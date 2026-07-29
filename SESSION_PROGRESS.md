@@ -46,13 +46,17 @@ Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Ke
 
 - ✅ **Seed data done** (task #20): 1 assignment + 1 quiz (3 questions: 2 multiple_choice + 1 true_false) per module across all 5 courses, content matching each course's actual week-1 topic. Verified via API for all 5 courses and a full real-content start→submit→100% curl flow (including confirming shuffle actually randomizes question/answer order).
 
-**BACKEND IS FULLY DONE for Phase 2 (assignments + quizzes). Remaining work is frontend only:**
-1. **Frontend: assignment submission UI** (next task, #21 in tracker): `assignments.api.ts`, `assignmentsSlice.ts`, `AssignmentDetailPage.tsx`, route → browser-test as seeded student
-2. Frontend: quiz taking UI (`quizzes.api.ts`, `quizzesSlice.ts`, `QuizTakingPage.tsx`, `QuizResultsPage.tsx`, timer, retake flow) → browser-test
-3. Frontend: instructor grading UI (`InstructorGradingQueuePage.tsx`, `GradeSubmissionPage.tsx`, first real use of the existing-but-unused `RoleRoute` component) → browser-test as seeded instructor
-4. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+- ✅ **Frontend assignment submission UI done** (task #21): `assignments.api.ts`, `assignmentsSlice.ts`, `AssignmentDetailPage.tsx`. Verified in browser: registered/enrolled a student, submitted a real assignment, saw success state.
+- ✅ **Frontend quiz-taking UI done** (task #22): `quizzes.api.ts`, `quizzesSlice.ts`, `QuizTakingPage.tsx` (timer, radio answers, immediate results), `QuizResultsPage.tsx` (attempt history + best score). **Found and fixed a real backend concurrency bug during browser testing**: `quiz.service.ts`'s `start()` had a check-then-create race (two concurrent start calls could both pass the "no existing in-progress attempt" check before either insert committed, both landing `attempt_number=1`) — surfaced by React StrictMode's dev-mode double effect invocation. Fixed with a partial unique index (`20260729030700-add-quiz-attempts-in-progress-unique-index.ts`) on `quiz_attempts(quiz_id, student_id) WHERE status='in_progress'`, retry-on-conflict in the service, a frontend mount-effect guard, and a new regression test that fires two `start()` calls concurrently via `Promise.all`. All 31 backend tests pass. Verified end-to-end in browser: took quiz (100%, passed), retook it, confirmed attempt history now correctly shows "Attempt 1" / "Attempt 2".
 
-Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16-20 are done; 21-24 are pending, in order.
+**Remaining work — frontend only:**
+1. **Frontend: instructor grading UI** (next task, #23 in tracker): `InstructorGradingQueuePage.tsx`, `GradeSubmissionPage.tsx`, first real use of the existing-but-unused `RoleRoute` component → browser-test as seeded instructor (`instructor@trainingportal.local` / `ChangeMe123!`)
+2. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+
+Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16-22 are done; 23-24 are pending, in order.
+
+## Auth rate limiter note
+The Phase 1 auth rate limiter (20 req/15min on `/api/auth/*`) is real and correctly protects production, but it WILL block rapid manual curl-based testing/smoke-testing in this same session (confirmed it happened once already). It's skipped automatically when `NODE_ENV=test` (Jest), but manual curl testing against the dev server can still hit it — if that happens, `docker compose restart backend` clears the in-memory counter. Prefer testing via the browser UI (one request per action) over rapid-fire curl loops when possible.
 
 ## Backend API reference for the frontend work (all built and tested)
 - `GET /api/modules/:id/assignments`, `GET /api/assignments/:id`, `POST /api/assignments/:id/submit` (multipart, field `submissionText` + optional file field `file`), `GET /api/assignments/:id/submissions/:submissionId`, `GET /api/assignments/:id/submissions` (instructor/admin), `PATCH /api/assignment-submissions/:id/grade` (body `{score, feedback}`), `GET /api/instructor/ungraded-submissions`
