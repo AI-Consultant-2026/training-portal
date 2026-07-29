@@ -38,19 +38,21 @@ Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Ke
 
 **Done so far:**
 - ✅ All 7 migrations written and run: `create-assignments`, `create-assignment-submissions`, `create-quizzes`, `create-quiz-questions`, `create-quiz-answers`, `create-quiz-attempts`, `create-quiz-responses`. Verified via `\dt` — all 14 tables exist (7 original + 7 new).
-- 🔄 **Models — in progress.** Done: `assignment.model.ts`, `assignmentSubmission.model.ts`, `quiz.model.ts`. **Still needed:** `quizQuestion.model.ts`, `quizAnswer.model.ts`, `quizAttempt.model.ts`, `quizResponse.model.ts`, then wire all association calls into `backend/src/models/index.ts` (exact association code is in the plan file §2), then verify `docker compose exec backend npx tsc --noEmit` is clean.
+- ✅ **All 7 models done** (`assignment.model.ts`, `assignmentSubmission.model.ts`, `quiz.model.ts`, `quizQuestion.model.ts`, `quizAnswer.model.ts`, `quizAttempt.model.ts`, `quizResponse.model.ts`) and wired into `backend/src/models/index.ts` with all associations. `tsc --noEmit` clean, backend restarts and connects to DB with no errors.
 
-**Not started yet (in order, per the plan's §11 sequenced build):**
-1. Finish models + associations (currently in progress — see above)
-2. Assignments backend: `StorageAdapter`/`LocalDiskAdapter` (§3), `multer` upload middleware, `assignment.service.ts`, controller, routes, validators (§4, §7) → write `assignment.test.ts` (§9) → curl smoke test
-3. Quiz backend: `quiz.service.ts` (start/submit/scoring/retake logic — full design already written in plan §5), controller, routes, validators → write `quiz.test.ts` (§9, includes the retake-highest-score test) → curl smoke test
-4. Seed data: 1 assignment + 1 quiz (3 questions, no short_answer) per already-seeded module across all 5 courses (§8)
-5. Frontend: assignment submission UI (`AssignmentDetailPage`, slice, API module)
-6. Frontend: quiz taking UI (`QuizTakingPage`, `QuizResultsPage`, timer, retake flow)
-7. Frontend: instructor grading UI (`InstructorGradingQueuePage`, `GradeSubmissionPage`, first real use of the existing-but-unused `RoleRoute` component)
-8. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+**Not started yet (in order, per the plan's §11 sequenced build) — NEXT UP IS #1:**
+1. **Assignments backend** (next task, #18 in tracker): `StorageAdapter`/`LocalDiskAdapter` (§3), `multer` upload middleware, `assignment.service.ts`, controller, routes, validators (§4, §7) → write `assignment.test.ts` (§9) → curl smoke test
+2. Quiz backend: `quiz.service.ts` (start/submit/scoring/retake logic — full design already written in plan §5), controller, routes, validators → write `quiz.test.ts` (§9, includes the retake-highest-score test) → curl smoke test
+3. Seed data: 1 assignment + 1 quiz (3 questions, no short_answer) per already-seeded module across all 5 courses (§8)
+4. Frontend: assignment submission UI (`AssignmentDetailPage`, slice, API module)
+5. Frontend: quiz taking UI (`QuizTakingPage`, `QuizResultsPage`, timer, retake flow)
+6. Frontend: instructor grading UI (`InstructorGradingQueuePage`, `GradeSubmissionPage`, first real use of the existing-but-unused `RoleRoute` component)
+7. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
 
-Task list IDs 16–24 in the Claude Code task tracker correspond exactly to these 9 stages (16 and partial-17 are done/in-progress; 18–24 are pending).
+Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16 and 17 are done; 18-24 are pending, in order.
+
+## Session automation (new this session)
+- `.claude/settings.json` (project-scoped) now has a **Stop hook** (logs a timestamp to `.claude/last-activity.log` after every turn) and a **PreToolUse hook** (blocks tool calls if Mac battery is below 15% and discharging — fails open if `pmset` is unavailable). Both tested and working. If a low-battery block ever fires unexpectedly or doesn't fire when expected, check `.claude/settings.json` was picked up (may need `/hooks` once since the directory was created mid-session).
 
 ---
 
