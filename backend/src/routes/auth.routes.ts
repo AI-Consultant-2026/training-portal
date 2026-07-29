@@ -1,6 +1,7 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import * as authController from "../controllers/auth.controller";
+import { config } from "../config";
 import { validate } from "../middleware/validate";
 import {
   loginSchema,
@@ -16,6 +17,9 @@ const authRateLimiter = rateLimit({
   limit: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  // The rate limiter protects production auth endpoints from brute-forcing;
+  // it isn't meant to constrain the integration test suite's own request volume.
+  skip: () => config.nodeEnv === "test",
 });
 
 authRouter.use(authRateLimiter);

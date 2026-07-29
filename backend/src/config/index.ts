@@ -19,6 +19,8 @@ export const config = {
     accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? "15m",
     refreshExpiresInDays: parseRefreshDays(process.env.JWT_REFRESH_EXPIRES_IN ?? "7d"),
   },
+  storageDriver: process.env.STORAGE_DRIVER ?? "local",
+  uploadRoot: process.env.UPLOAD_ROOT ?? "/app/uploads",
 };
 
 function parseRefreshDays(value: string): number {

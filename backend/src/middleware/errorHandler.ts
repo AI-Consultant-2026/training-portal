@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import multer from "multer";
 import { ValidationError as SequelizeValidationError } from "sequelize";
 import { ZodError } from "zod";
 import { ApiError } from "../utils/ApiError";
@@ -14,6 +15,14 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
     return res.status(400).json({
       error: { message: "Validation failed", details: err.flatten() },
     });
+  }
+
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: { message: `Upload error: ${err.message}` } });
+  }
+
+  if (err instanceof Error && /^Unsupported file type:/.test(err.message)) {
+    return res.status(400).json({ error: { message: err.message } });
   }
 
   if (err instanceof SequelizeValidationError) {

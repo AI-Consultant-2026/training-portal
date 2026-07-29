@@ -8,3 +8,5 @@ build/
 *.log
 coverage/
 .vscode/
+backend/uploads/*
+!backend/uploads/.gitkeep
