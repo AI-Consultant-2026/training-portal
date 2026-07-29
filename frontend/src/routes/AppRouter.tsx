@@ -1,0 +1,27 @@
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ProtectedRoute } from "../components/layout/ProtectedRoute";
+import { LoginPage } from "../features/auth/LoginPage";
+import { RegisterPage } from "../features/auth/RegisterPage";
+import { CourseDetailPage } from "../features/courses/CourseDetailPage";
+import { CourseListPage } from "../features/courses/CourseListPage";
+import { StudentDashboardPage } from "../features/dashboard/StudentDashboardPage";
+
+function NotFound() {
+  return <div className="mx-auto max-w-3xl px-6 py-16 text-center text-gray-600">Page not found.</div>;
+}
+
+export function AppRouter() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/courses" replace />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/courses" element={<CourseListPage />} />
+      <Route path="/courses/:slug" element={<CourseDetailPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<StudentDashboardPage />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
