@@ -1,6 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
+import { RoleRoute } from "../components/layout/RoleRoute";
 import { AssignmentDetailPage } from "../features/assignments/AssignmentDetailPage";
+import { GradeSubmissionPage } from "../features/assignments/GradeSubmissionPage";
+import { InstructorGradingQueuePage } from "../features/assignments/InstructorGradingQueuePage";
 import { LoginPage } from "../features/auth/LoginPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
 import { CourseDetailPage } from "../features/courses/CourseDetailPage";
@@ -26,6 +29,10 @@ export function AppRouter() {
         <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
         <Route path="/quizzes/:id" element={<QuizTakingPage />} />
         <Route path="/quizzes/:id/attempts" element={<QuizResultsPage />} />
+        <Route element={<RoleRoute allowedRoles={["instructor", "admin"]} />}>
+          <Route path="/instructor/grading" element={<InstructorGradingQueuePage />} />
+          <Route path="/instructor/submissions/:id/grade" element={<GradeSubmissionPage />} />
+        </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

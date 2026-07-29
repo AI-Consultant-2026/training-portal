@@ -11,6 +11,15 @@ export async function fetchAssignment(assignmentId: string): Promise<Assignment>
   return res.data.assignment;
 }
 
+export async function fetchMySubmissionForAssignment(
+  assignmentId: string,
+): Promise<AssignmentSubmission | null> {
+  const res = await axiosClient.get<{ submission: AssignmentSubmission | null }>(
+    `/assignments/${assignmentId}/my-submission`,
+  );
+  return res.data.submission;
+}
+
 export interface SubmitAssignmentInput {
   assignmentId: string;
   submissionText?: string;
@@ -73,4 +82,20 @@ export async function gradeSubmission(input: GradeSubmissionInput): Promise<Assi
     { score: input.score, feedback: input.feedback },
   );
   return res.data.submission;
+}
+
+// The download endpoint requires the JWT bearer token, so a plain <a href> won't work -
+// fetch it as a blob through the authenticated client and trigger the browser download ourselves.
+export async function downloadSubmissionFile(submissionId: string, fileName: string): Promise<void> {
+  const res = await axiosClient.get(`/assignment-submissions/${submissionId}/file`, {
+    responseType: "blob",
+  });
+  const url = window.URL.createObjectURL(res.data as Blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 }

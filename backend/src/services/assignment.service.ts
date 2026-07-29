@@ -56,6 +56,12 @@ function serializeSubmission(submission: AssignmentSubmission, dueDate: Date | n
   };
 }
 
+export async function getMySubmission(assignmentId: string, studentId: string) {
+  const { assignment } = await getAssignmentWithCourse(assignmentId);
+  const submission = await AssignmentSubmission.findOne({ where: { assignmentId, studentId } });
+  return submission ? serializeSubmission(submission, assignment.dueDate) : null;
+}
+
 export async function submit(assignmentId: string, studentId: string, input: SubmitInput) {
   const { assignment, course } = await getAssignmentWithCourse(assignmentId);
 
@@ -166,6 +172,30 @@ export async function listUngradedForInstructor(user: { id: string; role: string
     ...serializeSubmission(s, assignmentById.get(s.assignmentId)?.dueDate ?? null),
     assignmentTitle: assignmentById.get(s.assignmentId)?.title ?? null,
   }));
+}
+
+export async function getSubmissionFileForDownload(
+  submissionId: string,
+  user: { id: string; role: string },
+) {
+  const submission = await AssignmentSubmission.findByPk(submissionId);
+  if (!submission) {
+    throw ApiError.notFound("Submission not found");
+  }
+  if (!submission.filePath) {
+    throw ApiError.notFound("This submission has no attached file");
+  }
+
+  const { course } = await getAssignmentWithCourse(submission.assignmentId);
+  if (user.role === "student") {
+    if (submission.studentId !== user.id) {
+      throw ApiError.forbidden("You do not have permission to view this submission");
+    }
+  } else {
+    await assertInstructorOwnsCourse(course, user);
+  }
+
+  return submission;
 }
 
 export async function grade(submissionId: string, user: { id: string; role: string }, input: GradeInput) {

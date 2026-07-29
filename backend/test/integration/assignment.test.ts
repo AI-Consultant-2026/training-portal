@@ -230,4 +230,126 @@ describe("Assignments", () => {
       .set("Authorization", `Bearer ${tokenB}`);
     expect(res.status).toBe(403);
   });
+
+  it("returns null from my-submission before submitting, then the real submission after", async () => {
+    const instructor = await createInstructor();
+    const { course, assignment } = await createCourseWithAssignment(instructor.id);
+    const student = await registerStudent("student8@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("student8@example.com");
+
+    const before = await request(app)
+      .get(`/api/assignments/${assignment.id}/my-submission`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(before.status).toBe(200);
+    expect(before.body.submission).toBeNull();
+
+    await request(app)
+      .post(`/api/assignments/${assignment.id}/submit`)
+      .set("Authorization", `Bearer ${token}`)
+      .field("submissionText", "my answer");
+
+    const after = await request(app)
+      .get(`/api/assignments/${assignment.id}/my-submission`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(after.status).toBe(200);
+    expect(after.body.submission.submissionText).toBe("my answer");
+  });
+
+  it("forbids an instructor from reading my-submission (student-only endpoint)", async () => {
+    const instructor = await createInstructor();
+    const { assignment } = await createCourseWithAssignment(instructor.id);
+    const token = await loginAs(instructor.email);
+
+    const res = await request(app)
+      .get(`/api/assignments/${assignment.id}/my-submission`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(403);
+  });
+
+  describe("file download", () => {
+    it("allows the submitting student to download their own file", async () => {
+      const instructor = await createInstructor();
+      const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
+      const student = await registerStudent("filestudent1@example.com");
+      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      const token = await loginAs("filestudent1@example.com");
+
+      const submitRes = await request(app)
+        .post(`/api/assignments/${assignment.id}/submit`)
+        .set("Authorization", `Bearer ${token}`)
+        .attach("file", Buffer.from("file contents"), { filename: "essay.txt", contentType: "text/plain" });
+
+      const res = await request(app)
+        .get(`/api/assignment-submissions/${submitRes.body.submission.id}/file`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(res.status).toBe(200);
+      expect(res.text).toBe("file contents");
+    });
+
+    it("forbids a different student from downloading someone else's file", async () => {
+      const instructor = await createInstructor();
+      const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
+      const studentA = await registerStudent("filestudentA@example.com");
+      const studentB = await registerStudent("filestudentB@example.com");
+      await Enrollment.create({ courseId: course.id, studentId: studentA.id });
+      await Enrollment.create({ courseId: course.id, studentId: studentB.id });
+      const tokenA = await loginAs("filestudentA@example.com");
+      const tokenB = await loginAs("filestudentB@example.com");
+
+      const submitRes = await request(app)
+        .post(`/api/assignments/${assignment.id}/submit`)
+        .set("Authorization", `Bearer ${tokenA}`)
+        .attach("file", Buffer.from("A's file"), { filename: "a.txt", contentType: "text/plain" });
+
+      const res = await request(app)
+        .get(`/api/assignment-submissions/${submitRes.body.submission.id}/file`)
+        .set("Authorization", `Bearer ${tokenB}`);
+      expect(res.status).toBe(403);
+    });
+
+    it("allows the owning instructor to download a student's file, forbids a non-owning instructor", async () => {
+      const instructor = await createInstructor("file-owner-instructor@example.com");
+      const otherInstructor = await createInstructor("file-other-instructor@example.com");
+      const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
+      const student = await registerStudent("filestudent2@example.com");
+      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      const studentToken = await loginAs("filestudent2@example.com");
+
+      const submitRes = await request(app)
+        .post(`/api/assignments/${assignment.id}/submit`)
+        .set("Authorization", `Bearer ${studentToken}`)
+        .attach("file", Buffer.from("submission file"), { filename: "b.txt", contentType: "text/plain" });
+
+      const ownerToken = await loginAs(instructor.email);
+      const ownerRes = await request(app)
+        .get(`/api/assignment-submissions/${submitRes.body.submission.id}/file`)
+        .set("Authorization", `Bearer ${ownerToken}`);
+      expect(ownerRes.status).toBe(200);
+
+      const otherToken = await loginAs(otherInstructor.email);
+      const otherRes = await request(app)
+        .get(`/api/assignment-submissions/${submitRes.body.submission.id}/file`)
+        .set("Authorization", `Bearer ${otherToken}`);
+      expect(otherRes.status).toBe(403);
+    });
+
+    it("returns 404 when the submission has no attached file", async () => {
+      const instructor = await createInstructor();
+      const { course, assignment } = await createCourseWithAssignment(instructor.id);
+      const student = await registerStudent("filestudent3@example.com");
+      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      const token = await loginAs("filestudent3@example.com");
+
+      const submitRes = await request(app)
+        .post(`/api/assignments/${assignment.id}/submit`)
+        .set("Authorization", `Bearer ${token}`)
+        .field("submissionText", "no file here");
+
+      const res = await request(app)
+        .get(`/api/assignment-submissions/${submitRes.body.submission.id}/file`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(res.status).toBe(404);
+    });
+  });
 });

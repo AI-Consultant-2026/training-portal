@@ -6,8 +6,10 @@ export interface AssignmentsState {
   currentAssignment: Assignment | null;
   mySubmission: AssignmentSubmission | null;
   ungradedSubmissions: AssignmentSubmission[];
+  submissionToGrade: AssignmentSubmission | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   submitStatus: "idle" | "loading" | "succeeded" | "failed";
+  gradeStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
@@ -15,8 +17,10 @@ const initialState: AssignmentsState = {
   currentAssignment: null,
   mySubmission: null,
   ungradedSubmissions: [],
+  submissionToGrade: null,
   status: "idle",
   submitStatus: "idle",
+  gradeStatus: "idle",
   error: null,
 };
 
@@ -48,6 +52,13 @@ export const fetchMySubmission = createAsyncThunk(
   },
 );
 
+export const fetchMySubmissionForAssignment = createAsyncThunk(
+  "assignments/fetchMySubmissionForAssignment",
+  async (assignmentId: string) => {
+    return assignmentsApi.fetchMySubmissionForAssignment(assignmentId);
+  },
+);
+
 export const fetchUngradedSubmissions = createAsyncThunk("assignments/fetchUngraded", async () => {
   return assignmentsApi.listUngradedSubmissions();
 });
@@ -57,6 +68,17 @@ export const gradeSubmission = createAsyncThunk(
   async (input: assignmentsApi.GradeSubmissionInput, { rejectWithValue }) => {
     try {
       return await assignmentsApi.gradeSubmission(input);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
+
+export const fetchSubmissionForGrading = createAsyncThunk(
+  "assignments/fetchForGrading",
+  async (submissionId: string, { rejectWithValue }) => {
+    try {
+      return await assignmentsApi.fetchSubmissionForGrading(submissionId);
     } catch (err) {
       return rejectWithValue(extractErrorMessage(err));
     }
@@ -102,6 +124,9 @@ const assignmentsSlice = createSlice({
       .addCase(fetchMySubmission.fulfilled, (state, action) => {
         state.mySubmission = action.payload;
       })
+      .addCase(fetchMySubmissionForAssignment.fulfilled, (state, action) => {
+        state.mySubmission = action.payload;
+      })
       .addCase(fetchUngradedSubmissions.pending, (state) => {
         state.status = "loading";
       })
@@ -113,13 +138,31 @@ const assignmentsSlice = createSlice({
         state.status = "failed";
         state.error = "Could not load ungraded submissions";
       })
+      .addCase(gradeSubmission.pending, (state) => {
+        state.gradeStatus = "loading";
+        state.error = null;
+      })
       .addCase(gradeSubmission.fulfilled, (state, action) => {
+        state.gradeStatus = "succeeded";
         state.ungradedSubmissions = state.ungradedSubmissions.filter(
           (s) => s.id !== action.payload.id,
         );
       })
       .addCase(gradeSubmission.rejected, (state, action) => {
+        state.gradeStatus = "failed";
         state.error = (action.payload as string) ?? "Could not grade submission";
+      })
+      .addCase(fetchSubmissionForGrading.pending, (state) => {
+        state.status = "loading";
+        state.submissionToGrade = null;
+      })
+      .addCase(fetchSubmissionForGrading.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.submissionToGrade = action.payload;
+      })
+      .addCase(fetchSubmissionForGrading.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = (action.payload as string) ?? "Could not load submission";
       });
   },
 });

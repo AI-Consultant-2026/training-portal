@@ -7,6 +7,7 @@ import { gradeSubmissionSchema } from "../validators/assignment.validators";
 
 export const assignmentSubmissionsRouter = Router();
 
+assignmentSubmissionsRouter.get("/:id/file", authenticate, assignmentsController.downloadFile);
 assignmentSubmissionsRouter.patch(
   "/:id/grade",
   authenticate,

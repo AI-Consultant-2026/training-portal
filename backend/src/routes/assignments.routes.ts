@@ -18,6 +18,12 @@ assignmentsRouter.post(
   assignmentsController.submit,
 );
 assignmentsRouter.get(
+  "/:id/my-submission",
+  authenticate,
+  authorize("student"),
+  assignmentsController.getMySubmission,
+);
+assignmentsRouter.get(
   "/:id/submissions/:submissionId",
   authenticate,
   assignmentsController.getSubmission,
