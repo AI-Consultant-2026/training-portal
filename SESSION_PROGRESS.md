@@ -44,14 +44,19 @@ Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Ke
 
 - ✅ **Quiz backend done** (task #19): `quiz.service.ts` with idempotent attempt-start (refresh-safe), SQL-level `sequelize.random()` question selection + in-app answer shuffling, server-side auto-grading for multiple_choice/true_false with `is_correct` always stripped pre-submission, unlimited retakes with best-score as a read-time `MAX()` (never an overwrite), and the timed-out-but-still-graded policy. 8 passing tests + curl smoke test. All 30 backend tests pass.
 
-**Not started yet (in order, per the plan's §11 sequenced build) — NEXT UP IS #1:**
-1. **Seed data** (next task, #20 in tracker): 1 assignment + 1 quiz (3 questions, no short_answer) per already-seeded module across all 5 courses (§8)
-2. Frontend: assignment submission UI (`AssignmentDetailPage`, slice, API module)
-3. Frontend: quiz taking UI (`QuizTakingPage`, `QuizResultsPage`, timer, retake flow)
-4. Frontend: instructor grading UI (`InstructorGradingQueuePage`, `GradeSubmissionPage`, first real use of the existing-but-unused `RoleRoute` component)
-5. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+- ✅ **Seed data done** (task #20): 1 assignment + 1 quiz (3 questions: 2 multiple_choice + 1 true_false) per module across all 5 courses, content matching each course's actual week-1 topic. Verified via API for all 5 courses and a full real-content start→submit→100% curl flow (including confirming shuffle actually randomizes question/answer order).
 
-Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16-19 are done; 20-24 are pending, in order.
+**BACKEND IS FULLY DONE for Phase 2 (assignments + quizzes). Remaining work is frontend only:**
+1. **Frontend: assignment submission UI** (next task, #21 in tracker): `assignments.api.ts`, `assignmentsSlice.ts`, `AssignmentDetailPage.tsx`, route → browser-test as seeded student
+2. Frontend: quiz taking UI (`quizzes.api.ts`, `quizzesSlice.ts`, `QuizTakingPage.tsx`, `QuizResultsPage.tsx`, timer, retake flow) → browser-test
+3. Frontend: instructor grading UI (`InstructorGradingQueuePage.tsx`, `GradeSubmissionPage.tsx`, first real use of the existing-but-unused `RoleRoute` component) → browser-test as seeded instructor
+4. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+
+Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16-20 are done; 21-24 are pending, in order.
+
+## Backend API reference for the frontend work (all built and tested)
+- `GET /api/modules/:id/assignments`, `GET /api/assignments/:id`, `POST /api/assignments/:id/submit` (multipart, field `submissionText` + optional file field `file`), `GET /api/assignments/:id/submissions/:submissionId`, `GET /api/assignments/:id/submissions` (instructor/admin), `PATCH /api/assignment-submissions/:id/grade` (body `{score, feedback}`), `GET /api/instructor/ungraded-submissions`
+- `GET /api/modules/:id/quizzes`, `GET /api/quizzes/:id`, `POST /api/quizzes/:id/start` (returns `{attempt, quiz, questions}`, questions never include `isCorrect`), `POST /api/quizzes/:id/submit` (body `{attemptId, responses: [{questionId, studentAnswer}]}` where `studentAnswer` is the selected answer's id for multiple_choice/true_false; returns `{attempt, responses, timedOut, passed}`), `GET /api/quizzes/:id/attempts/:attemptId`, `GET /api/quizzes/:id/attempts` (returns `{attempts, bestScore}`)
 
 ## Session automation (new this session)
 - `.claude/settings.json` (project-scoped) now has a **Stop hook** (logs a timestamp to `.claude/last-activity.log` after every turn) and a **PreToolUse hook** (blocks tool calls if Mac battery is below 15% and discharging — fails open if `pmset` is unavailable). Both tested and working. If a low-battery block ever fires unexpectedly or doesn't fire when expected, check `.claude/settings.json` was picked up (may need `/hooks` once since the directory was created mid-session).
