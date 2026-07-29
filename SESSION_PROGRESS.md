@@ -40,16 +40,17 @@ Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Ke
 - ✅ All 7 migrations written and run: `create-assignments`, `create-assignment-submissions`, `create-quizzes`, `create-quiz-questions`, `create-quiz-answers`, `create-quiz-attempts`, `create-quiz-responses`. Verified via `\dt` — all 14 tables exist (7 original + 7 new).
 - ✅ **All 7 models done** (`assignment.model.ts`, `assignmentSubmission.model.ts`, `quiz.model.ts`, `quizQuestion.model.ts`, `quizAnswer.model.ts`, `quizAttempt.model.ts`, `quizResponse.model.ts`) and wired into `backend/src/models/index.ts` with all associations. `tsc --noEmit` clean, backend restarts and connects to DB with no errors.
 
-**Not started yet (in order, per the plan's §11 sequenced build) — NEXT UP IS #1:**
-1. **Assignments backend** (next task, #18 in tracker): `StorageAdapter`/`LocalDiskAdapter` (§3), `multer` upload middleware, `assignment.service.ts`, controller, routes, validators (§4, §7) → write `assignment.test.ts` (§9) → curl smoke test
-2. Quiz backend: `quiz.service.ts` (start/submit/scoring/retake logic — full design already written in plan §5), controller, routes, validators → write `quiz.test.ts` (§9, includes the retake-highest-score test) → curl smoke test
-3. Seed data: 1 assignment + 1 quiz (3 questions, no short_answer) per already-seeded module across all 5 courses (§8)
-4. Frontend: assignment submission UI (`AssignmentDetailPage`, slice, API module)
-5. Frontend: quiz taking UI (`QuizTakingPage`, `QuizResultsPage`, timer, retake flow)
-6. Frontend: instructor grading UI (`InstructorGradingQueuePage`, `GradeSubmissionPage`, first real use of the existing-but-unused `RoleRoute` component)
-7. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+- ✅ **Assignments backend done** (task #18): `StorageAdapter`/`LocalDiskAdapter` (files stored under `backend/uploads/`, gitignored), multer upload middleware (10MB limit, MIME allow-list), full `assignment.service.ts` (submit/resubmit/grade with late-flagging + graded-lock semantics), controller, routes, validators. 8 passing integration tests (`assignment.test.ts`) + a real curl+file smoke test. Also fixed a real bug: the Phase 1 auth rate limiter (20 req/15min) was getting hit by the test suite's own volume once assignment tests were added — now skipped when `NODE_ENV=test` (production unaffected). All 22 backend tests pass.
 
-Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16 and 17 are done; 18-24 are pending, in order.
+**Not started yet (in order, per the plan's §11 sequenced build) — NEXT UP IS #1:**
+1. **Quiz backend** (next task, #19 in tracker): `quiz.service.ts` (start/submit/scoring/retake logic — full design already written in plan §5), controller, routes, validators → write `quiz.test.ts` (§9, includes the retake-highest-score test) → curl smoke test. Also need to add the `GET /modules/:id/quizzes` route to `modules.routes.ts` (deliberately deferred from the assignments stage to keep it self-contained).
+2. Seed data: 1 assignment + 1 quiz (3 questions, no short_answer) per already-seeded module across all 5 courses (§8)
+3. Frontend: assignment submission UI (`AssignmentDetailPage`, slice, API module)
+4. Frontend: quiz taking UI (`QuizTakingPage`, `QuizResultsPage`, timer, retake flow)
+5. Frontend: instructor grading UI (`InstructorGradingQueuePage`, `GradeSubmissionPage`, first real use of the existing-but-unused `RoleRoute` component)
+6. Wire assignment/quiz links into `CourseDetailPage`'s module list + final full browser walkthrough as both student and instructor
+
+Task list IDs 16-24 in the Claude Code task tracker correspond to these stages: 16-18 are done; 19-24 are pending, in order.
 
 ## Session automation (new this session)
 - `.claude/settings.json` (project-scoped) now has a **Stop hook** (logs a timestamp to `.claude/last-activity.log` after every turn) and a **PreToolUse hook** (blocks tool calls if Mac battery is below 15% and discharging — fails open if `pmset` is unavailable). Both tested and working. If a low-battery block ever fires unexpectedly or doesn't fire when expected, check `.claude/settings.json` was picked up (may need `/hooks` once since the directory was created mid-session).
