@@ -142,6 +142,35 @@ const COURSES: CourseSeed[] = [
       },
     ],
   },
+  {
+    title: "Digital Marketing",
+    slug: "digital-marketing",
+    description:
+      "Build practical, hands-on digital marketing skills across SEO, email, paid advertising, and analytics for real Delta State businesses.",
+    durationWeeks: 8,
+    modules: [
+      {
+        title: "Digital Marketing Fundamentals & Strategy",
+        description: "The marketing funnel, channel landscape, and buyer personas.",
+        weekNumber: 1,
+        order: 1,
+        lessons: [
+          {
+            title: "The Digital Marketing Funnel",
+            content: "Awareness, consideration, conversion, and loyalty stages explained.",
+            order: 1,
+            durationMinutes: 25,
+          },
+          {
+            title: "Digital Marketing Channels Overview",
+            content: "SEO, email, content, paid, and social channels compared.",
+            order: 2,
+            durationMinutes: 25,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 module.exports = {
