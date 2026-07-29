@@ -52,3 +52,105 @@ export interface Enrollment {
   grade: string | null;
   course?: Course;
 }
+
+export interface Assignment {
+  id: string;
+  moduleId: string;
+  title: string;
+  description: string | null;
+  dueDate: string | null;
+  fileRequired: boolean;
+  gradingRubric: Record<string, unknown> | null;
+  pointsTotal: number;
+}
+
+export type AssignmentSubmissionStatus = "submitted" | "graded" | "returned";
+
+export interface AssignmentSubmission {
+  id: string;
+  assignmentId: string;
+  studentId: string;
+  submissionDate: string;
+  filePath: string | null;
+  submissionText: string | null;
+  status: AssignmentSubmissionStatus;
+  score: number | null;
+  feedback: string | null;
+  gradedDate: string | null;
+  isLate: boolean;
+  assignmentTitle?: string;
+}
+
+export type QuizQuestionType = "multiple_choice" | "true_false" | "short_answer";
+
+export interface Quiz {
+  id: string;
+  moduleId: string;
+  title: string;
+  description: string | null;
+  dueDate: string | null;
+  timeLimitMinutes: number | null;
+  passingScore: number;
+  questionCount: number;
+  shuffleQuestions: boolean;
+}
+
+export interface QuizAnswerOption {
+  id: string;
+  answerText: string;
+  order: number;
+}
+
+export interface QuizAnswerOptionGraded extends QuizAnswerOption {
+  isCorrect: boolean;
+}
+
+export interface QuizQuestion {
+  id: string;
+  questionText: string;
+  questionType: QuizQuestionType;
+  points: number;
+  order: number;
+  answers: QuizAnswerOption[];
+}
+
+export interface QuizAttemptSummary {
+  id: string;
+  quizId: string;
+  startTime: string;
+  attemptNumber: number;
+  status: "in_progress" | "submitted" | "graded";
+}
+
+export interface QuizAttemptResult {
+  id: string;
+  quizId: string;
+  status: "in_progress" | "submitted" | "graded";
+  score: number | null;
+  startTime: string;
+  endTime: string | null;
+  attemptNumber: number;
+}
+
+export interface QuizStartResponse {
+  attempt: QuizAttemptSummary;
+  quiz: Quiz;
+  questions: QuizQuestion[];
+}
+
+export interface QuizGradedResponse {
+  questionId: string;
+  questionText: string | null;
+  studentAnswer: string;
+  isCorrect: boolean | null;
+  pointsEarned: number | null;
+  explanation: string | null;
+  answers: QuizAnswerOptionGraded[];
+}
+
+export interface QuizSubmitResponse {
+  attempt: QuizAttemptResult;
+  responses: QuizGradedResponse[];
+  timedOut: boolean;
+  passed: boolean | null;
+}

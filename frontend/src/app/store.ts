@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { attachStore } from "../api/axiosClient";
+import assignmentsReducer from "../features/assignments/assignmentsSlice";
 import authReducer from "../features/auth/authSlice";
 import coursesReducer from "../features/courses/coursesSlice";
 import enrollmentsReducer from "../features/enrollments/enrollmentsSlice";
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     courses: coursesReducer,
     enrollments: enrollmentsReducer,
+    assignments: assignmentsReducer,
   },
 });
 

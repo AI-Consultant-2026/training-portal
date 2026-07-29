@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
+import { AssignmentDetailPage } from "../features/assignments/AssignmentDetailPage";
 import { LoginPage } from "../features/auth/LoginPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
 import { CourseDetailPage } from "../features/courses/CourseDetailPage";
@@ -20,6 +21,7 @@ export function AppRouter() {
       <Route path="/courses/:slug" element={<CourseDetailPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<StudentDashboardPage />} />
+        <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
