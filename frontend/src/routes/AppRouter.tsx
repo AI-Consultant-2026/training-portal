@@ -6,6 +6,8 @@ import { RegisterPage } from "../features/auth/RegisterPage";
 import { CourseDetailPage } from "../features/courses/CourseDetailPage";
 import { CourseListPage } from "../features/courses/CourseListPage";
 import { StudentDashboardPage } from "../features/dashboard/StudentDashboardPage";
+import { QuizResultsPage } from "../features/quizzes/QuizResultsPage";
+import { QuizTakingPage } from "../features/quizzes/QuizTakingPage";
 
 function NotFound() {
   return <div className="mx-auto max-w-3xl px-6 py-16 text-center text-gray-600">Page not found.</div>;
@@ -22,6 +24,8 @@ export function AppRouter() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
+        <Route path="/quizzes/:id" element={<QuizTakingPage />} />
+        <Route path="/quizzes/:id/attempts" element={<QuizResultsPage />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

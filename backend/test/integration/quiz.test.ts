@@ -116,6 +116,27 @@ describe("Quizzes", () => {
     expect(count).toBe(1);
   });
 
+  it("only creates one attempt when two start calls race concurrently", async () => {
+    const instructor = await createInstructor();
+    const { course, quiz } = await createCourseWithQuiz(instructor.id);
+    const student = await registerStudent("quizraceconditionstudent@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("quizraceconditionstudent@example.com");
+
+    const [first, second] = await Promise.all([
+      request(app).post(`/api/quizzes/${quiz.id}/start`).set("Authorization", `Bearer ${token}`),
+      request(app).post(`/api/quizzes/${quiz.id}/start`).set("Authorization", `Bearer ${token}`),
+    ]);
+
+    expect(first.status).toBe(201);
+    expect(second.status).toBe(201);
+    expect(first.body.attempt.id).toBe(second.body.attempt.id);
+
+    const attempts = await QuizAttempt.findAll({ where: { quizId: quiz.id, studentId: student.id } });
+    expect(attempts).toHaveLength(1);
+    expect(attempts[0].attemptNumber).toBe(1);
+  });
+
   it("rejects starting a quiz for a non-enrolled student", async () => {
     const instructor = await createInstructor();
     const { quiz } = await createCourseWithQuiz(instructor.id);

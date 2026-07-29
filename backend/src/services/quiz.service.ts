@@ -111,11 +111,24 @@ export async function start(quizId: string, studentId: string) {
   let attempt = existing;
   if (!attempt) {
     const maxAttemptNumber = await QuizAttempt.max("attemptNumber", { where: { quizId, studentId } });
-    attempt = await QuizAttempt.create({
-      quizId,
-      studentId,
-      attemptNumber: (typeof maxAttemptNumber === "number" ? maxAttemptNumber : 0) + 1,
-    });
+    try {
+      attempt = await QuizAttempt.create({
+        quizId,
+        studentId,
+        attemptNumber: (typeof maxAttemptNumber === "number" ? maxAttemptNumber : 0) + 1,
+      });
+    } catch (err) {
+      // A concurrent start() call (double-click, retry, StrictMode's dev double-invoke)
+      // may have won the race and already inserted the in-progress attempt; the partial
+      // unique index on (quiz_id, student_id) WHERE status='in_progress' rejects ours.
+      // Re-fetch and use whichever attempt actually landed, instead of erroring.
+      if (err && typeof err === "object" && "name" in err && (err as { name: string }).name === "SequelizeUniqueConstraintError") {
+        attempt = await QuizAttempt.findOne({ where: { quizId, studentId, status: "in_progress" } });
+        if (!attempt) throw err;
+      } else {
+        throw err;
+      }
+    }
   }
 
   // Question selection isn't persisted per-attempt (no extra table); with question_count
