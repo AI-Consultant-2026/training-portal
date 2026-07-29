@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p .claude && echo \"$(date '+%Y-%m-%d %H:%M:%S') - session active - see SESSION_PROGRESS.md for detailed status\" >> .claude/last-activity.log"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "batt=$(pmset -g batt 2>/dev/null); pct=$(echo \"$batt\" | grep -Eo '[0-9]+%' | head -1 | tr -d '%'); batt_state=$(echo \"$batt\" | grep -Eo 'charging|discharging|charged|finishing charge' | head -1); if [ -n \"$pct\" ] && [ -n \"$batt_state\" ] && [ \"$batt_state\" = \"discharging\" ] && [ \"$pct\" -lt 15 ] 2>/dev/null; then echo \"Battery at ${pct}% and discharging - please plug in. Work is safely committed to git and tracked in SESSION_PROGRESS.md up to this point.\" >&2; exit 2; fi; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
