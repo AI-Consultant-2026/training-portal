@@ -1,6 +1,6 @@
 # Training Portal — Session Progress
 
-Last updated: 2026-07-29 (mid Phase 2 build)
+Last updated: 2026-07-29 (Phase 2 COMPLETE)
 
 ## How to resume
 
@@ -32,7 +32,7 @@ All at `training-portal/content/<course-slug>/week-NN.md`.
 ### Digital Marketing — 5th course (done, committed, delivered to user)
 Not in the original spec — designed an 8-week curriculum from scratch (strategy/personas, SEO, content & email, paid ads, analytics, e-commerce & automation, integrated strategy/capstone prep). Seeded into the DB (course + 1 sample module + 2 lessons, matching Phase 1's seeding density) and wrote all 8 lecture scripts at `training-portal/content/digital-marketing/week-NN.md`.
 
-### Phase 2 — Assignments & Quizzes (IN PROGRESS — this is where we are)
+### Phase 2 — Assignments & Quizzes (DONE, committed, fully tested)
 
 Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Key locked decisions (see that file for the complete list): local disk file storage behind a swappable `StorageAdapter` interface, quiz engine built in full but only sample questions seeded, no capstone this phase, late submissions accepted+flagged (not blocked/penalized), resubmission blocked once graded, unlimited quiz retakes (highest score = read-time MAX aggregation, never an overwrite), `short_answer` questions deferred entirely (zero in seed data), 10MB upload limit with a specific MIME allow-list.
 
@@ -51,10 +51,11 @@ Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Ke
 
 - ✅ **Frontend instructor grading UI done** (task #23): `InstructorGradingQueuePage.tsx`, `GradeSubmissionPage.tsx`, first real use of `RoleRoute`. Verified end-to-end in browser as `instructor@trainingportal.local` / `ChangeMe123!`. **Found and fixed two more real gaps during this testing**: (1) no endpoint existed to actually download a submitted file — added `GET /api/assignment-submissions/:id/file` (ownership-checked, streams via the existing `StorageAdapter`) plus a frontend blob-fetch helper since the JWT bearer token can't be attached to a plain `<a href>`; (2) a student reloading an assignment page lost all visibility into their own grade — there was no "get my own submission" endpoint. Added `GET /api/assignments/:id/my-submission` and reworked `AssignmentDetailPage`'s render logic to correctly distinguish graded (read-only) vs. not-yet-graded (editable, resubmit-allowed) states. 6 new tests added, all 37 backend tests pass.
 
-**Remaining work:**
-1. **CourseDetailPage integration + final walkthrough** (next task, #24 in tracker, the LAST one): wire inline "Assignments"/"Quizzes" links into each module row on the course detail page, then do one complete browser walkthrough as both student and instructor across a single course, start to finish.
+- ✅ **CourseDetailPage integration done** (task #24, the last one): each module row now shows inline links to its assignments and quizzes. Verified in browser. **Phase 2 is fully complete**: 37 backend tests passing, both frontend and backend `tsc --noEmit` clean, full student flow (submit assignment, take/retake quiz) and full instructor flow (grade a submission, download its file) verified end-to-end in a real browser.
 
-Task list IDs 16-24 in the Claude Code task tracker: 16-23 are done; 24 is the only one left.
+Task list IDs 16-24 in the Claude Code task tracker: all done (16-24).
+
+**Next possible work** (not started, no plan written yet — would need a fresh EnterPlanMode pass same as Phase 1/2 were): capstone submission system, `short_answer` quiz grading, real `progress_tracking`, instructor/admin dashboards & analytics, production deployment, or the interactive-video-checkpoint feature. See "Not yet built" section below for the full list.
 
 ## Auth rate limiter note
 The Phase 1 auth rate limiter (20 req/15min on `/api/auth/*`) is real and correctly protects production, but it WILL block rapid manual curl-based testing/smoke-testing in this same session (confirmed it happened once already). It's skipped automatically when `NODE_ENV=test` (Jest), but manual curl testing against the dev server can still hit it — if that happens, `docker compose restart backend` clears the in-memory counter. Prefer testing via the browser UI (one request per action) over rapid-fire curl loops when possible.
