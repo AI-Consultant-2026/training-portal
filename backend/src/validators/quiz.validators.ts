@@ -13,3 +13,16 @@ export const submitQuizSchema = z.object({
       .min(1),
   }),
 });
+
+export const gradeQuizAttemptSchema = z.object({
+  body: z.object({
+    responses: z
+      .array(
+        z.object({
+          responseId: z.string().uuid(),
+          pointsEarned: z.number().int().min(0),
+        }),
+      )
+      .min(1),
+  }),
+});

@@ -31,3 +31,13 @@ export const listMyAttempts = asyncHandler(async (req: Request, res: Response) =
   const result = await quizService.listMyAttempts(req.params.id, req.user!.id);
   res.json(result);
 });
+
+export const listPendingReviews = asyncHandler(async (req: Request, res: Response) => {
+  const attempts = await quizService.listPendingReviewsForInstructor(req.user!);
+  res.json({ attempts });
+});
+
+export const gradeAttempt = asyncHandler(async (req: Request, res: Response) => {
+  const attempt = await quizService.gradeAttempt(req.params.id, req.user!, req.body.responses);
+  res.json({ attempt });
+});

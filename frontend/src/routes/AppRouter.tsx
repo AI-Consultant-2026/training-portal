@@ -9,6 +9,8 @@ import { RegisterPage } from "../features/auth/RegisterPage";
 import { CourseDetailPage } from "../features/courses/CourseDetailPage";
 import { CourseListPage } from "../features/courses/CourseListPage";
 import { StudentDashboardPage } from "../features/dashboard/StudentDashboardPage";
+import { GradeQuizAttemptPage } from "../features/quizzes/GradeQuizAttemptPage";
+import { QuizGradingQueuePage } from "../features/quizzes/QuizGradingQueuePage";
 import { QuizResultsPage } from "../features/quizzes/QuizResultsPage";
 import { QuizTakingPage } from "../features/quizzes/QuizTakingPage";
 
@@ -32,6 +34,11 @@ export function AppRouter() {
         <Route element={<RoleRoute allowedRoles={["instructor", "admin"]} />}>
           <Route path="/instructor/grading" element={<InstructorGradingQueuePage />} />
           <Route path="/instructor/submissions/:id/grade" element={<GradeSubmissionPage />} />
+          <Route path="/instructor/quiz-grading" element={<QuizGradingQueuePage />} />
+          <Route
+            path="/instructor/quizzes/:quizId/attempts/:attemptId/grade"
+            element={<GradeQuizAttemptPage />}
+          />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

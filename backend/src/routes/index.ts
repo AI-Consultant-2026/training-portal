@@ -8,6 +8,7 @@ import { healthRouter } from "./health.routes";
 import { instructorRouter } from "./instructor.routes";
 import { lessonsRouter } from "./lessons.routes";
 import { modulesRouter } from "./modules.routes";
+import { quizAttemptsRouter } from "./quizAttempts.routes";
 import { quizzesRouter } from "./quizzes.routes";
 import { usersRouter } from "./users.routes";
 
@@ -24,3 +25,4 @@ apiRouter.use("/assignments", assignmentsRouter);
 apiRouter.use("/assignment-submissions", assignmentSubmissionsRouter);
 apiRouter.use("/instructor", instructorRouter);
 apiRouter.use("/quizzes", quizzesRouter);
+apiRouter.use("/quiz-attempts", quizAttemptsRouter);

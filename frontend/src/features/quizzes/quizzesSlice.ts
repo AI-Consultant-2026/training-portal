@@ -1,14 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as quizzesApi from "../../api/quizzes.api";
-import { QuizAttemptResult, QuizStartResponse, QuizSubmitResponse } from "../../types/api";
+import {
+  QuizAttemptDetail,
+  QuizAttemptResult,
+  QuizPendingReview,
+  QuizStartResponse,
+  QuizSubmitResponse,
+} from "../../types/api";
 
 export interface QuizzesState {
   activeAttempt: QuizStartResponse | null;
   submitResult: QuizSubmitResponse | null;
   myAttempts: QuizAttemptResult[];
   bestScore: number | null;
+  pendingReviews: QuizPendingReview[];
+  attemptToGrade: QuizAttemptDetail | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   submitStatus: "idle" | "loading" | "succeeded" | "failed";
+  gradeStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
@@ -17,8 +26,11 @@ const initialState: QuizzesState = {
   submitResult: null,
   myAttempts: [],
   bestScore: null,
+  pendingReviews: [],
+  attemptToGrade: null,
   status: "idle",
   submitStatus: "idle",
+  gradeStatus: "idle",
   error: null,
 };
 
@@ -53,6 +65,32 @@ export const submitQuizAttempt = createAsyncThunk(
 export const fetchMyAttempts = createAsyncThunk("quizzes/fetchMyAttempts", async (quizId: string) => {
   return quizzesApi.fetchMyAttempts(quizId);
 });
+
+export const fetchPendingQuizReviews = createAsyncThunk("quizzes/fetchPendingReviews", async () => {
+  return quizzesApi.fetchPendingQuizReviews();
+});
+
+export const fetchAttemptForGrading = createAsyncThunk(
+  "quizzes/fetchAttemptForGrading",
+  async ({ quizId, attemptId }: { quizId: string; attemptId: string }, { rejectWithValue }) => {
+    try {
+      return await quizzesApi.fetchAttempt(quizId, attemptId);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
+
+export const gradeQuizAttempt = createAsyncThunk(
+  "quizzes/gradeAttempt",
+  async (input: quizzesApi.GradeQuizAttemptInput, { rejectWithValue }) => {
+    try {
+      return await quizzesApi.gradeQuizAttempt(input);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
 
 const quizzesSlice = createSlice({
   name: "quizzes",
@@ -95,6 +133,42 @@ const quizzesSlice = createSlice({
       .addCase(fetchMyAttempts.fulfilled, (state, action) => {
         state.myAttempts = action.payload.attempts;
         state.bestScore = action.payload.bestScore;
+      })
+      .addCase(fetchPendingQuizReviews.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPendingQuizReviews.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.pendingReviews = action.payload;
+      })
+      .addCase(fetchPendingQuizReviews.rejected, (state) => {
+        state.status = "failed";
+        state.error = "Could not load pending reviews";
+      })
+      .addCase(fetchAttemptForGrading.pending, (state) => {
+        state.status = "loading";
+        state.attemptToGrade = null;
+      })
+      .addCase(fetchAttemptForGrading.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.attemptToGrade = action.payload;
+      })
+      .addCase(fetchAttemptForGrading.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = (action.payload as string) ?? "Could not load attempt";
+      })
+      .addCase(gradeQuizAttempt.pending, (state) => {
+        state.gradeStatus = "loading";
+        state.error = null;
+      })
+      .addCase(gradeQuizAttempt.fulfilled, (state, action) => {
+        state.gradeStatus = "succeeded";
+        state.attemptToGrade = action.payload;
+        state.pendingReviews = state.pendingReviews.filter((r) => r.id !== action.payload.id);
+      })
+      .addCase(gradeQuizAttempt.rejected, (state, action) => {
+        state.gradeStatus = "failed";
+        state.error = (action.payload as string) ?? "Could not grade attempt";
       });
   },
 });

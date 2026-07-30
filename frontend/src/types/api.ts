@@ -139,11 +139,13 @@ export interface QuizStartResponse {
 }
 
 export interface QuizGradedResponse {
+  id: string;
   questionId: string;
   questionText: string | null;
   studentAnswer: string;
   isCorrect: boolean | null;
   pointsEarned: number | null;
+  points: number | null;
   explanation: string | null;
   answers: QuizAnswerOptionGraded[];
 }
@@ -153,4 +155,18 @@ export interface QuizSubmitResponse {
   responses: QuizGradedResponse[];
   timedOut: boolean;
   passed: boolean | null;
+}
+
+export interface QuizAttemptDetail extends QuizAttemptResult {
+  studentId: string;
+  responses: QuizGradedResponse[];
+}
+
+export interface QuizPendingReview {
+  id: string;
+  quizId: string;
+  quizTitle: string | null;
+  studentId: string;
+  endTime: string | null;
+  attemptNumber: number;
 }

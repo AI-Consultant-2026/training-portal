@@ -1,6 +1,6 @@
 # Training Portal — Session Progress
 
-Last updated: 2026-07-29 (Phase 2 COMPLETE)
+Last updated: 2026-07-30 (short_answer quiz grading COMPLETE)
 
 ## How to resume
 
@@ -55,7 +55,18 @@ Full plan approved and saved at `.claude/plans/agile-squishing-lightning.md`. Ke
 
 Task list IDs 16-24 in the Claude Code task tracker: all done (16-24).
 
-**Next possible work** (not started, no plan written yet — would need a fresh EnterPlanMode pass same as Phase 1/2 were): capstone submission system, `short_answer` quiz grading, real `progress_tracking`, instructor/admin dashboards & analytics, production deployment, or the interactive-video-checkpoint feature. See "Not yet built" section below for the full list.
+### short_answer quiz grading (implemented and verified, not yet committed)
+
+Plan approved and saved at `.claude/plans/recursive-giggling-cocke.md`. The schema already had everything needed (`quiz_attempts.status` already included a `"submitted"` pending-review state distinct from `"graded"`, `quiz_responses.marked_at` already existed unused) — this built the missing grading workflow on top of it. No DB migration needed.
+
+- **Backend**: `quiz.service.ts` gained `gradeAttempt()` (transaction + row lock so two concurrent grade requests can't silently lost-update each other; validates the payload's response ids exactly match the attempt's pending set; recomputes score from ALL responses using the same formula `submit()` uses; sets `markedAt`) and `listPendingReviewsForInstructor()` (mirrors the assignment grading queue, scoped by course ownership). `getAttempt()` now exposes `responses` to the owning instructor/admin while an attempt is `"submitted"` (still hidden from students until `"graded"`, unchanged). `serializeGradedResponse()` now includes the response's own `id` and the question's `points` — both were missing and needed for the grading UI (the `id` gap in particular would have silently broken grading, since the endpoint needs the response row id, not the question id — caught and fixed before it shipped).
+  - New routes: `PATCH /api/quiz-attempts/:id/grade`, `GET /api/instructor/ungraded-quiz-attempts`.
+  - New additive seeder `20260730020300-add-short-answer-quiz-questions.ts` — adds one `short_answer` question per course's Week 1 Quiz (bank size bumped 3→4, `question_count` bumped to match) rather than editing the original Phase 2 seeder in place, since that seeder had already been run against the persistent dev DB and undoing it would have cascade-deleted every quiz attempt taken during Phase 2's browser testing.
+  - 11 new Jest integration tests in `quiz.test.ts` (auth/ownership, exact-pending-set validation, partial-credit score recomputation, concurrent-grade race, queue scoping, response visibility). All 48 backend tests pass.
+- **Frontend**: `QuizTakingPage.tsx` renders a textarea for `short_answer` questions and a distinct "pending review" state (no score/pass-fail shown) when `attempt.status === "submitted"`; also fixed a latent submit-button bug (button enabled on empty-string answers, not just missing ones — harmless for radios, real once a textarea could be typed-then-cleared). New `QuizGradingQueuePage.tsx` + `GradeQuizAttemptPage.tsx` (mirrors the Phase 2 assignment-grading pages), routes at `/instructor/quiz-grading` and `/instructor/quizzes/:quizId/attempts/:attemptId/grade`.
+- **Verified**: all 48 backend tests pass, `tsc --noEmit` clean on both projects. **Full browser click-through done** (registered a student, enrolled, took the quiz with the new short-answer textarea, submitted, saw the pending-review state; logged in as `instructor@trainingportal.local`, saw the attempt in `/instructor/quiz-grading`, opened it, graded it, confirmed the queue cleared; logged back in as the student and confirmed the graded score/attempt history). **Found and fixed one more real bug during this pass**: `GradeQuizAttemptPage` was rendering the raw answer-option UUID instead of the readable answer text for auto-graded (multiple_choice/true_false) responses — fixed by resolving `studentAnswer` against the response's `answers` array before display. Also re-confirmed the project's documented auth-rate-limiter gotcha fires on rapid instructor logins during manual testing (`docker compose restart backend` clears it, as noted below).
+
+**Next possible work** (not started, no plan written yet — would need a fresh EnterPlanMode pass same as Phase 1/2 were): capstone submission system, real `progress_tracking`, instructor/admin dashboards & analytics, production deployment, or the interactive-video-checkpoint feature. See "Not yet built" section below for the full list.
 
 ## Auth rate limiter note
 The Phase 1 auth rate limiter (20 req/15min on `/api/auth/*`) is real and correctly protects production, but it WILL block rapid manual curl-based testing/smoke-testing in this same session (confirmed it happened once already). It's skipped automatically when `NODE_ENV=test` (Jest), but manual curl testing against the dev server can still hit it — if that happens, `docker compose restart backend` clears the in-memory counter. Prefer testing via the browser UI (one request per action) over rapid-fire curl loops when possible.
@@ -71,7 +82,6 @@ The Phase 1 auth rate limiter (20 req/15min on `/api/auth/*`) is real and correc
 
 ## Not yet built (deferred, not part of Phase 2)
 - Capstone project submission system
-- `short_answer` quiz grading (manual instructor review)
 - Progress_tracking table (real per-lesson completion, replacing the naive Phase 1 placeholder)
 - Instructor/admin dashboards, analytics, email notifications
 - Production deployment (S3, staging/prod infra, CI/CD, monitoring)

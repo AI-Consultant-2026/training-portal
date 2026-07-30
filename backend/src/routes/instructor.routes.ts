@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as assignmentsController from "../controllers/assignments.controller";
+import * as quizzesController from "../controllers/quizzes.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 
@@ -10,4 +11,11 @@ instructorRouter.get(
   authenticate,
   authorize("instructor", "admin"),
   assignmentsController.listUngradedForInstructor,
+);
+
+instructorRouter.get(
+  "/ungraded-quiz-attempts",
+  authenticate,
+  authorize("instructor", "admin"),
+  quizzesController.listPendingReviews,
 );

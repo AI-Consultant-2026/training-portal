@@ -80,6 +80,27 @@ export function QuizTakingPage() {
 
   if (submitResult) {
     const { attempt, responses, timedOut, passed } = submitResult;
+
+    if (attempt.status === "submitted") {
+      return (
+        <div className="mx-auto max-w-3xl px-6 py-10">
+          <h1 className="text-2xl font-semibold text-gray-900">{activeAttempt.quiz.title}</h1>
+          <div className="mt-4 rounded-lg border border-gray-200 bg-white p-5">
+            <Alert
+              variant="info"
+              message="Submitted — awaiting instructor review of the short-answer question(s). Your score will be available once grading is complete."
+            />
+            <div className="mt-6 flex items-center gap-4">
+              <Button onClick={handleRetake}>Retake quiz</Button>
+              <Link to={`/quizzes/${id}/attempts`} className="text-sm text-blue-600 hover:underline">
+                View attempt history
+              </Link>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="mx-auto max-w-3xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-gray-900">{activeAttempt.quiz.title}</h1>
@@ -132,20 +153,29 @@ export function QuizTakingPage() {
             <p className="font-medium text-gray-900">
               {index + 1}. {q.questionText}
             </p>
-            <div className="mt-3 flex flex-col gap-2">
-              {q.answers.map((a) => (
-                <label key={a.id} className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name={q.id}
-                    value={a.id}
-                    checked={answers[q.id] === a.id}
-                    onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: a.id }))}
-                  />
-                  {a.answerText}
-                </label>
-              ))}
-            </div>
+            {q.questionType === "short_answer" ? (
+              <textarea
+                className="mt-3 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                rows={3}
+                value={answers[q.id] ?? ""}
+                onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+              />
+            ) : (
+              <div className="mt-3 flex flex-col gap-2">
+                {q.answers.map((a) => (
+                  <label key={a.id} className="flex items-center gap-2 text-sm text-gray-700">
+                    <input
+                      type="radio"
+                      name={q.id}
+                      value={a.id}
+                      checked={answers[q.id] === a.id}
+                      onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: a.id }))}
+                    />
+                    {a.answerText}
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -154,7 +184,7 @@ export function QuizTakingPage() {
         <Button
           onClick={handleSubmit}
           isLoading={submitStatus === "loading"}
-          disabled={Object.keys(answers).length < activeAttempt.questions.length}
+          disabled={activeAttempt.questions.some((q) => !(answers[q.id] ?? "").trim())}
         >
           Submit quiz
         </Button>

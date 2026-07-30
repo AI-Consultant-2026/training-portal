@@ -80,14 +80,22 @@ function serializeGradedResponse(
   answers: QuizAnswer[],
 ) {
   return {
+    id: response.id,
     questionId: response.questionId,
     questionText: question?.questionText ?? null,
     studentAnswer: response.studentAnswer,
     isCorrect: response.isCorrect,
     pointsEarned: response.pointsEarned,
+    points: question?.points ?? null,
     explanation: question?.explanation ?? null,
     answers: answers.map((a) => ({ id: a.id, answerText: a.answerText, isCorrect: a.isCorrect })),
   };
+}
+
+function assertInstructorOwnsCourse(course: Course, user: { id: string; role: string }) {
+  if (user.role === "admin") return;
+  if (user.role === "instructor" && course.instructorId === user.id) return;
+  throw ApiError.forbidden("You do not have permission to access this quiz");
 }
 
 export async function listByModule(moduleId: string): Promise<ReturnType<typeof serializeQuiz>[]> {
@@ -282,7 +290,9 @@ export async function getAttempt(quizId: string, attemptId: string, user: { id: 
     }
   }
 
-  const responses = attempt.status === "graded" ? await QuizResponse.findAll({ where: { attemptId } }) : [];
+  const canSeeResponses =
+    attempt.status === "graded" || (attempt.status === "submitted" && user.role !== "student");
+  const responses = canSeeResponses ? await QuizResponse.findAll({ where: { attemptId } }) : [];
   const questions = await QuizQuestion.findAll({ where: { quizId } });
   const questionsById = new Map(questions.map((q) => [q.id, q]));
 
@@ -330,4 +340,112 @@ export async function listMyAttempts(quizId: string, studentId: string) {
     })),
     bestScore,
   };
+}
+
+export async function listPendingReviewsForInstructor(user: { id: string; role: string }) {
+  const courseWhere = user.role === "admin" ? {} : { instructorId: user.id };
+  const courses = await Course.findAll({ where: courseWhere });
+  const courseIds = courses.map((c) => c.id);
+  if (courseIds.length === 0) return [];
+
+  const modules = await CourseModule.findAll({ where: { courseId: courseIds } });
+  const moduleIds = modules.map((m) => m.id);
+  if (moduleIds.length === 0) return [];
+
+  const quizzes = await Quiz.findAll({ where: { moduleId: moduleIds } });
+  const quizIds = quizzes.map((q) => q.id);
+  if (quizIds.length === 0) return [];
+
+  const attempts = await QuizAttempt.findAll({
+    where: { quizId: quizIds, status: "submitted" },
+    order: [["endTime", "ASC"]],
+  });
+
+  const quizById = new Map(quizzes.map((q) => [q.id, q]));
+  return attempts.map((a) => ({
+    id: a.id,
+    quizId: a.quizId,
+    quizTitle: quizById.get(a.quizId)?.title ?? null,
+    studentId: a.studentId,
+    endTime: a.endTime,
+    attemptNumber: a.attemptNumber,
+  }));
+}
+
+interface GradeResponseInput {
+  responseId: string;
+  pointsEarned: number;
+}
+
+export async function gradeAttempt(
+  attemptId: string,
+  user: { id: string; role: string },
+  grades: GradeResponseInput[],
+) {
+  const attempt = await QuizAttempt.findByPk(attemptId);
+  if (!attempt) {
+    throw ApiError.notFound("Attempt not found");
+  }
+  const { course } = await getQuizWithCourse(attempt.quizId);
+  assertInstructorOwnsCourse(course, user);
+
+  await sequelize.transaction(async (transaction) => {
+    const lockedAttempt = await QuizAttempt.findByPk(attemptId, {
+      transaction,
+      lock: transaction.LOCK.UPDATE,
+    });
+    if (!lockedAttempt) {
+      throw ApiError.notFound("Attempt not found");
+    }
+    if (lockedAttempt.status !== "submitted") {
+      throw ApiError.conflict(
+        lockedAttempt.status === "in_progress"
+          ? "This attempt has not been submitted yet"
+          : "This attempt has already been graded",
+      );
+    }
+
+    const questions = await QuizQuestion.findAll({ where: { quizId: lockedAttempt.quizId }, transaction });
+    const questionsById = new Map(questions.map((q) => [q.id, q]));
+
+    const responses = await QuizResponse.findAll({ where: { attemptId }, transaction });
+    const responsesById = new Map(responses.map((r) => [r.id, r]));
+    const pendingIds = new Set(responses.filter((r) => r.isCorrect === null).map((r) => r.id));
+
+    const submittedIds = new Set(grades.map((g) => g.responseId));
+    const missing = [...pendingIds].filter((id) => !submittedIds.has(id));
+    const unexpected = grades
+      .map((g) => g.responseId)
+      .filter((id) => !pendingIds.has(id));
+    if (missing.length > 0 || unexpected.length > 0) {
+      throw ApiError.badRequest("Grades must cover exactly the pending responses for this attempt", {
+        missing,
+        unexpected,
+      });
+    }
+
+    for (const grade of grades) {
+      const response = responsesById.get(grade.responseId)!;
+      const question = questionsById.get(response.questionId);
+      if (!question) {
+        throw ApiError.badRequest(`Unknown question for response ${grade.responseId}`);
+      }
+      if (grade.pointsEarned < 0 || grade.pointsEarned > question.points) {
+        throw ApiError.badRequest(`pointsEarned for response ${grade.responseId} must be between 0 and ${question.points}`);
+      }
+      response.pointsEarned = grade.pointsEarned;
+      response.isCorrect = grade.pointsEarned >= question.points;
+      response.markedAt = new Date();
+      await response.save({ transaction });
+    }
+
+    const allResponses = await QuizResponse.findAll({ where: { attemptId }, transaction });
+    const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
+    const earnedPoints = allResponses.reduce((sum, r) => sum + (r.pointsEarned ?? 0), 0);
+    lockedAttempt.score = totalPoints > 0 ? Math.round((100 * earnedPoints) / totalPoints) : 0;
+    lockedAttempt.status = "graded";
+    await lockedAttempt.save({ transaction });
+  });
+
+  return getAttempt(attempt.quizId, attemptId, user);
 }

@@ -1,6 +1,8 @@
 import {
   Quiz,
+  QuizAttemptDetail,
   QuizAttemptResult,
+  QuizPendingReview,
   QuizStartResponse,
   QuizSubmitResponse,
 } from "../types/api";
@@ -35,8 +37,8 @@ export async function submitQuizAttempt(input: SubmitQuizInput): Promise<QuizSub
   return res.data;
 }
 
-export async function fetchAttempt(quizId: string, attemptId: string) {
-  const res = await axiosClient.get<{ attempt: QuizAttemptResult }>(
+export async function fetchAttempt(quizId: string, attemptId: string): Promise<QuizAttemptDetail> {
+  const res = await axiosClient.get<{ attempt: QuizAttemptDetail }>(
     `/quizzes/${quizId}/attempts/${attemptId}`,
   );
   return res.data.attempt;
@@ -47,4 +49,24 @@ export async function fetchMyAttempts(quizId: string) {
     `/quizzes/${quizId}/attempts`,
   );
   return res.data;
+}
+
+export async function fetchPendingQuizReviews(): Promise<QuizPendingReview[]> {
+  const res = await axiosClient.get<{ attempts: QuizPendingReview[] }>(
+    "/instructor/ungraded-quiz-attempts",
+  );
+  return res.data.attempts;
+}
+
+export interface GradeQuizAttemptInput {
+  attemptId: string;
+  responses: { responseId: string; pointsEarned: number }[];
+}
+
+export async function gradeQuizAttempt(input: GradeQuizAttemptInput): Promise<QuizAttemptDetail> {
+  const res = await axiosClient.patch<{ attempt: QuizAttemptDetail }>(
+    `/quiz-attempts/${input.attemptId}/grade`,
+    { responses: input.responses },
+  );
+  return res.data.attempt;
 }
