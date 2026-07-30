@@ -3,6 +3,7 @@ import { sequelize } from "../src/models";
 afterEach(async () => {
   const tables = [
     "refresh_tokens",
+    "progress_tracking",
     "quiz_responses",
     "quiz_attempts",
     "quiz_answers",

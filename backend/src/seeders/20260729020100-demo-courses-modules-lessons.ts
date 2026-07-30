@@ -7,6 +7,8 @@ interface LessonSeed {
   content: string;
   order: number;
   durationMinutes: number;
+  videoUrl?: string;
+  resources?: { links: { label: string; url: string }[] };
 }
 
 interface ModuleSeed {
@@ -50,6 +52,13 @@ const COURSES: CourseSeed[] = [
             content: "Confidentiality, Integrity, and Availability as the foundation of security.",
             order: 2,
             durationMinutes: 25,
+            videoUrl: "https://www.youtube.com/watch?v=CIA-triad-explained",
+            resources: {
+              links: [
+                { label: "NIST: Security and Privacy Controls", url: "https://csrc.nist.gov/publications/sp800" },
+                { label: "OWASP Top 10", url: "https://owasp.org/www-project-top-ten/" },
+              ],
+            },
           },
         ],
       },
@@ -229,8 +238,8 @@ module.exports = {
             module_id: moduleId,
             title: lesson.title,
             content: lesson.content,
-            video_url: null,
-            resources: JSON.stringify({}),
+            video_url: lesson.videoUrl ?? null,
+            resources: JSON.stringify(lesson.resources ?? {}),
             order: lesson.order,
             duration_minutes: lesson.durationMinutes,
             created_at: now,

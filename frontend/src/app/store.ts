@@ -4,6 +4,7 @@ import assignmentsReducer from "../features/assignments/assignmentsSlice";
 import authReducer from "../features/auth/authSlice";
 import coursesReducer from "../features/courses/coursesSlice";
 import enrollmentsReducer from "../features/enrollments/enrollmentsSlice";
+import lessonsReducer from "../features/lessons/lessonsSlice";
 import quizzesReducer from "../features/quizzes/quizzesSlice";
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     enrollments: enrollmentsReducer,
     assignments: assignmentsReducer,
     quizzes: quizzesReducer,
+    lessons: lessonsReducer,
   },
 });
 

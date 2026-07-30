@@ -30,3 +30,9 @@ coursesRouter.delete("/:id", authenticate, authorize("admin"), coursesController
 
 coursesRouter.get("/:id/modules", modulesController.listModulesForCourse);
 coursesRouter.post("/:id/enroll", authenticate, authorize("student"), enrollmentsController.enrollInCourse);
+coursesRouter.get(
+  "/:id/progress",
+  authenticate,
+  authorize("student"),
+  coursesController.getCourseProgress,
+);

@@ -1,4 +1,4 @@
-import { Course, CourseModule } from "../types/api";
+import { Course, CourseModule, CourseProgress } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchCourses(): Promise<Course[]> {
@@ -14,4 +14,9 @@ export async function fetchCourseBySlug(slug: string): Promise<Course> {
 export async function fetchModulesForCourse(courseId: string): Promise<CourseModule[]> {
   const res = await axiosClient.get<{ modules: CourseModule[] }>(`/courses/${courseId}/modules`);
   return res.data.modules;
+}
+
+export async function fetchCourseProgress(courseId: string): Promise<CourseProgress> {
+  const res = await axiosClient.get<CourseProgress>(`/courses/${courseId}/progress`);
+  return res.data;
 }

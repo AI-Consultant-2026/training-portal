@@ -9,6 +9,7 @@ import { RegisterPage } from "../features/auth/RegisterPage";
 import { CourseDetailPage } from "../features/courses/CourseDetailPage";
 import { CourseListPage } from "../features/courses/CourseListPage";
 import { StudentDashboardPage } from "../features/dashboard/StudentDashboardPage";
+import { LessonDetailPage } from "../features/lessons/LessonDetailPage";
 import { GradeQuizAttemptPage } from "../features/quizzes/GradeQuizAttemptPage";
 import { QuizGradingQueuePage } from "../features/quizzes/QuizGradingQueuePage";
 import { QuizResultsPage } from "../features/quizzes/QuizResultsPage";
@@ -26,6 +27,7 @@ export function AppRouter() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/courses" element={<CourseListPage />} />
       <Route path="/courses/:slug" element={<CourseDetailPage />} />
+      <Route path="/lessons/:id" element={<LessonDetailPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/assignments/:id" element={<AssignmentDetailPage />} />

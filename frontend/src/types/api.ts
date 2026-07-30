@@ -39,6 +39,35 @@ export interface CourseModule {
   createdAt: string;
 }
 
+export interface LessonResourceLink {
+  label: string;
+  url: string;
+}
+
+export interface Lesson {
+  id: string;
+  moduleId: string;
+  title: string;
+  content: string;
+  videoUrl: string | null;
+  resources: { links?: LessonResourceLink[] };
+  order: number;
+  durationMinutes: number;
+}
+
+export interface CourseProgress {
+  totalLessons: number;
+  completedLessons: number;
+  progressPercent: number;
+  completedLessonIds: string[];
+}
+
+export interface MarkLessonCompleteResult {
+  completed: true;
+  alreadyCompleted: boolean;
+  courseProgress: { totalLessons: number; completedLessons: number; progressPercent: number };
+}
+
 export type EnrollmentStatus = "active" | "completed" | "dropped" | "suspended";
 
 export interface Enrollment {

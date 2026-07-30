@@ -13,6 +13,11 @@ export const getLesson = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const markLessonComplete = asyncHandler(async (req: Request, res: Response) => {
-  await lessonService.markLessonComplete(req.params.id, req.user!.id);
-  res.status(204).send();
+  const result = await lessonService.markLessonComplete(req.params.id, req.user!.id);
+  res.json(result);
+});
+
+export const getMyLessonCompletion = asyncHandler(async (req: Request, res: Response) => {
+  const completed = await lessonService.isLessonCompletedByStudent(req.params.id, req.user!.id);
+  res.json({ completed });
 });

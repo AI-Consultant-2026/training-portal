@@ -5,6 +5,7 @@ import { Course, initCourseModel } from "./course.model";
 import { CourseModule, initCourseModuleModel } from "./module.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
 import { Lesson, initLessonModel } from "./lesson.model";
+import { ProgressTracking, initProgressTrackingModel } from "./progressTracking.model";
 import { Quiz, initQuizModel } from "./quiz.model";
 import { QuizAnswer, initQuizAnswerModel } from "./quizAnswer.model";
 import { QuizAttempt, initQuizAttemptModel } from "./quizAttempt.model";
@@ -39,6 +40,7 @@ initQuizQuestionModel(sequelize);
 initQuizAnswerModel(sequelize);
 initQuizAttemptModel(sequelize);
 initQuizResponseModel(sequelize);
+initProgressTrackingModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -88,6 +90,12 @@ QuizResponse.belongsTo(QuizAttempt, { foreignKey: "attemptId", as: "attempt" });
 QuizQuestion.hasMany(QuizResponse, { foreignKey: "questionId", as: "responses" });
 QuizResponse.belongsTo(QuizQuestion, { foreignKey: "questionId", as: "question" });
 
+User.hasMany(ProgressTracking, { foreignKey: "studentId", as: "progressRecords" });
+ProgressTracking.belongsTo(User, { foreignKey: "studentId", as: "student" });
+
+Lesson.hasMany(ProgressTracking, { foreignKey: "lessonId", as: "progressRecords" });
+ProgressTracking.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
+
 export {
   Assignment,
   AssignmentSubmission,
@@ -95,6 +103,7 @@ export {
   CourseModule,
   Enrollment,
   Lesson,
+  ProgressTracking,
   Quiz,
   QuizAnswer,
   QuizAttempt,

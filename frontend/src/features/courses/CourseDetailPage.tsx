@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchModuleAssignments } from "../../api/assignments.api";
-import { fetchModulesForCourse } from "../../api/courses.api";
+import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
+import { fetchModuleLessons } from "../../api/lessons.api";
 import { fetchModuleQuizzes } from "../../api/quizzes.api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
+import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
-import { Assignment, CourseModule, Quiz } from "../../types/api";
+import { Assignment, CourseModule, CourseProgress, Lesson, Quiz } from "../../types/api";
 import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 
 interface ModuleContent {
+  lessons: Lesson[];
   assignments: Assignment[];
   quizzes: Quiz[];
 }
@@ -24,6 +27,7 @@ export function CourseDetailPage() {
   const { user } = useAppSelector((state) => state.auth);
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [moduleContent, setModuleContent] = useState<Record<string, ModuleContent>>({});
+  const [courseProgress, setCourseProgress] = useState<CourseProgress | null>(null);
   const [enrolling, setEnrolling] = useState(false);
 
   useEffect(() => {
@@ -31,6 +35,12 @@ export function CourseDetailPage() {
       dispatch(fetchCourseBySlug(slug));
     }
   }, [dispatch, slug]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchMyEnrollments());
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (course) {
@@ -41,15 +51,22 @@ export function CourseDetailPage() {
   useEffect(() => {
     if (!user || modules.length === 0) return;
     modules.forEach(async (mod) => {
-      const [assignments, quizzes] = await Promise.all([
+      const [lessons, assignments, quizzes] = await Promise.all([
+        fetchModuleLessons(mod.id),
         fetchModuleAssignments(mod.id),
         fetchModuleQuizzes(mod.id),
       ]);
-      setModuleContent((prev) => ({ ...prev, [mod.id]: { assignments, quizzes } }));
+      setModuleContent((prev) => ({ ...prev, [mod.id]: { lessons, assignments, quizzes } }));
     });
   }, [modules, user]);
 
   const isEnrolled = course ? enrollments.some((e) => e.courseId === course.id) : false;
+
+  useEffect(() => {
+    if (course && user?.role === "student" && isEnrolled) {
+      fetchCourseProgress(course.id).then(setCourseProgress);
+    }
+  }, [course, user, isEnrolled]);
 
   async function handleEnroll() {
     if (!course) return;
@@ -94,6 +111,16 @@ export function CourseDetailPage() {
         </div>
       )}
 
+      {courseProgress && (
+        <div className="mt-6">
+          <ProgressBar percent={courseProgress.progressPercent} />
+          <p className="mt-1 text-sm text-gray-500">
+            {courseProgress.completedLessons} of {courseProgress.totalLessons} lessons complete (
+            {courseProgress.progressPercent}%)
+          </p>
+        </div>
+      )}
+
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Modules</h2>
       <ul className="mt-3 flex flex-col gap-2">
         {modules.map((mod) => {
@@ -104,8 +131,24 @@ export function CourseDetailPage() {
               <p className="font-medium text-gray-900">{mod.title}</p>
               <p className="text-sm text-gray-600">{mod.description}</p>
 
-              {content && (content.assignments.length > 0 || content.quizzes.length > 0) && (
+              {content &&
+                (content.lessons.length > 0 ||
+                  content.assignments.length > 0 ||
+                  content.quizzes.length > 0) && (
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-3">
+                  {content.lessons.map((lesson) => {
+                    const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
+                    return (
+                      <Link
+                        key={lesson.id}
+                        to={`/lessons/${lesson.id}`}
+                        className="text-sm font-medium text-blue-600 hover:underline"
+                      >
+                        Lesson: {lesson.title}
+                        {isCompleted && <span className="ml-1 text-green-700">(completed)</span>}
+                      </Link>
+                    );
+                  })}
                   {content.assignments.map((a) => (
                     <Link
                       key={a.id}

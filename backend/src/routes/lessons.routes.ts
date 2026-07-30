@@ -6,6 +6,12 @@ import { authorize } from "../middleware/authorize";
 export const lessonsRouter = Router();
 
 lessonsRouter.get("/:id", lessonsController.getLesson);
+lessonsRouter.get(
+  "/:id/my-completion",
+  authenticate,
+  authorize("student"),
+  lessonsController.getMyLessonCompletion,
+);
 lessonsRouter.post(
   "/:id/mark-complete",
   authenticate,
