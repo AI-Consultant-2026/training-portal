@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { attachStore } from "../api/axiosClient";
+import adminReducer from "../features/admin/adminSlice";
 import assignmentsReducer from "../features/assignments/assignmentsSlice";
 import authReducer from "../features/auth/authSlice";
 import coursesReducer from "../features/courses/coursesSlice";
@@ -15,6 +16,7 @@ export const store = configureStore({
     assignments: assignmentsReducer,
     quizzes: quizzesReducer,
     lessons: lessonsReducer,
+    admin: adminReducer,
   },
 });
 

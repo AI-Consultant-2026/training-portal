@@ -26,6 +26,11 @@ export function Navbar() {
             <Link to="/dashboard" className="text-gray-600 hover:text-gray-900">
               Dashboard
             </Link>
+            {user.role === "admin" && (
+              <Link to="/admin" className="text-gray-600 hover:text-gray-900">
+                Admin
+              </Link>
+            )}
             <span className="text-gray-500">{user.firstName}</span>
             <button onClick={handleLogout} className="text-gray-600 hover:text-gray-900">
               Log out

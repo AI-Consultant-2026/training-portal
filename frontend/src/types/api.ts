@@ -199,3 +199,33 @@ export interface QuizPendingReview {
   endTime: string | null;
   attemptNumber: number;
 }
+
+export interface AdminStats {
+  users: {
+    total: number;
+    byRole: Record<UserRole, number>;
+  };
+  courses: {
+    total: number;
+    byStatus: Record<CourseStatus, number>;
+    list: { id: string; title: string; status: CourseStatus; enrollmentCount: number }[];
+  };
+  enrollments: {
+    total: number;
+    byStatus: Record<EnrollmentStatus, number>;
+    averageProgressPercent: number | null;
+  };
+  assignments: {
+    totalSubmissions: number;
+    pendingGrading: number;
+    graded: number;
+    averageScore: number | null;
+  };
+  quizzes: {
+    totalAttempts: number;
+    pendingGrading: number;
+    graded: number;
+    averageScore: number | null;
+    passRate: number | null;
+  };
+}

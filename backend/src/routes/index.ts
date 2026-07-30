@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { adminRouter } from "./admin.routes";
 import { assignmentsRouter } from "./assignments.routes";
 import { assignmentSubmissionsRouter } from "./assignmentSubmissions.routes";
 import { authRouter } from "./auth.routes";
@@ -24,5 +25,6 @@ apiRouter.use("/enrollments", enrollmentsRouter);
 apiRouter.use("/assignments", assignmentsRouter);
 apiRouter.use("/assignment-submissions", assignmentSubmissionsRouter);
 apiRouter.use("/instructor", instructorRouter);
+apiRouter.use("/admin", adminRouter);
 apiRouter.use("/quizzes", quizzesRouter);
 apiRouter.use("/quiz-attempts", quizAttemptsRouter);
