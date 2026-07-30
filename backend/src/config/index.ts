@@ -15,7 +15,6 @@ export const config = {
   bcryptSaltRounds: Number(process.env.BCRYPT_SALT_ROUNDS ?? 10),
   jwt: {
     accessSecret: requireEnv("JWT_ACCESS_SECRET"),
-    refreshSecret: requireEnv("JWT_REFRESH_SECRET"),
     accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? "15m",
     refreshExpiresInDays: parseRefreshDays(process.env.JWT_REFRESH_EXPIRES_IN ?? "7d"),
   },

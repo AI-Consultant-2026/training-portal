@@ -11,6 +11,7 @@ function buildConfig() {
     url: databaseUrl,
     dialect: "postgres",
     logging: false,
+    dialectOptions: nodeEnv === "production" ? { ssl: { require: true, rejectUnauthorized: false } } : {},
   };
 }
 

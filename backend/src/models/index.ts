@@ -22,9 +22,14 @@ if (!databaseUrl) {
   throw new Error("Missing required environment variable: DATABASE_URL");
 }
 
+// Render's managed Postgres (and most hosted providers) require SSL on their public
+// connection string; local/test Postgres never runs with NODE_ENV=production, so this
+// is inert everywhere except a real production deploy.
 export const sequelize = new Sequelize(databaseUrl, {
   dialect: "postgres",
   logging: false,
+  dialectOptions:
+    process.env.NODE_ENV === "production" ? { ssl: { require: true, rejectUnauthorized: false } } : {},
 });
 
 initUserModel(sequelize);

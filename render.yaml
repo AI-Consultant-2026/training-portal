@@ -1,0 +1,49 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Applying this creates one web service (built from the root Dockerfile) and one
+# managed Postgres database. Plan names below (`starter`, `basic-256mb`) are current
+# as of when this was written — check Render's dashboard for current tier names/pricing
+# before applying, since these change over time and aren't something this repo controls.
+
+databases:
+  - name: training-portal-db
+    plan: basic-256mb
+    databaseName: training_portal
+    user: training_portal
+
+services:
+  - name: training-portal
+    type: web
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    disk:
+      name: uploads
+      mountPath: /var/data/uploads
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: training-portal-db
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: BCRYPT_SALT_ROUNDS
+        value: "10"
+      - key: STORAGE_DRIVER
+        value: local
+      - key: UPLOAD_ROOT
+        value: /var/data/uploads
+      # Same-origin in this architecture (the service serves its own frontend), so this
+      # is mostly defense-in-depth rather than something production traffic depends on.
+      # Update to the service's actual assigned *.onrender.com URL (or custom domain)
+      # after the first deploy if you didn't pick the service name in advance.
+      - key: CORS_ORIGIN
+        value: https://training-portal.onrender.com
