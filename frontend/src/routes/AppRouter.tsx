@@ -5,8 +5,10 @@ import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
 import { AssignmentDetailPage } from "../features/assignments/AssignmentDetailPage";
 import { GradeSubmissionPage } from "../features/assignments/GradeSubmissionPage";
 import { InstructorGradingQueuePage } from "../features/assignments/InstructorGradingQueuePage";
+import { ForgotPasswordPage } from "../features/auth/ForgotPasswordPage";
 import { LoginPage } from "../features/auth/LoginPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
+import { ResetPasswordPage } from "../features/auth/ResetPasswordPage";
 import { CapstoneDetailPage } from "../features/capstones/CapstoneDetailPage";
 import { CapstoneGradingQueuePage } from "../features/capstones/CapstoneGradingQueuePage";
 import { GradeCapstoneSubmissionPage } from "../features/capstones/GradeCapstoneSubmissionPage";
@@ -29,6 +31,8 @@ export function AppRouter() {
       <Route path="/" element={<Navigate to="/courses" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/courses" element={<CourseListPage />} />
       <Route path="/courses/:slug" element={<CourseDetailPage />} />
       <Route path="/lessons/:id" element={<LessonDetailPage />} />

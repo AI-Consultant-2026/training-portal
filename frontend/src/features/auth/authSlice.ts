@@ -8,6 +8,10 @@ export interface AuthState {
   status: "idle" | "loading" | "succeeded" | "failed";
   bootstrapped: boolean;
   error: string | null;
+  passwordReset: {
+    status: "idle" | "loading" | "succeeded" | "failed";
+    error: string | null;
+  };
 }
 
 const initialState: AuthState = {
@@ -16,6 +20,10 @@ const initialState: AuthState = {
   status: "idle",
   bootstrapped: false,
   error: null,
+  passwordReset: {
+    status: "idle",
+    error: null,
+  },
 };
 
 function extractErrorMessage(err: unknown): string {
@@ -57,6 +65,28 @@ export const bootstrapAuth = createAsyncThunk("auth/bootstrap", async (_: void, 
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   await authApi.logout();
 });
+
+export const requestPasswordReset = createAsyncThunk(
+  "auth/requestPasswordReset",
+  async (input: authApi.PasswordResetRequestInput, { rejectWithValue }) => {
+    try {
+      await authApi.requestPasswordReset(input);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
+
+export const confirmPasswordReset = createAsyncThunk(
+  "auth/confirmPasswordReset",
+  async (input: authApi.PasswordResetConfirmInput, { rejectWithValue }) => {
+    try {
+      await authApi.confirmPasswordReset(input);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -111,6 +141,28 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.accessToken = null;
+      })
+      .addCase(requestPasswordReset.pending, (state) => {
+        state.passwordReset.status = "loading";
+        state.passwordReset.error = null;
+      })
+      .addCase(requestPasswordReset.fulfilled, (state) => {
+        state.passwordReset.status = "succeeded";
+      })
+      .addCase(requestPasswordReset.rejected, (state, action) => {
+        state.passwordReset.status = "failed";
+        state.passwordReset.error = (action.payload as string) ?? "Something went wrong";
+      })
+      .addCase(confirmPasswordReset.pending, (state) => {
+        state.passwordReset.status = "loading";
+        state.passwordReset.error = null;
+      })
+      .addCase(confirmPasswordReset.fulfilled, (state) => {
+        state.passwordReset.status = "succeeded";
+      })
+      .addCase(confirmPasswordReset.rejected, (state, action) => {
+        state.passwordReset.status = "failed";
+        state.passwordReset.error = (action.payload as string) ?? "Something went wrong";
       });
   },
 });

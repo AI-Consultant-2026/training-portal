@@ -2,8 +2,10 @@ import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { Course, User } from "../../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 async function createInstructor() {
   const passwordHash = await bcrypt.hash("Password123!", 4);
@@ -117,10 +119,15 @@ describe("Courses", () => {
     });
     const token = await loginAs("jest-student3@example.com", "Password123!");
 
+    memAdapter.clear();
     const firstEnroll = await request(app)
       .post(`/api/courses/${course.id}/enroll`)
       .set("Authorization", `Bearer ${token}`);
     expect(firstEnroll.status).toBe(201);
+
+    const enrollEmail = memAdapter.sentMessages.find((m) => m.to === "jest-student3@example.com");
+    expect(enrollEmail).toBeDefined();
+    expect(enrollEmail!.text).toContain(course.title);
 
     const secondEnroll = await request(app)
       .post(`/api/courses/${course.id}/enroll`)

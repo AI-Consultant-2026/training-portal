@@ -12,8 +12,10 @@ import {
   QuizResponse,
   User,
 } from "../../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 async function createInstructor(email = "jest-instructor@example.com") {
   const passwordHash = await bcrypt.hash("Password123!", 4);
@@ -465,6 +467,12 @@ describe("Quiz short-answer manual grading", () => {
     expect(res.status).toBe(200);
     expect(res.body.attempt.status).toBe("graded");
     expect(res.body.attempt.score).toBe(100);
+
+    const gradedEmail = memAdapter.sentMessages.find(
+      (m) => m.to === student.email && m.subject.includes("graded"),
+    );
+    expect(gradedEmail).toBeDefined();
+    expect(gradedEmail!.text).toContain("100");
 
     const graded = await QuizResponse.findByPk(pending.id);
     expect(graded!.isCorrect).toBe(true);

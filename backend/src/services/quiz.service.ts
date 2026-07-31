@@ -1,3 +1,4 @@
+import * as emails from "../emails";
 import {
   Course,
   CourseModule,
@@ -7,6 +8,7 @@ import {
   QuizAttempt,
   QuizQuestion,
   QuizResponse,
+  User,
   sequelize,
 } from "../models";
 import { ApiError } from "../utils/ApiError";
@@ -386,7 +388,7 @@ export async function gradeAttempt(
   if (!attempt) {
     throw ApiError.notFound("Attempt not found");
   }
-  const { course } = await getQuizWithCourse(attempt.quizId);
+  const { quiz, course } = await getQuizWithCourse(attempt.quizId);
   assertInstructorOwnsCourse(course, user);
 
   await sequelize.transaction(async (transaction) => {
@@ -447,5 +449,12 @@ export async function gradeAttempt(
     await lockedAttempt.save({ transaction });
   });
 
-  return getAttempt(attempt.quizId, attemptId, user);
+  const result = await getAttempt(attempt.quizId, attemptId, user);
+
+  const student = await User.findByPk(attempt.studentId);
+  if (student) {
+    await emails.sendQuizGradedEmail(student, quiz, course, result.score);
+  }
+
+  return result;
 }

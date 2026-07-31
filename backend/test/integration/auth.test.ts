@@ -1,7 +1,9 @@
 import request from "supertest";
 import { createApp } from "../../src/app";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 const validRegistration = {
   email: "jest-student@example.com",
@@ -18,6 +20,12 @@ describe("Auth flow", () => {
     expect(res.body.user.email).toBe(validRegistration.email);
     expect(res.body.accessToken).toEqual(expect.any(String));
     expect(res.headers["set-cookie"]?.[0]).toMatch(/^rt=/);
+
+    expect(memAdapter.sentMessages).toHaveLength(1);
+    expect(memAdapter.sentMessages[0]).toMatchObject({
+      to: validRegistration.email,
+      subject: expect.stringContaining("Welcome"),
+    });
   });
 
   it("rejects registration with a weak password", async () => {
@@ -79,5 +87,41 @@ describe("Auth flow", () => {
 
     const secondRefreshRes = await agent.post("/api/auth/refresh");
     expect(secondRefreshRes.status).toBe(401);
+  });
+
+  it("sends a password reset email with a working reset link, and lets the user log in with the new password", async () => {
+    await request(app).post("/api/auth/register").send(validRegistration);
+    memAdapter.clear();
+
+    const requestRes = await request(app)
+      .post("/api/auth/password-reset")
+      .send({ email: validRegistration.email });
+    expect(requestRes.status).toBe(202);
+
+    expect(memAdapter.sentMessages).toHaveLength(1);
+    const resetMessage = memAdapter.sentMessages[0];
+    expect(resetMessage.to).toBe(validRegistration.email);
+    const match = resetMessage.text.match(/\/reset-password\?token=(\S+)/);
+    expect(match).not.toBeNull();
+    const token = match![1];
+
+    const confirmRes = await request(app)
+      .post("/api/auth/password-reset/confirm")
+      .send({ token, password: "NewPassword456!" });
+    expect(confirmRes.status).toBe(200);
+
+    const loginRes = await request(app)
+      .post("/api/auth/login")
+      .send({ email: validRegistration.email, password: "NewPassword456!" });
+    expect(loginRes.status).toBe(200);
+  });
+
+  it("does not send an email or reveal whether the address exists for an unknown email", async () => {
+    const res = await request(app)
+      .post("/api/auth/password-reset")
+      .send({ email: "no-such-user@example.com" });
+
+    expect(res.status).toBe(202);
+    expect(memAdapter.sentMessages).toHaveLength(0);
   });
 });

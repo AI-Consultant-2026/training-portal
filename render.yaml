@@ -47,3 +47,18 @@ services:
       # was taken) — update again if a custom domain is added later.
       - key: CORS_ORIGIN
         value: https://training-portal-6a2k.onrender.com
+      # No SMTP provider is chosen yet - email sends are best-effort and silently no-op until
+      # these are set for real in the Render dashboard (sync: false means Render won't overwrite
+      # a manually-set value on the next Blueprint apply). See docs/DEPLOYMENT.md.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_SECURE
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM_ADDRESS
+        sync: false

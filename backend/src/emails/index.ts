@@ -1,0 +1,60 @@
+import { User } from "../models";
+import { emailAdapter, EmailMessage } from "../utils/email";
+import { logger } from "../utils/logger";
+import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
+import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
+import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
+import { buildPasswordResetEmail } from "./templates/passwordReset";
+import { buildQuizGradedEmail } from "./templates/quizGraded";
+import { buildWelcomeEmail } from "./templates/welcome";
+
+async function sendEmail(message: EmailMessage): Promise<void> {
+  try {
+    await emailAdapter.send(message);
+  } catch (err) {
+    logger.error(`Failed to send email (to=${message.to}, subject="${message.subject}")`, err);
+  }
+}
+
+export async function sendWelcomeEmail(user: User): Promise<void> {
+  await sendEmail(buildWelcomeEmail(user));
+}
+
+export async function sendPasswordResetEmail(user: User, resetUrl: string): Promise<void> {
+  await sendEmail(buildPasswordResetEmail(user, resetUrl));
+}
+
+export async function sendEnrollmentConfirmationEmail(
+  user: User,
+  course: { title: string },
+): Promise<void> {
+  await sendEmail(buildEnrollmentConfirmationEmail(user, course));
+}
+
+export async function sendAssignmentGradedEmail(
+  user: User,
+  assignment: { title: string },
+  course: { title: string },
+  submission: { score: number | null; feedback: string | null },
+): Promise<void> {
+  await sendEmail(buildAssignmentGradedEmail(user, assignment, course, submission));
+}
+
+export async function sendQuizGradedEmail(
+  user: User,
+  quiz: { title: string },
+  course: { title: string },
+  score: number | null,
+): Promise<void> {
+  await sendEmail(buildQuizGradedEmail(user, quiz, course, score));
+}
+
+export async function sendCapstoneGradedEmail(
+  user: User,
+  capstone: { title: string },
+  course: { title: string },
+  score: number,
+  feedback: string | null | undefined,
+): Promise<void> {
+  await sendEmail(buildCapstoneGradedEmail(user, capstone, course, score, feedback));
+}

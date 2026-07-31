@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { config } from "../config";
+import * as emails from "../emails";
 import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
-import { logger } from "../utils/logger";
 import {
   findValidRefreshToken,
   generateAccessToken,
@@ -49,6 +49,8 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
 
   const accessToken = generateAccessToken(user);
   const refreshToken = await issueRefreshToken(user.id);
+
+  await emails.sendWelcomeEmail(user);
 
   return { user, accessToken, refreshToken };
 }
@@ -105,8 +107,8 @@ export async function requestPasswordReset(email: string): Promise<void> {
     expiresIn: "1h",
   });
 
-  // No email provider is wired up yet (Phase 1 stub) - log so the token can be used manually in dev/testing.
-  logger.info(`Password reset requested for ${email}. Reset token: ${resetToken}`);
+  const resetUrl = `${config.corsOrigin}/reset-password?token=${resetToken}`;
+  await emails.sendPasswordResetEmail(user, resetUrl);
 }
 
 export async function confirmPasswordReset(token: string, newPassword: string): Promise<void> {

@@ -1,6 +1,9 @@
 import { sequelize } from "../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../src/utils/email";
 
 afterEach(async () => {
+  (emailAdapter as MemoryEmailAdapter).clear();
+
   const tables = [
     "refresh_tokens",
     "progress_tracking",

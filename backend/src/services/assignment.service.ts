@@ -1,4 +1,5 @@
-import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment } from "../models";
+import * as emails from "../emails";
+import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { storageAdapter } from "../utils/storage";
 
@@ -216,6 +217,11 @@ export async function grade(submissionId: string, user: { id: string; role: stri
   submission.feedback = input.feedback ?? null;
   submission.gradedDate = new Date();
   await submission.save();
+
+  const student = await User.findByPk(submission.studentId);
+  if (student) {
+    await emails.sendAssignmentGradedEmail(student, assignment, course, submission);
+  }
 
   return serializeSubmission(submission, assignment.dueDate);
 }

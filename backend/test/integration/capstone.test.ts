@@ -2,8 +2,10 @@ import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { Capstone, CapstoneSubmission, Course, CourseModule, Enrollment, User } from "../../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 async function createInstructor(email = "jest-instructor@example.com") {
   const passwordHash = await bcrypt.hash("Password123!", 4);
@@ -372,6 +374,12 @@ describe("Capstones", () => {
 
       const enrollment = await Enrollment.findOne({ where: { courseId: course.id, studentId: student.id } });
       expect(enrollment!.grade).toBe("88");
+
+      const gradedEmail = memAdapter.sentMessages.find(
+        (m) => m.to === student.email && m.subject.includes("graded"),
+      );
+      expect(gradedEmail).toBeDefined();
+      expect(gradedEmail!.text).toContain("88");
     });
 
     it("still grades successfully when no enrollment row exists", async () => {

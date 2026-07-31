@@ -2,8 +2,10 @@ import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment, User } from "../../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 async function createInstructor(email = "jest-instructor@example.com") {
   const passwordHash = await bcrypt.hash("Password123!", 4);
@@ -154,6 +156,12 @@ describe("Assignments", () => {
       .send({ score: 90, feedback: "Great work" });
     expect(gradeRes.status).toBe(200);
     expect(gradeRes.body.submission.status).toBe("graded");
+
+    const gradedEmail = memAdapter.sentMessages.find(
+      (m) => m.to === student.email && m.subject.includes("graded"),
+    );
+    expect(gradedEmail).toBeDefined();
+    expect(gradedEmail!.text).toContain("Great work");
 
     const thirdSubmit = await request(app)
       .post(`/api/assignments/${assignment.id}/submit`)

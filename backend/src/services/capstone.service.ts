@@ -1,4 +1,5 @@
-import { Capstone, CapstoneSubmission, Course, Enrollment, sequelize } from "../models";
+import * as emails from "../emails";
+import { Capstone, CapstoneSubmission, Course, Enrollment, User, sequelize } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { storageAdapter } from "../utils/storage";
@@ -245,5 +246,11 @@ export async function grade(submissionId: string, user: { id: string; role: stri
   });
 
   const updated = await CapstoneSubmission.findByPk(submissionId);
+
+  const student = await User.findByPk(updated!.studentId);
+  if (student) {
+    await emails.sendCapstoneGradedEmail(student, capstone, course, input.score, input.feedback);
+  }
+
   return serializeSubmission(updated!, capstone.dueDate);
 }

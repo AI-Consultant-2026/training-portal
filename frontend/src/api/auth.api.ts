@@ -13,6 +13,15 @@ export interface LoginInput {
   password: string;
 }
 
+export interface PasswordResetRequestInput {
+  email: string;
+}
+
+export interface PasswordResetConfirmInput {
+  token: string;
+  password: string;
+}
+
 export interface AuthResponse {
   user: User;
   accessToken: string;
@@ -35,4 +44,12 @@ export async function refresh(): Promise<AuthResponse> {
 
 export async function logout(): Promise<void> {
   await axiosClient.post("/auth/logout");
+}
+
+export async function requestPasswordReset(input: PasswordResetRequestInput): Promise<void> {
+  await axiosClient.post("/auth/password-reset", input);
+}
+
+export async function confirmPasswordReset(input: PasswordResetConfirmInput): Promise<void> {
+  await axiosClient.post("/auth/password-reset/confirm", input);
 }

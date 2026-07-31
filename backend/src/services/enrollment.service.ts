@@ -1,5 +1,6 @@
 import { Transaction } from "sequelize";
-import { Course, Enrollment } from "../models";
+import * as emails from "../emails";
+import { Course, Enrollment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 
 export async function enrollStudent(courseId: string, studentId: string): Promise<Enrollment> {
@@ -13,7 +14,14 @@ export async function enrollStudent(courseId: string, studentId: string): Promis
     throw ApiError.conflict("You are already enrolled in this course");
   }
 
-  return Enrollment.create({ courseId, studentId });
+  const enrollment = await Enrollment.create({ courseId, studentId });
+
+  const student = await User.findByPk(studentId);
+  if (student) {
+    await emails.sendEnrollmentConfirmationEmail(student, course);
+  }
+
+  return enrollment;
 }
 
 export async function listMyEnrollments(studentId: string): Promise<Enrollment[]> {
