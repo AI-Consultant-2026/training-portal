@@ -4,6 +4,8 @@ afterEach(async () => {
   const tables = [
     "refresh_tokens",
     "progress_tracking",
+    "capstone_submissions",
+    "capstones",
     "quiz_responses",
     "quiz_attempts",
     "quiz_answers",

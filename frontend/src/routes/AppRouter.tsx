@@ -7,6 +7,9 @@ import { GradeSubmissionPage } from "../features/assignments/GradeSubmissionPage
 import { InstructorGradingQueuePage } from "../features/assignments/InstructorGradingQueuePage";
 import { LoginPage } from "../features/auth/LoginPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
+import { CapstoneDetailPage } from "../features/capstones/CapstoneDetailPage";
+import { CapstoneGradingQueuePage } from "../features/capstones/CapstoneGradingQueuePage";
+import { GradeCapstoneSubmissionPage } from "../features/capstones/GradeCapstoneSubmissionPage";
 import { CourseDetailPage } from "../features/courses/CourseDetailPage";
 import { CourseListPage } from "../features/courses/CourseListPage";
 import { StudentDashboardPage } from "../features/dashboard/StudentDashboardPage";
@@ -32,6 +35,7 @@ export function AppRouter() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
+        <Route path="/capstones/:id" element={<CapstoneDetailPage />} />
         <Route path="/quizzes/:id" element={<QuizTakingPage />} />
         <Route path="/quizzes/:id/attempts" element={<QuizResultsPage />} />
         <Route element={<RoleRoute allowedRoles={["instructor", "admin"]} />}>
@@ -41,6 +45,11 @@ export function AppRouter() {
           <Route
             path="/instructor/quizzes/:quizId/attempts/:attemptId/grade"
             element={<GradeQuizAttemptPage />}
+          />
+          <Route path="/instructor/capstone-grading" element={<CapstoneGradingQueuePage />} />
+          <Route
+            path="/instructor/capstone-submissions/:id/grade"
+            element={<GradeCapstoneSubmissionPage />}
           />
         </Route>
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>

@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize";
 import { Assignment, initAssignmentModel } from "./assignment.model";
 import { AssignmentSubmission, initAssignmentSubmissionModel } from "./assignmentSubmission.model";
+import { Capstone, initCapstoneModel } from "./capstone.model";
+import { CapstoneSubmission, initCapstoneSubmissionModel } from "./capstoneSubmission.model";
 import { Course, initCourseModel } from "./course.model";
 import { CourseModule, initCourseModuleModel } from "./module.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
@@ -46,6 +48,8 @@ initQuizAnswerModel(sequelize);
 initQuizAttemptModel(sequelize);
 initQuizResponseModel(sequelize);
 initProgressTrackingModel(sequelize);
+initCapstoneModel(sequelize);
+initCapstoneSubmissionModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -101,9 +105,22 @@ ProgressTracking.belongsTo(User, { foreignKey: "studentId", as: "student" });
 Lesson.hasMany(ProgressTracking, { foreignKey: "lessonId", as: "progressRecords" });
 ProgressTracking.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
 
+// Structurally a hasOne (not hasMany, unlike every other Course relation here) since
+// capstones.course_id is unique -- at most one capstone per course.
+Course.hasOne(Capstone, { foreignKey: "courseId", as: "capstone" });
+Capstone.belongsTo(Course, { foreignKey: "courseId", as: "course" });
+
+Capstone.hasMany(CapstoneSubmission, { foreignKey: "capstoneId", as: "submissions" });
+CapstoneSubmission.belongsTo(Capstone, { foreignKey: "capstoneId", as: "capstone" });
+
+User.hasMany(CapstoneSubmission, { foreignKey: "studentId", as: "capstoneSubmissions" });
+CapstoneSubmission.belongsTo(User, { foreignKey: "studentId", as: "student" });
+
 export {
   Assignment,
   AssignmentSubmission,
+  Capstone,
+  CapstoneSubmission,
   Course,
   CourseModule,
   Enrollment,

@@ -36,3 +36,4 @@ coursesRouter.get(
   authorize("student"),
   coursesController.getCourseProgress,
 );
+coursesRouter.get("/:id/capstone", authenticate, coursesController.getCourseCapstone);

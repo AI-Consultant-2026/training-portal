@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchModuleAssignments } from "../../api/assignments.api";
+import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
 import { fetchModuleQuizzes } from "../../api/quizzes.api";
@@ -9,7 +10,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
-import { Assignment, CourseModule, CourseProgress, Lesson, Quiz } from "../../types/api";
+import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, Quiz } from "../../types/api";
 import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 
@@ -28,6 +29,7 @@ export function CourseDetailPage() {
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [moduleContent, setModuleContent] = useState<Record<string, ModuleContent>>({});
   const [courseProgress, setCourseProgress] = useState<CourseProgress | null>(null);
+  const [capstone, setCapstone] = useState<Capstone | null>(null);
   const [enrolling, setEnrolling] = useState(false);
 
   useEffect(() => {
@@ -67,6 +69,14 @@ export function CourseDetailPage() {
       fetchCourseProgress(course.id).then(setCourseProgress);
     }
   }, [course, user, isEnrolled]);
+
+  // Course-level, not per-module -- deliberately a separate effect rather than folded
+  // into the per-module Promise.all above.
+  useEffect(() => {
+    if (course && user) {
+      fetchCapstoneForCourse(course.id).then(setCapstone);
+    }
+  }, [course, user]);
 
   async function handleEnroll() {
     if (!course) return;
@@ -173,6 +183,22 @@ export function CourseDetailPage() {
           );
         })}
       </ul>
+
+      {capstone && (
+        <div className="mt-8 rounded-lg border border-gray-200 bg-white p-4">
+          <span className="text-xs font-medium uppercase text-gray-400">Capstone project</span>
+          <p className="mt-1 font-medium text-gray-900">{capstone.title}</p>
+          {capstone.description && (
+            <p className="mt-1 line-clamp-3 text-sm text-gray-600">{capstone.description}</p>
+          )}
+          <Link
+            to={`/capstones/${capstone.id}`}
+            className="mt-2 inline-block text-sm font-medium text-blue-600 hover:underline"
+          >
+            View capstone
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as capstoneService from "../services/capstone.service";
 import * as courseService from "../services/course.service";
 import * as lessonService from "../services/lesson.service";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -36,4 +37,10 @@ export const getCourseProgress = asyncHandler(async (req: Request, res: Response
   const course = await courseService.getCourseByIdOrSlug(req.params.id);
   const progress = await lessonService.getCourseProgressForStudent(course.id, req.user!.id);
   res.json(progress);
+});
+
+export const getCourseCapstone = asyncHandler(async (req: Request, res: Response) => {
+  const course = await courseService.getCourseByIdOrSlug(req.params.id);
+  const capstone = await capstoneService.getByCourse(course.id);
+  res.json({ capstone });
 });

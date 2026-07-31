@@ -110,6 +110,34 @@ export interface AssignmentSubmission {
   assignmentTitle?: string;
 }
 
+export interface Capstone {
+  id: string;
+  courseId: string;
+  title: string;
+  description: string | null;
+  dueDate: string | null;
+  fileRequired: boolean;
+  gradingRubric: Record<string, unknown> | null;
+  pointsTotal: number;
+}
+
+export type CapstoneSubmissionStatus = "submitted" | "graded" | "returned";
+
+export interface CapstoneSubmission {
+  id: string;
+  capstoneId: string;
+  studentId: string;
+  submissionDate: string;
+  filePath: string | null;
+  submissionText: string | null;
+  status: CapstoneSubmissionStatus;
+  score: number | null;
+  feedback: string | null;
+  gradedDate: string | null;
+  isLate: boolean;
+  courseTitle?: string;
+}
+
 export type QuizQuestionType = "multiple_choice" | "true_false" | "short_answer";
 
 export interface Quiz {

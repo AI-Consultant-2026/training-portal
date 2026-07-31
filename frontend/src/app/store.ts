@@ -3,6 +3,7 @@ import { attachStore } from "../api/axiosClient";
 import adminReducer from "../features/admin/adminSlice";
 import assignmentsReducer from "../features/assignments/assignmentsSlice";
 import authReducer from "../features/auth/authSlice";
+import capstonesReducer from "../features/capstones/capstonesSlice";
 import coursesReducer from "../features/courses/coursesSlice";
 import enrollmentsReducer from "../features/enrollments/enrollmentsSlice";
 import lessonsReducer from "../features/lessons/lessonsSlice";
@@ -17,6 +18,7 @@ export const store = configureStore({
     quizzes: quizzesReducer,
     lessons: lessonsReducer,
     admin: adminReducer,
+    capstones: capstonesReducer,
   },
 });
 
