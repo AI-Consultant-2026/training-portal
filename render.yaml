@@ -43,7 +43,7 @@ services:
         value: /var/data/uploads
       # Same-origin in this architecture (the service serves its own frontend), so this
       # is mostly defense-in-depth rather than something production traffic depends on.
-      # Update to the service's actual assigned *.onrender.com URL (or custom domain)
-      # after the first deploy if you didn't pick the service name in advance.
+      # This is the real assigned URL (Render appended a suffix since the exact name
+      # was taken) — update again if a custom domain is added later.
       - key: CORS_ORIGIN
-        value: https://training-portal.onrender.com
+        value: https://training-portal-6a2k.onrender.com
