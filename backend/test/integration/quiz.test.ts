@@ -186,6 +186,33 @@ describe("Quizzes", () => {
     expect(submitRes.body.passed).toBe(true);
   });
 
+  it("accepts a submission with zero responses (the time-limit auto-submit path) and grades it as 0", async () => {
+    // Regression test: the frontend auto-submits on timeout even if the student never
+    // answered a single question, which previously sent an empty `responses` array and
+    // was rejected by a `.min(1)` Zod constraint with a 400 "Validation failed" --
+    // leaving the attempt stuck in_progress forever instead of finalizing at 0%.
+    const instructor = await createInstructor();
+    const { course, quiz } = await createCourseWithQuiz(instructor.id);
+    const student = await registerStudent("quizstudent-empty@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("quizstudent-empty@example.com");
+
+    const startRes = await request(app)
+      .post(`/api/quizzes/${quiz.id}/start`)
+      .set("Authorization", `Bearer ${token}`);
+    const attemptId = startRes.body.attempt.id;
+
+    const submitRes = await request(app)
+      .post(`/api/quizzes/${quiz.id}/submit`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ attemptId, responses: [] });
+
+    expect(submitRes.status).toBe(200);
+    expect(submitRes.body.attempt.status).toBe("graded");
+    expect(submitRes.body.attempt.score).toBe(0);
+    expect(submitRes.body.passed).toBe(false);
+  });
+
   it("rejects submitting the same attempt twice", async () => {
     const instructor = await createInstructor();
     const { course, quiz, q1, q1Correct, q2, q2Correct } = await createCourseWithQuiz(instructor.id);

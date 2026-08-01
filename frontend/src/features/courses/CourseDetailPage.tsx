@@ -18,6 +18,7 @@ interface ModuleContent {
   lessons: Lesson[];
   assignments: Assignment[];
   quizzes: Quiz[];
+  loadError?: boolean;
 }
 
 export function CourseDetailPage() {
@@ -50,16 +51,35 @@ export function CourseDetailPage() {
     }
   }, [course]);
 
+  async function loadModuleContent(moduleId: string) {
+    // Promise.allSettled, not Promise.all: one failed request (a transient network
+    // blip, a slow cold start) must not silently blank out this week's whole content --
+    // it previously did, since an unhandled rejection here just skipped the
+    // setModuleContent call entirely, with no error and no way to recover short of a
+    // full page reload hitting the same problem again.
+    const [lessonsResult, assignmentsResult, quizzesResult] = await Promise.allSettled([
+      fetchModuleLessons(moduleId),
+      fetchModuleAssignments(moduleId),
+      fetchModuleQuizzes(moduleId),
+    ]);
+    const loadError = [lessonsResult, assignmentsResult, quizzesResult].some(
+      (r) => r.status === "rejected",
+    );
+    setModuleContent((prev) => ({
+      ...prev,
+      [moduleId]: {
+        lessons: lessonsResult.status === "fulfilled" ? lessonsResult.value : [],
+        assignments: assignmentsResult.status === "fulfilled" ? assignmentsResult.value : [],
+        quizzes: quizzesResult.status === "fulfilled" ? quizzesResult.value : [],
+        loadError,
+      },
+    }));
+  }
+
   useEffect(() => {
     if (!user || modules.length === 0) return;
-    modules.forEach(async (mod) => {
-      const [lessons, assignments, quizzes] = await Promise.all([
-        fetchModuleLessons(mod.id),
-        fetchModuleAssignments(mod.id),
-        fetchModuleQuizzes(mod.id),
-      ]);
-      setModuleContent((prev) => ({ ...prev, [mod.id]: { lessons, assignments, quizzes } }));
-    });
+    modules.forEach((mod) => loadModuleContent(mod.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modules, user]);
 
   const isEnrolled = course ? enrollments.some((e) => e.courseId === course.id) : false;
@@ -177,6 +197,19 @@ export function CourseDetailPage() {
                       Quiz: {q.title}
                     </Link>
                   ))}
+                </div>
+              )}
+
+              {content?.loadError && (
+                <div className="mt-3 border-t border-gray-100 pt-3">
+                  <Alert variant="error" message="Couldn't load this week's lessons, assignment, or quiz." />
+                  <button
+                    type="button"
+                    onClick={() => loadModuleContent(mod.id)}
+                    className="mt-1 text-sm font-medium text-blue-600 hover:underline"
+                  >
+                    Retry
+                  </button>
                 </div>
               )}
             </li>
