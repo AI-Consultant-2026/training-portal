@@ -13,6 +13,12 @@ import { apiRouter } from "./routes";
 export function createApp() {
   const app = express();
 
+  // Render (and most PaaS deploys) sit in front of this app as a single reverse proxy
+  // hop. Without this, Express's req.ip resolves to the proxy's own address for every
+  // request, which silently turns the per-IP auth rate limiter below into one shared
+  // limit across every real user on the site instead of a per-user one.
+  app.set("trust proxy", 1);
+
   app.use(helmet());
   app.use(cors({ origin: config.corsOrigin, credentials: true }));
   app.use(express.json());
