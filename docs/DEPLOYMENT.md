@@ -2,7 +2,7 @@
 
 This app deploys as a single Render Web Service (backend + built frontend, same origin — see `Dockerfile` and the static-serving block in `backend/src/app.ts`) plus a managed Render Postgres database, defined together in `render.yaml`.
 
-**Status: live.** Deployed at **https://training-portal-6a2k.onrender.com** (still on the default `*.onrender.com` domain — a custom domain is planned for later, not done yet: Render Dashboard → training-portal → Settings → Custom Domains, then add the DNS records Render gives you). Production database has no seed data yet (see the seeding warning below before changing that).
+**Status: live.** Deployed at **https://training-portal-6a2k.onrender.com** (still on the default `*.onrender.com` domain — a custom domain is planned for later, not done yet: Render Dashboard → training-portal → Settings → Custom Domains, then add the DNS records Render gives you). Production database is seeded with real content: all 5 courses, their full curriculum (modules/lessons/assignments/quizzes for every week, not just Week 1), and each course's capstone project. `admin@trainingportal.local` and `instructor@trainingportal.local` exist for demo/support purposes, but their passwords have already been rotated off the hardcoded seed value — see below.
 
 ## One-time setup (already done for this deploy — kept here for reference/rebuilding elsewhere)
 
@@ -20,7 +20,9 @@ The Docker image's `CMD` runs `npm run migrate && npm start` (see `Dockerfile`) 
 
 ## ⚠️ Before you ever run the seeder against production
 
-`backend/src/seeders/20260729020000-demo-admin-and-instructor.ts` creates `admin@trainingportal.local` and `instructor@trainingportal.local` with a hardcoded, publicly-documented password. If you ever run `npm run seed` against the production database (e.g. to get demo course content in), **log in as both accounts immediately afterward and change their passwords**, or delete/recreate them with real credentials. Never leave the demo password active on a real deployment.
+`backend/src/seeders/20260729020000-demo-admin-and-instructor.ts` creates `admin@trainingportal.local` and `instructor@trainingportal.local` with a hardcoded, publicly-documented password (`ChangeMe123!`). If you ever run `npm run seed` against the production database (e.g. to get demo course content in), **immediately rotate both accounts' passwords**, or delete/recreate them with real credentials. Never leave the demo password active on a real deployment.
+
+**Status: done.** `npm run seed` has been run against production (all 8 seeders, via Render's Web Shell — Dashboard → Shell — since seeding is never automatic). Both demo accounts' passwords were rotated immediately afterward via a one-off script run in that same shell (bcrypt-hashing a freshly generated password and updating `users.password_hash` directly by email, using the container's own `DATABASE_URL`/SSL config). Confirmed live: the old `ChangeMe123!` password now returns `401` for both accounts, and the new passwords are stored outside this repo, not written down here or anywhere in git history.
 
 ## File storage
 
