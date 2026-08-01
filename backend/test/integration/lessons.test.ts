@@ -1,7 +1,16 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
-import { Course, CourseModule, Enrollment, Lesson, ProgressTracking, User } from "../../src/models";
+import {
+  Course,
+  CourseModule,
+  Enrollment,
+  Lesson,
+  ProgressTracking,
+  User,
+  VideoCheckpoint,
+  VideoCheckpointAnswer,
+} from "../../src/models";
 
 const app = createApp();
 
@@ -252,5 +261,107 @@ describe("Lessons and progress tracking", () => {
       .get(`/api/lessons/${lessons[0].id}/my-completion`)
       .set("Authorization", `Bearer ${token}`);
     expect(after.body.completed).toBe(true);
+  });
+
+  describe("video checkpoints", () => {
+    async function createCheckpointWithAnswers(lessonId: string) {
+      const checkpoint = await VideoCheckpoint.create({
+        lessonId,
+        timestampSeconds: 30,
+        questionText: "What does the C in CIA Triad stand for?",
+        questionType: "multiple_choice",
+        order: 1,
+        explanation: "Confidentiality is the first pillar of the CIA Triad.",
+      });
+      const correct = await VideoCheckpointAnswer.create({
+        checkpointId: checkpoint.id,
+        answerText: "Confidentiality",
+        isCorrect: true,
+        order: 1,
+      });
+      const wrong = await VideoCheckpointAnswer.create({
+        checkpointId: checkpoint.id,
+        answerText: "Control",
+        isCorrect: false,
+        order: 2,
+      });
+      return { checkpoint, correct, wrong };
+    }
+
+    it("returns checkpoints for a lesson without ever exposing isCorrect", async () => {
+      const instructor = await createInstructor();
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+      await createCheckpointWithAnswers(lessons[0].id);
+
+      const res = await request(app).get(`/api/lessons/${lessons[0].id}/checkpoints`);
+      expect(res.status).toBe(200);
+      expect(res.body.checkpoints).toHaveLength(1);
+      const checkpoint = res.body.checkpoints[0];
+      expect(checkpoint.timestampSeconds).toBe(30);
+      expect(checkpoint.answers).toHaveLength(2);
+      checkpoint.answers.forEach((a: Record<string, unknown>) => {
+        expect(a.isCorrect).toBeUndefined();
+      });
+    });
+
+    it("returns an empty array for a lesson with no checkpoints", async () => {
+      const instructor = await createInstructor();
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+
+      const res = await request(app).get(`/api/lessons/${lessons[0].id}/checkpoints`);
+      expect(res.status).toBe(200);
+      expect(res.body.checkpoints).toEqual([]);
+    });
+
+    it("confirms a correct answer and lets an incorrect answer retry with the right answer revealed", async () => {
+      const instructor = await createInstructor();
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+      const { checkpoint, correct, wrong } = await createCheckpointWithAnswers(lessons[0].id);
+
+      const wrongRes = await request(app)
+        .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .send({ answerId: wrong.id });
+      expect(wrongRes.status).toBe(200);
+      expect(wrongRes.body.correct).toBe(false);
+      expect(wrongRes.body.correctAnswerId).toBe(correct.id);
+      expect(wrongRes.body.explanation).toBe(checkpoint.explanation);
+
+      const rightRes = await request(app)
+        .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .send({ answerId: correct.id });
+      expect(rightRes.status).toBe(200);
+      expect(rightRes.body.correct).toBe(true);
+      expect(rightRes.body.correctAnswerId).toBe(correct.id);
+    });
+
+    it("returns 404 for an unknown checkpoint", async () => {
+      const res = await request(app)
+        .post(`/api/lessons/00000000-0000-0000-0000-000000000000/checkpoints/00000000-0000-0000-0000-000000000000/check`)
+        .send({ answerId: "00000000-0000-0000-0000-000000000000" });
+      expect(res.status).toBe(404);
+    });
+
+    it("returns 404 when the answer doesn't belong to the given checkpoint", async () => {
+      const instructor = await createInstructor();
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+      const { checkpoint: checkpointA } = await createCheckpointWithAnswers(lessons[0].id);
+      const { correct: answerFromB } = await createCheckpointWithAnswers(lessons[0].id);
+
+      const res = await request(app)
+        .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpointA.id}/check`)
+        .send({ answerId: answerFromB.id });
+      expect(res.status).toBe(404);
+    });
+
+    it("rejects a check request with a malformed answerId", async () => {
+      const instructor = await createInstructor();
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+      const { checkpoint } = await createCheckpointWithAnswers(lessons[0].id);
+
+      const res = await request(app)
+        .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .send({ answerId: "not-a-uuid" });
+      expect(res.status).toBe(400);
+    });
   });
 });

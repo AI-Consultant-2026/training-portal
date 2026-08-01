@@ -15,6 +15,8 @@ import { QuizQuestion, initQuizQuestionModel } from "./quizQuestion.model";
 import { QuizResponse, initQuizResponseModel } from "./quizResponse.model";
 import { RefreshToken, initRefreshTokenModel } from "./refreshToken.model";
 import { User, initUserModel } from "./user.model";
+import { VideoCheckpoint, initVideoCheckpointModel } from "./videoCheckpoint.model";
+import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCheckpointAnswer.model";
 
 const databaseUrl =
   process.env.NODE_ENV === "test"
@@ -50,6 +52,8 @@ initQuizResponseModel(sequelize);
 initProgressTrackingModel(sequelize);
 initCapstoneModel(sequelize);
 initCapstoneSubmissionModel(sequelize);
+initVideoCheckpointModel(sequelize);
+initVideoCheckpointAnswerModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -116,6 +120,12 @@ CapstoneSubmission.belongsTo(Capstone, { foreignKey: "capstoneId", as: "capstone
 User.hasMany(CapstoneSubmission, { foreignKey: "studentId", as: "capstoneSubmissions" });
 CapstoneSubmission.belongsTo(User, { foreignKey: "studentId", as: "student" });
 
+Lesson.hasMany(VideoCheckpoint, { foreignKey: "lessonId", as: "checkpoints" });
+VideoCheckpoint.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
+
+VideoCheckpoint.hasMany(VideoCheckpointAnswer, { foreignKey: "checkpointId", as: "answers" });
+VideoCheckpointAnswer.belongsTo(VideoCheckpoint, { foreignKey: "checkpointId", as: "checkpoint" });
+
 export {
   Assignment,
   AssignmentSubmission,
@@ -133,4 +143,6 @@ export {
   QuizResponse,
   RefreshToken,
   User,
+  VideoCheckpoint,
+  VideoCheckpointAnswer,
 };

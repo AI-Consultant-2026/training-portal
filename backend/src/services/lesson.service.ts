@@ -1,5 +1,13 @@
 import { Op, Transaction } from "sequelize";
-import { CourseModule, Enrollment, Lesson, ProgressTracking, sequelize } from "../models";
+import {
+  CourseModule,
+  Enrollment,
+  Lesson,
+  ProgressTracking,
+  VideoCheckpoint,
+  VideoCheckpointAnswer,
+  sequelize,
+} from "../models";
 import { ApiError } from "../utils/ApiError";
 import { getEnrollmentForCourseAndStudent, recalculateProgress } from "./enrollment.service";
 
@@ -161,5 +169,87 @@ export async function getCourseProgressForStudent(
     completedLessons: completedRecords.length,
     progressPercent: enrollment.progressPercent,
     completedLessonIds: completedRecords.map((r) => r.lessonId),
+  };
+}
+
+export interface CheckpointAnswerView {
+  id: string;
+  answerText: string;
+  order: number;
+}
+
+export interface CheckpointView {
+  id: string;
+  timestampSeconds: number;
+  questionText: string;
+  questionType: "multiple_choice" | "true_false";
+  order: number;
+  explanation: string | null;
+  answers: CheckpointAnswerView[];
+}
+
+// Answers are deliberately returned without isCorrect, mirroring quiz.service.ts's
+// handling of in-progress quiz questions -- a formative checkpoint would be pointless
+// if the correct answer were visible in the initial payload.
+export async function getCheckpointsForLesson(lessonId: string): Promise<CheckpointView[]> {
+  const checkpoints = await VideoCheckpoint.findAll({
+    where: { lessonId },
+    order: [["order", "ASC"]],
+  });
+  if (checkpoints.length === 0) return [];
+
+  const answers = await VideoCheckpointAnswer.findAll({
+    where: { checkpointId: { [Op.in]: checkpoints.map((c) => c.id) } },
+    order: [["order", "ASC"]],
+  });
+  const answersByCheckpoint = new Map<string, CheckpointAnswerView[]>();
+  answers.forEach((a) => {
+    const list = answersByCheckpoint.get(a.checkpointId) ?? [];
+    list.push({ id: a.id, answerText: a.answerText, order: a.order });
+    answersByCheckpoint.set(a.checkpointId, list);
+  });
+
+  return checkpoints.map((c) => ({
+    id: c.id,
+    timestampSeconds: c.timestampSeconds,
+    questionText: c.questionText,
+    questionType: c.questionType,
+    order: c.order,
+    explanation: c.explanation,
+    answers: answersByCheckpoint.get(c.id) ?? [],
+  }));
+}
+
+export interface CheckCheckpointAnswerResult {
+  correct: boolean;
+  correctAnswerId: string;
+  explanation: string | null;
+}
+
+// No attempt/response persistence -- checkpoints are purely formative (confirmed
+// decision), so this is a stateless lookup-and-compare, not a graded submission.
+export async function checkCheckpointAnswer(
+  checkpointId: string,
+  answerId: string,
+): Promise<CheckCheckpointAnswerResult> {
+  const checkpoint = await VideoCheckpoint.findByPk(checkpointId);
+  if (!checkpoint) {
+    throw ApiError.notFound("Checkpoint not found");
+  }
+
+  const submittedAnswer = await VideoCheckpointAnswer.findOne({ where: { id: answerId, checkpointId } });
+  if (!submittedAnswer) {
+    throw ApiError.notFound("Answer not found");
+  }
+
+  const correctAnswer = await VideoCheckpointAnswer.findOne({ where: { checkpointId, isCorrect: true } });
+  if (!correctAnswer) {
+    throw ApiError.badRequest("This checkpoint has no correct answer configured");
+  }
+
+  return {
+    correct: submittedAnswer.isCorrect,
+    correctAnswerId: correctAnswer.id,
+    explanation: checkpoint.explanation,
   };
 }

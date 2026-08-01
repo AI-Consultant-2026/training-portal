@@ -55,6 +55,28 @@ export interface Lesson {
   durationMinutes: number;
 }
 
+export interface VideoCheckpointAnswer {
+  id: string;
+  answerText: string;
+  order: number;
+}
+
+export interface VideoCheckpoint {
+  id: string;
+  timestampSeconds: number;
+  questionText: string;
+  questionType: "multiple_choice" | "true_false";
+  order: number;
+  explanation: string | null;
+  answers: VideoCheckpointAnswer[];
+}
+
+export interface CheckCheckpointAnswerResult {
+  correct: boolean;
+  correctAnswerId: string;
+  explanation: string | null;
+}
+
 export interface CourseProgress {
   totalLessons: number;
   completedLessons: number;

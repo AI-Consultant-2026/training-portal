@@ -4,12 +4,13 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
-import { fetchLesson, fetchLessonCompletion, markLessonComplete } from "./lessonsSlice";
+import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
+import { fetchCheckpoints, fetchLesson, fetchLessonCompletion, markLessonComplete } from "./lessonsSlice";
 
 export function LessonDetailPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { currentLesson: lesson, completed, status, markCompleteStatus, error } = useAppSelector(
+  const { currentLesson: lesson, completed, checkpoints, status, markCompleteStatus, error } = useAppSelector(
     (state) => state.lessons,
   );
   const { user } = useAppSelector((state) => state.auth);
@@ -17,6 +18,7 @@ export function LessonDetailPage() {
   useEffect(() => {
     if (id) {
       dispatch(fetchLesson(id));
+      dispatch(fetchCheckpoints(id));
       if (user?.role === "student") {
         dispatch(fetchLessonCompletion(id));
       }
@@ -38,6 +40,7 @@ export function LessonDetailPage() {
   }
 
   const links = lesson.resources?.links ?? [];
+  const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -48,17 +51,21 @@ export function LessonDetailPage() {
 
       <p className="mt-4 whitespace-pre-wrap text-gray-700">{lesson.content}</p>
 
-      {lesson.videoUrl && (
-        <div className="mt-6">
-          <a
-            href={lesson.videoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm font-medium text-blue-600 hover:underline"
-          >
-            Watch video
-          </a>
-        </div>
+      {youtubeVideoId ? (
+        <CheckpointVideoPlayer lessonId={lesson.id} videoId={youtubeVideoId} checkpoints={checkpoints} />
+      ) : (
+        lesson.videoUrl && (
+          <div className="mt-6">
+            <a
+              href={lesson.videoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm font-medium text-blue-600 hover:underline"
+            >
+              Watch video
+            </a>
+          </div>
+        )
       )}
 
       {links.length > 0 && (
