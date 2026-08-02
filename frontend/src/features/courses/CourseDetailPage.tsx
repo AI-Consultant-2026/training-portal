@@ -167,7 +167,23 @@ export function CourseDetailPage() {
                   content.quizzes.length > 0) && (
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-3">
                   {content.lessons.map((lesson) => {
+                    // Disabled by default: lessons and assignments only open once the
+                    // student has actually enrolled. Only gates students -- instructors/
+                    // admins aren't enrollees and should always be able to review content.
+                    const isLocked = user?.role === "student" && !isEnrolled;
                     const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
+
+                    if (isLocked) {
+                      return (
+                        <span
+                          key={lesson.id}
+                          className="text-sm font-medium text-gray-400"
+                          title="Enroll in this course to unlock its lessons"
+                        >
+                          Lesson: {lesson.title} (locked)
+                        </span>
+                      );
+                    }
                     return (
                       <Link
                         key={lesson.id}
@@ -179,15 +195,29 @@ export function CourseDetailPage() {
                       </Link>
                     );
                   })}
-                  {content.assignments.map((a) => (
-                    <Link
-                      key={a.id}
-                      to={`/assignments/${a.id}`}
-                      className="text-sm font-medium text-blue-600 hover:underline"
-                    >
-                      Assignment: {a.title}
-                    </Link>
-                  ))}
+                  {content.assignments.map((a) => {
+                    const isLocked = user?.role === "student" && !isEnrolled;
+                    if (isLocked) {
+                      return (
+                        <span
+                          key={a.id}
+                          className="text-sm font-medium text-gray-400"
+                          title="Enroll in this course to unlock its assignments"
+                        >
+                          Assignment: {a.title} (locked)
+                        </span>
+                      );
+                    }
+                    return (
+                      <Link
+                        key={a.id}
+                        to={`/assignments/${a.id}`}
+                        className="text-sm font-medium text-blue-600 hover:underline"
+                      >
+                        Assignment: {a.title}
+                      </Link>
+                    );
+                  })}
                   {content.quizzes.map((q) => {
                     // Disabled by default: a quiz only unlocks once every lesson in its
                     // own week is completed. Only gates students -- instructors/admins
