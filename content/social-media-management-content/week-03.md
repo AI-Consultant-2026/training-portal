@@ -37,7 +37,7 @@ A strong **caption** typically follows a simple, effective structure: an opening
 
 **Copywriting** for social media differs meaningfully from other forms of writing. It needs to work for an audience scrolling quickly, often on a small phone screen, frequently distracted. This generally means shorter sentences, conversational language rather than formal or corporate tone, and specific, concrete details rather than vague generalities — "our tailoring turnaround is now just 3 days" lands far better than "we offer excellent, fast service."
 
-**Hashtags** serve a specific, practical function: extending your content's discoverability beyond your existing followers, primarily on platforms like Instagram and TikTok. Effective hashtag strategy mixes a small number of broad, high-volume hashtags with a larger number of specific, niche hashtags relevant to your exact content and location — for a Delta State business, this often includes location-specific hashtags that connect you with a genuinely relevant local audience actively searching for businesses in your area.
+**Hashtags** serve a specific, practical function: extending your content's discoverability beyond your existing followers, primarily on platforms like Instagram and TikTok. Effective hashtag strategy mixes a small number of broad, high-volume hashtags with a larger number of specific, niche hashtags relevant to your exact content and location — for a State business, this often includes location-specific hashtags that connect you with a genuinely relevant local audience actively searching for businesses in your area.
 
 ## Content Calendar Planning and Scheduling
 

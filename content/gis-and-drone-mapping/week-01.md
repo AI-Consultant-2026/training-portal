@@ -5,9 +5,9 @@ week: 1
 topics:
   - GIS definition, components, and applications
   - Raster vs. Vector data models
-  - Real-world GIS use cases in Delta State (agriculture, water resources, urban planning)
+  - Real-world GIS use cases in the State (agriculture, water resources, urban planning)
 ties_to:
-  assignment: "Research GIS applications in Delta State; document findings"
+  assignment: "Research GIS applications in the State; document findings"
   practical: "Create a basic map using QGIS with provided datasets"
 target_length_minutes: 12
 ---
@@ -16,7 +16,7 @@ target_length_minutes: 12
 
 [Open direct to camera]
 
-Hello, and welcome to GIS and Drone Mapping. My name is [YOUR NAME], and over the next eight weeks, I'm going to teach you how to work with geographic information systems and drone technology to solve genuinely real problems — agriculture planning, water resource management, infrastructure development, right here in Delta State and beyond.
+Hello, and welcome to GIS and Drone Mapping. My name is [YOUR NAME], and over the next eight weeks, I'm going to teach you how to work with geographic information systems and drone technology to solve genuinely real problems — agriculture planning, water resource management, infrastructure development, right here in the State and beyond.
 
 I want to start by addressing something honestly: this course involves genuinely technical software and some math-adjacent concepts, like coordinate systems, which we'll get to next week. If you've never done anything like this before, that's completely fine. Everyone in this field started as a beginner. What matters is that you take the fundamentals seriously in these first two weeks, because everything else in this course builds directly on top of them.
 
@@ -38,7 +38,7 @@ Every single piece of spatial data in a GIS is represented using one of two fund
 
 A practical, memorable way to think about the difference: if you can clearly answer "where exactly does this specific feature start and end," it should almost certainly be vector data. If the answer is genuinely "it varies gradually and continuously across the entire area," it should almost certainly be raster data. You'll be working directly with both formats throughout this course, and today's practical exercise gives you your very first hands-on experience with each.
 
-## Real-World GIS Use Cases in Delta State
+## Real-World GIS Use Cases in the State
 
 Let's ground all of this in genuinely local, practical context, because that's exactly where this course's real value lies.
 
@@ -60,6 +60,6 @@ Don't worry at all about making it look polished or professional today. The goal
 
 Today we covered what GIS fundamentally is, the crucial distinction between raster and vector data models, and genuinely real, local applications that show exactly why this field matters. This foundation is what makes every single topic in the weeks ahead — coordinate systems, remote sensing, drone mapping, spatial analysis — actually make sense once we get there.
 
-For your assignment, research specific GIS applications already in use, or clearly needed, in Delta State, and document your findings. For your practical exercise, get comfortable creating a basic map in QGIS using the provided datasets.
+For your assignment, research specific GIS applications already in use, or clearly needed, in the State, and document your findings. For your practical exercise, get comfortable creating a basic map in QGIS using the provided datasets.
 
 Next week, we cover coordinate systems and projections — how a genuinely round earth gets accurately represented on a flat map — along with map fundamentals and a proper overview of professional GIS software. See you then.

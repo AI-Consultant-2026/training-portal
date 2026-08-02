@@ -22,9 +22,9 @@ export const WEEKS: WeekSeed[] = [
         durationMinutes: 30,
       },
     ],
-    assignmentTitle: "Delta State Solar Potential Calculation",
+    assignmentTitle: "State Solar Potential Calculation",
     assignmentDescription:
-      "Using peak sun hour data, calculate estimated daily solar energy output for three different locations in Delta State and compare the results.",
+      "Using peak sun hour data, calculate estimated daily solar energy output for three different locations in the State and compare the results.",
     fileRequired: false,
     quizQuestions: [
       { text: "What effect does rising panel temperature typically have on a PV panel's efficiency?", type: "multiple_choice", points: 1, explanation: null, answers: [
@@ -92,7 +92,7 @@ export const WEEKS: WeekSeed[] = [
         { text: "Panel cost, battery capacity, and inverter rating", isCorrect: false },
         { text: "Voltage, current, and total number of panels", isCorrect: false },
       ]},
-      { text: "Why does real historical climate data matter more than a single average annual peak sun hour figure for a Delta State location?", type: "multiple_choice", points: 1, explanation: null, answers: [
+      { text: "Why does real historical climate data matter more than a single average annual peak sun hour figure for a State location?", type: "multiple_choice", points: 1, explanation: null, answers: [
         { text: "Because meaningful seasonal variation exists between wetter and drier periods", isCorrect: true },
         { text: "Because peak sun hours are only measurable during the dry season", isCorrect: false },
         { text: "Because average figures are not published for any Nigerian region", isCorrect: false },
@@ -779,7 +779,7 @@ export const WEEKS: WeekSeed[] = [
         { text: "Replacing charge controllers in battery systems", isCorrect: false },
       ]},
       { text: "What kind of facility does the capstone project ask students to design a complete renewable energy system for?", type: "multiple_choice", points: 1, explanation: null, answers: [
-        { text: "A community center, school, or health facility in Delta State", isCorrect: true },
+        { text: "A community center, school, or health facility in the State", isCorrect: true },
         { text: "A large industrial manufacturing plant", isCorrect: false },
         { text: "A single-family residential home outside Nigeria", isCorrect: false },
       ]},

@@ -56,7 +56,7 @@ Influencer campaigns need the same rigorous, disciplined measurement we covered 
 
 ## Preparing Your Capstone Project
 
-Now, let's talk about what's ahead. Your capstone project asks you to build a complete social media presence for a new tourism business right here in Delta State — hotels, cultural tours, food experiences — starting from zero existing followers.
+Now, let's talk about what's ahead. Your capstone project asks you to build a complete social media presence for a new tourism business right here in the State — hotels, cultural tours, food experiences — starting from zero existing followers.
 
 I want you to treat this as one connected story, not eight disconnected weekly assignments. Your strategy document should draw directly on the audience personas and positioning work from Module 1. Your content package should apply the ideation, calendar planning, and visual and video production skills from Module 2. Your ad campaign plan should apply targeting and budgeting from Module 4. And your analytics dashboard should apply the reporting principles from Module 5.
 

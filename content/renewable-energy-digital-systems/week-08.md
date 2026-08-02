@@ -55,7 +55,7 @@ I mention these emerging developments not because you need to master them today,
 
 ## Preparing Your Capstone Project
 
-Your capstone project asks you to design and plan a complete renewable energy system for a community center, school, or health facility here in Delta State, explicitly serving as a demonstration and training facility for the surrounding community.
+Your capstone project asks you to design and plan a complete renewable energy system for a community center, school, or health facility here in the State, explicitly serving as a demonstration and training facility for the surrounding community.
 
 I want you to treat this as one genuinely connected story. Your energy audit and load calculation should build directly on Module 1's fundamentals and Module 2's proper sizing methodology. Your system design should incorporate the battery storage decisions from Module 3. Your monitoring design should apply Module 4's dashboard principles. Your installation plan should apply Module 6's safety and sequencing considerations. And your community engagement plan should apply the customer education principles we just covered today, adapted specifically for a genuinely broader community audience, not merely a single individual customer.
 

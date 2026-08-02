@@ -30,7 +30,7 @@ Why does this history matter for your work? Because it shows you something cruci
 
 Let's walk through the major platforms you'll be working with, because each one has a genuinely different purpose, audience, and content style. Treating them all the same is one of the most common mistakes beginners make.
 
-**Facebook** remains enormous, especially for reaching an older demographic and for local community engagement — think local business pages, community groups, and marketplace activity. It's often underestimated by younger social media managers, but for many businesses here in Delta State targeting a broad local customer base, Facebook is still where a large share of your actual customers spend their time.
+**Facebook** remains enormous, especially for reaching an older demographic and for local community engagement — think local business pages, community groups, and marketplace activity. It's often underestimated by younger social media managers, but for many businesses here in the State targeting a broad local customer base, Facebook is still where a large share of your actual customers spend their time.
 
 **Instagram** is built around visual storytelling — photos, short videos called Reels, and Stories that disappear after 24 hours. It's particularly strong for brands with a strong visual identity: food, fashion, tourism, beauty.
 

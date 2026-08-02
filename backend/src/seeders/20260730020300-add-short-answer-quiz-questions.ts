@@ -30,9 +30,9 @@ const CONTENT: ShortAnswerSeed[] = [
   },
   {
     slug: "renewable-energy-digital-systems",
-    questionText: "In one or two sentences, explain why solar power is particularly well suited to Delta State.",
+    questionText: "In one or two sentences, explain why solar power is particularly well suited to the State.",
     explanation:
-      "Delta State receives strong, consistent year-round sunlight and lacks the geothermal or tidal resources that make other renewable sources practical there.",
+      "the State receives strong, consistent year-round sunlight and lacks the geothermal or tidal resources that make other renewable sources practical there.",
   },
   {
     slug: "digital-marketing",

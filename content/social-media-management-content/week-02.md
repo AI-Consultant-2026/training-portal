@@ -8,7 +8,7 @@ topics:
   - Competitive analysis
   - Content pillars and messaging frameworks
 ties_to:
-  assignment: "Develop audience personas for a fictional Delta State business"
+  assignment: "Develop audience personas for a fictional State business"
   practical: "Develop a social media strategy document (5-10 pages)"
 target_length_minutes: 12
 ---
@@ -27,7 +27,7 @@ A useful persona typically includes: demographic details — age range, location
 
 Where does this research actually come from? Start with data the business already has — customer records, past sales, existing social media analytics if any exists. Combine that with direct observation — look at who's already engaging with the business and, importantly, who's engaging with their competitors. And where possible, talk to actual customers directly. Even a handful of honest conversations with real customers will teach you more than hours of guessing.
 
-For this week's assignment, you'll develop audience personas for a fictional Delta State business. I want you to make these personas feel like real, specific people, not vague categories. "Chidinma, 28, runs a small tailoring business in Asaba, checks Instagram and WhatsApp daily during work breaks, frustrated by how much time she spends manually replying to the same pricing questions" is dramatically more useful than "young female business owner." Specificity is what makes a persona genuinely actionable for content decisions.
+For this week's assignment, you'll develop audience personas for a fictional State business. I want you to make these personas feel like real, specific people, not vague categories. "Chidinma, 28, runs a small tailoring business in Asaba, checks Instagram and WhatsApp daily during work breaks, frustrated by how much time she spends manually replying to the same pricing questions" is dramatically more useful than "young female business owner." Specificity is what makes a persona genuinely actionable for content decisions.
 
 ## Brand Positioning on Social Media
 
@@ -57,6 +57,6 @@ A **messaging framework** goes one level deeper, defining the specific language 
 
 This week, we moved from broad platform knowledge into an actual, usable strategy: knowing precisely who you're speaking to through personas, knowing what you stand for through positioning, understanding the competitive landscape you're operating within, and organizing your actual content ideas around clear, consistent pillars. Together with last week's lecture, this gives you everything needed to write a genuine, complete social media strategy document — which is exactly this week's practical exercise.
 
-For your assignment, build out those detailed Delta State business personas we discussed. For your practical exercise, write a full 5 to 10 page social media strategy document, pulling together platform choice, goals and KPIs, personas, positioning, and content pillars into one coherent plan.
+For your assignment, build out those detailed State business personas we discussed. For your practical exercise, write a full 5 to 10 page social media strategy document, pulling together platform choice, goals and KPIs, personas, positioning, and content pillars into one coherent plan.
 
 Next week, we move into Module 2: Content Creation and Storytelling, where we turn strategy into the actual words, images, and videos that get posted. See you then.

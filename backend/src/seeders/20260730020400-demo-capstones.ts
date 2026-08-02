@@ -12,7 +12,7 @@ const CONTENT: CapstoneSeed[] = [
     slug: "cyber-security-fundamentals",
     title: "Security Consulting Capstone",
     description:
-      "Act as a security consultant for a mid-sized manufacturing company here in Delta State that's had a minor security incident and wants to seriously improve its cybersecurity posture. Produce a security audit report, a remediation roadmap, an incident response plan, and a final presentation. Treat this as one connected story, not twelve separate topics: your audit findings should directly drive your remediation roadmap, your risk assessment should justify your prioritization, and your incident response plan should be tailored to this company's actual environment and constraints. Scope realistically for a fifty-employee manufacturing company with a limited IT budget.",
+      "Act as a security consultant for a mid-sized manufacturing company here in the State that's had a minor security incident and wants to seriously improve its cybersecurity posture. Produce a security audit report, a remediation roadmap, an incident response plan, and a final presentation. Treat this as one connected story, not twelve separate topics: your audit findings should directly drive your remediation roadmap, your risk assessment should justify your prioritization, and your incident response plan should be tailored to this company's actual environment and constraints. Scope realistically for a fifty-employee manufacturing company with a limited IT budget.",
   },
   {
     slug: "digital-marketing",
@@ -30,13 +30,13 @@ const CONTENT: CapstoneSeed[] = [
     slug: "renewable-energy-digital-systems",
     title: "Community Renewable Energy System Capstone",
     description:
-      "Design and plan a complete renewable energy system for a community center, school, or health facility here in Delta State, explicitly serving as a demonstration and training facility for the surrounding community. Treat this as one connected story: your energy audit and load calculation should build on proper sizing methodology, your system design should incorporate sound battery storage decisions, your monitoring design should apply solid dashboard principles, your installation plan should apply safety and sequencing considerations, and your community engagement plan should be adapted for a genuinely broader community audience, not a single customer.",
+      "Design and plan a complete renewable energy system for a community center, school, or health facility here in the State, explicitly serving as a demonstration and training facility for the surrounding community. Treat this as one connected story: your energy audit and load calculation should build on proper sizing methodology, your system design should incorporate sound battery storage decisions, your monitoring design should apply solid dashboard principles, your installation plan should apply safety and sequencing considerations, and your community engagement plan should be adapted for a genuinely broader community audience, not a single customer.",
   },
   {
     slug: "social-media-management-content",
     title: "Tourism Business Social Media Capstone",
     description:
-      "Build a complete social media presence for a new tourism business right here in Delta State — hotels, cultural tours, food experiences — starting from zero existing followers. Treat this as one connected story, not disconnected weekly assignments: your strategy document should draw directly on audience personas and positioning work, your content package should apply ideation, calendar planning, and visual/video production skills, your ad campaign plan should apply targeting and budgeting, and your analytics dashboard should apply sound reporting principles.",
+      "Build a complete social media presence for a new tourism business right here in the State — hotels, cultural tours, food experiences — starting from zero existing followers. Treat this as one connected story, not disconnected weekly assignments: your strategy document should draw directly on audience personas and positioning work, your content package should apply ideation, calendar planning, and visual/video production skills, your ad campaign plan should apply targeting and budgeting, and your analytics dashboard should apply sound reporting principles.",
   },
 ];
 

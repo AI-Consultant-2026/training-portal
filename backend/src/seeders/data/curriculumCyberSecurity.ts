@@ -1205,7 +1205,7 @@ export const WEEKS: WeekSeed[] = [
         { text: "One year", isCorrect: false },
       ]},
       { text: "Who does the capstone project ask students to act as?", type: "multiple_choice", points: 1, explanation: null, answers: [
-        { text: "A security consultant for a mid-sized manufacturing company in Delta State", isCorrect: true },
+        { text: "A security consultant for a mid-sized manufacturing company in the State", isCorrect: true },
         { text: "A government regulator auditing a hospital", isCorrect: false },
         { text: "A cloud provider's customer support representative", isCorrect: false },
       ]},

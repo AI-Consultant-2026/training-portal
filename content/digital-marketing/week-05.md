@@ -9,7 +9,7 @@ topics:
   - Budgeting and bidding strategies
   - Conversion tracking basics
 ties_to:
-  assignment: "Create a Google Ads campaign plan for a Delta State business"
+  assignment: "Create a Google Ads campaign plan for a State business"
   practical: "Set up a sample Google Ads campaign using free trial credits (structure, keywords, ad copy)"
 target_length_minutes: 13
 ---
@@ -62,6 +62,6 @@ Without properly configured conversion tracking, you genuinely only know how man
 
 Today we covered how Google Ads works across its major campaign types, how keyword bidding and Quality Score together determine both cost and ad position, how to structure a campaign effectively and write genuinely compelling ad copy, and the basics of conversion tracking. Paid advertising complements the organic channels from the previous two weeks by delivering immediate, deliberately targeted reach, precisely when a business genuinely needs faster results than SEO alone can reasonably provide.
 
-For your assignment, create a complete Google Ads campaign plan for a Delta State business. For your practical exercise, set up a sample Google Ads campaign using free trial credits, applying everything covered today — structure, keyword selection, and ad copy.
+For your assignment, create a complete Google Ads campaign plan for a State business. For your practical exercise, set up a sample Google Ads campaign using free trial credits, applying everything covered today — structure, keyword selection, and ad copy.
 
 Next week, we move into Module 5: Marketing Analytics and Measurement, where we cover exactly how to properly evaluate whether all of this — SEO, content, email, and paid advertising together — is genuinely working. See you then.

@@ -9,7 +9,7 @@ topics:
   - Thematic mapping techniques
   - Infrastructure and environmental monitoring mapping
 ties_to:
-  assignment: "Create a series of thematic maps for a Delta State resource"
+  assignment: "Create a series of thematic maps for a State resource"
   practical: "Perform spatial analysis for a resource management problem"
 target_length_minutes: 14
 ---
@@ -32,7 +32,7 @@ Welcome to Module 5. We now have a genuinely rich data foundation — GIS fundam
 
 Often, you have accurate measurements at only specific, discrete points, but you genuinely need to understand values across an entire continuous area. This is exactly the purpose of **interpolation** — mathematically estimating values at unmeasured locations based on the pattern of nearby known, measured values.
 
-For example, if you have accurate rainfall measurements from twenty specific weather stations scattered across Delta State, interpolation can generate a genuinely reasonable, continuous estimate of rainfall across the entire region between those station locations, based on the general, sensible assumption that nearby locations tend to experience genuinely similar conditions.
+For example, if you have accurate rainfall measurements from twenty specific weather stations scattered across the State, interpolation can generate a genuinely reasonable, continuous estimate of rainfall across the entire region between those station locations, based on the general, sensible assumption that nearby locations tend to experience genuinely similar conditions.
 
 **Surface analysis** then works directly with this kind of continuous data, commonly represented as raster data, which we first introduced back in week one. Common surface analysis techniques include slope analysis, identifying how steep terrain is at every single point, directly relevant for assessing erosion risk or construction feasibility, and aspect analysis, identifying precisely which direction a slope faces, which meaningfully affects sun exposure and consequently agricultural suitability for many specific crops.
 
@@ -62,6 +62,6 @@ Let's bring all of this together with two genuinely practical, common applicatio
 
 Today we covered the core spatial analysis toolkit that transforms carefully collected data into genuinely meaningful, actionable answers: buffering and overlay for relationship-based questions, interpolation and surface analysis for working confidently with continuous data, network analysis for connected systems, and thematic mapping for communicating your results clearly and effectively to others. This is genuinely the analytical heart of professional GIS work, and it draws directly on absolutely everything we've built together across the previous six weeks.
 
-For your assignment, create a full series of thematic maps for a specific Delta State resource of your choosing — water, agriculture, or infrastructure are all excellent, genuinely relevant starting points. For your practical exercise, perform real spatial analysis for a resource management problem, applying the specific techniques covered today.
+For your assignment, create a full series of thematic maps for a specific State resource of your choosing — water, agriculture, or infrastructure are all excellent, genuinely relevant starting points. For your practical exercise, perform real spatial analysis for a resource management problem, applying the specific techniques covered today.
 
 Next week, in our final lecture, we cover project planning and preparation for your capstone project, where all of this genuinely comes together into one complete, comprehensive analysis. See you then.

@@ -7,8 +7,8 @@ topics:
   - System types (grid-tied, off-grid, hybrid)
   - Solar resource assessment and irradiance data
 ties_to:
-  assignment: "Calculate solar potential for 3 different locations in Delta State"
-  practical: "Assess solar resource availability for a Delta State location"
+  assignment: "Calculate solar potential for 3 different locations in the State"
+  practical: "Assess solar resource availability for a State location"
 target_length_minutes: 12
 ---
 
@@ -22,7 +22,7 @@ Welcome to Module 2. Last week we built the foundational vocabulary of energy an
 
 Recall from last week that PV cells convert sunlight into electricity, with efficiency indicating what percentage of that available solar energy actually becomes genuinely usable electrical power. It's worth understanding what actually affects real-world efficiency in practice, beyond a panel's simple rated specification.
 
-**Temperature** genuinely matters more than most beginners expect: PV panels actually lose some efficiency as they get hotter, meaning a panel's rated performance, typically measured under standardized, cooler laboratory conditions, may differ meaningfully from its actual real-world output on a genuinely hot Delta State afternoon. **Shading** significantly affects performance, since even a comparatively small amount of shade falling across just part of a panel can disproportionately reduce that panel's total output, sometimes far more than the shaded area's simple physical proportion would suggest. **Dust and dirt accumulation** gradually reduces performance over time, which is exactly why regular, routine panel cleaning is a genuinely real, ongoing maintenance consideration in dusty environments, not merely a cosmetic concern.
+**Temperature** genuinely matters more than most beginners expect: PV panels actually lose some efficiency as they get hotter, meaning a panel's rated performance, typically measured under standardized, cooler laboratory conditions, may differ meaningfully from its actual real-world output on a genuinely hot afternoon here in the State. **Shading** significantly affects performance, since even a comparatively small amount of shade falling across just part of a panel can disproportionately reduce that panel's total output, sometimes far more than the shaded area's simple physical proportion would suggest. **Dust and dirt accumulation** gradually reduces performance over time, which is exactly why regular, routine panel cleaning is a genuinely real, ongoing maintenance consideration in dusty environments, not merely a cosmetic concern.
 
 **Panel angle and orientation** also matter considerably: panels perform best when positioned to directly face the sun as closely as possible throughout the day, which is why proper installation angle, ideally matched reasonably closely to a location's specific latitude, genuinely affects total overall system output.
 
@@ -44,7 +44,7 @@ Before sizing any actual system, you need reliable data on precisely how much so
 
 For practical system design purposes, we more commonly use **peak sun hours** — a genuinely useful simplification representing the equivalent number of hours per day at a standardized, ideal irradiance level that would deliver the exact same total daily energy as the real, actual variable irradiance pattern throughout that day. A location with an average of five peak sun hours per day receives the equivalent of five hours at that ideal standard intensity, even though real, actual sunlight naturally varies continuously throughout the day, from a low sunrise angle, through peak midday intensity, back down through sunset.
 
-For Delta State, average peak sun hours generally fall somewhere in a range that supports genuinely viable solar system design, though real, meaningful seasonal variation exists between wetter and drier periods, and this seasonal variation is precisely why real, genuine historical climate data matters so much for accurate system design, rather than relying on any single average annual figure alone.
+For the State, average peak sun hours generally fall somewhere in a range that supports genuinely viable solar system design, though real, meaningful seasonal variation exists between wetter and drier periods, and this seasonal variation is precisely why real, genuine historical climate data matters so much for accurate system design, rather than relying on any single average annual figure alone.
 
 Reliable sources for this specific data include NASA's POWER database, which provides freely available solar irradiance data for locations essentially anywhere in the world, and various tools provided directly by system design software, including PVsyst and HOMER, which we'll cover next week.
 
@@ -54,6 +54,6 @@ The practical calculation you'll be doing for both this week's assignment and pr
 
 Today we covered the practical factors genuinely affecting real-world solar efficiency, the three fundamental system architectures and when each one genuinely makes sense, and how to properly assess a location's actual solar resource using peak sun hour data. This is the essential foundation for actually sizing a complete, working system, which we'll cover directly next week.
 
-For your assignment, calculate genuine solar potential for three different locations across Delta State, using real climate data. For your practical exercise, assess solar resource availability in real, specific detail for one particular Delta State location.
+For your assignment, calculate genuine solar potential for three different locations across the State, using real climate data. For your practical exercise, assess solar resource availability in real, specific detail for one particular State location.
 
 Next week, we cover component sizing, load calculation, and the professional design software used to bring a complete solar system design together. See you then.

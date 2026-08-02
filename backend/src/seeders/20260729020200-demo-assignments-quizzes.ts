@@ -93,7 +93,7 @@ const CONTENT: CourseContentSeed[] = [
   {
     slug: "gis-and-drone-mapping",
     assignmentTitle: "GIS Applications Research",
-    assignmentDescription: "Research GIS applications already in use, or clearly needed, in Delta State, and document your findings.",
+    assignmentDescription: "Research GIS applications already in use, or clearly needed, in the State, and document your findings.",
     fileRequired: true,
     questions: [
       {
@@ -140,7 +140,7 @@ const CONTENT: CourseContentSeed[] = [
         ],
       },
       {
-        text: "Which renewable source is generally the most practical and accessible option for Delta State?",
+        text: "Which renewable source is generally the most practical and accessible option for the State?",
         type: "multiple_choice",
         answers: [
           { text: "Solar", isCorrect: true },

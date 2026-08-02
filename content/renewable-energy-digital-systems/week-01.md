@@ -9,10 +9,10 @@ topics:
   - Battery storage systems
   - Smart grids and microgrids
   - Digital monitoring and control systems
-  - Renewable energy potential in Nigeria/Delta State
+  - Renewable energy potential in Nigeria/the State
 ties_to:
   assignment: "Research renewable energy policies and incentives in Nigeria"
-  practical: "Calculate energy potential for Delta State based on climate data"
+  practical: "Calculate energy potential for the State based on climate data"
 target_length_minutes: 14
 ---
 
@@ -42,9 +42,9 @@ These three quantities relate through a simple, foundational formula you'll use 
 
 Let's survey the major renewable energy sources, since understanding all of them, even the ones we won't focus on heavily, helps you correctly recognize when solar genuinely is, or perhaps isn't, the right practical choice for a specific situation.
 
-**Solar** converts sunlight directly into electricity, and we'll spend considerable time on it throughout this course, precisely because it's the most broadly accessible and genuinely scalable option for the Delta State context. **Wind** converts kinetic energy from moving air into electricity, generally requiring meaningfully consistent wind speeds to be genuinely practical and cost-effective. **Hydro** converts the energy of flowing or falling water into electricity, requiring appropriate river or water flow conditions that aren't universally available everywhere. **Biomass** converts organic material — agricultural waste, wood, and similar materials — into usable energy, often through direct combustion or controlled digestion processes. **Geothermal** harnesses the earth's own internal heat, though this generally requires genuinely specific geological conditions that aren't broadly available in most regions.
+**Solar** converts sunlight directly into electricity, and we'll spend considerable time on it throughout this course, precisely because it's the most broadly accessible and genuinely scalable option for the State context. **Wind** converts kinetic energy from moving air into electricity, generally requiring meaningfully consistent wind speeds to be genuinely practical and cost-effective. **Hydro** converts the energy of flowing or falling water into electricity, requiring appropriate river or water flow conditions that aren't universally available everywhere. **Biomass** converts organic material — agricultural waste, wood, and similar materials — into usable energy, often through direct combustion or controlled digestion processes. **Geothermal** harnesses the earth's own internal heat, though this generally requires genuinely specific geological conditions that aren't broadly available in most regions.
 
-For most of Nigeria, and especially for Delta State specifically, solar represents the single most practical and immediately accessible renewable option, given genuinely abundant available sunlight and comparatively lower upfront technical barriers relative to the other sources we just discussed.
+For most of Nigeria, and especially for the State specifically, solar represents the single most practical and immediately accessible renewable option, given genuinely abundant available sunlight and comparatively lower upfront technical barriers relative to the other sources we just discussed.
 
 ## Solar PV Technology
 
@@ -64,9 +64,9 @@ A **smart grid** uses digital technology to monitor and intelligently manage ele
 
 This course's title includes "digital systems" specifically because modern renewable energy installations increasingly rely on digital sensors and software to monitor real-time performance, automatically detect emerging problems, and remotely control system behavior. We'll dedicate an entire module later in this course, Module 4, specifically to these digital monitoring capabilities, since they genuinely represent a meaningfully growing and increasingly valuable part of this overall field.
 
-## Renewable Energy Potential in Nigeria and Delta State
+## Renewable Energy Potential in Nigeria and the State
 
-Nigeria receives genuinely abundant, consistent sunlight throughout most of the year, making solar power a fundamentally strong option almost anywhere in the country. Delta State specifically, given its location, generally experiences good solar irradiance, though with real, meaningful seasonal variation between the wet and dry seasons that any proper system design must genuinely account for.
+Nigeria receives genuinely abundant, consistent sunlight throughout most of the year, making solar power a fundamentally strong option almost anywhere in the country. The State specifically, given its location, generally experiences good solar irradiance, though with real, meaningful seasonal variation between the wet and dry seasons that any proper system design must genuinely account for.
 
 Beyond the pure physical resource availability, Nigeria has also implemented various policies and incentives specifically intended to encourage broader renewable energy adoption — precisely what this week's assignment asks you to research directly.
 
@@ -74,6 +74,6 @@ Beyond the pure physical resource availability, Nigeria has also implemented var
 
 Today we built the essential foundational vocabulary — power, voltage, current, efficiency — and surveyed the renewable energy landscape, with a clear, deliberate focus on why solar makes genuine practical sense for this specific region. This foundation is exactly what makes every remaining week of this course meaningfully accessible, even the more technically detailed weeks ahead.
 
-For your assignment, research Nigeria's current renewable energy policies and incentives. For your practical exercise, calculate genuine energy potential for Delta State using real, actual climate data, applying the fundamental concepts from today's lecture.
+For your assignment, research Nigeria's current renewable energy policies and incentives. For your practical exercise, calculate genuine energy potential for the State using real, actual climate data, applying the fundamental concepts from today's lecture.
 
 Next week, we begin Module 2: Solar Energy System Design, where we start genuinely, properly sizing real solar systems. See you then.

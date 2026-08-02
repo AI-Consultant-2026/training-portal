@@ -21,7 +21,7 @@ export const WEEKS: WeekSeed[] = [
     ],
     assignmentTitle: "Audience Persona Development",
     assignmentDescription:
-      "Develop detailed, specific audience personas for a fictional Delta State business, covering demographic details, psychographic details, platform behavior, and content preferences.",
+      "Develop detailed, specific audience personas for a fictional State business, covering demographic details, psychographic details, platform behavior, and content preferences.",
     fileRequired: false,
     quizQuestions: [
       { text: "What are audience personas built from, according to the lecture?", type: "multiple_choice", points: 1, explanation: null, answers: [
@@ -473,7 +473,7 @@ export const WEEKS: WeekSeed[] = [
     ],
     assignmentTitle: "Ad Campaign Plan",
     assignmentDescription:
-      "Create a comprehensive ad campaign plan for a Delta State business, including clear objectives, a defined target audience, and a realistic proposed budget.",
+      "Create a comprehensive ad campaign plan for a State business, including clear objectives, a defined target audience, and a realistic proposed budget.",
     fileRequired: true,
     quizQuestions: [
       { text: "Which platform's Ads Manager also controls advertising for Instagram, since Meta owns both?", type: "multiple_choice", points: 1, explanation: null, answers: [
@@ -768,7 +768,7 @@ export const WEEKS: WeekSeed[] = [
         { text: "Conversions from influencer campaigns cannot be measured", isCorrect: false },
       ]},
       { text: "What is the subject of the capstone project described in the lecture?", type: "multiple_choice", points: 1, explanation: null, answers: [
-        { text: "Building a complete social media presence for a new Delta State tourism business starting from zero followers", isCorrect: true },
+        { text: "Building a complete social media presence for a new State tourism business starting from zero followers", isCorrect: true },
         { text: "Auditing an already-established multinational brand's global campaign", isCorrect: false },
         { text: "Writing a research paper with no practical deliverable", isCorrect: false },
       ]},
@@ -789,7 +789,7 @@ export const WEEKS: WeekSeed[] = [
         { text: "False", isCorrect: false },
       ]},
       { text: "In one or two sentences, explain why the lecture recommends vetting an influencer before entering a partnership.", type: "short_answer", points: 1, explanation: "Vetting means reviewing an influencer's past content quality, checking for prior controversies, and honestly assessing whether their style and values align with the brand, since a poor-fit or risky partnership could create real brand risk.", answers: [] },
-      { text: "In one or two sentences, explain what the capstone project asks students to build, and how it should draw on earlier weeks.", type: "short_answer", points: 1, explanation: "The capstone asks students to build a complete social media presence for a new Delta State tourism business with zero existing followers, connecting the strategy, content, advertising, and analytics work from every earlier module into one coherent professional deliverable.", answers: [] },
+      { text: "In one or two sentences, explain what the capstone project asks students to build, and how it should draw on earlier weeks.", type: "short_answer", points: 1, explanation: "The capstone asks students to build a complete social media presence for a new State tourism business with zero existing followers, connecting the strategy, content, advertising, and analytics work from every earlier module into one coherent professional deliverable.", answers: [] },
     ],
   },
 ];

@@ -97,7 +97,7 @@ const COURSES: CourseSeed[] = [
     title: "GIS and Drone Mapping",
     slug: "gis-and-drone-mapping",
     description:
-      "Learn geographic information systems, remote sensing, and drone survey mapping with real Delta State use cases.",
+      "Learn geographic information systems, remote sensing, and drone survey mapping with real State use cases.",
     durationWeeks: 8,
     modules: [
       {
@@ -155,7 +155,7 @@ const COURSES: CourseSeed[] = [
     title: "Digital Marketing",
     slug: "digital-marketing",
     description:
-      "Build practical, hands-on digital marketing skills across SEO, email, paid advertising, and analytics for real Delta State businesses.",
+      "Build practical, hands-on digital marketing skills across SEO, email, paid advertising, and analytics for real State businesses.",
     durationWeeks: 8,
     modules: [
       {

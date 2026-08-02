@@ -34,7 +34,7 @@ Modern monitoring relies heavily on **Internet of Things, IoT**, sensors — sma
 
 These sensors communicate using various protocols, each suited to genuinely different practical needs. **WiFi** offers high bandwidth but requires reasonably reliable local internet infrastructure to actually function. **Cellular connectivity** works well for genuinely remote installations lacking any local WiFi access, though it does require an ongoing cellular data plan. **LoRaWAN**, a specialized low-power, long-range protocol, is particularly well suited to remote monitoring applications requiring only small amounts of data transmitted relatively infrequently, while offering genuinely excellent battery life for the sensors themselves.
 
-Choosing the right communication protocol depends heavily on a specific installation's location and existing available infrastructure — a genuinely important, practical consideration for installations in more rural parts of Delta State, where reliable internet access itself cannot always be safely assumed or taken for granted.
+Choosing the right communication protocol depends heavily on a specific installation's location and existing available infrastructure — a genuinely important, practical consideration for installations in more rural parts of the State, where reliable internet access itself cannot always be safely assumed or taken for granted.
 
 ## SCADA Systems for Energy Management
 

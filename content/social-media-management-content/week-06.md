@@ -11,7 +11,7 @@ topics:
   - A/B testing for ads
   - Performance tracking and optimization
 ties_to:
-  assignment: "Create comprehensive ad campaign plan for a Delta State business"
+  assignment: "Create comprehensive ad campaign plan for a State business"
   practical: "Launch sample ad campaigns on 2 platforms (using free credits); optimize based on performance"
 target_length_minutes: 14
 ---
@@ -76,6 +76,6 @@ Once ads are live, ongoing monitoring is essential, not optional. Key metrics in
 
 Paid advertising takes the strategic and creative foundation we've built over the past five weeks and adds precise, powerful targeting along with genuinely measurable, immediate results. Used well, it can dramatically accelerate what organic content alone would take considerably longer to achieve.
 
-For your assignment, create a comprehensive ad campaign plan for a Delta State business, including clear objectives, defined target audience, and a realistic proposed budget. For your practical exercise, you'll launch sample campaigns on two different platforms using free ad credits, then practice the crucial skill of monitoring and optimizing based on genuine, real performance data.
+For your assignment, create a comprehensive ad campaign plan for a State business, including clear objectives, defined target audience, and a realistic proposed budget. For your practical exercise, you'll launch sample campaigns on two different platforms using free ad credits, then practice the crucial skill of monitoring and optimizing based on genuine, real performance data.
 
 Next week, we cover analytics and performance measurement in real depth — the reporting skills that prove your work is genuinely delivering value. See you then.

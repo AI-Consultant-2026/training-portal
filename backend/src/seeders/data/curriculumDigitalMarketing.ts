@@ -23,7 +23,7 @@ export const WEEKS: WeekSeed[] = [
     ],
     assignmentTitle: "Buyer Personas & Channel Strategy",
     assignmentDescription:
-      "Develop detailed buyer personas — including demographics, needs, information sources, and objections — for a fictional Delta State business, then build a channel strategy identifying which channels genuinely deserve investment based on those personas and a competitive review.",
+      "Develop detailed buyer personas — including demographics, needs, information sources, and objections — for a fictional State business, then build a channel strategy identifying which channels genuinely deserve investment based on those personas and a competitive review.",
     fileRequired: true,
     quizQuestions: [
       { text: "What is a buyer persona, as defined in this week's lecture?", type: "multiple_choice", points: 1, explanation: null, answers: [
@@ -368,7 +368,7 @@ export const WEEKS: WeekSeed[] = [
     ],
     assignmentTitle: "Google Ads Campaign Plan",
     assignmentDescription:
-      "Create a complete Google Ads campaign plan for a Delta State business, including the recommended campaign type, ad group structure, target keywords, and sample ad copy.",
+      "Create a complete Google Ads campaign plan for a State business, including the recommended campaign type, ad group structure, target keywords, and sample ad copy.",
     fileRequired: true,
     quizQuestions: [
       { text: "Which Google Ads campaign type shows text ads directly within search results to people actively typing a relevant query?", type: "multiple_choice", points: 1, explanation: null, answers: [

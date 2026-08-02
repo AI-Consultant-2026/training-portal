@@ -7,7 +7,7 @@ topics:
   - Competitive analysis and market research
   - Building a channel strategy
 ties_to:
-  assignment: "Develop buyer personas and a channel strategy for a fictional Delta State business"
+  assignment: "Develop buyer personas and a channel strategy for a fictional State business"
   practical: "Create a digital marketing plan outline (5-10 pages)"
 target_length_minutes: 12
 ---
@@ -24,7 +24,7 @@ A **buyer persona** is a detailed, research-based representation of a business's
 
 A solid buyer persona includes demographic details — age, location, income level, occupation; the specific problem or need that drives them to seek a solution in the first place; where they genuinely look for information when solving that problem — a search engine, a friend's recommendation, a social platform; and the objections or hesitations that typically prevent them from actually converting.
 
-That last point deserves real emphasis, because it's often skipped. Understanding why a genuinely interested prospect doesn't convert — price concerns, trust concerns, simply not knowing the business exists — directly tells you what your marketing content and channel choices need to actively address. This is exactly the kind of detail this week's assignment asks you to develop for a fictional Delta State business.
+That last point deserves real emphasis, because it's often skipped. Understanding why a genuinely interested prospect doesn't convert — price concerns, trust concerns, simply not knowing the business exists — directly tells you what your marketing content and channel choices need to actively address. This is exactly the kind of detail this week's assignment asks you to develop for a fictional State business.
 
 ## Competitive Analysis and Market Research
 
@@ -46,6 +46,6 @@ I want to emphasize something that will save you real wasted effort throughout y
 
 Today we moved from the broad funnel and channel map of week one into an actual, specific strategy: understanding precisely who you're marketing to through genuinely detailed personas, understanding the competitive landscape you're operating within, and making a deliberate, realistic channel strategy decision based on both. This is exactly the strategic foundation every remaining technical channel we cover in this course assumes is already in place.
 
-For your assignment, develop full buyer personas and a genuine channel strategy for a fictional Delta State business. For your practical exercise, create a complete digital marketing plan outline, pulling together the funnel thinking, channel overview, personas, and channel strategy from these first two weeks into one coherent document.
+For your assignment, develop full buyer personas and a genuine channel strategy for a fictional State business. For your practical exercise, create a complete digital marketing plan outline, pulling together the funnel thinking, channel overview, personas, and channel strategy from these first two weeks into one coherent document.
 
 Next week, we move into Module 2 and get hands-on with our first specific channel: Search Engine Optimization. See you then.

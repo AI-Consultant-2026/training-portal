@@ -9,7 +9,7 @@ topics:
   - Image classification techniques
   - Change detection analysis
 ties_to:
-  assignment: "Perform change detection analysis; document environmental changes in Delta State"
+  assignment: "Perform change detection analysis; document environmental changes in the State"
   practical: "Analyze satellite imagery using QGIS; classify land use"
 target_length_minutes: 14
 ---
@@ -38,7 +38,7 @@ Several major satellite programs provide freely available imagery, which is a ge
 
 **MODIS**, another NASA program, provides considerably lower spatial resolution than either Landsat or Sentinel, but captures imagery of virtually the entire earth on a genuinely daily basis, making it especially well suited to tracking rapidly changing phenomena, like active wildfires or fast-moving storm systems.
 
-The genuinely encouraging news for you: all three of these programs make their imagery completely freely available to the public. This means you can access globally consistent, scientifically rigorous satellite data covering Delta State and the entire surrounding region without any licensing cost whatsoever — a real, significant advantage for the practical work you'll do throughout the remainder of this course.
+The genuinely encouraging news for you: all three of these programs make their imagery completely freely available to the public. This means you can access globally consistent, scientifically rigorous satellite data covering the State and the entire surrounding region without any licensing cost whatsoever — a real, significant advantage for the practical work you'll do throughout the remainder of this course.
 
 ## Spectral Indices: NDVI and NDBI
 
@@ -68,6 +68,6 @@ This might mean comparing NDVI values across two different years to identify def
 
 Today we covered how remote sensing actually works at a fundamental physical level, the major satellite programs providing freely available imagery, how spectral indices like NDVI extract meaningful, specific information from raw imagery, how image classification assigns clear meaning to individual pixels, and how change detection reveals genuine change over time. This gives you an entirely new, powerful data source well beyond the field-collected data we covered last week.
 
-For your assignment, perform a genuine change detection analysis and document real environmental changes here in Delta State — deforestation, urban expansion, or agricultural change are all excellent, genuinely relevant starting points. For your practical exercise, analyze real satellite imagery using QGIS and classify land use, applying the techniques covered today.
+For your assignment, perform a genuine change detection analysis and document real environmental changes here in the State — deforestation, urban expansion, or agricultural change are all excellent, genuinely relevant starting points. For your practical exercise, analyze real satellite imagery using QGIS and classify land use, applying the techniques covered today.
 
 Next week, we move into Module 4: Drone Operations and Survey Mapping — bringing this same remote sensing thinking down to a much closer, considerably more detailed scale. See you then.

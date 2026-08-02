@@ -25,9 +25,9 @@ Welcome to our final lecture of GIS and Drone Mapping. Over the past seven weeks
 
 Every genuinely successful GIS project starts with clear, well-defined **scope** — precisely what questions the project needs to answer, what specific geographic area it covers, and what final deliverables will actually be produced.
 
-A common, serious mistake, especially among beginners, is scope that's either too vague — "map the environment of Delta State" — or genuinely unrealistic for the time and resources actually available. Effective scoping means being specific: which exact resource, which exact geographic boundary, which exact time period, and precisely what decisions the finished analysis is genuinely meant to support.
+A common, serious mistake, especially among beginners, is scope that's either too vague — "map the environment of the State" — or genuinely unrealistic for the time and resources actually available. Effective scoping means being specific: which exact resource, which exact geographic boundary, which exact time period, and precisely what decisions the finished analysis is genuinely meant to support.
 
-This directly connects to your capstone project, which asks you to support Delta State government planning for sustainable agriculture zones. That's a genuinely substantial, ambitious topic, and part of your real work this week is narrowing it into a scope that's both meaningful and realistically achievable — perhaps focusing on one specific local government area, or one particular crop type, or one specific resource constraint like water availability, rather than attempting to comprehensively address absolutely everything at once.
+This directly connects to your capstone project, which asks you to support the State government planning for sustainable agriculture zones. That's a genuinely substantial, ambitious topic, and part of your real work this week is narrowing it into a scope that's both meaningful and realistically achievable — perhaps focusing on one specific local government area, or one particular crop type, or one specific resource constraint like water availability, rather than attempting to comprehensively address absolutely everything at once.
 
 ## Budget and Resource Estimation
 

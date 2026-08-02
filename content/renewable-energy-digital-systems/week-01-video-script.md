@@ -28,7 +28,7 @@ These relate through one formula you'll use constantly: **power equals voltage m
 
 **Solar** converts sunlight directly into electricity — our focus this course. **Wind** converts kinetic energy from moving air, but needs **consistent wind speeds** to be practical. **Hydro** converts flowing or falling water, requiring appropriate **river or water flow conditions**. **Biomass** converts organic material — agricultural waste, wood — through combustion or digestion. **Geothermal** harnesses the earth's internal heat, but needs **specific geological conditions** most regions don't have.
 
-For Nigeria, and Delta State specifically, **solar is the most practical and accessible option**, given abundant sunlight and lower technical barriers.
+For Nigeria, and the State specifically, **solar is the most practical and accessible option**, given abundant sunlight and lower technical barriers.
 
 ## Solar PV, Storage, and Smart Systems
 
@@ -44,9 +44,9 @@ This course's title includes "digital systems" because modern installations rely
 
 [CUT TO: host, direct to camera]
 
-## Potential in Nigeria and Delta State
+## Potential in Nigeria and the State
 
-Nigeria receives abundant, consistent sunlight most of the year, making solar strong almost anywhere in the country. Delta State experiences good solar irradiance, with real seasonal variation between wet and dry seasons that any proper design must account for. Nigeria has also implemented policies and incentives to encourage renewable adoption.
+Nigeria receives abundant, consistent sunlight most of the year, making solar strong almost anywhere in the country. The State experiences good solar irradiance, with real seasonal variation between wet and dry seasons that any proper design must account for. Nigeria has also implemented policies and incentives to encourage renewable adoption.
 
 ## Bringing It Together
 

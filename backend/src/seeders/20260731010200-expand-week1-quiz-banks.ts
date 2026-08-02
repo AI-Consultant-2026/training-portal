@@ -310,10 +310,10 @@ const EXPANSIONS: CourseExpansion[] = [
       ]),
       tf("Power equals voltage multiplied by current, according to the formula given in the lecture.", true),
       tf("A smart grid is described as a purely passive electrical grid with no real-time monitoring.", false),
-      tf("The lecture states that Delta State experiences no meaningful seasonal variation in solar irradiance between wet and dry seasons.", false),
+      tf("The lecture states that the State experiences no meaningful seasonal variation in solar irradiance between wet and dry seasons.", false),
       sa(
-        "In one or two sentences, explain why the lecture says solar is the most practical renewable option for Delta State specifically, compared to wind, hydro, or geothermal.",
-        "Solar is broadly accessible and scalable given Delta State's abundant sunlight and comparatively lower upfront technical barriers, whereas wind needs consistent wind speeds, hydro needs suitable water flow, and geothermal needs specific geological conditions that aren't broadly available there.",
+        "In one or two sentences, explain why the lecture says solar is the most practical renewable option for the State specifically, compared to wind, hydro, or geothermal.",
+        "Solar is broadly accessible and scalable given the State's abundant sunlight and comparatively lower upfront technical barriers, whereas wind needs consistent wind speeds, hydro needs suitable water flow, and geothermal needs specific geological conditions that aren't broadly available there.",
       ),
     ],
   },
