@@ -70,6 +70,21 @@ export function QuizTakingPage() {
     }
   }
 
+  if (status === "failed" && !activeAttempt) {
+    // Most commonly: the quiz is still locked (this week's lessons aren't all
+    // complete yet) or the student isn't enrolled. Previously this fell through to
+    // the loading spinner below and spun forever, since !activeAttempt is also true
+    // on failure -- no error was ever shown.
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-10">
+        <Alert message={error ?? "Could not start this quiz."} />
+        <Link to="/dashboard" className="mt-4 inline-block text-sm text-blue-600 hover:underline">
+          Back to dashboard
+        </Link>
+      </div>
+    );
+  }
+
   if (status === "loading" || !activeAttempt) {
     return (
       <div className="flex justify-center py-16">

@@ -188,15 +188,39 @@ export function CourseDetailPage() {
                       Assignment: {a.title}
                     </Link>
                   ))}
-                  {content.quizzes.map((q) => (
-                    <Link
-                      key={q.id}
-                      to={`/quizzes/${q.id}`}
-                      className="text-sm font-medium text-blue-600 hover:underline"
-                    >
-                      Quiz: {q.title}
-                    </Link>
-                  ))}
+                  {content.quizzes.map((q) => {
+                    // Disabled by default: a quiz only unlocks once every lesson in its
+                    // own week is completed. Only gates students -- instructors/admins
+                    // can't start a quiz attempt anyway (authorize("student") on the
+                    // backend), so there's nothing to lock for them here.
+                    const allLessonsCompleted =
+                      content.lessons.length === 0 ||
+                      content.lessons.every((lesson) =>
+                        courseProgress?.completedLessonIds.includes(lesson.id),
+                      );
+                    const isLocked = user?.role === "student" && !allLessonsCompleted;
+
+                    if (isLocked) {
+                      return (
+                        <span
+                          key={q.id}
+                          className="text-sm font-medium text-gray-400"
+                          title="Complete this week's lessons to unlock the quiz"
+                        >
+                          Quiz: {q.title} (locked)
+                        </span>
+                      );
+                    }
+                    return (
+                      <Link
+                        key={q.id}
+                        to={`/quizzes/${q.id}`}
+                        className="text-sm font-medium text-blue-600 hover:underline"
+                      >
+                        Quiz: {q.title}
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
 

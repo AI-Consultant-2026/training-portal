@@ -50,6 +50,21 @@ async function countCompletedLessons(
   });
 }
 
+// Gates quiz access: a quiz stays locked until every lesson in its own module is
+// completed. A module with zero lessons is never locked -- there's nothing to gate on.
+export async function areAllModuleLessonsCompleted(
+  moduleId: string,
+  studentId: string,
+): Promise<boolean> {
+  const lessons = await listLessonsForModule(moduleId);
+  if (lessons.length === 0) return true;
+  const completedCount = await countCompletedLessons(
+    studentId,
+    lessons.map((l) => l.id),
+  );
+  return completedCount >= lessons.length;
+}
+
 // Distinct from enrollment.service.ts's getEnrollmentForCourseAndStudent (which allows
 // any status): completing a lesson requires an *active* enrollment, so a dropped or
 // suspended student can't rack up further progress. Local to this file (rather than a

@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import * as emails from "../emails";
 import {
   Course,
@@ -11,6 +12,7 @@ import {
   User,
   sequelize,
 } from "../models";
+import { areAllModuleLessonsCompleted } from "./lesson.service";
 import { ApiError } from "../utils/ApiError";
 import { shuffle } from "../utils/shuffle";
 
@@ -36,7 +38,15 @@ async function getQuizWithCourse(quizId: string) {
 }
 
 async function assertEnrolled(courseId: string, studentId: string) {
-  const enrollment = await Enrollment.findOne({ where: { courseId, studentId, status: "active" } });
+  // "completed" is deliberately allowed alongside "active": completing every lesson in a
+  // course's final module auto-flips the enrollment to "completed" (see
+  // enrollment.service.ts's recalculateProgress), and that can now happen at the exact
+  // moment a student finishes that same module's lessons and its quiz becomes unlocked --
+  // requiring "active" only would lock them out of the quiz their own progress just
+  // unlocked. Only genuinely inactive statuses (dropped/suspended) are excluded.
+  const enrollment = await Enrollment.findOne({
+    where: { courseId, studentId, status: { [Op.in]: ["active", "completed"] } },
+  });
   if (!enrollment) {
     throw ApiError.forbidden("You must be enrolled in this course to access this quiz");
   }
@@ -113,6 +123,11 @@ export async function getById(quizId: string) {
 export async function start(quizId: string, studentId: string) {
   const { quiz, course } = await getQuizWithCourse(quizId);
   await assertEnrolled(course.id, studentId);
+
+  const unlocked = await areAllModuleLessonsCompleted(quiz.moduleId, studentId);
+  if (!unlocked) {
+    throw ApiError.forbidden("Complete this week's lessons before you can start the quiz.");
+  }
 
   const existing = await QuizAttempt.findOne({
     where: { quizId, studentId, status: "in_progress" },

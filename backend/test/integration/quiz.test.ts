@@ -5,6 +5,7 @@ import {
   Course,
   CourseModule,
   Enrollment,
+  Lesson,
   Quiz,
   QuizAnswer,
   QuizAttempt,
@@ -155,6 +156,53 @@ describe("Quizzes", () => {
       .post(`/api/quizzes/${quiz.id}/start`)
       .set("Authorization", `Bearer ${token}`);
     expect(res.status).toBe(403);
+  });
+
+  it("locks the quiz until every lesson in its module is completed", async () => {
+    const instructor = await createInstructor();
+    const { course, courseModule, quiz } = await createCourseWithQuiz(instructor.id);
+    const lesson1 = await Lesson.create({ moduleId: courseModule.id, title: "Lesson 1", order: 1 });
+    const lesson2 = await Lesson.create({ moduleId: courseModule.id, title: "Lesson 2", order: 2 });
+    const student = await registerStudent("quizstudent-locked@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("quizstudent-locked@example.com");
+
+    const blocked = await request(app)
+      .post(`/api/quizzes/${quiz.id}/start`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(blocked.status).toBe(403);
+    expect(blocked.body.error.message).toMatch(/complete this week's lessons/i);
+
+    // Completing only one of the two lessons must still leave it locked.
+    await request(app)
+      .post(`/api/lessons/${lesson1.id}/mark-complete`)
+      .set("Authorization", `Bearer ${token}`);
+    const stillBlocked = await request(app)
+      .post(`/api/quizzes/${quiz.id}/start`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(stillBlocked.status).toBe(403);
+
+    // Completing the second lesson unlocks it.
+    await request(app)
+      .post(`/api/lessons/${lesson2.id}/mark-complete`)
+      .set("Authorization", `Bearer ${token}`);
+    const unlocked = await request(app)
+      .post(`/api/quizzes/${quiz.id}/start`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(unlocked.status).toBe(201);
+  });
+
+  it("does not lock a quiz whose module has no lessons at all", async () => {
+    const instructor = await createInstructor();
+    const { course, quiz } = await createCourseWithQuiz(instructor.id);
+    const student = await registerStudent("quizstudent-nolessons@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("quizstudent-nolessons@example.com");
+
+    const res = await request(app)
+      .post(`/api/quizzes/${quiz.id}/start`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(201);
   });
 
   it("grades an all-correct submission as 100 and graded", async () => {
