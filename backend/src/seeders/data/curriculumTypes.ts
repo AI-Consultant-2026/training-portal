@@ -1,8 +1,15 @@
+export interface LessonImageSeed {
+  url: string;
+  caption: string;
+  afterParagraph: number;
+}
+
 export interface LessonSeed {
   title: string;
   content: string;
   order: number;
   durationMinutes: number;
+  images?: LessonImageSeed[];
 }
 
 export interface AnswerSeed {

@@ -62,6 +62,7 @@ module.exports = {
             content: lesson.content,
             video_url: null,
             resources: JSON.stringify({}),
+            images: JSON.stringify(lesson.images ?? []),
             order: lesson.order,
             duration_minutes: lesson.durationMinutes,
             created_at: now,
