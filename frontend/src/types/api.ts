@@ -44,6 +44,12 @@ export interface LessonResourceLink {
   url: string;
 }
 
+export interface LessonImage {
+  url: string;
+  caption: string;
+  afterParagraph: number;
+}
+
 export interface Lesson {
   id: string;
   moduleId: string;
@@ -51,6 +57,7 @@ export interface Lesson {
   content: string;
   videoUrl: string | null;
   resources: { links?: LessonResourceLink[] };
+  images: LessonImage[];
   order: number;
   durationMinutes: number;
 }

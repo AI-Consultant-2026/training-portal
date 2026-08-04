@@ -1,5 +1,11 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
+export interface LessonImage {
+  url: string;
+  caption: string;
+  afterParagraph: number;
+}
+
 export interface LessonAttributes {
   id: string;
   moduleId: string;
@@ -7,6 +13,7 @@ export interface LessonAttributes {
   content: string;
   videoUrl: string | null;
   resources: Record<string, unknown>;
+  images: LessonImage[];
   order: number;
   durationMinutes: number;
   createdAt?: Date;
@@ -14,7 +21,7 @@ export interface LessonAttributes {
 
 export type LessonCreationAttributes = Optional<
   LessonAttributes,
-  "id" | "content" | "videoUrl" | "resources" | "order" | "durationMinutes" | "createdAt"
+  "id" | "content" | "videoUrl" | "resources" | "images" | "order" | "durationMinutes" | "createdAt"
 >;
 
 export class Lesson extends Model<LessonAttributes, LessonCreationAttributes> implements LessonAttributes {
@@ -24,6 +31,7 @@ export class Lesson extends Model<LessonAttributes, LessonCreationAttributes> im
   declare content: string;
   declare videoUrl: string | null;
   declare resources: Record<string, unknown>;
+  declare images: LessonImage[];
   declare order: number;
   declare durationMinutes: number;
   declare readonly createdAt: Date;
@@ -47,6 +55,7 @@ export function initLessonModel(sequelize: Sequelize) {
       content: { type: DataTypes.TEXT, allowNull: false, defaultValue: "" },
       videoUrl: { type: DataTypes.STRING, allowNull: true, field: "video_url" },
       resources: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
+      images: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
       order: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
       durationMinutes: {
         type: DataTypes.INTEGER,

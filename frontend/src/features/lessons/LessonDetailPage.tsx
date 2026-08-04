@@ -41,6 +41,8 @@ export function LessonDetailPage() {
 
   const links = lesson.resources?.links ?? [];
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
+  const paragraphs = lesson.content.split("\n\n");
+  const images = lesson.images ?? [];
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -49,7 +51,21 @@ export function LessonDetailPage() {
 
       {error && <Alert message={error} />}
 
-      <p className="mt-4 whitespace-pre-wrap text-gray-700">{lesson.content}</p>
+      <div className="mt-4 flex flex-col gap-4">
+        {paragraphs.map((paragraph, index) => (
+          <div key={index}>
+            <p className="whitespace-pre-wrap text-gray-700">{paragraph}</p>
+            {images
+              .filter((image) => image.afterParagraph === index)
+              .map((image) => (
+                <figure key={image.url} className="mt-4">
+                  <img src={image.url} alt={image.caption} className="w-full rounded-lg border border-gray-200" />
+                  <figcaption className="mt-2 text-sm text-gray-500">{image.caption}</figcaption>
+                </figure>
+              ))}
+          </div>
+        ))}
+      </div>
 
       {youtubeVideoId ? (
         <CheckpointVideoPlayer lessonId={lesson.id} videoId={youtubeVideoId} checkpoints={checkpoints} />
