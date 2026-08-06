@@ -148,11 +148,12 @@ export function LessonDetailPage() {
       </div>
 
       {youtubeVideoId ? (
-        checkpoints.length > 0 ? (
-          <CheckpointVideoPlayer lessonId={lesson.id} videoId={youtubeVideoId} checkpoints={checkpoints} />
-        ) : (
-          <PlainYouTubeEmbed videoId={youtubeVideoId} />
-        )
+        <CheckpointVideoPlayer
+          lessonId={lesson.id}
+          videoId={youtubeVideoId}
+          videoUrl={lesson.videoUrl!}
+          checkpoints={checkpoints}
+        />
       ) : (
         lesson.videoUrl && (
           <div className="mt-6">
@@ -245,25 +246,5 @@ function LessonNavLink({
       </span>
       <span className="mt-1 truncate text-sm font-medium text-gray-900">{item.title}</span>
     </Link>
-  );
-}
-
-// Used whenever a lesson's video has no checkpoints -- the plain majority case. A bare
-// iframe embed plays immediately and doesn't depend on youtube.com/iframe_api loading
-// successfully, unlike CheckpointVideoPlayer's JS-API-driven player (reserved for
-// lessons that actually need programmatic pause-at-timestamp for checkpoint questions).
-// A failure of that extra script previously left checkpoint-less lessons stuck on a
-// permanent black box with no error shown.
-function PlainYouTubeEmbed({ videoId }: { videoId: string }) {
-  return (
-    <div className="relative mt-6 overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}>
-      <iframe
-        className="h-full w-full"
-        src={`https://www.youtube.com/embed/${videoId}`}
-        title="Lesson video"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-      />
-    </div>
   );
 }

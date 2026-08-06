@@ -28,7 +28,7 @@ function loadYouTubeIframeApi(): Promise<void> {
   if (youtubeApiPromise) {
     return youtubeApiPromise;
   }
-  youtubeApiPromise = new Promise((resolve) => {
+  youtubeApiPromise = new Promise<void>((resolve, reject) => {
     const previous = window.onYouTubeIframeAPIReady;
     window.onYouTubeIframeAPIReady = () => {
       previous?.();
@@ -36,7 +36,18 @@ function loadYouTubeIframeApi(): Promise<void> {
     };
     const script = document.createElement("script");
     script.src = "https://www.youtube.com/iframe_api";
+    // Without this, a blocked/failed script load (a CSP misconfiguration, a network
+    // blip) left the promise permanently unresolved -- the player never initialized
+    // and the video area stayed a silent black box forever, with nothing shown to
+    // the student and no way to recover short of a full page reload.
+    script.onerror = () => reject(new Error("Failed to load the YouTube IFrame API script"));
     document.head.appendChild(script);
+  }).catch((err) => {
+    // Reset the cache on failure (but not on success) so a later lesson mount in the
+    // same page session gets a fresh attempt instead of being stuck replaying the
+    // same rejected promise for the rest of the visit.
+    youtubeApiPromise = null;
+    throw err;
   });
   return youtubeApiPromise;
 }
@@ -44,6 +55,7 @@ function loadYouTubeIframeApi(): Promise<void> {
 interface CheckpointVideoPlayerProps {
   lessonId: string;
   videoId: string;
+  videoUrl: string;
   checkpoints: VideoCheckpoint[];
 }
 
@@ -53,7 +65,7 @@ interface Feedback {
   explanation: string | null;
 }
 
-export function CheckpointVideoPlayer({ lessonId, videoId, checkpoints }: CheckpointVideoPlayerProps) {
+export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints }: CheckpointVideoPlayerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YT.Player | null>(null);
   const pollRef = useRef<number | null>(null);
@@ -66,8 +78,16 @@ export function CheckpointVideoPlayer({ lessonId, videoId, checkpoints }: Checkp
   const [selectedAnswerId, setSelectedAnswerId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Set when the API script itself fails to load, or YouTube's own player reports an
+  // error for this specific video (e.g. embedding disabled or Content ID-restricted on
+  // this domain) -- a real, video-specific failure oEmbed metadata alone can't catch,
+  // since oEmbed can validly succeed for a video that still errors at actual playback
+  // time. Either way, render our own clean "Watch on YouTube" card instead of leaving a
+  // black box up or letting YouTube's own raw error UI show inside the iframe.
+  const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
+    setUnavailable(false);
     const sortedCheckpoints = [...checkpoints].sort((a, b) => a.timestampSeconds - b.timestampSeconds);
     let cancelled = false;
 
@@ -98,22 +118,29 @@ export function CheckpointVideoPlayer({ lessonId, videoId, checkpoints }: Checkp
       }, 300);
     }
 
-    loadYouTubeIframeApi().then(() => {
-      if (cancelled || !containerRef.current || !window.YT) return;
-      playerRef.current = new window.YT.Player(containerRef.current, {
-        videoId,
-        playerVars: { rel: 0 },
-        events: {
-          onStateChange: (event) => {
-            if (event.data === window.YT!.PlayerState.PLAYING) {
-              startPolling();
-            } else {
-              stopPolling();
-            }
+    loadYouTubeIframeApi()
+      .then(() => {
+        if (cancelled || !containerRef.current || !window.YT) return;
+        playerRef.current = new window.YT.Player(containerRef.current, {
+          videoId,
+          playerVars: { rel: 0 },
+          events: {
+            onError: () => {
+              if (!cancelled) setUnavailable(true);
+            },
+            onStateChange: (event) => {
+              if (event.data === window.YT!.PlayerState.PLAYING) {
+                startPolling();
+              } else {
+                stopPolling();
+              }
+            },
           },
-        },
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setUnavailable(true);
       });
-    });
 
     return () => {
       cancelled = true;
@@ -150,6 +177,10 @@ export function CheckpointVideoPlayer({ lessonId, videoId, checkpoints }: Checkp
   function handleTryAgain() {
     setFeedback(null);
     setSelectedAnswerId(null);
+  }
+
+  if (unavailable) {
+    return <VideoUnavailableCard videoUrl={videoUrl} />;
   }
 
   return (
@@ -225,6 +256,32 @@ export function CheckpointVideoPlayer({ lessonId, videoId, checkpoints }: Checkp
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Shown instead of the player when the IFrame API script itself fails to load, or when
+// YouTube reports a playback error for this specific video (embedding disabled,
+// Content ID restriction, removed, etc.) -- a real, video-specific failure that can
+// happen even for a video that passed an oEmbed check ahead of time, since oEmbed's
+// success doesn't guarantee actual playback succeeds on every domain. A plain outbound
+// link, not a re-hosted copy of the video, keeps the lesson resilient without touching
+// anyone else's copyrighted content.
+function VideoUnavailableCard({ videoUrl }: { videoUrl: string }) {
+  return (
+    <div
+      className="mt-6 flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center"
+      style={{ aspectRatio: "16 / 9" }}
+    >
+      <p className="text-sm text-gray-600">This video can&apos;t be played here.</p>
+      <a
+        href={videoUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="text-sm font-medium text-blue-600 hover:underline"
+      >
+        Watch on YouTube
+      </a>
     </div>
   );
 }
