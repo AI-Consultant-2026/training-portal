@@ -19,7 +19,25 @@ export function createApp() {
   // limit across every real user on the site instead of a per-user one.
   app.set("trust proxy", 1);
 
-  app.use(helmet());
+  // Default CSP blocks framing/scripting anything outside this origin, which silently
+  // broke every embedded lesson video: youtube.com/iframe_api (loaded via a <script>
+  // tag for CheckpointVideoPlayer) and the youtube.com/embed/... iframe itself (both
+  // the checkpoint player and the plain fallback embed) were being blocked by
+  // script-src/frame-src 'self' with no console-visible error on our own domain --
+  // only reproducible by actually loading a lesson video in a browser against the
+  // deployed app, since local dev serves the frontend through Vite instead of this
+  // Express app and never applies this CSP at all.
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+          "frame-src": ["'self'", "https://www.youtube.com"],
+          "script-src": ["'self'", "https://www.youtube.com"],
+        },
+      },
+    }),
+  );
   app.use(cors({ origin: config.corsOrigin, credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
