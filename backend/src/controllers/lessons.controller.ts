@@ -12,6 +12,11 @@ export const getLesson = asyncHandler(async (req: Request, res: Response) => {
   res.json({ lesson });
 });
 
+export const getLessonNavigation = asyncHandler(async (req: Request, res: Response) => {
+  const navigation = await lessonService.getLessonNavigation(req.params.id);
+  res.json(navigation);
+});
+
 export const markLessonComplete = asyncHandler(async (req: Request, res: Response) => {
   const result = await lessonService.markLessonComplete(req.params.id, req.user!.id);
   res.json(result);

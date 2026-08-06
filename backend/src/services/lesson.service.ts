@@ -1,5 +1,6 @@
 import { Op, Transaction } from "sequelize";
 import {
+  Course,
   CourseModule,
   Enrollment,
   Lesson,
@@ -21,6 +22,83 @@ export async function getLessonById(id: string): Promise<Lesson> {
     throw ApiError.notFound("Lesson not found");
   }
   return lesson;
+}
+
+export interface LessonNavItem {
+  id: string;
+  title: string;
+  weekNumber: number;
+}
+
+export interface LessonNavigation {
+  course: { id: string; slug: string; title: string };
+  module: { id: string; title: string; weekNumber: number };
+  previous: LessonNavItem | null;
+  next: LessonNavItem | null;
+}
+
+// Powers the Previous/Next lesson buttons on the lesson page. Navigation stays within
+// the current module (ordered by `order`) until a boundary is hit, at which point it
+// crosses into the last lesson of the previous module or the first lesson of the next
+// one -- ordered by weekNumber then order, so "next" always means "the next thing a
+// student would work through," not just "next within this week."
+export async function getLessonNavigation(lessonId: string): Promise<LessonNavigation> {
+  const lesson = await getLessonById(lessonId);
+  const courseModule = await CourseModule.findByPk(lesson.moduleId);
+  if (!courseModule) {
+    throw ApiError.notFound("Module not found");
+  }
+  const course = await Course.findByPk(courseModule.courseId);
+  if (!course) {
+    throw ApiError.notFound("Course not found");
+  }
+
+  const siblingLessons = await listLessonsForModule(courseModule.id);
+  const indexInModule = siblingLessons.findIndex((l) => l.id === lesson.id);
+
+  const allModules = await CourseModule.findAll({
+    where: { courseId: courseModule.courseId },
+    order: [
+      ["weekNumber", "ASC"],
+      ["order", "ASC"],
+    ],
+  });
+  const moduleIndex = allModules.findIndex((m) => m.id === courseModule.id);
+
+  let previous: LessonNavItem | null = null;
+  if (indexInModule > 0) {
+    const prevLesson = siblingLessons[indexInModule - 1];
+    previous = { id: prevLesson.id, title: prevLesson.title, weekNumber: courseModule.weekNumber };
+  } else if (moduleIndex > 0) {
+    for (let i = moduleIndex - 1; i >= 0 && !previous; i--) {
+      const prevModuleLessons = await listLessonsForModule(allModules[i].id);
+      const lastLesson = prevModuleLessons[prevModuleLessons.length - 1];
+      if (lastLesson) {
+        previous = { id: lastLesson.id, title: lastLesson.title, weekNumber: allModules[i].weekNumber };
+      }
+    }
+  }
+
+  let next: LessonNavItem | null = null;
+  if (indexInModule >= 0 && indexInModule < siblingLessons.length - 1) {
+    const nextLesson = siblingLessons[indexInModule + 1];
+    next = { id: nextLesson.id, title: nextLesson.title, weekNumber: courseModule.weekNumber };
+  } else if (moduleIndex >= 0 && moduleIndex < allModules.length - 1) {
+    for (let i = moduleIndex + 1; i < allModules.length && !next; i++) {
+      const nextModuleLessons = await listLessonsForModule(allModules[i].id);
+      const firstLesson = nextModuleLessons[0];
+      if (firstLesson) {
+        next = { id: firstLesson.id, title: firstLesson.title, weekNumber: allModules[i].weekNumber };
+      }
+    }
+  }
+
+  return {
+    course: { id: course.id, slug: course.slug, title: course.title },
+    module: { id: courseModule.id, title: courseModule.title, weekNumber: courseModule.weekNumber },
+    previous,
+    next,
+  };
 }
 
 async function getLessonIdsForCourse(courseId: string): Promise<string[]> {

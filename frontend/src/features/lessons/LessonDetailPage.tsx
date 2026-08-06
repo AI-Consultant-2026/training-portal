@@ -1,15 +1,21 @@
 import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
-import { LessonImage } from "../../types/api";
+import { LessonImage, LessonNavItem } from "../../types/api";
 import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
-import { fetchCheckpoints, fetchLesson, fetchLessonCompletion, markLessonComplete } from "./lessonsSlice";
+import {
+  fetchCheckpoints,
+  fetchLesson,
+  fetchLessonCompletion,
+  fetchLessonNavigation,
+  markLessonComplete,
+} from "./lessonsSlice";
 
 // Markdown/HTML-formatted lesson content. `rehypeRaw` allows literal HTML in
 // content since lessons are only ever authored by instructors/admins via
@@ -70,14 +76,21 @@ function buildContentSegments(content: string, images: LessonImage[]): ContentSe
 export function LessonDetailPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { currentLesson: lesson, completed, checkpoints, status, markCompleteStatus, error } = useAppSelector(
-    (state) => state.lessons,
-  );
+  const {
+    currentLesson: lesson,
+    navigation,
+    completed,
+    checkpoints,
+    status,
+    markCompleteStatus,
+    error,
+  } = useAppSelector((state) => state.lessons);
   const { user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (id) {
       dispatch(fetchLesson(id));
+      dispatch(fetchLessonNavigation(id));
       dispatch(fetchCheckpoints(id));
       if (user?.role === "student") {
         dispatch(fetchLessonCompletion(id));
@@ -182,6 +195,51 @@ export function LessonDetailPage() {
           </Button>
         </div>
       )}
+
+      {navigation && (navigation.previous || navigation.next) && (
+        <div className="mt-8 flex items-center justify-between gap-4 border-t border-gray-200 pt-6">
+          <LessonNavLink
+            item={navigation.previous}
+            currentWeekNumber={navigation.module.weekNumber}
+            direction="previous"
+          />
+          <LessonNavLink item={navigation.next} currentWeekNumber={navigation.module.weekNumber} direction="next" />
+        </div>
+      )}
     </div>
+  );
+}
+
+// Shows the adjacent lesson's title, plus a "Week N" label only when that lesson
+// lives in a different week than the one currently being viewed -- crossing that
+// boundary is the one case worth calling out; staying within the same week doesn't
+// need repeating on every lesson.
+function LessonNavLink({
+  item,
+  currentWeekNumber,
+  direction,
+}: {
+  item: LessonNavItem | null;
+  currentWeekNumber: number;
+  direction: "previous" | "next";
+}) {
+  if (!item) {
+    return <div />;
+  }
+
+  const isNewWeek = item.weekNumber !== currentWeekNumber;
+  const alignment = direction === "previous" ? "text-left" : "text-right ml-auto";
+
+  return (
+    <Link
+      to={`/lessons/${item.id}`}
+      className={`flex max-w-[45%] flex-col rounded-md border border-gray-200 px-4 py-3 hover:border-blue-300 hover:bg-blue-50 ${alignment}`}
+    >
+      <span className="text-xs font-medium uppercase text-gray-400">
+        {direction === "previous" ? "← Previous" : "Next →"}
+        {isNewWeek && ` · Week ${item.weekNumber}`}
+      </span>
+      <span className="mt-1 truncate text-sm font-medium text-gray-900">{item.title}</span>
+    </Link>
   );
 }

@@ -64,6 +64,110 @@ describe("Lessons and progress tracking", () => {
     expect(detailRes.body.lesson.id).toBe(lessons[0].id);
   });
 
+  describe("lesson navigation", () => {
+    async function createCourseWithModules(instructorId: string, lessonsPerModule: number[]) {
+      const course = await Course.create({
+        title: "Navigation Course",
+        slug: `navigation-course-${Date.now()}-${Math.random()}`,
+        durationWeeks: lessonsPerModule.length,
+        status: "published",
+        instructorId,
+      });
+      const modules: CourseModule[] = [];
+      const lessonsByModule: Lesson[][] = [];
+      for (let week = 0; week < lessonsPerModule.length; week++) {
+        const courseModule = await CourseModule.create({
+          courseId: course.id,
+          title: `Module ${week + 1}`,
+          weekNumber: week + 1,
+        });
+        modules.push(courseModule);
+        const lessons: Lesson[] = [];
+        for (let i = 1; i <= lessonsPerModule[week]; i++) {
+          lessons.push(
+            await Lesson.create({ moduleId: courseModule.id, title: `Week ${week + 1} Lesson ${i}`, order: i }),
+          );
+        }
+        lessonsByModule.push(lessons);
+      }
+      return { course, modules, lessonsByModule };
+    }
+
+    it("returns previous and next within the same module", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-1@example.com");
+      const { modules, lessonsByModule } = await createCourseWithModules(instructor.id, [2]);
+
+      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][1].id}/navigation`);
+      expect(res.status).toBe(200);
+      expect(res.body.module.id).toBe(modules[0].id);
+      expect(res.body.previous).toEqual({
+        id: lessonsByModule[0][0].id,
+        title: "Week 1 Lesson 1",
+        weekNumber: 1,
+      });
+      expect(res.body.next).toBeNull();
+    });
+
+    it("crosses into the next module's first lesson at a week boundary", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-2@example.com");
+      const { lessonsByModule } = await createCourseWithModules(instructor.id, [2, 2]);
+
+      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][1].id}/navigation`);
+      expect(res.status).toBe(200);
+      expect(res.body.next).toEqual({
+        id: lessonsByModule[1][0].id,
+        title: "Week 2 Lesson 1",
+        weekNumber: 2,
+      });
+    });
+
+    it("crosses into the previous module's last lesson at a week boundary", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-3@example.com");
+      const { lessonsByModule } = await createCourseWithModules(instructor.id, [2, 2]);
+
+      const res = await request(app).get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`);
+      expect(res.status).toBe(200);
+      expect(res.body.previous).toEqual({
+        id: lessonsByModule[0][1].id,
+        title: "Week 1 Lesson 2",
+        weekNumber: 1,
+      });
+    });
+
+    it("skips over an empty module when crossing a boundary", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-4@example.com");
+      const { lessonsByModule } = await createCourseWithModules(instructor.id, [1, 0, 1]);
+
+      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`);
+      expect(res.status).toBe(200);
+      expect(res.body.next).toEqual({
+        id: lessonsByModule[2][0].id,
+        title: "Week 3 Lesson 1",
+        weekNumber: 3,
+      });
+    });
+
+    it("returns null previous/next at the very first and last lesson of a course", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-5@example.com");
+      const { course, lessonsByModule } = await createCourseWithModules(instructor.id, [1, 1]);
+
+      const first = await request(app).get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`);
+      expect(first.body.previous).toBeNull();
+      expect(first.body.course).toEqual({ id: course.id, slug: course.slug, title: course.title });
+
+      const last = await request(app).get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`);
+      expect(last.body.next).toBeNull();
+    });
+
+    it("requires no authentication, matching the other public lesson endpoints", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-6@example.com");
+      const { lessonsByModule } = await createCourseWithModules(instructor.id, [1]);
+
+      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`);
+      expect(res.status).toBe(200);
+    });
+  });
+
   it("rejects mark-complete for unauthenticated, non-student, non-enrolled, and inactive enrollments", async () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id);

@@ -62,6 +62,19 @@ export interface Lesson {
   durationMinutes: number;
 }
 
+export interface LessonNavItem {
+  id: string;
+  title: string;
+  weekNumber: number;
+}
+
+export interface LessonNavigation {
+  course: { id: string; slug: string; title: string };
+  module: { id: string; title: string; weekNumber: number };
+  previous: LessonNavItem | null;
+  next: LessonNavItem | null;
+}
+
 export interface VideoCheckpointAnswer {
   id: string;
   answerText: string;

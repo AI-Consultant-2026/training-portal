@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as lessonsApi from "../../api/lessons.api";
-import { Lesson, VideoCheckpoint } from "../../types/api";
+import { Lesson, LessonNavigation, VideoCheckpoint } from "../../types/api";
 
 export interface LessonsState {
   currentLesson: Lesson | null;
+  navigation: LessonNavigation | null;
   completed: boolean | null;
   checkpoints: VideoCheckpoint[];
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -13,6 +14,7 @@ export interface LessonsState {
 
 const initialState: LessonsState = {
   currentLesson: null,
+  navigation: null,
   completed: null,
   checkpoints: [],
   status: "idle",
@@ -34,6 +36,13 @@ export const fetchLesson = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(extractErrorMessage(err));
     }
+  },
+);
+
+export const fetchLessonNavigation = createAsyncThunk(
+  "lessons/fetchNavigation",
+  async (lessonId: string) => {
+    return lessonsApi.fetchLessonNavigation(lessonId);
   },
 );
 
@@ -71,6 +80,7 @@ const lessonsSlice = createSlice({
       .addCase(fetchLesson.pending, (state) => {
         state.status = "loading";
         state.currentLesson = null;
+        state.navigation = null;
         state.completed = null;
         state.checkpoints = [];
       })
@@ -81,6 +91,9 @@ const lessonsSlice = createSlice({
       .addCase(fetchLesson.rejected, (state, action) => {
         state.status = "failed";
         state.error = (action.payload as string) ?? "Could not load lesson";
+      })
+      .addCase(fetchLessonNavigation.fulfilled, (state, action) => {
+        state.navigation = action.payload;
       })
       .addCase(fetchLessonCompletion.fulfilled, (state, action) => {
         state.completed = action.payload;

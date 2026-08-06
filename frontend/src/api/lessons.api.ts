@@ -1,4 +1,10 @@
-import { CheckCheckpointAnswerResult, Lesson, MarkLessonCompleteResult, VideoCheckpoint } from "../types/api";
+import {
+  CheckCheckpointAnswerResult,
+  Lesson,
+  LessonNavigation,
+  MarkLessonCompleteResult,
+  VideoCheckpoint,
+} from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchModuleLessons(moduleId: string): Promise<Lesson[]> {
@@ -9,6 +15,11 @@ export async function fetchModuleLessons(moduleId: string): Promise<Lesson[]> {
 export async function fetchLesson(lessonId: string): Promise<Lesson> {
   const res = await axiosClient.get<{ lesson: Lesson }>(`/lessons/${lessonId}`);
   return res.data.lesson;
+}
+
+export async function fetchLessonNavigation(lessonId: string): Promise<LessonNavigation> {
+  const res = await axiosClient.get<LessonNavigation>(`/lessons/${lessonId}/navigation`);
+  return res.data;
 }
 
 export async function fetchLessonCompletion(lessonId: string): Promise<boolean> {

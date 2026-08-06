@@ -8,6 +8,7 @@ import { checkCheckpointAnswerSchema } from "../validators/checkpoint.validators
 export const lessonsRouter = Router();
 
 lessonsRouter.get("/:id", lessonsController.getLesson);
+lessonsRouter.get("/:id/navigation", lessonsController.getLessonNavigation);
 lessonsRouter.get(
   "/:id/my-completion",
   authenticate,
