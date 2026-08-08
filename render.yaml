@@ -62,3 +62,6 @@ services:
         sync: false
       - key: EMAIL_FROM_ADDRESS
         sync: false
+      # Not a secret, so a real value can live in git (unlike the SMTP vars above).
+      - key: LEADS_NOTIFY_EMAIL
+        value: hello@paleontraining.com

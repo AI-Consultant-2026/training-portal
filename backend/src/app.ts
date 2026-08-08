@@ -48,6 +48,17 @@ export function createApp() {
 
   app.use("/api", apiRouter);
 
+  // Standalone marketing page, served same-origin so its registration form can post to
+  // /api/leads directly. Lives under src/ (not public/) so it's present in both dev
+  // (ts-node runs straight from src/) and prod (the whole backend build output is
+  // copied into the image, see root Dockerfile) without depending on the frontend build.
+  app.get("/welcome", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "welcome.html"));
+  });
+  app.get("/welcome.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "welcome.js"));
+  });
+
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this
   // directory never exists outside that image and these routes are simply skipped.

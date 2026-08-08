@@ -5,6 +5,7 @@ afterEach(async () => {
   (emailAdapter as MemoryEmailAdapter).clear();
 
   const tables = [
+    "leads",
     "refresh_tokens",
     "progress_tracking",
     "video_checkpoint_answers",

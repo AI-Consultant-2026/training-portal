@@ -34,6 +34,7 @@ export const config = {
     smtpPass: process.env.SMTP_PASS ?? "",
     fromAddress: process.env.EMAIL_FROM_ADDRESS ?? "no-reply@trainingportal.local",
   },
+  leadsNotifyEmail: process.env.LEADS_NOTIFY_EMAIL ?? "hello@paleontraining.com",
 };
 
 function parseRefreshDays(value: string): number {

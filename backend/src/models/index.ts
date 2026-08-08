@@ -6,6 +6,7 @@ import { CapstoneSubmission, initCapstoneSubmissionModel } from "./capstoneSubmi
 import { Course, initCourseModel } from "./course.model";
 import { CourseModule, initCourseModuleModel } from "./module.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
+import { Lead, initLeadModel } from "./lead.model";
 import { Lesson, initLessonModel } from "./lesson.model";
 import { ProgressTracking, initProgressTrackingModel } from "./progressTracking.model";
 import { Quiz, initQuizModel } from "./quiz.model";
@@ -54,6 +55,7 @@ initCapstoneModel(sequelize);
 initCapstoneSubmissionModel(sequelize);
 initVideoCheckpointModel(sequelize);
 initVideoCheckpointAnswerModel(sequelize);
+initLeadModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -134,6 +136,7 @@ export {
   Course,
   CourseModule,
   Enrollment,
+  Lead,
   Lesson,
   ProgressTracking,
   Quiz,

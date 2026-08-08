@@ -4,6 +4,7 @@ import { logger } from "../utils/logger";
 import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
+import { buildLeadNotificationEmail } from "./templates/leadNotification";
 import { buildPasswordResetEmail } from "./templates/passwordReset";
 import { buildQuizGradedEmail } from "./templates/quizGraded";
 import { buildWelcomeEmail } from "./templates/welcome";
@@ -47,6 +48,14 @@ export async function sendQuizGradedEmail(
   score: number | null,
 ): Promise<void> {
   await sendEmail(buildQuizGradedEmail(user, quiz, course, score));
+}
+
+export async function sendLeadNotificationEmail(lead: {
+  name: string;
+  email: string;
+  course: string;
+}): Promise<void> {
+  await sendEmail(buildLeadNotificationEmail(lead));
 }
 
 export async function sendCapstoneGradedEmail(
