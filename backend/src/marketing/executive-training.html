@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paleon Training | Executive Corporate Training in London</title>
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-dark:#081a33;
+    --gold:#c9a24b;
+    --gold-light:#e6c874;
+    --grey:#5a6472;
+    --bg:#f7f8fa;
+    --white:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI', Arial, sans-serif;color:#222;line-height:1.6;background:var(--bg);}
+  a{text-decoration:none;}
+  .container{max-width:1100px;margin:0 auto;padding:0 24px;}
+
+  /* Header */
+  header{background:var(--navy);color:var(--white);padding:18px 0;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.15);}
+  header .container{display:flex;justify-content:space-between;align-items:center;}
+  .logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:.5px;}
+  .logo-mark{flex:none;}
+  .logo span{color:var(--gold-light);}
+  nav a{color:var(--white);margin-left:28px;font-size:14px;font-weight:600;opacity:.9;}
+  nav a:hover{opacity:1;color:var(--gold-light);}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);color:var(--white);padding:90px 0 80px;text-align:center;}
+  .hero h1{font-size:38px;font-weight:800;max-width:800px;margin:0 auto 18px;line-height:1.3;}
+  .hero h1 span{color:var(--gold-light);}
+  .hero p{font-size:18px;max-width:650px;margin:0 auto 34px;opacity:.9;}
+  .hero-tags{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:36px;}
+  .hero-tags span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);padding:8px 18px;border-radius:30px;font-size:13px;font-weight:600;}
+  .btn{display:inline-block;padding:15px 36px;border-radius:6px;font-weight:700;font-size:15px;transition:.2s;}
+  .btn-primary{background:var(--gold);color:var(--navy-dark);}
+  .btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);}
+  .btn-outline{border:2px solid var(--white);color:var(--white);margin-left:14px;}
+  .btn-outline:hover{background:var(--white);color:var(--navy);}
+
+  /* Sections */
+  section{padding:70px 0;}
+  .section-title{text-align:center;margin-bottom:46px;}
+  .section-title p.eyebrow{color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-size:13px;margin-bottom:10px;}
+  .section-title h2{font-size:30px;color:var(--navy);font-weight:800;}
+  .section-title .sub{max-width:600px;margin:14px auto 0;color:var(--grey);font-size:16px;}
+
+  /* Sectors */
+  .sectors{background:var(--white);}
+  .sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .sector-card{background:var(--bg);border-radius:10px;padding:32px 24px;text-align:center;border:1px solid #e8eaed;transition:.2s;}
+  .sector-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.06);}
+  .sector-card .icon{font-size:36px;margin-bottom:14px;}
+  .sector-card h3{color:var(--navy);font-size:18px;margin-bottom:8px;}
+  .sector-card p{color:var(--grey);font-size:14px;}
+
+  /* Why */
+  .why{background:var(--navy);color:var(--white);}
+  .why .section-title h2, .why .section-title p.eyebrow{color:var(--white);}
+  .why .section-title p.eyebrow{color:var(--gold-light);}
+  .why .section-title .sub{color:#c8d2e0;}
+  .benefit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;}
+  .benefit{display:flex;gap:16px;align-items:flex-start;}
+  .benefit .num{background:var(--gold);color:var(--navy-dark);width:38px;height:38px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;}
+  .benefit h4{font-size:17px;margin-bottom:6px;color:var(--gold-light);}
+  .benefit p{color:#d5dce6;font-size:14.5px;}
+
+  /* Course info strip */
+  .info-strip{background:var(--white);}
+  .info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;}
+  .info-item{padding:26px 16px;border-radius:10px;background:var(--bg);border:1px solid #e8eaed;}
+  .info-item .icon{font-size:30px;margin-bottom:10px;}
+  .info-item h4{color:var(--navy);font-size:15px;margin-bottom:4px;}
+  .info-item p{color:var(--grey);font-size:13.5px;}
+
+  /* Testimonial-style trust bar */
+  .trust{background:var(--gold);color:var(--navy-dark);text-align:center;padding:40px 0;}
+  .trust p{font-size:19px;font-weight:700;max-width:750px;margin:0 auto;}
+
+  /* CTA / Contact */
+  .contact{background:var(--navy-dark);color:var(--white);text-align:center;}
+  .contact .section-title h2, .contact .section-title p.eyebrow{color:var(--white);}
+  .contact .section-title p.eyebrow{color:var(--gold-light);}
+  .contact .section-title .sub{color:#c8d2e0;}
+  .contact-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:44px;max-width:640px;margin:0 auto;}
+  .contact-methods{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin:26px 0 32px;}
+  .contact-methods div{text-align:left;}
+  .contact-methods .label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--gold-light);font-weight:700;margin-bottom:4px;}
+  .contact-methods a{color:var(--white);font-size:18px;font-weight:700;}
+  .contact-methods a:hover{color:var(--gold-light);}
+
+  footer{background:var(--navy-dark);color:#9aa7ba;text-align:center;padding:24px 0;font-size:13px;border-top:1px solid rgba(255,255,255,.08);}
+  footer strong{color:var(--white);}
+
+  @media(max-width:768px){
+    .sector-grid,.benefit-grid,.info-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:28px;}
+    nav{display:none;}
+    .contact-methods{flex-direction:column;gap:20px;align-items:center;}
+    .contact-methods div{text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">
+      <svg class="logo-mark" width="30" height="30" viewBox="0 0 40 40" fill="none">
+        <rect x="1" y="1" width="38" height="38" rx="4" stroke="#ffffff" stroke-width="1.4"/>
+        <path d="M8 27 L15 14 L20 21 L25 11 L32 27" stroke="var(--gold-light)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+        <circle cx="15" cy="14" r="1.8" fill="#ffffff"/>
+        <circle cx="25" cy="11" r="1.8" fill="#ffffff"/>
+      </svg>
+      PALEON <span>TRAINING</span>
+    </div>
+    <nav>
+      <a href="#sectors">Who We Train</a>
+      <a href="#why">Why Paleon</a>
+      <a href="#course">The Programme</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-tags">
+      <span>🇬🇧 London, UK</span>
+      <span>📅 5-Day Intensive Programme</span>
+      <span>🎓 Delivered by Industry Experts</span>
+    </div>
+    <h1>Executive Training That Sharpens Nigeria's <span>Oil &amp; Gas, Banking and Telecoms</span> Leaders</h1>
+    <p>Paleon Training delivers specialised, high-impact courses in London for leading private sector organisations — designed and taught by seasoned professionals from the field.</p>
+    <a href="mailto:hello@paleontraining.com" class="btn btn-primary">Enrol Your Team Today</a>
+    <a href="#contact" class="btn btn-outline">Speak to Us</a>
+  </div>
+</section>
+
+<section class="sectors" id="sectors">
+  <div class="container">
+    <div class="section-title">
+      <p class="eyebrow">Who We Train</p>
+      <h2>Built for Nigeria's Most Critical Sectors</h2>
+      <p class="sub">Our programmes are tailored to the real challenges facing leading private sector enterprises.</p>
+    </div>
+    <div class="sector-grid">
+      <div class="sector-card">
+        <div class="icon">🛢️</div>
+        <h3>Oil &amp; Gas</h3>
+        <p>Technical and management training for upstream, midstream and downstream professionals.</p>
+      </div>
+      <div class="sector-card">
+        <div class="icon">🏦</div>
+        <h3>Banking &amp; Finance</h3>
+        <p>Risk, compliance and leadership courses for financial institutions and regulators.</p>
+      </div>
+      <div class="sector-card">
+        <div class="icon">📡</div>
+        <h3>Telecoms</h3>
+        <p>Strategic and operational training for telecom operators and infrastructure teams.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <div class="container">
+    <div class="section-title">
+      <p class="eyebrow">Why Paleon Training</p>
+      <h2>The Benefits Your Team Gains</h2>
+      <p class="sub">More than a course — an investment in performance, credibility and career growth.</p>
+    </div>
+    <div class="benefit-grid">
+      <div class="benefit">
+        <div class="num">1</div>
+        <div><h4>Taught by Practitioners, Not Just Trainers</h4><p>Every course is led by professionals who work in the field they teach — real experience, real case studies.</p></div>
+      </div>
+      <div class="benefit">
+        <div class="num">2</div>
+        <div><h4>London-Based Immersive Experience</h4><p>Step away from daily distractions and focus fully on learning in a globally respected training environment.</p></div>
+      </div>
+      <div class="benefit">
+        <div class="num">3</div>
+        <div><h4>Sector-Specific Curriculum</h4><p>Courses are designed around the actual regulatory, technical and operational realities of your industry.</p></div>
+      </div>
+      <div class="benefit">
+        <div class="num">4</div>
+        <div><h4>Networking with Global Peers</h4><p>Connect with professionals from other organisations and sectors attending the same programme.</p></div>
+      </div>
+      <div class="benefit">
+        <div class="num">5</div>
+        <div><h4>Career &amp; Organisational Impact</h4><p>Delegates return with practical tools, frameworks and certifications that drive measurable performance gains.</p></div>
+      </div>
+      <div class="benefit">
+        <div class="num">6</div>
+        <div><h4>Trusted by Leading Private Institutions</h4><p>A proven track record delivering training that meets the standards of top corporate stakeholders.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="info-strip" id="course">
+  <div class="container">
+    <div class="section-title">
+      <p class="eyebrow">The Programme</p>
+      <h2>What to Expect</h2>
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="icon">📍</div>
+        <h4>Location</h4>
+        <p>London, United Kingdom</p>
+      </div>
+      <div class="info-item">
+        <div class="icon">🗓️</div>
+        <h4>Duration</h4>
+        <p>5-Day Intensive Course</p>
+      </div>
+      <div class="info-item">
+        <div class="icon">👥</div>
+        <h4>Delivery</h4>
+        <p>Led by Industry Professionals</p>
+      </div>
+      <div class="info-item">
+        <div class="icon">🎯</div>
+        <h4>Audience</h4>
+        <p>Oil &amp; Gas, Banking &amp; Telecoms Teams</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="container">
+    <p>"Practical, expert-led training that turns delegates into sector leaders — delivered where it matters, in London."</p>
+  </div>
+</div>
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-title">
+      <p class="eyebrow">Get Started</p>
+      <h2>Secure Your Team's Place</h2>
+      <p class="sub">Reach out today to discuss course dates, group bookings and tailored training for your organisation.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-methods">
+        <div>
+          <div class="label">Email</div>
+          <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>
+        </div>
+        <div>
+          <div class="label">Phone (NG)</div>
+          <a href="tel:+2347077149215">+234(0)707 714 9215</a>
+        </div>
+        <div>
+          <div class="label">Phone (UK)</div>
+          <a href="tel:+447508823495">+44(0)750 882 3495</a>
+        </div>
+        <div>
+          <div class="label">Address</div>
+          42 Okemore Gardens,<br />Orpington, Kent BR5 3PH
+        </div>
+      </div>
+      <a href="mailto:hello@paleontraining.com" class="btn btn-primary">Request a Training Proposal</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p><strong>Paleon Training</strong> — Specialised Corporate Training for Oil &amp; Gas, Banking and Telecoms Leaders</p>
+  </div>
+</footer>
+
+</body>
+</html>

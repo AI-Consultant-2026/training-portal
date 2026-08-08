@@ -58,6 +58,9 @@ export function createApp() {
   app.get("/welcome.js", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "welcome.js"));
   });
+  app.get("/executive-training", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "executive-training.html"));
+  });
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this
