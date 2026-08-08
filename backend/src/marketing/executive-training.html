@@ -22,7 +22,7 @@
   /* Header */
   header{background:var(--navy);color:var(--white);padding:18px 0;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.15);}
   header .container{display:flex;justify-content:space-between;align-items:center;}
-  .logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:.5px;}
+  .logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:.5px;color:inherit;}
   .logo-mark{flex:none;}
   .logo span{color:var(--gold-light);}
   nav a{color:var(--white);margin-left:28px;font-size:14px;font-weight:600;opacity:.9;}
@@ -108,7 +108,7 @@
 
 <header>
   <div class="container">
-    <div class="logo">
+    <a class="logo" href="/welcome">
       <svg class="logo-mark" width="30" height="30" viewBox="0 0 40 40" fill="none">
         <rect x="1" y="1" width="38" height="38" rx="4" stroke="#ffffff" stroke-width="1.4"/>
         <path d="M8 27 L15 14 L20 21 L25 11 L32 27" stroke="var(--gold-light)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
@@ -116,8 +116,9 @@
         <circle cx="25" cy="11" r="1.8" fill="#ffffff"/>
       </svg>
       PALEON <span>TRAINING</span>
-    </div>
+    </a>
     <nav>
+      <a href="/welcome">Home</a>
       <a href="#sectors">Who We Train</a>
       <a href="#why">Why Paleon</a>
       <a href="#course">The Programme</a>
