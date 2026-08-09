@@ -12,13 +12,15 @@ export interface UserAttributes {
   role: UserRole;
   status: UserStatus;
   profileData: Record<string, unknown>;
+  location: string;
+  courseInterest: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export type UserCreationAttributes = Optional<
   UserAttributes,
-  "id" | "role" | "status" | "profileData" | "createdAt" | "updatedAt"
+  "id" | "role" | "status" | "profileData" | "location" | "courseInterest" | "createdAt" | "updatedAt"
 >;
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -30,6 +32,8 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   declare role: UserRole;
   declare status: UserStatus;
   declare profileData: Record<string, unknown>;
+  declare location: string;
+  declare courseInterest: string | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -78,6 +82,16 @@ export function initUserModel(sequelize: Sequelize) {
         allowNull: false,
         defaultValue: {},
         field: "profile_data",
+      },
+      location: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "Nigeria",
+      },
+      courseInterest: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: "course_interest",
       },
     },
     {

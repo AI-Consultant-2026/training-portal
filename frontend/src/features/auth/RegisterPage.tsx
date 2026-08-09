@@ -4,22 +4,54 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
+import { Select } from "../../components/ui/Select";
 import { registerUser } from "./authSlice";
+
+const LOCATIONS = [
+  "Nigeria",
+  "United Kingdom",
+  "United States",
+  "Canada",
+  "Germany",
+  "China",
+  "India",
+  "France",
+  "Japan",
+  "Brazil",
+  "Russia",
+  "Other Country",
+];
+
+// value = the real course slug, so a selection can both be saved as-is and used
+// directly to redirect to /courses/<slug> after a successful signup.
+const COURSE_INTERESTS = [
+  { slug: "cyber-security-fundamentals", label: "Cyber Security Fundamentals" },
+  { slug: "social-media-management-content", label: "Social Media Management & Content" },
+  { slug: "digital-marketing", label: "Digital Marketing" },
+  { slug: "gis-and-drone-mapping", label: "GIS and Drone Mapping" },
+  { slug: "renewable-energy-digital-systems", label: "Renewable Energy Digital Systems" },
+];
 
 export function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [location, setLocation] = useState("Nigeria");
+  const [courseInterest, setCourseInterest] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { status, error } = useAppSelector((state) => state.auth);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const result = await dispatch(registerUser({ email, password, firstName, lastName }));
+    const result = await dispatch(
+      registerUser({ email, password, firstName, lastName, location, courseInterest }),
+    );
     if (registerUser.fulfilled.match(result)) {
-      navigate("/dashboard");
+      // Send the student straight to the course they said they're interested in,
+      // instead of the generic dashboard.
+      navigate(`/courses/${courseInterest}`);
     }
   }
 
@@ -59,6 +91,35 @@ export function RegisterPage() {
           required
           minLength={8}
         />
+        <Select
+          id="location"
+          label="Select your location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          required
+        >
+          {LOCATIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
+        <Select
+          id="courseInterest"
+          label="Which course are you interested in?"
+          value={courseInterest}
+          onChange={(e) => setCourseInterest(e.target.value)}
+          required
+        >
+          <option value="" disabled>
+            Choose a course&hellip;
+          </option>
+          {COURSE_INTERESTS.map((course) => (
+            <option key={course.slug} value={course.slug}>
+              {course.label}
+            </option>
+          ))}
+        </Select>
         <Button type="submit" isLoading={status === "loading"}>
           Sign up
         </Button>

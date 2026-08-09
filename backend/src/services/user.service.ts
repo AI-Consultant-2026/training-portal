@@ -10,6 +10,8 @@ export function serializeUser(user: User) {
     role: user.role,
     status: user.status,
     profileData: user.profileData,
+    location: user.location,
+    courseInterest: user.courseInterest,
   };
 }
 

@@ -9,6 +9,8 @@ export interface User {
   role: UserRole;
   status: UserStatus;
   profileData: Record<string, unknown>;
+  location: string;
+  courseInterest: string | null;
 }
 
 export type CourseLevel = "beginner" | "intermediate" | "advanced";

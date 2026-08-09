@@ -17,6 +17,8 @@ export interface RegisterInput {
   password: string;
   firstName: string;
   lastName: string;
+  location?: string;
+  courseInterest?: string;
 }
 
 export interface LoginInput {
@@ -45,6 +47,8 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     passwordHash,
     firstName: input.firstName,
     lastName: input.lastName,
+    location: input.location ?? "Nigeria",
+    courseInterest: input.courseInterest ?? null,
   });
 
   const accessToken = generateAccessToken(user);
