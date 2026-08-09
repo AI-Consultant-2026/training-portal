@@ -38,8 +38,8 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     ctaText: "Pay & Enrol Now — Start Your Digital Skills Training",
   },
   "social-media-management-content": {
-    videoId: "aee9ySpGXBs",
-    title: "Social Media Management for Dummies | Learn the Basics in One Video",
+    videoId: "egyKxMm5tus",
+    title: "Social Media Marketing for Beginners",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
 };
