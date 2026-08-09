@@ -35,7 +35,7 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
   "cyber-security-fundamentals": {
     videoId: "aRbKFCY4tjE",
     title: "Cybersecurity for Beginners: Basic Skills",
-    ctaText: "Pay & Enrol Now — Start Your Digital Skills Training",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
   "social-media-management-content": {
     videoId: "egyKxMm5tus",

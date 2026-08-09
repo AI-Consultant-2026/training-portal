@@ -18,12 +18,6 @@ export function Navbar() {
         Training Portal
       </Link>
       <div className="flex items-center gap-4 text-sm">
-        <Link to="/courses" className="text-gray-600 hover:text-gray-900">
-          Courses
-        </Link>
-        <a href="/bridge36.html" className="text-gray-600 hover:text-gray-900">
-          Bridge36
-        </a>
         {user ? (
           <>
             <Link to="/dashboard" className="text-gray-600 hover:text-gray-900">
