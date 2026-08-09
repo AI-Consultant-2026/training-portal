@@ -10,6 +10,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
+import { YouTubePlayer } from "../../components/ui/YouTubePlayer";
 import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, Quiz } from "../../types/api";
 import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
@@ -156,15 +157,11 @@ export function CourseDetailPage() {
         <div className="mt-6">
           {course.slug === "cyber-security-fundamentals" && (
             <div className="mb-4">
-              <div className="relative overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}>
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube.com/embed/aRbKFCY4tjE"
-                  title="Cybersecurity for Beginners: Basic Skills"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
+              <YouTubePlayer
+                videoId="aRbKFCY4tjE"
+                videoUrl="https://www.youtube.com/watch?v=aRbKFCY4tjE"
+                title="Cybersecurity for Beginners: Basic Skills"
+              />
               <p className="mt-3 text-center text-base font-semibold text-gray-900">
                 Pay &amp; Enrol Now &mdash; Start Your Digital Skills Training
               </p>

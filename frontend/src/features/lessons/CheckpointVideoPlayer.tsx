@@ -2,55 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { checkCheckpointAnswer } from "../../api/lessons.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
+import { loadYouTubeIframeApi, VideoUnavailableCard } from "../../components/ui/YouTubePlayer";
 import { VideoCheckpoint } from "../../types/api";
 
-export function extractYouTubeId(url: string): string | null {
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname.includes("youtube.com")) {
-      return parsed.searchParams.get("v");
-    }
-    if (parsed.hostname === "youtu.be") {
-      return parsed.pathname.slice(1) || null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-let youtubeApiPromise: Promise<void> | null = null;
-
-function loadYouTubeIframeApi(): Promise<void> {
-  if (window.YT?.Player) {
-    return Promise.resolve();
-  }
-  if (youtubeApiPromise) {
-    return youtubeApiPromise;
-  }
-  youtubeApiPromise = new Promise<void>((resolve, reject) => {
-    const previous = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => {
-      previous?.();
-      resolve();
-    };
-    const script = document.createElement("script");
-    script.src = "https://www.youtube.com/iframe_api";
-    // Without this, a blocked/failed script load (a CSP misconfiguration, a network
-    // blip) left the promise permanently unresolved -- the player never initialized
-    // and the video area stayed a silent black box forever, with nothing shown to
-    // the student and no way to recover short of a full page reload.
-    script.onerror = () => reject(new Error("Failed to load the YouTube IFrame API script"));
-    document.head.appendChild(script);
-  }).catch((err) => {
-    // Reset the cache on failure (but not on success) so a later lesson mount in the
-    // same page session gets a fresh attempt instead of being stuck replaying the
-    // same rejected promise for the rest of the visit.
-    youtubeApiPromise = null;
-    throw err;
-  });
-  return youtubeApiPromise;
-}
+export { extractYouTubeId } from "../../components/ui/YouTubePlayer";
 
 interface CheckpointVideoPlayerProps {
   lessonId: string;
@@ -180,7 +135,11 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
   }
 
   if (unavailable) {
-    return <VideoUnavailableCard videoUrl={videoUrl} />;
+    return (
+      <div className="mt-6">
+        <VideoUnavailableCard videoUrl={videoUrl} />
+      </div>
+    );
   }
 
   return (
@@ -256,32 +215,6 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-// Shown instead of the player when the IFrame API script itself fails to load, or when
-// YouTube reports a playback error for this specific video (embedding disabled,
-// Content ID restriction, removed, etc.) -- a real, video-specific failure that can
-// happen even for a video that passed an oEmbed check ahead of time, since oEmbed's
-// success doesn't guarantee actual playback succeeds on every domain. A plain outbound
-// link, not a re-hosted copy of the video, keeps the lesson resilient without touching
-// anyone else's copyrighted content.
-function VideoUnavailableCard({ videoUrl }: { videoUrl: string }) {
-  return (
-    <div
-      className="mt-6 flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center"
-      style={{ aspectRatio: "16 / 9" }}
-    >
-      <p className="text-sm text-gray-600">This video can&apos;t be played here.</p>
-      <a
-        href={videoUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="text-sm font-medium text-blue-600 hover:underline"
-      >
-        Watch on YouTube
-      </a>
     </div>
   );
 }
