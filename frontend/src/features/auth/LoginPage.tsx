@@ -17,7 +17,7 @@ export function LoginPage() {
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(result)) {
-      navigate("/dashboard");
+      navigate(result.payload.user.role === "admin" ? "/admin" : "/dashboard");
     }
   }
 
