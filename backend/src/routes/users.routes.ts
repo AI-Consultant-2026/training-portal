@@ -9,4 +9,5 @@ export const usersRouter = Router();
 
 usersRouter.get("/me", authenticate, usersController.getMe);
 usersRouter.patch("/me", authenticate, validate(updateMeSchema), usersController.updateMe);
+usersRouter.patch("/me/heartbeat", authenticate, usersController.heartbeat);
 usersRouter.get("/:id", authenticate, authorize("admin"), usersController.getUserById);

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
 import { RoleRoute } from "../components/layout/RoleRoute";
+import { AdminCandidatesPage } from "../features/admin/AdminCandidatesPage";
 import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
 import { AssignmentDetailPage } from "../features/assignments/AssignmentDetailPage";
 import { GradeSubmissionPage } from "../features/assignments/GradeSubmissionPage";
@@ -58,6 +59,7 @@ export function AppRouter() {
         </Route>
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

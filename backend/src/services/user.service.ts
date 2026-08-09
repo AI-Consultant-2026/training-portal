@@ -39,3 +39,7 @@ export async function updateProfile(userId: string, input: UpdateProfileInput): 
   await user.save();
   return user;
 }
+
+export async function recordHeartbeat(userId: string): Promise<void> {
+  await User.update({ lastActiveAt: new Date() }, { where: { id: userId } });
+}

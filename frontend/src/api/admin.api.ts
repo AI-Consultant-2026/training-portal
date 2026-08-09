@@ -1,7 +1,38 @@
-import { AdminStats } from "../types/api";
+import { AdminStats, Candidate, Lead } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchAdminStats(): Promise<AdminStats> {
   const res = await axiosClient.get<{ stats: AdminStats }>("/admin/stats");
   return res.data.stats;
+}
+
+export async function fetchCandidates(): Promise<Candidate[]> {
+  const res = await axiosClient.get<{ candidates: Candidate[] }>("/admin/candidates");
+  return res.data.candidates;
+}
+
+export interface AddCandidateInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  location: string;
+  courseInterest?: string;
+}
+
+export async function addCandidate(input: AddCandidateInput): Promise<Candidate> {
+  const res = await axiosClient.post<{ candidate: Candidate }>("/admin/candidates", input);
+  return res.data.candidate;
+}
+
+export async function deleteCandidate(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/candidates/${id}`);
+}
+
+export async function confirmPayment(enrollmentId: string, paymentConfirmed: boolean): Promise<void> {
+  await axiosClient.patch(`/admin/enrollments/${enrollmentId}/payment`, { paymentConfirmed });
+}
+
+export async function fetchLeads(): Promise<Lead[]> {
+  const res = await axiosClient.get<{ leads: Lead[] }>("/admin/leads");
+  return res.data.leads;
 }

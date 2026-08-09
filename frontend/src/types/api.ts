@@ -123,6 +123,8 @@ export interface Enrollment {
   completionDate: string | null;
   progressPercent: number;
   grade: string | null;
+  paymentConfirmed: boolean;
+  paymentConfirmedAt: string | null;
   course?: Course;
 }
 
@@ -300,4 +302,37 @@ export interface AdminStats {
     averageScore: number | null;
     passRate: number | null;
   };
+  payments: { courseId: string; courseTitle: string; paymentConfirmed: number; paymentPending: number }[];
+}
+
+export interface CandidateEnrollment {
+  id: string;
+  courseId: string;
+  courseTitle: string | null;
+  status: EnrollmentStatus;
+  progressPercent: number;
+  paymentConfirmed: boolean;
+  paymentConfirmedAt: string | null;
+}
+
+export interface Candidate {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  status: UserStatus;
+  location: string;
+  courseInterest: string | null;
+  createdAt: string;
+  online: boolean;
+  lastActiveAt: string | null;
+  enrollments: CandidateEnrollment[];
+}
+
+export interface Lead {
+  id: string;
+  name: string;
+  email: string;
+  course: string;
+  createdAt: string;
 }

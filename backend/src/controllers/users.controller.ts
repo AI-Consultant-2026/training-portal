@@ -13,6 +13,11 @@ export const updateMe = asyncHandler(async (req: Request, res: Response) => {
   res.json({ user: userService.serializeUser(user) });
 });
 
+export const heartbeat = asyncHandler(async (req: Request, res: Response) => {
+  await userService.recordHeartbeat(req.user!.id);
+  res.status(204).end();
+});
+
 export const getUserById = asyncHandler(async (req: Request, res: Response) => {
   if (!req.params.id) {
     throw ApiError.badRequest("User id is required");

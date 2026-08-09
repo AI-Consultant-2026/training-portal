@@ -11,11 +11,20 @@ export interface EnrollmentAttributes {
   completionDate: Date | null;
   progressPercent: number;
   grade: string | null;
+  paymentConfirmed: boolean;
+  paymentConfirmedAt: Date | null;
 }
 
 export type EnrollmentCreationAttributes = Optional<
   EnrollmentAttributes,
-  "id" | "enrolledDate" | "status" | "completionDate" | "progressPercent" | "grade"
+  | "id"
+  | "enrolledDate"
+  | "status"
+  | "completionDate"
+  | "progressPercent"
+  | "grade"
+  | "paymentConfirmed"
+  | "paymentConfirmedAt"
 >;
 
 export class Enrollment
@@ -30,6 +39,8 @@ export class Enrollment
   declare completionDate: Date | null;
   declare progressPercent: number;
   declare grade: string | null;
+  declare paymentConfirmed: boolean;
+  declare paymentConfirmedAt: Date | null;
 }
 
 export function initEnrollmentModel(sequelize: Sequelize) {
@@ -71,6 +82,17 @@ export function initEnrollmentModel(sequelize: Sequelize) {
         field: "progress_percent",
       },
       grade: { type: DataTypes.STRING, allowNull: true },
+      paymentConfirmed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: "payment_confirmed",
+      },
+      paymentConfirmedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: "payment_confirmed_at",
+      },
     },
     {
       sequelize,

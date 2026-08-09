@@ -14,13 +14,22 @@ export interface UserAttributes {
   profileData: Record<string, unknown>;
   location: string;
   courseInterest: string | null;
+  lastActiveAt: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export type UserCreationAttributes = Optional<
   UserAttributes,
-  "id" | "role" | "status" | "profileData" | "location" | "courseInterest" | "createdAt" | "updatedAt"
+  | "id"
+  | "role"
+  | "status"
+  | "profileData"
+  | "location"
+  | "courseInterest"
+  | "lastActiveAt"
+  | "createdAt"
+  | "updatedAt"
 >;
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -34,6 +43,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   declare profileData: Record<string, unknown>;
   declare location: string;
   declare courseInterest: string | null;
+  declare lastActiveAt: Date | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -92,6 +102,11 @@ export function initUserModel(sequelize: Sequelize) {
         type: DataTypes.STRING,
         allowNull: true,
         field: "course_interest",
+      },
+      lastActiveAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: "last_active_at",
       },
     },
     {

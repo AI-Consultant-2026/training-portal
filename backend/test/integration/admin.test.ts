@@ -87,6 +87,7 @@ describe("Admin dashboard stats", () => {
         averageScore: null,
         passRate: null,
       },
+      payments: [],
     });
   });
 

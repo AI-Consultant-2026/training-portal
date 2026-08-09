@@ -7,7 +7,7 @@ import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { registerUser } from "./authSlice";
 
-const LOCATIONS = [
+export const LOCATIONS = [
   "Nigeria",
   "United Kingdom",
   "United States",
@@ -24,7 +24,7 @@ const LOCATIONS = [
 
 // value = the real course slug, so a selection can both be saved as-is and used
 // directly to redirect to /courses/<slug> after a successful signup.
-const COURSE_INTERESTS = [
+export const COURSE_INTERESTS = [
   { slug: "cyber-security-fundamentals", label: "Cyber Security Fundamentals" },
   { slug: "social-media-management-content", label: "Social Media Management & Content" },
   { slug: "digital-marketing", label: "Digital Marketing" },

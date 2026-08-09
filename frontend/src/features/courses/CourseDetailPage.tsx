@@ -131,7 +131,8 @@ export function CourseDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modules, user]);
 
-  const isEnrolled = course ? enrollments.some((e) => e.courseId === course.id) : false;
+  const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
+  const isEnrolled = myEnrollment !== undefined;
 
   useEffect(() => {
     if (course && user?.role === "student" && isEnrolled) {
@@ -217,7 +218,11 @@ export function CourseDetailPage() {
           {enrollError && <Alert message={enrollError} />}
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={handleEnroll} isLoading={enrolling} disabled={isEnrolled}>
-              {isEnrolled ? "Already enrolled" : "Enroll"}
+              {!isEnrolled
+                ? "Enroll"
+                : myEnrollment?.paymentConfirmed
+                  ? "Already Enrolled"
+                  : "Payment pending"}
             </Button>
             {COURSE_PRICES[course.slug] && (
               <Button variant="secondary">Pay for course – N{COURSE_PRICES[course.slug]}</Button>

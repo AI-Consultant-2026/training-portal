@@ -1,12 +1,23 @@
+import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 import { col, fn, Op } from "sequelize";
+import { config } from "../config";
 import {
   AssignmentSubmission,
   Course,
   Enrollment,
+  Lead,
   Quiz,
   QuizAttempt,
   User,
 } from "../models";
+import * as authService from "./auth.service";
+import { ApiError } from "../utils/ApiError";
+
+// A candidate counts as "online" if their last heartbeat was within this window. The
+// frontend pings every ~60s while a session is active, so a few missed beats still read
+// as online before falling back to "last seen X ago".
+const ONLINE_THRESHOLD_MS = 5 * 60 * 1000;
 
 // Sequelize's typed findAll() return type doesn't vary with the runtime `raw: true`
 // option, so aggregate/grouped queries (which return plain rows, not model instances)
@@ -125,5 +136,127 @@ export async function getDashboardStats() {
       averageScore: quizzesAverageScore,
       passRate,
     },
+    payments: await getPaymentsOverview(),
   };
+}
+
+async function getPaymentsOverview() {
+  const courses = await Course.findAll({ attributes: ["id", "title"] });
+  const rows = (await (Enrollment as unknown as FindAllRaw).findAll({
+    attributes: ["courseId", "paymentConfirmed", [fn("COUNT", col("id")), "count"]],
+    group: ["courseId", "paymentConfirmed"],
+    raw: true,
+  })) as unknown as { courseId: string; paymentConfirmed: boolean; count: string }[];
+
+  return courses.map((course) => {
+    const courseRows = rows.filter((r) => r.courseId === course.id);
+    const confirmed = courseRows.find((r) => r.paymentConfirmed)?.count ?? "0";
+    const pending = courseRows.find((r) => !r.paymentConfirmed)?.count ?? "0";
+    return {
+      courseId: course.id,
+      courseTitle: course.title,
+      paymentConfirmed: Number(confirmed),
+      paymentPending: Number(pending),
+    };
+  });
+}
+
+function isOnline(lastActiveAt: Date | null): boolean {
+  return lastActiveAt !== null && Date.now() - lastActiveAt.getTime() < ONLINE_THRESHOLD_MS;
+}
+
+function serializeCandidate(user: User) {
+  const enrollments = ((user as unknown as { enrollments?: Enrollment[] }).enrollments ?? []).map(
+    (e) => ({
+      id: e.id,
+      courseId: e.courseId,
+      courseTitle: (e as unknown as { course?: Course }).course?.title ?? null,
+      status: e.status,
+      progressPercent: e.progressPercent,
+      paymentConfirmed: e.paymentConfirmed,
+      paymentConfirmedAt: e.paymentConfirmedAt,
+    }),
+  );
+
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    status: user.status,
+    location: user.location,
+    courseInterest: user.courseInterest,
+    createdAt: user.createdAt,
+    online: isOnline(user.lastActiveAt),
+    lastActiveAt: user.lastActiveAt,
+    enrollments,
+  };
+}
+
+export async function listCandidates() {
+  const candidates = await User.findAll({
+    where: { role: "student" },
+    include: [{ model: Enrollment, as: "enrollments", include: [{ model: Course, as: "course" }] }],
+    order: [["createdAt", "DESC"]],
+  });
+  return candidates.map(serializeCandidate);
+}
+
+export interface CreateCandidateInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  location?: string;
+  courseInterest?: string;
+}
+
+export async function createCandidate(input: CreateCandidateInput) {
+  const existing = await User.findOne({ where: { email: input.email } });
+  if (existing) {
+    throw ApiError.conflict("An account with this email already exists");
+  }
+
+  // The candidate never uses this password directly -- they set their own via the
+  // password-reset email sent right below, reusing the existing forgot-password flow
+  // instead of building a separate invite/set-password mechanism.
+  const unusablePassword = randomBytes(32).toString("hex");
+  const passwordHash = await bcrypt.hash(unusablePassword, config.bcryptSaltRounds);
+
+  const user = await User.create({
+    email: input.email,
+    passwordHash,
+    firstName: input.firstName,
+    lastName: input.lastName,
+    role: "student",
+    location: input.location ?? "Nigeria",
+    courseInterest: input.courseInterest ?? null,
+  });
+
+  await authService.requestPasswordReset(input.email);
+
+  return serializeCandidate(user);
+}
+
+export async function deactivateCandidate(id: string): Promise<void> {
+  const user = await User.findOne({ where: { id, role: "student" } });
+  if (!user) {
+    throw ApiError.notFound("Candidate not found");
+  }
+  user.status = "inactive";
+  await user.save();
+}
+
+export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed: boolean) {
+  const enrollment = await Enrollment.findByPk(enrollmentId);
+  if (!enrollment) {
+    throw ApiError.notFound("Enrollment not found");
+  }
+  enrollment.paymentConfirmed = paymentConfirmed;
+  enrollment.paymentConfirmedAt = paymentConfirmed ? new Date() : null;
+  await enrollment.save();
+  return enrollment;
+}
+
+export async function listLeads() {
+  return Lead.findAll({ order: [["createdAt", "DESC"]] });
 }
