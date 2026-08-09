@@ -104,10 +104,12 @@
     border-bottom: 1px solid var(--line-light);
   }
   .header-row {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 0;
+    padding-top: 16px;
+    padding-bottom: 16px;
     gap: 24px;
   }
   .logo {
@@ -217,7 +219,8 @@
     pointer-events: none;
   }
   .hero-inner {
-    padding: clamp(64px, 11vw, 128px) 0 clamp(56px, 9vw, 96px);
+    padding-top: clamp(64px, 11vw, 128px);
+    padding-bottom: clamp(56px, 9vw, 96px);
   }
   .eyebrow {
     display: inline-flex;
@@ -515,11 +518,15 @@
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
     gap: 40px;
-    padding: 56px 0 44px;
+    padding-top: 56px;
+    padding-bottom: 44px;
     border-bottom: 1px solid var(--line);
   }
   @media (max-width: 760px) {
     .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .footer-top { grid-template-columns: 1fr; }
   }
   .footer-brand .logo-word, .footer-brand .logo { color: var(--paper); }
   .footer-tag { font-size: 13.5px; color: var(--ink-soft); margin-top: 14px; max-width: 32ch; line-height: 1.6; }
@@ -546,10 +553,40 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 22px 0;
+    padding-top: 22px;
+    padding-bottom: 22px;
     font-size: 12.5px;
     color: var(--ink-faint);
     font-family: var(--font-body);
+  }
+
+  /* ============ Mobile typography ============ */
+  @media (max-width: 640px) {
+    /* Body/description copy: keep everything comfortably readable on a phone */
+    .course-desc { font-size: 15px; }
+    .why-desc { font-size: 14.5px; }
+    .footer-tag { font-size: 14.5px; }
+    .footer-links a { font-size: 14.5px; }
+    .footer-contact { font-size: 14.5px; }
+    .register-list-item { font-size: 14.5px; }
+    .form-note { font-size: 12.5px; }
+    .form-label { font-size: 13px; }
+    /* 16px prevents iOS Safari's auto-zoom-on-focus for inputs under that size */
+    .form-input, .form-select { font-size: 16px; }
+
+    /* Small uppercase tracked labels read smaller than their size suggests */
+    .util-bar { font-size: 13.5px; }
+    .eyebrow { font-size: 13px; }
+    .section-eyebrow { font-size: 13px; }
+    .course-category { font-size: 12px; }
+    .course-meta { font-size: 13px; }
+    .why-num { font-size: 13px; }
+    .footer-heading { font-size: 12.5px; }
+    .stat-label { font-size: 13px; }
+    .footer-bottom { font-size: 13px; }
+
+    /* Open mobile nav menu */
+    .nav-links a { font-size: 16px; }
   }
 
   .skip-link {

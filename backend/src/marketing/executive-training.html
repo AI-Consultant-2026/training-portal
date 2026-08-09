@@ -50,12 +50,13 @@
 
   /* Header */
   header{background:var(--ink);color:var(--white);padding:18px 0;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.15);}
-  header .container{display:flex;justify-content:space-between;align-items:center;}
+  header .container{position:relative;display:flex;justify-content:space-between;align-items:center;}
   .logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.01em;color:inherit;}
   .logo-mark{flex:none;}
   .logo span{color:var(--signal-2);}
   nav a{color:var(--white);margin-left:28px;font-size:14px;font-weight:600;opacity:.9;}
   nav a:hover{opacity:1;color:var(--signal-2);}
+  .nav-toggle{display:none;background:none;border:1px solid rgba(255,255,255,.3);border-radius:var(--radius);width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--white);}
 
   /* Hero */
   .hero{background:linear-gradient(135deg,var(--ink) 0%,var(--ink-2) 100%);color:var(--white);padding:90px 0 80px;text-align:center;}
@@ -128,8 +129,24 @@
     .sector-grid,.benefit-grid,.info-grid{grid-template-columns:1fr;}
     .hero h1{font-size:28px;}
     nav{display:none;}
+    nav.nav-open{
+      display:flex;flex-direction:column;position:absolute;top:100%;left:24px;right:24px;
+      background:var(--ink);border:1px solid rgba(255,255,255,.15);border-top:none;
+      padding:16px 20px;gap:14px;z-index:20;
+    }
+    nav.nav-open a{margin-left:0;}
+    .nav-toggle{display:inline-flex;}
     .contact-methods{flex-direction:column;gap:20px;align-items:center;}
     .contact-methods div{text-align:center;}
+
+    /* Mobile typography: bump the smallest labels/copy for legibility */
+    .hero-tags span{font-size:12.5px;}
+    .section-title p.eyebrow{font-size:13px;}
+    .sector-card p{font-size:14.5px;}
+    .benefit p{font-size:15px;}
+    .info-item p{font-size:14px;}
+    .contact-methods .label{font-size:12.5px;}
+    footer{font-size:13.5px;}
   }
 </style>
 </head>
@@ -153,6 +170,9 @@
       <a href="#course">The Programme</a>
       <a href="#contact">Contact</a>
     </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
+    </button>
   </div>
 </header>
 
@@ -165,7 +185,7 @@
     </div>
     <h1>Executive Training That Sharpens Nigeria's <span>Oil &amp; Gas, Banking and Telecoms</span> Leaders</h1>
     <p>Paleon Training delivers specialised, high-impact courses in London for leading private sector organisations — designed and taught by seasoned professionals from the field.</p>
-    <a href="mailto:hello@paleontraining.com" class="btn btn-primary">Enrol Your Team Today</a>
+    <a href="mailto:corporate@paleontraining.com" class="btn btn-primary">Enrol Your Team Today</a>
     <a href="#contact" class="btn btn-outline">Speak to Us</a>
   </div>
 </section>
@@ -281,7 +301,7 @@
       <div class="contact-methods">
         <div>
           <div class="label">Email</div>
-          <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>
+          <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
         </div>
         <div>
           <div class="label">Phone (NG)</div>
@@ -296,7 +316,7 @@
           <span>42 Okemore Gardens,<br />Orpington, Kent BR5 3PH</span>
         </div>
       </div>
-      <a href="mailto:hello@paleontraining.com" class="btn btn-primary">Request a Training Proposal</a>
+      <a href="mailto:corporate@paleontraining.com" class="btn btn-primary">Request a Training Proposal</a>
     </div>
   </div>
 </section>
@@ -307,5 +327,6 @@
   </div>
 </footer>
 
+<script src="/executive-training.js"></script>
 </body>
 </html>

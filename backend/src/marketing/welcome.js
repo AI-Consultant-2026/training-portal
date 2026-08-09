@@ -8,7 +8,7 @@
         links.style.display = open ? "none" : "flex";
         links.style.cssText += open
           ? ""
-          : "display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line-light);padding:16px 20px;gap:14px;";
+          : "display:flex;flex-direction:column;position:absolute;top:100%;left:clamp(20px, 4vw, 48px);right:clamp(20px, 4vw, 48px);background:var(--paper);border-bottom:1px solid var(--line-light);padding:16px 20px;gap:14px;border:1px solid var(--line-light);border-top:none;";
         toggle.setAttribute("aria-expanded", String(!open));
       });
     }
