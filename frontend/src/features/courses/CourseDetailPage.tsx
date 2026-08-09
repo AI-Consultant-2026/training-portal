@@ -47,6 +47,11 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     title: "Digital Marketing Explained: What It Is and Why It Matters in 2025",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
+  "renewable-energy-digital-systems": {
+    videoId: "FQXkMt0Zm1A",
+    title: "How do solar plants work? | Solar plant explained",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
 };
 
 export function CourseDetailPage() {
