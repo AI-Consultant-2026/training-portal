@@ -42,6 +42,11 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     title: "Social Media Marketing for Beginners",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
+  "digital-marketing": {
+    videoId: "lHMCFlSVtNs",
+    title: "Digital Marketing Explained: What It Is and Why It Matters in 2025",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
 };
 
 export function CourseDetailPage() {
