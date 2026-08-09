@@ -22,6 +22,28 @@ interface ModuleContent {
   loadError?: boolean;
 }
 
+interface IntroVideo {
+  videoId: string;
+  title: string;
+  ctaText: string;
+}
+
+// Real, verified (oEmbed-checked), embeddable YouTube videos chosen to entice a
+// prospective student into enrolling -- shown before the Enroll button, one per course,
+// keyed by slug so adding another course's intro video is a one-line addition here.
+const INTRO_VIDEOS: Record<string, IntroVideo> = {
+  "cyber-security-fundamentals": {
+    videoId: "aRbKFCY4tjE",
+    title: "Cybersecurity for Beginners: Basic Skills",
+    ctaText: "Pay & Enrol Now — Start Your Digital Skills Training",
+  },
+  "social-media-management-content": {
+    videoId: "aee9ySpGXBs",
+    title: "Social Media Management for Dummies | Learn the Basics in One Video",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
+};
+
 export function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
@@ -155,15 +177,15 @@ export function CourseDetailPage() {
 
       {user?.role === "student" && (
         <div className="mt-6">
-          {course.slug === "cyber-security-fundamentals" && (
+          {INTRO_VIDEOS[course.slug] && (
             <div className="mb-4">
               <YouTubePlayer
-                videoId="aRbKFCY4tjE"
-                videoUrl="https://www.youtube.com/watch?v=aRbKFCY4tjE"
-                title="Cybersecurity for Beginners: Basic Skills"
+                videoId={INTRO_VIDEOS[course.slug].videoId}
+                videoUrl={`https://www.youtube.com/watch?v=${INTRO_VIDEOS[course.slug].videoId}`}
+                title={INTRO_VIDEOS[course.slug].title}
               />
               <p className="mt-3 text-center text-base font-semibold text-gray-900">
-                Pay &amp; Enrol Now &mdash; Start Your Digital Skills Training
+                {INTRO_VIDEOS[course.slug].ctaText}
               </p>
             </div>
           )}
