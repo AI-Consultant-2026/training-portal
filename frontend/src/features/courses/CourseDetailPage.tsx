@@ -28,6 +28,16 @@ interface IntroVideo {
   ctaText: string;
 }
 
+// Displayed on a secondary button next to Enroll -- placeholder only, no payment
+// flow wired up yet.
+const COURSE_PRICES: Record<string, string> = {
+  "cyber-security-fundamentals": "200,000",
+  "digital-marketing": "150,000",
+  "gis-and-drone-mapping": "200,000",
+  "renewable-energy-digital-systems": "250,000",
+  "social-media-management-content": "150,000",
+};
+
 // Real, verified (oEmbed-checked), embeddable YouTube videos chosen to entice a
 // prospective student into enrolling -- shown before the Enroll button, one per course,
 // keyed by slug so adding another course's intro video is a one-line addition here.
@@ -205,9 +215,14 @@ export function CourseDetailPage() {
             </div>
           )}
           {enrollError && <Alert message={enrollError} />}
-          <Button onClick={handleEnroll} isLoading={enrolling} disabled={isEnrolled}>
-            {isEnrolled ? "Already enrolled" : "Enroll"}
-          </Button>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button onClick={handleEnroll} isLoading={enrolling} disabled={isEnrolled}>
+              {isEnrolled ? "Already enrolled" : "Enroll"}
+            </Button>
+            {COURSE_PRICES[course.slug] && (
+              <Button variant="secondary">Pay for course – N{COURSE_PRICES[course.slug]}</Button>
+            )}
+          </div>
         </div>
       )}
 
