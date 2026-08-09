@@ -154,6 +154,22 @@ export function CourseDetailPage() {
 
       {user?.role === "student" && (
         <div className="mt-6">
+          {course.slug === "cyber-security-fundamentals" && (
+            <div className="mb-4">
+              <div className="relative overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}>
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube.com/embed/aRbKFCY4tjE"
+                  title="Cybersecurity for Beginners: Basic Skills"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+              <p className="mt-3 text-center text-base font-semibold text-gray-900">
+                Pay &amp; Enrol Now &mdash; Start Your Digital Skills Training
+              </p>
+            </div>
+          )}
           {enrollError && <Alert message={enrollError} />}
           <Button onClick={handleEnroll} isLoading={enrolling} disabled={isEnrolled}>
             {isEnrolled ? "Already enrolled" : "Enroll"}
