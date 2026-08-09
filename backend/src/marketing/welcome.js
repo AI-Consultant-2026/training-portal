@@ -69,7 +69,7 @@
           .catch(function () {
             errorBox.classList.add("show");
             submitBtn.disabled = false;
-            submitBtn.textContent = "Register interest";
+            submitBtn.textContent = "Submit";
           });
       });
     }
