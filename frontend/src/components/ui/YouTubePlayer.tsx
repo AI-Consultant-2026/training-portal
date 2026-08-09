@@ -124,7 +124,12 @@ export function YouTubePlayer({ videoId, videoUrl, title }: YouTubePlayerProps) 
 
   return (
     <div
-      className="relative overflow-hidden rounded-lg bg-black"
+      // The YouTube IFrame API replaces this element's child with a fresh <iframe>
+      // sized 640x390 by default, ignoring our h-full/w-full classes -- fine on
+      // desktop where the container is close to 640px wide, but badly clipped on
+      // mobile. Forcing the injected iframe to fill this wrapper via CSS keeps it
+      // responsive regardless of what pixel size YouTube assigns it.
+      className="relative overflow-hidden rounded-lg bg-black [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
       style={{ aspectRatio: "16 / 9" }}
       role="group"
       aria-label={title}

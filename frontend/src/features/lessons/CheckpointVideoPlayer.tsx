@@ -143,7 +143,11 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
   }
 
   return (
-    <div className="relative mt-6 overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}>
+    <div
+      // See YouTubePlayer.tsx for why the injected iframe needs a forced-fill override.
+      className="relative mt-6 overflow-hidden rounded-lg bg-black [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
+      style={{ aspectRatio: "16 / 9" }}
+    >
       <div ref={containerRef} className="h-full w-full" />
 
       {activeCheckpoint && (
