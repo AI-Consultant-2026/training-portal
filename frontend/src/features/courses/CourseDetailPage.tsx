@@ -52,6 +52,11 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     title: "How do solar plants work? | Solar plant explained",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
+  "gis-and-drone-mapping": {
+    videoId: "KOvgaZMer5U",
+    title: "What is Drone Mapping? Beginner's Guide",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
 };
 
 export function CourseDetailPage() {
