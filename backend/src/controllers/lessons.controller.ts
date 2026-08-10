@@ -8,7 +8,7 @@ export const listLessonsForModule = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getLesson = asyncHandler(async (req: Request, res: Response) => {
-  const lesson = await lessonService.getLessonById(req.params.id);
+  const lesson = await lessonService.getLessonForStudent(req.params.id, req.user!);
   res.json({ lesson });
 });
 

@@ -24,6 +24,29 @@ export async function getLessonById(id: string): Promise<Lesson> {
   return lesson;
 }
 
+// Every week has exactly two lessons, so gating "lessons" here means gating all of
+// them -- locked until the student's enrollment has payment_confirmed set by an admin.
+// Only gates students -- instructors/admins aren't enrollees and should always be able
+// to review content (mirrors the frontend's CourseDetailPage lock check).
+export async function getLessonForStudent(id: string, requester: { id: string; role: string }): Promise<Lesson> {
+  const lesson = await getLessonById(id);
+  if (requester.role !== "student") {
+    return lesson;
+  }
+
+  const courseModule = await CourseModule.findByPk(lesson.moduleId);
+  if (!courseModule) {
+    throw ApiError.notFound("Module not found");
+  }
+
+  const enrollment = await getEnrollmentForCourseAndStudent(courseModule.courseId, requester.id);
+  if (!enrollment || !enrollment.paymentConfirmed) {
+    throw ApiError.forbidden("This lesson unlocks once your payment has been confirmed");
+  }
+
+  return lesson;
+}
+
 export interface LessonNavItem {
   id: string;
   title: string;

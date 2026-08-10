@@ -257,10 +257,11 @@ export function CourseDetailPage() {
                   content.quizzes.length > 0) && (
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-3">
                   {content.lessons.map((lesson) => {
-                    // Disabled by default: lessons and assignments only open once the
-                    // student has actually enrolled. Only gates students -- instructors/
-                    // admins aren't enrollees and should always be able to review content.
-                    const isLocked = user?.role === "student" && !isEnrolled;
+                    // Disabled by default: lessons only open once an admin has confirmed
+                    // payment for this student's enrollment -- enrolling alone isn't
+                    // enough. Only gates students -- instructors/admins aren't enrollees
+                    // and should always be able to review content.
+                    const isLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
                     const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
 
                     if (isLocked) {
@@ -268,7 +269,7 @@ export function CourseDetailPage() {
                         <span
                           key={lesson.id}
                           className="text-sm font-medium text-gray-400"
-                          title="Enroll in this course to unlock its lessons"
+                          title="This lesson unlocks once your payment has been confirmed"
                         >
                           Lesson: {lesson.title} (locked)
                         </span>
