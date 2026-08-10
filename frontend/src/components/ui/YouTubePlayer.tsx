@@ -99,7 +99,11 @@ export function YouTubePlayer({ videoId, videoUrl, title }: YouTubePlayerProps) 
         if (cancelled || !containerRef.current || !window.YT) return;
         playerRef.current = new window.YT.Player(containerRef.current, {
           videoId,
-          playerVars: { rel: 0 },
+          // Without `origin` set to the embedding page's own origin, the IFrame API's
+          // postMessage handshake with youtube.com can fail validation -- intermittently
+          // on desktop, far more reliably on mobile browsers -- surfacing as onError's
+          // Error 153 ("video player configuration error") even for a fully embeddable video.
+          playerVars: { rel: 0, origin: window.location.origin },
           events: {
             onError: () => {
               if (!cancelled) setUnavailable(true);

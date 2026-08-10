@@ -78,7 +78,9 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
         if (cancelled || !containerRef.current || !window.YT) return;
         playerRef.current = new window.YT.Player(containerRef.current, {
           videoId,
-          playerVars: { rel: 0 },
+          // See YouTubePlayer.tsx for why `origin` matters here -- without it the postMessage
+          // handshake can fail and surface as Error 153, especially on mobile browsers.
+          playerVars: { rel: 0, origin: window.location.origin },
           events: {
             onError: () => {
               if (!cancelled) setUnavailable(true);
