@@ -208,7 +208,7 @@ export function CourseDetailPage() {
       {user?.role === "student" && (
         <div className="mt-6">
           {INTRO_VIDEOS[course.slug] && (
-            <div className="mb-4">
+            <div className="mb-4 hidden md:block">
               <YouTubePlayer
                 videoId={INTRO_VIDEOS[course.slug].videoId}
                 videoUrl={`https://www.youtube.com/watch?v=${INTRO_VIDEOS[course.slug].videoId}`}
