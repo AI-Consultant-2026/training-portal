@@ -34,10 +34,9 @@ export function AppRouter() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/courses" element={<CourseListPage />} />
-      <Route path="/courses/:slug" element={<CourseDetailPage />} />
-      <Route path="/lessons/:id" element={<LessonDetailPage />} />
       <Route element={<ProtectedRoute />}>
+        <Route path="/courses/:slug" element={<CourseDetailPage />} />
+        <Route path="/lessons/:id" element={<LessonDetailPage />} />
         <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
         <Route path="/capstones/:id" element={<CapstoneDetailPage />} />
@@ -58,6 +57,7 @@ export function AppRouter() {
           />
         </Route>
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>
+          <Route path="/courses" element={<CourseListPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
         </Route>

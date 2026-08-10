@@ -7,8 +7,8 @@ import { checkCheckpointAnswerSchema } from "../validators/checkpoint.validators
 
 export const lessonsRouter = Router();
 
-lessonsRouter.get("/:id", lessonsController.getLesson);
-lessonsRouter.get("/:id/navigation", lessonsController.getLessonNavigation);
+lessonsRouter.get("/:id", authenticate, lessonsController.getLesson);
+lessonsRouter.get("/:id/navigation", authenticate, lessonsController.getLessonNavigation);
 lessonsRouter.get(
   "/:id/my-completion",
   authenticate,
@@ -21,9 +21,10 @@ lessonsRouter.post(
   authorize("student"),
   lessonsController.markLessonComplete,
 );
-lessonsRouter.get("/:id/checkpoints", lessonsController.getLessonCheckpoints);
+lessonsRouter.get("/:id/checkpoints", authenticate, lessonsController.getLessonCheckpoints);
 lessonsRouter.post(
   "/:id/checkpoints/:checkpointId/check",
+  authenticate,
   validate(checkCheckpointAnswerSchema),
   lessonsController.checkCheckpointAnswer,
 );

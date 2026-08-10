@@ -51,15 +51,33 @@ async function createCourseWithLessons(instructorId: string, lessonCount = 2) {
 }
 
 describe("Lessons and progress tracking", () => {
-  it("keeps the lesson list and lesson detail endpoints public (no auth required)", async () => {
+  it("rejects anonymous requests to the lesson list and lesson detail endpoints", async () => {
     const instructor = await createInstructor();
     const { courseModule, lessons } = await createCourseWithLessons(instructor.id);
 
     const listRes = await request(app).get(`/api/modules/${courseModule.id}/lessons`);
+    expect(listRes.status).toBe(401);
+
+    const detailRes = await request(app).get(`/api/lessons/${lessons[0].id}`);
+    expect(detailRes.status).toBe(401);
+  });
+
+  it("returns the lesson list and lesson detail for an authenticated user", async () => {
+    const instructor = await createInstructor();
+    const { courseModule, lessons } = await createCourseWithLessons(instructor.id);
+    const student = await registerStudent("lesson-detail-student@example.com");
+    const token = await loginAs("lesson-detail-student@example.com");
+    void student;
+
+    const listRes = await request(app)
+      .get(`/api/modules/${courseModule.id}/lessons`)
+      .set("Authorization", `Bearer ${token}`);
     expect(listRes.status).toBe(200);
     expect(listRes.body.lessons).toHaveLength(2);
 
-    const detailRes = await request(app).get(`/api/lessons/${lessons[0].id}`);
+    const detailRes = await request(app)
+      .get(`/api/lessons/${lessons[0].id}`)
+      .set("Authorization", `Bearer ${token}`);
     expect(detailRes.status).toBe(200);
     expect(detailRes.body.lesson.id).toBe(lessons[0].id);
   });
@@ -95,9 +113,12 @@ describe("Lessons and progress tracking", () => {
 
     it("returns previous and next within the same module", async () => {
       const instructor = await createInstructor("jest-nav-instructor-1@example.com");
+      const token = await loginAs(instructor.email);
       const { modules, lessonsByModule } = await createCourseWithModules(instructor.id, [2]);
 
-      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][1].id}/navigation`);
+      const res = await request(app)
+        .get(`/api/lessons/${lessonsByModule[0][1].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
       expect(res.status).toBe(200);
       expect(res.body.module.id).toBe(modules[0].id);
       expect(res.body.previous).toEqual({
@@ -110,9 +131,12 @@ describe("Lessons and progress tracking", () => {
 
     it("crosses into the next module's first lesson at a week boundary", async () => {
       const instructor = await createInstructor("jest-nav-instructor-2@example.com");
+      const token = await loginAs(instructor.email);
       const { lessonsByModule } = await createCourseWithModules(instructor.id, [2, 2]);
 
-      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][1].id}/navigation`);
+      const res = await request(app)
+        .get(`/api/lessons/${lessonsByModule[0][1].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
       expect(res.status).toBe(200);
       expect(res.body.next).toEqual({
         id: lessonsByModule[1][0].id,
@@ -123,9 +147,12 @@ describe("Lessons and progress tracking", () => {
 
     it("crosses into the previous module's last lesson at a week boundary", async () => {
       const instructor = await createInstructor("jest-nav-instructor-3@example.com");
+      const token = await loginAs(instructor.email);
       const { lessonsByModule } = await createCourseWithModules(instructor.id, [2, 2]);
 
-      const res = await request(app).get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`);
+      const res = await request(app)
+        .get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
       expect(res.status).toBe(200);
       expect(res.body.previous).toEqual({
         id: lessonsByModule[0][1].id,
@@ -136,9 +163,12 @@ describe("Lessons and progress tracking", () => {
 
     it("skips over an empty module when crossing a boundary", async () => {
       const instructor = await createInstructor("jest-nav-instructor-4@example.com");
+      const token = await loginAs(instructor.email);
       const { lessonsByModule } = await createCourseWithModules(instructor.id, [1, 0, 1]);
 
-      const res = await request(app).get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`);
+      const res = await request(app)
+        .get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
       expect(res.status).toBe(200);
       expect(res.body.next).toEqual({
         id: lessonsByModule[2][0].id,
@@ -149,22 +179,27 @@ describe("Lessons and progress tracking", () => {
 
     it("returns null previous/next at the very first and last lesson of a course", async () => {
       const instructor = await createInstructor("jest-nav-instructor-5@example.com");
+      const token = await loginAs(instructor.email);
       const { course, lessonsByModule } = await createCourseWithModules(instructor.id, [1, 1]);
 
-      const first = await request(app).get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`);
+      const first = await request(app)
+        .get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
       expect(first.body.previous).toBeNull();
       expect(first.body.course).toEqual({ id: course.id, slug: course.slug, title: course.title });
 
-      const last = await request(app).get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`);
+      const last = await request(app)
+        .get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
       expect(last.body.next).toBeNull();
     });
 
-    it("requires no authentication, matching the other public lesson endpoints", async () => {
+    it("requires authentication, unlike the login-gated lesson endpoints in general", async () => {
       const instructor = await createInstructor("jest-nav-instructor-6@example.com");
       const { lessonsByModule } = await createCourseWithModules(instructor.id, [1]);
 
       const res = await request(app).get(`/api/lessons/${lessonsByModule[0][0].id}/navigation`);
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(401);
     });
   });
 
@@ -392,12 +427,24 @@ describe("Lessons and progress tracking", () => {
       return { checkpoint, correct, wrong };
     }
 
-    it("returns checkpoints for a lesson without ever exposing isCorrect", async () => {
+    it("rejects an anonymous request for a lesson's checkpoints", async () => {
       const instructor = await createInstructor();
       const { lessons } = await createCourseWithLessons(instructor.id, 1);
       await createCheckpointWithAnswers(lessons[0].id);
 
       const res = await request(app).get(`/api/lessons/${lessons[0].id}/checkpoints`);
+      expect(res.status).toBe(401);
+    });
+
+    it("returns checkpoints for a lesson without ever exposing isCorrect", async () => {
+      const instructor = await createInstructor();
+      const token = await loginAs(instructor.email);
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+      await createCheckpointWithAnswers(lessons[0].id);
+
+      const res = await request(app)
+        .get(`/api/lessons/${lessons[0].id}/checkpoints`)
+        .set("Authorization", `Bearer ${token}`);
       expect(res.status).toBe(200);
       expect(res.body.checkpoints).toHaveLength(1);
       const checkpoint = res.body.checkpoints[0];
@@ -410,20 +457,36 @@ describe("Lessons and progress tracking", () => {
 
     it("returns an empty array for a lesson with no checkpoints", async () => {
       const instructor = await createInstructor();
+      const token = await loginAs(instructor.email);
       const { lessons } = await createCourseWithLessons(instructor.id, 1);
 
-      const res = await request(app).get(`/api/lessons/${lessons[0].id}/checkpoints`);
+      const res = await request(app)
+        .get(`/api/lessons/${lessons[0].id}/checkpoints`)
+        .set("Authorization", `Bearer ${token}`);
       expect(res.status).toBe(200);
       expect(res.body.checkpoints).toEqual([]);
     });
 
+    it("rejects an anonymous request to check a checkpoint answer", async () => {
+      const instructor = await createInstructor();
+      const { lessons } = await createCourseWithLessons(instructor.id, 1);
+      const { checkpoint, correct } = await createCheckpointWithAnswers(lessons[0].id);
+
+      const res = await request(app)
+        .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .send({ answerId: correct.id });
+      expect(res.status).toBe(401);
+    });
+
     it("confirms a correct answer and lets an incorrect answer retry with the right answer revealed", async () => {
       const instructor = await createInstructor();
+      const token = await loginAs(instructor.email);
       const { lessons } = await createCourseWithLessons(instructor.id, 1);
       const { checkpoint, correct, wrong } = await createCheckpointWithAnswers(lessons[0].id);
 
       const wrongRes = await request(app)
         .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ answerId: wrong.id });
       expect(wrongRes.status).toBe(200);
       expect(wrongRes.body.correct).toBe(false);
@@ -432,6 +495,7 @@ describe("Lessons and progress tracking", () => {
 
       const rightRes = await request(app)
         .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ answerId: correct.id });
       expect(rightRes.status).toBe(200);
       expect(rightRes.body.correct).toBe(true);
@@ -439,31 +503,39 @@ describe("Lessons and progress tracking", () => {
     });
 
     it("returns 404 for an unknown checkpoint", async () => {
+      const instructor = await createInstructor();
+      const token = await loginAs(instructor.email);
+
       const res = await request(app)
         .post(`/api/lessons/00000000-0000-0000-0000-000000000000/checkpoints/00000000-0000-0000-0000-000000000000/check`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ answerId: "00000000-0000-0000-0000-000000000000" });
       expect(res.status).toBe(404);
     });
 
     it("returns 404 when the answer doesn't belong to the given checkpoint", async () => {
       const instructor = await createInstructor();
+      const token = await loginAs(instructor.email);
       const { lessons } = await createCourseWithLessons(instructor.id, 1);
       const { checkpoint: checkpointA } = await createCheckpointWithAnswers(lessons[0].id);
       const { correct: answerFromB } = await createCheckpointWithAnswers(lessons[0].id);
 
       const res = await request(app)
         .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpointA.id}/check`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ answerId: answerFromB.id });
       expect(res.status).toBe(404);
     });
 
     it("rejects a check request with a malformed answerId", async () => {
       const instructor = await createInstructor();
+      const token = await loginAs(instructor.email);
       const { lessons } = await createCourseWithLessons(instructor.id, 1);
       const { checkpoint } = await createCheckpointWithAnswers(lessons[0].id);
 
       const res = await request(app)
         .post(`/api/lessons/${lessons[0].id}/checkpoints/${checkpoint.id}/check`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ answerId: "not-a-uuid" });
       expect(res.status).toBe(400);
     });
