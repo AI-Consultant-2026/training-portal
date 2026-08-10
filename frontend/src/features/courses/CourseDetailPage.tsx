@@ -34,8 +34,8 @@ interface IntroVideo {
 // keyed by slug so adding another course's intro video is a one-line addition here.
 const INTRO_VIDEOS: Record<string, IntroVideo> = {
   "cyber-security-fundamentals": {
-    videoId: "aRbKFCY4tjE",
-    title: "Cybersecurity for Beginners: Basic Skills",
+    videoId: "j0f1A8jrgTc",
+    title: "What Are Cybersecurity Fundamentals?",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
   "social-media-management-content": {
