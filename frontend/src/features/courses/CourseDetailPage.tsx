@@ -224,7 +224,7 @@ export function CourseDetailPage() {
                   ? "Already Enrolled"
                   : "Payment pending"}
             </Button>
-            {COURSE_PRICES[course.slug] && (
+            {COURSE_PRICES[course.slug] && !myEnrollment?.paymentConfirmed && (
               <Button variant="secondary">Pay for course – N{COURSE_PRICES[course.slug]}</Button>
             )}
           </div>
