@@ -173,20 +173,30 @@ export function AdminCandidatesPage() {
                     ) : (
                       <ul className="flex flex-col gap-1.5">
                         {c.enrollments.map((e) => (
-                          <li key={e.id} className="flex items-center gap-2">
-                            <label className="flex items-center gap-1.5">
-                              <input
-                                type="checkbox"
-                                checked={e.paymentConfirmed}
-                                onChange={(ev) => handleTogglePayment(e.id, ev.target.checked)}
-                              />
-                              <span className="text-gray-700">{e.courseTitle ?? "Unknown course"}</span>
-                            </label>
-                            <span
-                              className={`text-xs ${e.paymentConfirmed ? "text-green-700" : "text-amber-600"}`}
-                            >
-                              {e.paymentConfirmed ? "Paid" : "Payment pending"}
-                            </span>
+                          <li key={e.id}>
+                            <div className="flex items-center gap-2">
+                              <label className="flex items-center gap-1.5">
+                                <input
+                                  type="checkbox"
+                                  checked={e.paymentConfirmed}
+                                  onChange={(ev) => handleTogglePayment(e.id, ev.target.checked)}
+                                />
+                                <span className="text-gray-700">{e.courseTitle ?? "Unknown course"}</span>
+                              </label>
+                              <span
+                                className={`text-xs ${e.paymentConfirmed ? "text-green-700" : "text-amber-600"}`}
+                              >
+                                {e.paymentConfirmed ? "Paid" : "Payment pending"}
+                              </span>
+                            </div>
+                            {!e.paymentConfirmed && e.latestPayment?.method === "bank_transfer" && (
+                              <p className="ml-5 text-xs text-gray-500">
+                                Bank transfer claimed: {e.latestPayment.currency}{" "}
+                                {e.latestPayment.amount.toLocaleString()}, ref{" "}
+                                <span className="font-mono">{e.latestPayment.gatewayReference}</span> &mdash; verify
+                                against your bank account before confirming.
+                              </p>
+                            )}
                           </li>
                         ))}
                       </ul>

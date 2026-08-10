@@ -7,6 +7,7 @@ import {
   Course,
   Enrollment,
   Lead,
+  Payment,
   Quiz,
   QuizAttempt,
   User,
@@ -167,15 +168,36 @@ function isOnline(lastActiveAt: Date | null): boolean {
 
 function serializeCandidate(user: User) {
   const enrollments = ((user as unknown as { enrollments?: Enrollment[] }).enrollments ?? []).map(
-    (e) => ({
-      id: e.id,
-      courseId: e.courseId,
-      courseTitle: (e as unknown as { course?: Course }).course?.title ?? null,
-      status: e.status,
-      progressPercent: e.progressPercent,
-      paymentConfirmed: e.paymentConfirmed,
-      paymentConfirmedAt: e.paymentConfirmedAt,
-    }),
+    (e) => {
+      // Most recent payment attempt for this enrollment, if any -- surfaced mainly for
+      // pending bank transfers, so the admin has the reference to look up when
+      // reconciling their bank account before ticking "payment confirmed" below.
+      const payments = (e as unknown as { payments?: Payment[] }).payments ?? [];
+      const latestPayment = [...payments].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )[0];
+
+      return {
+        id: e.id,
+        courseId: e.courseId,
+        courseTitle: (e as unknown as { course?: Course }).course?.title ?? null,
+        status: e.status,
+        progressPercent: e.progressPercent,
+        paymentConfirmed: e.paymentConfirmed,
+        paymentConfirmedAt: e.paymentConfirmedAt,
+        latestPayment: latestPayment
+          ? {
+              method: latestPayment.method,
+              status: latestPayment.status,
+              currency: latestPayment.currency,
+              amount: latestPayment.amount,
+              gatewayReference: latestPayment.gatewayReference,
+              notes: latestPayment.notes,
+              createdAt: latestPayment.createdAt,
+            }
+          : null,
+      };
+    },
   );
 
   return {
@@ -196,7 +218,16 @@ function serializeCandidate(user: User) {
 export async function listCandidates() {
   const candidates = await User.findAll({
     where: { role: "student" },
-    include: [{ model: Enrollment, as: "enrollments", include: [{ model: Course, as: "course" }] }],
+    include: [
+      {
+        model: Enrollment,
+        as: "enrollments",
+        include: [
+          { model: Course, as: "course" },
+          { model: Payment, as: "payments" },
+        ],
+      },
+    ],
     order: [["createdAt", "DESC"]],
   });
   return candidates.map(serializeCandidate);

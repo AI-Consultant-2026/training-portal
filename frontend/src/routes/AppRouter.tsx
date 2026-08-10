@@ -17,6 +17,8 @@ import { CourseDetailPage } from "../features/courses/CourseDetailPage";
 import { CourseListPage } from "../features/courses/CourseListPage";
 import { StudentDashboardPage } from "../features/dashboard/StudentDashboardPage";
 import { LessonDetailPage } from "../features/lessons/LessonDetailPage";
+import { BankTransferPage } from "../features/payments/BankTransferPage";
+import { CardPaymentPage } from "../features/payments/CardPaymentPage";
 import { GradeQuizAttemptPage } from "../features/quizzes/GradeQuizAttemptPage";
 import { QuizGradingQueuePage } from "../features/quizzes/QuizGradingQueuePage";
 import { QuizResultsPage } from "../features/quizzes/QuizResultsPage";
@@ -36,6 +38,8 @@ export function AppRouter() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
+        <Route path="/courses/:slug/pay/card" element={<CardPaymentPage />} />
+        <Route path="/courses/:slug/pay/bank-transfer" element={<BankTransferPage />} />
         <Route path="/lessons/:id" element={<LessonDetailPage />} />
         <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/assignments/:id" element={<AssignmentDetailPage />} />

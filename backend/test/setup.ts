@@ -19,6 +19,7 @@ afterEach(async () => {
     "quizzes",
     "assignment_submissions",
     "assignments",
+    "payments",
     "enrollments",
     "lessons",
     "modules",

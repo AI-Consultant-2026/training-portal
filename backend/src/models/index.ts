@@ -8,6 +8,7 @@ import { CourseModule, initCourseModuleModel } from "./module.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
 import { Lead, initLeadModel } from "./lead.model";
 import { Lesson, initLessonModel } from "./lesson.model";
+import { Payment, initPaymentModel } from "./payment.model";
 import { ProgressTracking, initProgressTrackingModel } from "./progressTracking.model";
 import { Quiz, initQuizModel } from "./quiz.model";
 import { QuizAnswer, initQuizAnswerModel } from "./quizAnswer.model";
@@ -56,6 +57,7 @@ initCapstoneSubmissionModel(sequelize);
 initVideoCheckpointModel(sequelize);
 initVideoCheckpointAnswerModel(sequelize);
 initLeadModel(sequelize);
+initPaymentModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -71,6 +73,12 @@ Enrollment.belongsTo(Course, { foreignKey: "courseId", as: "course" });
 
 User.hasMany(Enrollment, { foreignKey: "studentId", as: "enrollments" });
 Enrollment.belongsTo(User, { foreignKey: "studentId", as: "student" });
+
+Enrollment.hasMany(Payment, { foreignKey: "enrollmentId", as: "payments" });
+Payment.belongsTo(Enrollment, { foreignKey: "enrollmentId", as: "enrollment" });
+
+User.hasMany(Payment, { foreignKey: "studentId", as: "payments" });
+Payment.belongsTo(User, { foreignKey: "studentId", as: "student" });
 
 User.hasMany(RefreshToken, { foreignKey: "userId", as: "refreshTokens" });
 RefreshToken.belongsTo(User, { foreignKey: "userId", as: "user" });
@@ -138,6 +146,7 @@ export {
   Enrollment,
   Lead,
   Lesson,
+  Payment,
   ProgressTracking,
   Quiz,
   QuizAnswer,

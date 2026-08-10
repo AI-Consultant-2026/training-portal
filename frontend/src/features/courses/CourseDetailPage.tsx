@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
+import { fetchPaymentQuote } from "../../api/payments.api";
 import { fetchModuleQuizzes, fetchMyAttempts } from "../../api/quizzes.api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -11,7 +12,7 @@ import { Button } from "../../components/ui/Button";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { YouTubePlayer } from "../../components/ui/YouTubePlayer";
-import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, Quiz } from "../../types/api";
+import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, PaymentQuote, Quiz } from "../../types/api";
 import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 
@@ -27,16 +28,6 @@ interface IntroVideo {
   title: string;
   ctaText: string;
 }
-
-// Displayed on a secondary button next to Enroll -- placeholder only, no payment
-// flow wired up yet.
-const COURSE_PRICES: Record<string, string> = {
-  "cyber-security-fundamentals": "200,000",
-  "digital-marketing": "150,000",
-  "gis-and-drone-mapping": "200,000",
-  "renewable-energy-digital-systems": "250,000",
-  "social-media-management-content": "150,000",
-};
 
 // Real, verified (oEmbed-checked), embeddable YouTube videos chosen to entice a
 // prospective student into enrolling -- shown before the Enroll button, one per course,
@@ -72,6 +63,7 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
 export function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { selectedCourse: course, status, error } = useAppSelector((state) => state.courses);
   const { items: enrollments, error: enrollError } = useAppSelector((state) => state.enrollments);
   const { user } = useAppSelector((state) => state.auth);
@@ -81,6 +73,7 @@ export function CourseDetailPage() {
   const [capstone, setCapstone] = useState<Capstone | null>(null);
   const [finalQuizCompleted, setFinalQuizCompleted] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
+  const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null);
 
   useEffect(() => {
     if (slug) {
@@ -133,6 +126,17 @@ export function CourseDetailPage() {
 
   const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
   const isEnrolled = myEnrollment !== undefined;
+
+  useEffect(() => {
+    if (course && user?.role === "student") {
+      fetchPaymentQuote(course.id).then(setPaymentQuote).catch(() => setPaymentQuote(null));
+    }
+  }, [course, user]);
+
+  function handlePayForCourse() {
+    if (!course) return;
+    navigate(`/courses/${course.slug}/pay/${user?.location === "Nigeria" ? "bank-transfer" : "card"}`);
+  }
 
   useEffect(() => {
     if (course && user?.role === "student" && isEnrolled) {
@@ -224,8 +228,10 @@ export function CourseDetailPage() {
                   ? "Already Enrolled"
                   : "Payment pending"}
             </Button>
-            {COURSE_PRICES[course.slug] && !myEnrollment?.paymentConfirmed && (
-              <Button variant="secondary">Pay for course – N{COURSE_PRICES[course.slug]}</Button>
+            {isEnrolled && !myEnrollment?.paymentConfirmed && paymentQuote && (
+              <Button variant="secondary" onClick={handlePayForCourse}>
+                Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}
+              </Button>
             )}
           </div>
         </div>

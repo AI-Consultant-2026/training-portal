@@ -128,6 +128,34 @@ export interface Enrollment {
   course?: Course;
 }
 
+export type PaymentMethod = "card" | "bank_transfer";
+export type PaymentStatus = "pending" | "succeeded" | "failed";
+
+export interface Payment {
+  id: string;
+  enrollmentId: string;
+  method: PaymentMethod;
+  status: PaymentStatus;
+  currency: string;
+  amount: number;
+}
+
+export interface PaymentQuote {
+  baseAmountNgn: number;
+  card: { currency: string; amount: number };
+  bankTransfer: {
+    currency: string;
+    amount: number;
+    bankDetails: {
+      bankName: string;
+      accountName: string;
+      accountNumber: string;
+      sortCodeOrIban: string;
+    };
+  };
+  estimatedLocal: { currency: string; amount: number } | null;
+}
+
 export interface Assignment {
   id: string;
   moduleId: string;
@@ -313,6 +341,15 @@ export interface CandidateEnrollment {
   progressPercent: number;
   paymentConfirmed: boolean;
   paymentConfirmedAt: string | null;
+  latestPayment: {
+    method: PaymentMethod;
+    status: PaymentStatus;
+    currency: string;
+    amount: number;
+    gatewayReference: string | null;
+    notes: string | null;
+    createdAt: string;
+  } | null;
 }
 
 export interface Candidate {
