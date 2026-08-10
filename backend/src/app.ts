@@ -64,6 +64,11 @@ export function createApp() {
   app.get("/executive-training.js", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "executive-training.js"));
   });
+  // Partner-facing explainer of the enrolment/payment/access pipeline -- static, no
+  // form, so unlike the pages above it needs no companion .js file.
+  app.get("/trainingportalprocess", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "trainingportalprocess.html"));
+  });
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this
