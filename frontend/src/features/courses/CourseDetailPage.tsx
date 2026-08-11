@@ -5,7 +5,7 @@ import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
 import { fetchPaymentQuote } from "../../api/payments.api";
-import { fetchModuleQuizzes, fetchMyAttempts } from "../../api/quizzes.api";
+import { fetchModuleQuizzes } from "../../api/quizzes.api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
@@ -71,7 +71,6 @@ export function CourseDetailPage() {
   const [moduleContent, setModuleContent] = useState<Record<string, ModuleContent>>({});
   const [courseProgress, setCourseProgress] = useState<CourseProgress | null>(null);
   const [capstone, setCapstone] = useState<Capstone | null>(null);
-  const [finalQuizCompleted, setFinalQuizCompleted] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
   const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null);
 
@@ -151,25 +150,6 @@ export function CourseDetailPage() {
       fetchCapstoneForCourse(course.id).then(setCapstone);
     }
   }, [course, user]);
-
-  // The capstone unlocks once the student has completed the quiz for the final week --
-  // the last module by weekNumber, not by array position, in case modules ever come back
-  // out of order. Applies to every course the same way: whichever week is numerically
-  // last is treated as "the last week."
-  const lastModule =
-    modules.length > 0 ? modules.reduce((a, b) => (b.weekNumber > a.weekNumber ? b : a)) : null;
-  const lastModuleQuizId = lastModule ? moduleContent[lastModule.id]?.quizzes[0]?.id : undefined;
-
-  useEffect(() => {
-    if (user?.role !== "student" || !isEnrolled || !lastModuleQuizId) return;
-    fetchMyAttempts(lastModuleQuizId).then(({ attempts }) => {
-      // "Completed" means the student has turned it in ("submitted" or "graded"), not
-      // that it's been graded -- a quiz with a short_answer question stays "submitted"
-      // (pending manual instructor review) until an instructor scores it, and the
-      // capstone shouldn't stay locked behind that grading queue.
-      setFinalQuizCompleted(attempts.some((a) => a.status === "submitted" || a.status === "graded"));
-    });
-  }, [user, isEnrolled, lastModuleQuizId]);
 
   async function handleEnroll() {
     if (!course) return;
@@ -375,24 +355,12 @@ export function CourseDetailPage() {
           {capstone.description && (
             <p className="mt-1 line-clamp-3 text-sm text-gray-600">{capstone.description}</p>
           )}
-          {/* Disabled by default: unlocks once the final week's quiz has a graded
-              attempt. Applies uniformly across every course -- "final week" is always
-              whichever module has the highest weekNumber for that course. */}
-          {user?.role === "student" && !finalQuizCompleted ? (
-            <span
-              className="mt-2 inline-block text-sm font-medium text-gray-400"
-              title="Complete the final week's quiz to unlock the capstone"
-            >
-              View capstone (locked)
-            </span>
-          ) : (
-            <Link
-              to={`/capstones/${capstone.id}`}
-              className="mt-2 inline-block text-sm font-medium text-blue-600 hover:underline"
-            >
-              View capstone
-            </Link>
-          )}
+          <Link
+            to={`/capstones/${capstone.id}`}
+            className="mt-2 inline-block text-sm font-medium text-blue-600 hover:underline"
+          >
+            View capstone
+          </Link>
         </div>
       )}
     </div>
