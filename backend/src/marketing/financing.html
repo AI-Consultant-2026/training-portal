@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paleon Training Investment Case</title>
+<meta name="description" content="Development cost breakdown, funding ask, and break-even projections for launching the Paleon Training platform in Nigeria.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --paper: #eef1ec;
+    --surface: #ffffff;
+    --surface-2: #f6f7f3;
+    --ink: #12261f;
+    --ink-soft: #4b5d54;
+    --ink-faint: #7c8b83;
+    --border: #d9ddd2;
+    --border-strong: #c3c9ba;
+    --accent: #b06f28;
+    --accent-deep: #8f5a1f;
+    --accent-soft: #f1e2ce;
+    --chart-1: #1c8265;
+    --chart-2: #c17a2e;
+    --chart-3: #8a3b5c;
+    --good: #2f7a4f;
+    --serif: ui-serif, Charter, "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0e1713;
+      --surface: #15211b;
+      --surface-2: #182620;
+      --ink: #e9ede8;
+      --ink-soft: #a9b6ac;
+      --ink-faint: #77857c;
+      --border: #2a382f;
+      --border-strong: #3a4a3e;
+      --accent: #d6913f;
+      --accent-deep: #eaab5c;
+      --accent-soft: #3a2c17;
+      --chart-1: #35a37e;
+      --chart-2: #c17d3a;
+      --chart-3: #b85480;
+      --good: #4fa872;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0e1713;
+    --surface: #15211b;
+    --surface-2: #182620;
+    --ink: #e9ede8;
+    --ink-soft: #a9b6ac;
+    --ink-faint: #77857c;
+    --border: #2a382f;
+    --border-strong: #3a4a3e;
+    --accent: #d6913f;
+    --accent-deep: #eaab5c;
+    --accent-soft: #3a2c17;
+    --chart-1: #35a37e;
+    --chart-2: #c17d3a;
+    --chart-3: #b85480;
+    --good: #4fa872;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); color: var(--accent-deep); }
+  a { color: var(--accent-deep); }
+  img, svg { max-width: 100%; display: block; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  .sheet { max-width: 760px; margin: 0 auto; padding: 0 28px 120px; }
+  @media (max-width: 640px) { .sheet { padding: 0 18px 90px; } }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; text-wrap: balance; margin: 0; color: var(--ink); }
+  p { margin: 0 0 16px; max-width: 66ch; }
+  .lede { color: var(--ink-soft); font-size: 18px; line-height: 1.65; }
+
+  /* ---------- Cover ---------- */
+  .cover { padding: 72px 0 48px; border-bottom: 1px solid var(--border); }
+  .cover .kicker {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent-deep); margin: 0 0 22px; display: flex; align-items: center; gap: 10px;
+  }
+  .cover .kicker::before { content: ""; width: 26px; height: 1px; background: var(--accent); }
+  .cover h1 { font-size: clamp(32px, 5vw, 46px); line-height: 1.08; margin-bottom: 18px; }
+  .cover .meta {
+    margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    font-family: var(--mono); font-size: 13px;
+  }
+  .cover .meta div .k { color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; margin-bottom: 3px; }
+  .cover .meta div .v { color: var(--ink); font-size: 14.5px; }
+  @media (max-width: 560px) { .cover .meta { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- Sections ---------- */
+  section { padding: 46px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .sec-label {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent-deep); margin: 0 0 14px;
+  }
+  h2 { font-size: 26px; margin-bottom: 16px; }
+  h3 { font-size: 18px; margin: 28px 0 10px; }
+
+  /* ---------- Callout figures ---------- */
+  .figure-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0; }
+  @media (max-width: 620px) { .figure-row { grid-template-columns: 1fr; } }
+  .figure {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px 22px;
+  }
+  .figure .k { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 6px; }
+  .figure .v { font-family: var(--serif); font-size: 27px; color: var(--ink); }
+  .figure .v.accent { color: var(--accent-deep); }
+  .figure .sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+
+  /* ---------- Tables ---------- */
+  .table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; background: var(--surface); }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th:last-child, td:last-child { text-align: right; }
+  th {
+    font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.03em;
+    color: var(--ink-faint); background: var(--surface-2); font-weight: 600; line-height: 1.3;
+  }
+  td { font-size: 14px; line-height: 1.45; }
+  tr:last-child td { border-bottom: none; }
+  tr.total td { font-weight: 700; background: var(--surface-2); border-top: 1px solid var(--border-strong); }
+  td.num, th.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
+  td:first-child, th:first-child { min-width: 120px; }
+  table.risks th:last-child, table.risks td:last-child { text-align: left; }
+
+  /* ---------- Charts ---------- */
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 22px 22px 16px; margin: 20px 0; }
+  .chart-card .chart-title { font-family: var(--serif); font-size: 16px; margin-bottom: 2px; }
+  .chart-card .chart-sub { font-size: 13px; color: var(--ink-faint); margin-bottom: 14px; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 10px; font-size: 12.5px; color: var(--ink-soft); }
+  .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-legend .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .chart-svg text { font-family: var(--mono); }
+  .axis-label { fill: var(--ink-faint); font-size: 10.5px; }
+  .grid-line { stroke: var(--border); stroke-width: 1; }
+  .ref-line { stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 4; }
+  .ref-label { fill: var(--ink-soft); font-size: 10.5px; }
+  .bar-label { fill: var(--ink); font-size: 12px; font-family: var(--sans); }
+  .bar-value { fill: var(--ink-soft); font-size: 11.5px; }
+
+  /* ---------- Callout / note boxes ---------- */
+  .note {
+    border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px;
+    background: var(--surface-2); padding: 14px 18px; font-size: 14.5px; color: var(--ink-soft); margin: 18px 0;
+  }
+  .note strong { color: var(--ink); }
+  .note.caveat { border-left-color: var(--ink-faint); }
+
+  /* ---------- Lists ---------- */
+  ul.plain { margin: 0 0 16px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  ul.plain li { padding-left: 22px; position: relative; color: var(--ink-soft); font-size: 15px; }
+  ul.plain li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+  ul.plain li strong { color: var(--ink); }
+
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 16px; }
+  ol.steps li { counter-increment: step; padding-left: 40px; position: relative; }
+  ol.steps li::before {
+    content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: 0;
+    font-family: var(--mono); font-size: 12px; color: var(--accent-deep); font-weight: 700;
+  }
+  ol.steps h4 { font-family: var(--sans); font-size: 15px; font-weight: 700; margin: 0 0 3px; color: var(--ink); }
+  ol.steps p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+
+  .sources { font-size: 12.5px; color: var(--ink-faint); }
+  .sources a { color: var(--ink-faint); }
+  .sources li { margin-bottom: 4px; }
+
+  footer { padding: 40px 0 0; text-align: center; color: var(--ink-faint); font-size: 12.5px; }
+</style>
+
+</head>
+<body>
+
+<div class="sheet">
+
+  <div class="cover">
+    <p class="kicker">Internal Proposal · Prepared for Discussion</p>
+    <h1>Funding the next phase of Paleon Training.</h1>
+    <p class="lede">A cost accounting of what's already been built, a funding ask to take it to market in Nigeria, and the numbers behind how it breaks even.</p>
+    <div class="meta">
+      <div><div class="k">Prepared for</div><div class="v">Founding partners</div></div>
+      <div><div class="k">Platform</div><div class="v">Paleon Training Portal</div></div>
+      <div><div class="k">Target market</div><div class="v">Nigeria</div></div>
+    </div>
+  </div>
+
+  <section>
+    <p class="sec-label">01 — Executive Summary</p>
+    <h2>The platform is built. What's missing is capital, not code.</h2>
+    <p>Between the two of you, the Paleon Training platform has already been built to a production-ready standard: a full learning management system with five complete curricula, a working payment system, and an admin back-office — represented on paper by roughly <strong>950 hours of software development</strong> and <strong>200 hours of curriculum authoring</strong>, contributed without either partner drawing a salary.</p>
+    <p>What the business needs now isn't more building — it's the cash to go from "built" to "selling": a real payment gateway for the Nigerian market, a marketing budget to acquire the first paying students, and a small working-capital buffer. This document sets out that cost, proposes a funding structure for a third partner to cover it, and works through — with real course pricing and cited market data — how the business breaks even and turns a profit.</p>
+    <div class="figure-row">
+      <div class="figure"><div class="k">Sweat equity to date</div><div class="v">£34,500</div><div class="sub">950 dev hrs + 200 content hrs @ £30/hr</div></div>
+      <div class="figure"><div class="k">Recommended raise</div><div class="v accent">£15,000</div><div class="sub">see funding ask, §5</div></div>
+      <div class="figure"><div class="k">Break-even</div><div class="v">2–11 months</div><div class="sub">depending on traction, see §6</div></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">02 — What's Been Built</p>
+    <h2>A production LMS, not a prototype.</h2>
+    <p>The platform is live and in active use. It includes:</p>
+    <ul class="plain">
+      <li><strong>Five complete curricula</strong> — Cyber Security Fundamentals, Digital Marketing, GIS &amp; Drone Mapping, Renewable Energy Digital Systems, and Social Media Management — 98 lessons total, each with custom illustrations and embedded video.</li>
+      <li><strong>A course, module, lesson, quiz, assignment and capstone system</strong> — the full structure of a real cohort-based learning product, not just static content pages.</li>
+      <li><strong>A working payment system</strong> — card payments (settled in GBP) and Nigerian bank-transfer payments (in Naira), with admin confirmation for bank transfers and single-source-of-truth pricing.</li>
+      <li><strong>An admin back-office</strong> — candidate management, payment confirmation, enrollment and online-status controls.</li>
+      <li><strong>A 10% referral program</strong> — already designed and documented, ready to activate as a low-cost acquisition channel.</li>
+    </ul>
+    <div class="note">
+      <strong>One real gap to flag honestly:</strong> the payment gateway is currently a placeholder that simulates a successful charge — it was built this way deliberately to get the platform working end-to-end first. Before real Naira transactions can flow, it needs to be connected to an actual Nigerian payment processor (Paystack or Flutterwave are the standard choices). This is accounted for in the funding ask below.
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">03 — Market Opportunity: Nigeria</p>
+    <h2>A large, young, underserved, mobile-first market.</h2>
+    <p>Nigeria is not a speculative market to enter — it's already the platform's designed home currency and payment rail. The macro case is strong:</p>
+    <ul class="plain">
+      <li><strong>224 million people</strong>, the majority under 25 — the largest youth population in Africa, with 126 million children and adolescents projected by 2030.</li>
+      <li>The World Bank estimates digital skills will be required for <strong>35–45% of all jobs in Nigeria by 2030</strong> — yet 23% of young Nigerians are actively unemployed and looking for work, and a further 32% are out of employment entirely.</li>
+      <li>Nigeria's digital skills gap is estimated to cost the economy <strong>$11 billion a year</strong> — the Nigerian government's own National Digital Economy Policy commits $200 million to digital education and training as a response.</li>
+      <li>Nigeria's e-learning/skills-development market is valued at roughly <strong>$1.5 billion</strong>, with the narrower EdTech segment alone projected near <strong>$185–200 million</strong> by the end of 2026 — Nigeria already accounts for over a fifth of Africa's entire e-learning market.</li>
+      <li><strong>109 million internet users</strong> (45.5% penetration) and a smartphone base projected to approach 100 million by 2029, with <strong>68.7% of web traffic already mobile</strong> — the market is built for a mobile-first product, which this platform already is.</li>
+    </ul>
+    <h3>Competitive landscape</h3>
+    <p>The market is real enough that competitors already exist and are well-funded: <strong>Decagon</strong>, <strong>AltSchool Africa</strong>, and <strong>Utiva</strong> are the established names, alongside <strong>HNG Internship</strong>, <strong>Semicolon</strong>, and <strong>ALX Africa</strong>. None of them currently cover the specific mix this platform does — cyber security, GIS/drone mapping, and renewable energy digital systems alongside the more commonly-offered digital marketing and social media tracks — which is a genuine differentiation angle, not just a pricing one.</p>
+  </section>
+
+  <section>
+    <p class="sec-label">04 — Development Cost Breakdown</p>
+    <h2>What it would cost to build this from a standing start.</h2>
+    <p>At a blended rate of £30/hour for two developers, here is what the platform represents in market-rate development time — this is the sweat-equity basis for the ownership discussion in §7, not a bill either partner is owed.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Workstream</th><th class="num">Hours</th><th class="num">Cost @ £30/hr</th></tr></thead>
+        <tbody>
+          <tr><td>Project setup, database schema, Docker/infrastructure</td><td class="num tnum">50</td><td class="num tnum">£1,500</td></tr>
+          <tr><td>Auth &amp; role-based access (student / instructor / admin)</td><td class="num tnum">70</td><td class="num tnum">£2,100</td></tr>
+          <tr><td>Course / module / lesson content system</td><td class="num tnum">140</td><td class="num tnum">£4,200</td></tr>
+          <tr><td>Quizzes, assignments &amp; capstones</td><td class="num tnum">140</td><td class="num tnum">£4,200</td></tr>
+          <tr><td>Enrollment &amp; payment-gating logic</td><td class="num tnum">50</td><td class="num tnum">£1,500</td></tr>
+          <tr><td>Payments (gateway, bank transfer, FX, admin confirmation)</td><td class="num tnum">120</td><td class="num tnum">£3,600</td></tr>
+          <tr><td>Admin panel (candidate management, CRUD)</td><td class="num tnum">90</td><td class="num tnum">£2,700</td></tr>
+          <tr><td>Frontend UI build-out (39 components, responsive/mobile)</td><td class="num tnum">160</td><td class="num tnum">£4,800</td></tr>
+          <tr><td>QA, bug-fixing, cross-device fixes</td><td class="num tnum">80</td><td class="num tnum">£2,400</td></tr>
+          <tr><td>Deployment &amp; DevOps</td><td class="num tnum">25</td><td class="num tnum">£750</td></tr>
+          <tr><td>Marketing pages</td><td class="num tnum">25</td><td class="num tnum">£750</td></tr>
+          <tr class="total"><td>Software development subtotal</td><td class="num tnum">950</td><td class="num tnum">£28,500</td></tr>
+          <tr><td>Curriculum authoring &amp; illustration (5 curricula, 98 lessons) — instructional design, not software dev</td><td class="num tnum">200</td><td class="num tnum">£6,000</td></tr>
+          <tr class="total"><td>Total value contributed to date</td><td class="num tnum">1,150</td><td class="num tnum">£34,500</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note caveat">This reflects two people working with heavy AI-assisted development, completed over roughly two weeks — not a claim about typical unassisted developer velocity. The hours are an itemized effort estimate by feature area, cross-checked against the codebase's actual scope (lines of code, migrations, services, components), not a reconstruction of the real calendar time spent.</p>
+  </section>
+
+  <section>
+    <p class="sec-label">05 — The Funding Ask</p>
+    <h2>£10,000 covers the minimum. £15,000 is the safer number.</h2>
+    <p>£10,000 is workable, but it's tight — it funds roughly three to four months of meaningful marketing spend before the business needs to be self-sustaining off enrollment revenue, with very little buffer if the first marketing channel underperforms. £15,000 gives the same plan a six-to-nine-month runway and a genuine contingency line, which matters more than the extra £5,000 given that customer acquisition cost for this market is currently unproven.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Use of funds</th><th class="num">Lean (£10,000)</th><th class="num">Recommended (£15,000)</th></tr></thead>
+        <tbody>
+          <tr><td>Marketing &amp; customer acquisition</td><td class="num tnum">£4,000</td><td class="num tnum">£6,500</td></tr>
+          <tr><td>Payment gateway integration (Paystack/Flutterwave) &amp; compliance</td><td class="num tnum">£1,500</td><td class="num tnum">£1,500</td></tr>
+          <tr><td>Hosting &amp; infrastructure (12 months)</td><td class="num tnum">£1,500</td><td class="num tnum">£2,000</td></tr>
+          <tr><td>Legal &amp; regulatory (company/NDPA compliance, contracts)</td><td class="num tnum">£1,000</td><td class="num tnum">£1,500</td></tr>
+          <tr><td>Content maintenance budget</td><td class="num tnum">—</td><td class="num tnum">£1,500</td></tr>
+          <tr><td>Contingency / working capital</td><td class="num tnum">£2,000</td><td class="num tnum">£2,000</td></tr>
+          <tr class="total"><td>Total</td><td class="num tnum">£10,000</td><td class="num tnum">£15,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Recommended £15,000 allocation</div>
+      <div class="chart-sub">Ranked by share of the raise</div>
+      <svg class="chart-svg" viewBox="0 0 640 360" role="img" aria-label="Bar chart of the recommended fifteen thousand pound use of funds, ranked: Marketing and CAC six thousand five hundred pounds, Hosting and infrastructure two thousand pounds, Contingency two thousand pounds, Payment gateway integration one thousand five hundred pounds, Legal and regulatory one thousand five hundred pounds, Content maintenance one thousand five hundred pounds">
+        <text x="0" y="22" class="bar-label">Marketing &amp; customer acquisition</text>
+        <rect x="0" y="30" width="540" height="22" rx="3" fill="var(--accent)"></rect>
+        <text x="550" y="46" class="bar-value">£6,500</text>
+
+        <text x="0" y="82" class="bar-label">Hosting &amp; infrastructure</text>
+        <rect x="0" y="90" width="166" height="22" rx="3" fill="var(--accent)"></rect>
+        <text x="176" y="106" class="bar-value">£2,000</text>
+
+        <text x="0" y="142" class="bar-label">Contingency / working capital</text>
+        <rect x="0" y="150" width="166" height="22" rx="3" fill="var(--accent)"></rect>
+        <text x="176" y="166" class="bar-value">£2,000</text>
+
+        <text x="0" y="202" class="bar-label">Payment gateway integration</text>
+        <rect x="0" y="210" width="125" height="22" rx="3" fill="var(--accent)"></rect>
+        <text x="135" y="226" class="bar-value">£1,500</text>
+
+        <text x="0" y="262" class="bar-label">Legal &amp; regulatory</text>
+        <rect x="0" y="270" width="125" height="22" rx="3" fill="var(--accent)"></rect>
+        <text x="135" y="286" class="bar-value">£1,500</text>
+
+        <text x="0" y="322" class="bar-label">Content maintenance budget</text>
+        <rect x="0" y="330" width="125" height="22" rx="3" fill="var(--accent)"></rect>
+        <text x="135" y="346" class="bar-value">£1,500</text>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">06 — Break-Even &amp; Profit Projections</p>
+    <h2>Grounded in the platform's real course pricing.</h2>
+    <p>These figures use the platform's actual, already-live course prices — this is not a hypothetical pricing exercise.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Course</th><th class="num">Price (NGN)</th></tr></thead>
+        <tbody>
+          <tr><td>Renewable Energy Digital Systems</td><td class="num tnum">₦250,000</td></tr>
+          <tr><td>Cyber Security Fundamentals</td><td class="num tnum">₦200,000</td></tr>
+          <tr><td>GIS &amp; Drone Mapping</td><td class="num tnum">₦200,000</td></tr>
+          <tr><td>Digital Marketing</td><td class="num tnum">₦150,000</td></tr>
+          <tr><td>Social Media Management</td><td class="num tnum">₦150,000</td></tr>
+          <tr class="total"><td>Average course price</td><td class="num tnum">₦190,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note caveat">At an illustrative £1 = ₦2,000 (verify against the live rate — the Naira has been volatile), the average course nets roughly <strong>£95</strong>, or <strong>£92</strong> after a ~3% payment-processing fee. All projections below use £92 net revenue per enrollment.</p>
+
+    <h3>Three enrollment scenarios</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Scenario</th><th class="num">Enroll./mo</th><th class="num">Monthly margin</th><th class="num">Mo. to £15k</th><th class="num">Yr 1 profit</th></tr></thead>
+        <tbody>
+          <tr><td>Conservative</td><td class="num tnum">15</td><td class="num tnum">£1,380</td><td class="num tnum">10.9</td><td class="num tnum">£13,560</td></tr>
+          <tr><td>Moderate</td><td class="num tnum">40</td><td class="num tnum">£3,680</td><td class="num tnum">4.1</td><td class="num tnum">£41,160</td></tr>
+          <tr><td>Optimistic</td><td class="num tnum">100</td><td class="num tnum">£9,200</td><td class="num tnum">1.6</td><td class="num tnum">£107,400</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--ink-faint);">Year 1 net profit = 12 months of margin at that rate, less ~£3,000/year in ongoing hosting and platform costs. Figures are gross margin (revenue net of payment fees) before any owner drawings or tax.</p>
+
+    <div class="chart-card">
+      <div class="chart-title">Cumulative margin vs. the £15,000 funding line</div>
+      <div class="chart-sub">Twelve months, three enrollment scenarios</div>
+      <svg class="chart-svg" viewBox="0 0 720 340" role="img" aria-label="Line chart showing cumulative margin over twelve months for three scenarios, crossing a fifteen thousand pound reference line at month one point six for optimistic, month four point one for moderate, and not crossing within eleven months for conservative">
+        <line x1="60" y1="300" x2="680" y2="300" class="grid-line"></line>
+        <line x1="60" y1="230" x2="680" y2="230" class="grid-line"></line>
+        <line x1="60" y1="160" x2="680" y2="160" class="grid-line"></line>
+        <line x1="60" y1="90" x2="680" y2="90" class="grid-line"></line>
+        <line x1="60" y1="20" x2="680" y2="20" class="grid-line"></line>
+        <text x="52" y="304" class="axis-label" text-anchor="end">£0</text>
+        <text x="52" y="234" class="axis-label" text-anchor="end">£30k</text>
+        <text x="52" y="164" class="axis-label" text-anchor="end">£60k</text>
+        <text x="52" y="94" class="axis-label" text-anchor="end">£90k</text>
+        <text x="52" y="24" class="axis-label" text-anchor="end">£120k</text>
+
+        <text x="60" y="320" class="axis-label">0</text>
+        <text x="163" y="320" class="axis-label" text-anchor="middle">2 mo</text>
+        <text x="267" y="320" class="axis-label" text-anchor="middle">4 mo</text>
+        <text x="370" y="320" class="axis-label" text-anchor="middle">6 mo</text>
+        <text x="473" y="320" class="axis-label" text-anchor="middle">8 mo</text>
+        <text x="577" y="320" class="axis-label" text-anchor="middle">10 mo</text>
+        <text x="680" y="320" class="axis-label" text-anchor="end">12 mo</text>
+
+        <line x1="60" y1="265" x2="680" y2="265" class="ref-line"></line>
+        <text x="64" y="259" class="ref-label">£15,000 — funding recovered</text>
+
+        <polyline points="60.0,300.0 111.7,296.8 163.3,293.6 215.0,290.3 266.7,287.1 318.3,283.9 370.0,280.7 421.7,277.5 473.3,274.2 525.0,271.0 576.7,267.8 628.3,264.6 680.0,261.4"
+          fill="none" stroke="var(--chart-1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <polyline points="60.0,300.0 111.7,291.4 163.3,282.8 215.0,274.2 266.7,265.7 318.3,257.1 370.0,248.5 421.7,239.9 473.3,231.3 525.0,222.7 576.7,214.1 628.3,205.5 680.0,197.0"
+          fill="none" stroke="var(--chart-2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <polyline points="60.0,300.0 111.7,278.5 163.3,257.1 215.0,235.6 266.7,214.1 318.3,192.7 370.0,171.2 421.7,149.7 473.3,128.3 525.0,106.8 576.7,85.3 628.3,63.9 680.0,42.4"
+          fill="none" stroke="var(--chart-3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+
+        <circle cx="680.0" cy="261.4" r="4" fill="var(--chart-1)"></circle>
+        <circle cx="680.0" cy="197.0" r="4" fill="var(--chart-2)"></circle>
+        <circle cx="680.0" cy="42.4" r="4" fill="var(--chart-3)"></circle>
+        <text x="670" y="256" class="ref-label" text-anchor="end" fill="var(--chart-1)">£16,560</text>
+        <text x="670" y="191" class="ref-label" text-anchor="end" fill="var(--chart-2)">£44,160</text>
+        <text x="670" y="37" class="ref-label" text-anchor="end" fill="var(--chart-3)">£110,400</text>
+      </svg>
+      <div class="chart-legend">
+        <span><i class="dot" style="background:var(--chart-1)"></i>Conservative — 15/mo</span>
+        <span><i class="dot" style="background:var(--chart-2)"></i>Moderate — 40/mo</span>
+        <span><i class="dot" style="background:var(--chart-3)"></i>Optimistic — 100/mo</span>
+      </div>
+    </div>
+    <p class="note caveat">These are illustrative, not forecasts — customer acquisition cost for this market is unproven. Treat the conservative case as the planning assumption and the other two as upside, and validate CAC with a small pilot spend before committing the full marketing budget in one go.</p>
+  </section>
+
+  <section>
+    <p class="sec-label">07 — Proposed Equity Structure</p>
+    <h2>A starting point for negotiation, not a formula to accept as-is.</h2>
+    <p>One defensible, transparent way to value the split: treat the £34,500 of development work as the two founding partners' contributed value, add the incoming partner's cash, and split ownership proportionally to what each side put in.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>If the raise is</th><th class="num">Incoming partner</th><th class="num">Each founding partner</th></tr></thead>
+        <tbody>
+          <tr><td>£10,000</td><td class="num tnum">22.5%</td><td class="num tnum">38.75%</td></tr>
+          <tr><td>£15,000 (recommended)</td><td class="num tnum">30.3%</td><td class="num tnum">34.85%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <strong>Treat this as a discussion starter, not a term sheet.</strong> Sweat-equity valuation by hourly rate is one legitimate method, but a cash investor taking real risk on a pre-revenue product will often reasonably push back on it — pre-revenue "cost to rebuild" and "what it's actually worth today" are different numbers. Get a solicitor or accountant to draft the actual shareholders' agreement before anyone signs anything; this section exists to give you a reasoned number to walk in with, not to replace that advice.
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">08 — Risks &amp; Mitigations</p>
+    <h2>What could go wrong, and what's already in the plan for it.</h2>
+    <div class="table-wrap">
+      <table class="risks">
+        <colgroup><col style="width:38%"><col style="width:62%"></colgroup>
+        <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td>Payment gateway is currently mocked</td><td>Funded explicitly in the £15k ask (§5) — first task before any real revenue can flow</td></tr>
+          <tr><td>Naira/FX volatility</td><td>Pricing is already Naira-native; keep a GBP contingency buffer rather than converting all cash upfront</td></tr>
+          <tr><td>Unproven customer acquisition cost</td><td>Validate with a small pilot spend before committing the full marketing budget</td></tr>
+          <tr><td>Established competitors (Decagon, AltSchool, Utiva)</td><td>Differentiate on curriculum mix (cyber security, GIS/drone, renewable energy) they don't cover</td></tr>
+          <tr><td>Nigeria Data Protection Act (NDPA) compliance</td><td>Budgeted under legal &amp; regulatory (§5) before handling Nigerian user data at scale</td></tr>
+          <tr><td>Curriculum currency (esp. cyber security)</td><td>Content maintenance budget line reserved specifically for this (§5)</td></tr>
+          <tr><td>Key-person dependency (2–3 people)</td><td>Document processes as the team grows; revisit once past break-even</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">09 — Next 90 Days</p>
+    <h2>What happens once the funding lands.</h2>
+    <ol class="steps">
+      <li>
+        <h4>Days 1–30 — Get transaction-ready</h4>
+        <p>Integrate a real Nigerian payment gateway (Paystack or Flutterwave), complete company/legal formation, and review NDPA compliance before taking a single live payment.</p>
+      </li>
+      <li>
+        <h4>Days 31–60 — First cohort</h4>
+        <p>Activate the referral program, start a small paid-marketing pilot, and onboard the first paying students with analytics in place to actually measure customer acquisition cost.</p>
+      </li>
+      <li>
+        <h4>Days 61–90 — Read the data, then scale</h4>
+        <p>Review real CAC and conversion numbers against the scenarios in §6, adjust pricing or channel mix accordingly, and plan the second cohort's marketing spend based on what's actually working.</p>
+      </li>
+    </ol>
+  </section>
+
+  <footer>
+    <p class="sources" style="margin-bottom:14px;">
+      Market data cited: Ken Research (Nigeria E-Learning &amp; Skills Development Market), World Bank digital skills estimates via UNICEF/WEF reporting, DataReportal Digital 2026 Nigeria, Statista Nigeria internet/smartphone statistics.
+    </p>
+    <p>Prepared as an internal working document — not a formal offer of securities.</p>
+  </footer>
+
+</div>
+</body>
+</html>

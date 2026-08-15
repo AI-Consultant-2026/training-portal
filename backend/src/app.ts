@@ -69,6 +69,12 @@ export function createApp() {
   app.get("/trainingportalprocess", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "trainingportalprocess.html"));
   });
+  // Investment case for the founding partners' funding round -- public but unlisted
+  // (no nav link, robots noindex) and not linked from any other page; static, no
+  // companion .js file, same as trainingportalprocess above.
+  app.get("/financing", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "financing.html"));
+  });
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this
