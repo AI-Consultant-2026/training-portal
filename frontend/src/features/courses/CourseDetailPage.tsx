@@ -272,29 +272,6 @@ export function CourseDetailPage() {
                       </Link>
                     );
                   })}
-                  {content.assignments.map((a) => {
-                    const isLocked = user?.role === "student" && !isEnrolled;
-                    if (isLocked) {
-                      return (
-                        <span
-                          key={a.id}
-                          className="text-sm font-medium text-gray-400"
-                          title="Enroll in this course to unlock its assignments"
-                        >
-                          Assignment: {a.title} (locked)
-                        </span>
-                      );
-                    }
-                    return (
-                      <Link
-                        key={a.id}
-                        to={`/assignments/${a.id}`}
-                        className="text-sm font-medium text-blue-600 hover:underline"
-                      >
-                        Assignment: {a.title}
-                      </Link>
-                    );
-                  })}
                   {content.quizzes.map((q) => {
                     // Disabled by default: a quiz only unlocks once every lesson in its
                     // own week is completed. Only gates students -- instructors/admins
@@ -325,6 +302,29 @@ export function CourseDetailPage() {
                         className="text-sm font-medium text-blue-600 hover:underline"
                       >
                         Quiz: {q.title}
+                      </Link>
+                    );
+                  })}
+                  {content.assignments.map((a) => {
+                    const isLocked = user?.role === "student" && !isEnrolled;
+                    if (isLocked) {
+                      return (
+                        <span
+                          key={a.id}
+                          className="text-sm font-medium text-gray-400"
+                          title="Enroll in this course to unlock its assignments"
+                        >
+                          Assignment: {a.title} (locked)
+                        </span>
+                      );
+                    }
+                    return (
+                      <Link
+                        key={a.id}
+                        to={`/assignments/${a.id}`}
+                        className="text-sm font-medium text-blue-600 hover:underline"
+                      >
+                        Assignment: {a.title}
                       </Link>
                     );
                   })}
