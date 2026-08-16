@@ -16,6 +16,11 @@ import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, PaymentQuot
 import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 
+// The shared demo login used to let prospects "feel out" the portal before paying --
+// mirrors the backend's DEMO_ACCOUNT_EMAIL in lesson.service.ts. Only this exact
+// account gets the Week 1 Lesson 1 preview exemption below.
+const DEMO_ACCOUNT_EMAIL = "demo@paleontraining.com";
+
 interface ModuleContent {
   lessons: Lesson[];
   assignments: Assignment[];
@@ -73,6 +78,7 @@ export function CourseDetailPage() {
   const [capstone, setCapstone] = useState<Capstone | null>(null);
   const [enrolling, setEnrolling] = useState(false);
   const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -126,6 +132,15 @@ export function CourseDetailPage() {
   const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
   const isEnrolled = myEnrollment !== undefined;
 
+  // Demo-account preview: only the very first lesson of the course's first module
+  // (lowest weekNumber) is exempt from the payment lock -- mirrors the backend
+  // exemption in lesson.service.ts's isDemoPreviewLesson().
+  const isDemoAccount = user?.email === DEMO_ACCOUNT_EMAIL;
+  const firstModuleId =
+    modules.length > 0
+      ? modules.reduce((min, m) => (m.weekNumber < min.weekNumber ? m : min), modules[0]).id
+      : undefined;
+
   useEffect(() => {
     if (course && user?.role === "student") {
       fetchPaymentQuote(course.id).then(setPaymentQuote).catch(() => setPaymentQuote(null));
@@ -134,6 +149,12 @@ export function CourseDetailPage() {
 
   function handlePayForCourse() {
     if (!course) return;
+    // The demo account is a shared preview login, not a real enrollee -- it never goes
+    // through the actual (placeholder) payment gateway, just the same "get started" nudge.
+    if (isDemoAccount) {
+      setShowPaymentDialog(true);
+      return;
+    }
     navigate(`/courses/${course.slug}/pay/${user?.location === "Nigeria" ? "bank-transfer" : "card"}`);
   }
 
@@ -246,19 +267,25 @@ export function CourseDetailPage() {
                     // Disabled by default: lessons only open once an admin has confirmed
                     // payment for this student's enrollment -- enrolling alone isn't
                     // enough. Only gates students -- instructors/admins aren't enrollees
-                    // and should always be able to review content.
-                    const isLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
+                    // and should always be able to review content. The demo account gets
+                    // one exemption: the course's very first lesson, for preview purposes.
+                    const isCourseFirstLesson =
+                      isDemoAccount && mod.id === firstModuleId && content.lessons[0]?.id === lesson.id;
+                    const isLocked =
+                      user?.role === "student" && !myEnrollment?.paymentConfirmed && !isCourseFirstLesson;
                     const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
 
                     if (isLocked) {
                       return (
-                        <span
+                        <button
                           key={lesson.id}
-                          className="text-sm font-medium text-gray-400"
+                          type="button"
+                          onClick={() => setShowPaymentDialog(true)}
+                          className="text-sm font-medium text-gray-400 hover:text-gray-600"
                           title="This lesson unlocks once your payment has been confirmed"
                         >
                           Lesson: {lesson.title} (locked)
-                        </span>
+                        </button>
                       );
                     }
                     return (
@@ -361,6 +388,20 @@ export function CourseDetailPage() {
           >
             View capstone
           </Link>
+        </div>
+      )}
+
+      {showPaymentDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
+            <p className="text-sm text-gray-700">
+              Thanks for your interest in Paleon Training. If you would like to enrol in any of
+              our digital skills courses, make payment for the course and get started.
+            </p>
+            <div className="mt-4 flex justify-end">
+              <Button onClick={() => setShowPaymentDialog(false)}>Close</Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

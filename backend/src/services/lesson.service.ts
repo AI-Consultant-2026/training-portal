@@ -5,12 +5,45 @@ import {
   Enrollment,
   Lesson,
   ProgressTracking,
+  User,
   VideoCheckpoint,
   VideoCheckpointAnswer,
   sequelize,
 } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { getEnrollmentForCourseAndStudent, recalculateProgress } from "./enrollment.service";
+
+// Public preview: the shared demo login (demo@paleontraining.com) can view this one
+// course's very first lesson without paying, so prospects can "feel out" the portal
+// before enrolling. Everything else stays gated behind payment like any other student.
+const DEMO_ACCOUNT_EMAIL = "demo@paleontraining.com";
+const DEMO_PREVIEW_COURSE_SLUG = "social-media-management-content";
+
+async function isDemoPreviewLesson(lesson: Lesson, courseModule: CourseModule, studentId: string): Promise<boolean> {
+  const course = await Course.findByPk(courseModule.courseId);
+  if (!course || course.slug !== DEMO_PREVIEW_COURSE_SLUG) {
+    return false;
+  }
+
+  const student = await User.findByPk(studentId);
+  if (!student || student.email !== DEMO_ACCOUNT_EMAIL) {
+    return false;
+  }
+
+  const firstModule = await CourseModule.findOne({
+    where: { courseId: course.id },
+    order: [["weekNumber", "ASC"]],
+  });
+  if (!firstModule || firstModule.id !== courseModule.id) {
+    return false;
+  }
+
+  const firstLesson = await Lesson.findOne({
+    where: { moduleId: firstModule.id },
+    order: [["order", "ASC"]],
+  });
+  return firstLesson !== null && firstLesson.id === lesson.id;
+}
 
 export async function listLessonsForModule(moduleId: string): Promise<Lesson[]> {
   return Lesson.findAll({ where: { moduleId }, order: [["order", "ASC"]] });
@@ -41,6 +74,9 @@ export async function getLessonForStudent(id: string, requester: { id: string; r
 
   const enrollment = await getEnrollmentForCourseAndStudent(courseModule.courseId, requester.id);
   if (!enrollment || !enrollment.paymentConfirmed) {
+    if (await isDemoPreviewLesson(lesson, courseModule, requester.id)) {
+      return lesson;
+    }
     throw ApiError.forbidden("This lesson unlocks once your payment has been confirmed");
   }
 
