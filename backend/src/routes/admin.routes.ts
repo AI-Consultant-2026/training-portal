@@ -13,6 +13,9 @@ adminRouter.get("/stats", adminController.getDashboardStats);
 adminRouter.get("/leads", adminController.listLeads);
 adminRouter.get("/candidates", adminController.listCandidates);
 adminRouter.post("/candidates", validate(createCandidateSchema), adminController.createCandidate);
+// Must come before "/candidates/:id" -- otherwise Express would match "inactive" as
+// the :id param and route this to deactivateCandidate instead.
+adminRouter.delete("/candidates/inactive", adminController.deleteInactiveCandidates);
 adminRouter.delete("/candidates/:id", adminController.deactivateCandidate);
 adminRouter.patch(
   "/enrollments/:id/payment",

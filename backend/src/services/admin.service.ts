@@ -277,6 +277,35 @@ export async function deactivateCandidate(id: string): Promise<void> {
   await user.save();
 }
 
+export interface DeleteInactiveCandidatesResult {
+  deletedCount: number;
+  skippedCount: number;
+}
+
+// Permanently removes deactivated candidates. Enrollments, progress, quiz attempts,
+// assignment/capstone submissions, and refresh tokens all cascade-delete with the user
+// (see their migrations' onDelete: "CASCADE" on student_id/user_id) -- but payments
+// deliberately don't cascade, since those are financial records worth keeping even
+// after the account is gone. A candidate with any payment history is skipped rather
+// than deleted, so this can't silently erase an audit trail.
+export async function deleteInactiveCandidates(): Promise<DeleteInactiveCandidatesResult> {
+  const inactiveCandidates = await User.findAll({ where: { role: "student", status: "inactive" } });
+
+  let deletedCount = 0;
+  let skippedCount = 0;
+  for (const candidate of inactiveCandidates) {
+    const paymentCount = await Payment.count({ where: { studentId: candidate.id } });
+    if (paymentCount > 0) {
+      skippedCount += 1;
+      continue;
+    }
+    await candidate.destroy();
+    deletedCount += 1;
+  }
+
+  return { deletedCount, skippedCount };
+}
+
 export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed: boolean) {
   const enrollment = await Enrollment.findByPk(enrollmentId);
   if (!enrollment) {

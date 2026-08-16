@@ -7,7 +7,13 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { Spinner } from "../../components/ui/Spinner";
-import { addCandidate, confirmPayment, deleteCandidate, fetchCandidates } from "./adminSlice";
+import {
+  addCandidate,
+  confirmPayment,
+  deleteCandidate,
+  deleteInactiveCandidates,
+  fetchCandidates,
+} from "./adminSlice";
 
 function formatLastActive(lastActiveAt: string | null): string {
   if (!lastActiveAt) return "Never";
@@ -29,6 +35,13 @@ export function AdminCandidatesPage() {
   const [location, setLocation] = useState("Nigeria");
   const [courseInterest, setCourseInterest] = useState("");
   const [adding, setAdding] = useState(false);
+  const [deletingInactive, setDeletingInactive] = useState(false);
+  const [deleteInactiveMessage, setDeleteInactiveMessage] = useState<{
+    text: string;
+    variant: "success" | "error";
+  } | null>(null);
+
+  const inactiveCount = candidates.filter((c) => c.status === "inactive").length;
 
   useEffect(() => {
     dispatch(fetchCandidates());
@@ -55,6 +68,33 @@ export function AdminCandidatesPage() {
     dispatch(deleteCandidate(id));
   }
 
+  async function handleDeleteInactive() {
+    if (
+      !window.confirm(
+        `Permanently delete all ${inactiveCount} inactive candidate${inactiveCount === 1 ? "" : "s"}? This cannot be undone.`,
+      )
+    ) {
+      return;
+    }
+    setDeletingInactive(true);
+    setDeleteInactiveMessage(null);
+    const result = await dispatch(deleteInactiveCandidates());
+    setDeletingInactive(false);
+    if (deleteInactiveCandidates.fulfilled.match(result)) {
+      const { deletedCount, skippedCount } = result.payload;
+      setDeleteInactiveMessage({
+        text:
+          skippedCount > 0
+            ? `Deleted ${deletedCount}. Skipped ${skippedCount} with payment history (kept for records).`
+            : `Deleted ${deletedCount} inactive candidate${deletedCount === 1 ? "" : "s"}.`,
+        variant: "success",
+      });
+      dispatch(fetchCandidates());
+    } else {
+      setDeleteInactiveMessage({ text: "Could not delete inactive candidates.", variant: "error" });
+    }
+  }
+
   function handleTogglePayment(enrollmentId: string, paymentConfirmed: boolean) {
     dispatch(confirmPayment({ enrollmentId, paymentConfirmed }));
   }
@@ -66,10 +106,31 @@ export function AdminCandidatesPage() {
       </Link>
       <div className="mt-2 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Candidates</h1>
-        <Button variant="secondary" onClick={() => setShowAddForm((v) => !v)}>
-          {showAddForm ? "Cancel" : "Add candidate"}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" onClick={() => setShowAddForm((v) => !v)}>
+            {showAddForm ? "Cancel" : "Add candidate"}
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleDeleteInactive}
+            isLoading={deletingInactive}
+            disabled={inactiveCount === 0}
+            title={
+              inactiveCount === 0
+                ? "No inactive candidates to delete"
+                : `Permanently delete all ${inactiveCount} inactive candidates`
+            }
+          >
+            Delete inactive ({inactiveCount})
+          </Button>
+        </div>
       </div>
+
+      {deleteInactiveMessage && (
+        <div className="mt-3">
+          <Alert message={deleteInactiveMessage.text} variant={deleteInactiveMessage.variant} />
+        </div>
+      )}
 
       {showAddForm && (
         <form

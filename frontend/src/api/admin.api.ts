@@ -28,6 +28,16 @@ export async function deleteCandidate(id: string): Promise<void> {
   await axiosClient.delete(`/admin/candidates/${id}`);
 }
 
+export interface DeleteInactiveCandidatesResult {
+  deletedCount: number;
+  skippedCount: number;
+}
+
+export async function deleteInactiveCandidates(): Promise<DeleteInactiveCandidatesResult> {
+  const res = await axiosClient.delete<DeleteInactiveCandidatesResult>("/admin/candidates/inactive");
+  return res.data;
+}
+
 export async function confirmPayment(enrollmentId: string, paymentConfirmed: boolean): Promise<void> {
   await axiosClient.patch(`/admin/enrollments/${enrollmentId}/payment`, { paymentConfirmed });
 }

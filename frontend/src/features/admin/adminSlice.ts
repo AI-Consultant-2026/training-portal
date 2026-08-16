@@ -51,6 +51,10 @@ export const deleteCandidate = createAsyncThunk("admin/deleteCandidate", async (
   return id;
 });
 
+export const deleteInactiveCandidates = createAsyncThunk("admin/deleteInactiveCandidates", async () => {
+  return adminApi.deleteInactiveCandidates();
+});
+
 export const confirmPayment = createAsyncThunk(
   "admin/confirmPayment",
   async ({ enrollmentId, paymentConfirmed }: { enrollmentId: string; paymentConfirmed: boolean }) => {
