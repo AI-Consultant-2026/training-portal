@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -8,6 +8,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
 import { LessonImage, LessonNavItem } from "../../types/api";
+import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
 import {
   fetchCheckpoints,
@@ -86,6 +87,8 @@ export function LessonDetailPage() {
     error,
   } = useAppSelector((state) => state.lessons);
   const { user } = useAppSelector((state) => state.auth);
+  const { items: enrollments } = useAppSelector((state) => state.enrollments);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -94,6 +97,7 @@ export function LessonDetailPage() {
       dispatch(fetchCheckpoints(id));
       if (user?.role === "student") {
         dispatch(fetchLessonCompletion(id));
+        dispatch(fetchMyEnrollments());
       }
     }
   }, [dispatch, id, user]);
@@ -123,6 +127,14 @@ export function LessonDetailPage() {
   const links = lesson.resources?.links ?? [];
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
   const segments = buildContentSegments(lesson.content, lesson.images ?? []);
+
+  // Reaching this page as a student at all means the current lesson is unlocked --
+  // either the enrollment is paid, or (for the demo account) this is its one exempted
+  // preview lesson. Either way, "next" is only guaranteed unlocked if payment is
+  // confirmed; otherwise clicking through would just hit the same 403 the backend
+  // already enforces, so intercept it with the same upsell dialog as a locked lesson.
+  const myEnrollment = navigation ? enrollments.find((e) => e.courseId === navigation.course.id) : undefined;
+  const isNextLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -216,7 +228,27 @@ export function LessonDetailPage() {
             currentWeekNumber={navigation.module.weekNumber}
             direction="previous"
           />
-          <LessonNavLink item={navigation.next} currentWeekNumber={navigation.module.weekNumber} direction="next" />
+          <LessonNavLink
+            item={navigation.next}
+            currentWeekNumber={navigation.module.weekNumber}
+            direction="next"
+            locked={isNextLocked}
+            onLockedClick={() => setShowPaymentDialog(true)}
+          />
+        </div>
+      )}
+
+      {showPaymentDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
+            <p className="text-sm text-gray-700">
+              Thanks for your interest in Paleon Training. If you would like to enrol in any of
+              our digital skills courses, make payment for the course and get started.
+            </p>
+            <div className="mt-4 flex justify-end">
+              <Button onClick={() => setShowPaymentDialog(false)}>Close</Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -231,10 +263,14 @@ function LessonNavLink({
   item,
   currentWeekNumber,
   direction,
+  locked = false,
+  onLockedClick,
 }: {
   item: LessonNavItem | null;
   currentWeekNumber: number;
   direction: "previous" | "next";
+  locked?: boolean;
+  onLockedClick?: () => void;
 }) {
   if (!item) {
     return <div />;
@@ -242,12 +278,22 @@ function LessonNavLink({
 
   const isNewWeek = item.weekNumber !== currentWeekNumber;
   const alignment = direction === "previous" ? "text-left" : "text-right ml-auto";
+  const className = `flex max-w-[45%] flex-col rounded-md border border-gray-200 px-4 py-3 hover:border-blue-300 hover:bg-blue-50 ${alignment}`;
+
+  if (locked) {
+    return (
+      <button type="button" onClick={onLockedClick} className={className}>
+        <span className="text-xs font-medium uppercase text-gray-400">
+          {direction === "previous" ? "← Previous" : "Next →"}
+          {isNewWeek && ` · Week ${item.weekNumber}`}
+        </span>
+        <span className="mt-1 truncate text-sm font-medium text-gray-900">{item.title}</span>
+      </button>
+    );
+  }
 
   return (
-    <Link
-      to={`/lessons/${item.id}`}
-      className={`flex max-w-[45%] flex-col rounded-md border border-gray-200 px-4 py-3 hover:border-blue-300 hover:bg-blue-50 ${alignment}`}
-    >
+    <Link to={`/lessons/${item.id}`} className={className}>
       <span className="text-xs font-medium uppercase text-gray-400">
         {direction === "previous" ? "← Previous" : "Next →"}
         {isNewWeek && ` · Week ${item.weekNumber}`}
