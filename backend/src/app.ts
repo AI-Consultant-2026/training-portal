@@ -75,6 +75,13 @@ export function createApp() {
   app.get("/financing", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "financing.html"));
   });
+  // Legal pages -- static, no companion .js file, linked from the welcome page footer.
+  app.get("/terms", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "terms.html"));
+  });
+  app.get("/privacy", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "privacy.html"));
+  });
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this

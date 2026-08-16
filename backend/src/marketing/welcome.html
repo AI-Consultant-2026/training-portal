@@ -565,6 +565,9 @@
     font-family: var(--font-body);
   }
 
+  .footer-legal a { color: var(--ink-faint); text-decoration: underline; text-underline-offset: 2px; }
+  .footer-legal a:hover { color: var(--signal-2); }
+
   /* ============ Mobile typography ============ */
   @media (max-width: 640px) {
     /* Body/description copy: keep everything comfortably readable on a phone */
@@ -985,6 +988,7 @@
   <div class="wrap footer-bottom">
     <span>&copy; 2026 Paleon Training. All rights reserved.</span>
     <span>Company registered in England &amp; Wales</span>
+    <span class="footer-legal"><a href="/terms">Terms of Service</a> &middot; <a href="/privacy">Privacy Policy</a></span>
   </div>
 </footer>
 
