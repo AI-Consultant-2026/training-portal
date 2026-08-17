@@ -42,6 +42,18 @@ export async function confirmPayment(enrollmentId: string, paymentConfirmed: boo
   await axiosClient.patch(`/admin/enrollments/${enrollmentId}/payment`, { paymentConfirmed });
 }
 
+export async function addEnrollment(
+  candidateId: string,
+  courseId: string,
+  paymentConfirmed?: boolean,
+): Promise<Candidate> {
+  const res = await axiosClient.post<{ candidate: Candidate }>(
+    `/admin/candidates/${candidateId}/enrollments`,
+    { courseId, paymentConfirmed },
+  );
+  return res.data.candidate;
+}
+
 export async function fetchLeads(): Promise<Lead[]> {
   const res = await axiosClient.get<{ leads: Lead[] }>("/admin/leads");
   return res.data.leads;

@@ -18,6 +18,18 @@ export const createCandidate = asyncHandler(async (req: Request, res: Response) 
   res.status(201).json({ candidate });
 });
 
+export const addEnrollment = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.params.id) {
+    throw ApiError.badRequest("Candidate id is required");
+  }
+  const candidate = await adminService.addEnrollmentToCandidate(
+    req.params.id,
+    req.body.courseId,
+    req.body.paymentConfirmed,
+  );
+  res.status(201).json({ candidate });
+});
+
 export const deactivateCandidate = asyncHandler(async (req: Request, res: Response) => {
   if (!req.params.id) {
     throw ApiError.badRequest("Candidate id is required");

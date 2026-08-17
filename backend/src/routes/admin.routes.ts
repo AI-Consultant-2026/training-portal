@@ -3,7 +3,11 @@ import * as adminController from "../controllers/admin.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import { validate } from "../middleware/validate";
-import { createCandidateSchema, setPaymentConfirmedSchema } from "../validators/admin.validators";
+import {
+  addEnrollmentSchema,
+  createCandidateSchema,
+  setPaymentConfirmedSchema,
+} from "../validators/admin.validators";
 
 export const adminRouter = Router();
 
@@ -17,6 +21,11 @@ adminRouter.post("/candidates", validate(createCandidateSchema), adminController
 // the :id param and route this to deactivateCandidate instead.
 adminRouter.delete("/candidates/inactive", adminController.deleteInactiveCandidates);
 adminRouter.delete("/candidates/:id", adminController.deactivateCandidate);
+adminRouter.post(
+  "/candidates/:id/enrollments",
+  validate(addEnrollmentSchema),
+  adminController.addEnrollment,
+);
 adminRouter.patch(
   "/enrollments/:id/payment",
   validate(setPaymentConfirmedSchema),

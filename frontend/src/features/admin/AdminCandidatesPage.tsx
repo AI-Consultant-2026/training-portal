@@ -2,13 +2,16 @@ import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { COURSE_INTERESTS, LOCATIONS } from "../auth/RegisterPage";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchCourses } from "../../api/courses.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { Spinner } from "../../components/ui/Spinner";
+import { Course } from "../../types/api";
 import {
   addCandidate,
+  addEnrollment,
   confirmPayment,
   deleteCandidate,
   deleteInactiveCandidates,
@@ -40,12 +43,29 @@ export function AdminCandidatesPage() {
     text: string;
     variant: "success" | "error";
   } | null>(null);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [enrollSelections, setEnrollSelections] = useState<Record<string, string>>({});
+  const [enrollMarkPaid, setEnrollMarkPaid] = useState<Record<string, boolean>>({});
+  const [addingCourseFor, setAddingCourseFor] = useState<string | null>(null);
 
   const inactiveCount = candidates.filter((c) => c.status === "inactive").length;
 
   useEffect(() => {
     dispatch(fetchCandidates());
+    fetchCourses().then(setCourses).catch(() => setCourses([]));
   }, [dispatch]);
+
+  async function handleAddEnrollment(candidateId: string) {
+    const courseId = enrollSelections[candidateId];
+    if (!courseId) return;
+    setAddingCourseFor(candidateId);
+    await dispatch(
+      addEnrollment({ candidateId, courseId, paymentConfirmed: enrollMarkPaid[candidateId] ?? false }),
+    );
+    setAddingCourseFor(null);
+    setEnrollSelections((prev) => ({ ...prev, [candidateId]: "" }));
+    setEnrollMarkPaid((prev) => ({ ...prev, [candidateId]: false }));
+  }
 
   async function handleAddCandidate(e: FormEvent) {
     e.preventDefault();
@@ -262,6 +282,50 @@ export function AdminCandidatesPage() {
                         ))}
                       </ul>
                     )}
+                    {(() => {
+                      const enrolledCourseIds = new Set(c.enrollments.map((e) => e.courseId));
+                      const available = courses.filter((course) => !enrolledCourseIds.has(course.id));
+                      if (available.length === 0) return null;
+                      return (
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <Select
+                            id={`enrollCourse-${c.id}`}
+                            label="Add a course"
+                            labelClassName="sr-only"
+                            value={enrollSelections[c.id] ?? ""}
+                            onChange={(e) =>
+                              setEnrollSelections((prev) => ({ ...prev, [c.id]: e.target.value }))
+                            }
+                            className="text-xs"
+                          >
+                            <option value="">Add a course&hellip;</option>
+                            {available.map((course) => (
+                              <option key={course.id} value={course.id}>
+                                {course.title}
+                              </option>
+                            ))}
+                          </Select>
+                          <label className="flex items-center gap-1 text-xs text-gray-600">
+                            <input
+                              type="checkbox"
+                              checked={enrollMarkPaid[c.id] ?? false}
+                              onChange={(ev) =>
+                                setEnrollMarkPaid((prev) => ({ ...prev, [c.id]: ev.target.checked }))
+                              }
+                            />
+                            Mark paid
+                          </label>
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleAddEnrollment(c.id)}
+                            disabled={!enrollSelections[c.id]}
+                            isLoading={addingCourseFor === c.id}
+                          >
+                            Add
+                          </Button>
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="px-4 py-3 text-gray-600">{c.status}</td>
                   <td className="px-4 py-3 text-right">

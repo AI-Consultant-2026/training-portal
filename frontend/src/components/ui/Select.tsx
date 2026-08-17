@@ -2,12 +2,13 @@ import { SelectHTMLAttributes } from "react";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
+  labelClassName?: string;
 }
 
-export function Select({ label, id, className, children, ...rest }: SelectProps) {
+export function Select({ label, labelClassName, id, className, children, ...rest }: SelectProps) {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">
+      <label htmlFor={id} className={labelClassName ?? "text-sm font-medium text-gray-700"}>
         {label}
       </label>
       <select

@@ -179,4 +179,55 @@ describe("Admin candidate management", () => {
       .set("Authorization", `Bearer ${studentToken}`);
     expect(myEnrollments.body.enrollments[0].paymentConfirmed).toBe(true);
   });
+
+  it("lets an admin add a course to a candidate's account, optionally marking payment confirmed", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const student = await registerStudent("granted@example.com");
+
+    const course = await Course.create({
+      title: "Granted Course",
+      slug: "granted-course",
+      description: "d",
+      status: "published",
+      durationWeeks: 1,
+      level: "beginner",
+    });
+
+    const res = await request(app)
+      .post(`/api/admin/candidates/${student.id}/enrollments`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ courseId: course.id, paymentConfirmed: true });
+
+    expect(res.status).toBe(201);
+    const enrollment = res.body.candidate.enrollments.find((e: { courseId: string }) => e.courseId === course.id);
+    expect(enrollment).toBeDefined();
+    expect(enrollment.paymentConfirmed).toBe(true);
+
+    const dbEnrollment = await Enrollment.findOne({ where: { courseId: course.id, studentId: student.id } });
+    expect(dbEnrollment).not.toBeNull();
+  });
+
+  it("rejects adding a duplicate course to a candidate already enrolled in it", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const student = await registerStudent("dupenroll@example.com");
+
+    const course = await Course.create({
+      title: "Dup Course",
+      slug: "dup-course",
+      description: "d",
+      status: "published",
+      durationWeeks: 1,
+      level: "beginner",
+    });
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+
+    const res = await request(app)
+      .post(`/api/admin/candidates/${student.id}/enrollments`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ courseId: course.id });
+
+    expect(res.status).toBe(409);
+  });
 });

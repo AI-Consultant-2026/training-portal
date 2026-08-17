@@ -16,3 +16,10 @@ export const setPaymentConfirmedSchema = z.object({
     paymentConfirmed: z.boolean(),
   }),
 });
+
+export const addEnrollmentSchema = z.object({
+  body: z.object({
+    courseId: z.string().uuid(),
+    paymentConfirmed: z.boolean().optional(),
+  }),
+});

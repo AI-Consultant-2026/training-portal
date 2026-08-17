@@ -13,6 +13,7 @@ import {
   User,
 } from "../models";
 import * as authService from "./auth.service";
+import * as enrollmentService from "./enrollment.service";
 import { ApiError } from "../utils/ApiError";
 
 // A candidate counts as "online" if their last heartbeat was within this window. The
@@ -215,22 +216,35 @@ function serializeCandidate(user: User) {
   };
 }
 
+const CANDIDATE_ENROLLMENTS_INCLUDE = [
+  {
+    model: Enrollment,
+    as: "enrollments",
+    include: [
+      { model: Course, as: "course" },
+      { model: Payment, as: "payments" },
+    ],
+  },
+];
+
 export async function listCandidates() {
   const candidates = await User.findAll({
     where: { role: "student" },
-    include: [
-      {
-        model: Enrollment,
-        as: "enrollments",
-        include: [
-          { model: Course, as: "course" },
-          { model: Payment, as: "payments" },
-        ],
-      },
-    ],
+    include: CANDIDATE_ENROLLMENTS_INCLUDE,
     order: [["createdAt", "DESC"]],
   });
   return candidates.map(serializeCandidate);
+}
+
+async function getCandidateById(id: string) {
+  const candidate = await User.findOne({
+    where: { id, role: "student" },
+    include: CANDIDATE_ENROLLMENTS_INCLUDE,
+  });
+  if (!candidate) {
+    throw ApiError.notFound("Candidate not found");
+  }
+  return serializeCandidate(candidate);
 }
 
 export interface CreateCandidateInput {
@@ -304,6 +318,30 @@ export async function deleteInactiveCandidates(): Promise<DeleteInactiveCandidat
   }
 
   return { deletedCount, skippedCount };
+}
+
+// Lets an admin grant a candidate access to a course directly (e.g. payment reconciled
+// outside the portal, a scholarship, or a manual override) without them going through
+// self-service checkout. Reuses the same enrollStudent path students hit on checkout, so
+// the confirmation email and "already enrolled" guard stay in one place.
+export async function addEnrollmentToCandidate(
+  candidateId: string,
+  courseId: string,
+  paymentConfirmed = false,
+) {
+  const candidate = await User.findOne({ where: { id: candidateId, role: "student" } });
+  if (!candidate) {
+    throw ApiError.notFound("Candidate not found");
+  }
+
+  const enrollment = await enrollmentService.enrollStudent(courseId, candidateId);
+  if (paymentConfirmed) {
+    enrollment.paymentConfirmed = true;
+    enrollment.paymentConfirmedAt = new Date();
+    await enrollment.save();
+  }
+
+  return getCandidateById(candidateId);
 }
 
 export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed: boolean) {

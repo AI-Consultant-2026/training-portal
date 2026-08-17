@@ -67,6 +67,23 @@ export const fetchLeads = createAsyncThunk("admin/fetchLeads", async () => {
   return adminApi.fetchLeads();
 });
 
+export const addEnrollment = createAsyncThunk(
+  "admin/addEnrollment",
+  async (
+    { candidateId, courseId, paymentConfirmed }: { candidateId: string; courseId: string; paymentConfirmed?: boolean },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await adminApi.addEnrollment(candidateId, courseId, paymentConfirmed);
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
+          ?.message ?? "Could not add course";
+      return rejectWithValue(message);
+    }
+  },
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -122,6 +139,13 @@ const adminSlice = createSlice({
       })
       .addCase(fetchLeads.rejected, (state) => {
         state.leadsStatus = "failed";
+      })
+      .addCase(addEnrollment.fulfilled, (state, action) => {
+        const index = state.candidates.findIndex((c) => c.id === action.payload.id);
+        if (index !== -1) state.candidates[index] = action.payload;
+      })
+      .addCase(addEnrollment.rejected, (state, action) => {
+        state.candidatesError = (action.payload as string) ?? "Could not add course";
       });
   },
 });
