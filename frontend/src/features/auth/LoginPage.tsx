@@ -68,7 +68,7 @@ export function LoginPage() {
           have access to training in:
         </p>
         <ul className="mt-2 space-y-1 text-sm text-gray-700">
-          <li>🔐 Cyber Security</li>
+          <li>🔐 Cyber Security Fundamentals</li>
           <li>📱 Social Media Management &amp; Content</li>
           <li>📈 Digital Marketing</li>
           <li>🗺️ GIS &amp; Drone Mapping</li>
