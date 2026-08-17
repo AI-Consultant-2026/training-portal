@@ -63,8 +63,9 @@ export function LoginPage() {
           <strong>Monday, 14 September 2026</strong>!
         </p>
         <p className="mt-3 text-sm text-gray-700">
-          If you&apos;re a Nigerian graduate looking to build practical digital skills, you&apos;ll
-          be able to apply for training in:
+          If you&apos;re a Nigerian graduate looking to develop practical digital skills for career
+          opportunities in the Oil &amp; Gas, Telecommunications, and Banking sectors, you&apos;ll
+          have access to training in:
         </p>
         <ul className="mt-2 space-y-1 text-sm text-gray-700">
           <li>🔐 Cyber Security</li>
