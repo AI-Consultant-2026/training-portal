@@ -43,10 +43,10 @@ services:
         value: /var/data/uploads
       # Same-origin in this architecture (the service serves its own frontend), so this
       # is mostly defense-in-depth rather than something production traffic depends on.
-      # This is the real assigned URL (Render appended a suffix since the exact name
-      # was taken) — update again if a custom domain is added later.
+      # Custom domain (paleontraining.com) attached in Render — update again if the
+      # domain ever changes.
       - key: CORS_ORIGIN
-        value: https://training-portal-6a2k.onrender.com
+        value: https://paleontraining.com
       # No SMTP provider is chosen yet - email sends are best-effort and silently no-op until
       # these are set for real in the Render dashboard (sync: false means Render won't overwrite
       # a manually-set value on the next Blueprint apply). See docs/DEPLOYMENT.md.
