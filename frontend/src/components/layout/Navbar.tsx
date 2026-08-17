@@ -35,6 +35,9 @@ export function Navbar() {
           </>
         ) : (
           <>
+            <a href="/welcome" className="text-gray-600 hover:text-gray-900">
+              Home
+            </a>
             <Link to="/login" className="text-gray-600 hover:text-gray-900">
               Log in
             </Link>
