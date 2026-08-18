@@ -60,7 +60,7 @@ export function LoginPage() {
         <h2 className="text-lg font-semibold text-gray-900">New Intake Opening Soon 🎓🇳🇬</h2>
         <p className="mt-2 text-sm text-gray-700">
           Paleon Training is reopening its portal for new intakes on{" "}
-          <strong>Monday, 14 September 2026</strong>!
+          <strong>Thursday, 01 October 2026</strong>!
         </p>
         <p className="mt-3 text-sm text-gray-700">
           If you&apos;re a Nigerian graduate looking to develop practical digital skills for career
@@ -88,7 +88,7 @@ export function LoginPage() {
           Explore the platform, preview the courses and see what Paleon Training has to offer.
         </p>
         <p className="mt-3 text-sm font-medium text-gray-900">
-          New intake opens Monday, 14 September 2026. 🚀
+          New intake opens Thursday, 01 October 2026. 🚀
         </p>
         <p className="mt-1 text-sm text-gray-700">Start building the digital skills for your future.</p>
       </div>
