@@ -126,7 +126,6 @@ export function CourseDetailPage() {
   useEffect(() => {
     if (!user || modules.length === 0) return;
     modules.forEach((mod) => loadModuleContent(mod.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modules, user]);
 
   const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
