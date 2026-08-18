@@ -12,6 +12,11 @@ export interface AuthState {
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
   };
+  emailVerification: {
+    status: "idle" | "loading" | "succeeded" | "failed";
+    error: string | null;
+    resendStatus: "idle" | "loading" | "succeeded" | "failed";
+  };
 }
 
 const initialState: AuthState = {
@@ -23,6 +28,11 @@ const initialState: AuthState = {
   passwordReset: {
     status: "idle",
     error: null,
+  },
+  emailVerification: {
+    status: "idle",
+    error: null,
+    resendStatus: "idle",
   },
 };
 
@@ -82,6 +92,28 @@ export const confirmPasswordReset = createAsyncThunk(
   async (input: authApi.PasswordResetConfirmInput, { rejectWithValue }) => {
     try {
       await authApi.confirmPasswordReset(input);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
+
+export const verifyEmail = createAsyncThunk(
+  "auth/verifyEmail",
+  async (input: authApi.VerifyEmailInput, { rejectWithValue }) => {
+    try {
+      await authApi.verifyEmail(input);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err));
+    }
+  },
+);
+
+export const resendVerification = createAsyncThunk(
+  "auth/resendVerification",
+  async (_: void, { rejectWithValue }) => {
+    try {
+      await authApi.resendVerification();
     } catch (err) {
       return rejectWithValue(extractErrorMessage(err));
     }
@@ -163,6 +195,32 @@ const authSlice = createSlice({
       .addCase(confirmPasswordReset.rejected, (state, action) => {
         state.passwordReset.status = "failed";
         state.passwordReset.error = (action.payload as string) ?? "Something went wrong";
+      })
+      .addCase(verifyEmail.pending, (state) => {
+        state.emailVerification.status = "loading";
+        state.emailVerification.error = null;
+      })
+      .addCase(verifyEmail.fulfilled, (state) => {
+        state.emailVerification.status = "succeeded";
+        // Best-effort UI sync for the common case (verifying in the same session/tab
+        // that's logged in as this user) -- the server remains the source of truth
+        // regardless, e.g. after a fresh login or in a different browser.
+        if (state.user) {
+          state.user.emailVerifiedAt = new Date().toISOString();
+        }
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.emailVerification.status = "failed";
+        state.emailVerification.error = (action.payload as string) ?? "Something went wrong";
+      })
+      .addCase(resendVerification.pending, (state) => {
+        state.emailVerification.resendStatus = "loading";
+      })
+      .addCase(resendVerification.fulfilled, (state) => {
+        state.emailVerification.resendStatus = "succeeded";
+      })
+      .addCase(resendVerification.rejected, (state) => {
+        state.emailVerification.resendStatus = "failed";
       });
   },
 });

@@ -21,11 +21,15 @@ describe("Auth flow", () => {
     expect(res.body.accessToken).toEqual(expect.any(String));
     expect(res.headers["set-cookie"]?.[0]).toMatch(/^rt=/);
 
-    expect(memAdapter.sentMessages).toHaveLength(1);
-    expect(memAdapter.sentMessages[0]).toMatchObject({
-      to: validRegistration.email,
-      subject: expect.stringContaining("Welcome"),
-    });
+    // Registration sends two emails: the welcome message and a separate email-
+    // verification link (see the "email verification" describe block below).
+    expect(memAdapter.sentMessages).toHaveLength(2);
+    expect(memAdapter.sentMessages).toContainEqual(
+      expect.objectContaining({ to: validRegistration.email, subject: expect.stringContaining("Welcome") }),
+    );
+    expect(memAdapter.sentMessages).toContainEqual(
+      expect.objectContaining({ to: validRegistration.email, subject: expect.stringContaining("Verify") }),
+    );
   });
 
   it("rejects registration with a weak password", async () => {
@@ -123,5 +127,72 @@ describe("Auth flow", () => {
 
     expect(res.status).toBe(202);
     expect(memAdapter.sentMessages).toHaveLength(0);
+  });
+
+  describe("email verification", () => {
+    it("verifies a new account via the link sent on registration, idempotently", async () => {
+      await request(app).post("/api/auth/register").send(validRegistration);
+
+      const verifyMessage = memAdapter.sentMessages.find((m) => m.subject.includes("Verify"));
+      expect(verifyMessage).toBeDefined();
+      const match = verifyMessage!.text.match(/\/verify-email\?token=(\S+)/);
+      expect(match).not.toBeNull();
+      const token = match![1];
+
+      const firstVerify = await request(app).post("/api/auth/verify-email").send({ token });
+      expect(firstVerify.status).toBe(200);
+
+      // Clicking the same link twice (double-click, stale tab) should stay a success,
+      // not error just because the account is already verified.
+      const secondVerify = await request(app).post("/api/auth/verify-email").send({ token });
+      expect(secondVerify.status).toBe(200);
+    });
+
+    it("rejects an invalid or malformed verification token", async () => {
+      const res = await request(app).post("/api/auth/verify-email").send({ token: "not-a-real-token" });
+      expect(res.status).toBe(400);
+    });
+
+    it("rejects a password-reset token reused as a verification token", async () => {
+      await request(app).post("/api/auth/register").send(validRegistration);
+      memAdapter.clear();
+
+      await request(app).post("/api/auth/password-reset").send({ email: validRegistration.email });
+      const resetMessage = memAdapter.sentMessages[0];
+      const match = resetMessage.text.match(/\/reset-password\?token=(\S+)/);
+      const resetToken = match![1];
+
+      const res = await request(app).post("/api/auth/verify-email").send({ token: resetToken });
+      expect(res.status).toBe(400);
+    });
+
+    it("resends a verification link for an unverified user, and no-ops for an already-verified one", async () => {
+      const registerRes = await request(app).post("/api/auth/register").send(validRegistration);
+      const accessToken = registerRes.body.accessToken;
+      memAdapter.clear();
+
+      const resendRes = await request(app)
+        .post("/api/auth/resend-verification")
+        .set("Authorization", `Bearer ${accessToken}`);
+      expect(resendRes.status).toBe(202);
+      expect(memAdapter.sentMessages).toHaveLength(1);
+      expect(memAdapter.sentMessages[0].subject).toContain("Verify");
+
+      const verifyMessage = memAdapter.sentMessages[0];
+      const token = verifyMessage.text.match(/\/verify-email\?token=(\S+)/)![1];
+      await request(app).post("/api/auth/verify-email").send({ token });
+      memAdapter.clear();
+
+      const secondResendRes = await request(app)
+        .post("/api/auth/resend-verification")
+        .set("Authorization", `Bearer ${accessToken}`);
+      expect(secondResendRes.status).toBe(202);
+      expect(memAdapter.sentMessages).toHaveLength(0);
+    });
+
+    it("requires authentication to resend a verification link", async () => {
+      const res = await request(app).post("/api/auth/resend-verification");
+      expect(res.status).toBe(401);
+    });
   });
 });

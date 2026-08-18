@@ -10,6 +10,7 @@ import { ForgotPasswordPage } from "../features/auth/ForgotPasswordPage";
 import { LoginPage } from "../features/auth/LoginPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
 import { ResetPasswordPage } from "../features/auth/ResetPasswordPage";
+import { VerifyEmailPage } from "../features/auth/VerifyEmailPage";
 import { CapstoneDetailPage } from "../features/capstones/CapstoneDetailPage";
 import { CapstoneGradingQueuePage } from "../features/capstones/CapstoneGradingQueuePage";
 import { GradeCapstoneSubmissionPage } from "../features/capstones/GradeCapstoneSubmissionPage";
@@ -36,6 +37,7 @@ export function AppRouter() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/courses" element={<CourseListPage />} />
         <Route path="/courses/:slug" element={<CourseDetailPage />} />

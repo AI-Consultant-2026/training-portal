@@ -30,6 +30,7 @@ const STUDENT: User = {
   profileData: {},
   location: "Nigeria",
   courseInterest: null,
+  emailVerifiedAt: "2026-01-01T00:00:00.000Z",
 };
 
 const COURSE: Course = {
@@ -129,6 +130,7 @@ function renderCoursePage() {
           bootstrapped: true,
           error: null,
           passwordReset: { status: "idle", error: null },
+          emailVerification: { status: "idle", error: null, resendStatus: "idle" },
         },
       },
     },

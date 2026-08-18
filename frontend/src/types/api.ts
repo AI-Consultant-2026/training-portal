@@ -11,6 +11,7 @@ export interface User {
   profileData: Record<string, unknown>;
   location: string;
   courseInterest: string | null;
+  emailVerifiedAt: string | null;
 }
 
 export type CourseLevel = "beginner" | "intermediate" | "advanced";

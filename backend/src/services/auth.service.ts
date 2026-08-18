@@ -34,6 +34,18 @@ export interface AuthResult {
 }
 
 const PASSWORD_RESET_PURPOSE = "password-reset";
+const EMAIL_VERIFICATION_PURPOSE = "email-verification";
+
+function sendVerificationEmail(user: User): void {
+  const verifyToken = jwt.sign({ sub: user.id, purpose: EMAIL_VERIFICATION_PURPOSE }, config.jwt.accessSecret, {
+    expiresIn: "24h",
+  });
+  const verifyUrl = `${config.corsOrigin}/verify-email?token=${verifyToken}`;
+  // Best-effort, not awaited -- same reasoning as sendWelcomeEmail below.
+  emails
+    .sendEmailVerificationEmail(user, verifyUrl)
+    .catch((err) => logger.error("Failed to send email verification email", err));
+}
 
 export async function register(input: RegisterInput): Promise<AuthResult> {
   const existing = await User.findOne({ where: { email: input.email } });
@@ -58,6 +70,7 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
   // Best-effort, not awaited: an unreachable/slow SMTP provider must never hang
   // registration itself -- the account is already created and usable at this point.
   emails.sendWelcomeEmail(user).catch((err) => logger.error("Failed to send welcome email", err));
+  sendVerificationEmail(user);
 
   return { user, accessToken, refreshToken };
 }
@@ -140,4 +153,37 @@ export async function confirmPasswordReset(token: string, newPassword: string): 
 
   user.passwordHash = await bcrypt.hash(newPassword, config.bcryptSaltRounds);
   await user.save();
+}
+
+export async function verifyEmail(token: string): Promise<void> {
+  let payload: { sub: string; purpose: string };
+  try {
+    payload = jwt.verify(token, config.jwt.accessSecret) as { sub: string; purpose: string };
+  } catch {
+    throw ApiError.badRequest("Invalid or expired verification link");
+  }
+
+  if (payload.purpose !== EMAIL_VERIFICATION_PURPOSE) {
+    throw ApiError.badRequest("Invalid or expired verification link");
+  }
+
+  const user = await User.findByPk(payload.sub);
+  if (!user) {
+    throw ApiError.badRequest("Invalid or expired verification link");
+  }
+
+  // Idempotent: a student clicking an already-used link (double-click, stale tab)
+  // should just see success again, not an error.
+  if (!user.emailVerifiedAt) {
+    user.emailVerifiedAt = new Date();
+    await user.save();
+  }
+}
+
+export async function resendVerificationEmail(userId: string): Promise<void> {
+  const user = await User.findByPk(userId);
+  if (!user || user.emailVerifiedAt) {
+    return;
+  }
+  sendVerificationEmail(user);
 }

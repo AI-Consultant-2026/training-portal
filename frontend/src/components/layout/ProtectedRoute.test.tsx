@@ -20,6 +20,7 @@ const STUDENT: User = {
   profileData: {},
   location: "Nigeria",
   courseInterest: null,
+  emailVerifiedAt: "2026-01-01T00:00:00.000Z",
 };
 
 function renderProtected(authState: { user: User | null; bootstrapped: boolean }) {
@@ -40,6 +41,7 @@ function renderProtected(authState: { user: User | null; bootstrapped: boolean }
           bootstrapped: authState.bootstrapped,
           error: null,
           passwordReset: { status: "idle", error: null },
+          emailVerification: { status: "idle", error: null, resendStatus: "idle" },
         },
       },
     },
@@ -83,6 +85,7 @@ describe("RoleRoute", () => {
             bootstrapped: true,
             error: null,
             passwordReset: { status: "idle", error: null },
+            emailVerification: { status: "idle", error: null, resendStatus: "idle" },
           },
         },
       },

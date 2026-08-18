@@ -3,6 +3,7 @@ import { emailAdapter, EmailMessage } from "../utils/email";
 import { logger } from "../utils/logger";
 import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
+import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
 import { buildLeadNotificationEmail } from "./templates/leadNotification";
 import { buildPasswordResetEmail } from "./templates/passwordReset";
@@ -23,6 +24,10 @@ export async function sendWelcomeEmail(user: User): Promise<void> {
 
 export async function sendPasswordResetEmail(user: User, resetUrl: string): Promise<void> {
   await sendEmail(buildPasswordResetEmail(user, resetUrl));
+}
+
+export async function sendEmailVerificationEmail(user: User, verifyUrl: string): Promise<void> {
+  await sendEmail(buildEmailVerificationEmail(user, verifyUrl));
 }
 
 export async function sendEnrollmentConfirmationEmail(

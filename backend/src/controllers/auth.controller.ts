@@ -66,3 +66,13 @@ export const confirmPasswordReset = asyncHandler(async (req: Request, res: Respo
   await authService.confirmPasswordReset(req.body.token, req.body.password);
   res.status(200).json({ message: "Password updated" });
 });
+
+export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
+  await authService.verifyEmail(req.body.token);
+  res.status(200).json({ message: "Email verified" });
+});
+
+export const resendVerification = asyncHandler(async (req: Request, res: Response) => {
+  await authService.resendVerificationEmail(req.user!.id);
+  res.status(202).json({ message: "If your email isn't verified yet, a new link has been sent" });
+});

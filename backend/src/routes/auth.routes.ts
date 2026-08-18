@@ -2,12 +2,14 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import * as authController from "../controllers/auth.controller";
 import { config } from "../config";
+import { authenticate } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
 import {
   loginSchema,
   passwordResetConfirmSchema,
   passwordResetRequestSchema,
   registerSchema,
+  verifyEmailSchema,
 } from "../validators/auth.validators";
 
 export const authRouter = Router();
@@ -38,3 +40,5 @@ authRouter.post(
   validate(passwordResetConfirmSchema),
   authController.confirmPasswordReset,
 );
+authRouter.post("/verify-email", validate(verifyEmailSchema), authController.verifyEmail);
+authRouter.post("/resend-verification", authenticate, authController.resendVerification);

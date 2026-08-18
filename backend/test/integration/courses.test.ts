@@ -199,6 +199,10 @@ describe("Courses", () => {
       firstName: "Jest",
       lastName: "Student3",
     });
+    await User.update(
+      { emailVerifiedAt: new Date() },
+      { where: { email: "jest-student3@example.com" } },
+    );
     const token = await loginAs("jest-student3@example.com", "Password123!");
 
     memAdapter.clear();
@@ -215,5 +219,28 @@ describe("Courses", () => {
       .post(`/api/courses/${course.id}/enroll`)
       .set("Authorization", `Bearer ${token}`);
     expect(secondEnroll.status).toBe(409);
+  });
+
+  it("rejects self-service enrollment from a student who hasn't verified their email", async () => {
+    const course = await Course.create({
+      title: "Unverified Enroll Course",
+      slug: "unverified-enroll-course",
+      durationWeeks: 4,
+      status: "published",
+    });
+
+    await request(app).post("/api/auth/register").send({
+      email: "jest-student-unverified@example.com",
+      password: "Password123!",
+      firstName: "Jest",
+      lastName: "Unverified",
+    });
+    const token = await loginAs("jest-student-unverified@example.com", "Password123!");
+
+    const res = await request(app)
+      .post(`/api/courses/${course.id}/enroll`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(403);
   });
 });

@@ -15,6 +15,7 @@ export interface UserAttributes {
   location: string;
   courseInterest: string | null;
   lastActiveAt: Date | null;
+  emailVerifiedAt: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -28,6 +29,7 @@ export type UserCreationAttributes = Optional<
   | "location"
   | "courseInterest"
   | "lastActiveAt"
+  | "emailVerifiedAt"
   | "createdAt"
   | "updatedAt"
 >;
@@ -44,6 +46,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   declare location: string;
   declare courseInterest: string | null;
   declare lastActiveAt: Date | null;
+  declare emailVerifiedAt: Date | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -107,6 +110,11 @@ export function initUserModel(sequelize: Sequelize) {
         type: DataTypes.DATE,
         allowNull: true,
         field: "last_active_at",
+      },
+      emailVerifiedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: "email_verified_at",
       },
     },
     {
