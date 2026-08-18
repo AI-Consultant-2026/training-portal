@@ -21,6 +21,14 @@ export class SmtpEmailAdapter implements EmailAdapter {
       port: config.smtpPort,
       secure: config.smtpSecure,
       auth: config.smtpUser ? { user: config.smtpUser, pass: config.smtpPass } : undefined,
+      // Nodemailer has no timeout at all by default -- an unreachable host (e.g. no real
+      // SMTP provider configured yet, only the "mailhog" dev default) hangs the socket
+      // forever instead of erroring. Every caller of EmailAdapter.send() now also treats
+      // email as best-effort rather than awaiting it on the response path, but this is
+      // the fail-fast backstop in case something ever does await it directly.
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 10_000,
     });
   }
 

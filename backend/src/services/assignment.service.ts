@@ -2,6 +2,7 @@ import * as emails from "../emails";
 import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment, User } from "../models";
 import { getEnrollmentForCourseAndStudent } from "./enrollment.service";
 import { ApiError } from "../utils/ApiError";
+import { logger } from "../utils/logger";
 import { storageAdapter } from "../utils/storage";
 
 interface SubmitInput {
@@ -237,7 +238,11 @@ export async function grade(submissionId: string, user: { id: string; role: stri
 
   const student = await User.findByPk(submission.studentId);
   if (student) {
-    await emails.sendAssignmentGradedEmail(student, assignment, course, submission);
+    // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang
+    // grading; the grade itself is already saved at this point.
+    emails
+      .sendAssignmentGradedEmail(student, assignment, course, submission)
+      .catch((err) => logger.error("Failed to send assignment graded email", err));
   }
 
   return serializeSubmission(submission, assignment.dueDate);

@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import * as emails from "../emails";
+import { logger } from "../utils/logger";
 import {
   Course,
   CourseModule,
@@ -468,7 +469,11 @@ export async function gradeAttempt(
 
   const student = await User.findByPk(attempt.studentId);
   if (student) {
-    await emails.sendQuizGradedEmail(student, quiz, course, result.score);
+    // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang
+    // quiz submission; the grade itself is already saved at this point.
+    emails
+      .sendQuizGradedEmail(student, quiz, course, result.score)
+      .catch((err) => logger.error("Failed to send quiz graded email", err));
   }
 
   return result;

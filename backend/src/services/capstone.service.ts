@@ -249,7 +249,11 @@ export async function grade(submissionId: string, user: { id: string; role: stri
 
   const student = await User.findByPk(updated!.studentId);
   if (student) {
-    await emails.sendCapstoneGradedEmail(student, capstone, course, input.score, input.feedback);
+    // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang
+    // grading; the grade itself is already saved at this point.
+    emails
+      .sendCapstoneGradedEmail(student, capstone, course, input.score, input.feedback)
+      .catch((err) => logger.error("Failed to send capstone graded email", err));
   }
 
   return serializeSubmission(updated!, capstone.dueDate);

@@ -4,6 +4,7 @@ import { config } from "../config";
 import * as emails from "../emails";
 import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
+import { logger } from "../utils/logger";
 import {
   findValidRefreshToken,
   generateAccessToken,
@@ -54,7 +55,9 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
   const accessToken = generateAccessToken(user);
   const refreshToken = await issueRefreshToken(user.id);
 
-  await emails.sendWelcomeEmail(user);
+  // Best-effort, not awaited: an unreachable/slow SMTP provider must never hang
+  // registration itself -- the account is already created and usable at this point.
+  emails.sendWelcomeEmail(user).catch((err) => logger.error("Failed to send welcome email", err));
 
   return { user, accessToken, refreshToken };
 }
@@ -112,7 +115,10 @@ export async function requestPasswordReset(email: string): Promise<void> {
   });
 
   const resetUrl = `${config.corsOrigin}/reset-password?token=${resetToken}`;
-  await emails.sendPasswordResetEmail(user, resetUrl);
+  // Best-effort, not awaited -- same reasoning as sendWelcomeEmail above.
+  emails
+    .sendPasswordResetEmail(user, resetUrl)
+    .catch((err) => logger.error("Failed to send password reset email", err));
 }
 
 export async function confirmPasswordReset(token: string, newPassword: string): Promise<void> {

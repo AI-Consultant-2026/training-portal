@@ -2,6 +2,7 @@ import { Transaction } from "sequelize";
 import * as emails from "../emails";
 import { Course, Enrollment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
+import { logger } from "../utils/logger";
 
 export async function enrollStudent(courseId: string, studentId: string): Promise<Enrollment> {
   const course = await Course.findByPk(courseId);
@@ -18,7 +19,11 @@ export async function enrollStudent(courseId: string, studentId: string): Promis
 
   const student = await User.findByPk(studentId);
   if (student) {
-    await emails.sendEnrollmentConfirmationEmail(student, course);
+    // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang
+    // enrolling in a course; the enrollment itself is already committed at this point.
+    emails
+      .sendEnrollmentConfirmationEmail(student, course)
+      .catch((err) => logger.error("Failed to send enrollment confirmation email", err));
   }
 
   return enrollment;
