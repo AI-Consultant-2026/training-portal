@@ -383,6 +383,33 @@
     .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
+  /* ============ Announcement ticker ============ */
+  .ticker {
+    background: var(--signal);
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--signal-deep);
+  }
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 26s linear infinite;
+  }
+  .ticker-item {
+    padding: 13px 48px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+  }
+
   /* ============ Section scaffolding ============ */
   .section { padding: clamp(64px, 9vw, 108px) 0; }
   .section-dark { background: var(--ink); color: var(--paper); }
@@ -777,6 +804,14 @@
       </div>
     </div>
   </section>
+
+  <!-- ============ ANNOUNCEMENT TICKER ============ -->
+  <div class="ticker" role="note" aria-label="Announcement">
+    <div class="ticker-track" aria-hidden="true">
+      <span class="ticker-item">Paleon Training is reopening its digital skills portal for new intakes on Thursday, 01 October 2026! &#127891;&#127475;&#127468;</span>
+      <span class="ticker-item">Paleon Training is reopening its digital skills portal for new intakes on Thursday, 01 October 2026! &#127891;&#127475;&#127468;</span>
+    </div>
+  </div>
 
   <!-- ============ COURSES ============ -->
   <section class="section section-paper" id="courses">
