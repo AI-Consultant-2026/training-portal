@@ -48,11 +48,23 @@ export function createApp() {
 
   app.use("/api", apiRouter);
 
+  // SEO crawl directives + sitemap for the public marketing pages below. Static files
+  // (not routes under /api) so search engines can fetch them without auth.
+  app.get("/robots.txt", (req, res) => {
+    res.type("text/plain").sendFile(path.join(__dirname, "marketing", "robots.txt"));
+  });
+  app.get("/sitemap.xml", (req, res) => {
+    res.type("application/xml").sendFile(path.join(__dirname, "marketing", "sitemap.xml"));
+  });
+
   // Standalone marketing page, served same-origin so its registration form can post to
   // /api/leads directly. Lives under src/ (not public/) so it's present in both dev
   // (ts-node runs straight from src/) and prod (the whole backend build output is
   // copied into the image, see root Dockerfile) without depending on the frontend build.
-  app.get("/welcome", (req, res) => {
+  // Also served at "/" so the bare domain lands here instead of falling through to the
+  // SPA catch-all below, whose "/" route redirects into the app (and on to /login for
+  // anyone signed out).
+  app.get(["/", "/welcome"], (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "welcome.html"));
   });
   app.get("/welcome.js", (req, res) => {
