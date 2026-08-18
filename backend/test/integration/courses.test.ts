@@ -40,13 +40,34 @@ describe("Courses", () => {
     expect(res.status).toBe(401);
   });
 
-  it("forbids a non-admin from listing courses", async () => {
-    await createInstructor();
-    const token = await loginAs("jest-instructor@example.com", "Password123!");
+  it("lets a student list courses, but only published ones (drafts stay instructor/admin-only)", async () => {
+    await request(app).post("/api/auth/register").send({
+      email: "jest-student-course-list@example.com",
+      password: "Password123!",
+      firstName: "Jest",
+      lastName: "Student",
+    });
+    const token = await loginAs("jest-student-course-list@example.com", "Password123!");
+
+    await Course.create({
+      title: "Published Course",
+      slug: "published-course-for-students",
+      durationWeeks: 4,
+      status: "published",
+    });
+    await Course.create({
+      title: "Draft Course",
+      slug: "draft-course-hidden-from-students",
+      durationWeeks: 4,
+      status: "draft",
+    });
 
     const res = await request(app).get("/api/courses").set("Authorization", `Bearer ${token}`);
 
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(200);
+    const slugs = res.body.courses.map((c: { slug: string }) => c.slug);
+    expect(slugs).toContain("published-course-for-students");
+    expect(slugs).not.toContain("draft-course-hidden-from-students");
   });
 
   it("lists all courses for an admin", async () => {

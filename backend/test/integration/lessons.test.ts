@@ -64,10 +64,10 @@ describe("Lessons and progress tracking", () => {
 
   it("returns the lesson list and lesson detail for an authenticated user", async () => {
     const instructor = await createInstructor();
-    const { courseModule, lessons } = await createCourseWithLessons(instructor.id);
+    const { course, courseModule, lessons } = await createCourseWithLessons(instructor.id);
     const student = await registerStudent("lesson-detail-student@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lesson-detail-student@example.com");
-    void student;
 
     const listRes = await request(app)
       .get(`/api/modules/${courseModule.id}/lessons`)

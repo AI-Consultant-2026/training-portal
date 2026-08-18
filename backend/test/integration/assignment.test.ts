@@ -60,7 +60,7 @@ describe("Assignments", () => {
     const instructor = await createInstructor();
     const { course, assignment } = await createCourseWithAssignment(instructor.id);
     const student = await registerStudent("student1@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("student1@example.com");
 
     const getRes = await request(app)
@@ -82,7 +82,7 @@ describe("Assignments", () => {
     const instructor = await createInstructor();
     const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
     const student = await registerStudent("student2@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("student2@example.com");
 
     const res = await request(app)
@@ -97,7 +97,7 @@ describe("Assignments", () => {
     const instructor = await createInstructor();
     const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
     const student = await registerStudent("student3@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("student3@example.com");
 
     const res = await request(app)
@@ -124,11 +124,30 @@ describe("Assignments", () => {
     expect(res.status).toBe(403);
   });
 
+  it("rejects viewing and submitting when enrolled but payment hasn't been confirmed", async () => {
+    const instructor = await createInstructor();
+    const { course, assignment } = await createCourseWithAssignment(instructor.id);
+    const student = await registerStudent("student-unpaid@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("student-unpaid@example.com");
+
+    const getRes = await request(app)
+      .get(`/api/assignments/${assignment.id}`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(getRes.status).toBe(403);
+
+    const submitRes = await request(app)
+      .post(`/api/assignments/${assignment.id}/submit`)
+      .set("Authorization", `Bearer ${token}`)
+      .field("submissionText", "trying to sneak this in without paying");
+    expect(submitRes.status).toBe(403);
+  });
+
   it("overwrites a submission on resubmission before grading, and blocks it after grading", async () => {
     const instructor = await createInstructor();
     const { course, assignment } = await createCourseWithAssignment(instructor.id);
     const student = await registerStudent("student5@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const studentToken = await loginAs("student5@example.com");
 
     await request(app)
@@ -175,7 +194,7 @@ describe("Assignments", () => {
     const otherInstructor = await createInstructor("other-instructor@example.com");
     const { course, assignment } = await createCourseWithAssignment(instructor.id);
     const student = await registerStudent("student6@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const studentToken = await loginAs("student6@example.com");
 
     await request(app)
@@ -208,7 +227,7 @@ describe("Assignments", () => {
     const instructor = await createInstructor();
     const { course, assignment } = await createCourseWithAssignment(instructor.id);
     const student = await registerStudent("student7@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("student7@example.com");
 
     const res = await request(app)
@@ -222,8 +241,8 @@ describe("Assignments", () => {
     const { course, assignment } = await createCourseWithAssignment(instructor.id);
     const studentA = await registerStudent("studentA@example.com");
     const studentB = await registerStudent("studentB@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: studentA.id });
-    await Enrollment.create({ courseId: course.id, studentId: studentB.id });
+    await Enrollment.create({ courseId: course.id, studentId: studentA.id, paymentConfirmed: true });
+    await Enrollment.create({ courseId: course.id, studentId: studentB.id, paymentConfirmed: true });
     const tokenA = await loginAs("studentA@example.com");
     const tokenB = await loginAs("studentB@example.com");
 
@@ -243,7 +262,7 @@ describe("Assignments", () => {
     const instructor = await createInstructor();
     const { course, assignment } = await createCourseWithAssignment(instructor.id);
     const student = await registerStudent("student8@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("student8@example.com");
 
     const before = await request(app)
@@ -280,7 +299,7 @@ describe("Assignments", () => {
       const instructor = await createInstructor();
       const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
       const student = await registerStudent("filestudent1@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const token = await loginAs("filestudent1@example.com");
 
       const submitRes = await request(app)
@@ -300,8 +319,8 @@ describe("Assignments", () => {
       const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
       const studentA = await registerStudent("filestudentA@example.com");
       const studentB = await registerStudent("filestudentB@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: studentA.id });
-      await Enrollment.create({ courseId: course.id, studentId: studentB.id });
+      await Enrollment.create({ courseId: course.id, studentId: studentA.id, paymentConfirmed: true });
+      await Enrollment.create({ courseId: course.id, studentId: studentB.id, paymentConfirmed: true });
       const tokenA = await loginAs("filestudentA@example.com");
       const tokenB = await loginAs("filestudentB@example.com");
 
@@ -321,7 +340,7 @@ describe("Assignments", () => {
       const otherInstructor = await createInstructor("file-other-instructor@example.com");
       const { course, assignment } = await createCourseWithAssignment(instructor.id, true);
       const student = await registerStudent("filestudent2@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const studentToken = await loginAs("filestudent2@example.com");
 
       const submitRes = await request(app)
@@ -346,7 +365,7 @@ describe("Assignments", () => {
       const instructor = await createInstructor();
       const { course, assignment } = await createCourseWithAssignment(instructor.id);
       const student = await registerStudent("filestudent3@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const token = await loginAs("filestudent3@example.com");
 
       const submitRes = await request(app)
