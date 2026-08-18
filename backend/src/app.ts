@@ -56,6 +56,13 @@ export function createApp() {
   app.get("/sitemap.xml", (req, res) => {
     res.type("application/xml").sendFile(path.join(__dirname, "marketing", "sitemap.xml"));
   });
+  // Duplicated at frontend/public/favicon.svg for the SPA build (Vite copies that dir
+  // verbatim into dist, which becomes ./public below in production). Routed explicitly
+  // here too so the marketing pages get a favicon in local dev as well, where ./public
+  // doesn't exist yet -- same reasoning as welcome.js et al. below.
+  app.get("/favicon.svg", (req, res) => {
+    res.type("image/svg+xml").sendFile(path.join(__dirname, "marketing", "favicon.svg"));
+  });
 
   // Standalone marketing page, served same-origin so its registration form can post to
   // /api/leads directly. Lives under src/ (not public/) so it's present in both dev
