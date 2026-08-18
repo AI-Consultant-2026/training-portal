@@ -51,9 +51,9 @@ export function LoginPage() {
       </form>
       <p className="mt-4 text-sm text-gray-600">
         Don&apos;t have an account?{" "}
-        <span className="cursor-not-allowed text-gray-400" aria-disabled="true">
+        <Link to="/register" className="text-blue-600 hover:underline">
           Sign up
-        </span>
+        </Link>
       </p>
 
       <div className="mt-10 rounded-lg border border-blue-100 bg-blue-50 p-5">
