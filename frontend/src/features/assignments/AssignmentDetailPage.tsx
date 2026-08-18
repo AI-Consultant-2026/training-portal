@@ -40,6 +40,14 @@ export function AssignmentDetailPage() {
     await dispatch(submitAssignment({ assignmentId: id, submissionText, file }));
   }
 
+  if (status === "failed") {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-10">
+        <Alert message={error ?? "Could not load assignment"} />
+      </div>
+    );
+  }
+
   if (status === "loading" || !assignment) {
     return (
       <div className="flex justify-center py-16">

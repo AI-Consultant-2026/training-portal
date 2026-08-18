@@ -333,13 +333,13 @@ export function CourseDetailPage() {
                     );
                   })}
                   {content.assignments.map((a) => {
-                    const isLocked = user?.role === "student" && !isEnrolled;
+                    const isLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
                     if (isLocked) {
                       return (
                         <span
                           key={a.id}
                           className="text-sm font-medium text-gray-400"
-                          title="Enroll in this course to unlock its assignments"
+                          title="This assignment unlocks once your payment has been confirmed"
                         >
                           Assignment: {a.title} (locked)
                         </span>

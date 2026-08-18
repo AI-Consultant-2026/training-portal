@@ -11,7 +11,7 @@ export const listByModule = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const getById = asyncHandler(async (req: Request, res: Response) => {
-  const assignment = await assignmentService.getById(req.params.id);
+  const assignment = await assignmentService.getById(req.params.id, req.user!);
   res.json({ assignment });
 });
 

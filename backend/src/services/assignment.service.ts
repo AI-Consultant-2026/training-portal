@@ -1,5 +1,6 @@
 import * as emails from "../emails";
 import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment, User } from "../models";
+import { getEnrollmentForCourseAndStudent } from "./enrollment.service";
 import { ApiError } from "../utils/ApiError";
 import { storageAdapter } from "../utils/storage";
 
@@ -33,10 +34,23 @@ export async function listByModule(moduleId: string): Promise<Assignment[]> {
   return Assignment.findAll({ where: { moduleId }, order: [["createdAt", "ASC"]] });
 }
 
-export async function getById(assignmentId: string): Promise<Assignment> {
-  const assignment = await Assignment.findByPk(assignmentId);
-  if (!assignment) {
-    throw ApiError.notFound("Assignment not found");
+// Mirrors lesson.service.ts's getLessonForStudent(): assignment content stays locked
+// for a student until their enrollment's payment is confirmed -- being merely
+// "enrolled" (free) was previously enough to read and submit an assignment, the one
+// piece of course content that had no payment gate at all. Only gates students --
+// instructors/admins aren't enrollees and should always be able to review content.
+export async function getById(
+  assignmentId: string,
+  requester: { id: string; role: string },
+): Promise<Assignment> {
+  const { assignment, course } = await getAssignmentWithCourse(assignmentId);
+  if (requester.role !== "student") {
+    return assignment;
+  }
+
+  const enrollment = await getEnrollmentForCourseAndStudent(course.id, requester.id);
+  if (!enrollment || !enrollment.paymentConfirmed) {
+    throw ApiError.forbidden("This assignment unlocks once your payment has been confirmed");
   }
   return assignment;
 }
@@ -71,6 +85,9 @@ export async function submit(assignmentId: string, studentId: string, input: Sub
   });
   if (!enrollment) {
     throw ApiError.forbidden("You must be enrolled in this course to submit this assignment");
+  }
+  if (!enrollment.paymentConfirmed) {
+    throw ApiError.forbidden("This assignment unlocks once your payment has been confirmed");
   }
 
   if (assignment.fileRequired && !input.file) {
