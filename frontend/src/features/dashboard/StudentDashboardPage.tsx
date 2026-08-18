@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
@@ -28,6 +29,12 @@ export function StudentDashboardPage() {
       {status === "succeeded" && enrollments.length === 0 && (
         <div className="mt-8 rounded-lg border border-dashed border-gray-300 p-8 text-center">
           <p className="text-gray-600">You&apos;re not enrolled in any courses yet.</p>
+          <Link
+            to="/courses"
+            className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            Browse courses
+          </Link>
         </div>
       )}
 

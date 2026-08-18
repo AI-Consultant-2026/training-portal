@@ -9,7 +9,10 @@ import { createCourseSchema, updateCourseSchema } from "../validators/courses.va
 
 export const coursesRouter = Router();
 
-coursesRouter.get("/", authenticate, authorize("admin"), coursesController.listCourses);
+// listCourses itself branches on role (admin/instructor see drafts too via
+// listAllCourses, everyone else gets listPublishedCourses) -- this route just needs
+// an authenticated user, not an admin one, or students can never reach the catalog.
+coursesRouter.get("/", authenticate, coursesController.listCourses);
 coursesRouter.post(
   "/",
   authenticate,

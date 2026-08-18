@@ -37,6 +37,7 @@ export function AppRouter() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route element={<ProtectedRoute />}>
+        <Route path="/courses" element={<CourseListPage />} />
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
         <Route path="/courses/:slug/pay/card" element={<CardPaymentPage />} />
         <Route path="/courses/:slug/pay/bank-transfer" element={<BankTransferPage />} />
@@ -61,7 +62,6 @@ export function AppRouter() {
           />
         </Route>
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>
-          <Route path="/courses" element={<CourseListPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
         </Route>
