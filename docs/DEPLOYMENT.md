@@ -48,3 +48,25 @@ docker run --rm -p 4000:4000 \
 ```
 
 Then visit `http://localhost:4000` — you should see the built frontend (not a Vite dev server), and `http://localhost:4000/api/health` should return `{"status":"ok"}` once migrations finish running.
+
+## Optional env vars that need setting once in the Render dashboard
+
+`render.yaml` declares these with `sync: false`, meaning Render creates the key on the
+next Blueprint sync but leaves the value alone after that — you set the real value once
+in the dashboard (Render Dashboard → the service → Environment), not in git.
+
+- **Email (SMTP)** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
+  `EMAIL_FROM_ADDRESS`. Until these are set, `backend/src/config/index.ts` defaults
+  `SMTP_HOST` to `mailhog` (a dev-only hostname that doesn't exist in production), and
+  every email send is fire-and-forget (see `backend/src/services/auth.service.ts` etc.)
+  so a broken/missing SMTP config fails silently — it never blocks the action that
+  triggered the email, it just means the email never arrives. Verify by checking
+  Render's logs for `Failed to send email` after triggering one (register, enroll, etc.).
+- **Error tracking (Sentry)** — `SENTRY_DSN` (backend, plain runtime env var) and
+  `VITE_SENTRY_DSN` (frontend, baked in at **build time** since Vite reads `VITE_*`
+  vars when it builds, not when the container starts — Render does forward dashboard
+  env vars as Docker build args automatically, so setting this in the dashboard and
+  redeploying is enough, no Dockerfile change needed). Both are genuine no-ops until
+  set — see `backend/src/instrument.ts` and `frontend/src/instrument.ts`. A Sentry DSN
+  is a write-only token meant to be public in frontend bundles (unlike `SMTP_PASS`),
+  so there's no secrecy concern baking `VITE_SENTRY_DSN` into the built JS.

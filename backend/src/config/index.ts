@@ -35,6 +35,10 @@ export const config = {
     fromAddress: process.env.EMAIL_FROM_ADDRESS ?? "no-reply@trainingportal.local",
   },
   leadsNotifyEmail: process.env.LEADS_NOTIFY_EMAIL ?? "hello@paleontraining.com",
+  // Optional, same reasoning as `email` above: error tracking is genuinely off (not
+  // silently broken) until a Sentry project exists and this is set -- see
+  // src/instrument.ts, which no-ops entirely when this is empty.
+  sentryDsn: process.env.SENTRY_DSN ?? "",
   // Placeholder receiving-bank details shown on the bank-transfer payment page, and a
   // placeholder card-gateway API key (currently unused by paymentGateway.service.ts's
   // mock implementation). Intentionally always optional/defaulted, same reasoning as

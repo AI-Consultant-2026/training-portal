@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
@@ -118,6 +119,10 @@ export function createApp() {
   }
 
   app.use(notFound);
+  // Reports 5xx errors to Sentry (a no-op when SENTRY_DSN isn't set, see
+  // instrument.ts) before errorHandler below turns them into a JSON response --
+  // must come after notFound/routes and before errorHandler, not instead of it.
+  Sentry.setupExpressErrorHandler(app);
   app.use(errorHandler);
 
   return app;

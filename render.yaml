@@ -65,3 +65,13 @@ services:
       # Not a secret, so a real value can live in git (unlike the SMTP vars above).
       - key: LEADS_NOTIFY_EMAIL
         value: hello@paleontraining.com
+      # No Sentry project has been created yet - error tracking is genuinely off (not
+      # silently broken) until these are set for real in the Render dashboard. SENTRY_DSN
+      # is read at runtime (backend/src/instrument.ts); VITE_SENTRY_DSN is baked in at
+      # Docker build time (Render forwards dashboard env vars as build args), since Vite
+      # only reads VITE_* vars when it builds, not when the container starts. See
+      # docs/DEPLOYMENT.md.
+      - key: SENTRY_DSN
+        sync: false
+      - key: VITE_SENTRY_DSN
+        sync: false

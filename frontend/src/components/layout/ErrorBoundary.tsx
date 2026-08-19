@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { Component, ErrorInfo, ReactNode } from "react";
 
 interface Props {
@@ -22,6 +23,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("Unhandled render error:", error, info.componentStack);
+    // No-op when VITE_SENTRY_DSN isn't set (see instrument.ts) -- keeps this custom
+    // fallback UI instead of swapping in Sentry's own <ErrorBoundary> component.
+    Sentry.captureException(error, { extra: { componentStack: info.componentStack } });
   }
 
   render() {
