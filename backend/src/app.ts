@@ -95,6 +95,13 @@ export function createApp() {
   app.get("/financing", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "financing.html"));
   });
+  // Internal outreach playbook (directory blurbs, social posts, press release, pitch
+  // email templates) for promoting the SEO guide pages below -- same "public but
+  // unlisted" pattern as /financing above: robots noindex, no nav link, not in
+  // sitemap.xml, reachable only by anyone who has the direct URL.
+  app.get("/marketingPlaybook.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "marketingPlaybook.html"));
+  });
   // SEO content page targeting long-tail "how do I get an oil & gas job in Nigeria"
   // searches -- reuses trainingportalprocess.html's design system (same <style> block,
   // same class names) rather than a new one, so it reads as the same publication.

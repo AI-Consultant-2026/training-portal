@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Paleon Training Marketing Playbook</title>
+<meta name="description" content="Internal outreach playbook for promoting Paleon Training's SEO guide pages -- not for public search or navigation.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --ink: #10151F;
+    --paper: #F7F4EC;
+    --paper-2: #EFEADA;
+    --paper-3: #E8E1CB;
+    --signal: #E8863C;
+    --signal-deep: #C96A26;
+    --signal-tint: #FBE7D2;
+    --line-light: #DED7C4;
+    --charcoal: #211D17;
+    --charcoal-soft: #6B6252;
+    --white: #FFFFFF;
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", ui-serif, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+    --bg: var(--paper);
+    --surface: var(--paper-2);
+    --surface-strong: var(--paper-3);
+    --text: var(--charcoal);
+    --text-muted: var(--charcoal-soft);
+    --border: var(--line-light);
+    --accent: var(--signal-deep);
+    --accent-tint: var(--signal-tint);
+    --band-bg: var(--ink);
+    --band-text: var(--paper);
+    --band-text-muted: #A9AFC0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10151F;
+      --surface: #171E2C;
+      --surface-strong: #202A3D;
+      --text: #F0EEE6;
+      --text-muted: #A9AFC0;
+      --border: #2A3344;
+      --accent: #F2A65A;
+      --accent-tint: #2E2418;
+      --band-bg: #05070C;
+      --band-text: #F7F4EC;
+      --band-text-muted: #8890A3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10151F;
+    --surface: #171E2C;
+    --surface-strong: #202A3D;
+    --text: #F0EEE6;
+    --text-muted: #A9AFC0;
+    --border: #2A3344;
+    --accent: #F2A65A;
+    --accent-tint: #2E2418;
+    --band-bg: #05070C;
+    --band-text: #F7F4EC;
+    --band-text-muted: #8890A3;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: inherit; font-weight: 600; }
+
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .band { background: var(--band-bg); color: var(--band-text); }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 28px; }
+  .measure { max-width: 720px; }
+
+  .masthead { padding: 52px 0 44px; }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+  .wordmark .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--band-text-muted);
+    margin: 0 0 14px;
+  }
+
+  h1.title { font-size: clamp(30px, 4.2vw, 42px); line-height: 1.14; max-width: 18ch; }
+
+  .subhead {
+    margin: 18px 0 0;
+    max-width: 58ch;
+    font-size: 17.5px;
+    color: var(--band-text-muted);
+    line-height: 1.55;
+  }
+
+  .stat-strip {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid #2A3344;
+  }
+  .stat { flex: 1 1 140px; padding: 16px 20px 0 0; border-right: 1px solid #2A3344; }
+  .stat:last-child { border-right: none; }
+  .stat-value { font-family: var(--font-mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--band-text); }
+  .stat-label { margin-top: 4px; font-size: 12.5px; color: var(--band-text-muted); }
+
+  section { padding: 48px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  h2.section-title { font-size: 25px; margin-bottom: 14px; }
+  h3.sub-title { font-family: var(--font-body); font-size: 15.5px; font-weight: 600; margin: 28px 0 8px; color: var(--text); }
+  h3.sub-title:first-of-type { margin-top: 4px; }
+
+  p { margin: 0 0 14px; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+  p.lede { font-size: 17.5px; }
+  .note { font-size: 15px; color: var(--text-muted); }
+  .note:last-child { margin-bottom: 0; }
+
+  .table-scroll { overflow-x: auto; }
+  table.ref {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    margin: 4px 0 20px;
+  }
+  table.ref th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 0 14px 9px 0;
+    border-bottom: 1px solid var(--text);
+    white-space: nowrap;
+  }
+  table.ref td {
+    padding: 11px 14px 11px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.ref td.url { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+  table.ref tr:last-child td { border-bottom: none; }
+
+  .copy-block {
+    position: relative;
+    margin: 14px 0 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 22px;
+  }
+  .copy-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-tint);
+    border-radius: 4px;
+    padding: 3px 8px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .copy-block .field {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0 0 4px;
+  }
+  .copy-block .field + p { margin-top: 0; }
+  .copy-block p { font-size: 15.5px; }
+  .copy-block p:last-child { margin-bottom: 0; }
+  .copy-block hr.field-rule { border: none; border-top: 1px dashed var(--border); margin: 14px 0; }
+
+  ul.target-list { margin: 0 0 14px; padding-left: 20px; }
+  ul.target-list li { margin-bottom: 8px; color: var(--text); }
+  ul.target-list li:last-child { margin-bottom: 0; }
+  ul.target-list .kind { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.03em; }
+
+  code.inline {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+  }
+
+  .footer-band { padding: 40px 0 36px; }
+  .footer-band p { max-width: 60ch; color: var(--band-text-muted); font-size: 15px; }
+  .footer-band .signoff {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #2A3344;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--band-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+    table.ref { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="band">
+  <div class="wrap masthead">
+    <div class="wordmark"><span class="dot"></span>Paleon Training</div>
+    <p class="eyebrow">Internal playbook</p>
+    <h1 class="title">Off-page outreach kit</h1>
+    <p class="subhead">Ready-to-use copy for getting the four new guide pages actual backlinks and traffic &mdash; directory blurbs, social posts across every channel, a press release, and pitch email templates. Nothing here sends itself; review and send from your own accounts.</p>
+    <div class="stat-strip">
+      <div class="stat"><div class="stat-value">4</div><div class="stat-label">guides to promote</div></div>
+      <div class="stat"><div class="stat-value">11</div><div class="stat-label">channels covered</div></div>
+      <div class="stat"><div class="stat-value">18</div><div class="stat-label">ready-to-paste posts &amp; messages</div></div>
+      <div class="stat"><div class="stat-value">5</div><div class="stat-label">email &amp; press templates</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <p class="section-label">Reference</p>
+    <h2 class="section-title">The four guides</h2>
+    <p class="note">Whoever's sending outreach needs to know which guide fits which target. Keep this table close by.</p>
+    <div class="table-scroll">
+      <table class="ref">
+        <thead>
+          <tr><th>Guide</th><th>URL</th><th>Best target</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Oil &amp; gas careers</td>
+            <td class="url">/oil-and-gas-careers-nigeria</td>
+            <td>Career blogs, university career centres, NCDMB-adjacent bodies, oil &amp; gas industry newsletters</td>
+          </tr>
+          <tr>
+            <td>Corporate training</td>
+            <td class="url">/corporate-training-nigeria</td>
+            <td>HR/L&amp;D publications, business directories, LinkedIn HR groups</td>
+          </tr>
+          <tr>
+            <td>Banking &amp; telecom training</td>
+            <td class="url">/banking-telecom-training-nigeria</td>
+            <td>Fintech/telecom trade press, banking HR contacts, LinkedIn sector groups</td>
+          </tr>
+          <tr>
+            <td>Digital skills &amp; jobs</td>
+            <td class="url">/digital-skills-jobs-nigeria</td>
+            <td>Career blogs, university career centres, NYSC-adjacent communities, general jobs forums</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Every URL below is relative to <code class="inline">https://paleontraining.com</code> &mdash; use the full address when it goes anywhere off-site.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Directories &amp; listings</p>
+    <h2 class="section-title">Business blurbs, three lengths</h2>
+    <div class="measure">
+      <p>Paste the length that fits the field. Consistent wording across listings is worth more for SEO than a bespoke pitch each time &mdash; save the bespoke writing for the pitch emails further down.</p>
+    </div>
+
+    <h3 class="sub-title">One-liner (Google Business Profile tagline, Twitter/X bio, etc.)</h3>
+    <div class="copy-block">
+      <span class="copy-tag">Copy</span>
+      <p>Paleon Training &mdash; project-based digital skills courses and corporate training for Nigeria's oil &amp; gas, banking, and telecom sectors.</p>
+    </div>
+
+    <h3 class="sub-title">Short (directory listings: Connect Nigeria, VConnect, Nigeria Business Directory, Jobberman employer profile)</h3>
+    <div class="copy-block">
+      <span class="copy-tag">Copy</span>
+      <p>Paleon Training runs project-based digital skills courses &mdash; cybersecurity, GIS &amp; drone mapping, renewable energy, digital marketing, and social media management &mdash; for Nigerian graduates and corporate teams in oil &amp; gas, banking, and telecom. Every course ends in a graded capstone project, not just a certificate. Corporate training packages available on request.</p>
+    </div>
+
+    <h3 class="sub-title">Long (LinkedIn Company Page "About", partnership one-pagers)</h3>
+    <div class="copy-block">
+      <span class="copy-tag">Copy</span>
+      <p>Paleon Training builds project-based digital skills courses for the industries doing the most hiring in Nigeria right now: oil &amp; gas, banking, and telecom. Five courses &mdash; Cyber Security Fundamentals, GIS &amp; Drone Mapping, Renewable Energy &amp; Digital Systems, Digital Marketing, and Social Media Management &amp; Content &mdash; each 8&ndash;12 weeks, each finishing with a graded capstone project rather than a certificate for watching videos.</p>
+      <p>For graduates, that means an application with something concrete attached. For employers, it means staff training that's actually trackable &mdash; enrolment, progress, and completion managed from an admin dashboard, with course mix and cohort size built around the specific skills gap you're training for. Get in touch at corporate@paleontraining.com to set up a team, or see the course catalog at paleontraining.com/welcome.</p>
+    </div>
+
+    <h3 class="sub-title">Where to submit</h3>
+    <ul class="target-list">
+      <li><span class="kind">Local/business directory</span> &mdash; Connect Nigeria, VConnect, Nigeria Business Directory</li>
+      <li><span class="kind">Jobs/employer</span> &mdash; Jobberman employer profile</li>
+      <li><span class="kind">Maps/local search</span> &mdash; Google Business Profile (use the one-liner as the tagline, the short blurb as the description)</li>
+      <li><span class="kind">Social</span> &mdash; LinkedIn Company Page About section (use the long blurb)</li>
+    </ul>
+  </section>
+
+  <section>
+    <p class="section-label">LinkedIn</p>
+    <h2 class="section-title">Post copy, one per guide</h2>
+    <p class="note">Post from the company page, and ideally have a founder or team member reshare with a line or two of their own &mdash; personal-account reach usually beats a company page alone on LinkedIn.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; oil &amp; gas careers guide</span>
+      <p>"No experience" is the normal starting point for oil &amp; gas jobs in Nigeria, not a disadvantage &mdash; almost all graduate hiring runs through structured trainee programmes built for exactly that.</p>
+      <p>What actually gets an application shortlisted is different: a demonstrable skill in one of four areas we keep seeing come up &mdash; GIS &amp; drone mapping, HSE fundamentals, digital/cyber literacy, or renewable energy &amp; the energy transition.</p>
+      <p>We wrote up where the jobs actually sit, what NCDMB's Nigerian Content Act means for your job search, and which skills to build first: https://paleontraining.com/oil-and-gas-careers-nigeria</p>
+    </div>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; corporate training guide</span>
+      <p>Most corporate training providers in Nigeria sell a fixed course bundle. We build the package around the skills gap you're actually training for.</p>
+      <p>Digital skills training for employees only works if it ends in something a manager can evaluate &mdash; so every Paleon course, corporate or individual, finishes with a graded capstone project, not a completion certificate.</p>
+      <p>How it works, the course catalog, and pricing: https://paleontraining.com/corporate-training-nigeria</p>
+    </div>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; banking &amp; telecom training guide</span>
+      <p>Banks and telecom operators need genuinely different things from staff training. Banks are under real regulatory pressure to build cybersecurity capability across staff, not just IT. Telecom operators need technical digital literacy on the engineering side and real digital marketing skill on the commercial side &mdash; subscribers are won on digital channels now, not just coverage.</p>
+      <p>We run courses built for both: https://paleontraining.com/banking-telecom-training-nigeria</p>
+    </div>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; digital skills &amp; jobs guide</span>
+      <p>Most graduates only start job hunting seriously once NYSC is ending &mdash; which is exactly the wrong time to start building the skill that would get the application shortlisted.</p>
+      <p>We broke down which digital skill actually fits which industry in Nigeria (cybersecurity and digital marketing for banking/telecom, GIS and renewable energy for oil &amp; gas), and why an 8-to-12-week project-based course during service year beats a general degree alone: https://paleontraining.com/digital-skills-jobs-nigeria</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Twitter / X</p>
+    <h2 class="section-title">Post copy, one per guide</h2>
+    <p class="note">Shorter and punchier than LinkedIn &mdash; X rewards a hook in the first line. Post from the company account, and quote-tweet or reply-thread the others over the following days rather than posting all four back to back.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; oil &amp; gas careers guide</span>
+      <p>"No experience" isn't the problem you think it is for oil &amp; gas jobs in Nigeria. Almost all graduate hiring runs through trainee programmes built for exactly that.</p>
+      <p>What actually matters: a demonstrable skill in GIS/drone mapping, HSE, cyber, or renewable energy.</p>
+      <p>https://paleontraining.com/oil-and-gas-careers-nigeria</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; corporate training guide</span>
+      <p>Most corporate training providers in Nigeria sell one fixed bundle. We build the package around the skills gap you're actually training for &mdash; and every course ends in a graded project, not a certificate for watching videos.</p>
+      <p>https://paleontraining.com/corporate-training-nigeria</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; banking &amp; telecom training guide</span>
+      <p>Banks need cybersecurity capability across staff, not just IT. Telecom needs technical literacy on engineering + real digital marketing skill on the commercial side. We train for both.</p>
+      <p>https://paleontraining.com/banking-telecom-training-nigeria</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; digital skills &amp; jobs guide</span>
+      <p>Most Nigerian graduates start job hunting once NYSC is ending &mdash; the wrong time to start building the skill that gets you shortlisted.</p>
+      <p>Here's which digital skill actually fits which industry:</p>
+      <p>https://paleontraining.com/digital-skills-jobs-nigeria</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Facebook</p>
+    <h2 class="section-title">Page post and group-share copy</h2>
+    <p class="note">One roundup post for the Paleon Facebook Page, plus a standalone example for sharing into a relevant jobs/graduate group. Nigerian career groups (NYSC corps member groups, "Jobs in Nigeria" groups, university alumni groups) are genuinely good traffic sources &mdash; but check each group's rules first, since many ban or restrict outside links and some require admin approval.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; Page post, all four guides</span>
+      <p>We just published four free guides for anyone job-hunting or hiring in Nigeria's oil &amp; gas, banking, and telecom sectors:</p>
+      <p>&#128073; How to get an oil &amp; gas job in Nigeria with no experience<br>&#128073; What digital skills actually get you hired in 2026<br>&#128073; Corporate training for your team<br>&#128073; Staff training for banks &amp; telecom operators</p>
+      <p>All free to read, no signup needed. Start here: https://paleontraining.com/welcome</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; group share, oil &amp; gas guide</span>
+      <p>For anyone applying to oil &amp; gas graduate trainee programmes this year &mdash; we wrote up where the jobs actually are, what NCDMB requires, and which skills come up most in shortlisting. No experience needed, just worth reading before you apply: https://paleontraining.com/oil-and-gas-careers-nigeria</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Instagram</p>
+    <h2 class="section-title">Captions, one per guide</h2>
+    <p class="note">Needs a carousel or single graphic per post &mdash; this is caption text only. Link goes in the bio or a link-in-bio tool, since Instagram post captions don't support clickable links; say "link in bio" rather than pasting the URL directly.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; oil &amp; gas careers guide</span>
+      <p>"No experience" isn't the obstacle it feels like for oil &amp; gas jobs in Nigeria &mdash; most hiring runs through graduate trainee programmes built for exactly that. The real filter is a demonstrable skill: GIS &amp; drone mapping, HSE, digital literacy, or renewable energy. Full guide &mdash; link in bio.</p>
+      <p class="note">#OilAndGasJobs #NigeriaJobs #NCDMB #GraduateTrainee #NigerianGraduates</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; digital skills &amp; jobs guide</span>
+      <p>Most graduates start job hunting once NYSC ends &mdash; the wrong time to start building the skill that gets you shortlisted. Which digital skill fits which industry, broken down. Full guide &mdash; link in bio.</p>
+      <p class="note">#NYSC #NigerianGraduates #DigitalSkills #JobsInNigeria #CareerGuide</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">WhatsApp</p>
+    <h2 class="section-title">Broadcast list messages</h2>
+    <p class="note">Keep these short &mdash; broadcast messages get read on a lock screen. One message per guide, one link each, sent to your existing candidate/lead broadcast list rather than random forwarding.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; oil &amp; gas careers guide</span>
+      <p>Hi! If you or someone you know is job-hunting in oil &amp; gas, we put together a free guide on getting hired with no experience &mdash; where the jobs are, what NCDMB requires, and the skills that get you shortlisted. &#128073; https://paleontraining.com/oil-and-gas-careers-nigeria</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; digital skills &amp; jobs guide</span>
+      <p>Quick one &mdash; we wrote a free guide on the digital skills that actually get Nigerian graduates hired in 2026, and how to use your NYSC year to build one. Worth a read before you start applying: https://paleontraining.com/digital-skills-jobs-nigeria</p>
+    </div>
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; corporate/employer contacts</span>
+      <p>Hi! If your team needs digital skills or cybersecurity training, we now run corporate packages built around your specific skills gap &mdash; full details here: https://paleontraining.com/corporate-training-nigeria. Happy to put a quote together, just reply here or email corporate@paleontraining.com.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Your own list</p>
+    <h2 class="section-title">Email to existing leads</h2>
+    <p class="note">For the leads already captured through the welcome page's registration form &mdash; the highest-intent audience you already have. Keep it short; the guides do the selling.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; adapt brackets</span>
+      <p class="field">Subject</p>
+      <p>4 free guides &mdash; oil &amp; gas jobs, digital skills, and corporate training in Nigeria</p>
+      <hr class="field-rule">
+      <p class="field">Body</p>
+      <p>Hi [name],</p>
+      <p>We've just published four free guides that might be useful, whether you're job-hunting or hiring:</p>
+      <p>&mdash; How to get an oil &amp; gas job in Nigeria with no experience<br>&mdash; The digital skills Nigerian graduates need to get hired in 2026<br>&mdash; Setting up corporate training for your team<br>&mdash; Staff training for banks &amp; telecom operators</p>
+      <p>All free, no signup required &mdash; start at https://paleontraining.com/welcome.</p>
+      <p>Thanks,<br>The Paleon Training team</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Press</p>
+    <h2 class="section-title">Press release</h2>
+    <p class="note">Standard release format for Nigerian business/tech press (BusinessDay, Nairametrics, TechCabal, Premium Times, ThisDay) &mdash; the newsworthy angle here is a free resource launch, not a product announcement, which is an easier, lower-friction pitch for most outlets to run. Fill in the bracketed name/title before sending; don't send with a placeholder still in it.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; adapt brackets</span>
+      <p><strong>FOR IMMEDIATE RELEASE</strong></p>
+      <p><strong>Paleon Training Launches Free Career Guides for Nigerian Graduates Targeting Oil &amp; Gas, Banking, and Telecom Jobs</strong></p>
+      <p>[City], Nigeria &mdash; [Date] &mdash; Paleon Training, a provider of project-based digital skills courses for Nigerian graduates and corporate teams, today announced the release of four free guides addressing skills gaps in Nigeria's oil &amp; gas, banking, and telecom sectors.</p>
+      <p>The guides cover how graduates can break into the oil &amp; gas industry without prior experience, which digital skills are most in demand across Nigerian industries in 2026, and how employers in banking, telecom, and oil &amp; gas can structure staff training programmes around specific skills gaps &mdash; including guidance on Nigerian Content (NCDMB) requirements for the oil &amp; gas sector.</p>
+      <p>"[Quote from a Paleon spokesperson on why this matters &mdash; e.g. the gap between what graduates are taught and what employers actually screen for, and why service-year timing matters]," said [Name], [Title] at Paleon Training.</p>
+      <p>The guides are free to read at paleontraining.com, with no signup required. Paleon Training also offers project-based courses in Cyber Security Fundamentals, GIS &amp; Drone Mapping, Renewable Energy &amp; Digital Systems, Digital Marketing, and Social Media Management &amp; Content, each finishing with a graded capstone project, along with corporate training packages for employers.</p>
+      <p><strong>About Paleon Training</strong><br>Paleon Training builds project-based digital skills courses for Nigerian graduates and corporate teams in oil &amp; gas, banking, and telecom. Courses run 8&ndash;12 weeks and finish with a graded capstone project rather than a certificate alone.</p>
+      <p><strong>Media contact:</strong><br>[Name]<br>Paleon Training<br>corporate@paleontraining.com</p>
+      <p>###</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Guest posts &amp; partnerships</p>
+    <h2 class="section-title">Pitch email template</h2>
+    <p class="note">Adapt the bracketed parts per publication. Keep the ask small on the first email &mdash; a guest post or a link addition, not a partnership.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; adapt brackets</span>
+      <p class="field">Subject</p>
+      <p>Guide on [oil &amp; gas jobs in Nigeria / digital skills for Nigerian graduates] &mdash; useful for your readers?</p>
+      <hr class="field-rule">
+      <p class="field">Body</p>
+      <p>Hi [name],</p>
+      <p>I run training at Paleon Training &mdash; we build project-based digital skills courses (cybersecurity, GIS &amp; drone mapping, renewable energy, digital marketing) for Nigerian graduates and corporate teams, mostly in oil &amp; gas, banking, and telecom.</p>
+      <p>We recently published a practical guide on [how to get a job in Nigeria's oil &amp; gas industry with no experience / the digital skills Nigerian graduates need in 2026], covering [where the jobs actually are, what NCDMB requires, which skills come up in graduate-trainee screening]. It's written for your audience specifically, not as a sales page &mdash; happy to send the link so you can judge for yourself.</p>
+      <p>Would a guest post or a resource-link addition make sense for [publication name]? I can also adapt the piece to your house style if that's easier.</p>
+      <p>Thanks,<br>[name]<br>Paleon Training &mdash; corporate@paleontraining.com</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">University career centres</p>
+    <h2 class="section-title">Student-resource outreach email</h2>
+    <p class="note">Genuinely high-value outreach: career centres want free, practical resources for students, and a link from a university page carries real weight. Send to career services offices individually rather than a mass blast.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; adapt brackets</span>
+      <p class="field">Subject</p>
+      <p>Free career guide for your students &mdash; oil &amp; gas + digital skills</p>
+      <hr class="field-rule">
+      <p class="field">Body</p>
+      <p>Hi [name],</p>
+      <p>I run training at Paleon Training. We've put together two free guides that might be useful for [university]'s final-year and NYSC-bound students:</p>
+      <p>&mdash; How to get a job in Nigeria's oil &amp; gas industry with no experience: https://paleontraining.com/oil-and-gas-careers-nigeria<br>&mdash; The digital skills Nigerian graduates need to get hired in 2026: https://paleontraining.com/digital-skills-jobs-nigeria</p>
+      <p>Both are free to read, no signup required. If it'd be useful, I'd be glad to have them linked from your careers resources page, or to send a short version for your student newsletter.</p>
+      <p>Thanks,<br>[name]<br>Paleon Training &mdash; corporate@paleontraining.com</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Industry bodies</p>
+    <h2 class="section-title">NCDMB-adjacent outreach email</h2>
+    <p class="note">For the oil &amp; gas guide specifically. Target industry associations, NCDMB-registered training/vendor directories, and oil &amp; gas HR/L&amp;D networks &mdash; not NCDMB itself unless there's a real, verifiable relationship to reference.</p>
+
+    <div class="copy-block">
+      <span class="copy-tag">Copy &mdash; adapt brackets</span>
+      <p class="field">Subject</p>
+      <p>Resource on Nigerian Content, training, and graduate hiring in oil &amp; gas</p>
+      <hr class="field-rule">
+      <p class="field">Body</p>
+      <p>Hi [name],</p>
+      <p>I run training at Paleon Training &mdash; we build GIS &amp; drone mapping and renewable energy courses aimed at the technical skill areas Nigerian Content-compliant oil and gas employers are required to develop in their Nigerian workforce.</p>
+      <p>We put together a guide explaining how NCDMB and the Nigerian Content Act shape graduate hiring in the sector, aimed at helping graduates actually understand the policy rather than just the recruitment listings: https://paleontraining.com/oil-and-gas-careers-nigeria</p>
+      <p>If it's a fit for [organisation]'s resources or member communications, I'd welcome that &mdash; and happy to talk about training partnerships more broadly if useful.</p>
+      <p>Thanks,<br>[name]<br>Paleon Training &mdash; corporate@paleontraining.com</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Where to look</p>
+    <h2 class="section-title">Real, named targets worth researching</h2>
+    <p class="note">Named platforms, not fabricated contacts &mdash; you'll still need to find the actual editor/contact at each one before sending anything.</p>
+    <ul class="target-list">
+      <li><span class="kind">Forum</span> &mdash; Nairaland's Jobs/Vacancies board, still one of the highest-traffic Nigerian career discussion spaces</li>
+      <li><span class="kind">Jobs platform</span> &mdash; Jobberman's blog/resources section</li>
+      <li><span class="kind">Business press</span> &mdash; BusinessDay, Nairametrics, TechCabal (careers/HR-adjacent coverage)</li>
+      <li><span class="kind">Social</span> &mdash; LinkedIn groups for Nigerian HR/L&amp;D professionals, and for oil &amp; gas / banking / telecom sector professionals specifically</li>
+      <li><span class="kind">University</span> &mdash; career services offices at universities with strong oil &amp; gas, engineering, or business programmes (UNILAG, UI, Covenant, UNIPORT among others worth starting with, given Port Harcourt's role in the sector)</li>
+    </ul>
+  </section>
+
+</div>
+
+<div class="band footer-band">
+  <div class="wrap">
+    <p>None of this is automatic &mdash; each email, post, and listing needs a human to send or submit it, and to actually follow up. Track what's been sent where so the same directory or contact doesn't get pitched twice.</p>
+    <div class="signoff">
+      <span>Paleon Training &mdash; Digital Skills for the Long Run</span>
+      <span>Internal playbook</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
