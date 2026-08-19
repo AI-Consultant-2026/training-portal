@@ -114,6 +114,13 @@ export function createApp() {
   app.get("/banking-telecom-training-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "banking-telecom-training-nigeria.html"));
   });
+  // General job-seeker hub, same design system as the pages above -- targets broad
+  // "digital skills needed to get a job in Nigeria" / "how to become employable after
+  // NYSC" searches, and cross-links into oil-and-gas-careers-nigeria.html as the one
+  // sector-specific job-seeker spoke that exists so far.
+  app.get("/digital-skills-jobs-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-jobs-nigeria.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));
