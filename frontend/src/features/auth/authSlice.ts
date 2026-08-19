@@ -37,9 +37,18 @@ const initialState: AuthState = {
 };
 
 function extractErrorMessage(err: unknown): string {
-  const message = (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
-    ?.message;
-  return message ?? "Something went wrong. Please try again.";
+  const error = (
+    err as {
+      response?: {
+        data?: { error?: { message?: string; details?: { fieldErrors?: Record<string, string[]> } } };
+      };
+    }
+  )?.response?.data?.error;
+  // Zod validation failures come back as a generic "Validation failed" message plus a
+  // details.fieldErrors map (see backend/src/middleware/errorHandler.ts) -- surface the
+  // first actual field message (e.g. the password policy) instead of the generic one.
+  const firstFieldError = Object.values(error?.details?.fieldErrors ?? {})[0]?.[0];
+  return firstFieldError ?? error?.message ?? "Something went wrong. Please try again.";
 }
 
 export const registerUser = createAsyncThunk(

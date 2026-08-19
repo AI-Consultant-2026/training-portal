@@ -1,5 +1,38 @@
 import { z } from "zod";
 
+// Exact matches only (case-insensitive) -- catches the passwords people actually type
+// when a form merely demands "8+ characters", not a general strength estimator. Includes
+// this app's own former seed-admin password (see docs/DEPLOYMENT.md) since that value has
+// been publicly documented in this repo's history.
+const COMMON_WEAK_PASSWORDS = new Set([
+  "password",
+  "password1",
+  "password123",
+  "12345678",
+  "123456789",
+  "1234567890",
+  "qwerty123",
+  "qwertyuiop",
+  "letmein123",
+  "iloveyou1",
+  "admin1234",
+  "welcome123",
+  "changeme123",
+  "abc123456",
+  "football1",
+  "monkey123",
+]);
+
+const passwordSchema = z
+  .string()
+  .min(10, "Password must be at least 10 characters")
+  .refine((val) => /[a-zA-Z]/.test(val) && /[0-9]/.test(val), {
+    message: "Password must include both letters and numbers",
+  })
+  .refine((val) => !COMMON_WEAK_PASSWORDS.has(val.toLowerCase()), {
+    message: "This password is too common, please choose a different one",
+  });
+
 export const LOCATIONS = [
   "Nigeria",
   "United Kingdom",
@@ -28,7 +61,7 @@ export const COURSE_INTERESTS = [
 export const registerSchema = z.object({
   body: z.object({
     email: z.string().email(),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: passwordSchema,
     firstName: z.string().min(1),
     lastName: z.string().min(1),
     // Optional at the API level (existing/other callers shouldn't break over a new
@@ -55,7 +88,7 @@ export const passwordResetRequestSchema = z.object({
 export const passwordResetConfirmSchema = z.object({
   body: z.object({
     token: z.string().min(1),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: passwordSchema,
   }),
 });
 

@@ -59,8 +59,11 @@ export function ResetPasswordPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          minLength={8}
+          minLength={10}
+          pattern="(?=.*[A-Za-z])(?=.*\d).+"
+          title="At least 10 characters, including letters and numbers"
         />
+        <p className="-mt-2 text-xs text-gray-500">At least 10 characters, including letters and numbers.</p>
         <Button type="submit" isLoading={status === "loading"}>
           Set new password
         </Button>

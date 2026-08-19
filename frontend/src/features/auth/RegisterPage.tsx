@@ -89,8 +89,11 @@ export function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          minLength={8}
+          minLength={10}
+          pattern="(?=.*[A-Za-z])(?=.*\d).+"
+          title="At least 10 characters, including letters and numbers"
         />
+        <p className="-mt-2 text-xs text-gray-500">At least 10 characters, including letters and numbers.</p>
         <Select
           id="location"
           label="Select your location"
