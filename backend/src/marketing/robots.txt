@@ -6,6 +6,7 @@ Allow: /oil-and-gas-careers-nigeria
 Allow: /corporate-training-nigeria
 Allow: /banking-telecom-training-nigeria
 Allow: /digital-skills-jobs-nigeria
+Allow: /hse-training-nigeria
 Allow: /terms
 Allow: /privacy
 Disallow: /api/

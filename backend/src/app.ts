@@ -128,6 +128,13 @@ export function createApp() {
   app.get("/digital-skills-jobs-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "digital-skills-jobs-nigeria.html"));
   });
+  // Dual-audience spoke (job-seeker "HSE officer" + employer "HSE training") off both
+  // oil-and-gas-careers-nigeria.html and corporate-training-nigeria.html -- same design
+  // system, targets "HSE training providers oil and gas companies Nigeria" and
+  // "how to become an HSE officer in Nigeria" searches specifically.
+  app.get("/hse-training-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "hse-training-nigeria.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));
