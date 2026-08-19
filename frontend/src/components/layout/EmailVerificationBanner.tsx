@@ -5,7 +5,10 @@ export function EmailVerificationBanner() {
   const dispatch = useAppDispatch();
   const { user, emailVerification } = useAppSelector((state) => state.auth);
 
-  if (!user || user.emailVerifiedAt) {
+  // Only students are ever blocked by this (see enrollments.controller.ts) -- admins add
+  // enrollments through a separate path that bypasses the check entirely, and instructors
+  // don't enroll at all, so the banner would be actively misleading for either role.
+  if (!user || user.emailVerifiedAt || user.role !== "student") {
     return null;
   }
 
