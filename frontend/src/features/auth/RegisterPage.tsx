@@ -8,18 +8,44 @@ import { Select } from "../../components/ui/Select";
 import { registerUser } from "./authSlice";
 
 export const LOCATIONS = [
+  "Abia",
+  "Adamawa",
+  "Akwa Ibom",
+  "Anambra",
+  "Bauchi",
+  "Bayelsa",
+  "Benue",
+  "Borno",
+  "Cross River",
+  "Delta",
+  "Ebonyi",
+  "Edo",
+  "Ekiti",
+  "Enugu",
+  "Federal Capital Territory",
+  "Gombe",
+  "Imo",
+  "Jigawa",
+  "Kaduna",
+  "Kano",
+  "Katsina",
+  "Kebbi",
+  "Kogi",
+  "Kwara",
+  "Lagos",
+  "Nasarawa",
+  "Niger",
   "Nigeria",
-  "United Kingdom",
-  "United States",
-  "Canada",
-  "Germany",
-  "China",
-  "India",
-  "France",
-  "Japan",
-  "Brazil",
-  "Russia",
-  "Other Country",
+  "Ogun",
+  "Ondo",
+  "Osun",
+  "Oyo",
+  "Plateau",
+  "Rivers",
+  "Sokoto",
+  "Taraba",
+  "Yobe",
+  "Zamfara",
 ];
 
 // value = the real course slug, so a selection can both be saved as-is and used
@@ -37,7 +63,7 @@ export function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [location, setLocation] = useState("Nigeria");
+  const [location, setLocation] = useState("");
   const [courseInterest, setCourseInterest] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -101,6 +127,9 @@ export function RegisterPage() {
           onChange={(e) => setLocation(e.target.value)}
           required
         >
+          <option value="" disabled>
+            Select State
+          </option>
           {LOCATIONS.map((option) => (
             <option key={option} value={option}>
               {option}

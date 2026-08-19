@@ -8,14 +8,27 @@ import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { Spinner } from "../../components/ui/Spinner";
 import { PaymentQuote } from "../../types/api";
-import { LOCATIONS } from "../auth/RegisterPage";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "../courses/coursesSlice";
 
 // Card payments always settle in GBP -- Paleon Training UK Limited receives card
 // payments in GBP regardless of the student's own country/currency. Naira payments go
-// through the separate bank-transfer page instead, so Nigeria isn't offered here.
-const BILLING_COUNTRIES = LOCATIONS.filter((c) => c !== "Nigeria");
+// through the separate bank-transfer page instead, so Nigeria isn't offered here. Kept
+// as its own list (not derived from RegisterPage's LOCATIONS) since that field now holds
+// Nigerian states, not countries -- a genuinely different concept from billing country.
+const BILLING_COUNTRIES = [
+  "United Kingdom",
+  "United States",
+  "Canada",
+  "Germany",
+  "China",
+  "India",
+  "France",
+  "Japan",
+  "Brazil",
+  "Russia",
+  "Other Country",
+];
 
 const CURRENT_YEAR = new Date().getFullYear();
 const EXPIRY_YEARS = Array.from({ length: 15 }, (_, i) => CURRENT_YEAR + i);
