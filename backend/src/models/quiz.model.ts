@@ -10,13 +10,21 @@ export interface QuizAttributes {
   passingScore: number;
   questionCount: number;
   shuffleQuestions: boolean;
+  isEnabled: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export type QuizCreationAttributes = Optional<
   QuizAttributes,
-  "id" | "description" | "dueDate" | "timeLimitMinutes" | "shuffleQuestions" | "createdAt" | "updatedAt"
+  | "id"
+  | "description"
+  | "dueDate"
+  | "timeLimitMinutes"
+  | "shuffleQuestions"
+  | "isEnabled"
+  | "createdAt"
+  | "updatedAt"
 >;
 
 export class Quiz extends Model<QuizAttributes, QuizCreationAttributes> implements QuizAttributes {
@@ -29,6 +37,7 @@ export class Quiz extends Model<QuizAttributes, QuizCreationAttributes> implemen
   declare passingScore: number;
   declare questionCount: number;
   declare shuffleQuestions: boolean;
+  declare isEnabled: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -58,6 +67,12 @@ export function initQuizModel(sequelize: Sequelize) {
         allowNull: false,
         defaultValue: true,
         field: "shuffle_questions",
+      },
+      isEnabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+        field: "is_enabled",
       },
     },
     {

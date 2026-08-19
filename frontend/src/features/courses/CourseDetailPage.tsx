@@ -295,6 +295,21 @@ export function CourseDetailPage() {
                     );
                   })}
                   {content.quizzes.map((q) => {
+                    // Admin-disabled takes precedence over everything else -- an instructor
+                    // pulled this quiz from availability, which is a different, stronger
+                    // gate than the lesson-completion lock below and applies to every role,
+                    // not just students (see quiz.service.ts's start()).
+                    if (!q.isEnabled) {
+                      return (
+                        <span
+                          key={q.id}
+                          className="text-sm font-medium text-gray-400"
+                          title="This quiz is not available right now"
+                        >
+                          Quiz: {q.title} (unavailable)
+                        </span>
+                      );
+                    }
                     // Disabled by default: a quiz only unlocks once every lesson in its
                     // own week is completed. Only gates students -- instructors/admins
                     // can't start a quiz attempt anyway (authorize("student") on the

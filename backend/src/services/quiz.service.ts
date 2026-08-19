@@ -71,6 +71,7 @@ function serializeQuiz(quiz: Quiz) {
     passingScore: quiz.passingScore,
     questionCount: quiz.questionCount,
     shuffleQuestions: quiz.shuffleQuestions,
+    isEnabled: quiz.isEnabled,
   };
 }
 
@@ -124,6 +125,10 @@ export async function getById(quizId: string) {
 export async function start(quizId: string, studentId: string) {
   const { quiz, course } = await getQuizWithCourse(quizId);
   await assertEnrolled(course.id, studentId);
+
+  if (!quiz.isEnabled) {
+    throw ApiError.forbidden("This quiz is not available right now.");
+  }
 
   const unlocked = await areAllModuleLessonsCompleted(quiz.moduleId, studentId);
   if (!unlocked) {

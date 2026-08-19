@@ -225,6 +225,7 @@ export interface Quiz {
   passingScore: number;
   questionCount: number;
   shuffleQuestions: boolean;
+  isEnabled: boolean;
 }
 
 export interface QuizAnswerOption {

@@ -158,6 +158,21 @@ describe("Quizzes", () => {
     expect(res.status).toBe(403);
   });
 
+  it("rejects starting a quiz an admin has disabled, even for an otherwise-eligible student", async () => {
+    const instructor = await createInstructor();
+    const { course, quiz } = await createCourseWithQuiz(instructor.id);
+    await quiz.update({ isEnabled: false });
+    const student = await registerStudent("quizstudent-disabled@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    const token = await loginAs("quizstudent-disabled@example.com");
+
+    const res = await request(app)
+      .post(`/api/quizzes/${quiz.id}/start`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(403);
+    expect(res.body.error.message).toMatch(/not available/i);
+  });
+
   it("locks the quiz until every lesson in its module is completed", async () => {
     const instructor = await createInstructor();
     const { course, courseModule, quiz } = await createCourseWithQuiz(instructor.id);
