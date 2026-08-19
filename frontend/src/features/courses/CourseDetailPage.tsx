@@ -63,6 +63,11 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     title: "What is Drone Mapping? Beginner's Guide",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
+  "hse-fundamentals": {
+    videoId: "-PWrkFMZ48U",
+    title: "Understanding HSE: Health, Safety, and Environment",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
 };
 
 export function CourseDetailPage() {

@@ -7,6 +7,7 @@ export const COURSE_PRICES_NGN: Record<string, number> = {
   "cyber-security-fundamentals": 200_000,
   "digital-marketing": 150_000,
   "gis-and-drone-mapping": 200_000,
+  "hse-fundamentals": 100_000,
   "renewable-energy-digital-systems": 250_000,
   "social-media-management-content": 150_000,
 };

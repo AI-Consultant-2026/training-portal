@@ -56,6 +56,7 @@ export const COURSE_INTERESTS = [
   { slug: "digital-marketing", label: "Digital Marketing" },
   { slug: "gis-and-drone-mapping", label: "GIS and Drone Mapping" },
   { slug: "renewable-energy-digital-systems", label: "Renewable Energy Digital Systems" },
+  { slug: "hse-fundamentals", label: "HSE Fundamentals" },
 ];
 
 export function RegisterPage() {

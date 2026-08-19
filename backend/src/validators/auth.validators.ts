@@ -82,6 +82,7 @@ export const COURSE_INTERESTS = [
   "digital-marketing",
   "gis-and-drone-mapping",
   "renewable-energy-digital-systems",
+  "hse-fundamentals",
 ] as const;
 
 export const registerSchema = z.object({
