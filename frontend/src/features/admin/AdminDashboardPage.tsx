@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
+import { Modal } from "../../components/ui/Modal";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { Lead } from "../../types/api";
-import { fetchAdminStats, fetchLeads } from "./adminSlice";
+import { closeCoursePayments, fetchAdminStats, fetchCoursePayments, fetchLeads } from "./adminSlice";
 
 function formatNumberOrDash(value: number | null): string {
   return value === null ? "—" : String(value);
@@ -42,12 +43,18 @@ function downloadLeadsCsv(leads: Lead[]) {
 
 export function AdminDashboardPage() {
   const dispatch = useAppDispatch();
-  const { stats, status, error, leads, leadsStatus } = useAppSelector((state) => state.admin);
+  const { stats, status, error, leads, leadsStatus, coursePayments } = useAppSelector(
+    (state) => state.admin,
+  );
 
   useEffect(() => {
     dispatch(fetchAdminStats());
     dispatch(fetchLeads());
   }, [dispatch]);
+
+  function viewCoursePayments(courseId: string, courseTitle: string, paymentStatus: "confirmed" | "pending") {
+    dispatch(fetchCoursePayments({ courseId, courseTitle, status: paymentStatus }));
+  }
 
   if (status === "loading" || !stats) {
     return (
@@ -147,8 +154,32 @@ export function AdminDashboardPage() {
               {stats.payments.map((p) => (
                 <tr key={p.courseId} className="border-b border-gray-100 last:border-0">
                   <td className="px-4 py-2 text-gray-900">{p.courseTitle}</td>
-                  <td className="px-4 py-2 text-green-700">{p.paymentConfirmed}</td>
-                  <td className="px-4 py-2 text-amber-600">{p.paymentPending}</td>
+                  <td className="px-4 py-2">
+                    {p.paymentConfirmed > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => viewCoursePayments(p.courseId, p.courseTitle, "confirmed")}
+                        className="text-green-700 underline-offset-2 hover:underline"
+                      >
+                        {p.paymentConfirmed}
+                      </button>
+                    ) : (
+                      <span className="text-green-700">{p.paymentConfirmed}</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2">
+                    {p.paymentPending > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => viewCoursePayments(p.courseId, p.courseTitle, "pending")}
+                        className="text-amber-600 underline-offset-2 hover:underline"
+                      >
+                        {p.paymentPending}
+                      </button>
+                    ) : (
+                      <span className="text-amber-600">{p.paymentPending}</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -227,6 +258,60 @@ export function AdminDashboardPage() {
           View queue
         </Link>
       </div>
+
+      {coursePayments && (
+        <Modal
+          title={`${coursePayments.courseTitle} — ${coursePayments.paymentStatus === "confirmed" ? "Paid" : "Pending"}`}
+          onClose={() => dispatch(closeCoursePayments())}
+        >
+          {coursePayments.requestStatus === "loading" ? (
+            <div className="flex justify-center py-6">
+              <Spinner />
+            </div>
+          ) : coursePayments.requestStatus === "failed" ? (
+            <Alert message="Could not load payments for this course." />
+          ) : coursePayments.payments.length === 0 ? (
+            <p className="text-sm text-gray-500">No students in this list.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="border-b border-gray-200 text-xs uppercase text-gray-500">
+                  <tr>
+                    <th className="py-2 pr-4">Name</th>
+                    <th className="py-2 pr-4">Email</th>
+                    <th className="py-2 pr-4">Method</th>
+                    <th className="py-2 pr-4">Amount</th>
+                    <th className="py-2">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {coursePayments.payments.map((row) => (
+                    <tr key={row.enrollmentId} className="border-b border-gray-100 last:border-0">
+                      <td className="py-2 pr-4 text-gray-900">
+                        {row.firstName} {row.lastName}
+                      </td>
+                      <td className="py-2 pr-4 text-gray-600">{row.email}</td>
+                      <td className="py-2 pr-4 text-gray-600">
+                        {row.latestPayment ? row.latestPayment.method.replace("_", " ") : "—"}
+                      </td>
+                      <td className="py-2 pr-4 text-gray-600">
+                        {row.latestPayment
+                          ? `${row.latestPayment.currency} ${Number(row.latestPayment.amount).toLocaleString()}`
+                          : "—"}
+                      </td>
+                      <td className="py-2 text-gray-600">
+                        {new Date(
+                          row.latestPayment?.createdAt ?? row.paymentConfirmedAt ?? row.enrolledAt,
+                        ).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Modal>
+      )}
     </div>
   );
 }

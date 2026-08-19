@@ -1,4 +1,4 @@
-import { AdminStats, Candidate, Lead } from "../types/api";
+import { AdminStats, Candidate, CoursePayment, Lead } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchAdminStats(): Promise<AdminStats> {
@@ -57,4 +57,15 @@ export async function addEnrollment(
 export async function fetchLeads(): Promise<Lead[]> {
   const res = await axiosClient.get<{ leads: Lead[] }>("/admin/leads");
   return res.data.leads;
+}
+
+export async function fetchCoursePayments(
+  courseId: string,
+  status: "confirmed" | "pending",
+): Promise<CoursePayment[]> {
+  const res = await axiosClient.get<{ payments: CoursePayment[] }>(
+    `/admin/courses/${courseId}/payments`,
+    { params: { status } },
+  );
+  return res.data.payments;
 }

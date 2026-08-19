@@ -7,6 +7,7 @@ import {
   Course,
   CourseModule,
   Enrollment,
+  Payment,
   Quiz,
   QuizAttempt,
   User,
@@ -227,6 +228,154 @@ describe("Admin dashboard stats", () => {
       graded: 4,
       averageScore: 78,
       passRate: 75,
+    });
+  });
+});
+
+describe("Course payments drill-down", () => {
+  it("rejects unauthenticated, student, and instructor callers", async () => {
+    const instructor = await createInstructor();
+    const instructorToken = await loginAs("jest-instructor@example.com");
+    await registerStudent("paymentsdrilldownstudent@example.com");
+    const studentToken = await loginAs("paymentsdrilldownstudent@example.com");
+    const course = await Course.create({
+      title: "Drilldown Auth Course",
+      slug: `drilldown-auth-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+
+    const unauth = await request(app).get(`/api/admin/courses/${course.id}/payments?status=confirmed`);
+    expect(unauth.status).toBe(401);
+
+    const asStudent = await request(app)
+      .get(`/api/admin/courses/${course.id}/payments?status=confirmed`)
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(asStudent.status).toBe(403);
+
+    const asInstructor = await request(app)
+      .get(`/api/admin/courses/${course.id}/payments?status=confirmed`)
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(asInstructor.status).toBe(403);
+  });
+
+  it("404s for an unknown course and 400s for an invalid status", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+
+    const unknownCourse = await request(app)
+      .get("/api/admin/courses/00000000-0000-0000-0000-000000000000/payments?status=confirmed")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(unknownCourse.status).toBe(404);
+
+    const instructor = await createInstructor();
+    const course = await Course.create({
+      title: "Drilldown Validation Course",
+      slug: `drilldown-validation-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const badStatus = await request(app)
+      .get(`/api/admin/courses/${course.id}/payments?status=paid`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(badStatus.status).toBe(400);
+  });
+
+  it("lists the right students for confirmed vs pending, with their latest payment", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const instructor = await createInstructor();
+    const course = await Course.create({
+      title: "Drilldown Course",
+      slug: `drilldown-course-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const otherCourse = await Course.create({
+      title: "Other Course",
+      slug: `drilldown-other-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+
+    const paidStudent = await registerStudent("drilldownpaid@example.com");
+    const pendingStudent = await registerStudent("drilldownpending@example.com");
+    const otherCourseStudent = await registerStudent("drilldownothercourse@example.com");
+
+    const paidEnrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: paidStudent.id,
+      status: "active",
+      progressPercent: 0,
+      paymentConfirmed: true,
+    });
+    await Payment.create({
+      enrollmentId: paidEnrollment.id,
+      studentId: paidStudent.id,
+      method: "card",
+      status: "succeeded",
+      currency: "GBP",
+      amount: 199,
+      baseAmountNgn: 199 * 1900,
+      billingCountry: "United Kingdom",
+    });
+
+    const pendingEnrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: pendingStudent.id,
+      status: "active",
+      progressPercent: 0,
+      paymentConfirmed: false,
+    });
+    await Payment.create({
+      enrollmentId: pendingEnrollment.id,
+      studentId: pendingStudent.id,
+      method: "bank_transfer",
+      status: "pending",
+      currency: "NGN",
+      amount: 150000,
+      baseAmountNgn: 150000,
+      billingCountry: "Nigeria",
+      gatewayReference: "REF-123",
+    });
+
+    // Confirmed in a different course -- must not leak into this course's drill-down.
+    await Enrollment.create({
+      courseId: otherCourse.id,
+      studentId: otherCourseStudent.id,
+      status: "active",
+      progressPercent: 0,
+      paymentConfirmed: true,
+    });
+
+    const confirmedRes = await request(app)
+      .get(`/api/admin/courses/${course.id}/payments?status=confirmed`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(confirmedRes.status).toBe(200);
+    expect(confirmedRes.body.payments).toHaveLength(1);
+    expect(confirmedRes.body.payments[0]).toMatchObject({
+      enrollmentId: paidEnrollment.id,
+      email: "drilldownpaid@example.com",
+      paymentConfirmed: true,
+      // DECIMAL columns come back from pg as strings, not numbers -- Sequelize doesn't
+      // coerce them (avoids silent float-precision loss on money values).
+      latestPayment: { method: "card", status: "succeeded", currency: "GBP", amount: "199.00" },
+    });
+
+    const pendingRes = await request(app)
+      .get(`/api/admin/courses/${course.id}/payments?status=pending`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(pendingRes.status).toBe(200);
+    expect(pendingRes.body.payments).toHaveLength(1);
+    expect(pendingRes.body.payments[0]).toMatchObject({
+      enrollmentId: pendingEnrollment.id,
+      email: "drilldownpending@example.com",
+      paymentConfirmed: false,
+      latestPayment: { method: "bank_transfer", status: "pending", gatewayReference: "REF-123" },
     });
   });
 });

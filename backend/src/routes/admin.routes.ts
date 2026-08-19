@@ -6,6 +6,7 @@ import { validate } from "../middleware/validate";
 import {
   addEnrollmentSchema,
   createCandidateSchema,
+  listCoursePaymentsSchema,
   setPaymentConfirmedSchema,
 } from "../validators/admin.validators";
 
@@ -15,6 +16,11 @@ adminRouter.use(authenticate, authorize("admin"));
 
 adminRouter.get("/stats", adminController.getDashboardStats);
 adminRouter.get("/leads", adminController.listLeads);
+adminRouter.get(
+  "/courses/:courseId/payments",
+  validate(listCoursePaymentsSchema),
+  adminController.listCoursePayments,
+);
 adminRouter.get("/candidates", adminController.listCandidates);
 adminRouter.post("/candidates", validate(createCandidateSchema), adminController.createCandidate);
 // Must come before "/candidates/:id" -- otherwise Express would match "inactive" as

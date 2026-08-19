@@ -58,3 +58,9 @@ export const listLeads = asyncHandler(async (_req: Request, res: Response) => {
   const leads = await adminService.listLeads();
   res.json({ leads });
 });
+
+export const listCoursePayments = asyncHandler(async (req: Request, res: Response) => {
+  const status = req.query.status as "confirmed" | "pending";
+  const payments = await adminService.listCoursePayments(req.params.courseId as string, status);
+  res.json({ payments });
+});

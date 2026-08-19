@@ -353,6 +353,18 @@ export interface CandidateEnrollment {
   } | null;
 }
 
+export interface CoursePayment {
+  enrollmentId: string;
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  paymentConfirmed: boolean;
+  paymentConfirmedAt: string | null;
+  enrolledAt: string;
+  latestPayment: CandidateEnrollment["latestPayment"];
+}
+
 export interface Candidate {
   id: string;
   firstName: string;

@@ -23,3 +23,12 @@ export const addEnrollmentSchema = z.object({
     paymentConfirmed: z.boolean().optional(),
   }),
 });
+
+export const listCoursePaymentsSchema = z.object({
+  params: z.object({
+    courseId: z.string().uuid(),
+  }),
+  query: z.object({
+    status: z.enum(["confirmed", "pending"]),
+  }),
+});

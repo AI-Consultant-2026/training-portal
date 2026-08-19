@@ -1,6 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as adminApi from "../../api/admin.api";
-import { AdminStats, Candidate, Lead } from "../../types/api";
+import { AdminStats, Candidate, CoursePayment, Lead } from "../../types/api";
+
+export interface CoursePaymentsDrillDown {
+  courseId: string;
+  courseTitle: string;
+  paymentStatus: "confirmed" | "pending";
+  requestStatus: "loading" | "succeeded" | "failed";
+  payments: CoursePayment[];
+}
 
 export interface AdminState {
   stats: AdminStats | null;
@@ -11,6 +19,7 @@ export interface AdminState {
   candidatesError: string | null;
   leads: Lead[];
   leadsStatus: "idle" | "loading" | "succeeded" | "failed";
+  coursePayments: CoursePaymentsDrillDown | null;
 }
 
 const initialState: AdminState = {
@@ -22,6 +31,7 @@ const initialState: AdminState = {
   candidatesError: null,
   leads: [],
   leadsStatus: "idle",
+  coursePayments: null,
 };
 
 export const fetchAdminStats = createAsyncThunk("admin/fetchStats", async () => {
@@ -84,10 +94,30 @@ export const addEnrollment = createAsyncThunk(
   },
 );
 
+export const fetchCoursePayments = createAsyncThunk(
+  "admin/fetchCoursePayments",
+  async ({
+    courseId,
+    courseTitle,
+    status,
+  }: {
+    courseId: string;
+    courseTitle: string;
+    status: "confirmed" | "pending";
+  }) => {
+    const payments = await adminApi.fetchCoursePayments(courseId, status);
+    return { courseId, courseTitle, status, payments };
+  },
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
-  reducers: {},
+  reducers: {
+    closeCoursePayments(state) {
+      state.coursePayments = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAdminStats.pending, (state) => {
@@ -146,8 +176,30 @@ const adminSlice = createSlice({
       })
       .addCase(addEnrollment.rejected, (state, action) => {
         state.candidatesError = (action.payload as string) ?? "Could not add course";
+      })
+      .addCase(fetchCoursePayments.pending, (state, action) => {
+        // Set eagerly (before the request resolves) so the modal opens with a spinner
+        // right on click, using the courseId/status from the request the reducer is
+        // reacting to -- not whatever (if anything) was already in state.
+        state.coursePayments = {
+          courseId: action.meta.arg.courseId,
+          courseTitle: action.meta.arg.courseTitle,
+          paymentStatus: action.meta.arg.status,
+          requestStatus: "loading",
+          payments: [],
+        };
+      })
+      .addCase(fetchCoursePayments.fulfilled, (state, action) => {
+        if (state.coursePayments?.courseId !== action.payload.courseId) return;
+        state.coursePayments.requestStatus = "succeeded";
+        state.coursePayments.payments = action.payload.payments;
+      })
+      .addCase(fetchCoursePayments.rejected, (state, action) => {
+        if (state.coursePayments?.courseId !== action.meta.arg.courseId) return;
+        state.coursePayments.requestStatus = "failed";
       });
   },
 });
 
+export const { closeCoursePayments } = adminSlice.actions;
 export default adminSlice.reducer;

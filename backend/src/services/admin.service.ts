@@ -163,42 +163,79 @@ async function getPaymentsOverview() {
   });
 }
 
+// Drill-down behind the paid/pending counts in getPaymentsOverview -- who, specifically,
+// is in that count for a given course.
+export async function listCoursePayments(courseId: string, status: "confirmed" | "pending") {
+  const course = await Course.findByPk(courseId);
+  if (!course) {
+    throw ApiError.notFound("Course not found");
+  }
+
+  const enrollments = await Enrollment.findAll({
+    where: { courseId, paymentConfirmed: status === "confirmed" },
+    include: [
+      { model: User, as: "student", attributes: ["id", "firstName", "lastName", "email"] },
+      { model: Payment, as: "payments" },
+    ],
+    order: [["enrolledDate", "DESC"]],
+  });
+
+  return enrollments.map((e) => {
+    const student = (e as unknown as { student: User }).student;
+    return {
+      enrollmentId: e.id,
+      studentId: student.id,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      email: student.email,
+      paymentConfirmed: e.paymentConfirmed,
+      paymentConfirmedAt: e.paymentConfirmedAt,
+      enrolledAt: e.enrolledDate,
+      latestPayment: serializeLatestPayment(
+        (e as unknown as { payments?: Payment[] }).payments ?? [],
+      ),
+    };
+  });
+}
+
 function isOnline(lastActiveAt: Date | null): boolean {
   return lastActiveAt !== null && Date.now() - lastActiveAt.getTime() < ONLINE_THRESHOLD_MS;
 }
 
+// Most recent payment attempt among the given ones, if any -- surfaced mainly for
+// pending bank transfers, so the admin has the reference to look up when reconciling
+// their bank account before ticking "payment confirmed".
+function serializeLatestPayment(payments: Payment[]) {
+  const latestPayment = [...payments].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )[0];
+  return latestPayment
+    ? {
+        method: latestPayment.method,
+        status: latestPayment.status,
+        currency: latestPayment.currency,
+        amount: latestPayment.amount,
+        gatewayReference: latestPayment.gatewayReference,
+        notes: latestPayment.notes,
+        createdAt: latestPayment.createdAt,
+      }
+    : null;
+}
+
 function serializeCandidate(user: User) {
   const enrollments = ((user as unknown as { enrollments?: Enrollment[] }).enrollments ?? []).map(
-    (e) => {
-      // Most recent payment attempt for this enrollment, if any -- surfaced mainly for
-      // pending bank transfers, so the admin has the reference to look up when
-      // reconciling their bank account before ticking "payment confirmed" below.
-      const payments = (e as unknown as { payments?: Payment[] }).payments ?? [];
-      const latestPayment = [...payments].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      )[0];
-
-      return {
-        id: e.id,
-        courseId: e.courseId,
-        courseTitle: (e as unknown as { course?: Course }).course?.title ?? null,
-        status: e.status,
-        progressPercent: e.progressPercent,
-        paymentConfirmed: e.paymentConfirmed,
-        paymentConfirmedAt: e.paymentConfirmedAt,
-        latestPayment: latestPayment
-          ? {
-              method: latestPayment.method,
-              status: latestPayment.status,
-              currency: latestPayment.currency,
-              amount: latestPayment.amount,
-              gatewayReference: latestPayment.gatewayReference,
-              notes: latestPayment.notes,
-              createdAt: latestPayment.createdAt,
-            }
-          : null,
-      };
-    },
+    (e) => ({
+      id: e.id,
+      courseId: e.courseId,
+      courseTitle: (e as unknown as { course?: Course }).course?.title ?? null,
+      status: e.status,
+      progressPercent: e.progressPercent,
+      paymentConfirmed: e.paymentConfirmed,
+      paymentConfirmedAt: e.paymentConfirmedAt,
+      latestPayment: serializeLatestPayment(
+        (e as unknown as { payments?: Payment[] }).payments ?? [],
+      ),
+    }),
   );
 
   return {
