@@ -11,6 +11,7 @@ import { lazyImport } from "./lazyImport";
 // below shows the same spinner ProtectedRoute already uses while a route's chunk loads.
 const AdminCandidatesPage = lazyImport(() => import("../features/admin/AdminCandidatesPage"), "AdminCandidatesPage");
 const AdminDashboardPage = lazyImport(() => import("../features/admin/AdminDashboardPage"), "AdminDashboardPage");
+const AdminQuizzesPage = lazyImport(() => import("../features/admin/AdminQuizzesPage"), "AdminQuizzesPage");
 const AssignmentDetailPage = lazyImport(
   () => import("../features/assignments/AssignmentDetailPage"),
   "AssignmentDetailPage",
@@ -107,6 +108,7 @@ export function AppRouter() {
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
+            <Route path="/admin/quizzes" element={<AdminQuizzesPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

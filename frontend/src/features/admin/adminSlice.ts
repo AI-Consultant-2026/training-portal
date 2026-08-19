@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as adminApi from "../../api/admin.api";
-import { AdminStats, Candidate, CoursePayment, Lead } from "../../types/api";
+import { AdminQuiz, AdminStats, Candidate, CoursePayment, Lead } from "../../types/api";
 
 export interface CoursePaymentsDrillDown {
   courseId: string;
@@ -20,6 +20,9 @@ export interface AdminState {
   leads: Lead[];
   leadsStatus: "idle" | "loading" | "succeeded" | "failed";
   coursePayments: CoursePaymentsDrillDown | null;
+  quizzes: AdminQuiz[];
+  quizzesStatus: "idle" | "loading" | "succeeded" | "failed";
+  quizzesError: string | null;
 }
 
 const initialState: AdminState = {
@@ -32,6 +35,9 @@ const initialState: AdminState = {
   leads: [],
   leadsStatus: "idle",
   coursePayments: null,
+  quizzes: [],
+  quizzesStatus: "idle",
+  quizzesError: null,
 };
 
 export const fetchAdminStats = createAsyncThunk("admin/fetchStats", async () => {
@@ -107,6 +113,27 @@ export const fetchCoursePayments = createAsyncThunk(
   }) => {
     const payments = await adminApi.fetchCoursePayments(courseId, status);
     return { courseId, courseTitle, status, payments };
+  },
+);
+
+export const fetchQuizzes = createAsyncThunk("admin/fetchQuizzes", async () => {
+  return adminApi.fetchQuizzes();
+});
+
+export const toggleQuizEnabled = createAsyncThunk(
+  "admin/toggleQuizEnabled",
+  async (
+    { quizId, isEnabled }: { quizId: string; isEnabled: boolean },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await adminApi.setQuizEnabled(quizId, isEnabled);
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
+          ?.message ?? "Could not update this quiz";
+      return rejectWithValue(message);
+    }
   },
 );
 
@@ -197,6 +224,24 @@ const adminSlice = createSlice({
       .addCase(fetchCoursePayments.rejected, (state, action) => {
         if (state.coursePayments?.courseId !== action.meta.arg.courseId) return;
         state.coursePayments.requestStatus = "failed";
+      })
+      .addCase(fetchQuizzes.pending, (state) => {
+        state.quizzesStatus = "loading";
+      })
+      .addCase(fetchQuizzes.fulfilled, (state, action) => {
+        state.quizzesStatus = "succeeded";
+        state.quizzes = action.payload;
+      })
+      .addCase(fetchQuizzes.rejected, (state) => {
+        state.quizzesStatus = "failed";
+        state.quizzesError = "Could not load quizzes";
+      })
+      .addCase(toggleQuizEnabled.fulfilled, (state, action) => {
+        const quiz = state.quizzes.find((q) => q.id === action.payload.id);
+        if (quiz) quiz.isEnabled = action.payload.isEnabled;
+      })
+      .addCase(toggleQuizEnabled.rejected, (state, action) => {
+        state.quizzesError = (action.payload as string) ?? "Could not update this quiz";
       });
   },
 });

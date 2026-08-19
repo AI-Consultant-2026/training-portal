@@ -379,3 +379,100 @@ describe("Course payments drill-down", () => {
     });
   });
 });
+
+describe("Quiz management", () => {
+  it("rejects unauthenticated, student, and instructor callers on both routes", async () => {
+    const instructor = await createInstructor();
+    const instructorToken = await loginAs("jest-instructor@example.com");
+    await registerStudent("quizmanagementstudent@example.com");
+    const studentToken = await loginAs("quizmanagementstudent@example.com");
+    const course = await Course.create({
+      title: "Quiz Mgmt Auth Course",
+      slug: `quiz-mgmt-auth-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const courseModule = await CourseModule.create({ courseId: course.id, title: "Module 1", weekNumber: 1 });
+    const quiz = await Quiz.create({
+      moduleId: courseModule.id,
+      title: "Week 1 Quiz",
+      passingScore: 70,
+      questionCount: 1,
+    });
+
+    const unauthList = await request(app).get("/api/admin/quizzes");
+    expect(unauthList.status).toBe(401);
+    const studentList = await request(app)
+      .get("/api/admin/quizzes")
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(studentList.status).toBe(403);
+    const instructorList = await request(app)
+      .get("/api/admin/quizzes")
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(instructorList.status).toBe(403);
+
+    const studentPatch = await request(app)
+      .patch(`/api/admin/quizzes/${quiz.id}`)
+      .set("Authorization", `Bearer ${studentToken}`)
+      .send({ isEnabled: false });
+    expect(studentPatch.status).toBe(403);
+  });
+
+  it("lists quizzes with course/week context and toggles isEnabled", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const instructor = await createInstructor();
+    const course = await Course.create({
+      title: "Quiz Mgmt Course",
+      slug: `quiz-mgmt-course-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const courseModule = await CourseModule.create({ courseId: course.id, title: "Module 1", weekNumber: 3 });
+    const quiz = await Quiz.create({
+      moduleId: courseModule.id,
+      title: "Week 3 Quiz",
+      passingScore: 70,
+      questionCount: 1,
+    });
+
+    const listRes = await request(app)
+      .get("/api/admin/quizzes")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(listRes.status).toBe(200);
+    const entry = listRes.body.quizzes.find((q: { id: string }) => q.id === quiz.id);
+    expect(entry).toMatchObject({
+      title: "Week 3 Quiz",
+      isEnabled: true,
+      weekNumber: 3,
+      courseId: course.id,
+      courseTitle: "Quiz Mgmt Course",
+    });
+
+    const disableRes = await request(app)
+      .patch(`/api/admin/quizzes/${quiz.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ isEnabled: false });
+    expect(disableRes.status).toBe(200);
+    expect(disableRes.body.quiz.isEnabled).toBe(false);
+
+    const listAfter = await request(app)
+      .get("/api/admin/quizzes")
+      .set("Authorization", `Bearer ${adminToken}`);
+    const entryAfter = listAfter.body.quizzes.find((q: { id: string }) => q.id === quiz.id);
+    expect(entryAfter.isEnabled).toBe(false);
+  });
+
+  it("404s when toggling an unknown quiz", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+
+    const res = await request(app)
+      .patch("/api/admin/quizzes/00000000-0000-0000-0000-000000000000")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ isEnabled: false });
+    expect(res.status).toBe(404);
+  });
+});

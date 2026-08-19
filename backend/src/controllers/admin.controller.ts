@@ -64,3 +64,16 @@ export const listCoursePayments = asyncHandler(async (req: Request, res: Respons
   const payments = await adminService.listCoursePayments(req.params.courseId as string, status);
   res.json({ payments });
 });
+
+export const listQuizzes = asyncHandler(async (_req: Request, res: Response) => {
+  const quizzes = await adminService.listQuizzes();
+  res.json({ quizzes });
+});
+
+export const setQuizEnabled = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.params.id) {
+    throw ApiError.badRequest("Quiz id is required");
+  }
+  const quiz = await adminService.setQuizEnabled(req.params.id, req.body.isEnabled);
+  res.json({ quiz });
+});

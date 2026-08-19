@@ -76,12 +76,17 @@ export function AdminDashboardPage() {
     <div className="mx-auto max-w-4xl px-6 py-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
-        <Link
-          to="/admin/candidates"
-          className="text-sm font-medium text-blue-600 hover:underline"
-        >
-          Manage candidates →
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link to="/admin/quizzes" className="text-sm font-medium text-blue-600 hover:underline">
+            Manage quizzes →
+          </Link>
+          <Link
+            to="/admin/candidates"
+            className="text-sm font-medium text-blue-600 hover:underline"
+          >
+            Manage candidates →
+          </Link>
+        </div>
       </div>
 
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Users</h2>

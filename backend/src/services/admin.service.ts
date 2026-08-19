@@ -5,6 +5,7 @@ import { config } from "../config";
 import {
   AssignmentSubmission,
   Course,
+  CourseModule,
   Enrollment,
   Lead,
   Payment,
@@ -394,4 +395,46 @@ export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed
 
 export async function listLeads() {
   return Lead.findAll({ order: [["createdAt", "DESC"]] });
+}
+
+// Every quiz across every course, with enough course/week context to manage them from a
+// single flat list rather than drilling into each course individually.
+export async function listQuizzes() {
+  const quizzes = await Quiz.findAll({
+    include: [
+      {
+        model: CourseModule,
+        as: "module",
+        attributes: ["id", "weekNumber"],
+        include: [{ model: Course, as: "course", attributes: ["id", "title"] }],
+      },
+    ],
+    order: [
+      [{ model: CourseModule, as: "module" }, { model: Course, as: "course" }, "title", "ASC"],
+      [{ model: CourseModule, as: "module" }, "weekNumber", "ASC"],
+    ],
+  });
+
+  return quizzes.map((quiz) => {
+    const courseModule = (quiz as unknown as { module: CourseModule & { course: Course } }).module;
+    return {
+      id: quiz.id,
+      title: quiz.title,
+      isEnabled: quiz.isEnabled,
+      moduleId: courseModule.id,
+      weekNumber: courseModule.weekNumber,
+      courseId: courseModule.course.id,
+      courseTitle: courseModule.course.title,
+    };
+  });
+}
+
+export async function setQuizEnabled(quizId: string, isEnabled: boolean) {
+  const quiz = await Quiz.findByPk(quizId);
+  if (!quiz) {
+    throw ApiError.notFound("Quiz not found");
+  }
+  quiz.isEnabled = isEnabled;
+  await quiz.save();
+  return quiz;
 }

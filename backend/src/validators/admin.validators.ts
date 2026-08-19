@@ -32,3 +32,9 @@ export const listCoursePaymentsSchema = z.object({
     status: z.enum(["confirmed", "pending"]),
   }),
 });
+
+export const setQuizEnabledSchema = z.object({
+  body: z.object({
+    isEnabled: z.boolean(),
+  }),
+});

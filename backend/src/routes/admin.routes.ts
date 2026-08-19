@@ -8,6 +8,7 @@ import {
   createCandidateSchema,
   listCoursePaymentsSchema,
   setPaymentConfirmedSchema,
+  setQuizEnabledSchema,
 } from "../validators/admin.validators";
 
 export const adminRouter = Router();
@@ -36,4 +37,10 @@ adminRouter.patch(
   "/enrollments/:id/payment",
   validate(setPaymentConfirmedSchema),
   adminController.setPaymentConfirmed,
+);
+adminRouter.get("/quizzes", adminController.listQuizzes);
+adminRouter.patch(
+  "/quizzes/:id",
+  validate(setQuizEnabledSchema),
+  adminController.setQuizEnabled,
 );

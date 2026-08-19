@@ -354,6 +354,16 @@ export interface CandidateEnrollment {
   } | null;
 }
 
+export interface AdminQuiz {
+  id: string;
+  title: string;
+  isEnabled: boolean;
+  moduleId: string;
+  weekNumber: number;
+  courseId: string;
+  courseTitle: string;
+}
+
 export interface CoursePayment {
   enrollmentId: string;
   studentId: string;
