@@ -107,6 +107,13 @@ export function createApp() {
   app.get("/corporate-training-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "corporate-training-nigeria.html"));
   });
+  // Sector-specific spoke off corporate-training-nigeria.html above (the hub) -- targets
+  // "cybersecurity training for banks in Nigeria" / "telecom staff technical training
+  // Nigeria" style searches specifically, cross-linking back to the hub for the full
+  // catalog/pricing rather than duplicating it.
+  app.get("/banking-telecom-training-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "banking-telecom-training-nigeria.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));
