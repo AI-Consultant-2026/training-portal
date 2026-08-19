@@ -102,6 +102,11 @@ export function createApp() {
   app.get("/oil-and-gas-careers-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-careers-nigeria.html"));
   });
+  // SEO content page targeting B2B "corporate training providers in Nigeria" searches --
+  // same reused design system as oil-and-gas-careers-nigeria.html above, same pattern.
+  app.get("/corporate-training-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "corporate-training-nigeria.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));

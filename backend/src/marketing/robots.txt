@@ -3,6 +3,7 @@ Allow: /welcome
 Allow: /executive-training
 Allow: /trainingportalprocess
 Allow: /oil-and-gas-careers-nigeria
+Allow: /corporate-training-nigeria
 Allow: /terms
 Allow: /privacy
 Disallow: /api/
