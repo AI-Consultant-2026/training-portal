@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
@@ -68,7 +68,6 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
 export function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { selectedCourse: course, status, error } = useAppSelector((state) => state.courses);
   const { items: enrollments, error: enrollError } = useAppSelector((state) => state.enrollments);
   const { user } = useAppSelector((state) => state.auth);
@@ -146,15 +145,12 @@ export function CourseDetailPage() {
     }
   }, [course, user]);
 
+  // Enrolment/payment is paused until the next intake -- every student sees the same
+  // "reopens" notice on click instead of reaching the real (card/bank-transfer) payment
+  // pages, not just the demo account's usual "get started" nudge.
   function handlePayForCourse() {
     if (!course) return;
-    // The demo account is a shared preview login, not a real enrollee -- it never goes
-    // through the actual (placeholder) payment gateway, just the same "get started" nudge.
-    if (isDemoAccount) {
-      setShowPaymentDialog(true);
-      return;
-    }
-    navigate(`/courses/${course.slug}/pay/${user?.location === "Nigeria" ? "bank-transfer" : "card"}`);
+    setShowPaymentDialog(true);
   }
 
   useEffect(() => {
@@ -394,8 +390,8 @@ export function CourseDetailPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
             <p className="text-sm text-gray-700">
-              Thanks for your interest in Paleon Training. If you would like to enrol in any of
-              our digital skills courses, make payment for the course and get started.
+              Enrolment for digital skills training reopens 01/01/2026. If you have sign up for
+              any of the courses, you will be contacted to make payment and start. Thank you.
             </p>
             <div className="mt-4 flex justify-end">
               <Button onClick={() => setShowPaymentDialog(false)}>Close</Button>
