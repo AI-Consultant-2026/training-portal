@@ -95,6 +95,13 @@ export function createApp() {
   app.get("/financing", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "financing.html"));
   });
+  // SEO content page targeting long-tail "how do I get an oil & gas job in Nigeria"
+  // searches -- reuses trainingportalprocess.html's design system (same <style> block,
+  // same class names) rather than a new one, so it reads as the same publication.
+  // Linked from welcome.html's footer, listed in sitemap.xml, allowed in robots.txt.
+  app.get("/oil-and-gas-careers-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-careers-nigeria.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));
