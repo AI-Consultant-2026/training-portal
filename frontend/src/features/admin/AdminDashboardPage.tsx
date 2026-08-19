@@ -2,13 +2,42 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
+import { Button } from "../../components/ui/Button";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
+import { Lead } from "../../types/api";
 import { fetchAdminStats, fetchLeads } from "./adminSlice";
 
 function formatNumberOrDash(value: number | null): string {
   return value === null ? "—" : String(value);
+}
+
+function toCsvField(value: string): string {
+  return `"${value.replace(/"/g, '""')}"`;
+}
+
+function leadsToCsv(leads: Lead[]): string {
+  const header = ["Name", "Email", "Course", "Submitted"].map(toCsvField).join(",");
+  const rows = leads.map((lead) =>
+    [lead.name, lead.email, lead.course, new Date(lead.createdAt).toISOString()].map(toCsvField).join(","),
+  );
+  return [header, ...rows].join("\r\n");
+}
+
+// Client-side export: the admin dashboard already fetches every lead (GET /admin/leads
+// has no pagination), so there's nothing to gain from a dedicated export endpoint --
+// just turn what's already in state into a file download.
+function downloadLeadsCsv(leads: Lead[]) {
+  const blob = new Blob([leadsToCsv(leads)], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 export function AdminDashboardPage() {
@@ -129,7 +158,14 @@ export function AdminDashboardPage() {
         <p className="mt-3 text-sm text-gray-500">No enrollments yet.</p>
       )}
 
-      <h2 className="mt-8 text-lg font-semibold text-gray-900">Leads</h2>
+      <div className="mt-8 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">Leads</h2>
+        {leads.length > 0 && (
+          <Button variant="secondary" className="px-3 py-1.5 text-xs" onClick={() => downloadLeadsCsv(leads)}>
+            Download CSV
+          </Button>
+        )}
+      </div>
       {leadsStatus === "loading" && leads.length === 0 ? (
         <div className="flex justify-center py-6">
           <Spinner />
