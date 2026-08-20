@@ -144,18 +144,33 @@ export function createApp() {
   });
   // Sector-specific corporate/government sales briefs -- public but unlisted (no nav
   // link, robots noindex, not in sitemap.xml), same pattern as /financing above; each
-  // is a standalone one-off pitch document, not part of the SEO hub/spoke set.
+  // is a standalone one-off pitch document, not part of the SEO hub/spoke set. Each
+  // page's SVG-chart-building script is a separate .js file (not inline) because
+  // helmet's CSP here is script-src 'self' with no unsafe-inline -- an inline <script>
+  // gets silently blocked, same issue as bridge36.js previously.
   app.get("/oil-sector", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-sector.html"));
+  });
+  app.get("/oil-sector.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-sector.js"));
   });
   app.get("/banking-sector", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "banking-sector.html"));
   });
+  app.get("/banking-sector.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "banking-sector.js"));
+  });
   app.get("/telecom-sector", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "telecom-sector.html"));
   });
+  app.get("/telecom-sector.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "telecom-sector.js"));
+  });
   app.get("/delta-state-government", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "delta-state-government.html"));
+  });
+  app.get("/delta-state-government.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "delta-state-government.js"));
   });
 
   // Only present in the production Docker image (the frontend build gets copied to
