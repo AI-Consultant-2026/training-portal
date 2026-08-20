@@ -165,13 +165,24 @@
   .format-strip .tile .l{ margin-top:4px; font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; }
   @media (max-width:760px){ .format-strip{ grid-template-columns:repeat(2,1fr); } }
 
-  .map-card{ margin-top:28px; border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:24px; display:grid; grid-template-columns:1fr 1.1fr; gap:28px; align-items:center; }
-  .map-card .map-svg{ width:100%; height:auto; }
-  .map-figures{ display:flex; flex-direction:column; gap:16px; }
+  .map-card{ margin-top:28px; border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:24px; }
+  .map-card .map-svg{ width:100%; height:auto; display:block; }
+  .map-figures{ margin-top:24px; padding-top:20px; border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
   .map-fig .v{ font-family:var(--font-mono); font-weight:600; font-size:20px; color:var(--ink); }
   .map-fig .l{ margin-top:3px; font-size:12.5px; color:var(--ink-2); line-height:1.4; }
-  .map-caption{ grid-column:1/-1; font-size:11.5px; color:var(--ink-3); font-style:italic; margin-top:4px; }
-  @media (max-width:760px){ .map-card{ grid-template-columns:1fr; } }
+  .map-caption{ font-size:11.5px; color:var(--ink-3); font-style:italic; margin-top:18px; }
+  @media (max-width:760px){ .map-figures{ grid-template-columns:repeat(2,1fr); } }
+
+  .lga-legend{ display:flex; gap:18px; flex-wrap:wrap; margin-top:22px; padding-top:20px; border-top:1px solid var(--line); }
+  .lga-legend .key{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-2); }
+  .lga-legend .swatch{ width:10px; height:10px; border-radius:50%; flex:none; }
+  .lga-columns{ margin-top:16px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .lga-col h4{ font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:0 0 10px; font-weight:600; }
+  .lga-col ol{ margin:0; padding:0; list-style:none; font-size:12.5px; color:var(--ink-2); line-height:1.85; }
+  .lga-col li{ display:flex; gap:7px; }
+  .lga-col li .n{ font-family:var(--font-mono); font-size:11px; color:var(--ink-3); min-width:18px; flex:none; }
+  .lga-col li b{ color:var(--ink); font-weight:600; }
+  @media (max-width:760px){ .lga-columns{ grid-template-columns:1fr; gap:14px; } }
 
   .proof-grid{ margin-top:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
   .proof-tile{ border:1px solid var(--line); border-radius:4px; padding:18px; background:var(--surface); }
@@ -412,14 +423,61 @@
   </p>
 
   <div class="map-card">
-    <svg class="map-svg" id="delta-map" viewBox="0 0 400 420" role="img" aria-label="Simplified schematic map of Delta State showing the capital Asaba and the cities Agbor, Ughelli, Sapele, and Warri, bordered by Edo State to the north, Anambra and Rivers States to the east, Ondo State to the west, and the Atlantic Ocean to the south"></svg>
+    <svg class="map-svg" id="delta-map" viewBox="-50 -35 790 690" role="img" aria-label="Map of Delta State built from real LGA boundary data, showing all 25 local government areas as individually shaped and numbered regions, grouped into 3 senatorial districts (Delta North, Delta Central, Delta South), with the capital Asaba and the economic hub Warri highlighted, bordered by Edo State to the north, Anambra and Rivers States to the east, Ondo State to the west, and the Atlantic Ocean to the south"></svg>
     <div class="map-figures">
-      <div class="map-fig"><div class="v">25 LGAs</div><div class="l">Local government areas across the state</div></div>
+      <div class="map-fig"><div class="v">25 LGAs</div><div class="l">Local government areas across 3 senatorial districts</div></div>
       <div class="map-fig"><div class="v">Asaba</div><div class="l">State capital, seat of government</div></div>
       <div class="map-fig"><div class="v">3rd-largest</div><div class="l">State economy in Nigeria by size<sup>4</sup></div></div>
       <div class="map-fig"><div class="v">~21.5%</div><div class="l">Of Nigeria's total oil output, as of March 2023<sup>4</sup></div></div>
     </div>
-    <div class="map-caption">Simplified schematic for orientation — not a surveyed boundary map.</div>
+    <div class="lga-legend">
+      <div class="key"><span class="swatch" style="background:var(--green)"></span>Delta North — 9 LGAs</div>
+      <div class="key"><span class="swatch" style="background:var(--gold)"></span>Delta Central — 8 LGAs</div>
+      <div class="key"><span class="swatch" style="background:var(--critical)"></span>Delta South — 8 LGAs</div>
+    </div>
+    <div class="lga-columns">
+      <div class="lga-col">
+        <h4>Delta North</h4>
+        <ol>
+          <li><span class="n">1</span>Aniocha North</li>
+          <li><span class="n">2</span>Aniocha South</li>
+          <li><span class="n">3</span>Ika North East</li>
+          <li><span class="n">4</span>Ika South</li>
+          <li><span class="n">5</span>Ndokwa East</li>
+          <li><span class="n">6</span>Ndokwa West</li>
+          <li><span class="n">7</span>Oshimili North</li>
+          <li><span class="n">8</span><b>Oshimili South</b> — Asaba (capital)</li>
+          <li><span class="n">9</span>Ukwuani</li>
+        </ol>
+      </div>
+      <div class="lga-col">
+        <h4>Delta Central</h4>
+        <ol>
+          <li><span class="n">10</span>Ethiope East</li>
+          <li><span class="n">11</span>Ethiope West</li>
+          <li><span class="n">12</span>Okpe</li>
+          <li><span class="n">13</span>Sapele</li>
+          <li><span class="n">14</span>Udu</li>
+          <li><span class="n">15</span>Ughelli North</li>
+          <li><span class="n">16</span>Ughelli South</li>
+          <li><span class="n">17</span>Uvwie</li>
+        </ol>
+      </div>
+      <div class="lga-col">
+        <h4>Delta South</h4>
+        <ol>
+          <li><span class="n">18</span>Bomadi</li>
+          <li><span class="n">19</span>Burutu</li>
+          <li><span class="n">20</span>Isoko North</li>
+          <li><span class="n">21</span>Isoko South</li>
+          <li><span class="n">22</span>Patani</li>
+          <li><span class="n">23</span>Warri North</li>
+          <li><span class="n">24</span><b>Warri South</b> — Warri (economic hub)</li>
+          <li><span class="n">25</span>Warri South West</li>
+        </ol>
+      </div>
+    </div>
+    <div class="map-caption">LGA boundaries from geoBoundaries.org (GRID3 source data, CC BY 4.0), simplified for clarity — not a legal or surveyed reference map. Numbered pins cross-reference the LGA list above.</div>
   </div>
 </section>
 
