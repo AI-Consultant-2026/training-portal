@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Human Layer Brief</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,680&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F1F3F6;
+    --surface:#E4E8ED;
+    --surface-2:#D7DEE5;
+    --ink:#10192B;
+    --ink-2:#48566B;
+    --ink-3:#71809A;
+    --line:#C9D2DC;
+    --gold:#A6822C;
+    --gold-text:#8C6C22;
+    --slate:#3C6EA5;
+    --slate-text:#2F5885;
+    --critical:#A6373A;
+    --critical-bg:#F1DEDA;
+    --font-display:'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+    --font-sans:'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif;
+    --font-mono:'IBM Plex Mono','SF Mono',Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0A0F1A;
+      --surface:#121A2B;
+      --surface-2:#1A2338;
+      --ink:#E8ECF3;
+      --ink-2:#A8B3C7;
+      --ink-3:#7C879C;
+      --line:#253049;
+      --gold:#B8862F;
+      --gold-text:#D7A94E;
+      --slate:#4A7FC0;
+      --slate-text:#6FA0DE;
+      --critical:#D9615F;
+      --critical-bg:#2E1A18;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0A0F1A;
+    --surface:#121A2B;
+    --surface-2:#1A2338;
+    --ink:#E8ECF3;
+    --ink-2:#A8B3C7;
+    --ink-3:#7C879C;
+    --line:#253049;
+    --gold:#B8862F;
+    --gold-text:#D7A94E;
+    --slate:#4A7FC0;
+    --slate-text:#6FA0DE;
+    --critical:#D9615F;
+    --critical-bg:#2E1A18;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--font-sans); line-height:1.55; font-size:16px;
+  }
+  ::selection{ background:var(--gold); color:#fff; }
+  a{ color:var(--slate-text); }
+  h1,h2,h3{ font-family:var(--font-sans); text-wrap:balance; margin:0; }
+  p{ margin:0; }
+  .col{ max-width:800px; margin:0 auto; padding:0 24px; }
+  .wide{ max-width:1040px; margin:0 auto; padding:0 24px; }
+
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:13px; letter-spacing:.04em; color:var(--ink); }
+  .brand .dot{ width:8px; height:8px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 20%, transparent); }
+  .topbar a.cta{
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.03em;
+    color:var(--ink); text-decoration:none; border:1px solid var(--line);
+    padding:7px 13px; border-radius:3px; white-space:nowrap;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .topbar a.cta:hover{ border-color:var(--gold); color:var(--gold-text); }
+
+  .hero{ padding:76px 24px 40px; }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--gold-text); display:flex; align-items:center; gap:10px; margin-bottom:20px;
+  }
+  .eyebrow .rule{ height:1px; width:34px; background:var(--gold); opacity:.6; }
+  .hero h1{
+    font-family:var(--font-display); font-weight:600; font-optical-sizing:auto;
+    font-size:clamp(32px,5.2vw,54px); line-height:1.1; letter-spacing:-.01em; color:var(--ink);
+  }
+  .hero .sub{ margin-top:22px; font-size:18px; line-height:1.6; color:var(--ink-2); max-width:660px; }
+  .hero .sub b{ color:var(--ink); font-weight:600; }
+
+  .stat-strip{
+    margin-top:48px; display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  }
+  .stat-strip .tile{ background:var(--surface); padding:20px 18px; }
+  .stat-strip .tile .v{ font-family:var(--font-mono); font-weight:600; font-size:26px; color:var(--ink); }
+  .stat-strip .tile .l{ margin-top:6px; font-size:12.5px; color:var(--ink-2); line-height:1.4; }
+  @media (max-width:760px){ .stat-strip{ grid-template-columns:repeat(2,1fr); } }
+
+  section.block{ padding:64px 0 8px; }
+  .divider{ display:flex; align-items:center; gap:14px; margin-bottom:34px; }
+  .divider .num{ font-family:var(--font-mono); font-size:12.5px; color:var(--ink-3); letter-spacing:.04em; }
+  .divider .ttl{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); font-weight:600; }
+  .divider .ticks{
+    flex:1; height:6px;
+    background:linear-gradient(to right, var(--line), var(--line)) bottom/100% 1px no-repeat;
+    position:relative;
+  }
+  .divider .ticks::before{
+    content:""; position:absolute; inset:0;
+    background-image:repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 10px);
+    background-position:bottom left; height:6px; bottom:0;
+  }
+
+  h2.head{ font-family:var(--font-display); font-weight:600; font-size:clamp(24px,3vw,32px); line-height:1.2; color:var(--ink); max-width:640px; }
+  .lede{ margin-top:14px; font-size:16.5px; color:var(--ink-2); max-width:660px; }
+  .body-text{ margin-top:18px; font-size:15.5px; color:var(--ink-2); max-width:660px; }
+  .body-text + .body-text{ margin-top:12px; }
+  .body-text b{ color:var(--ink); font-weight:600; }
+
+  .risk-row{ margin-top:30px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .risk-tile{ border:1px solid var(--line); border-radius:4px; padding:18px 18px 16px; background:var(--surface); }
+  .risk-tile .v{ font-family:var(--font-mono); font-weight:600; font-size:24px; color:var(--critical); }
+  .risk-tile .l{ margin-top:6px; font-size:13px; color:var(--ink-2); line-height:1.45; }
+  @media (max-width:760px){ .risk-row{ grid-template-columns:1fr; } }
+
+  .chart-card{ margin-top:28px; border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:24px 24px 16px; }
+  .chart-card .chart-title{ font-size:13.5px; font-weight:600; color:var(--ink); }
+  .chart-card .chart-note{ font-size:12.5px; color:var(--ink-3); margin-top:3px; }
+  .chart-card svg{ display:block; width:100%; height:auto; margin-top:14px; overflow:visible; }
+  .chart-card .axis-label{ font-family:var(--font-mono); font-size:10.5px; fill:var(--ink-3); }
+  .chart-card .value-label{ font-family:var(--font-mono); font-size:11.5px; fill:var(--ink); font-weight:600; }
+  .chart-card .cat-label{ font-family:var(--font-sans); font-size:12.5px; fill:var(--ink-2); }
+
+  .hover-target{ cursor:pointer; }
+  .tooltip{
+    position:fixed; pointer-events:none; z-index:50; background:var(--ink); color:var(--paper);
+    font-family:var(--font-mono); font-size:12px; line-height:1.5; padding:8px 11px; border-radius:4px;
+    opacity:0; transform:translateY(4px); transition:opacity .12s ease, transform .12s ease; max-width:230px;
+  }
+  .tooltip.show{ opacity:1; transform:translateY(0); }
+  .tooltip .tt-head{ font-weight:600; margin-bottom:2px; }
+
+  .table-wrap{ margin-top:28px; overflow-x:auto; border:1px solid var(--line); border-radius:6px; }
+  table.matrix{ width:100%; border-collapse:collapse; min-width:720px; background:var(--surface); }
+  table.matrix th, table.matrix td{ padding:14px 16px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); font-size:13.5px; }
+  table.matrix th{ font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:600; background:var(--surface-2); }
+  table.matrix tr:last-child td{ border-bottom:none; }
+  table.matrix td.course{ font-weight:600; color:var(--ink); white-space:nowrap; }
+  table.matrix td.fmt{ font-family:var(--font-mono); font-size:12px; color:var(--ink-2); white-space:nowrap; }
+  table.matrix td .need{ color:var(--ink-2); }
+  table.matrix tr.aside td{ font-size:13px; color:var(--ink-3); font-style:italic; }
+
+  .proof-grid{ margin-top:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .proof-tile{ border:1px solid var(--line); border-radius:4px; padding:18px; background:var(--surface); }
+  .proof-tile .v{ font-family:var(--font-mono); font-weight:600; font-size:22px; color:var(--ink); }
+  .proof-tile .l{ margin-top:5px; font-size:12.5px; color:var(--ink-2); }
+  @media (max-width:760px){ .proof-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  .cta-block{ margin:88px 0 0; padding:56px 24px 64px; background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .cta-inner{ max-width:800px; margin:0 auto; }
+  .cta-block h2.head{ max-width:100%; }
+  .cta-actions{ margin-top:26px; display:flex; gap:12px; flex-wrap:wrap; }
+  .btn{ font-family:var(--font-mono); font-size:13.5px; letter-spacing:.02em; padding:13px 22px; border-radius:3px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+  .btn-primary{ background:var(--gold); color:#fff; }
+  .btn-primary:hover{ background:var(--gold-text); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--ink-3); }
+  .steps{ margin-top:34px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .step{ font-size:13.5px; color:var(--ink-2); }
+  .step .n{ font-family:var(--font-mono); color:var(--gold-text); font-weight:600; font-size:12.5px; }
+  .step .t{ margin-top:5px; color:var(--ink); font-weight:600; font-size:14px; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
+
+  footer{ padding:44px 24px 90px; }
+  footer .cols{ display:grid; grid-template-columns:1.2fr 1fr; gap:40px; }
+  footer h3{ font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:14px; }
+  footer ol{ margin:0; padding-left:18px; font-size:11.5px; color:var(--ink-3); line-height:1.9; }
+  footer ol li{ margin-bottom:2px; }
+  footer .disclaimer{ font-size:12.5px; color:var(--ink-3); max-width:420px; line-height:1.6; }
+  @media (max-width:760px){ footer .cols{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> PALEON TRAINING — CORPORATE BRIEF</div>
+  <a class="cta" href="#next-step">Talk to us →</a>
+</div>
+
+<div class="hero col">
+  <div class="eyebrow"><span class="rule"></span>PREPARED FOR BANKS &amp; FINANCIAL INSTITUTIONS IN NIGERIA</div>
+  <h1>Your biggest cybersecurity investment doesn't run on servers.</h1>
+  <p class="sub">
+    Nigerian banks poured <b>₦280.9 billion</b> into fraud-monitoring and
+    cybersecurity technology in 2025 alone — yet <b>98% of successful breaches
+    still start with a person, not a system</b>. Paleon Training builds the
+    staff-level digital fluency the CBN's cybersecurity framework already
+    requires: fraud awareness, phishing resilience, and digital customer
+    engagement, priced and delivered for Nigeria.
+  </p>
+
+  <div class="stat-strip">
+    <div class="tile"><div class="v">90.6%</div><div class="l">of Nigeria's cybersecurity workforce demand currently unfilled<sup>1</sup></div></div>
+    <div class="tile"><div class="v">₦280.9B</div><div class="l">combined tech &amp; cybersecurity spend by just 3 top Nigerian banks in 2025<sup>2</sup></div></div>
+    <div class="tile"><div class="v">98%</div><div class="l">of cyberattacks rely on social engineering, not a software flaw<sup>3</sup></div></div>
+    <div class="tile"><div class="v">6</div><div class="l">Paleon courses built specifically for this transition — not a generic online catalog</div></div>
+  </div>
+</div>
+
+<!-- 01 THE SIGNAL -->
+<section class="block col">
+  <div class="divider"><span class="num">01</span><span class="ttl">The Signal</span><span class="ticks"></span></div>
+  <h2 class="head">This isn't a hiring problem. It's a training pipeline problem.</h2>
+  <p class="lede">
+    Nigeria's fintech sector alone now drives roughly 22% of the country's GDP
+    growth — and hiring is its number-one operational constraint, not
+    demand<sup>4</sup>. The banks competing with fintechs for the same
+    small pool of "digitally fluent" hires are bidding against a shortage
+    that a structured training pipeline can actually solve.
+  </p>
+  <p class="body-text">
+    70% of employers report real difficulty finding qualified digital
+    candidates, and 77% now treat digital skill as a critical hiring
+    criterion rather than a bonus<sup>4</sup>. Nigeria has just <b>25,760</b>
+    cybersecurity professionals for a population of over 220 million<sup>1</sup>.
+    That gap doesn't close by widening the job posting — it closes by
+    training the graduates already applying.
+  </p>
+
+  <div class="chart-card">
+    <div class="chart-title">Nigeria's digital hiring gap</div>
+    <div class="chart-note">Share of relevant demand employers can't currently fill</div>
+    <svg id="chart-gap" viewBox="0 0 640 190" role="img" aria-label="Bar chart: 70 percent of employers struggle to find qualified digital talent, 90.6 percent cybersecurity workforce gap"></svg>
+  </div>
+</section>
+
+<!-- 02 THE EXPOSURE -->
+<section class="block col">
+  <div class="divider"><span class="num">02</span><span class="ttl">The Exposure</span><span class="ticks"></span></div>
+  <h2 class="head">Banking is the single most-targeted industry there is.</h2>
+  <p class="lede">
+    Attackers don't split their attention evenly across sectors. Financial
+    services absorbs a larger share of global phishing volume than any other
+    industry — and almost none of it is stopped by a firewall.
+  </p>
+  <div class="risk-row">
+    <div class="risk-tile"><div class="v">30.9%</div><div class="l">of all phishing attacks worldwide target financial services — the single most-targeted industry<sup>5</sup></div></div>
+    <div class="risk-tile"><div class="v">4,361</div><div class="l">attempted cyberattacks the average Nigerian organization faced per week as of June 2026 — Africa's 2nd most-attacked country<sup>6</sup></div></div>
+    <div class="risk-tile"><div class="v">#1</div><div class="l">rank of social engineering and insider abuse as the most prevalent fraud technique in Nigerian banks<sup>7</sup></div></div>
+  </div>
+  <p class="body-text">
+    Globally, 98% of cyberattacks rely on social engineering rather than a
+    technical exploit<sup>3</sup>, and Verizon's Data Breach Investigations
+    Report found financial gain driving 90% of confirmed breaches in the
+    finance and insurance sector<sup>5</sup>. The entry point is a person
+    clicking, approving, or trusting something they shouldn't — which makes
+    workforce training the control that every other control depends on.
+  </p>
+</section>
+
+<!-- 03 THE MARKET -->
+<section class="block col">
+  <div class="divider"><span class="num">03</span><span class="ttl">The Market</span><span class="ticks"></span></div>
+  <h2 class="head">Digital banking in Nigeria isn't slowing down for anyone.</h2>
+  <p class="lede">
+    Every year your staff spend under-trained is a year of a fast-growing
+    digital market running through hands that aren't ready for its scale.
+  </p>
+
+  <div class="chart-card">
+    <div class="chart-title">Nigeria digital payments market, $ billions</div>
+    <div class="chart-note">2024–2028, 10.06% CAGR<sup>8</sup></div>
+    <svg id="chart-market" viewBox="0 0 640 220" role="img" aria-label="Line chart showing Nigeria's digital payments market growing from 21.4 billion dollars in 2024 to 31.28 billion dollars in 2028"></svg>
+  </div>
+
+  <p class="body-text" style="margin-top:26px;">
+    Real-time transactions alone are forecast to reach <b>8.8 billion</b>
+    annually by 2026, unlocking an estimated <b>$6 billion</b> in additional
+    GDP — over 1% of the entire country's output moving through rails your
+    frontline and compliance staff have to understand, monitor, and defend<sup>8</sup>.
+    Formal financial inclusion has pushed past 64%, meaning the customer base
+    transacting digitally is growing faster than most banks' internal digital
+    literacy is<sup>9</sup>.
+  </p>
+</section>
+
+<!-- 04 THE RETURN -->
+<section class="block col">
+  <div class="divider"><span class="num">04</span><span class="ttl">The Return</span><span class="ticks"></span></div>
+  <h2 class="head">The investment already made is working. It needs a second half.</h2>
+  <p class="lede">
+    Sector-wide fraud losses fell sharply in 2025 — genuine proof that
+    technology and oversight spend is paying off. But look at what's left
+    standing after that spend, and the shape of the remaining problem is
+    unmistakable.
+  </p>
+
+  <div class="chart-card">
+    <div class="chart-title">Electronic payment fraud losses, ₦ billions</div>
+    <div class="chart-note">Nigerian banking sector, year-over-year<sup>7</sup></div>
+    <svg id="chart-fraud" viewBox="0 0 640 190" role="img" aria-label="Bar chart showing electronic payment fraud losses falling from 52.26 billion naira in 2024 to 25.85 billion naira in 2025, a 51 percent drop"></svg>
+  </div>
+
+  <p class="body-text" style="margin-top:26px;">
+    That's a genuine <b>51% drop</b> — proof the sector's technology and
+    monitoring investment works. But fraud incidents still totaled
+    <b>67,518</b> in 2025, and the average amount extracted per successful
+    attack actually <b>rose to ₦44,454</b><sup>7</sup>. Fewer attempts are
+    getting through — the ones that do are getting smarter, and they're
+    getting through the same door every time: a person, not a firewall.
+    That's the half of the investment technology alone can't finish.
+  </p>
+</section>
+
+<!-- 05 THE MANDATE -->
+<section class="block col">
+  <div class="divider"><span class="num">05</span><span class="ttl">The Mandate</span><span class="ticks"></span></div>
+  <h2 class="head">Staff cybersecurity training isn't optional. CBN made it a requirement.</h2>
+  <p class="lede">
+    The Central Bank of Nigeria's Risk-Based Cybersecurity Framework for
+    Deposit Money Banks and Payment Service Banks has been mandatory since
+    1 July 2024<sup>10</sup>.
+  </p>
+  <p class="body-text">
+    Its ten parts include explicit "awareness and training" and "personnel
+    security" pillars: <b>every employee, from junior staff to senior
+    executives, must be trained on cyber hygiene, phishing recognition, and
+    incident reporting</b>, with periodic phishing exercises to test whether
+    that training actually holds<sup>10</sup>. Banks must also complete an
+    annual cybersecurity self-assessment (CSAT) and participate in
+    NigFinCERT — non-compliance carries fines, and in serious cases, license
+    consequences<sup>10</sup>.
+  </p>
+  <p class="body-text">
+    Paleon holds no CBN endorsement and doesn't perform official CSAT
+    assessments — we won't claim otherwise. What Paleon's Cyber Security
+    Fundamentals course does is train staff at exactly the skill layer that
+    framework requires: recognizing phishing, understanding social
+    engineering, and knowing how to report an incident before it becomes a
+    breach. It's the training input the compliance requirement already
+    assumes someone is providing.
+  </p>
+</section>
+
+<!-- 06 THE PIPELINE -->
+<section class="block wide">
+  <div class="divider"><span class="num">06</span><span class="ttl">The Pipeline</span><span class="ticks"></span></div>
+  <h2 class="head">Three courses, mapped directly to where a bank is exposed.</h2>
+  <p class="lede">
+    Each course is a full curriculum — not a webinar — with real lessons,
+    illustrated concepts, video instruction, graded quizzes, and a capstone
+    project built around an industry scenario.
+  </p>
+
+  <div class="table-wrap">
+    <table class="matrix">
+      <thead>
+        <tr><th>Business need</th><th>Paleon course</th><th>Format</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="need">Fraud awareness, phishing resilience, CBN training-mandate compliance</span></td>
+          <td class="course">Cyber Security Fundamentals</td>
+          <td class="fmt">12 wks · 24 lessons</td>
+        </tr>
+        <tr>
+          <td><span class="need">Customer acquisition in a fintech-competitive market</span></td>
+          <td class="course">Digital Marketing</td>
+          <td class="fmt">8 wks · 16 lessons</td>
+        </tr>
+        <tr>
+          <td><span class="need">Digital customer engagement, brand reputation, complaint handling</span></td>
+          <td class="course">Social Media Management</td>
+          <td class="fmt">8 wks · 16 lessons</td>
+        </tr>
+        <tr class="aside">
+          <td colspan="3">Also available: HSE Fundamentals, GIS &amp; Drone Mapping, and Renewable Energy &amp; Digital Systems — relevant to banks with facilities/data-centre HSE needs or sustainability-linked and green-finance lending teams evaluating energy projects.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 07 THE PROOF -->
+<section class="block col">
+  <div class="divider"><span class="num">07</span><span class="ttl">The Proof</span><span class="ticks"></span></div>
+  <h2 class="head">Built as a real curriculum, priced honestly.</h2>
+  <p class="lede">
+    Nothing here is a landing page over an empty course shell. Every lesson
+    listed below is live, written, illustrated, and video-supported today.
+  </p>
+  <div class="proof-grid">
+    <div class="proof-tile"><div class="v">104</div><div class="l">live lessons across 6 courses</div></div>
+    <div class="proof-tile"><div class="v">48</div><div class="l">weeks of combined curriculum depth</div></div>
+    <div class="proof-tile"><div class="v">6</div><div class="l">capstone projects graded to real industry scenarios</div></div>
+    <div class="proof-tile"><div class="v">₦100K–250K</div><div class="l">per learner, per course — one transparent price list, no hidden bundling</div></div>
+  </div>
+  <p class="body-text" style="margin-top:26px;">
+    We won't quote you a bulk discount we haven't actually built pricing for,
+    and we won't claim an accreditation we don't hold. What we'll show you,
+    on request, is the actual course content — the lessons your staff would
+    sit through, not a syllabus outline.
+  </p>
+</section>
+
+<!-- 08 NEXT STEP -->
+<div class="cta-block" id="next-step">
+  <div class="cta-inner">
+    <div class="divider"><span class="num">08</span><span class="ttl">The Next Step</span><span class="ticks"></span></div>
+    <h2 class="head">Start with one course, one team.</h2>
+    <p class="lede">
+      You don't need a bank-wide rollout to find out whether this works. The
+      lowest-risk way to evaluate Paleon is a single pilot cohort — Cyber
+      Security Fundamentals for a branch network or fraud/compliance team —
+      before any larger conversation.
+    </p>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 1</div><div class="t">Scope the cohort</div>A short call to match your team's actual gap to one course, not the whole catalog.</div>
+      <div class="step"><div class="n">STEP 2</div><div class="t">Review real content</div>We walk your L&amp;D or compliance lead through the live lessons, quizzes, and capstone your staff would complete.</div>
+      <div class="step"><div class="n">STEP 3</div><div class="t">Run a paid pilot</div>One cohort, transparent per-learner pricing, a defined completion &amp; assessment date.</div>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="mailto:corporate@paleontraining.com?subject=Corporate%20training%20pilot%20-%20Banking%20%26%20Financial%20Services">Email corporate@paleontraining.com →</a>
+      <a class="btn btn-ghost" href="https://paleontraining.com" target="_blank" rel="noopener">View the courses at paleontraining.com</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wide cols">
+    <div>
+      <h3>Sources</h3>
+      <ol>
+        <li>Nigeria cybersecurity workforce gap, 90.6%, and 25,760 cybersecurity professionals nationally — NITDA, via CompTIA and TC Insights digital-skills reporting.</li>
+        <li>₦280.90 billion combined 2025 technology and cybersecurity investment across Access Holdings, GTCO, and UBA — NIBSS 2026 Nigeria Electronic Fraud Forum reporting via TechCabal.</li>
+        <li>98% of cyberattacks rely on social engineering — social engineering statistics reporting (Secureframe, Spacelift), 2026.</li>
+        <li>70% of employers report difficulty finding qualified digital candidates, 77% cite digital skill as a critical hiring criterion, fintech driving ~22% of GDP growth with hiring as the top operational constraint — Business &amp; Financial Times / BusinessDay NG fintech talent-gap reporting, 2026.</li>
+        <li>Financial services as 30.9% share of global phishing targets; financial gain driving 90% of confirmed Finance &amp; Insurance breaches — Verizon 2025 Data Breach Investigations Report; phishing-industry-target reporting (PowerDMARC, VikingCloud).</li>
+        <li>4,361 attempted attacks per week facing the average Nigerian organization, June 2026; Nigeria ranked Africa's 2nd most-attacked country — Dark Reading, Nigeria cybersecurity reporting.</li>
+        <li>Digital payment fraud losses: ₦52.26B (2024) → ₦25.85B (2025), a 51% drop; 67,518 fraud incidents in 2025; average value per successful attack rising to ₦44,454; social engineering/insider abuse as the most prevalent fraud technique — Nigeria Inter-Bank Settlement System (NIBSS), 2026 Nigeria Electronic Fraud Forum.</li>
+        <li>Nigeria digital payments market growing at a 10.06% CAGR toward $31.28B by 2028; real-time transactions forecast to 8.8 billion annually by 2026, unlocking ~$6B in additional GDP — digital finance market sizing reporting.</li>
+        <li>Formal financial inclusion surpassing 64% in 2025 — Nigeria financial inclusion reporting.</li>
+        <li>CBN Risk-Based Cybersecurity Framework for Deposit Money Banks and Payment Service Banks, mandatory from 1 July 2024, including staff-training, phishing-exercise, annual CSAT, and NigFinCERT requirements — Central Bank of Nigeria; DataGuidance and Securiti regulatory summaries.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>About this brief</h3>
+      <p class="disclaimer">
+        Prepared by Paleon Training as an introduction for bank and financial
+        institution decision-makers in Nigeria. External figures are drawn
+        from the cited public sources as of August 2026 and are presented for
+        context, not guaranteed forward projections. Paleon Training is not
+        CBN-, NDIC-, or ICAN-accredited and does not perform official CBN
+        CSAT assessments; course content is built to align with the
+        regulatory frameworks named above, not issued under their authority.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function(){
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){
+    const e = document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  const cssVar = (name) => 'var(' + name + ')';
+
+  const tooltip = document.getElementById('tooltip');
+  function showTip(evt, headHtml, bodyHtml){
+    tooltip.innerHTML = '<div class="tt-head">'+headHtml+'</div>'+(bodyHtml||'');
+    tooltip.classList.add('show');
+    moveTip(evt);
+  }
+  function moveTip(evt){
+    const pad = 14;
+    let x = evt.clientX + pad, y = evt.clientY + pad;
+    const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+    if(x + tw > window.innerWidth - 8) x = evt.clientX - tw - pad;
+    if(y + th > window.innerHeight - 8) y = evt.clientY - th - pad;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  }
+  function hideTip(){ tooltip.classList.remove('show'); }
+
+  /* ---------- Chart 1: bar — hiring gap ---------- */
+  (function(){
+    const svg = document.getElementById('chart-gap');
+    const gold = cssVar('--gold'), line = cssVar('--line');
+    const data = [
+      {label:"Employers struggling to hire digital talent", value:70, note:"70% report real difficulty hiring"},
+      {label:"Cybersecurity workforce", value:90.6, note:"90.6% of demand unfilled"}
+    ];
+    const W=640,H=190, top=10, bottom=44, left=230, right=70;
+    const plotW = W-left-right, plotH = H-top-bottom;
+    const maxV = 100;
+    [0,25,50,75,100].forEach(g=>{
+      const x = left + (g/maxV)*plotW;
+      svg.appendChild(el('line',{x1:x,y1:top,x2:x,y2:top+plotH,stroke:line,'stroke-width':1}));
+      const t = el('text',{x:x,y:top+plotH+18,'text-anchor':'middle',class:'axis-label'});
+      t.textContent = g+'%'; svg.appendChild(t);
+    });
+    const barH = 30, gap = 34;
+    data.forEach((d,i)=>{
+      const y = top + i*(barH+gap) + 8;
+      const w = (d.value/maxV)*plotW;
+      const lbl = el('text',{x:left-14,y:y+barH/2+4,'text-anchor':'end',class:'cat-label'});
+      lbl.textContent = d.label; svg.appendChild(lbl);
+      const bar = el('rect',{x:left,y:y,width:0,height:barH,rx:4,fill:gold,class:'hover-target'});
+      bar.style.transition='width .5s ease';
+      svg.appendChild(bar);
+      requestAnimationFrame(()=>bar.setAttribute('width', Math.max(w,4)));
+      const val = el('text',{x:left+w+10,y:y+barH/2+4,class:'value-label'});
+      val.textContent = d.value+'%'; svg.appendChild(val);
+      bar.addEventListener('mousemove',(e)=>showTip(e, d.label, d.note));
+      bar.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  /* ---------- Chart 2: line/area — digital payments market ---------- */
+  (function(){
+    const svg = document.getElementById('chart-market');
+    const slate = cssVar('--slate'), line = cssVar('--line');
+    const years = [2024,2025,2026,2027,2028];
+    const vals = [21.39,23.54,25.90,28.50,31.28];
+    const W=640,H=220, top=16, bottom=36, left=52, right=20;
+    const plotW=W-left-right, plotH=H-top-bottom;
+    const maxV = 35;
+    [0,8.75,17.5,26.25,35].forEach(g=>{
+      const y = top+plotH-(g/maxV)*plotH;
+      svg.appendChild(el('line',{x1:left,y1:y,x2:left+plotW,y2:y,stroke:line,'stroke-width':1}));
+      const t = el('text',{x:left-10,y:y+4,'text-anchor':'end',class:'axis-label'});
+      t.textContent = '$'+Math.round(g)+'B'; svg.appendChild(t);
+    });
+    const x = (i)=> left + (i/(years.length-1))*plotW;
+    const y = (v)=> top+plotH-(v/maxV)*plotH;
+    years.forEach((yr,i)=>{
+      const t = el('text',{x:x(i),y:top+plotH+22,'text-anchor':'middle',class:'axis-label'});
+      t.textContent = yr; svg.appendChild(t);
+    });
+    let areaPts = 'M'+x(0)+','+(top+plotH);
+    vals.forEach((v,i)=> areaPts += ' L'+x(i)+','+y(v));
+    areaPts += ' L'+x(vals.length-1)+','+(top+plotH)+' Z';
+    svg.appendChild(el('path',{d:areaPts, fill:slate, opacity:0.12, stroke:'none'}));
+    let linePts = '';
+    vals.forEach((v,i)=> linePts += (i===0?'M':'L')+x(i)+','+y(v));
+    const linePath = el('path',{d:linePts, fill:'none', stroke:slate, 'stroke-width':2, 'stroke-linejoin':'round','stroke-linecap':'round'});
+    svg.appendChild(linePath);
+    const len = linePath.getTotalLength ? linePath.getTotalLength() : 800;
+    linePath.style.strokeDasharray = len;
+    linePath.style.strokeDashoffset = len;
+    linePath.style.transition = 'stroke-dashoffset 1s ease';
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ linePath.style.strokeDashoffset = 0; }); });
+    vals.forEach((v,i)=>{
+      const ring = el('circle',{cx:x(i),cy:y(v),r:6,fill:cssVar('--surface')});
+      const dot = el('circle',{cx:x(i),cy:y(v),r:4,fill:slate,class:'hover-target'});
+      svg.appendChild(ring); svg.appendChild(dot);
+      dot.addEventListener('mousemove',(e)=>showTip(e, years[i], '$'+v.toFixed(2)+'B market size'));
+      dot.addEventListener('mouseleave', hideTip);
+      ring.addEventListener('mousemove',(e)=>showTip(e, years[i], '$'+v.toFixed(2)+'B market size'));
+      ring.addEventListener('mouseleave', hideTip);
+    });
+    const endLbl = el('text',{x:x(vals.length-1)-4,y:y(vals[vals.length-1])-14,'text-anchor':'end',class:'value-label'});
+    endLbl.textContent = '$31.28B';
+    svg.appendChild(endLbl);
+  })();
+
+  /* ---------- Chart 3: bar — fraud loss year over year ---------- */
+  (function(){
+    const svg = document.getElementById('chart-fraud');
+    const gold = cssVar('--gold'), slate = cssVar('--slate'), line = cssVar('--line');
+    const data = [
+      {label:'2024', value:52.26, note:'₦52.26B lost to electronic payment fraud', color: gold},
+      {label:'2025', value:25.85, note:'₦25.85B lost — a 51% drop', color: slate}
+    ];
+    const W=640,H=190, top=10, bottom=44, left=100, right=110;
+    const plotW=W-left-right, plotH=H-top-bottom;
+    const maxV=60;
+    [0,15,30,45,60].forEach(g=>{
+      const x = left + (g/maxV)*plotW;
+      svg.appendChild(el('line',{x1:x,y1:top,x2:x,y2:top+plotH,stroke:line,'stroke-width':1}));
+      const t = el('text',{x:x,y:top+plotH+18,'text-anchor':'middle',class:'axis-label'});
+      t.textContent = '₦'+g+'B'; svg.appendChild(t);
+    });
+    const barH=32, gap=32;
+    data.forEach((d,i)=>{
+      const y = top + i*(barH+gap) + 6;
+      const w = (d.value/maxV)*plotW;
+      const lbl = el('text',{x:left-14,y:y+barH/2+4,'text-anchor':'end',class:'cat-label'});
+      lbl.textContent = d.label; svg.appendChild(lbl);
+      const bar = el('rect',{x:left,y:y,width:0,height:barH,rx:4,fill:d.color,class:'hover-target'});
+      bar.style.transition='width .5s ease';
+      svg.appendChild(bar);
+      requestAnimationFrame(()=>bar.setAttribute('width', Math.max(w,4)));
+      const val = el('text',{x:left+w+10,y:y+barH/2+4,class:'value-label'});
+      val.textContent = '₦'+d.value.toFixed(2)+'B'; svg.appendChild(val);
+      bar.addEventListener('mousemove',(e)=>showTip(e, d.label, d.note));
+      bar.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  document.addEventListener('mousemove', function(e){
+    if(tooltip.classList.contains('show')) moveTip(e);
+  });
+})();
+</script>
+
+</body>
+</html>

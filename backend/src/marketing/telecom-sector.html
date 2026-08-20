@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Coverage Gap Brief</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,680&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F2F1ED;
+    --surface:#E6E4DC;
+    --surface-2:#D9D6CB;
+    --ink:#1A1F24;
+    --ink-2:#4E555C;
+    --ink-3:#767D85;
+    --line:#CFCBC0;
+    --cyan:#0090A8;
+    --cyan-text:#00738A;
+    --coral:#C1592E;
+    --coral-text:#A34A25;
+    --critical:#A63333;
+    --critical-bg:#F1DAD6;
+    --font-display:'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+    --font-sans:'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif;
+    --font-mono:'IBM Plex Mono','SF Mono',Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10151A;
+      --surface:#171E25;
+      --surface-2:#1F2830;
+      --ink:#EDEEEA;
+      --ink-2:#ABB3B8;
+      --ink-3:#7E868C;
+      --line:#2B343B;
+      --cyan:#1E93A9;
+      --cyan-text:#4CB6CB;
+      --coral:#CC6B3D;
+      --coral-text:#E08D64;
+      --critical:#D96B5E;
+      --critical-bg:#2E1B18;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10151A;
+    --surface:#171E25;
+    --surface-2:#1F2830;
+    --ink:#EDEEEA;
+    --ink-2:#ABB3B8;
+    --ink-3:#7E868C;
+    --line:#2B343B;
+    --cyan:#1E93A9;
+    --cyan-text:#4CB6CB;
+    --coral:#CC6B3D;
+    --coral-text:#E08D64;
+    --critical:#D96B5E;
+    --critical-bg:#2E1B18;
+  }
+
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-sans); line-height:1.55; font-size:16px; }
+  ::selection{ background:var(--cyan); color:#fff; }
+  a{ color:var(--cyan-text); }
+  h1,h2,h3{ font-family:var(--font-sans); text-wrap:balance; margin:0; }
+  p{ margin:0; }
+  .col{ max-width:800px; margin:0 auto; padding:0 24px; }
+  .wide{ max-width:1040px; margin:0 auto; padding:0 24px; }
+
+  .topbar{
+    position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; background:color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:13px; letter-spacing:.04em; color:var(--ink); }
+  .brand .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 3px color-mix(in srgb, var(--cyan) 20%, transparent); }
+  .topbar a.cta{
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.03em; color:var(--ink); text-decoration:none;
+    border:1px solid var(--line); padding:7px 13px; border-radius:3px; white-space:nowrap;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .topbar a.cta:hover{ border-color:var(--cyan); color:var(--cyan-text); }
+
+  .hero{ padding:76px 24px 40px; }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--cyan-text); display:flex; align-items:center; gap:10px; margin-bottom:20px;
+  }
+  .eyebrow .rule{ height:1px; width:34px; background:var(--cyan); opacity:.6; }
+  .hero h1{
+    font-family:var(--font-display); font-weight:600; font-optical-sizing:auto;
+    font-size:clamp(32px,5.2vw,54px); line-height:1.1; letter-spacing:-.01em; color:var(--ink);
+  }
+  .hero .sub{ margin-top:22px; font-size:18px; line-height:1.6; color:var(--ink-2); max-width:680px; }
+  .hero .sub b{ color:var(--ink); font-weight:600; }
+
+  .stat-strip{
+    margin-top:48px; display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  }
+  .stat-strip .tile{ background:var(--surface); padding:20px 18px; }
+  .stat-strip .tile .v{ font-family:var(--font-mono); font-weight:600; font-size:26px; color:var(--ink); }
+  .stat-strip .tile .l{ margin-top:6px; font-size:12.5px; color:var(--ink-2); line-height:1.4; }
+  @media (max-width:760px){ .stat-strip{ grid-template-columns:repeat(2,1fr); } }
+
+  section.block{ padding:64px 0 8px; }
+  .divider{ display:flex; align-items:center; gap:14px; margin-bottom:34px; }
+  .divider .num{ font-family:var(--font-mono); font-size:12.5px; color:var(--ink-3); letter-spacing:.04em; }
+  .divider .ttl{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); font-weight:600; }
+  .divider .ticks{ flex:1; height:6px; position:relative; }
+  .divider .ticks::before{
+    content:""; position:absolute; inset:0;
+    background-image:repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 10px);
+    background-position:bottom left; height:6px; bottom:0;
+  }
+
+  h2.head{ font-family:var(--font-display); font-weight:600; font-size:clamp(24px,3vw,32px); line-height:1.2; color:var(--ink); max-width:640px; }
+  .lede{ margin-top:14px; font-size:16.5px; color:var(--ink-2); max-width:660px; }
+  .body-text{ margin-top:18px; font-size:15.5px; color:var(--ink-2); max-width:660px; }
+  .body-text + .body-text{ margin-top:12px; }
+  .body-text b{ color:var(--ink); font-weight:600; }
+
+  .risk-row{ margin-top:30px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .risk-tile{ border:1px solid var(--line); border-radius:4px; padding:18px 18px 16px; background:var(--surface); }
+  .risk-tile .v{ font-family:var(--font-mono); font-weight:600; font-size:24px; color:var(--critical); }
+  .risk-tile .l{ margin-top:6px; font-size:13px; color:var(--ink-2); line-height:1.45; }
+  @media (max-width:760px){ .risk-row{ grid-template-columns:1fr; } }
+
+  .chart-card{ margin-top:28px; border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:24px 24px 16px; }
+  .chart-card .chart-title{ font-size:13.5px; font-weight:600; color:var(--ink); }
+  .chart-card .chart-note{ font-size:12.5px; color:var(--ink-3); margin-top:3px; }
+  .chart-card svg{ display:block; width:100%; height:auto; margin-top:14px; overflow:visible; }
+  .chart-card .axis-label{ font-family:var(--font-mono); font-size:10.5px; fill:var(--ink-3); }
+  .chart-card .value-label{ font-family:var(--font-mono); font-size:11.5px; fill:var(--ink); font-weight:600; }
+  .chart-card .cat-label{ font-family:var(--font-sans); font-size:12.5px; fill:var(--ink-2); }
+
+  .hover-target{ cursor:pointer; }
+  .tooltip{
+    position:fixed; pointer-events:none; z-index:50; background:var(--ink); color:var(--paper);
+    font-family:var(--font-mono); font-size:12px; line-height:1.5; padding:8px 11px; border-radius:4px;
+    opacity:0; transform:translateY(4px); transition:opacity .12s ease, transform .12s ease; max-width:230px;
+  }
+  .tooltip.show{ opacity:1; transform:translateY(0); }
+  .tooltip .tt-head{ font-weight:600; margin-bottom:2px; }
+
+  .table-wrap{ margin-top:28px; overflow-x:auto; border:1px solid var(--line); border-radius:6px; }
+  table.matrix{ width:100%; border-collapse:collapse; min-width:760px; background:var(--surface); }
+  table.matrix th, table.matrix td{ padding:14px 16px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); font-size:13.5px; }
+  table.matrix th{ font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:600; background:var(--surface-2); }
+  table.matrix tr:last-child td{ border-bottom:none; }
+  table.matrix td.course{ font-weight:600; color:var(--ink); white-space:nowrap; }
+  table.matrix td.fmt{ font-family:var(--font-mono); font-size:12px; color:var(--ink-2); white-space:nowrap; }
+  table.matrix td .need{ color:var(--ink-2); }
+  table.matrix tr.aside td{ font-size:13px; color:var(--ink-3); font-style:italic; }
+
+  .proof-grid{ margin-top:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .proof-tile{ border:1px solid var(--line); border-radius:4px; padding:18px; background:var(--surface); }
+  .proof-tile .v{ font-family:var(--font-mono); font-weight:600; font-size:22px; color:var(--ink); }
+  .proof-tile .l{ margin-top:5px; font-size:12.5px; color:var(--ink-2); }
+  @media (max-width:760px){ .proof-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  .cta-block{ margin:88px 0 0; padding:56px 24px 64px; background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .cta-inner{ max-width:800px; margin:0 auto; }
+  .cta-block h2.head{ max-width:100%; }
+  .cta-actions{ margin-top:26px; display:flex; gap:12px; flex-wrap:wrap; }
+  .btn{ font-family:var(--font-mono); font-size:13.5px; letter-spacing:.02em; padding:13px 22px; border-radius:3px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+  .btn-primary{ background:var(--cyan); color:#fff; }
+  .btn-primary:hover{ background:var(--cyan-text); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--ink-3); }
+  .steps{ margin-top:34px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .step{ font-size:13.5px; color:var(--ink-2); }
+  .step .n{ font-family:var(--font-mono); color:var(--cyan-text); font-weight:600; font-size:12.5px; }
+  .step .t{ margin-top:5px; color:var(--ink); font-weight:600; font-size:14px; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
+
+  footer{ padding:44px 24px 90px; }
+  footer .cols{ display:grid; grid-template-columns:1.2fr 1fr; gap:40px; }
+  footer h3{ font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:14px; }
+  footer ol{ margin:0; padding-left:18px; font-size:11.5px; color:var(--ink-3); line-height:1.9; }
+  footer ol li{ margin-bottom:2px; }
+  footer .disclaimer{ font-size:12.5px; color:var(--ink-3); max-width:420px; line-height:1.6; }
+  @media (max-width:760px){ footer .cols{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> PALEON TRAINING — CORPORATE BRIEF</div>
+  <a class="cta" href="#next-step">Talk to us →</a>
+</div>
+
+<div class="hero col">
+  <div class="eyebrow"><span class="rule"></span>PREPARED FOR TELECOM OPERATORS IN NIGERIA</div>
+  <h1>Your network is growing faster than your workforce can keep up.</h1>
+  <p class="sub">
+    Nigeria added over 20 million active mobile connections in the sixteen
+    months to May 2026, operators are upgrading 12,000 sites to 4G/5G this
+    year alone, and SIM-linked fraud is up 300% since 2022 — while 87% of
+    Nigerian employers call network and cybersecurity skills critical, and
+    only 11% of workers have the advanced digital skills the industry now
+    needs. <b>Paleon Training builds the graduate pipeline that closes that
+    gap</b>: network-adjacent GIS &amp; drone skills, off-grid power for
+    towers, cybersecurity, and customer-facing digital skills, priced and
+    delivered for Nigeria.
+  </p>
+
+  <div class="stat-strip">
+    <div class="tile"><div class="v">189.7M</div><div class="l">active mobile subscriptions in Nigeria, an all-time high as of May 2026<sup>1</sup></div></div>
+    <div class="tile"><div class="v">87%</div><div class="l">of Nigerian employers rank network &amp; cybersecurity skills as critical — above the 70% global average<sup>2</sup></div></div>
+    <div class="tile"><div class="v">$400M</div><div class="l">operators' estimated annual diesel spend just to keep towers running<sup>3</sup></div></div>
+    <div class="tile"><div class="v">6</div><div class="l">Paleon courses built specifically for this transition — not a generic online catalog</div></div>
+  </div>
+</div>
+
+<!-- 01 THE SIGNAL -->
+<section class="block col">
+  <div class="divider"><span class="num">01</span><span class="ttl">The Signal</span><span class="ticks"></span></div>
+  <h2 class="head">The industry doesn't have a headcount problem. It has a readiness problem.</h2>
+  <p class="lede">
+    Nearly 30% of critical telecom positions — ICT engineers, data analysts
+    and scientists, desktop support, software developers — are hard to fill
+    in Nigeria right now, even as the sector adds tens of millions of new
+    subscribers a year<sup>4</sup>.
+  </p>
+  <p class="body-text">
+    The most urgent shortages sit exactly where the network is expanding:
+    <b>5G deployment specialists, cybersecurity analysts, cloud engineers,
+    fibre optic technicians, commissioning engineers, and data-centre
+    operators</b><sup>2</sup>. Meanwhile brain drain keeps pulling
+    experienced engineers toward Canada, the UK, and the US<sup>2</sup> —
+    which makes a steady, structured graduate pipeline more valuable than
+    another round of poaching from a shrinking senior pool.
+  </p>
+
+  <div class="chart-card">
+    <div class="chart-title">Nigeria's telecom skills supply gap</div>
+    <div class="chart-note">Advanced digital skills employers require vs. what the workforce currently has</div>
+    <svg id="chart-gap" viewBox="0 0 640 190" role="img" aria-label="Bar chart: employers require advanced digital skills in 30 percent of roles, but only 11 percent of workers currently possess them"></svg>
+  </div>
+</section>
+
+<!-- 02 THE EXPOSURE -->
+<section class="block col">
+  <div class="divider"><span class="num">02</span><span class="ttl">The Exposure</span><span class="ticks"></span></div>
+  <h2 class="head">Every SIM card is a door. Too many are unlocked.</h2>
+  <p class="lede">
+    As telecom identity becomes the backbone of mobile banking and digital
+    payments, the SIM itself has become the weakest link in the chain — and
+    the attackers found it first.
+  </p>
+  <div class="risk-row">
+    <div class="risk-tile"><div class="v">+300%</div><div class="l">increase in reported SIM-swap fraud cases in Nigeria, 2022 to 2024<sup>5</sup></div></div>
+    <div class="risk-tile"><div class="v">₦12.5B</div><div class="l">lost to telecom-linked financial crimes between 2019 and 2023, per the NCC<sup>5</sup></div></div>
+    <div class="risk-tile"><div class="v">63.4%</div><div class="l">of identity-linked digital fraud in Nigeria concentrated in Lagos alone<sup>5</sup></div></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">SIM-swap fraud cases, indexed</div>
+    <div class="chart-note">2022 = 100. A 300% increase means 2024 sits at 400<sup>5</sup></div>
+    <svg id="chart-fraud" viewBox="0 0 640 190" role="img" aria-label="Bar chart showing SIM swap fraud cases indexed at 100 in 2022 rising to 400 in 2024, a 300 percent increase"></svg>
+  </div>
+</section>
+
+<!-- 03 THE MARKET -->
+<section class="block col">
+  <div class="divider"><span class="num">03</span><span class="ttl">The Market</span><span class="ticks"></span></div>
+  <h2 class="head">The subscriber base isn't waiting for the workforce to catch up.</h2>
+  <p class="lede">
+    Every month of growth adds more subscribers, more data traffic, and more
+    surface area for the exact roles the sector can't currently fill.
+  </p>
+
+  <div class="chart-card">
+    <div class="chart-title">Nigeria active mobile subscriptions, millions</div>
+    <div class="chart-note">NCC subscriber data, January 2025 – May 2026<sup>1</sup></div>
+    <svg id="chart-market" viewBox="0 0 640 220" role="img" aria-label="Line chart showing active mobile subscriptions rising from 169.3 million in January 2025 to 189.68 million in May 2026"></svg>
+  </div>
+
+  <p class="body-text" style="margin-top:26px;">
+    Telecoms contributed <b>9.19%</b> of Nigeria's entire GDP in the first
+    quarter of 2026<sup>1</sup>, and operators are mid-upgrade on
+    <b>12,000 sites</b> this year alone, layering additional spectrum onto
+    existing 4G infrastructure and converting older 2G/3G sites as 5G
+    slowly scales past its current 4.2% market share<sup>1</sup>. Every one
+    of those upgrades needs people who understand the network, the site,
+    and the power behind it — not just more towers.
+  </p>
+</section>
+
+<!-- 04 THE RETURN -->
+<section class="block col">
+  <div class="divider"><span class="num">04</span><span class="ttl">The Return</span><span class="ticks"></span></div>
+  <h2 class="head">The single biggest line item on a tower budget is a training problem in disguise.</h2>
+  <p class="lede">
+    Energy, not equipment, is the largest recurring cost of keeping a
+    Nigerian cell site on air — and it's a cost that skilled staff can
+    directly shrink.
+  </p>
+  <div class="risk-row">
+    <div class="risk-tile" style="--critical:var(--coral);"><div class="v">60%</div><div class="l">of operating cost at a remote tower site can be energy alone<sup>3</sup></div></div>
+    <div class="risk-tile" style="--critical:var(--coral);"><div class="v">-30%</div><div class="l">fuel spend cut after MTN's South Sudan operations converted sites to solar power<sup>3</sup></div></div>
+    <div class="risk-tile" style="--critical:var(--coral);"><div class="v">-50%+</div><div class="l">diesel use cut at Airtel Africa sites in Zambia and Congo after solar-hybrid conversion, with ENGIE Energy Access<sup>3</sup></div></div>
+  </div>
+  <p class="body-text" style="margin-top:26px;">
+    Diesel prices rose as much as 200% in a year after Nigeria's 2023 fuel
+    subsidy removal, and operators nationally now spend roughly
+    <b>$400 million a year</b> just to keep diesel-reliant towers
+    running<sup>3</sup>. Nigeria's telecom regulator is actively encouraging
+    operators to fold towers into solar minigrids<sup>3</sup> — but a solar
+    hybrid site doesn't run itself. It needs field staff who understand
+    both the power system and the site, which is exactly the ground Paleon's
+    Renewable Energy &amp; Digital Systems course covers, alongside GIS &amp;
+    Drone Mapping for the site-planning and inspection work around it.
+  </p>
+</section>
+
+<!-- 05 THE MANDATE -->
+<section class="block col">
+  <div class="divider"><span class="num">05</span><span class="ttl">The Mandate</span><span class="ticks"></span></div>
+  <h2 class="head">Identity and data-protection obligations are tightening, not loosening.</h2>
+  <p class="lede">
+    Regulators are actively closing the exact gap SIM-swap fraud exploits —
+    and the response depends on staff who understand digital identity, not
+    just the underlying systems.
+  </p>
+  <p class="body-text">
+    In April 2026, the CBN and NCC signed an MoU establishing the Telecom
+    Identity Risk Management Portal (TIRM), a data-sharing platform that lets
+    banks and telcos jointly flag fraud linked to recycled, swapped, or
+    blacklisted numbers<sup>5</sup>. Under existing NCC rules, telecom
+    providers already can't access subscriber photographs or fingerprints
+    held in the NIMC database during SIM replacement<sup>5</sup> — a
+    deliberate data-protection constraint that puts more weight on staff
+    judgment and process discipline, not less.
+  </p>
+  <p class="body-text">
+    Paleon holds no NCC or NITDA/NDPR accreditation and won't claim
+    otherwise. What Paleon's Cyber Security Fundamentals course does is
+    train staff to actually recognize the fraud patterns, identity risks,
+    and data-handling discipline these frameworks assume someone on your
+    team already has.
+  </p>
+</section>
+
+<!-- 06 THE PIPELINE -->
+<section class="block wide">
+  <div class="divider"><span class="num">06</span><span class="ttl">The Pipeline</span><span class="ticks"></span></div>
+  <h2 class="head">Five courses, mapped directly to where a telecom operator is stretched.</h2>
+  <p class="lede">
+    Each course is a full curriculum — not a webinar — with real lessons,
+    illustrated concepts, video instruction, graded quizzes, and a capstone
+    project built around an industry scenario.
+  </p>
+
+  <div class="table-wrap">
+    <table class="matrix">
+      <thead>
+        <tr><th>Business need</th><th>Paleon course</th><th>Format</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="need">Network &amp; tower site planning, fibre route mapping, drone tower inspection</span></td>
+          <td class="course">GIS &amp; Drone Mapping</td>
+          <td class="fmt">8 wks · 16 lessons</td>
+        </tr>
+        <tr>
+          <td><span class="need">Off-grid &amp; solar-hybrid tower power, energy-cost reduction</span></td>
+          <td class="course">Renewable Energy &amp; Digital Systems</td>
+          <td class="fmt">8 wks · 16 lessons</td>
+        </tr>
+        <tr>
+          <td><span class="need">SIM/identity fraud awareness, subscriber data-handling discipline</span></td>
+          <td class="course">Cyber Security Fundamentals</td>
+          <td class="fmt">12 wks · 24 lessons</td>
+        </tr>
+        <tr>
+          <td><span class="need">Customer acquisition in a hyper-competitive subscriber market</span></td>
+          <td class="course">Digital Marketing</td>
+          <td class="fmt">8 wks · 16 lessons</td>
+        </tr>
+        <tr>
+          <td><span class="need">Complaint handling at scale, social customer service, brand reputation</span></td>
+          <td class="course">Social Media Management</td>
+          <td class="fmt">8 wks · 16 lessons</td>
+        </tr>
+        <tr class="aside">
+          <td colspan="3">Also available: HSE Fundamentals — relevant to field and tower-climbing safety teams.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 07 THE PROOF -->
+<section class="block col">
+  <div class="divider"><span class="num">07</span><span class="ttl">The Proof</span><span class="ticks"></span></div>
+  <h2 class="head">Built as a real curriculum, priced honestly.</h2>
+  <p class="lede">
+    Nothing here is a landing page over an empty course shell. Every lesson
+    listed below is live, written, illustrated, and video-supported today.
+  </p>
+  <div class="proof-grid">
+    <div class="proof-tile"><div class="v">104</div><div class="l">live lessons across 6 courses</div></div>
+    <div class="proof-tile"><div class="v">48</div><div class="l">weeks of combined curriculum depth</div></div>
+    <div class="proof-tile"><div class="v">6</div><div class="l">capstone projects graded to real industry scenarios</div></div>
+    <div class="proof-tile"><div class="v">₦100K–250K</div><div class="l">per learner, per course — one transparent price list, no hidden bundling</div></div>
+  </div>
+  <p class="body-text" style="margin-top:26px;">
+    We won't quote you a bulk discount we haven't actually built pricing for,
+    and we won't claim an accreditation we don't hold. What we'll show you,
+    on request, is the actual course content — the lessons your field and
+    customer-facing staff would sit through, not a syllabus outline.
+  </p>
+</section>
+
+<!-- 08 NEXT STEP -->
+<div class="cta-block" id="next-step">
+  <div class="cta-inner">
+    <div class="divider"><span class="num">08</span><span class="ttl">The Next Step</span><span class="ticks"></span></div>
+    <h2 class="head">Start with one course, one team.</h2>
+    <p class="lede">
+      You don't need a network-wide rollout to find out whether this works.
+      The lowest-risk way to evaluate Paleon is a single pilot cohort —
+      GIS &amp; Drone Mapping for a network-rollout team, or Cyber Security
+      Fundamentals for a subscriber-data and fraud team — before any larger
+      conversation.
+    </p>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 1</div><div class="t">Scope the cohort</div>A short call to match your team's actual gap to one course, not the whole catalog.</div>
+      <div class="step"><div class="n">STEP 2</div><div class="t">Review real content</div>We walk your L&amp;D or network-ops lead through the live lessons, quizzes, and capstone your staff would complete.</div>
+      <div class="step"><div class="n">STEP 3</div><div class="t">Run a paid pilot</div>One cohort, transparent per-learner pricing, a defined completion &amp; assessment date.</div>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="mailto:corporate@paleontraining.com?subject=Corporate%20training%20pilot%20-%20Telecom">Email corporate@paleontraining.com →</a>
+      <a class="btn btn-ghost" href="https://paleontraining.com" target="_blank" rel="noopener">View the courses at paleontraining.com</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wide cols">
+    <div>
+      <h3>Sources</h3>
+      <ol>
+        <li>Active mobile subscriptions reaching 189.68 million (May 2026), up from 169.3 million (January 2025); teledensity 87.50%; internet subscriptions 157.02 million (May 2026); telecom's 9.19% contribution to Q1 2026 GDP; 5G at 4.2% market share vs. 4G at 53.76%; 12,000 sites under 2026 upgrade — Nigerian Communications Commission (NCC) subscriber/network data, via Business Post Nigeria, BusinessDay NG, Vanguard, and Technology Times reporting.</li>
+        <li>87% of Nigerian employers rank network and cybersecurity skills as critical, above the 70% global average; urgent shortages in 5G deployment, cybersecurity, cloud engineering, fibre optic technicians, commissioning engineers, and data-centre operators; brain drain of experienced engineers — Guardian Nigeria and BusinessDay NG telecom skills-gap reporting.</li>
+        <li>Telecom operators' ~$400M annual diesel spend; energy as up to 60% of remote tower operating cost; 200% diesel price rise post-2023 fuel subsidy removal; MTN South Sudan's 30% fuel-spend cut and Airtel Africa/ENGIE Energy Access's 50%+ diesel-use cut after solar-hybrid conversion — Associated Press, via Africanews and ABC News, "Africa's cellphone towers turn to solar as diesel costs surge," 2026.</li>
+        <li>Nearly 30% of critical telecom positions hard to fill (ICT engineers, data analysts/scientists, developers, desktop support) — BusinessDay NG, "Nigeria's telecom operators push for urgent training reforms over widening skills gaps."</li>
+        <li>SIM-swap fraud up 300% in Nigeria, 2022–2024; ₦12.5B lost to telecom-linked financial crimes, 2019–2023; 63.4% of identity-linked digital fraud concentrated in Lagos; April 2026 CBN–NCC MoU establishing the Telecom Identity Risk Management Portal (TIRM); NCC restrictions on telco access to NIMC biometric data during SIM replacement — Nigerian Communications Commission, via Businessday NG, Ecofin Agency, and TechPoint Africa reporting.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>About this brief</h3>
+      <p class="disclaimer">
+        Prepared by Paleon Training as an introduction for telecom operator
+        decision-makers in Nigeria. External figures are drawn from the
+        cited public sources as of August 2026 and are presented for
+        context, not guaranteed forward projections. Paleon Training is not
+        NCC- or NITDA/NDPR-accredited; course content is built to align with
+        the regulatory frameworks named above, not issued under their
+        authority.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function(){
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){
+    const e = document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  const cssVar = (name) => 'var(' + name + ')';
+
+  const tooltip = document.getElementById('tooltip');
+  function showTip(evt, headHtml, bodyHtml){
+    tooltip.innerHTML = '<div class="tt-head">'+headHtml+'</div>'+(bodyHtml||'');
+    tooltip.classList.add('show');
+    moveTip(evt);
+  }
+  function moveTip(evt){
+    const pad = 14;
+    let x = evt.clientX + pad, y = evt.clientY + pad;
+    const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+    if(x + tw > window.innerWidth - 8) x = evt.clientX - tw - pad;
+    if(y + th > window.innerHeight - 8) y = evt.clientY - th - pad;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  }
+  function hideTip(){ tooltip.classList.remove('show'); }
+
+  /* ---------- Chart 1: bar — skills supply gap ---------- */
+  (function(){
+    const svg = document.getElementById('chart-gap');
+    const cyan = cssVar('--cyan'), line = cssVar('--line');
+    const data = [
+      {label:"Advanced digital skills employers require", value:30, note:"Required across roughly 30% of roles"},
+      {label:"Workers who currently possess them", value:11, note:"Only 11% of the workforce today"}
+    ];
+    const W=640,H=190, top=10, bottom=44, left=260, right=70;
+    const plotW = W-left-right, plotH = H-top-bottom;
+    const maxV = 40;
+    [0,10,20,30,40].forEach(g=>{
+      const x = left + (g/maxV)*plotW;
+      svg.appendChild(el('line',{x1:x,y1:top,x2:x,y2:top+plotH,stroke:line,'stroke-width':1}));
+      const t = el('text',{x:x,y:top+plotH+18,'text-anchor':'middle',class:'axis-label'});
+      t.textContent = g+'%'; svg.appendChild(t);
+    });
+    const barH = 30, gap = 34;
+    data.forEach((d,i)=>{
+      const y = top + i*(barH+gap) + 8;
+      const w = (d.value/maxV)*plotW;
+      const lbl = el('text',{x:left-14,y:y+barH/2+4,'text-anchor':'end',class:'cat-label'});
+      lbl.textContent = d.label; svg.appendChild(lbl);
+      const bar = el('rect',{x:left,y:y,width:0,height:barH,rx:4,fill:cyan,class:'hover-target'});
+      bar.style.transition='width .5s ease';
+      svg.appendChild(bar);
+      requestAnimationFrame(()=>bar.setAttribute('width', Math.max(w,4)));
+      const val = el('text',{x:left+w+10,y:y+barH/2+4,class:'value-label'});
+      val.textContent = d.value+'%'; svg.appendChild(val);
+      bar.addEventListener('mousemove',(e)=>showTip(e, d.label, d.note));
+      bar.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  /* ---------- Chart 2: line/area — active subscriptions ---------- */
+  (function(){
+    const svg = document.getElementById('chart-market');
+    const coral = cssVar('--coral'), line = cssVar('--line');
+    const points = [
+      {label:'Jan 2025', value:169.3},
+      {label:'Dec 2025', value:179.64},
+      {label:'Jan 2026', value:182.2},
+      {label:'May 2026', value:189.68}
+    ];
+    const W=640,H=220, top=16, bottom=36, left=52, right=20;
+    const plotW=W-left-right, plotH=H-top-bottom;
+    const maxV = 200;
+    [0,50,100,150,200].forEach(g=>{
+      const y = top+plotH-(g/maxV)*plotH;
+      svg.appendChild(el('line',{x1:left,y1:y,x2:left+plotW,y2:y,stroke:line,'stroke-width':1}));
+      const t = el('text',{x:left-10,y:y+4,'text-anchor':'end',class:'axis-label'});
+      t.textContent = g+'M'; svg.appendChild(t);
+    });
+    const x = (i)=> left + (i/(points.length-1))*plotW;
+    const y = (v)=> top+plotH-(v/maxV)*plotH;
+    points.forEach((p,i)=>{
+      const t = el('text',{x:x(i),y:top+plotH+22,'text-anchor':'middle',class:'axis-label'});
+      t.textContent = p.label; svg.appendChild(t);
+    });
+    let areaPts = 'M'+x(0)+','+(top+plotH);
+    points.forEach((p,i)=> areaPts += ' L'+x(i)+','+y(p.value));
+    areaPts += ' L'+x(points.length-1)+','+(top+plotH)+' Z';
+    svg.appendChild(el('path',{d:areaPts, fill:coral, opacity:0.12, stroke:'none'}));
+    let linePts = '';
+    points.forEach((p,i)=> linePts += (i===0?'M':'L')+x(i)+','+y(p.value));
+    const linePath = el('path',{d:linePts, fill:'none', stroke:coral, 'stroke-width':2, 'stroke-linejoin':'round','stroke-linecap':'round'});
+    svg.appendChild(linePath);
+    const len = linePath.getTotalLength ? linePath.getTotalLength() : 800;
+    linePath.style.strokeDasharray = len;
+    linePath.style.strokeDashoffset = len;
+    linePath.style.transition = 'stroke-dashoffset 1s ease';
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ linePath.style.strokeDashoffset = 0; }); });
+    points.forEach((p,i)=>{
+      const ring = el('circle',{cx:x(i),cy:y(p.value),r:6,fill:cssVar('--surface')});
+      const dot = el('circle',{cx:x(i),cy:y(p.value),r:4,fill:coral,class:'hover-target'});
+      svg.appendChild(ring); svg.appendChild(dot);
+      dot.addEventListener('mousemove',(e)=>showTip(e, p.label, p.value.toFixed(2)+'M active subscriptions'));
+      dot.addEventListener('mouseleave', hideTip);
+      ring.addEventListener('mousemove',(e)=>showTip(e, p.label, p.value.toFixed(2)+'M active subscriptions'));
+      ring.addEventListener('mouseleave', hideTip);
+    });
+    const endLbl = el('text',{x:x(points.length-1)-4,y:y(points[points.length-1].value)-14,'text-anchor':'end',class:'value-label'});
+    endLbl.textContent = '189.68M';
+    svg.appendChild(endLbl);
+  })();
+
+  /* ---------- Chart 3: bar — SIM-swap fraud indexed ---------- */
+  (function(){
+    const svg = document.getElementById('chart-fraud');
+    const critical = cssVar('--critical'), line = cssVar('--line');
+    const data = [
+      {label:'2022 (baseline)', value:100, note:'Indexed baseline'},
+      {label:'2024', value:400, note:'+300% increase in reported cases'}
+    ];
+    const W=640,H=190, top=10, bottom=44, left=150, right=90;
+    const plotW=W-left-right, plotH=H-top-bottom;
+    const maxV=450;
+    [0,112.5,225,337.5,450].forEach(g=>{
+      const x = left + (g/maxV)*plotW;
+      svg.appendChild(el('line',{x1:x,y1:top,x2:x,y2:top+plotH,stroke:line,'stroke-width':1}));
+      const t = el('text',{x:x,y:top+plotH+18,'text-anchor':'middle',class:'axis-label'});
+      t.textContent = Math.round(g); svg.appendChild(t);
+    });
+    const barH=32, gap=32;
+    data.forEach((d,i)=>{
+      const y = top + i*(barH+gap) + 6;
+      const w = (d.value/maxV)*plotW;
+      const lbl = el('text',{x:left-14,y:y+barH/2+4,'text-anchor':'end',class:'cat-label'});
+      lbl.textContent = d.label; svg.appendChild(lbl);
+      const bar = el('rect',{x:left,y:y,width:0,height:barH,rx:4,fill:critical,class:'hover-target'});
+      bar.style.transition='width .5s ease';
+      svg.appendChild(bar);
+      requestAnimationFrame(()=>bar.setAttribute('width', Math.max(w,4)));
+      const val = el('text',{x:left+w+10,y:y+barH/2+4,class:'value-label'});
+      val.textContent = d.value; svg.appendChild(val);
+      bar.addEventListener('mousemove',(e)=>showTip(e, d.label, d.note));
+      bar.addEventListener('mouseleave', hideTip);
+    });
+    const foot = el('text',{x:left,y:H-2,class:'axis-label'});
+    foot.textContent = 'index, 2022 = 100 (absolute case counts not publicly broken out)';
+    svg.appendChild(foot);
+  })();
+
+  document.addEventListener('mousemove', function(e){
+    if(tooltip.classList.contains('show')) moveTip(e);
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -142,6 +142,21 @@ export function createApp() {
   app.get("/privacy", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "privacy.html"));
   });
+  // Sector-specific corporate/government sales briefs -- public but unlisted (no nav
+  // link, robots noindex, not in sitemap.xml), same pattern as /financing above; each
+  // is a standalone one-off pitch document, not part of the SEO hub/spoke set.
+  app.get("/oil-sector", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-sector.html"));
+  });
+  app.get("/banking-sector", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "banking-sector.html"));
+  });
+  app.get("/telecom-sector", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "telecom-sector.html"));
+  });
+  app.get("/delta-state-government", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "delta-state-government.html"));
+  });
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this
