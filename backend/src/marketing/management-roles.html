@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Paleon Training Roles</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,680&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F2EFE7;
+    --surface:#E7E2D5;
+    --surface-2:#DAD3C0;
+    --ink:#1E1B16;
+    --ink-2:#4F493E;
+    --ink-3:#79715F;
+    --line:#CFC6B0;
+
+    --ken:#3B4A6B;      --ken-text:#2E3A54;      --ken-bg:#E4E7EF;
+    --edmond:#A9601F;   --edmond-text:#8C4F19;   --edmond-bg:#F1E2CE;
+    --chuks:#0E6E6A;    --chuks-text:#0B5754;    --chuks-bg:#DCEBE9;
+    --shared:#5B5648;   --shared-text:#4A463A;   --shared-bg:#E6E2D4;
+
+    --font-display:'Fraunces','Iowan Old Style','Palatino Linotype',serif;
+    --font-sans:'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif;
+    --font-mono:'IBM Plex Mono','SF Mono',Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#15130F;
+      --surface:#1D1A14;
+      --surface-2:#272219;
+      --ink:#EEE9DC;
+      --ink-2:#BAB2A0;
+      --ink-3:#8C8471;
+      --line:#332D22;
+
+      --ken:#8B9BD1;      --ken-text:#A3B1DC;      --ken-bg:#232A3D;
+      --edmond:#E39A56;   --edmond-text:#ECB077;   --edmond-bg:#3A2A18;
+      --chuks:#49BDB6;    --chuks-text:#66CCC5;    --chuks-bg:#153230;
+      --shared:#B3AC9A;   --shared-text:#C7C1B0;   --shared-bg:#2B271D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#15130F; --surface:#1D1A14; --surface-2:#272219;
+    --ink:#EEE9DC; --ink-2:#BAB2A0; --ink-3:#8C8471; --line:#332D22;
+    --ken:#8B9BD1; --ken-text:#A3B1DC; --ken-bg:#232A3D;
+    --edmond:#E39A56; --edmond-text:#ECB077; --edmond-bg:#3A2A18;
+    --chuks:#49BDB6; --chuks-text:#66CCC5; --chuks-bg:#153230;
+    --shared:#B3AC9A; --shared-text:#C7C1B0; --shared-bg:#2B271D;
+  }
+
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-sans); line-height:1.55; font-size:16px; }
+  ::selection{ background:var(--ken); color:#fff; }
+  a{ color:var(--ken-text); }
+  h1,h2,h3{ font-family:var(--font-sans); text-wrap:balance; margin:0; }
+  p{ margin:0; }
+  .col{ max-width:860px; margin:0 auto; padding:0 24px; }
+
+  header.top{
+    padding:64px 24px 8px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--ink-3); display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .eyebrow .rule{ height:1px; width:34px; background:var(--ink-3); opacity:.5; }
+  h1.title{
+    font-family:var(--font-display); font-weight:600; font-optical-sizing:auto;
+    font-size:clamp(32px,5vw,48px); line-height:1.1; letter-spacing:-.01em;
+  }
+  .dek{ margin-top:18px; font-size:17px; line-height:1.65; color:var(--ink-2); max-width:640px; }
+  .basis{
+    margin-top:22px; font-size:13px; color:var(--ink-3); font-family:var(--font-mono);
+    border-left:2px solid var(--line); padding-left:14px; max-width:620px; line-height:1.7;
+  }
+
+  /* ---- role cards ---- */
+  .roles{
+    margin:44px 0 0; display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  }
+  .role-card{
+    border:1px solid var(--line); border-radius:6px; padding:20px 20px 18px; background:var(--surface);
+    border-top:3px solid var(--c);
+  }
+  .role-card .name{ font-family:var(--font-display); font-weight:600; font-size:20px; color:var(--ink); }
+  .role-card .mandate{ margin-top:4px; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--ctext); }
+  .role-card .desc{ margin-top:12px; font-size:13.5px; color:var(--ink-2); line-height:1.6; }
+
+  /* ---- section rhythm ---- */
+  section.block{ padding:52px 0 4px; }
+  .divider{ display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .divider .ttl{ font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
+  .divider .ticks{ flex:1; height:1px; background:var(--line); }
+  h2.head{
+    font-family:var(--font-display); font-weight:600; font-size:clamp(22px,2.6vw,27px);
+    line-height:1.25; color:var(--ink); max-width:600px; margin-top:10px;
+  }
+  .head-note{ margin-top:8px; font-size:14px; color:var(--ink-2); max-width:600px; line-height:1.6; }
+
+  /* ---- task rows ---- */
+  .tasks{ margin-top:22px; border-top:1px solid var(--line); }
+  .task{
+    display:grid; grid-template-columns:100px 1fr; gap:18px; padding:14px 0;
+    border-bottom:1px solid var(--line); align-items:start;
+  }
+  .task .owner{ padding-top:2px; }
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; font-weight:600;
+    padding:4px 9px; border-radius:20px; white-space:nowrap;
+  }
+  .pill.ken{ background:var(--ken-bg); color:var(--ken-text); }
+  .pill.edmond{ background:var(--edmond-bg); color:var(--edmond-text); }
+  .pill.chuks{ background:var(--chuks-bg); color:var(--chuks-text); }
+  .pill.shared{ background:var(--shared-bg); color:var(--shared-text); }
+  .task .t{ font-size:14.5px; color:var(--ink); line-height:1.55; }
+  .task .t b{ font-weight:600; }
+  .task .t .sub{ display:block; margin-top:3px; font-size:13px; color:var(--ink-3); }
+  @media (max-width:600px){
+    .task{ grid-template-columns:1fr; gap:6px; }
+    .roles{ grid-template-columns:1fr; }
+  }
+
+  footer{ padding:56px 24px 90px; }
+  footer p{ font-size:12.5px; color:var(--ink-3); line-height:1.7; max-width:640px; }
+  footer p + p{ margin-top:8px; }
+</style>
+</head>
+<body>
+
+<header class="top col">
+  <div class="eyebrow"><span class="rule"></span>INTERNAL &middot; FOUNDING TEAM</div>
+  <h1 class="title">Who owns what, across the Training Portal project.</h1>
+  <p class="dek">
+    A full pass over the platform, the go-to-market plan, and the investor case,
+    with every responsibility that surfaced sorted under whoever it actually
+    belongs to.
+  </p>
+  <div class="basis">
+    Built from the platform itself: the LMS and admin back-office, the
+    enrolment/payment pipeline, the investor case (financing.html), the four
+    sector briefs (oil &amp; gas, banking, telecom, Delta State), the London
+    executive-training programme, and the outreach playbook — not from
+    assumption.
+  </div>
+
+  <div class="roles">
+    <div class="role-card" style="--c:var(--ken); --ctext:var(--ken-text);">
+      <div class="name">Ken Uwotu</div>
+      <div class="mandate">Platform &middot; Operations &middot; Client-facing lead</div>
+      <div class="desc">Builds and runs the platform itself, keeps the business operating day to day nationwide, and leads the pitch when a deal reaches the table.</div>
+    </div>
+    <div class="role-card" style="--c:var(--edmond); --ctext:var(--edmond-text);">
+      <div class="name">Edmond Ofudje</div>
+      <div class="mandate">Oil &amp; Gas &middot; Government &amp; Public Sector</div>
+      <div class="desc">Sector relationships, vendor registration, and client sourcing across upstream, midstream and downstream operators — plus state and federal government/ministry relationships.</div>
+    </div>
+    <div class="role-card" style="--c:var(--chuks); --ctext:var(--chuks-text);">
+      <div class="name">Chukwuka Ugha</div>
+      <div class="mandate">Banking &amp; Financial Services &middot; Telecom</div>
+      <div class="desc">Sector relationships and client sourcing across Nigerian banks and fintechs, drawing on local and international banking experience — plus telecom operators.</div>
+    </div>
+  </div>
+</header>
+
+<!-- PLATFORM -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Platform &amp; Product</span><span class="ticks"></span></div>
+  <h2 class="head">The thing being sold has to keep working and keep improving.</h2>
+  <p class="head-note">Six live courses, 104 lessons, the payment-gating logic, and the admin back-office — the software itself.</p>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Maintain and extend the LMS</b> — courses, modules, quizzes, assignments, capstones, the referral program.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Connect a real Nigerian payment gateway</b> (Paystack or Flutterwave) — the card path is currently a placeholder that always succeeds; this is the single most urgent open item before real NGN revenue can flow.<span class="sub">Per the investor case, §5/§9: the first task once funding lands, before any live payment.</span></div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Own the admin back-office</b> — candidate management, enrolment and online-status controls, CRUD tooling.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Hosting, deployment, and DevOps.</b></div></div>
+    <div class="task"><div class="owner"><span class="pill shared">Shared</span></div><div class="t"><b>Keep curriculum content current</b> — Ken maintains it, but currency depends on Edmond and Chuks flagging what's changed in their sectors (new regulation, a shifting hiring bar) that a course should reflect.<span class="sub">The investor case names cybersecurity specifically as needing an ongoing content-maintenance budget.</span></div></div>
+  </div>
+</section>
+
+<!-- OPERATIONS -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Day-to-Day Operations</span><span class="ticks"></span></div>
+  <h2 class="head">The one manual step in an otherwise automated pipeline, plus everything around it.</h2>
+  <p class="head-note">Nigerian bank-transfer payments don't confirm themselves — and neither does compliance.</p>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Verify bank-transfer payments</b> by hand against Paleon's real account, then confirm in the admin dashboard.<span class="sub">The only step in the enrolment→access pipeline that isn't automatic — every Nigerian-market payment routes through it.</span></div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Company formation and NDPA compliance</b> — budgeted explicitly in the investor case, with a solicitor/accountant engaged before it's treated as done.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Track enrolment, progress, and completion across all cohorts; handle first-line student support.</div></div>
+    <div class="task"><div class="owner"><span class="pill shared">Shared</span></div><div class="t">Once past the first cohort: measure real customer-acquisition cost and conversion per sector against the funding plan's three scenarios, and feed that back into where marketing spend goes next.</div></div>
+  </div>
+</section>
+
+<!-- O&G BD -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Business Development — Oil &amp; Gas</span><span class="ticks"></span></div>
+  <h2 class="head">Registering Paleon where oil &amp; gas buyers actually look, then sourcing the deals.</h2>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t"><b>Register Paleon as a recognised training vendor</b> — NipeX Joint Qualification System, NCDMB's Nigerian Content registration, and the incoming Nigerian Content Trainers Registration Certificate (rollout expected July 2026).<span class="sub">Paleon doesn't hold this certification yet — this is the concrete path to it.</span></div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Build relationships with IOCs, indigenous operators, and NCDMB-adjacent bodies; identify the specific department (HSE, HR/L&amp;D, community relations) that owns training budget at each target.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Source pilot cohorts and corporate contracts, using the Oil &amp; Gas sector brief and the HSE Fundamentals / GIS &amp; Drone Mapping / Renewable Energy &amp; Digital Systems course lines as the pitch.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Represent Paleon in sector-specific channels — HSE/safety trade press, LinkedIn HSE and safety-officer groups, oil &amp; gas newsletters.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Joins to run the platform demo and close, once Edmond has the relationship warm.</div></div>
+  </div>
+</section>
+
+<!-- Banking BD -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Business Development — Banking &amp; Financial Services</span><span class="ticks"></span></div>
+  <h2 class="head">A live regulatory mandate to sell against, not just a pitch.</h2>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t"><b>Anchor the pitch on the CBN Risk-Based Cybersecurity Framework</b> (mandatory since 1 July 2024) — every bank employee must be trained on cyber hygiene and phishing recognition, which is exactly what Cyber Security Fundamentals covers.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Build relationships across Deposit Money Banks, Payment Service Banks, and fintechs, drawing on local and international banking network and credibility.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Register Paleon on bank vendor/training-provider panels where one exists; identify who owns L&amp;D/compliance-training budget at each target.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Represent Paleon in banking/fintech HR &amp; L&amp;D networks and trade press.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Joins to run the platform demo and close, once Chuks has the relationship warm.</div></div>
+  </div>
+</section>
+
+<!-- Telecom BD -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Business Development — Telecom</span><span class="ticks"></span></div>
+  <h2 class="head">A second vertical for Chuks, sold on identity fraud and network-rollout skills gaps.</h2>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t"><b>Anchor the pitch on SIM-identity risk</b> — SIM-swap fraud up 300% since 2022 and the CBN&ndash;NCC Telecom Identity Risk Management Portal (TIRM, live since April 2026) both point straight at Cyber Security Fundamentals.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Build relationships with telecom operators (MTN, Airtel, Globacom, 9mobile) and tower/infrastructure companies; identify who owns network-ops and subscriber-fraud training budget.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Source pilot cohorts using the Telecom sector brief — Cyber Security for SIM/identity fraud, GIS &amp; Drone Mapping and Renewable Energy &amp; Digital Systems for tower rollout and off-grid power, Digital Marketing/Social Media for subscriber-acquisition teams.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Represent Paleon in telecom trade press and NCC-adjacent networks — the existing banking &amp; telecom outreach guide already targets this audience alongside banking.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Joins to run the platform demo and close, once Chuks has the relationship warm.</div></div>
+  </div>
+</section>
+
+<!-- Government BD -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Business Development — Government &amp; Public Sector</span><span class="ticks"></span></div>
+  <h2 class="head">A second vertical for Edmond, with Delta State as the proof of concept.</h2>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t"><b>Build on the Delta State relationship</b> — the state's 2026 civil service reform already commits to partnering with training organisations, and its Ministry of Science &amp; Technology already runs its own ICT skills programme; that appetite is the entry point, not a cold pitch.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Map the course catalog to specific ministries as the pitch — GIS &amp; Drone Mapping to Lands &amp; Survey/DESOPADEC, Cyber Security to IGR/tax infrastructure, Renewable Energy to rural electrification, Digital Marketing/Social Media to investor relations and citizen engagement, HSE to field inspection teams.<span class="sub">Government is the only sector brief where the full six-course catalog applies directly — worth leading with.</span></div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Source delegations for the London programme's Good Governance &amp; Institutional Reform track (commissioners, permanent secretaries) alongside the graduate-training pitch — run them as parallel pilots, not sequential asks.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Once Delta State is proven, use it as the reference case to open conversations with other state governments.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Joins to run the platform demo and close, once Edmond has the relationship warm.</div></div>
+  </div>
+</section>
+
+<!-- Executive training -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Corporate &amp; Executive Training</span><span class="ticks"></span></div>
+  <h2 class="head">The London programme runs across four tracks now — sourcing follows the same split as everywhere else.</h2>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Owns programme logistics, scheduling, and the London delivery relationship.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Sources oil &amp; gas delegations (commissioners, senior technical/HSE leadership) and Good Governance &amp; Institutional Reform delegations (state commissioners, permanent secretaries).</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Sources banking &amp; finance delegations and telecom delegations.</div></div>
+  </div>
+</section>
+
+<!-- Marketing -->
+<section class="block col">
+  <div class="divider"><span class="ttl">Marketing &amp; Outreach</span><span class="ticks"></span></div>
+  <h2 class="head">The playbook is written. Sending it is a person, every time.</h2>
+  <p class="head-note">Directory listings, LinkedIn/Twitter/press copy, and pitch templates already exist for five guide pages — nothing in that kit sends itself.</p>
+  <div class="tasks">
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Authors and maintains the site itself — SEO guide pages, sector briefs, the welcome page, the investor deck.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t">Runs company-wide channels: LinkedIn company page, press releases, university career-centre outreach.</div></div>
+    <div class="task"><div class="owner"><span class="pill ken">Ken</span></div><div class="t"><b>Equips Edmond and Chukwuka to close</b> — pitch decks, sector briefs, proposal/pricing templates, and demo access built and kept current so both can run a deal to close without waiting on Ken to produce something from scratch each time.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Runs oil &amp; gas-specific channels: HSE/safety trade press, NCDMB-adjacent directories, career centres at UNILAG/UI/Covenant/UNIPORT-type engineering programmes.</div></div>
+    <div class="task"><div class="owner"><span class="pill edmond">Edmond</span></div><div class="t">Runs government-specific outreach: state ministry contacts (starting with Delta State's Ministry of Science &amp; Technology), civil-service reform offices, state and NCDMB-adjacent public-sector bodies.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Runs banking-specific channels: fintech/banking trade press, banking HR contacts, sector LinkedIn groups.</div></div>
+    <div class="task"><div class="owner"><span class="pill chuks">Chuks</span></div><div class="t">Runs telecom-specific channels via the same combined banking &amp; telecom outreach guide: telecom trade press, NCC-adjacent networks, telecom HR/L&amp;D contacts.</div></div>
+  </div>
+</section>
+
+<footer class="col">
+  <p>This is a responsibilities breakdown, not an equity or compensation document — the investor case (financing.html) handles ownership structure separately and the two shouldn't be assumed to map onto each other.</p>
+  <p>Built 2026-08-21 from the current state of the platform and its internal documents. Course/lesson/week figures, sector claims, and regulatory references are as current as those source documents — re-check before treating this as a standing org chart if the underlying pages have since changed.</p>
+</footer>
+
+</body>
+</html>

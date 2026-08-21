@@ -95,6 +95,12 @@ export function createApp() {
   app.get("/financing", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "financing.html"));
   });
+  // Founding-team responsibility breakdown (Ken/Edmond/Chuks, by function and
+  // sector) -- same "public but unlisted" pattern as /financing above: contains
+  // real names, robots noindex, no nav link, not in sitemap.xml.
+  app.get("/management-roles", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "management-roles.html"));
+  });
   // Internal outreach playbook (directory blurbs, social posts, press release, pitch
   // email templates) for promoting the SEO guide pages below -- same "public but
   // unlisted" pattern as /financing above: robots noindex, no nav link, not in
