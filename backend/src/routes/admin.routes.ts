@@ -18,6 +18,7 @@ adminRouter.use(authenticate, authorize("admin"));
 
 adminRouter.get("/stats", adminController.getDashboardStats);
 adminRouter.get("/leads", adminController.listLeads);
+adminRouter.delete("/leads/:id", adminController.deleteLead);
 adminRouter.get(
   "/courses/:courseId/payments",
   validate(listCoursePaymentsSchema),

@@ -59,6 +59,14 @@ export const listLeads = asyncHandler(async (_req: Request, res: Response) => {
   res.json({ leads });
 });
 
+export const deleteLead = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.params.id) {
+    throw ApiError.badRequest("Lead id is required");
+  }
+  await adminService.deleteLead(req.params.id);
+  res.status(204).end();
+});
+
 export const listCoursePayments = asyncHandler(async (req: Request, res: Response) => {
   const status = req.query.status as "confirmed" | "pending";
   const payments = await adminService.listCoursePayments(req.params.courseId as string, status);

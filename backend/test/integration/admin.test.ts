@@ -8,6 +8,7 @@ import {
   Course,
   CourseModule,
   Enrollment,
+  Lead,
   Payment,
   Quiz,
   QuizAttempt,
@@ -558,6 +559,61 @@ describe("Capstone management", () => {
       .patch("/api/admin/capstones/00000000-0000-0000-0000-000000000000")
       .set("Authorization", `Bearer ${adminToken}`)
       .send({ isEnabled: false });
+    expect(res.status).toBe(404);
+  });
+});
+
+describe("Lead management", () => {
+  it("rejects unauthenticated, student, and instructor callers", async () => {
+    await createInstructor();
+    const instructorToken = await loginAs("jest-instructor@example.com");
+    await registerStudent("leadmanagementstudent@example.com");
+    const studentToken = await loginAs("leadmanagementstudent@example.com");
+    const lead = await Lead.create({
+      name: "Jest Lead",
+      email: "jest-lead@example.com",
+      course: "Cyber Security Fundamentals",
+    });
+
+    const unauth = await request(app).delete(`/api/admin/leads/${lead.id}`);
+    expect(unauth.status).toBe(401);
+    const student = await request(app)
+      .delete(`/api/admin/leads/${lead.id}`)
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(student.status).toBe(403);
+    const instructor = await request(app)
+      .delete(`/api/admin/leads/${lead.id}`)
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(instructor.status).toBe(403);
+  });
+
+  it("lets an admin delete a lead", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const lead = await Lead.create({
+      name: "Jest Lead",
+      email: "jest-lead@example.com",
+      course: "Cyber Security Fundamentals",
+    });
+
+    const res = await request(app)
+      .delete(`/api/admin/leads/${lead.id}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(204);
+
+    const listRes = await request(app)
+      .get("/api/admin/leads")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(listRes.body.leads.find((l: { id: string }) => l.id === lead.id)).toBeUndefined();
+  });
+
+  it("404s when deleting an unknown lead", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+
+    const res = await request(app)
+      .delete("/api/admin/leads/00000000-0000-0000-0000-000000000000")
+      .set("Authorization", `Bearer ${adminToken}`);
     expect(res.status).toBe(404);
   });
 });

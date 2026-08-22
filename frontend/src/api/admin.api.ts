@@ -59,6 +59,10 @@ export async function fetchLeads(): Promise<Lead[]> {
   return res.data.leads;
 }
 
+export async function deleteLead(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/leads/${id}`);
+}
+
 export async function fetchCoursePayments(
   courseId: string,
   status: "confirmed" | "pending",

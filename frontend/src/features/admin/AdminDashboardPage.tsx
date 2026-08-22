@@ -8,7 +8,13 @@ import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { Lead } from "../../types/api";
-import { closeCoursePayments, fetchAdminStats, fetchCoursePayments, fetchLeads } from "./adminSlice";
+import {
+  closeCoursePayments,
+  deleteLead,
+  fetchAdminStats,
+  fetchCoursePayments,
+  fetchLeads,
+} from "./adminSlice";
 
 function formatNumberOrDash(value: number | null): string {
   return value === null ? "—" : String(value);
@@ -45,14 +51,6 @@ function downloadLeadsCsv(leads: Lead[]) {
   triggerCsvDownload(leadsToCsv(leads), `leads-${new Date().toISOString().slice(0, 10)}.csv`);
 }
 
-function downloadLeadCsv(lead: Lead) {
-  const slug = lead.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  triggerCsvDownload(
-    leadsToCsv([lead]),
-    `lead-${slug || "unnamed"}-${new Date(lead.createdAt).toISOString().slice(0, 10)}.csv`,
-  );
-}
-
 export function AdminDashboardPage() {
   const dispatch = useAppDispatch();
   const { stats, status, error, leads, leadsStatus, coursePayments } = useAppSelector(
@@ -66,6 +64,11 @@ export function AdminDashboardPage() {
 
   function viewCoursePayments(courseId: string, courseTitle: string, paymentStatus: "confirmed" | "pending") {
     dispatch(fetchCoursePayments({ courseId, courseTitle, status: paymentStatus }));
+  }
+
+  function handleDeleteLead(id: string, name: string) {
+    if (!window.confirm(`Delete the lead from ${name}? This cannot be undone.`)) return;
+    dispatch(deleteLead(id));
   }
 
   if (status === "loading" || !stats) {
@@ -242,10 +245,10 @@ export function AdminDashboardPage() {
                   <td className="px-4 py-2 text-right">
                     <button
                       type="button"
-                      onClick={() => downloadLeadCsv(lead)}
-                      className="text-xs font-medium text-blue-600 hover:underline"
+                      onClick={() => handleDeleteLead(lead.id, lead.name)}
+                      className="text-xs font-medium text-red-600 hover:underline"
                     >
-                      Download
+                      Delete
                     </button>
                   </td>
                 </tr>

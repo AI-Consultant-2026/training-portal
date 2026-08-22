@@ -398,6 +398,14 @@ export async function listLeads() {
   return Lead.findAll({ order: [["createdAt", "DESC"]] });
 }
 
+export async function deleteLead(id: string): Promise<void> {
+  const lead = await Lead.findByPk(id);
+  if (!lead) {
+    throw ApiError.notFound("Lead not found");
+  }
+  await lead.destroy();
+}
+
 // Every quiz across every course, with enough course/week context to manage them from a
 // single flat list rather than drilling into each course individually.
 export async function listQuizzes() {

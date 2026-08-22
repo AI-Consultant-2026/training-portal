@@ -83,6 +83,11 @@ export const fetchLeads = createAsyncThunk("admin/fetchLeads", async () => {
   return adminApi.fetchLeads();
 });
 
+export const deleteLead = createAsyncThunk("admin/deleteLead", async (id: string) => {
+  await adminApi.deleteLead(id);
+  return id;
+});
+
 export const addEnrollment = createAsyncThunk(
   "admin/addEnrollment",
   async (
@@ -196,6 +201,9 @@ const adminSlice = createSlice({
       })
       .addCase(fetchLeads.rejected, (state) => {
         state.leadsStatus = "failed";
+      })
+      .addCase(deleteLead.fulfilled, (state, action) => {
+        state.leads = state.leads.filter((lead) => lead.id !== action.payload);
       })
       .addCase(addEnrollment.fulfilled, (state, action) => {
         const index = state.candidates.findIndex((c) => c.id === action.payload.id);
