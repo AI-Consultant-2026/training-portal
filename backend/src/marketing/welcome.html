@@ -419,7 +419,18 @@
     to { transform: translateX(-50%); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .ticker-track { animation: none; }
+    .ticker { white-space: normal; }
+    .ticker-track {
+      display: block;
+      width: 100%;
+      animation: none;
+    }
+    .ticker-item {
+      display: block;
+      white-space: normal;
+      text-align: center;
+    }
+    .ticker-item + .ticker-item { display: none; }
   }
 
   /* ============ Section scaffolding ============ */
