@@ -77,3 +77,16 @@ export const setQuizEnabled = asyncHandler(async (req: Request, res: Response) =
   const quiz = await adminService.setQuizEnabled(req.params.id, req.body.isEnabled);
   res.json({ quiz });
 });
+
+export const listCapstones = asyncHandler(async (_req: Request, res: Response) => {
+  const capstones = await adminService.listCapstones();
+  res.json({ capstones });
+});
+
+export const setCapstoneEnabled = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.params.id) {
+    throw ApiError.badRequest("Capstone id is required");
+  }
+  const capstone = await adminService.setCapstoneEnabled(req.params.id, req.body.isEnabled);
+  res.json({ capstone });
+});

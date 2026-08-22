@@ -10,8 +10,8 @@ import { lazyImport } from "./lazyImport";
 // including admin/instructor-only pages that most visitors never load at all. Suspense
 // below shows the same spinner ProtectedRoute already uses while a route's chunk loads.
 const AdminCandidatesPage = lazyImport(() => import("../features/admin/AdminCandidatesPage"), "AdminCandidatesPage");
+const AdminCapstonesPage = lazyImport(() => import("../features/admin/AdminCapstonesPage"), "AdminCapstonesPage");
 const AdminDashboardPage = lazyImport(() => import("../features/admin/AdminDashboardPage"), "AdminDashboardPage");
-const AdminQuizzesPage = lazyImport(() => import("../features/admin/AdminQuizzesPage"), "AdminQuizzesPage");
 const AssignmentDetailPage = lazyImport(
   () => import("../features/assignments/AssignmentDetailPage"),
   "AssignmentDetailPage",
@@ -108,7 +108,7 @@ export function AppRouter() {
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
-            <Route path="/admin/quizzes" element={<AdminQuizzesPage />} />
+            <Route path="/admin/capstones" element={<AdminCapstonesPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

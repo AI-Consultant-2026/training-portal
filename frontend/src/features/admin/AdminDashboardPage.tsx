@@ -29,16 +29,28 @@ function leadsToCsv(leads: Lead[]): string {
 // Client-side export: the admin dashboard already fetches every lead (GET /admin/leads
 // has no pagination), so there's nothing to gain from a dedicated export endpoint --
 // just turn what's already in state into a file download.
-function downloadLeadsCsv(leads: Lead[]) {
-  const blob = new Blob([leadsToCsv(leads)], { type: "text/csv;charset=utf-8;" });
+function triggerCsvDownload(csv: string, filename: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.download = filename;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+function downloadLeadsCsv(leads: Lead[]) {
+  triggerCsvDownload(leadsToCsv(leads), `leads-${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+function downloadLeadCsv(lead: Lead) {
+  const slug = lead.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  triggerCsvDownload(
+    leadsToCsv([lead]),
+    `lead-${slug || "unnamed"}-${new Date(lead.createdAt).toISOString().slice(0, 10)}.csv`,
+  );
 }
 
 export function AdminDashboardPage() {
@@ -77,8 +89,8 @@ export function AdminDashboardPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
         <div className="flex items-center gap-4">
-          <Link to="/admin/quizzes" className="text-sm font-medium text-blue-600 hover:underline">
-            Manage quizzes →
+          <Link to="/admin/capstones" className="text-sm font-medium text-blue-600 hover:underline">
+            Manage capstone projects →
           </Link>
           <Link
             to="/admin/candidates"
@@ -215,6 +227,7 @@ export function AdminDashboardPage() {
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Course</th>
                 <th className="px-4 py-2">Submitted</th>
+                <th className="px-4 py-2" />
               </tr>
             </thead>
             <tbody>
@@ -225,6 +238,15 @@ export function AdminDashboardPage() {
                   <td className="px-4 py-2 text-gray-600">{lead.course}</td>
                   <td className="px-4 py-2 text-gray-600">
                     {new Date(lead.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2 text-right">
+                    <button
+                      type="button"
+                      onClick={() => downloadLeadCsv(lead)}
+                      className="text-xs font-medium text-blue-600 hover:underline"
+                    >
+                      Download
+                    </button>
                   </td>
                 </tr>
               ))}

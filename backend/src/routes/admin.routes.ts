@@ -7,6 +7,7 @@ import {
   addEnrollmentSchema,
   createCandidateSchema,
   listCoursePaymentsSchema,
+  setCapstoneEnabledSchema,
   setPaymentConfirmedSchema,
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
@@ -43,4 +44,10 @@ adminRouter.patch(
   "/quizzes/:id",
   validate(setQuizEnabledSchema),
   adminController.setQuizEnabled,
+);
+adminRouter.get("/capstones", adminController.listCapstones);
+adminRouter.patch(
+  "/capstones/:id",
+  validate(setCapstoneEnabledSchema),
+  adminController.setCapstoneEnabled,
 );

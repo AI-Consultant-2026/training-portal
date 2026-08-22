@@ -4,6 +4,7 @@ import { createApp } from "../../src/app";
 import {
   Assignment,
   AssignmentSubmission,
+  Capstone,
   Course,
   CourseModule,
   Enrollment,
@@ -471,6 +472,90 @@ describe("Quiz management", () => {
 
     const res = await request(app)
       .patch("/api/admin/quizzes/00000000-0000-0000-0000-000000000000")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ isEnabled: false });
+    expect(res.status).toBe(404);
+  });
+});
+
+describe("Capstone management", () => {
+  it("rejects unauthenticated, student, and instructor callers on both routes", async () => {
+    const instructor = await createInstructor();
+    const instructorToken = await loginAs("jest-instructor@example.com");
+    await registerStudent("capstonemanagementstudent@example.com");
+    const studentToken = await loginAs("capstonemanagementstudent@example.com");
+    const course = await Course.create({
+      title: "Capstone Mgmt Auth Course",
+      slug: `capstone-mgmt-auth-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const capstone = await Capstone.create({ courseId: course.id, title: "Final Project" });
+
+    const unauthList = await request(app).get("/api/admin/capstones");
+    expect(unauthList.status).toBe(401);
+    const studentList = await request(app)
+      .get("/api/admin/capstones")
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(studentList.status).toBe(403);
+    const instructorList = await request(app)
+      .get("/api/admin/capstones")
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(instructorList.status).toBe(403);
+
+    const studentPatch = await request(app)
+      .patch(`/api/admin/capstones/${capstone.id}`)
+      .set("Authorization", `Bearer ${studentToken}`)
+      .send({ isEnabled: false });
+    expect(studentPatch.status).toBe(403);
+  });
+
+  it("lists capstones with course context and toggles isEnabled", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const instructor = await createInstructor();
+    const course = await Course.create({
+      title: "Capstone Mgmt Course",
+      slug: `capstone-mgmt-course-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const capstone = await Capstone.create({ courseId: course.id, title: "Final Project" });
+
+    const listRes = await request(app)
+      .get("/api/admin/capstones")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(listRes.status).toBe(200);
+    const entry = listRes.body.capstones.find((c: { id: string }) => c.id === capstone.id);
+    expect(entry).toMatchObject({
+      title: "Final Project",
+      isEnabled: true,
+      courseId: course.id,
+      courseTitle: "Capstone Mgmt Course",
+    });
+
+    const disableRes = await request(app)
+      .patch(`/api/admin/capstones/${capstone.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ isEnabled: false });
+    expect(disableRes.status).toBe(200);
+    expect(disableRes.body.capstone.isEnabled).toBe(false);
+
+    const listAfter = await request(app)
+      .get("/api/admin/capstones")
+      .set("Authorization", `Bearer ${adminToken}`);
+    const entryAfter = listAfter.body.capstones.find((c: { id: string }) => c.id === capstone.id);
+    expect(entryAfter.isEnabled).toBe(false);
+  });
+
+  it("404s when toggling an unknown capstone", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+
+    const res = await request(app)
+      .patch("/api/admin/capstones/00000000-0000-0000-0000-000000000000")
       .set("Authorization", `Bearer ${adminToken}`)
       .send({ isEnabled: false });
     expect(res.status).toBe(404);

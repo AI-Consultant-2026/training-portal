@@ -70,6 +70,10 @@ export async function submit(capstoneId: string, studentId: string, input: Submi
     throw ApiError.forbidden("You must be enrolled in this course to submit this capstone");
   }
 
+  if (!capstone.isEnabled) {
+    throw ApiError.forbidden("This capstone is not available right now.");
+  }
+
   if (capstone.fileRequired && !input.file) {
     throw ApiError.badRequest("A file is required for this capstone");
   }

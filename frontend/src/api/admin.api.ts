@@ -1,4 +1,4 @@
-import { AdminQuiz, AdminStats, Candidate, CoursePayment, Lead } from "../types/api";
+import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchAdminStats(): Promise<AdminStats> {
@@ -70,12 +70,14 @@ export async function fetchCoursePayments(
   return res.data.payments;
 }
 
-export async function fetchQuizzes(): Promise<AdminQuiz[]> {
-  const res = await axiosClient.get<{ quizzes: AdminQuiz[] }>("/admin/quizzes");
-  return res.data.quizzes;
+export async function fetchCapstones(): Promise<AdminCapstone[]> {
+  const res = await axiosClient.get<{ capstones: AdminCapstone[] }>("/admin/capstones");
+  return res.data.capstones;
 }
 
-export async function setQuizEnabled(quizId: string, isEnabled: boolean): Promise<AdminQuiz> {
-  const res = await axiosClient.patch<{ quiz: AdminQuiz }>(`/admin/quizzes/${quizId}`, { isEnabled });
-  return res.data.quiz;
+export async function setCapstoneEnabled(capstoneId: string, isEnabled: boolean): Promise<AdminCapstone> {
+  const res = await axiosClient.patch<{ capstone: AdminCapstone }>(`/admin/capstones/${capstoneId}`, {
+    isEnabled,
+  });
+  return res.data.capstone;
 }

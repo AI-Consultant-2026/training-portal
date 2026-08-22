@@ -364,6 +364,14 @@ export interface AdminQuiz {
   courseTitle: string;
 }
 
+export interface AdminCapstone {
+  id: string;
+  title: string;
+  isEnabled: boolean;
+  courseId: string;
+  courseTitle: string;
+}
+
 export interface CoursePayment {
   enrollmentId: string;
   studentId: string;

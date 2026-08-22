@@ -9,13 +9,22 @@ export interface CapstoneAttributes {
   fileRequired: boolean;
   gradingRubric: Record<string, unknown> | null;
   pointsTotal: number;
+  isEnabled: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export type CapstoneCreationAttributes = Optional<
   CapstoneAttributes,
-  "id" | "description" | "dueDate" | "fileRequired" | "gradingRubric" | "pointsTotal" | "createdAt" | "updatedAt"
+  | "id"
+  | "description"
+  | "dueDate"
+  | "fileRequired"
+  | "gradingRubric"
+  | "pointsTotal"
+  | "isEnabled"
+  | "createdAt"
+  | "updatedAt"
 >;
 
 export class Capstone
@@ -30,6 +39,7 @@ export class Capstone
   declare fileRequired: boolean;
   declare gradingRubric: Record<string, unknown> | null;
   declare pointsTotal: number;
+  declare isEnabled: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -63,6 +73,12 @@ export function initCapstoneModel(sequelize: Sequelize) {
         allowNull: false,
         defaultValue: 100,
         field: "points_total",
+      },
+      isEnabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+        field: "is_enabled",
       },
     },
     {

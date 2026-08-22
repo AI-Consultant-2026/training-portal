@@ -4,6 +4,7 @@ import { col, fn, Op } from "sequelize";
 import { config } from "../config";
 import {
   AssignmentSubmission,
+  Capstone,
   Course,
   CourseModule,
   Enrollment,
@@ -437,4 +438,34 @@ export async function setQuizEnabled(quizId: string, isEnabled: boolean) {
   quiz.isEnabled = isEnabled;
   await quiz.save();
   return quiz;
+}
+
+// Every course's capstone project, one row per course (unlike quizzes, there's exactly
+// one capstone per course, not one per week).
+export async function listCapstones() {
+  const capstones = await Capstone.findAll({
+    include: [{ model: Course, as: "course", attributes: ["id", "title"] }],
+    order: [[{ model: Course, as: "course" }, "title", "ASC"]],
+  });
+
+  return capstones.map((capstone) => {
+    const course = (capstone as unknown as { course: Course }).course;
+    return {
+      id: capstone.id,
+      title: capstone.title,
+      isEnabled: capstone.isEnabled,
+      courseId: course.id,
+      courseTitle: course.title,
+    };
+  });
+}
+
+export async function setCapstoneEnabled(capstoneId: string, isEnabled: boolean) {
+  const capstone = await Capstone.findByPk(capstoneId);
+  if (!capstone) {
+    throw ApiError.notFound("Capstone not found");
+  }
+  capstone.isEnabled = isEnabled;
+  await capstone.save();
+  return capstone;
 }

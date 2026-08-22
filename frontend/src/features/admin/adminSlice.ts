@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as adminApi from "../../api/admin.api";
-import { AdminQuiz, AdminStats, Candidate, CoursePayment, Lead } from "../../types/api";
+import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead } from "../../types/api";
 
 export interface CoursePaymentsDrillDown {
   courseId: string;
@@ -20,9 +20,9 @@ export interface AdminState {
   leads: Lead[];
   leadsStatus: "idle" | "loading" | "succeeded" | "failed";
   coursePayments: CoursePaymentsDrillDown | null;
-  quizzes: AdminQuiz[];
-  quizzesStatus: "idle" | "loading" | "succeeded" | "failed";
-  quizzesError: string | null;
+  capstones: AdminCapstone[];
+  capstonesStatus: "idle" | "loading" | "succeeded" | "failed";
+  capstonesError: string | null;
 }
 
 const initialState: AdminState = {
@@ -35,9 +35,9 @@ const initialState: AdminState = {
   leads: [],
   leadsStatus: "idle",
   coursePayments: null,
-  quizzes: [],
-  quizzesStatus: "idle",
-  quizzesError: null,
+  capstones: [],
+  capstonesStatus: "idle",
+  capstonesError: null,
 };
 
 export const fetchAdminStats = createAsyncThunk("admin/fetchStats", async () => {
@@ -116,22 +116,22 @@ export const fetchCoursePayments = createAsyncThunk(
   },
 );
 
-export const fetchQuizzes = createAsyncThunk("admin/fetchQuizzes", async () => {
-  return adminApi.fetchQuizzes();
+export const fetchCapstones = createAsyncThunk("admin/fetchCapstones", async () => {
+  return adminApi.fetchCapstones();
 });
 
-export const toggleQuizEnabled = createAsyncThunk(
-  "admin/toggleQuizEnabled",
+export const toggleCapstoneEnabled = createAsyncThunk(
+  "admin/toggleCapstoneEnabled",
   async (
-    { quizId, isEnabled }: { quizId: string; isEnabled: boolean },
+    { capstoneId, isEnabled }: { capstoneId: string; isEnabled: boolean },
     { rejectWithValue },
   ) => {
     try {
-      return await adminApi.setQuizEnabled(quizId, isEnabled);
+      return await adminApi.setCapstoneEnabled(capstoneId, isEnabled);
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
-          ?.message ?? "Could not update this quiz";
+          ?.message ?? "Could not update this capstone";
       return rejectWithValue(message);
     }
   },
@@ -225,23 +225,23 @@ const adminSlice = createSlice({
         if (state.coursePayments?.courseId !== action.meta.arg.courseId) return;
         state.coursePayments.requestStatus = "failed";
       })
-      .addCase(fetchQuizzes.pending, (state) => {
-        state.quizzesStatus = "loading";
+      .addCase(fetchCapstones.pending, (state) => {
+        state.capstonesStatus = "loading";
       })
-      .addCase(fetchQuizzes.fulfilled, (state, action) => {
-        state.quizzesStatus = "succeeded";
-        state.quizzes = action.payload;
+      .addCase(fetchCapstones.fulfilled, (state, action) => {
+        state.capstonesStatus = "succeeded";
+        state.capstones = action.payload;
       })
-      .addCase(fetchQuizzes.rejected, (state) => {
-        state.quizzesStatus = "failed";
-        state.quizzesError = "Could not load quizzes";
+      .addCase(fetchCapstones.rejected, (state) => {
+        state.capstonesStatus = "failed";
+        state.capstonesError = "Could not load capstone projects";
       })
-      .addCase(toggleQuizEnabled.fulfilled, (state, action) => {
-        const quiz = state.quizzes.find((q) => q.id === action.payload.id);
-        if (quiz) quiz.isEnabled = action.payload.isEnabled;
+      .addCase(toggleCapstoneEnabled.fulfilled, (state, action) => {
+        const capstone = state.capstones.find((c) => c.id === action.payload.id);
+        if (capstone) capstone.isEnabled = action.payload.isEnabled;
       })
-      .addCase(toggleQuizEnabled.rejected, (state, action) => {
-        state.quizzesError = (action.payload as string) ?? "Could not update this quiz";
+      .addCase(toggleCapstoneEnabled.rejected, (state, action) => {
+        state.capstonesError = (action.payload as string) ?? "Could not update this capstone";
       });
   },
 });

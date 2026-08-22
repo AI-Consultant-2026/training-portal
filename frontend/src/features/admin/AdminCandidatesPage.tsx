@@ -15,6 +15,7 @@ import {
   confirmPayment,
   deleteCandidate,
   deleteInactiveCandidates,
+  fetchAdminStats,
   fetchCandidates,
 } from "./adminSlice";
 
@@ -110,6 +111,11 @@ export function AdminCandidatesPage() {
         variant: "success",
       });
       dispatch(fetchCandidates());
+      // Deleting inactive candidates cascade-deletes their Users, Enrollment, and
+      // QuizAttempt rows (see deleteInactiveCandidates in admin.service.ts) -- refetch
+      // the dashboard stats too, or the Users/Enrollments/Quiz grading tiles on
+      // /admin stay stale until the admin happens to revisit that page.
+      dispatch(fetchAdminStats());
     } else {
       setDeleteInactiveMessage({ text: "Could not delete inactive candidates.", variant: "error" });
     }

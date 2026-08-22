@@ -38,3 +38,9 @@ export const setQuizEnabledSchema = z.object({
     isEnabled: z.boolean(),
   }),
 });
+
+export const setCapstoneEnabledSchema = z.object({
+  body: z.object({
+    isEnabled: z.boolean(),
+  }),
+});
