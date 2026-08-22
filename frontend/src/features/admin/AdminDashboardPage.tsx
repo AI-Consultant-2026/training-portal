@@ -120,7 +120,7 @@ export function AdminDashboardPage() {
         <StatTile label="Archived" value={stats.courses.byStatus.archived} />
       </div>
       {stats.courses.list.length > 0 && (
-        <div className="mt-4 overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <div className="mt-4 overflow-x-auto rounded-lg border border-gray-200 bg-white">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
               <tr>
@@ -161,7 +161,7 @@ export function AdminDashboardPage() {
 
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Payments</h2>
       {stats.payments.length > 0 ? (
-        <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 bg-white">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
               <tr>
@@ -222,7 +222,7 @@ export function AdminDashboardPage() {
           <Spinner />
         </div>
       ) : leads.length > 0 ? (
-        <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 bg-white">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
               <tr>
