@@ -1,14 +1,26 @@
+import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { resendVerification } from "../../features/auth/authSlice";
 
 export function EmailVerificationBanner() {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const { user, emailVerification } = useAppSelector((state) => state.auth);
 
   // Only students are ever blocked by this (see enrollments.controller.ts) -- admins add
   // enrollments through a separate path that bypasses the check entirely, and instructors
   // don't enroll at all, so the banner would be actively misleading for either role.
-  if (!user || user.emailVerifiedAt || user.role !== "student") {
+  //
+  // Also skip it on the login/register pages: a still-authenticated-but-unverified session
+  // (e.g. a signup that never got redirected away) can land back here, and a "verify your
+  // email" notice above a login form reads as broken rather than helpful.
+  if (
+    !user ||
+    user.emailVerifiedAt ||
+    user.role !== "student" ||
+    location.pathname === "/login" ||
+    location.pathname === "/register"
+  ) {
     return null;
   }
 
