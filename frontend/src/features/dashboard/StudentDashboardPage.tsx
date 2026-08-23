@@ -5,6 +5,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { EnrollmentCard } from "../enrollments/components/EnrollmentCard";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
+import { Enrollment } from "../../types/api";
 
 export function StudentDashboardPage() {
   const dispatch = useAppDispatch();
@@ -38,11 +39,53 @@ export function StudentDashboardPage() {
         </div>
       )}
 
+      {status === "succeeded" && enrollments.length > 0 && <DashboardEnrollments enrollments={enrollments} />}
+    </div>
+  );
+}
+
+// Splits into "In progress" / "Completed" sections only once there's at least one of
+// each -- before a student finishes their first course, a "Completed" heading over an
+// empty grid (or an "In progress" heading over everything) would just be noise.
+function DashboardEnrollments({ enrollments }: { enrollments: Enrollment[] }) {
+  const completed = enrollments.filter((e) => e.status === "completed");
+  const inProgress = enrollments.filter((e) => e.status !== "completed");
+
+  if (completed.length === 0 || inProgress.length === 0) {
+    return (
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {enrollments.map((enrollment) => (
           <EnrollmentCard key={enrollment.id} enrollment={enrollment} />
         ))}
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <>
+      <EnrollmentSection title="In progress" enrollments={inProgress} className="mt-8" />
+      <EnrollmentSection title="Completed" enrollments={completed} className="mt-10" />
+    </>
+  );
+}
+
+function EnrollmentSection({
+  title,
+  enrollments,
+  className,
+}: {
+  title: string;
+  enrollments: Enrollment[];
+  className?: string;
+}) {
+  return (
+    <section className={className}>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">{title}</h2>
+      <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {enrollments.map((enrollment) => (
+          <EnrollmentCard key={enrollment.id} enrollment={enrollment} />
+        ))}
+      </div>
+    </section>
   );
 }

@@ -14,6 +14,25 @@ const STATUS_LABELS: Record<Enrollment["status"], string> = {
   suspended: "Suspended",
 };
 
+// A plain gray pill reads the same as "dropped" or "suspended" -- completing a course
+// is worth calling out visually, so it gets its own gold medal badge instead.
+function CompletedBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+      <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 text-amber-500">
+        <path d="M7 11 L4 17 L7 16 L8.5 18.5 L10.8 13" fill="currentColor" opacity="0.5" />
+        <path d="M13 11 L16 17 L13 16 L11.5 18.5 L9.2 13" fill="currentColor" opacity="0.5" />
+        <circle cx="10" cy="8" r="6" fill="currentColor" />
+        <path
+          d="M10 5.2 L11 7.3 L13.2 7.6 L11.6 9.2 L12 11.4 L10 10.3 L8 11.4 L8.4 9.2 L6.8 7.6 L9 7.3 Z"
+          fill="white"
+        />
+      </svg>
+      Completed
+    </span>
+  );
+}
+
 export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
   const course = enrollment.course;
   const coverImage = course ? COURSE_COVER_IMAGES[course.slug] : undefined;
@@ -24,9 +43,13 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
       <div className="flex flex-col gap-3 p-5">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">{course?.title ?? "Course"}</h3>
-          <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
-            {STATUS_LABELS[enrollment.status]}
-          </span>
+          {enrollment.status === "completed" ? (
+            <CompletedBadge />
+          ) : (
+            <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+              {STATUS_LABELS[enrollment.status]}
+            </span>
+          )}
         </div>
         <ProgressBar percent={enrollment.progressPercent} />
         <div className="flex items-center justify-between text-sm text-gray-500">
