@@ -234,6 +234,14 @@ export function CourseDetailPage() {
                 Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}
               </Button>
             )}
+            {isEnrolled && myEnrollment?.paymentConfirmed && myEnrollment.nextLessonId && (
+              <Link
+                to={`/lessons/${myEnrollment.nextLessonId}`}
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                Resume course
+              </Link>
+            )}
           </div>
         </div>
       )}
