@@ -6,6 +6,8 @@ export interface CertificateData {
   enrollmentId: string;
   studentName: string;
   courseTitle: string;
+  courseDescription: string;
+  durationWeeks: number;
   completionDate: Date;
 }
 
@@ -43,6 +45,8 @@ export async function getCertificateData(
     enrollmentId: enrollment.id,
     studentName: `${student.firstName} ${student.lastName}`,
     courseTitle: course.title,
+    courseDescription: course.description,
+    durationWeeks: course.durationWeeks,
     completionDate: enrollment.completionDate ?? new Date(),
   };
 }
@@ -119,6 +123,25 @@ export function streamCertificatePdf(data: CertificateData, destination: NodeJS.
     .text(data.courseTitle, margin + 60, margin + 263, {
       align: "center",
       width: width - (margin + 60) * 2,
+    });
+
+  // A short program-overview paragraph -- duration plus the course's own description --
+  // not the full curriculum (that belongs on a transcript, not a one-page certificate).
+  // Both fields already exist on Course, so this is presentation-only, no new data.
+  doc
+    .fillColor(CHARCOAL_SOFT)
+    .font("Helvetica")
+    .fontSize(10)
+    .text(`${data.durationWeeks}-WEEK PROGRAM`, 0, margin + 302, { align: "center", characterSpacing: 1.5 });
+
+  doc
+    .fillColor(CHARCOAL_SOFT)
+    .font("Helvetica-Oblique")
+    .fontSize(10.5)
+    .text(data.courseDescription, margin + 130, margin + 318, {
+      align: "center",
+      width: width - (margin + 130) * 2,
+      lineGap: 2,
     });
 
   // Two-column signature block near the bottom: issuing organization on the left,
