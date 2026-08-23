@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" role="img" aria-labelledby="socialMediaCoverTitle">
+<title id="socialMediaCoverTitle">A phone screen with a chat bubble and a heart icon, representing social media content</title>
+<rect width="400" height="160" fill="#EFF6FF"/>
+<circle cx="360" cy="20" r="90" fill="#BFDBFE" opacity="0.35"/>
+<circle cx="30" cy="150" r="60" fill="#BFDBFE" opacity="0.25"/>
+
+<g transform="translate(115,80)">
+  <rect x="-28" y="-55" width="56" height="110" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="3"/>
+  <rect x="-20" y="-42" width="40" height="66" rx="3" fill="#EFF6FF"/>
+  <circle cx="0" cy="42" r="5" fill="#2563EB"/>
+</g>
+<g transform="translate(185,35)">
+  <path d="M0,0 h56 a10,10 0 0 1 10,10 v22 a10,10 0 0 1 -10,10 h-34 l-14,12 v-12 h-2 a10,10 0 0 1 -10,-10 v-22 a10,10 0 0 1 10,-10 Z" fill="#2563EB"/>
+</g>
+<g transform="translate(255,95)">
+  <path d="M0,10 C-14,-2 -14,-18 0,-12 C14,-18 14,-2 0,10 Z" fill="#C1442D"/>
+</g>
+
+</svg>

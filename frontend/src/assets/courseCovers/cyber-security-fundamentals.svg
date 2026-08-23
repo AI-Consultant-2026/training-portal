@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" role="img" aria-labelledby="cyberSecCoverTitle">
+<title id="cyberSecCoverTitle">A shield with a padlock, representing cyber security protection</title>
+<rect width="400" height="160" fill="#EFF6FF"/>
+<circle cx="360" cy="20" r="90" fill="#BFDBFE" opacity="0.35"/>
+<circle cx="30" cy="150" r="60" fill="#BFDBFE" opacity="0.25"/>
+
+<g transform="translate(120,80)">
+  <path d="M0,-50 L42,-34 V6 C42,40 22,58 0,68 C-22,58 -42,40 -42,6 V-34 Z" fill="#FFFFFF" stroke="#2563EB" stroke-width="3"/>
+  <rect x="-16" y="-4" width="32" height="26" rx="4" fill="#2563EB"/>
+  <path d="M-10,-4 V-14 a10,10 0 0 1 20,0 V-4" fill="none" stroke="#2563EB" stroke-width="4"/>
+  <circle cx="0" cy="8" r="3.5" fill="#FFFFFF"/>
+</g>
+<g transform="translate(210,40)" stroke="#2563EB" stroke-width="2.5" opacity="0.5" fill="none">
+  <path d="M0,40 h30 v-20 h30"/>
+  <path d="M0,60 h50 v-15 h40"/>
+  <circle cx="0" cy="40" r="3" fill="#2563EB" stroke="none"/>
+  <circle cx="0" cy="60" r="3" fill="#2563EB" stroke="none"/>
+  <circle cx="90" cy="20" r="3" fill="#2563EB" stroke="none"/>
+  <circle cx="90" cy="45" r="3" fill="#2563EB" stroke="none"/>
+</g>
+
+</svg>
