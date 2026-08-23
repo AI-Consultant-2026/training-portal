@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as certificateService from "../services/certificate.service";
 import * as courseService from "../services/course.service";
 import * as enrollmentService from "../services/enrollment.service";
 import * as lessonService from "../services/lesson.service";
@@ -40,4 +41,12 @@ export const listMyEnrollments = asyncHandler(async (req: Request, res: Response
 export const getEnrollment = asyncHandler(async (req: Request, res: Response) => {
   const enrollment = await enrollmentService.getEnrollmentById(req.params.id, req.user!);
   res.json({ enrollment });
+});
+
+export const downloadCertificate = asyncHandler(async (req: Request, res: Response) => {
+  const data = await certificateService.getCertificateData(req.params.id, req.user!);
+  const safeTitle = data.courseTitle.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="${safeTitle}-certificate.pdf"`);
+  certificateService.streamCertificatePdf(data, res);
 });

@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { downloadCertificate } from "../../../api/enrollments.api";
 import { ProgressBar } from "../../../components/ui/ProgressBar";
 import { COURSE_COVER_IMAGES } from "../../courses/courseCoverImages";
 import { Enrollment } from "../../../types/api";
@@ -36,6 +38,21 @@ function CompletedBadge() {
 export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
   const course = enrollment.course;
   const coverImage = course ? COURSE_COVER_IMAGES[course.slug] : undefined;
+  const [downloading, setDownloading] = useState(false);
+  const [downloadFailed, setDownloadFailed] = useState(false);
+
+  async function handleDownloadCertificate() {
+    if (!course) return;
+    setDownloadFailed(false);
+    setDownloading(true);
+    try {
+      await downloadCertificate(enrollment.id, course.title);
+    } catch {
+      setDownloadFailed(true);
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-3 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -54,15 +71,28 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
         <ProgressBar percent={enrollment.progressPercent} />
         <div className="flex items-center justify-between text-sm text-gray-500">
           <span>{enrollment.progressPercent}% complete</span>
-          {course && (
-            <Link
-              to={enrollment.nextLessonId ? `/lessons/${enrollment.nextLessonId}` : `/courses/${course.slug}`}
-              className="text-blue-600 hover:underline"
-            >
-              Continue
-            </Link>
-          )}
+          <div className="flex items-center gap-3">
+            {enrollment.status === "completed" && course && (
+              <button
+                type="button"
+                onClick={handleDownloadCertificate}
+                disabled={downloading}
+                className="font-medium text-amber-700 hover:underline disabled:opacity-60"
+              >
+                {downloading ? "Preparing..." : "Certificate"}
+              </button>
+            )}
+            {course && (
+              <Link
+                to={enrollment.nextLessonId ? `/lessons/${enrollment.nextLessonId}` : `/courses/${course.slug}`}
+                className="text-blue-600 hover:underline"
+              >
+                Continue
+              </Link>
+            )}
+          </div>
         </div>
+        {downloadFailed && <p className="text-xs text-red-600">Could not download the certificate.</p>}
       </div>
     </div>
   );

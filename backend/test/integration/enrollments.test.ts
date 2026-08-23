@@ -152,3 +152,117 @@ describe("Enrollments: nextLessonId", () => {
     expect(res.body.enrollment.nextLessonId).toBeNull();
   });
 });
+
+async function createAdmin(email = "jest-enroll-admin@example.com") {
+  const passwordHash = await bcrypt.hash("Password123!", 4);
+  return User.create({ email, passwordHash, firstName: "Jest", lastName: "Admin", role: "admin" });
+}
+
+describe("Enrollments: certificate download", () => {
+  it("rejects an anonymous request", async () => {
+    const res = await request(app).get("/api/enrollments/00000000-0000-0000-0000-000000000000/certificate");
+    expect(res.status).toBe(401);
+  });
+
+  it("404s for an unknown enrollment", async () => {
+    const student = await registerStudent("certificate-unknown@example.com");
+    void student;
+    const token = await loginAs("certificate-unknown@example.com");
+
+    const res = await request(app)
+      .get("/api/enrollments/00000000-0000-0000-0000-000000000000/certificate")
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(404);
+  });
+
+  it("forbids a student downloading another student's certificate", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const owner = await registerStudent("certificate-owner@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: owner.id,
+      status: "completed",
+      progressPercent: 100,
+      completionDate: new Date(),
+    });
+
+    await registerStudent("certificate-intruder@example.com");
+    const intruderToken = await loginAs("certificate-intruder@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/certificate`)
+      .set("Authorization", `Bearer ${intruderToken}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("forbids downloading a certificate for a course that isn't completed yet", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const student = await registerStudent("certificate-notdone@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      status: "active",
+      progressPercent: 50,
+    });
+    const token = await loginAs("certificate-notdone@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/certificate`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("streams a real PDF for the owning student's completed enrollment", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const student = await registerStudent("certificate-owner2@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      status: "completed",
+      progressPercent: 100,
+      completionDate: new Date("2026-06-15"),
+    });
+    const token = await loginAs("certificate-owner2@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/certificate`)
+      .set("Authorization", `Bearer ${token}`)
+      .buffer(true)
+      .parse((r, cb) => {
+        const chunks: Buffer[] = [];
+        r.on("data", (chunk) => chunks.push(chunk));
+        r.on("end", () => cb(null, Buffer.concat(chunks)));
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toBe("application/pdf");
+    expect(res.headers["content-disposition"]).toContain("attachment");
+    expect(res.headers["content-disposition"]).toContain(".pdf");
+    const body = res.body as Buffer;
+    expect(body.subarray(0, 5).toString("latin1")).toBe("%PDF-");
+  });
+
+  it("allows an admin to download any student's certificate", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const student = await registerStudent("certificate-adminview@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      status: "completed",
+      progressPercent: 100,
+      completionDate: new Date(),
+    });
+
+    await createAdmin();
+    const adminToken = await loginAs("jest-enroll-admin@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/certificate`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+  });
+});

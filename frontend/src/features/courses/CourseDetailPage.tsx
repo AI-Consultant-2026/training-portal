@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
+import { downloadCertificate } from "../../api/enrollments.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
 import { fetchPaymentQuote } from "../../api/payments.api";
 import { fetchModuleQuizzes } from "../../api/quizzes.api";
@@ -83,6 +84,8 @@ export function CourseDetailPage() {
   const [enrolling, setEnrolling] = useState(false);
   const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [downloadingCertificate, setDownloadingCertificate] = useState(false);
+  const [certificateError, setCertificateError] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -182,6 +185,19 @@ export function CourseDetailPage() {
     setEnrolling(false);
   }
 
+  async function handleDownloadCertificate() {
+    if (!course || !myEnrollment) return;
+    setCertificateError(false);
+    setDownloadingCertificate(true);
+    try {
+      await downloadCertificate(myEnrollment.id, course.title);
+    } catch {
+      setCertificateError(true);
+    } finally {
+      setDownloadingCertificate(false);
+    }
+  }
+
   if (status === "loading" || !course) {
     return (
       <div className="flex justify-center py-16">
@@ -242,7 +258,20 @@ export function CourseDetailPage() {
                 Resume course
               </Link>
             )}
+            {isEnrolled && myEnrollment?.status === "completed" && (
+              <button
+                type="button"
+                onClick={handleDownloadCertificate}
+                disabled={downloadingCertificate}
+                className="rounded-md bg-amber-100 px-4 py-2 text-sm font-medium text-amber-700 hover:bg-amber-200 disabled:opacity-60"
+              >
+                {downloadingCertificate ? "Preparing..." : "Download certificate"}
+              </button>
+            )}
           </div>
+          {certificateError && (
+            <p className="mt-2 text-sm text-red-600">Could not download the certificate.</p>
+          )}
         </div>
       )}
 
