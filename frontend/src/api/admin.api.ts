@@ -42,6 +42,10 @@ export async function confirmPayment(enrollmentId: string, paymentConfirmed: boo
   await axiosClient.patch(`/admin/enrollments/${enrollmentId}/payment`, { paymentConfirmed });
 }
 
+export async function sendCompletionEmail(enrollmentId: string): Promise<void> {
+  await axiosClient.post(`/admin/enrollments/${enrollmentId}/send-completion-email`);
+}
+
 export async function addEnrollment(
   candidateId: string,
   courseId: string,

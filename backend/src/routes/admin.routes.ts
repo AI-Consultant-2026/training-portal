@@ -40,6 +40,7 @@ adminRouter.patch(
   validate(setPaymentConfirmedSchema),
   adminController.setPaymentConfirmed,
 );
+adminRouter.post("/enrollments/:id/send-completion-email", adminController.sendCompletionEmail);
 adminRouter.get("/quizzes", adminController.listQuizzes);
 adminRouter.patch(
   "/quizzes/:id",

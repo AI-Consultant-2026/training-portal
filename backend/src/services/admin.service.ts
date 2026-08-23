@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import { col, fn, Op } from "sequelize";
 import { config } from "../config";
+import * as emails from "../emails";
 import {
   AssignmentSubmission,
   Capstone,
@@ -406,6 +407,33 @@ export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed
   enrollment.paymentConfirmedAt = paymentConfirmed ? new Date() : null;
   await enrollment.save();
   return enrollment;
+}
+
+// Manual, admin-triggered send (not an automatic side effect of completion itself) --
+// no "already sent" tracking, since an admin re-sending a congratulations note on
+// request isn't a bug to guard against. Throws on failure (see sendCourseCompletedEmail's
+// comment) so the admin sees a real error instead of a false-positive "sent" response.
+export async function sendCompletionEmail(enrollmentId: string): Promise<void> {
+  const enrollment = await Enrollment.findByPk(enrollmentId, {
+    include: [
+      { model: Course, as: "course" },
+      { model: User, as: "student" },
+    ],
+  });
+  if (!enrollment) {
+    throw ApiError.notFound("Enrollment not found");
+  }
+  if (enrollment.status !== "completed") {
+    throw ApiError.badRequest("This candidate hasn't completed this course yet");
+  }
+
+  const course = (enrollment as unknown as { course?: Course }).course;
+  const student = (enrollment as unknown as { student?: User }).student;
+  if (!course || !student) {
+    throw ApiError.notFound("Enrollment is missing course or student data");
+  }
+
+  await emails.sendCourseCompletedEmail(student, course, `${config.corsOrigin}/dashboard`);
 }
 
 export async function listLeads() {

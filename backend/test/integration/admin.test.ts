@@ -15,8 +15,10 @@ import {
   QuizAttempt,
   User,
 } from "../../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 async function createInstructor(email = "jest-instructor@example.com") {
   const passwordHash = await bcrypt.hash("Password123!", 4);
@@ -643,5 +645,104 @@ describe("Lead management", () => {
       .delete("/api/admin/leads/00000000-0000-0000-0000-000000000000")
       .set("Authorization", `Bearer ${adminToken}`);
     expect(res.status).toBe(404);
+  });
+});
+
+describe("Sending a course-completion email", () => {
+  async function createCompletedEnrollment(studentEmail: string) {
+    const instructor = await createInstructor();
+    const course = await Course.create({
+      title: "Finished Course",
+      slug: `finished-course-${Date.now()}-${Math.random()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const student = await registerStudent(studentEmail);
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      status: "completed",
+      progressPercent: 100,
+      completionDate: new Date(),
+    });
+    return { course, student, enrollment };
+  }
+
+  it("rejects unauthenticated, student, and instructor callers", async () => {
+    const instructor = await createInstructor("jest-completionemail-instructor1@example.com");
+    const instructorToken = await loginAs(instructor.email);
+    const { enrollment } = await createCompletedEnrollment("completionemail-auth@example.com");
+    const studentToken = await loginAs("completionemail-auth@example.com");
+
+    const unauth = await request(app).post(`/api/admin/enrollments/${enrollment.id}/send-completion-email`);
+    expect(unauth.status).toBe(401);
+
+    const asStudent = await request(app)
+      .post(`/api/admin/enrollments/${enrollment.id}/send-completion-email`)
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(asStudent.status).toBe(403);
+
+    const asInstructor = await request(app)
+      .post(`/api/admin/enrollments/${enrollment.id}/send-completion-email`)
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(asInstructor.status).toBe(403);
+  });
+
+  it("404s for an unknown enrollment", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+
+    const res = await request(app)
+      .post("/api/admin/enrollments/00000000-0000-0000-0000-000000000000/send-completion-email")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(404);
+  });
+
+  it("rejects sending for an enrollment that isn't completed yet", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const instructor = await createInstructor("jest-completionemail-instructor2@example.com");
+    const course = await Course.create({
+      title: "In Progress Course",
+      slug: `in-progress-course-${Date.now()}`,
+      durationWeeks: 4,
+      status: "published",
+      instructorId: instructor.id,
+    });
+    const student = await registerStudent("completionemail-notdone@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      status: "active",
+      progressPercent: 50,
+    });
+
+    memAdapter.clear();
+    const res = await request(app)
+      .post(`/api/admin/enrollments/${enrollment.id}/send-completion-email`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(400);
+    expect(memAdapter.sentMessages).toHaveLength(0);
+  });
+
+  it("sends a congratulations email to the student for a completed enrollment", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const { course, enrollment } = await createCompletedEnrollment("completionemail-happy@example.com");
+
+    memAdapter.clear();
+    const res = await request(app)
+      .post(`/api/admin/enrollments/${enrollment.id}/send-completion-email`)
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.sent).toBe(true);
+    expect(memAdapter.sentMessages).toHaveLength(1);
+    expect(memAdapter.sentMessages[0]).toMatchObject({
+      to: "completionemail-happy@example.com",
+      subject: `Congratulations on completing ${course.title}!`,
+    });
+    expect(memAdapter.sentMessages[0].text).toContain(course.title);
   });
 });

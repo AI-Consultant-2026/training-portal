@@ -3,6 +3,7 @@ import { emailAdapter, EmailMessage } from "../utils/email";
 import { logger } from "../utils/logger";
 import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
+import { buildCourseCompletedEmail } from "./templates/courseCompleted";
 import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
 import { buildLeadNotificationEmail } from "./templates/leadNotification";
@@ -71,4 +72,17 @@ export async function sendCapstoneGradedEmail(
   feedback: string | null | undefined,
 ): Promise<void> {
   await sendEmail(buildCapstoneGradedEmail(user, capstone, course, score, feedback));
+}
+
+// Deliberately does NOT go through sendEmail()'s swallow-and-log wrapper -- every other
+// send in this file is a side effect of some other primary action (register, enroll,
+// grade) that must never fail because of a broken mail server. This one's sole purpose
+// IS sending an email (an admin clicked "Send email" specifically to notify a student),
+// so the admin needs to see a real failure if SMTP is down, not a false "sent" toast.
+export async function sendCourseCompletedEmail(
+  user: User,
+  course: { title: string },
+  dashboardUrl: string,
+): Promise<void> {
+  await emailAdapter.send(buildCourseCompletedEmail(user, course, dashboardUrl));
 }

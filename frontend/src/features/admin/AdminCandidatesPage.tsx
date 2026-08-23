@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { COURSE_INTERESTS, LOCATIONS } from "../auth/RegisterPage";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { sendCompletionEmail } from "../../api/admin.api";
 import { fetchCourses } from "../../api/courses.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
@@ -48,6 +49,10 @@ export function AdminCandidatesPage() {
   const [enrollSelections, setEnrollSelections] = useState<Record<string, string>>({});
   const [enrollMarkPaid, setEnrollMarkPaid] = useState<Record<string, boolean>>({});
   const [addingCourseFor, setAddingCourseFor] = useState<string | null>(null);
+  const [sendingEmailFor, setSendingEmailFor] = useState<string | null>(null);
+  const [emailMessages, setEmailMessages] = useState<
+    Record<string, { text: string; variant: "success" | "error" }>
+  >({});
 
   const inactiveCount = candidates.filter((c) => c.status === "inactive").length;
 
@@ -123,6 +128,26 @@ export function AdminCandidatesPage() {
 
   function handleTogglePayment(enrollmentId: string, paymentConfirmed: boolean) {
     dispatch(confirmPayment({ enrollmentId, paymentConfirmed }));
+  }
+
+  async function handleSendCompletionEmail(enrollmentId: string) {
+    setSendingEmailFor(enrollmentId);
+    setEmailMessages((prev) => {
+      const next = { ...prev };
+      delete next[enrollmentId];
+      return next;
+    });
+    try {
+      await sendCompletionEmail(enrollmentId);
+      setEmailMessages((prev) => ({ ...prev, [enrollmentId]: { text: "Email sent.", variant: "success" } }));
+    } catch (err) {
+      const message =
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
+          ?.message ?? "Could not send the email.";
+      setEmailMessages((prev) => ({ ...prev, [enrollmentId]: { text: message, variant: "error" } }));
+    } finally {
+      setSendingEmailFor(null);
+    }
   }
 
   return (
@@ -283,6 +308,29 @@ export function AdminCandidatesPage() {
                                 <span className="font-mono">{e.latestPayment.gatewayReference}</span> &mdash; verify
                                 against your bank account before confirming.
                               </p>
+                            )}
+                            {e.status === "completed" && (
+                              <div className="ml-5 mt-1 flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => handleSendCompletionEmail(e.id)}
+                                  disabled={sendingEmailFor === e.id}
+                                  className="text-xs font-medium text-blue-600 hover:underline disabled:opacity-60"
+                                >
+                                  {sendingEmailFor === e.id ? "Sending..." : "Send completion email"}
+                                </button>
+                                {emailMessages[e.id] && (
+                                  <span
+                                    className={`text-xs ${
+                                      emailMessages[e.id].variant === "success"
+                                        ? "text-green-700"
+                                        : "text-red-600"
+                                    }`}
+                                  >
+                                    {emailMessages[e.id].text}
+                                  </span>
+                                )}
+                              </div>
                             )}
                           </li>
                         ))}

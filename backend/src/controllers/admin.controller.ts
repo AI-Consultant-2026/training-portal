@@ -54,6 +54,14 @@ export const setPaymentConfirmed = asyncHandler(async (req: Request, res: Respon
   res.json({ enrollment });
 });
 
+export const sendCompletionEmail = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.params.id) {
+    throw ApiError.badRequest("Enrollment id is required");
+  }
+  await adminService.sendCompletionEmail(req.params.id);
+  res.json({ sent: true });
+});
+
 export const listLeads = asyncHandler(async (_req: Request, res: Response) => {
   const leads = await adminService.listLeads();
   res.json({ leads });
