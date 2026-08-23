@@ -160,6 +160,37 @@ export async function getLessonNavigation(lessonId: string): Promise<LessonNavig
   };
 }
 
+// Powers the dashboard's "Continue" deep link: the first lesson (in course order --
+// week/module, then lesson order) that the student hasn't completed yet, so returning
+// students land back where they left off instead of the course landing page. Returns
+// null for a course with no lessons yet, or once every lesson is complete.
+export async function getNextLessonId(courseId: string, studentId: string): Promise<string | null> {
+  const modules = await CourseModule.findAll({
+    where: { courseId },
+    order: [
+      ["weekNumber", "ASC"],
+      ["order", "ASC"],
+    ],
+  });
+
+  const lessonIds = await getLessonIdsForCourse(courseId);
+  if (lessonIds.length === 0) return null;
+
+  const completedRecords = await ProgressTracking.findAll({
+    where: { studentId, lessonId: { [Op.in]: lessonIds } },
+    attributes: ["lessonId"],
+  });
+  const completedIds = new Set(completedRecords.map((r) => r.lessonId));
+
+  for (const courseModule of modules) {
+    const lessons = await listLessonsForModule(courseModule.id);
+    const nextLesson = lessons.find((lesson) => !completedIds.has(lesson.id));
+    if (nextLesson) return nextLesson.id;
+  }
+
+  return null;
+}
+
 async function getLessonIdsForCourse(courseId: string): Promise<string[]> {
   const lessons = await Lesson.findAll({
     include: [

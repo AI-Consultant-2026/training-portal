@@ -127,6 +127,7 @@ export interface Enrollment {
   paymentConfirmed: boolean;
   paymentConfirmedAt: string | null;
   course?: Course;
+  nextLessonId: string | null;
 }
 
 export type PaymentMethod = "card" | "bank_transfer";

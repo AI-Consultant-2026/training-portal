@@ -32,7 +32,10 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
         <div className="flex items-center justify-between text-sm text-gray-500">
           <span>{enrollment.progressPercent}% complete</span>
           {course && (
-            <Link to={`/courses/${course.slug}`} className="text-blue-600 hover:underline">
+            <Link
+              to={enrollment.nextLessonId ? `/lessons/${enrollment.nextLessonId}` : `/courses/${course.slug}`}
+              className="text-blue-600 hover:underline"
+            >
               Continue
             </Link>
           )}
