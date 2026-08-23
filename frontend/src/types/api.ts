@@ -333,6 +333,12 @@ export interface AdminStats {
     averageScore: number | null;
     passRate: number | null;
   };
+  capstones: {
+    totalSubmissions: number;
+    pendingGrading: number;
+    graded: number;
+    averageScore: number | null;
+  };
   payments: { courseId: string; courseTitle: string; paymentConfirmed: number; paymentPending: number }[];
 }
 

@@ -5,6 +5,7 @@ import {
   Assignment,
   AssignmentSubmission,
   Capstone,
+  CapstoneSubmission,
   Course,
   CourseModule,
   Enrollment,
@@ -90,6 +91,7 @@ describe("Admin dashboard stats", () => {
         averageScore: null,
         passRate: null,
       },
+      capstones: { totalSubmissions: 0, pendingGrading: 0, graded: 0, averageScore: null },
       payments: [],
     });
   });
@@ -196,6 +198,25 @@ describe("Admin dashboard stats", () => {
     }
     await QuizAttempt.create({ quizId: quiz.id, studentId: students[1].id, status: "submitted" });
 
+    const capstone = await Capstone.create({ courseId: publishedA.id, title: "Final Project" });
+    await CapstoneSubmission.create({
+      capstoneId: capstone.id,
+      studentId: students[0].id,
+      status: "submitted",
+    });
+    await CapstoneSubmission.create({
+      capstoneId: capstone.id,
+      studentId: students[1].id,
+      status: "graded",
+      score: 80,
+    });
+    await CapstoneSubmission.create({
+      capstoneId: capstone.id,
+      studentId: students[2].id,
+      status: "returned",
+      score: 60,
+    });
+
     const res = await request(app).get("/api/admin/stats").set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.status).toBe(200);
@@ -230,6 +251,13 @@ describe("Admin dashboard stats", () => {
       graded: 4,
       averageScore: 78,
       passRate: 75,
+    });
+
+    expect(stats.capstones).toEqual({
+      totalSubmissions: 3,
+      pendingGrading: 1,
+      graded: 2,
+      averageScore: 70,
     });
   });
 });

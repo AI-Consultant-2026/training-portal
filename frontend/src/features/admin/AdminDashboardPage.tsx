@@ -289,6 +289,20 @@ export function AdminDashboardPage() {
         </Link>
       </div>
 
+      <h2 className="mt-8 text-lg font-semibold text-gray-900">Capstone grading</h2>
+      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatTile label="Total submissions" value={stats.capstones.totalSubmissions} />
+        <StatTile label="Graded" value={stats.capstones.graded} />
+        <StatTile label="Average score" value={formatNumberOrDash(stats.capstones.averageScore)} />
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="text-sm text-gray-500">Pending grading</p>
+          <p className="mt-1 text-2xl font-semibold text-gray-900">{stats.capstones.pendingGrading}</p>
+          <Link to="/instructor/capstone-grading" className="mt-1 text-xs text-blue-600 hover:underline">
+            View queue
+          </Link>
+        </div>
+      </div>
+
       {coursePayments && (
         <Modal
           title={`${coursePayments.courseTitle} — ${coursePayments.paymentStatus === "confirmed" ? "Paid" : "Pending"}`}

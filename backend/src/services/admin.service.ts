@@ -5,6 +5,7 @@ import { config } from "../config";
 import {
   AssignmentSubmission,
   Capstone,
+  CapstoneSubmission,
   Course,
   CourseModule,
   Enrollment,
@@ -119,6 +120,13 @@ export async function getDashboardStats() {
   ).length;
   const passRate = gradedAttempts.length > 0 ? Math.round((100 * passed) / gradedAttempts.length) : null;
 
+  const [capstonesTotal, capstonesPending, capstonesGraded, capstonesAverageScore] = await Promise.all([
+    CapstoneSubmission.count(),
+    CapstoneSubmission.count({ where: { status: "submitted" } }),
+    CapstoneSubmission.count({ where: { status: ["graded", "returned"] } }),
+    average(CapstoneSubmission, "score", { score: { [Op.ne]: null } }),
+  ]);
+
   return {
     users: { total: usersTotal, byRole: usersByRole },
     courses: { total: coursesTotal, byStatus: coursesByStatus, list: courseList },
@@ -139,6 +147,12 @@ export async function getDashboardStats() {
       graded: quizzesGraded,
       averageScore: quizzesAverageScore,
       passRate,
+    },
+    capstones: {
+      totalSubmissions: capstonesTotal,
+      pendingGrading: capstonesPending,
+      graded: capstonesGraded,
+      averageScore: capstonesAverageScore,
     },
     payments: await getPaymentsOverview(),
   };
