@@ -8,6 +8,7 @@ export interface RegisterInput {
   lastName: string;
   location: string;
   courseInterest: string;
+  university: string;
 }
 
 export interface LoginInput {

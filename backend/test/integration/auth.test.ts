@@ -47,6 +47,27 @@ describe("Auth flow", () => {
     expect(res.status).toBe(409);
   });
 
+  it("accepts and persists a university from the allow-list", async () => {
+    const res = await request(app)
+      .post("/api/auth/register")
+      .send({ ...validRegistration, email: "jest-university-student@example.com", university: "University of Lagos" });
+
+    expect(res.status).toBe(201);
+    expect(res.body.user.university).toBe("University of Lagos");
+  });
+
+  it("rejects a university that isn't on the allow-list", async () => {
+    const res = await request(app)
+      .post("/api/auth/register")
+      .send({
+        ...validRegistration,
+        email: "jest-baduniversity-student@example.com",
+        university: "Not A Real University",
+      });
+
+    expect(res.status).toBe(400);
+  });
+
   it("logs in and can access a protected route with the access token", async () => {
     await request(app).post("/api/auth/register").send(validRegistration);
 

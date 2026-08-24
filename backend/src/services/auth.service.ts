@@ -20,6 +20,7 @@ export interface RegisterInput {
   lastName: string;
   location?: string;
   courseInterest?: string;
+  university?: string;
 }
 
 export interface LoginInput {
@@ -62,6 +63,7 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     lastName: input.lastName,
     location: input.location ?? "Nigeria",
     courseInterest: input.courseInterest ?? null,
+    university: input.university ?? null,
   });
 
   const accessToken = generateAccessToken(user);

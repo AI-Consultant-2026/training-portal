@@ -85,6 +85,70 @@ export const COURSE_INTERESTS = [
   "hse-fundamentals",
 ] as const;
 
+// Nigeria's federal universities (per Wikipedia's "List of universities in Nigeria" as
+// of 2026-08-24). State and private universities were deliberately left out -- only
+// federal was asked for -- so if broader coverage is wanted later, add those as
+// additional options here rather than a separate field.
+export const UNIVERSITIES = [
+  "African Aviation and Aerospace University",
+  "Abubakar Tafawa Balewa University",
+  "Adeyemi Federal University of Education",
+  "Admiralty University Ibusa",
+  "Ahmadu Bello University",
+  "Air Force Institute of Technology",
+  "Alex Ekwueme Federal University Ndufu Alike Ikwo",
+  "Alvan Ikoku Federal University of Education",
+  "Bayero University",
+  "Federal University Birnin Kebbi",
+  "Federal University Dutse",
+  "Federal University Dutsin-Ma",
+  "Federal University Gashua",
+  "Federal University Gusau",
+  "Federal University Kashere",
+  "Federal University Lokoja",
+  "Federal University Lafia",
+  "Federal University of Agriculture Abeokuta",
+  "Federal University of Agriculture Mubi",
+  "Federal University of Agriculture Zuru",
+  "Federal University of Applied Sciences Kachia",
+  "Federal University of Education Pankshi",
+  "Federal University of Education Zaria",
+  "Federal University of Health Sciences Azare",
+  "Federal University of Petroleum Resources Effurun",
+  "Federal University of Technology Akure",
+  "Federal University of Technology Ikot Abasi",
+  "Federal University of Technology Minna",
+  "Federal University of Technology Owerri",
+  "Federal University of Transportation Daura",
+  "Federal University Otuoke",
+  "Federal University Oye-Ekiti",
+  "Federal University Wukari",
+  "Joseph Sarwuan Tarka University",
+  "Michael Okpara University of Agriculture Umudike",
+  "Modibbo Adama University Yola",
+  "National Open University of Nigeria",
+  "Nigeria Police Academy Wudil",
+  "Nigerian Army University Biu",
+  "Nigerian Defence Academy",
+  "Nigerian Maritime University",
+  "Nnamdi Azikiwe University",
+  "Obafemi Awolowo University",
+  "Tai Solarin Federal University of Education",
+  "University of Abuja",
+  "University of Benin",
+  "University of Calabar",
+  "University of Ibadan",
+  "University of Ilorin",
+  "University of Jos",
+  "University of Lagos",
+  "University of Maiduguri",
+  "University of Nigeria Nsukka",
+  "University of Port Harcourt",
+  "University of Uyo",
+  "Usmanu Danfodiyo University",
+  "Yusuf Maitama Sule Federal University of Education Kano",
+] as const;
+
 export const registerSchema = z.object({
   body: z.object({
     email: z.string().email(),
@@ -96,6 +160,7 @@ export const registerSchema = z.object({
     // required <select> elements, so every genuine signup still provides both.
     location: z.enum(LOCATIONS).default("Nigeria"),
     courseInterest: z.enum(COURSE_INTERESTS).optional(),
+    university: z.enum(UNIVERSITIES).optional(),
   }),
 });
 

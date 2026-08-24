@@ -12,6 +12,7 @@ export function serializeUser(user: User) {
     profileData: user.profileData,
     location: user.location,
     courseInterest: user.courseInterest,
+    university: user.university,
     emailVerifiedAt: user.emailVerifiedAt,
   };
 }

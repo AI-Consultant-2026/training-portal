@@ -14,6 +14,7 @@ const UNVERIFIED_STUDENT: User = {
   profileData: {},
   location: "Nigeria",
   courseInterest: null,
+  university: null,
   emailVerifiedAt: null,
 };
 
