@@ -37,4 +37,29 @@ describe("Leads", () => {
 
     expect(res.status).toBe(400);
   });
+
+  it("accepts and persists a university and source from the allow-lists, included in the notification email", async () => {
+    const res = await request(app)
+      .post("/api/leads")
+      .send({ ...validLead, university: "University of Lagos", source: "NYSC Camp" });
+
+    expect(res.status).toBe(201);
+
+    expect(memAdapter.sentMessages[0].text).toContain("University: University of Lagos");
+    expect(memAdapter.sentMessages[0].text).toContain("Heard about us via: NYSC Camp");
+  });
+
+  it("rejects a university that isn't on the allow-list", async () => {
+    const res = await request(app)
+      .post("/api/leads")
+      .send({ ...validLead, university: "Not A Real University" });
+
+    expect(res.status).toBe(400);
+  });
+
+  it("rejects a source that isn't on the allow-list", async () => {
+    const res = await request(app).post("/api/leads").send({ ...validLead, source: "Carrier Pigeon" });
+
+    expect(res.status).toBe(400);
+  });
 });

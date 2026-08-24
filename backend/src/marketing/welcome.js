@@ -56,6 +56,8 @@
             name: form.regName.value.trim(),
             email: form.regEmail.value.trim(),
             course: form.regCourse.value,
+            university: form.regUniversity.value,
+            source: form.regSource.value,
           }),
         })
           .then(function (res) {

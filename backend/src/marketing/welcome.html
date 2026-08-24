@@ -1079,6 +1079,85 @@
               <option>Not sure yet</option>
             </select>
           </div>
+          <div class="form-row">
+            <label class="form-label" for="regUniversity">University</label>
+            <!-- Keep in sync with backend/src/validators/auth.validators.ts's UNIVERSITIES
+                 and frontend/src/features/auth/RegisterPage.tsx's UNIVERSITIES -- this static
+                 page can't import that shared list, so it's a third manually-kept copy. -->
+            <select class="form-select" id="regUniversity" name="university" required>
+              <option value="" disabled selected>Select University&hellip;</option>
+              <option>African Aviation and Aerospace University</option>
+              <option>Abubakar Tafawa Balewa University</option>
+              <option>Adeyemi Federal University of Education</option>
+              <option>Admiralty University Ibusa</option>
+              <option>Ahmadu Bello University</option>
+              <option>Air Force Institute of Technology</option>
+              <option>Alex Ekwueme Federal University Ndufu Alike Ikwo</option>
+              <option>Alvan Ikoku Federal University of Education</option>
+              <option>Bayero University</option>
+              <option>Federal University Birnin Kebbi</option>
+              <option>Federal University Dutse</option>
+              <option>Federal University Dutsin-Ma</option>
+              <option>Federal University Gashua</option>
+              <option>Federal University Gusau</option>
+              <option>Federal University Kashere</option>
+              <option>Federal University Lokoja</option>
+              <option>Federal University Lafia</option>
+              <option>Federal University of Agriculture Abeokuta</option>
+              <option>Federal University of Agriculture Mubi</option>
+              <option>Federal University of Agriculture Zuru</option>
+              <option>Federal University of Applied Sciences Kachia</option>
+              <option>Federal University of Education Pankshi</option>
+              <option>Federal University of Education Zaria</option>
+              <option>Federal University of Health Sciences Azare</option>
+              <option>Federal University of Petroleum Resources Effurun</option>
+              <option>Federal University of Technology Akure</option>
+              <option>Federal University of Technology Ikot Abasi</option>
+              <option>Federal University of Technology Minna</option>
+              <option>Federal University of Technology Owerri</option>
+              <option>Federal University of Transportation Daura</option>
+              <option>Federal University Otuoke</option>
+              <option>Federal University Oye-Ekiti</option>
+              <option>Federal University Wukari</option>
+              <option>Joseph Sarwuan Tarka University</option>
+              <option>Michael Okpara University of Agriculture Umudike</option>
+              <option>Modibbo Adama University Yola</option>
+              <option>National Open University of Nigeria</option>
+              <option>Nigeria Police Academy Wudil</option>
+              <option>Nigerian Army University Biu</option>
+              <option>Nigerian Defence Academy</option>
+              <option>Nigerian Maritime University</option>
+              <option>Nnamdi Azikiwe University</option>
+              <option>Obafemi Awolowo University</option>
+              <option>Tai Solarin Federal University of Education</option>
+              <option>University of Abuja</option>
+              <option>University of Benin</option>
+              <option>University of Calabar</option>
+              <option>University of Ibadan</option>
+              <option>University of Ilorin</option>
+              <option>University of Jos</option>
+              <option>University of Lagos</option>
+              <option>University of Maiduguri</option>
+              <option>University of Nigeria Nsukka</option>
+              <option>University of Port Harcourt</option>
+              <option>University of Uyo</option>
+              <option>Usmanu Danfodiyo University</option>
+              <option>Yusuf Maitama Sule Federal University of Education Kano</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regSource">How did you hear about us?</label>
+            <select class="form-select" id="regSource" name="source" required>
+              <option value="" disabled selected>Choose one&hellip;</option>
+              <option>NYSC Camp</option>
+              <option>WhatsApp/Telegram Group</option>
+              <option>Campus Ambassador</option>
+              <option>Social Media Ads</option>
+              <option>Search/Website</option>
+              <option>Referral</option>
+              <option>Other</option>
+            </select>
+          </div>
           <button class="btn btn-signal" type="submit" id="registerSubmit" style="width:100%;">Submit</button>
           <p class="form-note">We'll reply by email &mdash; usually within one working day.</p>
           <div class="form-success" id="formSuccess">

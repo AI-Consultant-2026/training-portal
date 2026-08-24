@@ -2,13 +2,21 @@ import { config } from "../../config";
 import { EmailMessage } from "../../utils/email";
 import { wrapHtml } from "../htmlWrapper";
 
-export function buildLeadNotificationEmail(lead: { name: string; email: string; course: string }): EmailMessage {
+export function buildLeadNotificationEmail(lead: {
+  name: string;
+  email: string;
+  course: string;
+  university?: string | null;
+  source?: string | null;
+}): EmailMessage {
   const lines = [
     "New course interest submitted via the website.",
     `Name: ${lead.name}`,
     `Email: ${lead.email}`,
     `Course: ${lead.course}`,
   ];
+  if (lead.university) lines.push(`University: ${lead.university}`);
+  if (lead.source) lines.push(`Heard about us via: ${lead.source}`);
 
   return {
     to: config.leadsNotifyEmail,

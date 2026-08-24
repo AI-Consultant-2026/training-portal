@@ -5,16 +5,23 @@ export interface LeadAttributes {
   name: string;
   email: string;
   course: string;
+  university: string | null;
+  source: string | null;
   createdAt?: Date;
 }
 
-export type LeadCreationAttributes = Optional<LeadAttributes, "id" | "createdAt">;
+export type LeadCreationAttributes = Optional<
+  LeadAttributes,
+  "id" | "university" | "source" | "createdAt"
+>;
 
 export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implements LeadAttributes {
   declare id: string;
   declare name: string;
   declare email: string;
   declare course: string;
+  declare university: string | null;
+  declare source: string | null;
   declare readonly createdAt: Date;
 }
 
@@ -25,6 +32,8 @@ export function initLeadModel(sequelize: Sequelize) {
       name: { type: DataTypes.STRING, allowNull: false },
       email: { type: DataTypes.STRING, allowNull: false },
       course: { type: DataTypes.STRING, allowNull: false },
+      university: { type: DataTypes.STRING, allowNull: true },
+      source: { type: DataTypes.STRING, allowNull: true },
     },
     {
       sequelize,

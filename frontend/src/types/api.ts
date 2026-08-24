@@ -411,5 +411,7 @@ export interface Lead {
   name: string;
   email: string;
   course: string;
+  university: string | null;
+  source: string | null;
   createdAt: string;
 }
