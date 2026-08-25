@@ -262,6 +262,21 @@ describe("Admin dashboard stats", () => {
       averageScore: 70,
     });
   });
+
+  it("excludes deactivated users from the user totals and role breakdown", async () => {
+    await createAdmin();
+    await createInstructor();
+    const adminToken = await loginAs("jest-admin@example.com");
+
+    await registerStudent("adminstatsactive@example.com");
+    const deactivated = await registerStudent("adminstatsdeactivated@example.com");
+    await deactivated.update({ status: "inactive" });
+
+    const res = await request(app).get("/api/admin/stats").set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.stats.users).toEqual({ total: 3, byRole: { student: 1, instructor: 1, admin: 1 } });
+  });
 });
 
 describe("Course payments drill-down", () => {

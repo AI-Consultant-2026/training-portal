@@ -89,9 +89,14 @@ export function AdminCandidatesPage() {
     }
   }
 
-  function handleDeactivate(id: string, name: string) {
+  async function handleDeactivate(id: string, name: string) {
     if (!window.confirm(`Deactivate ${name}? They will no longer be able to log in.`)) return;
-    dispatch(deleteCandidate(id));
+    const result = await dispatch(deleteCandidate(id));
+    if (deleteCandidate.fulfilled.match(result)) {
+      // Deactivation drops the candidate out of the "active" user counts on /admin --
+      // refresh those tiles now instead of leaving them stale until next visit.
+      dispatch(fetchAdminStats());
+    }
   }
 
   async function handleDeleteInactive() {

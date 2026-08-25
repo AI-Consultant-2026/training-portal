@@ -36,8 +36,10 @@ async function countGroupedBy<K extends string>(
   model: unknown,
   column: string,
   keys: readonly K[],
+  where?: object,
 ): Promise<Record<K, number>> {
   const rows = await (model as FindAllRaw).findAll({
+    where,
     attributes: [column, [fn("COUNT", col("id")), "count"]],
     group: [column],
     raw: true,
@@ -62,9 +64,11 @@ async function average(model: unknown, column: string, where?: object): Promise<
 }
 
 export async function getDashboardStats() {
+  // "active" only -- a deactivated candidate should stop counting toward the dashboard's
+  // user totals immediately, not linger until someone hard-deletes the row.
   const [usersTotal, usersByRole] = await Promise.all([
-    User.count(),
-    countGroupedBy(User, "role", ["student", "instructor", "admin"] as const),
+    User.count({ where: { status: "active" } }),
+    countGroupedBy(User, "role", ["student", "instructor", "admin"] as const, { status: "active" }),
   ]);
 
   const [coursesTotal, coursesByStatus, courses, enrollmentCountsByCourse] = await Promise.all([
