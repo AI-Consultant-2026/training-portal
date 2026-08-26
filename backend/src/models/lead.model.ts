@@ -7,12 +7,23 @@ export interface LeadAttributes {
   course: string;
   university: string | null;
   source: string | null;
+  welcomeEmailSentAt: Date | null;
+  reminder21dSentAt: Date | null;
+  reminder7dSentAt: Date | null;
+  reminder1dSentAt: Date | null;
   createdAt?: Date;
 }
 
 export type LeadCreationAttributes = Optional<
   LeadAttributes,
-  "id" | "university" | "source" | "createdAt"
+  | "id"
+  | "university"
+  | "source"
+  | "welcomeEmailSentAt"
+  | "reminder21dSentAt"
+  | "reminder7dSentAt"
+  | "reminder1dSentAt"
+  | "createdAt"
 >;
 
 export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implements LeadAttributes {
@@ -22,6 +33,10 @@ export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implemen
   declare course: string;
   declare university: string | null;
   declare source: string | null;
+  declare welcomeEmailSentAt: Date | null;
+  declare reminder21dSentAt: Date | null;
+  declare reminder7dSentAt: Date | null;
+  declare reminder1dSentAt: Date | null;
   declare readonly createdAt: Date;
 }
 
@@ -34,6 +49,10 @@ export function initLeadModel(sequelize: Sequelize) {
       course: { type: DataTypes.STRING, allowNull: false },
       university: { type: DataTypes.STRING, allowNull: true },
       source: { type: DataTypes.STRING, allowNull: true },
+      welcomeEmailSentAt: { type: DataTypes.DATE, allowNull: true, field: "welcome_email_sent_at" },
+      reminder21dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_21d_sent_at" },
+      reminder7dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_7d_sent_at" },
+      reminder1dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_1d_sent_at" },
     },
     {
       sequelize,

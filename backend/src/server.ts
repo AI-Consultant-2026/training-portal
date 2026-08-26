@@ -1,6 +1,7 @@
 import "./instrument";
 import { createApp } from "./app";
 import { config } from "./config";
+import { startLeadNurtureJobs } from "./jobs/leadNurture.job";
 import { sequelize } from "./models";
 import { logger } from "./utils/logger";
 
@@ -13,6 +14,13 @@ async function start() {
   const server = app.listen(config.port, () => {
     logger.info(`Backend listening on port ${config.port} (${config.nodeEnv})`);
   });
+
+  // Skipped in tests -- avoids a lingering cron timer keeping the test process alive if
+  // this file is ever imported from a test context (integration tests currently import
+  // createApp() directly and never run this file, but this guard costs nothing).
+  if (config.nodeEnv !== "test") {
+    startLeadNurtureJobs();
+  }
 
   function shutdown(signal: string) {
     logger.info(`Received ${signal}, shutting down gracefully`);
