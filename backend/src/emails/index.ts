@@ -7,6 +7,7 @@ import { buildCourseCompletedEmail } from "./templates/courseCompleted";
 import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
 import { buildLeadNotificationEmail } from "./templates/leadNotification";
+import { buildLeadRecycleEmail } from "./templates/leadRecycle";
 import { buildLeadReminderEmail, ReminderStage } from "./templates/leadReminder";
 import { buildLeadWelcomeEmail } from "./templates/leadWelcome";
 import { buildPasswordResetEmail } from "./templates/passwordReset";
@@ -61,6 +62,7 @@ export async function sendQuizGradedEmail(
 export async function sendLeadNotificationEmail(lead: {
   name: string;
   email: string;
+  phone?: string | null;
   course: string;
   university?: string | null;
   source?: string | null;
@@ -81,6 +83,14 @@ export async function sendLeadReminderEmail(
   stage: ReminderStage,
 ): Promise<void> {
   await sendEmail(buildLeadReminderEmail(lead, stage));
+}
+
+export async function sendLeadRecycleEmail(lead: {
+  name: string;
+  email: string;
+  course: string;
+}): Promise<void> {
+  await sendEmail(buildLeadRecycleEmail(lead));
 }
 
 export async function sendCapstoneGradedEmail(

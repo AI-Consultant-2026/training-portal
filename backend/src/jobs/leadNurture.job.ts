@@ -1,5 +1,9 @@
 import cron from "node-cron";
-import { sendPendingReminderEmails, sendPendingWelcomeEmails } from "../services/leadNurture.service";
+import {
+  sendPendingRecycleEmails,
+  sendPendingReminderEmails,
+  sendPendingWelcomeEmails,
+} from "../services/leadNurture.service";
 import { logger } from "../utils/logger";
 
 // Runs in-process on the single web dyno this app currently deploys as (see
@@ -17,13 +21,20 @@ export function startLeadNurtureJobs(): void {
       .catch((err) => logger.error("Lead nurture: welcome email job failed", err));
   });
 
-  // Runs the T-21/T-7/T-1 countdown pass once a day.
+  // Runs the T-21/T-14/T-7/T-1/T-0 countdown pass, then the post-deadline recycle
+  // pass (a no-op until config.enrolment.followingDeadline is set), once a day.
   cron.schedule("17 6 * * *", () => {
     sendPendingReminderEmails()
       .then(({ sent }) => {
         if (sent > 0) logger.info(`Lead nurture: sent ${sent} reminder email(s)`);
       })
       .catch((err) => logger.error("Lead nurture: reminder email job failed", err));
+
+    sendPendingRecycleEmails()
+      .then(({ sent }) => {
+        if (sent > 0) logger.info(`Lead nurture: sent ${sent} recycle email(s)`);
+      })
+      .catch((err) => logger.error("Lead nurture: recycle email job failed", err));
   });
 
   logger.info("Lead nurture jobs scheduled");

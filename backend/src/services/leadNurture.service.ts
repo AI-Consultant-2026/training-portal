@@ -6,12 +6,19 @@ import { logger } from "../utils/logger";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-type ReminderField = "reminder21dSentAt" | "reminder7dSentAt" | "reminder1dSentAt";
+type ReminderField =
+  | "reminder21dSentAt"
+  | "reminder14dSentAt"
+  | "reminder7dSentAt"
+  | "reminder1dSentAt"
+  | "reminder0dSentAt";
 
 const REMINDER_STAGES: Array<{ stage: ReminderStage; days: number; field: ReminderField }> = [
   { stage: "21d", days: 21, field: "reminder21dSentAt" },
+  { stage: "14d", days: 14, field: "reminder14dSentAt" },
   { stage: "7d", days: 7, field: "reminder7dSentAt" },
   { stage: "1d", days: 1, field: "reminder1dSentAt" },
+  { stage: "0d", days: 0, field: "reminder0dSentAt" },
 ];
 
 function daysUntilDeadline(): number {
@@ -85,6 +92,42 @@ export async function sendPendingReminderEmails(): Promise<{ sent: number }> {
       sent++;
     } catch (err) {
       logger.error(`Failed to send lead reminder email (leadId=${lead.id}, stage=${mostUrgent.stage})`, err);
+    }
+  }
+
+  return { sent };
+}
+
+// Invites a lead who never converted by the current deadline to the next cohort,
+// instead of simply losing them once config.enrolment.nextDeadline passes. Gracefully
+// no-ops until config.enrolment.followingDeadline is actually set -- see that config
+// comment for why it's empty by default.
+export async function sendPendingRecycleEmails(): Promise<{ sent: number }> {
+  if (!config.enrolment.followingDeadline) {
+    return { sent: 0 };
+  }
+  if (daysUntilDeadline() >= 0) {
+    return { sent: 0 };
+  }
+
+  const leads = await Lead.findAll({ where: { recycleEmailSentAt: null } });
+  let sent = 0;
+
+  for (const lead of leads) {
+    if (await hasConfirmedPayment(lead.email)) {
+      // They converted after all -- backfill so we stop re-checking them every run.
+      lead.recycleEmailSentAt = new Date();
+      await lead.save();
+      continue;
+    }
+
+    try {
+      await emails.sendLeadRecycleEmail(lead);
+      lead.recycleEmailSentAt = new Date();
+      await lead.save();
+      sent++;
+    } catch (err) {
+      logger.error(`Failed to send lead recycle email (leadId=${lead.id})`, err);
     }
   }
 

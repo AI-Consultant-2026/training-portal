@@ -18,10 +18,16 @@ export const LEAD_SOURCES = [
   "Other",
 ] as const;
 
+// Permissive on purpose -- Nigerian numbers show up in several written forms
+// (+234..., 0..., with spaces/dashes) and this is a lead-capture form, not a payment
+// flow, so rejecting a real but oddly-formatted number costs more than it protects.
+const PHONE_REGEX = /^[0-9+()\s-]{7,20}$/;
+
 export const createLeadSchema = z.object({
   body: z.object({
     name: z.string().min(1),
     email: z.string().email(),
+    phone: z.string().regex(PHONE_REGEX).optional(),
     course: z.string().min(1),
     university: z.enum(UNIVERSITIES).optional(),
     source: z.enum(LEAD_SOURCES).optional(),

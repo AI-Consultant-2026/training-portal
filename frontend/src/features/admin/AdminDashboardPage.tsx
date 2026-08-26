@@ -25,11 +25,14 @@ function toCsvField(value: string): string {
 }
 
 function leadsToCsv(leads: Lead[]): string {
-  const header = ["Name", "Email", "Course", "University", "Source", "Submitted"].map(toCsvField).join(",");
+  const header = ["Name", "Email", "Phone", "Course", "University", "Source", "Submitted"]
+    .map(toCsvField)
+    .join(",");
   const rows = leads.map((lead) =>
     [
       lead.name,
       lead.email,
+      lead.phone ?? "",
       lead.course,
       lead.university ?? "",
       lead.source ?? "",
@@ -39,6 +42,15 @@ function leadsToCsv(leads: Lead[]): string {
       .join(","),
   );
   return [header, ...rows].join("\r\n");
+}
+
+// Nigerian numbers are usually written in local form (0801...); WhatsApp's click-to-chat
+// links need the full international digits with no leading 0. Falls back to stripping
+// symbols only for anything that doesn't look like that shape, rather than guessing.
+function toWhatsAppLink(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  const withCountryCode = digits.startsWith("0") ? `234${digits.slice(1)}` : digits;
+  return `https://wa.me/${withCountryCode}`;
 }
 
 // Client-side export: the admin dashboard already fetches every lead (GET /admin/leads
@@ -237,6 +249,7 @@ export function AdminDashboardPage() {
               <tr>
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">Phone</th>
                 <th className="px-4 py-2">Course</th>
                 <th className="px-4 py-2">University</th>
                 <th className="px-4 py-2">Source</th>
@@ -249,6 +262,21 @@ export function AdminDashboardPage() {
                 <tr key={lead.id} className="border-b border-gray-100 last:border-0">
                   <td className="px-4 py-2 text-gray-900">{lead.name}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.email}</td>
+                  <td className="px-4 py-2 text-gray-600">
+                    {lead.phone ? (
+                      <a
+                        href={toWhatsAppLink(lead.phone)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-700 hover:underline"
+                        title="Open WhatsApp chat"
+                      >
+                        {lead.phone}
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                   <td className="px-4 py-2 text-gray-600">{lead.course}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.university ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.source ?? "—"}</td>

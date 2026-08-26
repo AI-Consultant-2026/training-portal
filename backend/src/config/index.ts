@@ -43,6 +43,11 @@ export const config = {
   enrolment: {
     nextDeadline: process.env.ENROLMENT_DEADLINE ?? "2026-10-01",
     registrationUrl: process.env.ENROLMENT_REGISTRATION_URL ?? "https://paleontraining.com/welcome",
+    // Empty by default -- the following cohort's deadline usually isn't decided yet
+    // when this one opens. Leave unset and the recycle email
+    // (backend/src/emails/templates/leadRecycle.ts) simply never sends; set it once the
+    // next intake's date is known to start inviting leads who missed this one.
+    followingDeadline: process.env.NEXT_ENROLMENT_DEADLINE ?? "",
   },
   // Optional, same reasoning as `email` above: error tracking is genuinely off (not
   // silently broken) until a Sentry project exists and this is set -- see

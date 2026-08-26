@@ -5,6 +5,7 @@ import { logger } from "../utils/logger";
 export interface CreateLeadInput {
   name: string;
   email: string;
+  phone?: string;
   course: string;
   university?: string;
   source?: string;

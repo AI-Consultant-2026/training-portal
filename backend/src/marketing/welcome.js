@@ -49,16 +49,23 @@
         submitBtn.disabled = true;
         submitBtn.textContent = "Sending…";
 
+        // phone is optional -- omit the key entirely when blank rather than sending "",
+        // since the backend's regex validator rejects an empty string as malformed
+        // rather than treating it the same as "not provided".
+        var phone = form.regPhone.value.trim();
+        var payload = {
+          name: form.regName.value.trim(),
+          email: form.regEmail.value.trim(),
+          course: form.regCourse.value,
+          university: form.regUniversity.value,
+          source: form.regSource.value,
+        };
+        if (phone) payload.phone = phone;
+
         fetch("/api/leads", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: form.regName.value.trim(),
-            email: form.regEmail.value.trim(),
-            course: form.regCourse.value,
-            university: form.regUniversity.value,
-            source: form.regSource.value,
-          }),
+          body: JSON.stringify(payload),
         })
           .then(function (res) {
             if (!res.ok) throw new Error("request failed");
