@@ -438,6 +438,7 @@ export interface Partner {
   sector: string | null;
   url: string | null;
   contact: string | null;
+  contactName: string | null;
   cost: string | null;
   status: PartnerStatus;
   lastContacted: string | null;

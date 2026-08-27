@@ -93,10 +93,10 @@ function draftForPartner(partner: Partner, course: string): { subject: string; b
     return {
       subject: `Partnership proposal — practical digital-skills training for your ${audience}`,
       body:
-        `Hi [Name],\n\n` +
+        `Hi ${partner.contactName || "[Name]"},\n\n` +
         `I'm reaching out from Paleon Training, a training provider running practical, project-based digital-skills courses for Nigerian graduates — including ${course}. Each course ends in a real capstone project, giving ${audience} concrete proof of skill for job applications, not just a certificate.\n\n` +
         `I'd like to explore a partnership with ${partner.name} — for example, being listed as a recommended training provider, or a short session introducing the programme to your ${audience} ahead of our next intake, which closes ${deadline}.\n\n` +
-        `Would you be open to a short call this week to discuss?\n\n` +
+        `Would you be open to a discussion about providing your ${audience} with digital skills that could enhance their employability and make them more competitive in the job market?\n\n` +
         `More about the programme: ${REGISTRATION_URL}\n\n` +
         `Best regards,\n[Your name]\nPaleon Training`,
     };
@@ -113,7 +113,7 @@ interface PartnerFormState {
   name: string;
   category: PartnerCategory;
   sector: string;
-  url: string;
+  contactName: string;
   contact: string;
   cost: string;
   status: PartnerStatus;
@@ -126,7 +126,7 @@ const EMPTY_FORM: PartnerFormState = {
   name: "",
   category: "Job Board",
   sector: "",
-  url: "",
+  contactName: "",
   contact: "",
   cost: "",
   status: "not-started",
@@ -191,7 +191,7 @@ export function PartnerPipelinePage() {
       name: partner.name,
       category: partner.category,
       sector: partner.sector ?? "",
-      url: partner.url ?? "",
+      contactName: partner.contactName ?? "",
       contact: partner.contact ?? "",
       cost: partner.cost ?? "",
       status: partner.status,
@@ -209,7 +209,11 @@ export function PartnerPipelinePage() {
       name: form.name,
       category: form.category,
       sector: form.sector || null,
-      url: form.url || null,
+      // No longer collected in this form (replaced by Contact Name) -- preserve
+      // whatever a partner already has (Job Board rows use a real website link)
+      // rather than blanking it out on every save.
+      url: editing?.url ?? null,
+      contactName: form.contactName || null,
       contact: form.contact || null,
       cost: form.cost || null,
       status: form.status,
@@ -416,11 +420,11 @@ export function PartnerPipelinePage() {
               />
             </div>
             <Input
-              id="partner-url"
-              label="Website"
-              value={form.url}
-              onChange={(e) => setForm({ ...form, url: e.target.value })}
-              placeholder="example.com"
+              id="partner-contact-name"
+              label="Contact Name"
+              value={form.contactName}
+              onChange={(e) => setForm({ ...form, contactName: e.target.value })}
+              placeholder="e.g. the Vice-Chancellor or Career Centre contact's name"
             />
             <Input
               id="partner-contact"

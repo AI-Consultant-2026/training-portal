@@ -7,6 +7,7 @@ export interface PartnerAttributes {
   sector: string | null;
   url: string | null;
   contact: string | null;
+  contactName: string | null;
   cost: string | null;
   status: string;
   lastContacted: string | null;
@@ -22,6 +23,7 @@ export type PartnerCreationAttributes = Optional<
   | "sector"
   | "url"
   | "contact"
+  | "contactName"
   | "cost"
   | "status"
   | "lastContacted"
@@ -41,6 +43,7 @@ export class Partner
   declare sector: string | null;
   declare url: string | null;
   declare contact: string | null;
+  declare contactName: string | null;
   declare cost: string | null;
   declare status: string;
   declare lastContacted: string | null;
@@ -59,6 +62,7 @@ export function initPartnerModel(sequelize: Sequelize) {
       sector: { type: DataTypes.STRING, allowNull: true },
       url: { type: DataTypes.STRING, allowNull: true },
       contact: { type: DataTypes.STRING, allowNull: true },
+      contactName: { type: DataTypes.STRING, allowNull: true, field: "contact_name" },
       cost: { type: DataTypes.STRING, allowNull: true },
       status: { type: DataTypes.STRING, allowNull: false, defaultValue: "not-started" },
       lastContacted: { type: DataTypes.DATEONLY, allowNull: true, field: "last_contacted" },
