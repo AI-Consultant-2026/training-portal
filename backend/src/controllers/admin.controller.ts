@@ -75,6 +75,29 @@ export const deleteLead = asyncHandler(async (req: Request, res: Response) => {
   res.status(204).end();
 });
 
+export const listPartners = asyncHandler(async (_req: Request, res: Response) => {
+  const partners = await adminService.listPartners();
+  res.json({ partners });
+});
+
+export const createPartner = asyncHandler(async (req: Request, res: Response) => {
+  const partner = await adminService.createPartner(req.body);
+  res.status(201).json({ partner });
+});
+
+export const updatePartner = asyncHandler(async (req: Request, res: Response) => {
+  const partner = await adminService.updatePartner(req.params.id as string, req.body);
+  res.json({ partner });
+});
+
+export const deletePartner = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.params.id) {
+    throw ApiError.badRequest("Partner id is required");
+  }
+  await adminService.deletePartner(req.params.id);
+  res.status(204).end();
+});
+
 export const listCoursePayments = asyncHandler(async (req: Request, res: Response) => {
   const status = req.query.status as "confirmed" | "pending";
   const payments = await adminService.listCoursePayments(req.params.courseId as string, status);

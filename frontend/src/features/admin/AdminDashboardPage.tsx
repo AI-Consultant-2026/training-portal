@@ -113,6 +113,12 @@ export function AdminDashboardPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
         <div className="flex items-center gap-4">
+          <Link
+            to="/admin/partner-pipeline"
+            className="text-sm font-medium text-blue-600 hover:underline"
+          >
+            Partner pipeline →
+          </Link>
           <Link to="/admin/capstones" className="text-sm font-medium text-blue-600 hover:underline">
             Manage capstone projects →
           </Link>

@@ -416,3 +416,33 @@ export interface Lead {
   source: string | null;
   createdAt: string;
 }
+
+export type PartnerCategory =
+  | "Job Board"
+  | "NYSC / SAED"
+  | "University Career Centre"
+  | "Community Channel";
+
+export type PartnerStatus =
+  | "not-started"
+  | "drafted"
+  | "sent"
+  | "in-conversation"
+  | "partnered"
+  | "declined";
+
+export interface Partner {
+  id: string;
+  name: string;
+  category: PartnerCategory;
+  sector: string | null;
+  url: string | null;
+  contact: string | null;
+  cost: string | null;
+  status: PartnerStatus;
+  lastContacted: string | null;
+  renewalDate: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

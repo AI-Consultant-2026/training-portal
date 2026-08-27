@@ -1,4 +1,4 @@
-import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead } from "../types/api";
+import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead, Partner } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchAdminStats(): Promise<AdminStats> {
@@ -65,6 +65,28 @@ export async function fetchLeads(): Promise<Lead[]> {
 
 export async function deleteLead(id: string): Promise<void> {
   await axiosClient.delete(`/admin/leads/${id}`);
+}
+
+export async function fetchPartners(): Promise<Partner[]> {
+  const res = await axiosClient.get<{ partners: Partner[] }>("/admin/partners");
+  return res.data.partners;
+}
+
+export type CreatePartnerInput = Omit<Partner, "id" | "createdAt" | "updatedAt">;
+export type UpdatePartnerInput = Partial<CreatePartnerInput>;
+
+export async function createPartner(input: CreatePartnerInput): Promise<Partner> {
+  const res = await axiosClient.post<{ partner: Partner }>("/admin/partners", input);
+  return res.data.partner;
+}
+
+export async function updatePartner(id: string, input: UpdatePartnerInput): Promise<Partner> {
+  const res = await axiosClient.patch<{ partner: Partner }>(`/admin/partners/${id}`, input);
+  return res.data.partner;
+}
+
+export async function deletePartner(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/partners/${id}`);
 }
 
 export async function fetchCoursePayments(

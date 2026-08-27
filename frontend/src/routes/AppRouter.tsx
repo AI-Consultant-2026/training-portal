@@ -57,6 +57,10 @@ const QuizGradingQueuePage = lazyImport(
 );
 const QuizResultsPage = lazyImport(() => import("../features/quizzes/QuizResultsPage"), "QuizResultsPage");
 const QuizTakingPage = lazyImport(() => import("../features/quizzes/QuizTakingPage"), "QuizTakingPage");
+const PartnerPipelinePage = lazyImport(
+  () => import("../features/admin/PartnerPipelinePage"),
+  "PartnerPipelinePage",
+);
 
 function NotFound() {
   return <div className="mx-auto max-w-3xl px-6 py-16 text-center text-gray-600">Page not found.</div>;
@@ -109,6 +113,7 @@ export function AppRouter() {
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
             <Route path="/admin/capstones" element={<AdminCapstonesPage />} />
+            <Route path="/admin/partner-pipeline" element={<PartnerPipelinePage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

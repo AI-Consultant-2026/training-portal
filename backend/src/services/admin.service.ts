@@ -11,6 +11,7 @@ import {
   CourseModule,
   Enrollment,
   Lead,
+  Partner,
   Payment,
   Quiz,
   QuizAttempt,
@@ -450,6 +451,47 @@ export async function deleteLead(id: string): Promise<void> {
     throw ApiError.notFound("Lead not found");
   }
   await lead.destroy();
+}
+
+export interface CreatePartnerInput {
+  name: string;
+  category: string;
+  sector?: string | null;
+  url?: string | null;
+  contact?: string | null;
+  cost?: string | null;
+  status?: string;
+  lastContacted?: string | null;
+  renewalDate?: string | null;
+  notes?: string | null;
+}
+
+export type UpdatePartnerInput = Partial<CreatePartnerInput>;
+
+export async function listPartners() {
+  return Partner.findAll({ order: [["name", "ASC"]] });
+}
+
+export async function createPartner(input: CreatePartnerInput) {
+  return Partner.create(input);
+}
+
+export async function updatePartner(id: string, input: UpdatePartnerInput) {
+  const partner = await Partner.findByPk(id);
+  if (!partner) {
+    throw ApiError.notFound("Partner not found");
+  }
+  Object.assign(partner, input);
+  await partner.save();
+  return partner;
+}
+
+export async function deletePartner(id: string): Promise<void> {
+  const partner = await Partner.findByPk(id);
+  if (!partner) {
+    throw ApiError.notFound("Partner not found");
+  }
+  await partner.destroy();
 }
 
 // Every quiz across every course, with enough course/week context to manage them from a

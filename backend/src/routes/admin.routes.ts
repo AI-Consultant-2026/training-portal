@@ -11,6 +11,7 @@ import {
   setPaymentConfirmedSchema,
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
+import { createPartnerSchema, updatePartnerSchema } from "../validators/partners.validators";
 
 export const adminRouter = Router();
 
@@ -19,6 +20,10 @@ adminRouter.use(authenticate, authorize("admin"));
 adminRouter.get("/stats", adminController.getDashboardStats);
 adminRouter.get("/leads", adminController.listLeads);
 adminRouter.delete("/leads/:id", adminController.deleteLead);
+adminRouter.get("/partners", adminController.listPartners);
+adminRouter.post("/partners", validate(createPartnerSchema), adminController.createPartner);
+adminRouter.patch("/partners/:id", validate(updatePartnerSchema), adminController.updatePartner);
+adminRouter.delete("/partners/:id", adminController.deletePartner);
 adminRouter.get(
   "/courses/:courseId/payments",
   validate(listCoursePaymentsSchema),

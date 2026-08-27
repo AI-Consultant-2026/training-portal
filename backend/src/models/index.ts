@@ -8,6 +8,7 @@ import { CourseModule, initCourseModuleModel } from "./module.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
 import { Lead, initLeadModel } from "./lead.model";
 import { Lesson, initLessonModel } from "./lesson.model";
+import { Partner, initPartnerModel } from "./partner.model";
 import { Payment, initPaymentModel } from "./payment.model";
 import { ProgressTracking, initProgressTrackingModel } from "./progressTracking.model";
 import { Quiz, initQuizModel } from "./quiz.model";
@@ -58,6 +59,7 @@ initVideoCheckpointModel(sequelize);
 initVideoCheckpointAnswerModel(sequelize);
 initLeadModel(sequelize);
 initPaymentModel(sequelize);
+initPartnerModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -146,6 +148,7 @@ export {
   Enrollment,
   Lead,
   Lesson,
+  Partner,
   Payment,
   ProgressTracking,
   Quiz,

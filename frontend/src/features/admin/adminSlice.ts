@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as adminApi from "../../api/admin.api";
-import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead } from "../../types/api";
+import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead, Partner } from "../../types/api";
 
 export interface CoursePaymentsDrillDown {
   courseId: string;
@@ -23,6 +23,9 @@ export interface AdminState {
   capstones: AdminCapstone[];
   capstonesStatus: "idle" | "loading" | "succeeded" | "failed";
   capstonesError: string | null;
+  partners: Partner[];
+  partnersStatus: "idle" | "loading" | "succeeded" | "failed";
+  partnersError: string | null;
 }
 
 const initialState: AdminState = {
@@ -38,6 +41,9 @@ const initialState: AdminState = {
   capstones: [],
   capstonesStatus: "idle",
   capstonesError: null,
+  partners: [],
+  partnersStatus: "idle",
+  partnersError: null,
 };
 
 export const fetchAdminStats = createAsyncThunk("admin/fetchStats", async () => {
@@ -85,6 +91,43 @@ export const fetchLeads = createAsyncThunk("admin/fetchLeads", async () => {
 
 export const deleteLead = createAsyncThunk("admin/deleteLead", async (id: string) => {
   await adminApi.deleteLead(id);
+  return id;
+});
+
+export const fetchPartners = createAsyncThunk("admin/fetchPartners", async () => {
+  return adminApi.fetchPartners();
+});
+
+export const createPartner = createAsyncThunk(
+  "admin/createPartner",
+  async (input: adminApi.CreatePartnerInput, { rejectWithValue }) => {
+    try {
+      return await adminApi.createPartner(input);
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
+          ?.message ?? "Could not create partner";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const updatePartner = createAsyncThunk(
+  "admin/updatePartner",
+  async ({ id, input }: { id: string; input: adminApi.UpdatePartnerInput }, { rejectWithValue }) => {
+    try {
+      return await adminApi.updatePartner(id, input);
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
+          ?.message ?? "Could not update partner";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const deletePartner = createAsyncThunk("admin/deletePartner", async (id: string) => {
+  await adminApi.deletePartner(id);
   return id;
 });
 
@@ -204,6 +247,34 @@ const adminSlice = createSlice({
       })
       .addCase(deleteLead.fulfilled, (state, action) => {
         state.leads = state.leads.filter((lead) => lead.id !== action.payload);
+      })
+      .addCase(fetchPartners.pending, (state) => {
+        state.partnersStatus = "loading";
+      })
+      .addCase(fetchPartners.fulfilled, (state, action) => {
+        state.partnersStatus = "succeeded";
+        state.partners = action.payload;
+      })
+      .addCase(fetchPartners.rejected, (state) => {
+        state.partnersStatus = "failed";
+      })
+      .addCase(createPartner.fulfilled, (state, action) => {
+        state.partners.push(action.payload);
+        state.partnersError = null;
+      })
+      .addCase(createPartner.rejected, (state, action) => {
+        state.partnersError = (action.payload as string) ?? "Could not create partner";
+      })
+      .addCase(updatePartner.fulfilled, (state, action) => {
+        const index = state.partners.findIndex((p) => p.id === action.payload.id);
+        if (index !== -1) state.partners[index] = action.payload;
+        state.partnersError = null;
+      })
+      .addCase(updatePartner.rejected, (state, action) => {
+        state.partnersError = (action.payload as string) ?? "Could not update partner";
+      })
+      .addCase(deletePartner.fulfilled, (state, action) => {
+        state.partners = state.partners.filter((p) => p.id !== action.payload);
       })
       .addCase(addEnrollment.fulfilled, (state, action) => {
         const index = state.candidates.findIndex((c) => c.id === action.payload.id);
