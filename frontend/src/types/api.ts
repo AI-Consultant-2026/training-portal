@@ -421,7 +421,8 @@ export type PartnerCategory =
   | "Job Board"
   | "NYSC / SAED"
   | "University Career Centre"
-  | "Community Channel";
+  | "Community Channel"
+  | "Corporate Employer";
 
 export type PartnerStatus =
   | "not-started"

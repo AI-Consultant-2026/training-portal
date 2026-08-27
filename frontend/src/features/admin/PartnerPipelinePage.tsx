@@ -21,6 +21,7 @@ const CATEGORIES: PartnerCategory[] = [
   "NYSC / SAED",
   "University Career Centre",
   "Community Channel",
+  "Corporate Employer",
 ];
 
 const STATUSES: PartnerStatus[] = [
@@ -97,6 +98,18 @@ function draftForPartner(partner: Partner, course: string): { subject: string; b
         `I'm reaching out from Paleon Training, a training provider running practical, project-based digital-skills courses for Nigerian graduates — including ${course}. Each course ends in a real capstone project, giving ${audience} concrete proof of skill for job applications, not just a certificate.\n\n` +
         `I'd like to explore a partnership with ${partner.name} — for example, being listed as a recommended training provider, or a short session introducing the programme to your ${audience} ahead of our next intake, which closes ${deadline}.\n\n` +
         `Would you be open to a discussion about providing your ${audience} with digital skills that could enhance their employability and make them more competitive in the job market?\n\n` +
+        `More about the programme: ${REGISTRATION_URL}\n\n` +
+        `Best regards,\n\nKen Uwotu\nPaleon Training UK\nhello@paleontraining.com\nhttps://paleontraining.com`,
+    };
+  }
+  if (partner.category === "Corporate Employer") {
+    return {
+      subject: `Sponsor your team's digital skills development — ${partner.name}`,
+      body:
+        `Dear ${partner.contactName || "[Name]"},\n\n` +
+        `I'm reaching out from Paleon Training, a provider of practical, project-based digital-skills courses — including ${course} — designed for working professionals, not just job seekers.\n\n` +
+        `I'd like to explore ${partner.name} nominating and sponsoring employees to participate in our training, to enhance their workplace capabilities, productivity, and career development. Each course ends in a real capstone project, giving your team a concrete, demonstrable skill rather than just a certificate.\n\n` +
+        `Would you be open to a discussion about a sponsored cohort for your team?\n\n` +
         `More about the programme: ${REGISTRATION_URL}\n\n` +
         `Best regards,\n\nKen Uwotu\nPaleon Training UK\nhello@paleontraining.com\nhttps://paleontraining.com`,
     };
@@ -413,7 +426,7 @@ export function PartnerPipelinePage() {
               </Select>
               <Input
                 id="partner-sector"
-                label="Sector (job boards only)"
+                label="Sector (job boards & corporate employers)"
                 value={form.sector}
                 onChange={(e) => setForm({ ...form, sector: e.target.value })}
                 placeholder="General, Oil & Gas, Telecom, Banking"

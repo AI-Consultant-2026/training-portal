@@ -5,6 +5,7 @@ export const PARTNER_CATEGORIES = [
   "NYSC / SAED",
   "University Career Centre",
   "Community Channel",
+  "Corporate Employer",
 ] as const;
 
 export const PARTNER_STATUSES = [
