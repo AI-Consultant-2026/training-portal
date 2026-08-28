@@ -89,6 +89,13 @@ export function createApp() {
   app.get("/trainingportalprocess", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "trainingportalprocess.html"));
   });
+  // Corporate B2B sales proposal (sector bundles, seat pricing, ITF levy-reimbursement
+  // case, wider business-case section) -- same "public but unlisted" pattern as
+  // /financing below: robots noindex, no nav link, not in sitemap.xml, reachable only
+  // by anyone sent the direct URL. Static, no companion .js file.
+  app.get("/paleon-training-proposal", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "paleon-training-proposal.html"));
+  });
   // Investment case for the founding partners' funding round -- public but unlisted
   // (no nav link, robots noindex) and not linked from any other page; static, no
   // companion .js file, same as trainingportalprocess above.

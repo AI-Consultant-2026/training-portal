@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Paleon Training — Corporate Partnership Proposal</title>
+<meta name="description" content="Sector-matched course bundles, seat pricing, and the ITF levy-reimbursement route for companies sponsoring staff digital-skills training with Paleon Training.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper: #eef2f3;
+    --paper-raised: #ffffff;
+    --ink: #16232c;
+    --muted: #56666e;
+    --line: #d3dcdf;
+    --accent: #1c5f7e;
+    --accent-ink: #ffffff;
+    --accent-soft: #dcebf0;
+    --gold: #b6822c;
+    --gold-soft: #f3e6cc;
+    --gold-ink: #4a3410;
+    --shadow: 0 1px 2px rgba(22,35,44,0.06), 0 8px 24px rgba(22,35,44,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10181d;
+      --paper-raised: #17232a;
+      --ink: #e9eff1;
+      --muted: #93a5ac;
+      --line: #2a3941;
+      --accent: #6fb3cf;
+      --accent-ink: #0b1a20;
+      --accent-soft: #1c3540;
+      --gold: #d9a752;
+      --gold-soft: #362c17;
+      --gold-ink: #f3ddab;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #10181d;
+    --paper-raised: #17232a;
+    --ink: #e9eff1;
+    --muted: #93a5ac;
+    --line: #2a3941;
+    --accent: #6fb3cf;
+    --accent-ink: #0b1a20;
+    --accent-soft: #1c3540;
+    --gold: #d9a752;
+    --gold-soft: #362c17;
+    --gold-ink: #f3ddab;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: rise 0.5s cubic-bezier(.2,.7,.3,1) both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3.2rem 1.5rem 4rem;
+  }
+
+  /* ---- Masthead ---- */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1.1rem;
+    margin-bottom: 2.2rem;
+  }
+  .wordmark {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .wordmark span { color: var(--accent); }
+  .doc-kind {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---- Hero / thesis ---- */
+  .thesis-label {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.7rem;
+  }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(1.7rem, 4vw, 2.35rem);
+    line-height: 1.16;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+  .lede {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 62ch;
+    margin: 0 0 0.6rem;
+  }
+  .lede.muted { color: var(--muted); font-size: 0.98rem; max-width: 64ch; }
+
+  section { margin-top: 2.6rem; }
+
+  h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.3rem;
+  }
+  .section-sub {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin: 0 0 1.1rem;
+    max-width: 60ch;
+  }
+
+  /* ---- Bundle cards ---- */
+  .bundles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.9rem;
+  }
+  .bundle {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.15rem 1.2rem 1.3rem;
+    box-shadow: var(--shadow);
+  }
+  .bundle-sector {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.5rem;
+  }
+  .bundle h3 {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 0.65rem;
+    line-height: 1.3;
+  }
+  .bundle ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .bundle li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding-left: 0.9rem;
+    position: relative;
+  }
+  .bundle li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ---- Pricing table ---- */
+  .pricing-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+    min-width: 640px;
+  }
+  thead th {
+    text-align: left;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    padding: 0 0.9rem 0.6rem 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  tbody td {
+    padding: 0.85rem 0.9rem 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: 2px solid var(--ink); }
+  .tier-name {
+    font-weight: 600;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.02rem;
+  }
+  .tier-seats { color: var(--muted); font-size: 0.85rem; }
+  .price {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .tier-badge {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+  }
+  .price-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.8rem;
+  }
+  .course-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .th-sub {
+    display: block;
+    margin-top: 0.15rem;
+    font-family: "IBM Plex Sans", sans-serif;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  /* ---- ITF callout ---- */
+  .callout {
+    background: var(--gold-soft);
+    border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--line));
+    border-radius: 10px;
+    padding: 1.3rem 1.4rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem 1rem;
+  }
+  .callout-mark {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--gold-ink);
+    background: var(--paper-raised);
+    border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
+    border-radius: 6px;
+    padding: 0.2rem 0.45rem;
+    height: fit-content;
+    letter-spacing: 0.03em;
+  }
+  .callout h3 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: 1.08rem;
+    margin: 0 0 0.4rem;
+    color: var(--gold-ink);
+  }
+  .callout p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 58ch;
+  }
+  .callout p + p { margin-top: 0.55rem; }
+  .callout .fine {
+    grid-column: 2;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* ---- Benefits grid ---- */
+  .benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.9rem;
+  }
+  .benefit {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem 1.25rem;
+    box-shadow: var(--shadow);
+  }
+  .benefit-tag {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+    margin: 0 0 0.5rem;
+  }
+  .benefit h3 {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin: 0 0 0.4rem;
+    line-height: 1.3;
+  }
+  .benefit p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.87rem;
+    line-height: 1.55;
+  }
+
+  /* ---- Delivery / list rows ---- */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .check-row {
+    display: grid;
+    grid-template-columns: 1.35rem 1fr;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+  .check-row .num {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+  .check-row strong { font-weight: 600; }
+  .check-row span.detail { color: var(--muted); font-size: 0.92rem; }
+
+  /* ---- CTA ---- */
+  .cta {
+    margin-top: 2.8rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 12px;
+    padding: 1.8rem 1.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .cta h2 { color: var(--paper); margin: 0 0 0.25rem; }
+  .cta p { margin: 0; color: color-mix(in srgb, var(--paper) 70%, transparent); font-size: 0.92rem; max-width: 40ch; }
+  .cta-action {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding: 0.65rem 1.1rem;
+    border-radius: 7px;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .cta-action:hover { text-decoration: underline; }
+  .cta-action:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="wordmark">Paleon<span>Training</span></div>
+    <div class="doc-kind">Corporate Partnership Proposal</div>
+  </div>
+
+  <div class="reveal">
+    <p class="thesis-label">Prepared for HR &amp; Learning teams</p>
+    <h1>Turn your ITF levy into staff your competitors don't have yet.</h1>
+    <p class="lede">Every registered employer already pays 1% of payroll into the Industrial Training Fund. Most never see it again. Run that training through Paleon and it becomes certified staff capability in cybersecurity, digital marketing, GIS, and HSE — instead of a line item nobody reclaims.</p>
+    <p class="lede muted">Below: sector-matched course bundles, indicative seat pricing, and how the ITF reimbursement route works.</p>
+  </div>
+
+  <section>
+    <h2>Bundles by sector</h2>
+    <p class="section-sub">Pick a bundle as a starting point, or mix courses freely across all six.</p>
+    <div class="bundles">
+      <div class="bundle">
+        <p class="bundle-sector">Oil &amp; Gas / Energy</p>
+        <h3>Field &amp; site operations</h3>
+        <ul>
+          <li>HSE Fundamentals</li>
+          <li>GIS &amp; Drone Mapping</li>
+          <li>Cyber Security</li>
+        </ul>
+      </div>
+      <div class="bundle">
+        <p class="bundle-sector">Banking &amp; Telecom</p>
+        <h3>Customer-facing &amp; risk teams</h3>
+        <ul>
+          <li>Cyber Security</li>
+          <li>Digital Marketing</li>
+          <li>Social Media</li>
+        </ul>
+      </div>
+      <div class="bundle">
+        <p class="bundle-sector">Public Sector</p>
+        <h3>Digital transformation track</h3>
+        <ul>
+          <li>Digital Marketing</li>
+          <li>Social Media</li>
+          <li>Renewable Energy</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Seat pricing</h2>
+    <p class="section-sub">Per staff member, per course, billed to the company. List price is the individual rate — tier columns show what a corporate seat actually costs.</p>
+    <div class="pricing-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>List price</th>
+            <th>Pilot<span class="th-sub">10% off</span></th>
+            <th>Team<span class="th-sub">20% off</span></th>
+            <th>Enterprise<span class="th-sub">30%+ off</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="course-name">Cyber Security Fundamentals</td>
+            <td class="price">₦200,000</td>
+            <td class="price">₦180,000</td>
+            <td class="price">₦160,000</td>
+            <td class="price">from ₦140,000</td>
+          </tr>
+          <tr>
+            <td class="course-name">GIS and Drone Mapping</td>
+            <td class="price">₦200,000</td>
+            <td class="price">₦180,000</td>
+            <td class="price">₦160,000</td>
+            <td class="price">from ₦140,000</td>
+          </tr>
+          <tr>
+            <td class="course-name">Renewable Energy Digital Systems</td>
+            <td class="price">₦250,000</td>
+            <td class="price">₦225,000</td>
+            <td class="price">₦200,000</td>
+            <td class="price">from ₦175,000</td>
+          </tr>
+          <tr>
+            <td class="course-name">Digital Marketing</td>
+            <td class="price">₦150,000</td>
+            <td class="price">₦135,000</td>
+            <td class="price">₦120,000</td>
+            <td class="price">from ₦105,000</td>
+          </tr>
+          <tr>
+            <td class="course-name">Social Media Management &amp; Content</td>
+            <td class="price">₦150,000</td>
+            <td class="price">₦135,000</td>
+            <td class="price">₦120,000</td>
+            <td class="price">from ₦105,000</td>
+          </tr>
+          <tr>
+            <td class="course-name">HSE Fundamentals</td>
+            <td class="price">₦100,000</td>
+            <td class="price">₦90,000</td>
+            <td class="price">₦80,000</td>
+            <td class="price">from ₦70,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="price-note">Pilot: 5–10 seats, one course. Team: 20–49 seats, up to 3 courses, HR progress dashboard. Enterprise: 50+ seats, full catalogue, dedicated cohorts, named account contact.</p>
+  </section>
+
+  <section>
+    <div class="callout">
+      <span class="callout-mark">ITF</span>
+      <div>
+        <h3>Reclaim the levy you're already paying</h3>
+        <p>Registered employers contribute 1% of annual payroll to the Industrial Training Fund. Structured training that meets ITF criteria can reclaim up to 50% of that contribution — turning a compliance cost into a training budget.</p>
+        <p>Paleon provides the documentation your claim needs: syllabus outlines, attendance records, and completion certificates for every enrolled staff member.</p>
+      </div>
+      <p class="fine">50% reimbursement rate confirmed with the ITF. Criteria and rates are set by the ITF and can be revised — reconfirm with your area office for large or long-term commitments.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Beyond the ITF reclaim</h2>
+    <p class="section-sub">The levy reclaim is the fastest way to justify the spend — these hold whether or not a claim is filed.</p>
+    <div class="benefits">
+      <div class="benefit">
+        <p class="benefit-tag">Compliance &amp; risk</p>
+        <h3>A documented paper trail, not just a policy</h3>
+        <p>HSE training reduces workplace-incident liability for field staff; cyber security training gives compliance teams evidence of staff awareness relevant to NDPR obligations — the kind of record that matters if either is ever audited.</p>
+      </div>
+      <div class="benefit">
+        <p class="benefit-tag">Cost vs. alternatives</p>
+        <h3>Cheaper than the usual options</h3>
+        <p>No flying staff to a venue, no external facilitator day-rate, no lost workdays — especially for rotational site staff who can't be pulled off-site for a week.</p>
+      </div>
+      <div class="benefit">
+        <p class="benefit-tag">Retention</p>
+        <h3>Investment staff actually notice</h3>
+        <p>Visible development spend is a proven retention lever, and growing a skill in-house is cheaper than hiring externally for one you don't yet have.</p>
+      </div>
+      <div class="benefit">
+        <p class="benefit-tag">Proof of skill</p>
+        <h3>A work sample, not a checkbox</h3>
+        <p>Every course ends in a real capstone project — something HR can point to for a promotion or appraisal decision, not just a "completed training" tick.</p>
+      </div>
+      <div class="benefit">
+        <p class="benefit-tag">ESG &amp; employer brand</p>
+        <h3>A claim you can actually check</h3>
+        <p>"We upskilled 40 staff in cybersecurity this year" is a concrete line for sustainability or CSR reporting — unlike the vaguer language most training spend produces.</p>
+      </div>
+      <div class="benefit">
+        <p class="benefit-tag">Operational fit</p>
+        <h3>Works around your shift pattern</h3>
+        <p>No fixed classroom slot to staff around, and no single training date to coordinate across multiple offices or sites.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it runs</h2>
+    <div class="checklist">
+      <div class="check-row">
+        <span class="num">01</span>
+        <div><strong>Self-paced, no lost shift time.</strong> <span class="detail">Staff enrol once and complete lessons around rotations or working hours — no fixed classroom slots to staff around.</span></div>
+      </div>
+      <div class="check-row">
+        <span class="num">02</span>
+        <div><strong>HR sees progress, not just invoices.</strong> <span class="detail">A dashboard view of who's enrolled, in progress, and completed per course — exportable for your own reporting.</span></div>
+      </div>
+      <div class="check-row">
+        <span class="num">03</span>
+        <div><strong>Certificates on completion.</strong> <span class="detail">Each staff member downloads a dated completion certificate — usable for internal appraisal, CPD records, or an ITF claim.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <div>
+      <h2>Start with a pilot cohort</h2>
+      <p>5–10 seats, one course, four weeks to see completion rates before committing further.</p>
+    </div>
+    <a class="cta-action" href="mailto:corporate@paleontraining.com?subject=Corporate%20training%20partnership%20enquiry">Email corporate@paleontraining.com</a>
+  </div>
+
+</div>
+</body>
+</html>
