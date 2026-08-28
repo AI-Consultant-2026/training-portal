@@ -109,7 +109,8 @@ function draftForPartner(partner: Partner, course: string): { subject: string; b
         `Dear ${partner.contactName || "[Name]"},\n\n` +
         `I'm reaching out from Paleon Training, a provider of practical, project-based digital-skills courses — including ${course} — designed for working professionals, not just job seekers.\n\n` +
         `I'd like to explore ${partner.name} nominating and sponsoring employees to participate in our training, to enhance their workplace capabilities, productivity, and career development. Each course ends in a real capstone project, giving your team a concrete, demonstrable skill rather than just a certificate.\n\n` +
-        `Would you be open to a discussion about a sponsored cohort for your team?\n\n` +
+        `Interested in a Proposal?\n` +
+        `Discover how your organisation can benefit from a confirmed 50% reimbursement rate through the Industrial Training Fund (ITF)\n\n` +
         `More about the programme: ${REGISTRATION_URL}\n\n` +
         `Best regards,\n\nKen Uwotu\nPaleon Training UK\nhello@paleontraining.com\nhttps://paleontraining.com`,
     };
