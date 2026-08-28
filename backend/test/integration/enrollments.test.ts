@@ -266,3 +266,108 @@ describe("Enrollments: certificate download", () => {
     expect(res.status).toBe(200);
   });
 });
+
+describe("Enrollments: attendance record download", () => {
+  it("rejects an anonymous request", async () => {
+    const res = await request(app).get("/api/enrollments/00000000-0000-0000-0000-000000000000/attendance-record");
+    expect(res.status).toBe(401);
+  });
+
+  it("404s for an unknown enrollment", async () => {
+    await registerStudent("attendance-unknown@example.com");
+    const token = await loginAs("attendance-unknown@example.com");
+
+    const res = await request(app)
+      .get("/api/enrollments/00000000-0000-0000-0000-000000000000/attendance-record")
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(404);
+  });
+
+  it("forbids a student downloading another student's attendance record", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [2]);
+    const owner = await registerStudent("attendance-owner@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: owner.id,
+      paymentConfirmed: true,
+    });
+
+    await registerStudent("attendance-intruder@example.com");
+    const intruderToken = await loginAs("attendance-intruder@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/attendance-record`)
+      .set("Authorization", `Bearer ${intruderToken}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("forbids downloading an attendance record before payment is confirmed", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [2]);
+    const student = await registerStudent("attendance-unpaid@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      paymentConfirmed: false,
+    });
+    const token = await loginAs("attendance-unpaid@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/attendance-record`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("streams a real PDF listing every session with its completion state, mid-course", async () => {
+    const instructor = await createInstructor();
+    const { course, lessonsByModule } = await createCourseWithModules(instructor.id, [2, 2]);
+    const student = await registerStudent("attendance-owner2@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      paymentConfirmed: true,
+    });
+    // Only the first week's two lessons are done -- the record should still list all
+    // four sessions, with the second week's marked pending rather than omitted.
+    await ProgressTracking.create({ studentId: student.id, lessonId: lessonsByModule[0][0].id });
+    await ProgressTracking.create({ studentId: student.id, lessonId: lessonsByModule[0][1].id });
+    const token = await loginAs("attendance-owner2@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/attendance-record`)
+      .set("Authorization", `Bearer ${token}`)
+      .buffer(true)
+      .parse((r, cb) => {
+        const chunks: Buffer[] = [];
+        r.on("data", (chunk) => chunks.push(chunk));
+        r.on("end", () => cb(null, Buffer.concat(chunks)));
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toBe("application/pdf");
+    expect(res.headers["content-disposition"]).toContain("attachment");
+    expect(res.headers["content-disposition"]).toContain("attendance-record.pdf");
+    const body = res.body as Buffer;
+    expect(body.subarray(0, 5).toString("latin1")).toBe("%PDF-");
+  });
+
+  it("allows an admin to download any student's attendance record", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const student = await registerStudent("attendance-adminview@example.com");
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      paymentConfirmed: true,
+    });
+
+    await createAdmin();
+    const adminToken = await loginAs("jest-enroll-admin@example.com");
+
+    const res = await request(app)
+      .get(`/api/enrollments/${enrollment.id}/attendance-record`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+  });
+});

@@ -8,3 +8,4 @@ enrollmentsRouter.use(authenticate);
 enrollmentsRouter.get("/", enrollmentsController.listMyEnrollments);
 enrollmentsRouter.get("/:id", enrollmentsController.getEnrollment);
 enrollmentsRouter.get("/:id/certificate", enrollmentsController.downloadCertificate);
+enrollmentsRouter.get("/:id/attendance-record", enrollmentsController.downloadAttendanceRecord);

@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
-import { downloadCertificate } from "../../api/enrollments.api";
+import { downloadAttendanceRecord, downloadCertificate } from "../../api/enrollments.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
 import { fetchPaymentQuote } from "../../api/payments.api";
 import { fetchModuleQuizzes } from "../../api/quizzes.api";
@@ -86,6 +86,8 @@ export function CourseDetailPage() {
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [downloadingCertificate, setDownloadingCertificate] = useState(false);
   const [certificateError, setCertificateError] = useState(false);
+  const [downloadingAttendance, setDownloadingAttendance] = useState(false);
+  const [attendanceError, setAttendanceError] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -198,6 +200,19 @@ export function CourseDetailPage() {
     }
   }
 
+  async function handleDownloadAttendanceRecord() {
+    if (!course || !myEnrollment) return;
+    setAttendanceError(false);
+    setDownloadingAttendance(true);
+    try {
+      await downloadAttendanceRecord(myEnrollment.id, course.title);
+    } catch {
+      setAttendanceError(true);
+    } finally {
+      setDownloadingAttendance(false);
+    }
+  }
+
   if (status === "loading" || !course) {
     return (
       <div className="flex justify-center py-16">
@@ -268,9 +283,22 @@ export function CourseDetailPage() {
                 {downloadingCertificate ? "Preparing..." : "Download certificate"}
               </button>
             )}
+            {isEnrolled && myEnrollment?.paymentConfirmed && (
+              <button
+                type="button"
+                onClick={handleDownloadAttendanceRecord}
+                disabled={downloadingAttendance}
+                className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-60"
+              >
+                {downloadingAttendance ? "Preparing..." : "Download attendance record"}
+              </button>
+            )}
           </div>
           {certificateError && (
             <p className="mt-2 text-sm text-red-600">Could not download the certificate.</p>
+          )}
+          {attendanceError && (
+            <p className="mt-2 text-sm text-red-600">Could not download the attendance record.</p>
           )}
         </div>
       )}

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as attendanceService from "../services/attendance.service";
 import * as certificateService from "../services/certificate.service";
 import * as courseService from "../services/course.service";
 import * as enrollmentService from "../services/enrollment.service";
@@ -49,4 +50,12 @@ export const downloadCertificate = asyncHandler(async (req: Request, res: Respon
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", `attachment; filename="${safeTitle}-certificate.pdf"`);
   certificateService.streamCertificatePdf(data, res);
+});
+
+export const downloadAttendanceRecord = asyncHandler(async (req: Request, res: Response) => {
+  const data = await attendanceService.getAttendanceData(req.params.id, req.user!);
+  const safeTitle = data.courseTitle.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="${safeTitle}-attendance-record.pdf"`);
+  attendanceService.streamAttendancePdf(data, res);
 });

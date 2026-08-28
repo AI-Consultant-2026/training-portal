@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { downloadCertificate } from "../../../api/enrollments.api";
+import { downloadAttendanceRecord, downloadCertificate } from "../../../api/enrollments.api";
 import { ProgressBar } from "../../../components/ui/ProgressBar";
 import { COURSE_COVER_IMAGES } from "../../courses/courseCoverImages";
 import { Enrollment } from "../../../types/api";
@@ -40,6 +40,8 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
   const coverImage = course ? COURSE_COVER_IMAGES[course.slug] : undefined;
   const [downloading, setDownloading] = useState(false);
   const [downloadFailed, setDownloadFailed] = useState(false);
+  const [downloadingAttendance, setDownloadingAttendance] = useState(false);
+  const [attendanceDownloadFailed, setAttendanceDownloadFailed] = useState(false);
 
   async function handleDownloadCertificate() {
     if (!course) return;
@@ -51,6 +53,19 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
       setDownloadFailed(true);
     } finally {
       setDownloading(false);
+    }
+  }
+
+  async function handleDownloadAttendanceRecord() {
+    if (!course) return;
+    setAttendanceDownloadFailed(false);
+    setDownloadingAttendance(true);
+    try {
+      await downloadAttendanceRecord(enrollment.id, course.title);
+    } catch {
+      setAttendanceDownloadFailed(true);
+    } finally {
+      setDownloadingAttendance(false);
     }
   }
 
@@ -82,6 +97,16 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
                 {downloading ? "Preparing..." : "Certificate"}
               </button>
             )}
+            {enrollment.paymentConfirmed && course && (
+              <button
+                type="button"
+                onClick={handleDownloadAttendanceRecord}
+                disabled={downloadingAttendance}
+                className="font-medium text-gray-600 hover:underline disabled:opacity-60"
+              >
+                {downloadingAttendance ? "Preparing..." : "Attendance record"}
+              </button>
+            )}
             {course && (
               <Link
                 to={enrollment.nextLessonId ? `/lessons/${enrollment.nextLessonId}` : `/courses/${course.slug}`}
@@ -93,6 +118,9 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
           </div>
         </div>
         {downloadFailed && <p className="text-xs text-red-600">Could not download the certificate.</p>}
+        {attendanceDownloadFailed && (
+          <p className="text-xs text-red-600">Could not download the attendance record.</p>
+        )}
       </div>
     </div>
   );
