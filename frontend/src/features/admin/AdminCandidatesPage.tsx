@@ -4,6 +4,7 @@ import { COURSE_INTERESTS, LOCATIONS } from "../auth/RegisterPage";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { sendCompletionEmail } from "../../api/admin.api";
 import { fetchCourses } from "../../api/courses.api";
+import { downloadAttendanceRecord } from "../../api/enrollments.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -53,6 +54,8 @@ export function AdminCandidatesPage() {
   const [emailMessages, setEmailMessages] = useState<
     Record<string, { text: string; variant: "success" | "error" }>
   >({});
+  const [downloadingAttendanceFor, setDownloadingAttendanceFor] = useState<string | null>(null);
+  const [attendanceErrors, setAttendanceErrors] = useState<Record<string, string>>({});
 
   const inactiveCount = candidates.filter((c) => c.status === "inactive").length;
 
@@ -152,6 +155,22 @@ export function AdminCandidatesPage() {
       setEmailMessages((prev) => ({ ...prev, [enrollmentId]: { text: message, variant: "error" } }));
     } finally {
       setSendingEmailFor(null);
+    }
+  }
+
+  async function handleDownloadAttendanceRecord(enrollmentId: string, courseTitle: string | null) {
+    setDownloadingAttendanceFor(enrollmentId);
+    setAttendanceErrors((prev) => {
+      const next = { ...prev };
+      delete next[enrollmentId];
+      return next;
+    });
+    try {
+      await downloadAttendanceRecord(enrollmentId, courseTitle ?? "course");
+    } catch {
+      setAttendanceErrors((prev) => ({ ...prev, [enrollmentId]: "Could not download the attendance record." }));
+    } finally {
+      setDownloadingAttendanceFor(null);
     }
   }
 
@@ -306,6 +325,21 @@ export function AdminCandidatesPage() {
                                 {e.paymentConfirmed ? "Paid" : "Payment pending"}
                               </span>
                             </div>
+                            {e.paymentConfirmed && (
+                              <div className="ml-5 mt-1 flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDownloadAttendanceRecord(e.id, e.courseTitle)}
+                                  disabled={downloadingAttendanceFor === e.id}
+                                  className="text-xs font-medium text-gray-600 hover:underline disabled:opacity-60"
+                                >
+                                  {downloadingAttendanceFor === e.id ? "Preparing..." : "Attendance record"}
+                                </button>
+                                {attendanceErrors[e.id] && (
+                                  <span className="text-xs text-red-600">{attendanceErrors[e.id]}</span>
+                                )}
+                              </div>
+                            )}
                             {!e.paymentConfirmed && e.latestPayment?.method === "bank_transfer" && (
                               <p className="ml-5 text-xs text-gray-500">
                                 Bank transfer claimed: {e.latestPayment.currency}{" "}
