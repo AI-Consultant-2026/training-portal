@@ -1,7 +1,19 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
-import { Course, CourseModule, Enrollment, Lesson, ProgressTracking, User } from "../../src/models";
+import {
+  Assignment,
+  AssignmentSubmission,
+  Course,
+  CourseModule,
+  Enrollment,
+  Lesson,
+  ProgressTracking,
+  Quiz,
+  QuizAttempt,
+  User,
+} from "../../src/models";
+import { getAttendanceData } from "../../src/services/attendance.service";
 
 const app = createApp();
 
@@ -369,5 +381,94 @@ describe("Enrollments: attendance record download", () => {
       .get(`/api/enrollments/${enrollment.id}/attendance-record`)
       .set("Authorization", `Bearer ${adminToken}`);
     expect(res.status).toBe(200);
+  });
+});
+
+describe("Enrollments: attendance record weekly engagement", () => {
+  it("only marks a week 'attended' once lessons, quiz, and assignment are all done -- not lessons alone", async () => {
+    const instructor = await createInstructor();
+    const { course, lessonsByModule } = await createCourseWithModules(instructor.id, [2]);
+    const courseModule = await CourseModule.findOne({ where: { courseId: course.id } });
+    const quiz = await Quiz.create({ moduleId: courseModule!.id, title: "Week 1 Quiz", passingScore: 70, questionCount: 1 });
+    const assignment = await Assignment.create({ moduleId: courseModule!.id, title: "Week 1 Assignment" });
+
+    const student = await registerStudent("weekly-engagement-partial@example.com");
+    const enrollment = await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
+
+    // Both lessons done, but nothing else yet.
+    for (const lesson of lessonsByModule[0]) {
+      await ProgressTracking.create({ studentId: student.id, lessonId: lesson.id });
+    }
+
+    let data = await getAttendanceData(enrollment.id, { id: student.id, role: "student" });
+    expect(data.weeks).toHaveLength(1);
+    expect(data.weeks[0].lessonsCompleted).toBe(2);
+    expect(data.weeks[0].lessonsTotal).toBe(2);
+    expect(data.weeks[0].quizState).toBe("pending");
+    expect(data.weeks[0].assignmentState).toBe("pending");
+    // The bug this guards against: a week reading "attended" off lesson completion
+    // alone, before the quiz or assignment for that week exist.
+    expect(data.weeks[0].status).toBe("partial");
+    expect(data.weeksAttended).toBe(0);
+
+    // Quiz submitted, assignment still outstanding -- still not "attended".
+    await QuizAttempt.create({ quizId: quiz.id, studentId: student.id, status: "submitted", endTime: new Date() });
+    data = await getAttendanceData(enrollment.id, { id: student.id, role: "student" });
+    expect(data.weeks[0].quizState).toBe("done");
+    expect(data.weeks[0].status).toBe("partial");
+
+    // Assignment submitted too -- now every requirement for the week is met.
+    await AssignmentSubmission.create({ assignmentId: assignment.id, studentId: student.id });
+    data = await getAttendanceData(enrollment.id, { id: student.id, role: "student" });
+    expect(data.weeks[0].assignmentState).toBe("done");
+    expect(data.weeks[0].status).toBe("attended");
+    expect(data.weeksAttended).toBe(1);
+    expect(data.submittedQuizzes).toBe(1);
+    expect(data.submittedAssignments).toBe(1);
+  });
+
+  it("treats a week's quiz as not applicable once an admin disables it, rather than blocking attendance forever", async () => {
+    const instructor = await createInstructor();
+    const { course, lessonsByModule } = await createCourseWithModules(instructor.id, [1]);
+    const courseModule = await CourseModule.findOne({ where: { courseId: course.id } });
+    await Quiz.create({ moduleId: courseModule!.id, title: "Disabled Quiz", passingScore: 70, questionCount: 1, isEnabled: false });
+
+    const student = await registerStudent("weekly-engagement-disabled-quiz@example.com");
+    const enrollment = await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
+    await ProgressTracking.create({ studentId: student.id, lessonId: lessonsByModule[0][0].id });
+
+    const data = await getAttendanceData(enrollment.id, { id: student.id, role: "student" });
+    expect(data.weeks[0].quizState).toBe("not_applicable");
+    expect(data.weeks[0].assignmentState).toBe("not_applicable");
+    // Lessons are the only real requirement here (no assignment was even created), and
+    // they're done, so the week should read as fully attended.
+    expect(data.weeks[0].status).toBe("attended");
+  });
+
+  it("marks a week 'pending' when nothing has been done yet", async () => {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const student = await registerStudent("weekly-engagement-untouched@example.com");
+    const enrollment = await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
+
+    const data = await getAttendanceData(enrollment.id, { id: student.id, role: "student" });
+    expect(data.weeks[0].status).toBe("pending");
+    expect(data.weeksAttended).toBe(0);
+  });
+
+  it("marks a week 'partial', not 'pending', when only some of its lessons are done", async () => {
+    const instructor = await createInstructor();
+    const { course, lessonsByModule } = await createCourseWithModules(instructor.id, [2]);
+    const student = await registerStudent("weekly-engagement-onelesson@example.com");
+    const enrollment = await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
+    await ProgressTracking.create({ studentId: student.id, lessonId: lessonsByModule[0][0].id });
+
+    const data = await getAttendanceData(enrollment.id, { id: student.id, role: "student" });
+    expect(data.weeks[0].lessonsCompleted).toBe(1);
+    expect(data.weeks[0].lessonsTotal).toBe(2);
+    // The bug this guards against: "met requirements" counted a half-finished week's
+    // lessons as 0 progress, so 1/2 lessons done printed as "Pending" right next to a
+    // "1/2" in the same row that visibly says otherwise.
+    expect(data.weeks[0].status).toBe("partial");
   });
 });

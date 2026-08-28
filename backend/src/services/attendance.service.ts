@@ -1,11 +1,31 @@
+import { Op } from "sequelize";
 import PDFDocument from "pdfkit";
-import { Course, CourseModule, Enrollment, Lesson, ProgressTracking, User } from "../models";
+import {
+  Assignment,
+  AssignmentSubmission,
+  Course,
+  CourseModule,
+  Enrollment,
+  Lesson,
+  ProgressTracking,
+  Quiz,
+  QuizAttempt,
+  User,
+} from "../models";
 import { ApiError } from "../utils/ApiError";
 
-export interface AttendanceRow {
+export type WeekItemState = "done" | "pending" | "not_applicable";
+export type WeekStatus = "attended" | "partial" | "pending";
+
+export interface WeekEngagement {
   weekNumber: number;
-  lessonTitle: string;
-  completedAt: Date | null;
+  lessonsCompleted: number;
+  lessonsTotal: number;
+  quizState: WeekItemState;
+  quizDate: Date | null;
+  assignmentState: WeekItemState;
+  assignmentDate: Date | null;
+  status: WeekStatus;
 }
 
 export interface AttendanceData {
@@ -16,9 +36,14 @@ export interface AttendanceData {
   enrolledDate: Date;
   status: string;
   generatedAt: Date;
-  rows: AttendanceRow[];
+  weeks: WeekEngagement[];
+  weeksAttended: number;
   totalLessons: number;
   completedLessons: number;
+  totalQuizzes: number;
+  submittedQuizzes: number;
+  totalAssignments: number;
+  submittedAssignments: number;
 }
 
 // Same ownership rule as certificate.service.ts's getCertificateData (own enrollment or
@@ -52,39 +77,131 @@ export async function getAttendanceData(
   if (!course || !student) {
     throw ApiError.notFound("Enrollment is missing course or student data");
   }
+  const studentId = enrollment.studentId;
 
   const modules = await CourseModule.findAll({
     where: { courseId: course.id },
     order: [["weekNumber", "ASC"], ["order", "ASC"]],
   });
   const moduleIds = modules.map((m) => m.id);
-  const lessons =
+
+  const [lessons, quizzes, assignments] =
     moduleIds.length === 0
-      ? []
-      : await Lesson.findAll({
-          where: { moduleId: moduleIds },
-          order: [["order", "ASC"]],
-        });
-  const weekByModuleId = new Map(modules.map((m) => [m.id, m.weekNumber]));
+      ? [[], [], []]
+      : await Promise.all([
+          Lesson.findAll({ where: { moduleId: moduleIds } }),
+          Quiz.findAll({ where: { moduleId: moduleIds, isEnabled: true } }),
+          Assignment.findAll({ where: { moduleId: moduleIds } }),
+        ]);
 
   const lessonIds = lessons.map((l) => l.id);
-  const completedRecords =
-    lessonIds.length === 0
-      ? []
-      : await ProgressTracking.findAll({ where: { studentId: enrollment.studentId, lessonId: lessonIds } });
-  const completedAtByLessonId = new Map(completedRecords.map((r) => [r.lessonId, r.completedAt]));
+  const quizIds = quizzes.map((q) => q.id);
+  const assignmentIds = assignments.map((a) => a.id);
 
-  // Lessons come back ordered by `order` within each module's id, not by week -- re-sort
-  // by (weekNumber, order) so the printed rows always read Week 1 through Week N in order,
-  // regardless of what order the modules happened to be created in.
-  const rows: AttendanceRow[] = lessons
-    .map((lesson) => ({
-      weekNumber: weekByModuleId.get(lesson.moduleId) ?? 0,
-      order: lesson.order,
-      lessonTitle: lesson.title,
-      completedAt: completedAtByLessonId.get(lesson.id) ?? null,
-    }))
-    .sort((a, b) => a.weekNumber - b.weekNumber || a.order - b.order);
+  const [progressRecords, quizAttempts, submissions] = await Promise.all([
+    lessonIds.length === 0
+      ? Promise.resolve([])
+      : ProgressTracking.findAll({ where: { studentId, lessonId: lessonIds } }),
+    quizIds.length === 0
+      ? Promise.resolve([])
+      : QuizAttempt.findAll({
+          where: { studentId, quizId: quizIds, status: { [Op.in]: ["submitted", "graded"] } },
+          order: [["endTime", "ASC"]],
+        }),
+    assignmentIds.length === 0
+      ? Promise.resolve([])
+      : AssignmentSubmission.findAll({ where: { studentId, assignmentId: assignmentIds } }),
+  ]);
+
+  const completedAtByLessonId = new Map(progressRecords.map((r) => [r.lessonId, r.completedAt]));
+
+  // First (earliest) submitted/graded attempt per quiz -- a retake doesn't move the
+  // evidence date forward, since what's being evidenced is when the candidate first
+  // engaged with that week's material, not their final score.
+  const firstSubmissionByQuizId = new Map<string, Date>();
+  for (const attempt of quizAttempts) {
+    if (!firstSubmissionByQuizId.has(attempt.quizId) && attempt.endTime) {
+      firstSubmissionByQuizId.set(attempt.quizId, attempt.endTime);
+    }
+  }
+  const submissionDateByAssignmentId = new Map(submissions.map((s) => [s.assignmentId, s.submissionDate]));
+
+  const lessonsByModuleId = groupBy(lessons, (l) => l.moduleId);
+  const quizzesByModuleId = groupBy(quizzes, (q) => q.moduleId);
+  const assignmentsByModuleId = groupBy(assignments, (a) => a.moduleId);
+
+  const weeks: WeekEngagement[] = modules.map((courseModule) => {
+    const moduleLessons = lessonsByModuleId.get(courseModule.id) ?? [];
+    const moduleQuizzes = quizzesByModuleId.get(courseModule.id) ?? [];
+    const moduleAssignments = assignmentsByModuleId.get(courseModule.id) ?? [];
+
+    const lessonsCompleted = moduleLessons.filter((l) => completedAtByLessonId.has(l.id)).length;
+    const lessonsTotal = moduleLessons.length;
+    const lessonsDone = lessonsTotal > 0 && lessonsCompleted === lessonsTotal;
+
+    // A module can (in principle) have zero, one, or several quizzes/assignments --
+    // treated as "not applicable" when there are none (an admin-disabled quiz is
+    // already filtered out above, so it never counts against the candidate), and as one
+    // combined requirement that's only "done" once every one of them is.
+    const quizState: WeekItemState =
+      moduleQuizzes.length === 0
+        ? "not_applicable"
+        : moduleQuizzes.every((q) => firstSubmissionByQuizId.has(q.id))
+          ? "done"
+          : "pending";
+    const quizDate =
+      quizState === "done"
+        ? moduleQuizzes.reduce<Date | null>((latest, q) => {
+            const d = firstSubmissionByQuizId.get(q.id) ?? null;
+            return d && (!latest || d > latest) ? d : latest;
+          }, null)
+        : null;
+
+    const assignmentState: WeekItemState =
+      moduleAssignments.length === 0
+        ? "not_applicable"
+        : moduleAssignments.every((a) => submissionDateByAssignmentId.has(a.id))
+          ? "done"
+          : "pending";
+    const assignmentDate =
+      assignmentState === "done"
+        ? moduleAssignments.reduce<Date | null>((latest, a) => {
+            const d = submissionDateByAssignmentId.get(a.id) ?? null;
+            return d && (!latest || d > latest) ? d : latest;
+          }, null)
+        : null;
+
+    const requirements = [
+      lessonsTotal > 0,
+      quizState !== "not_applicable",
+      assignmentState !== "not_applicable",
+    ].filter(Boolean).length;
+    const met = [
+      lessonsTotal > 0 && lessonsDone,
+      quizState === "done",
+      assignmentState === "done",
+    ].filter(Boolean).length;
+    // A week with some but not all lessons done (e.g. 1/2) has real, visible progress in
+    // the Lessons column -- "met" alone would read that as 0 and mislabel the week
+    // "Pending" right next to a "1/2" that says otherwise, so partial lesson progress
+    // counts toward "any progress happened" even though it doesn't complete the
+    // lessons requirement.
+    const anyProgress = lessonsCompleted > 0 || quizState === "done" || assignmentState === "done";
+
+    const status: WeekStatus =
+      requirements > 0 && met === requirements ? "attended" : anyProgress ? "partial" : "pending";
+
+    return {
+      weekNumber: courseModule.weekNumber,
+      lessonsCompleted,
+      lessonsTotal,
+      quizState,
+      quizDate,
+      assignmentState,
+      assignmentDate,
+      status,
+    };
+  });
 
   return {
     enrollmentId: enrollment.id,
@@ -94,10 +211,29 @@ export async function getAttendanceData(
     enrolledDate: enrollment.enrolledDate,
     status: enrollment.status,
     generatedAt: new Date(),
-    rows,
-    totalLessons: rows.length,
-    completedLessons: rows.filter((r) => r.completedAt !== null).length,
+    weeks,
+    weeksAttended: weeks.filter((w) => w.status === "attended").length,
+    totalLessons: lessons.length,
+    completedLessons: completedAtByLessonId.size,
+    totalQuizzes: quizzes.length,
+    submittedQuizzes: firstSubmissionByQuizId.size,
+    totalAssignments: assignments.length,
+    submittedAssignments: submissionDateByAssignmentId.size,
   };
+}
+
+function groupBy<T, K>(items: T[], keyFn: (item: T) => K): Map<K, T[]> {
+  const map = new Map<K, T[]>();
+  for (const item of items) {
+    const key = keyFn(item);
+    const bucket = map.get(key);
+    if (bucket) {
+      bucket.push(item);
+    } else {
+      map.set(key, [item]);
+    }
+  }
+  return map;
 }
 
 // Same brand palette as certificate.service.ts (lifted from the marketing site) -- this
@@ -107,6 +243,8 @@ const INK = "#10151F";
 const SIGNAL_DEEP = "#C96A26";
 const CHARCOAL_SOFT = "#6B6252";
 const RULE = "#D8D2C4";
+const DONE_GREEN = "#2F6B3A";
+const PARTIAL_AMBER = "#B6822C";
 
 const STATUS_LABELS: Record<string, string> = {
   active: "In progress",
@@ -115,13 +253,29 @@ const STATUS_LABELS: Record<string, string> = {
   suspended: "Suspended",
 };
 
+const WEEK_STATUS_LABELS: Record<WeekStatus, string> = {
+  attended: "Attended",
+  partial: "Partial",
+  pending: "Pending",
+};
+
+const WEEK_STATUS_COLORS: Record<WeekStatus, string> = {
+  attended: DONE_GREEN,
+  partial: PARTIAL_AMBER,
+  pending: CHARCOAL_SOFT,
+};
+
 function fmtDate(date: Date): string {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
+function fmtDateShort(date: Date): string {
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+}
+
 // Generates straight into the given writable stream, same as streamCertificatePdf --
-// nothing is persisted server-side, so re-downloading always reflects whatever lessons
-// are completed at request time rather than a stale snapshot.
+// nothing is persisted server-side, so re-downloading always reflects whatever lessons,
+// quizzes, and assignments are complete at request time rather than a stale snapshot.
 export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.WritableStream): void {
   const doc = new PDFDocument({ size: "A4", margin: 50 });
   doc.pipe(destination);
@@ -147,7 +301,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
 
   // Two-column info grid: who/what on the left, when on the right -- everything a
   // reviewer (e.g. an ITF officer checking a reimbursement claim) needs to identify the
-  // record before reading the session-by-session table below it.
+  // record before reading the weekly engagement table below it.
   const infoTop = margin + 70;
   const infoColWidth = contentWidth / 2 - 10;
   const leftX = margin;
@@ -165,40 +319,61 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
   infoLine(leftX, infoTop + 80, "Status", STATUS_LABELS[data.status] ?? data.status);
   infoLine(rightX, infoTop + 80, "Record generated", fmtDate(data.generatedAt));
 
-  // Column layout for the session table -- widths sum to contentWidth.
-  const colWeek = 55;
-  const colStatus = 90;
-  const colDate = 115;
-  const colSession = contentWidth - colWeek - colStatus - colDate;
-  const colX = { week: margin, session: margin + colWeek, date: margin + colWeek + colSession, status: margin + colWeek + colSession + colDate };
-  // Sized so a full 12-week/24-session course still fits on one printed page --
-  // the largest course today (Cyber Security Fundamentals) has 24 lessons, and this
-  // row height is the largest that keeps 24 rows plus the header/footer within one A4
-  // page. addPage() below is still a safety net for any course longer than that.
-  const rowHeight = 17;
-  const headerHeight = 20;
+  // Column layout for the weekly engagement table -- widths sum to contentWidth. Each
+  // week is one row evidencing all three forms of engagement (lessons, quiz,
+  // assignment), not just lesson completion, so "Attended" on this table means the
+  // candidate did all of that week's required work, not merely opened a lesson.
+  const colWeek = 45;
+  const colLessons = 65;
+  const colStatus = 80;
+  const colQuiz = (contentWidth - colWeek - colLessons - colStatus) / 2;
+  const colAssignment = colQuiz;
+  const colX = {
+    week: margin,
+    lessons: margin + colWeek,
+    quiz: margin + colWeek + colLessons,
+    assignment: margin + colWeek + colLessons + colQuiz,
+    status: margin + colWeek + colLessons + colQuiz + colAssignment,
+  };
+  const rowHeight = 34;
+  const headerHeight = 22;
 
   let y = infoTop + 118;
 
   function drawTableHeader() {
     doc.rect(margin, y, contentWidth, headerHeight).fill("#F2EEE3");
     doc.fillColor(CHARCOAL_SOFT).font("Helvetica-Bold").fontSize(8.5);
-    doc.text("WEEK", colX.week + 8, y + 6);
-    doc.text("SESSION", colX.session + 8, y + 6);
-    doc.text("COMPLETED ON", colX.date + 8, y + 6);
-    doc.text("STATUS", colX.status + 8, y + 6);
+    doc.text("WEEK", colX.week + 8, y + 7);
+    doc.text("LESSONS", colX.lessons + 8, y + 7);
+    doc.text("QUIZ", colX.quiz + 8, y + 7);
+    doc.text("ASSIGNMENT", colX.assignment + 8, y + 7);
+    doc.text("STATUS", colX.status + 8, y + 7);
     y += headerHeight;
   }
 
-  // Reserve room for the summary line and the signature block below the table so a
-  // page break never lands between the last row and that footer -- if a row wouldn't
-  // fit above the reserved zone, start a fresh page and repeat the header instead.
-  // 120 covers the footer's actual ~112pt with a little slack, measured against the
-  // 24-row/12-week case this is tuned for.
-  const footerReserve = 120;
+  // A week's worth of rows (max 12 for the longest course) at this height never comes
+  // close to needing a second page, but addPage() below is kept as a safety net for any
+  // future course longer than that rather than assumed away.
+  const footerReserve = 130;
   drawTableHeader();
 
-  data.rows.forEach((row, i) => {
+  function itemCell(x: number, colWidth: number, yTop: number, state: WeekItemState, date: Date | null, doneLabel: string, pendingLabel: string) {
+    if (state === "not_applicable") {
+      doc.fillColor(CHARCOAL_SOFT).font("Helvetica").fontSize(9).text("—", x + 8, yTop);
+      return;
+    }
+    const done = state === "done";
+    doc
+      .fillColor(done ? DONE_GREEN : CHARCOAL_SOFT)
+      .font(done ? "Helvetica-Bold" : "Helvetica")
+      .fontSize(9)
+      .text(done ? doneLabel : pendingLabel, x + 8, yTop, { width: colWidth - 16 });
+    if (done && date) {
+      doc.fillColor(CHARCOAL_SOFT).font("Helvetica").fontSize(8).text(fmtDateShort(date), x + 8, yTop + 12);
+    }
+  }
+
+  data.weeks.forEach((week, i) => {
     if (y + rowHeight > bottomLimit - footerReserve) {
       doc.addPage();
       y = margin;
@@ -209,15 +384,24 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
       doc.rect(margin, y, contentWidth, rowHeight).fill("#FAF8F2");
     }
 
-    const attended = row.completedAt !== null;
-    doc.fillColor(INK).font("Helvetica").fontSize(9.5);
-    doc.text(String(row.weekNumber), colX.week + 8, y + 3.8);
-    doc.text(row.lessonTitle, colX.session + 8, y + 3.8, { width: colSession - 16 });
-    doc.fillColor(attended ? INK : CHARCOAL_SOFT).text(attended ? fmtDate(row.completedAt as Date) : "—", colX.date + 8, y + 3.8);
+    const textY = y + 11;
+    doc.fillColor(INK).font("Helvetica").fontSize(9.5).text(String(week.weekNumber), colX.week + 8, textY);
+
+    const lessonsDone = week.lessonsTotal > 0 && week.lessonsCompleted === week.lessonsTotal;
     doc
-      .fillColor(attended ? "#2F6B3A" : CHARCOAL_SOFT)
-      .font(attended ? "Helvetica-Bold" : "Helvetica")
-      .text(attended ? "Attended" : "Pending", colX.status + 8, y + 3.8);
+      .fillColor(lessonsDone ? DONE_GREEN : CHARCOAL_SOFT)
+      .font(lessonsDone ? "Helvetica-Bold" : "Helvetica")
+      .fontSize(9.5)
+      .text(`${week.lessonsCompleted}/${week.lessonsTotal}`, colX.lessons + 8, textY);
+
+    itemCell(colX.quiz, colQuiz, y + 7, week.quizState, week.quizDate, "Submitted", "Not attempted");
+    itemCell(colX.assignment, colAssignment, y + 7, week.assignmentState, week.assignmentDate, "Submitted", "Not submitted");
+
+    doc
+      .fillColor(WEEK_STATUS_COLORS[week.status])
+      .font("Helvetica-Bold")
+      .fontSize(9.5)
+      .text(WEEK_STATUS_LABELS[week.status], colX.status + 8, textY);
 
     y += rowHeight;
   });
@@ -225,12 +409,22 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
   doc.lineWidth(0.5).strokeColor(RULE).moveTo(margin, y).lineTo(width - margin, y).stroke();
   y += 12;
 
-  const percent = data.totalLessons > 0 ? Math.round((100 * data.completedLessons) / data.totalLessons) : 0;
   doc
     .fillColor(INK)
     .font("Helvetica-Bold")
     .fontSize(10.5)
-    .text(`${data.completedLessons} of ${data.totalLessons} sessions attended (${percent}%)`, margin, y);
+    .text(`${data.weeksAttended} of ${data.weeks.length} weeks fully attended`, margin, y);
+  y += 15;
+
+  doc
+    .fillColor(CHARCOAL_SOFT)
+    .font("Helvetica")
+    .fontSize(8.5)
+    .text(
+      `Lessons ${data.completedLessons}/${data.totalLessons} · Quizzes ${data.submittedQuizzes}/${data.totalQuizzes} submitted · Assignments ${data.submittedAssignments}/${data.totalAssignments} submitted`,
+      margin,
+      y,
+    );
   y += 18;
 
   doc
@@ -238,7 +432,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
     .font("Helvetica-Oblique")
     .fontSize(8.5)
     .text(
-      "This record reflects the candidate's session-by-session participation in the online programme listed above, as tracked by the Paleon Training platform.",
+      "A week counts as attended only once its lessons, quiz, and assignment are all complete, as tracked by the Paleon Training platform -- not lesson viewing alone.",
       margin,
       y,
       { width: contentWidth, lineGap: 2 },
@@ -260,9 +454,9 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
   doc.fillColor(CHARCOAL_SOFT).font("Helvetica").fontSize(9).text("Date generated", sigRightX, y + 32);
 
   // Pinned to the physical bottom margin for a short table (the common case), but never
-  // *above* that -- for a long table (e.g. the 24-row 12-week course) that pushed the
-  // signature captions further down the page, this flows below them instead of
-  // colliding with "Issuing organization" / "Date generated".
+  // *above* that -- for a long table that pushed the signature captions further down the
+  // page, this flows below them instead of colliding with "Issuing organization" /
+  // "Date generated".
   const referenceY = Math.max(y + 32 + 14, height - margin - 16);
   doc
     .fillColor(CHARCOAL_SOFT)
