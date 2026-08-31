@@ -109,18 +109,24 @@ export function ReferralPage() {
   );
 }
 
+type CopyTarget = "code" | "link" | "instagram";
+
 function ShareCard({ summary }: { summary: MyReferralSummary }) {
-  const [copied, setCopied] = useState<"code" | "link" | null>(null);
+  const [copied, setCopied] = useState<CopyTarget | null>(null);
 
   const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up to receive your discount: ${summary.shareUrl}`;
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+  const encodedUrl = encodeURIComponent(summary.shareUrl);
+  const encodedMessage = encodeURIComponent(shareMessage);
+  const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+  const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedMessage}`;
 
-  async function copy(value: string, which: "code" | "link") {
+  async function copy(value: string, which: CopyTarget) {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(which);
-      window.setTimeout(() => setCopied(null), 2000);
+      window.setTimeout(() => setCopied(null), which === "instagram" ? 5000 : 2000);
     } catch {
       setCopied(null);
     }
@@ -160,7 +166,23 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
           rel="noopener noreferrer"
           className="rounded-md bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700"
         >
-          Share on WhatsApp
+          WhatsApp
+        </a>
+        <a
+          href={telegramUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md bg-[#229ED9] px-3 py-2 text-sm font-medium text-white hover:bg-[#1b87ba]"
+        >
+          Telegram
+        </a>
+        <a
+          href={facebookUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md bg-[#1877F2] px-3 py-2 text-sm font-medium text-white hover:bg-[#1462c8]"
+        >
+          Facebook
         </a>
         <a
           href={twitterUrl}
@@ -168,8 +190,15 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
           rel="noopener noreferrer"
           className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-black"
         >
-          Share on X
+          X
         </a>
+        <button
+          type="button"
+          onClick={() => copy(shareMessage, "instagram")}
+          className="rounded-md bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] px-3 py-2 text-sm font-medium text-white hover:opacity-90"
+        >
+          {copied === "instagram" ? "Copied — paste in Instagram" : "Instagram"}
+        </button>
         <button
           type="button"
           onClick={() => copy(summary.shareUrl, "link")}
@@ -178,6 +207,13 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
           {copied === "link" ? "Link copied!" : "Copy invite link"}
         </button>
       </div>
+
+      {copied === "instagram" && (
+        <p className="mt-2 text-xs text-blue-800">
+          Instagram has no direct share link — your message and code are on the clipboard. Paste them
+          into a story, a DM, or your bio.
+        </p>
+      )}
     </div>
   );
 }
