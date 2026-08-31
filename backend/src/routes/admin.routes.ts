@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as adminController from "../controllers/admin.controller";
+import * as referralsController from "../controllers/referrals.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import { validate } from "../middleware/validate";
@@ -12,6 +13,11 @@ import {
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
 import { createPartnerSchema, updatePartnerSchema } from "../validators/partners.validators";
+import {
+  issueRewardSchema,
+  listReferralsSchema,
+  voidReferralSchema,
+} from "../validators/referrals.validators";
 
 export const adminRouter = Router();
 
@@ -46,6 +52,14 @@ adminRouter.patch(
   adminController.setPaymentConfirmed,
 );
 adminRouter.post("/enrollments/:id/send-completion-email", adminController.sendCompletionEmail);
+adminRouter.get("/referrals", validate(listReferralsSchema), referralsController.listReferrals);
+adminRouter.post(
+  "/referrals/:id/issue-reward",
+  validate(issueRewardSchema),
+  referralsController.issueReward,
+);
+adminRouter.post("/referrals/:id/void", validate(voidReferralSchema), referralsController.voidReferral);
+
 adminRouter.get("/quizzes", adminController.listQuizzes);
 adminRouter.patch(
   "/quizzes/:id",

@@ -12,7 +12,71 @@ export interface User {
   location: string;
   courseInterest: string | null;
   university: string | null;
+  referralCode: string | null;
   emailVerifiedAt: string | null;
+}
+
+export type ReferralRewardType = "airtime" | "data" | "discount";
+export type ReferralStatus = "pending" | "qualified" | "void";
+export type ReferralRewardStatus = "pending" | "issued";
+
+export interface MyReferralSummary {
+  code: string;
+  shareUrl: string;
+  rewardType: ReferralRewardType;
+  rewardPerReferralNgn: number;
+  welcomeBonusNgn: number;
+  counts: { invited: number; joined: number; qualified: number };
+  earnings: { pendingNgn: number; issuedNgn: number; totalNgn: number };
+  referrals: {
+    id: string;
+    refereeName: string;
+    status: ReferralStatus;
+    rewardStatus: ReferralRewardStatus;
+    joinedAt: string;
+    qualifiedAt: string | null;
+  }[];
+  leaderboardRank: number | null;
+}
+
+export interface ReferralLeaderboardEntry {
+  rank: number;
+  userId: string;
+  name: string;
+  university: string | null;
+  qualifiedReferrals: number;
+}
+
+export interface ReferralLeaderboard {
+  allTime: ReferralLeaderboardEntry[];
+  thisMonth: ReferralLeaderboardEntry[];
+}
+
+export interface AdminReferralReward {
+  type: ReferralRewardType | string;
+  amountNgn: number;
+  status: ReferralRewardStatus;
+  issuedAt: string | null;
+}
+
+export interface AdminReferral {
+  id: string;
+  code: string;
+  status: ReferralStatus;
+  referrer: { id: string; name: string; email: string } | null;
+  referee: { id: string; name: string; email: string } | null;
+  referrerReward: AdminReferralReward;
+  refereeReward: AdminReferralReward;
+  joinedAt: string;
+  qualifiedAt: string | null;
+  notes: string | null;
+}
+
+export interface AdminReferralOverview {
+  totalReferrers: number;
+  pendingReferrals: number;
+  qualifiedReferrals: number;
+  rewardsToPayNgn: number;
 }
 
 export type CourseLevel = "beginner" | "intermediate" | "advanced";
@@ -341,6 +405,7 @@ export interface AdminStats {
     averageScore: number | null;
   };
   payments: { courseId: string; courseTitle: string; paymentConfirmed: number; paymentPending: number }[];
+  referrals: AdminReferralOverview;
 }
 
 export interface CandidateEnrollment {

@@ -29,6 +29,11 @@ export function Navbar() {
       <Link to="/dashboard" className={linkClassName} onClick={closeMenu}>
         Dashboard
       </Link>
+      {user.role === "student" && (
+        <Link to="/refer" className={linkClassName} onClick={closeMenu}>
+          Refer &amp; earn
+        </Link>
+      )}
       {user.role === "admin" && (
         <Link to="/admin" className={linkClassName} onClick={closeMenu}>
           Admin

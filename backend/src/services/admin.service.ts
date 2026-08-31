@@ -19,7 +19,9 @@ import {
 } from "../models";
 import * as authService from "./auth.service";
 import * as enrollmentService from "./enrollment.service";
+import * as referralService from "./referral.service";
 import { ApiError } from "../utils/ApiError";
+import { logger } from "../utils/logger";
 
 // A candidate counts as "online" if their last heartbeat was within this window. The
 // frontend pings every ~60s while a session is active, so a few missed beats still read
@@ -161,6 +163,7 @@ export async function getDashboardStats() {
       averageScore: capstonesAverageScore,
     },
     payments: await getPaymentsOverview(),
+    referrals: await referralService.getReferralOverview(),
   };
 }
 
@@ -398,6 +401,7 @@ export async function addEnrollmentToCandidate(
     enrollment.paymentConfirmed = true;
     enrollment.paymentConfirmedAt = new Date();
     await enrollment.save();
+    await creditReferralIfAny(enrollment);
   }
 
   return getCandidateById(candidateId);
@@ -408,10 +412,27 @@ export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed
   if (!enrollment) {
     throw ApiError.notFound("Enrollment not found");
   }
+  const wasConfirmed = enrollment.paymentConfirmed;
   enrollment.paymentConfirmed = paymentConfirmed;
   enrollment.paymentConfirmedAt = paymentConfirmed ? new Date() : null;
   await enrollment.save();
+
+  // Confirming a payment (typically a verified bank transfer) is the other way a
+  // referred student's referral qualifies, alongside self-service card checkout.
+  if (paymentConfirmed && !wasConfirmed) {
+    await creditReferralIfAny(enrollment);
+  }
   return enrollment;
+}
+
+// Best-effort, non-fatal -- same reasoning as payment.service.ts's copy: a problem
+// crediting a referral must never fail the admin action that confirmed the payment.
+async function creditReferralIfAny(enrollment: Enrollment): Promise<void> {
+  try {
+    await referralService.handleQualifyingPayment(enrollment);
+  } catch (err) {
+    logger.error("Failed to credit referral after admin payment confirmation", err);
+  }
 }
 
 // Manual, admin-triggered send (not an automatic side effect of completion itself) --

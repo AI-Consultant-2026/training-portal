@@ -13,6 +13,7 @@ export function serializeUser(user: User) {
     location: user.location,
     courseInterest: user.courseInterest,
     university: user.university,
+    referralCode: user.referralCode,
     emailVerifiedAt: user.emailVerifiedAt,
   };
 }

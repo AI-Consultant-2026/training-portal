@@ -5,6 +5,7 @@ import * as emails from "../emails";
 import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
+import { attachReferralOnRegister } from "./referral.service";
 import {
   findValidRefreshToken,
   generateAccessToken,
@@ -21,6 +22,7 @@ export interface RegisterInput {
   location?: string;
   courseInterest?: string;
   university?: string;
+  referralCode?: string;
 }
 
 export interface LoginInput {
@@ -65,6 +67,15 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     courseInterest: input.courseInterest ?? null,
     university: input.university ?? null,
   });
+
+  // Best-effort: a malformed or unknown referral code must never fail a real signup.
+  // attachReferralOnRegister already swallows the "no such code" case; this guards
+  // against anything unexpected (e.g. a transient DB error on the lookup).
+  try {
+    await attachReferralOnRegister(user.id, input.referralCode);
+  } catch (err) {
+    logger.error("Failed to attach referral on registration", err);
+  }
 
   const accessToken = generateAccessToken(user);
   const refreshToken = await issueRefreshToken(user.id);

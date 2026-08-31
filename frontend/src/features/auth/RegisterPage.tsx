@@ -1,6 +1,7 @@
-import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { FormEvent, useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { validateReferralCode } from "../../api/referrals.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -130,14 +131,53 @@ export function RegisterPage() {
   const [location, setLocation] = useState("");
   const [university, setUniversity] = useState("");
   const [courseInterest, setCourseInterest] = useState("");
+  const [searchParams] = useSearchParams();
+  const [referralCode, setReferralCode] = useState(searchParams.get("ref")?.trim().toUpperCase() ?? "");
+  const [referralCheck, setReferralCheck] = useState<
+    { state: "idle" | "checking" } | { state: "valid"; name: string | null } | { state: "invalid" }
+  >({ state: "idle" });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { status, error } = useAppSelector((state) => state.auth);
 
+  useEffect(() => {
+    const code = referralCode.trim();
+    if (!code) {
+      setReferralCheck({ state: "idle" });
+      return;
+    }
+    let cancelled = false;
+    setReferralCheck({ state: "checking" });
+    const timer = window.setTimeout(async () => {
+      try {
+        const result = await validateReferralCode(code);
+        if (cancelled) return;
+        setReferralCheck(
+          result.valid ? { state: "valid", name: result.referrerName } : { state: "invalid" },
+        );
+      } catch {
+        if (!cancelled) setReferralCheck({ state: "idle" });
+      }
+    }, 400);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [referralCode]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const result = await dispatch(
-      registerUser({ email, password, firstName, lastName, location, university, courseInterest }),
+      registerUser({
+        email,
+        password,
+        firstName,
+        lastName,
+        location,
+        university,
+        courseInterest,
+        referralCode: referralCode.trim() || undefined,
+      }),
     );
     if (registerUser.fulfilled.match(result)) {
       // Send the student straight to the course they said they're interested in,
@@ -233,6 +273,28 @@ export function RegisterPage() {
             </option>
           ))}
         </Select>
+        <Input
+          id="referralCode"
+          label="Referral code (optional)"
+          value={referralCode}
+          onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+          placeholder="e.g. PLNAB7KMQ"
+          autoCapitalize="characters"
+        />
+        {referralCheck.state === "checking" && (
+          <p className="-mt-2 text-xs text-gray-500">Checking code&hellip;</p>
+        )}
+        {referralCheck.state === "valid" && (
+          <p className="-mt-2 text-xs text-green-600">
+            {referralCheck.name ? `Invited by ${referralCheck.name}. ` : "Code applied. "}
+            You&apos;ll get a welcome bonus when you pay for your first course.
+          </p>
+        )}
+        {referralCheck.state === "invalid" && (
+          <p className="-mt-2 text-xs text-amber-600">
+            We don&apos;t recognise that code — you can still sign up without it.
+          </p>
+        )}
         <Button type="submit" isLoading={status === "loading"}>
           Sign up
         </Button>

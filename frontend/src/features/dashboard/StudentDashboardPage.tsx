@@ -20,6 +20,17 @@ export function StudentDashboardPage() {
     <div className="mx-auto max-w-4xl px-6 py-10">
       <h1 className="text-2xl font-semibold text-gray-900">Welcome back, {user?.firstName}</h1>
 
+      <Link
+        to="/refer"
+        className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm hover:bg-blue-100"
+      >
+        <span className="text-blue-900">
+          <span className="font-medium">Refer a friend, earn rewards.</span> Airtime, data or course
+          credit for every friend who joins and pays.
+        </span>
+        <span className="shrink-0 font-medium text-blue-700">Get your code →</span>
+      </Link>
+
       {status === "loading" && (
         <div className="flex justify-center py-16">
           <Spinner />

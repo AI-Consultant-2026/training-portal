@@ -8,6 +8,7 @@ import coursesReducer from "../features/courses/coursesSlice";
 import enrollmentsReducer from "../features/enrollments/enrollmentsSlice";
 import lessonsReducer from "../features/lessons/lessonsSlice";
 import quizzesReducer from "../features/quizzes/quizzesSlice";
+import referralsReducer from "../features/referrals/referralsSlice";
 
 // Exported separately (not just inlined into configureStore below) so tests can build
 // their own store with the exact same reducers via createTestStore, instead of either
@@ -21,6 +22,7 @@ export const rootReducer = {
   lessons: lessonsReducer,
   admin: adminReducer,
   capstones: capstonesReducer,
+  referrals: referralsReducer,
 };
 
 export const store = configureStore({ reducer: rootReducer });

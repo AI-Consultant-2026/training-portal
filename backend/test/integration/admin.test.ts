@@ -95,6 +95,7 @@ describe("Admin dashboard stats", () => {
       },
       capstones: { totalSubmissions: 0, pendingGrading: 0, graded: 0, averageScore: null },
       payments: [],
+      referrals: { totalReferrers: 0, pendingReferrals: 0, qualifiedReferrals: 0, rewardsToPayNgn: 0 },
     });
   });
 

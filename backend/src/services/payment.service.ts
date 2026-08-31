@@ -5,7 +5,20 @@ import { COURSE_PRICES_NGN } from "../constants/coursePricing";
 import * as courseService from "./course.service";
 import { getEnrollmentForCourseAndStudent } from "./enrollment.service";
 import * as paymentGateway from "./paymentGateway.service";
+import * as referralService from "./referral.service";
+import { logger } from "../utils/logger";
 import { CARD_SETTLEMENT_CURRENCY, convertFromNgn, estimateLocalAmount } from "./currency.service";
+
+// A referred student's first confirmed payment qualifies their referrer's reward. Kept
+// best-effort and non-fatal: a hiccup crediting the referral must never turn a
+// successful payment into an error response for the student who just paid.
+async function creditReferralIfAny(enrollment: Enrollment): Promise<void> {
+  try {
+    await referralService.handleQualifyingPayment(enrollment);
+  } catch (err) {
+    logger.error("Failed to credit referral after confirmed payment", err);
+  }
+}
 
 function requirePriceNgn(courseSlug: string): number {
   const priceNgn = COURSE_PRICES_NGN[courseSlug];
@@ -93,6 +106,7 @@ export async function chargeCourseCard(input: CardPaymentInput): Promise<{ payme
     enrollment.paymentConfirmed = true;
     enrollment.paymentConfirmedAt = new Date();
     await enrollment.save();
+    await creditReferralIfAny(enrollment);
   }
 
   return { payment, enrollment };

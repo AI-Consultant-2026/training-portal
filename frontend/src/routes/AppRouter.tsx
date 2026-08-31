@@ -61,6 +61,11 @@ const PartnerPipelinePage = lazyImport(
   () => import("../features/admin/PartnerPipelinePage"),
   "PartnerPipelinePage",
 );
+const ReferralPage = lazyImport(() => import("../features/referrals/ReferralPage"), "ReferralPage");
+const AdminReferralsPage = lazyImport(
+  () => import("../features/admin/AdminReferralsPage"),
+  "AdminReferralsPage",
+);
 
 function NotFound() {
   return <div className="mx-auto max-w-3xl px-6 py-16 text-center text-gray-600">Page not found.</div>;
@@ -91,6 +96,7 @@ export function AppRouter() {
           <Route path="/courses/:slug/pay/bank-transfer" element={<BankTransferPage />} />
           <Route path="/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/dashboard" element={<StudentDashboardPage />} />
+          <Route path="/refer" element={<ReferralPage />} />
           <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
           <Route path="/capstones/:id" element={<CapstoneDetailPage />} />
           <Route path="/quizzes/:id" element={<QuizTakingPage />} />
@@ -114,6 +120,7 @@ export function AppRouter() {
             <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
             <Route path="/admin/capstones" element={<AdminCapstonesPage />} />
             <Route path="/admin/partner-pipeline" element={<PartnerPipelinePage />} />
+            <Route path="/admin/referrals" element={<AdminReferralsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

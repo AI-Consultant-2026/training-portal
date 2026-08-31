@@ -15,6 +15,7 @@ export interface UserAttributes {
   location: string;
   courseInterest: string | null;
   university: string | null;
+  referralCode: string | null;
   lastActiveAt: Date | null;
   emailVerifiedAt: Date | null;
   createdAt?: Date;
@@ -30,6 +31,7 @@ export type UserCreationAttributes = Optional<
   | "location"
   | "courseInterest"
   | "university"
+  | "referralCode"
   | "lastActiveAt"
   | "emailVerifiedAt"
   | "createdAt"
@@ -48,6 +50,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   declare location: string;
   declare courseInterest: string | null;
   declare university: string | null;
+  declare referralCode: string | null;
   declare lastActiveAt: Date | null;
   declare emailVerifiedAt: Date | null;
   declare readonly createdAt: Date;
@@ -112,6 +115,12 @@ export function initUserModel(sequelize: Sequelize) {
       university: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      referralCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+        field: "referral_code",
       },
       lastActiveAt: {
         type: DataTypes.DATE,

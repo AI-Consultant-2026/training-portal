@@ -161,6 +161,9 @@ export const registerSchema = z.object({
     location: z.enum(LOCATIONS).default("Nigeria"),
     courseInterest: z.enum(COURSE_INTERESTS).optional(),
     university: z.enum(UNIVERSITIES).optional(),
+    // Optional ambassador code from a ?ref= link or word of mouth. Lenient on purpose:
+    // an unknown/blank code is silently ignored by referral.service, never a signup error.
+    referralCode: z.string().trim().max(40).optional(),
   }),
 });
 

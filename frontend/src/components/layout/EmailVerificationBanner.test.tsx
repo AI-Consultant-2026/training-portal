@@ -15,6 +15,7 @@ const UNVERIFIED_STUDENT: User = {
   location: "Nigeria",
   courseInterest: null,
   university: null,
+  referralCode: null,
   emailVerifiedAt: null,
 };
 

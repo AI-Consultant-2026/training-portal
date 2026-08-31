@@ -11,6 +11,7 @@ import { Lesson, initLessonModel } from "./lesson.model";
 import { Partner, initPartnerModel } from "./partner.model";
 import { Payment, initPaymentModel } from "./payment.model";
 import { ProgressTracking, initProgressTrackingModel } from "./progressTracking.model";
+import { Referral, initReferralModel } from "./referral.model";
 import { Quiz, initQuizModel } from "./quiz.model";
 import { QuizAnswer, initQuizAnswerModel } from "./quizAnswer.model";
 import { QuizAttempt, initQuizAttemptModel } from "./quizAttempt.model";
@@ -60,6 +61,7 @@ initVideoCheckpointAnswerModel(sequelize);
 initLeadModel(sequelize);
 initPaymentModel(sequelize);
 initPartnerModel(sequelize);
+initReferralModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -84,6 +86,14 @@ Payment.belongsTo(User, { foreignKey: "studentId", as: "student" });
 
 User.hasMany(RefreshToken, { foreignKey: "userId", as: "refreshTokens" });
 RefreshToken.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// A user can refer many people (referralsMade) but be referred by at most one
+// (referralReceived -- hasOne, enforced by the unique referee_id column).
+User.hasMany(Referral, { foreignKey: "referrerId", as: "referralsMade" });
+Referral.belongsTo(User, { foreignKey: "referrerId", as: "referrer" });
+User.hasOne(Referral, { foreignKey: "refereeId", as: "referralReceived" });
+Referral.belongsTo(User, { foreignKey: "refereeId", as: "referee" });
+Referral.belongsTo(Enrollment, { foreignKey: "qualifyingEnrollmentId", as: "qualifyingEnrollment" });
 
 CourseModule.hasMany(Assignment, { foreignKey: "moduleId", as: "assignments" });
 Assignment.belongsTo(CourseModule, { foreignKey: "moduleId", as: "module" });
@@ -151,6 +161,7 @@ export {
   Partner,
   Payment,
   ProgressTracking,
+  Referral,
   Quiz,
   QuizAnswer,
   QuizAttempt,

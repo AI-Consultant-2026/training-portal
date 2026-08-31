@@ -9,6 +9,7 @@ export interface RegisterInput {
   location: string;
   courseInterest: string;
   university: string;
+  referralCode?: string;
 }
 
 export interface LoginInput {
