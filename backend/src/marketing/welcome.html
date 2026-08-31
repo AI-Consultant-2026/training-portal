@@ -573,6 +573,44 @@
   .why-title { font-size: 17px; font-weight: 700; margin-bottom: 9px; }
   .why-desc { font-size: 13.5px; color: #A9B0C2; line-height: 1.6; }
 
+  /* ============ Refer & earn ============ */
+  .refer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--line-light);
+    border: 1px solid var(--line-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .refer-step { background: var(--white); padding: 28px 24px; }
+  .refer-step-num {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--signal-deep);
+    margin-bottom: 14px;
+  }
+  .refer-step-title { font-size: 17px; font-weight: 700; margin-bottom: 9px; }
+  .refer-step-desc { font-size: 13.5px; color: var(--charcoal-soft); line-height: 1.6; }
+  .refer-foot {
+    margin-top: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+  }
+  .refer-note { font-size: 13.5px; color: var(--charcoal-soft); }
+  .refer-note a { color: var(--signal-deep); font-weight: 600; }
+  .refer-note a:hover { color: var(--signal); }
+  .refer-fineprint {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--charcoal-soft);
+    line-height: 1.6;
+    max-width: 70ch;
+  }
+
   /* ============ Register / CTA section ============ */
   .register-section {
     background: var(--paper-2);
@@ -791,6 +829,7 @@
         <li><a href="#courses">Courses</a></li>
         <li><a href="/executive-training">Corporate Nigeria</a></li>
         <li><a href="#why">Why Paleon</a></li>
+        <li><a href="#refer-earn">Refer &amp; Earn</a></li>
         <li><a href="/login">Login</a></li>
       </ul>
       <a class="btn btn-signal" href="#register">Contact Us</a>
@@ -1033,6 +1072,52 @@
     </div>
   </section>
 
+  <!-- ============ REFER & EARN ============ -->
+  <section class="section section-paper" id="refer-earn">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="section-eyebrow">Refer &amp; earn</span>
+          <h2 class="section-title">Bring a friend. You both get rewarded.</h2>
+        </div>
+        <p class="section-desc">Every enrolled student gets a personal referral code. Share it, and when
+          someone joins and pays for a course, the reward goes both ways.</p>
+      </div>
+
+      <div class="refer-grid reveal">
+        <div class="refer-step">
+          <div class="refer-step-num">01</div>
+          <div class="refer-step-title">Share your code</div>
+          <div class="refer-step-desc">It&rsquo;s on your dashboard once you&rsquo;re enrolled. Send it to
+            friends, coursemates or your NYSC set &mdash; by WhatsApp or your personal invite link.</div>
+        </div>
+        <div class="refer-step">
+          <div class="refer-step-num">02</div>
+          <div class="refer-step-title">They join &amp; pay</div>
+          <div class="refer-step-desc">They enter your code when they register and get
+            <strong>&#8358;3,000 off</strong> their first course.</div>
+        </div>
+        <div class="refer-step">
+          <div class="refer-step-num">03</div>
+          <div class="refer-step-title">You earn &#8358;5,000</div>
+          <div class="refer-step-desc">As airtime, a data bundle, or credit towards your next course &mdash;
+            your choice. No limit on how many friends you refer.</div>
+        </div>
+      </div>
+
+      <div class="refer-foot reveal">
+        <a class="btn btn-signal" href="#register">Register your interest</a>
+        <span class="refer-note">Already learning with Paleon?
+          <a href="/refer">Get your referral code &rarr;</a></span>
+      </div>
+
+      <p class="refer-fineprint reveal">Rewards are issued by our team after your friend&rsquo;s course
+        payment is confirmed &mdash; allow a few working days for airtime or data. Paleon Training builds
+        your skills and employability; it doesn&rsquo;t guarantee a job. Self-referrals and duplicate
+        accounts don&rsquo;t qualify, and we may adjust or end the programme at any time.</p>
+    </div>
+  </section>
+
   <!-- ============ REGISTER ============ -->
   <section class="section register-section" id="register">
     <div class="wrap">
@@ -1211,6 +1296,7 @@
       <div class="footer-heading">Company</div>
       <ul class="footer-links">
         <li><a href="#why">Why Paleon</a></li>
+        <li><a href="#refer-earn">Refer &amp; Earn</a></li>
         <li><a href="#register">Register interest</a></li>
         <li><a href="#top">Home</a></li>
         <li><a href="/digital-skills-jobs-nigeria">Digital Skills &amp; Jobs Guide</a></li>
