@@ -112,7 +112,7 @@ export function ReferralPage() {
 function ShareCard({ summary }: { summary: MyReferralSummary }) {
   const [copied, setCopied] = useState<"code" | "link" | null>(null);
 
-  const shareMessage = `I'm learning job-ready digital skills on Paleon Training. Use my code ${summary.code} when you sign up: ${summary.shareUrl}`;
+  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up to receive your discount: ${summary.shareUrl}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
