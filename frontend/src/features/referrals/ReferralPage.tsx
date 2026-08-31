@@ -121,6 +121,7 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
   const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedMessage}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
   async function copy(value: string, which: CopyTarget) {
     try {
@@ -183,6 +184,14 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
           className="rounded-md bg-[#1877F2] px-3 py-2 text-sm font-medium text-white hover:bg-[#1462c8]"
         >
           Facebook
+        </a>
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md bg-[#0A66C2] px-3 py-2 text-sm font-medium text-white hover:bg-[#08528f]"
+        >
+          LinkedIn
         </a>
         <a
           href={twitterUrl}
