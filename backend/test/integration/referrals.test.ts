@@ -151,12 +151,12 @@ describe("Referrals", () => {
     expect(await Referral.count({ where: { status: "qualified" } })).toBe(1);
   });
 
-  it("validates a code publicly, revealing only a display name", async () => {
+  it("validates a code publicly and returns the referrer's name", async () => {
     await register("known@example.com");
     const code = await myCode("known@example.com");
 
     const ok = await request(app).post("/api/referrals/validate-code").send({ code: code.toLowerCase() });
-    expect(ok.body).toEqual({ valid: true, referrerName: "Jest S." });
+    expect(ok.body).toEqual({ valid: true, referrerName: "Jest Student" });
 
     const bad = await request(app).post("/api/referrals/validate-code").send({ code: "PLNNOPE99" });
     expect(bad.body).toEqual({ valid: false, referrerName: null });

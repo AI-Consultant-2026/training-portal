@@ -117,10 +117,13 @@ export async function handleQualifyingPayment(enrollment: Enrollment): Promise<v
   );
 }
 
+function fullName(user?: User | null): string {
+  if (!user) return "";
+  return `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
+}
+
 function refereeDisplayName(referee?: User | null): string {
-  if (!referee) return "A student";
-  const lastInitial = referee.lastName ? `${referee.lastName.charAt(0).toUpperCase()}.` : "";
-  return `${referee.firstName} ${lastInitial}`.trim();
+  return fullName(referee) || "A student";
 }
 
 export interface MyReferralSummary {
@@ -220,8 +223,7 @@ export async function validateCode(rawCode: string): Promise<CodeValidation> {
   });
   if (!referrer) return { valid: false, referrerName: null };
 
-  const lastInitial = referrer.lastName ? `${referrer.lastName.charAt(0).toUpperCase()}.` : "";
-  return { valid: true, referrerName: `${referrer.firstName} ${lastInitial}`.trim() };
+  return { valid: true, referrerName: fullName(referrer) || null };
 }
 
 export interface LeaderboardEntry {
@@ -253,16 +255,13 @@ async function buildLeaderboard(since?: Date): Promise<LeaderboardEntry[]> {
   return [...byUser.values()]
     .sort((a, b) => b.count - a.count)
     .slice(0, REFERRAL_LEADERBOARD_SIZE)
-    .map((entry, index) => {
-      const lastInitial = entry.user.lastName ? `${entry.user.lastName.charAt(0).toUpperCase()}.` : "";
-      return {
-        rank: index + 1,
-        userId: entry.user.id,
-        name: `${entry.user.firstName} ${lastInitial}`.trim(),
-        university: entry.user.university,
-        qualifiedReferrals: entry.count,
-      };
-    });
+    .map((entry, index) => ({
+      rank: index + 1,
+      userId: entry.user.id,
+      name: fullName(entry.user),
+      university: entry.user.university,
+      qualifiedReferrals: entry.count,
+    }));
 }
 
 export async function getLeaderboard(): Promise<{ allTime: LeaderboardEntry[]; thisMonth: LeaderboardEntry[] }> {

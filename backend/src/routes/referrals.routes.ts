@@ -9,8 +9,8 @@ import { setRewardPreferenceSchema, validateCodeSchema } from "../validators/ref
 export const referralsRouter = Router();
 
 // Public: the register page checks a pasted/linked code before showing "invited by X".
-// Rate-limited because it's unauthenticated and technically enumerable (it only ever
-// reveals a first name + last initial, but no reason to allow bulk probing).
+// Rate-limited because it's unauthenticated and technically enumerable -- a valid code
+// returns the referrer's name, so no reason to allow bulk probing.
 const validateCodeLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 40,
