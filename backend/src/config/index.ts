@@ -57,12 +57,12 @@ export const config = {
   // placeholder card-gateway API key (currently unused by paymentGateway.service.ts's
   // mock implementation). Intentionally always optional/defaulted, same reasoning as
   // `email` above: no real merchant account or receiving bank account has been confirmed
-  // yet. Once Paleon Training UK Limited's account details are confirmed, set these env
+  // yet. Once Paleon Training Limited's account details are confirmed, set these env
   // vars (and swap paymentGateway.service.ts's mock for a real gateway call) -- nothing
   // else in the payment flow needs to change.
   bankTransfer: {
     bankName: process.env.BANK_TRANSFER_BANK_NAME ?? "PLACEHOLDER BANK NAME",
-    accountName: process.env.BANK_TRANSFER_ACCOUNT_NAME ?? "Paleon Training UK Limited",
+    accountName: process.env.BANK_TRANSFER_ACCOUNT_NAME ?? "Paleon Training Limited",
     accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",
     sortCodeOrIban: process.env.BANK_TRANSFER_SORT_CODE_OR_IBAN ?? "00-00-00",
   },
