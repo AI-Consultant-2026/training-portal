@@ -99,7 +99,7 @@ function draftForPartner(partner: Partner, course: string): { subject: string; b
         `I'd like to explore a partnership with ${partner.name} — for example, being listed as a recommended training provider, or a short session introducing the programme to your ${audience} ahead of our next intake, which closes ${deadline}.\n\n` +
         `Would you be open to a discussion about providing your ${audience} with digital skills that could enhance their employability and make them more competitive in the job market?\n\n` +
         `More about the programme: ${REGISTRATION_URL}\n\n` +
-        `Best regards,\n\nKen Uwotu\nPaleon Training UK\nhello@paleontraining.com\nhttps://paleontraining.com`,
+        `Best regards,\n\nKen Uwotu\nPaleon Training Limited\nhello@paleontraining.com\nhttps://paleontraining.com`,
     };
   }
   if (partner.category === "Corporate Employer") {
@@ -112,7 +112,7 @@ function draftForPartner(partner: Partner, course: string): { subject: string; b
         `Interested in a Proposal?\n` +
         `Discover how your organisation can benefit from a confirmed 50% reimbursement rate through the Industrial Training Fund (ITF)\n\n` +
         `More about the programme: ${REGISTRATION_URL}\n\n` +
-        `Best regards,\n\nKen Uwotu\nPaleon Training UK\nhello@paleontraining.com\nhttps://paleontraining.com`,
+        `Best regards,\n\nKen Uwotu\nPaleon Training Limited\nhello@paleontraining.com\nhttps://paleontraining.com`,
     };
   }
   return {
