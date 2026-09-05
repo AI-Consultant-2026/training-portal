@@ -70,7 +70,7 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState("");
-  const [university, setUniversity] = useState("");
+  const [university, setUniversity] = useState(REGISTRATION_STATUSES[0]);
   const [courseInterest, setCourseInterest] = useState("");
   const [searchParams] = useSearchParams();
   const [referralCode, setReferralCode] = useState(searchParams.get("ref")?.trim().toUpperCase() ?? "");
@@ -189,9 +189,6 @@ export function RegisterPage() {
           onChange={(e) => setUniversity(e.target.value)}
           required
         >
-          <option value="" disabled>
-            Status
-          </option>
           {REGISTRATION_STATUSES.map((option) => (
             <option key={option} value={option}>
               {option}
