@@ -10,11 +10,19 @@ export const listCourses = asyncHandler(async (req: Request, res: Response) => {
       ? await courseService.listAllCourses()
       : await courseService.listPublishedCourses();
 
-  res.json({ courses });
+  // Admin-only courses never appear in the catalog for anyone but an admin -- an
+  // instructor otherwise sees every course via listAllCourses above, which would
+  // otherwise leak an admin-only course's title/description as a catalog card.
+  const visible = courses.filter(
+    (course) => !courseService.isAdminOnlyCourse(course) || req.user?.role === "admin",
+  );
+
+  res.json({ courses: visible });
 });
 
 export const getCourse = asyncHandler(async (req: Request, res: Response) => {
   const course = await courseService.getCourseByIdOrSlug(req.params.id);
+  courseService.assertCourseAccessible(course, req.user);
   res.json({ course });
 });
 
@@ -41,6 +49,7 @@ export const getCourseProgress = asyncHandler(async (req: Request, res: Response
 
 export const getCourseCapstone = asyncHandler(async (req: Request, res: Response) => {
   const course = await courseService.getCourseByIdOrSlug(req.params.id);
+  courseService.assertCourseAccessible(course, req.user);
   const capstone = await capstoneService.getByCourse(course.id);
   res.json({ capstone });
 });

@@ -3,7 +3,7 @@ import * as lessonService from "../services/lesson.service";
 import { asyncHandler } from "../utils/asyncHandler";
 
 export const listLessonsForModule = asyncHandler(async (req: Request, res: Response) => {
-  const lessons = await lessonService.listLessonsForModule(req.params.id);
+  const lessons = await lessonService.listLessonsForModule(req.params.id, req.user);
   res.json({ lessons });
 });
 

@@ -82,6 +82,61 @@ describe("Lessons and progress tracking", () => {
     expect(detailRes.body.lesson.id).toBe(lessons[0].id);
   });
 
+  it("404s a student and an instructor on an admin-only course's lesson list and lesson detail, but allows an admin", async () => {
+    const owningInstructor = await createInstructor("admin-only-owning-instructor@example.com");
+    const course = await Course.create({
+      title: "Admin Only Lessons Course",
+      slug: `admin-only-lessons-course-${Date.now()}`,
+      durationWeeks: 1,
+      status: "published",
+      instructorId: owningInstructor.id,
+      metadata: { adminOnly: true },
+    });
+    const courseModule = await CourseModule.create({ courseId: course.id, title: "Module 1", weekNumber: 1 });
+    const lesson = await Lesson.create({ moduleId: courseModule.id, title: "Lesson 1", order: 1 });
+
+    await registerStudent("admin-only-lessons-student@example.com");
+    const studentToken = await loginAs("admin-only-lessons-student@example.com");
+    const studentListRes = await request(app)
+      .get(`/api/modules/${courseModule.id}/lessons`)
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(studentListRes.status).toBe(404);
+    const studentDetailRes = await request(app)
+      .get(`/api/lessons/${lesson.id}`)
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(studentDetailRes.status).toBe(404);
+
+    const otherInstructorToken = await loginAs("admin-only-owning-instructor@example.com");
+    const instructorListRes = await request(app)
+      .get(`/api/modules/${courseModule.id}/lessons`)
+      .set("Authorization", `Bearer ${otherInstructorToken}`);
+    expect(instructorListRes.status).toBe(404);
+    const instructorDetailRes = await request(app)
+      .get(`/api/lessons/${lesson.id}`)
+      .set("Authorization", `Bearer ${otherInstructorToken}`);
+    expect(instructorDetailRes.status).toBe(404);
+
+    const passwordHash = await bcrypt.hash("Password123!", 4);
+    await User.create({
+      email: "admin-only-lessons-admin@example.com",
+      passwordHash,
+      firstName: "Jest",
+      lastName: "Admin",
+      role: "admin",
+    });
+    const adminToken = await loginAs("admin-only-lessons-admin@example.com");
+    const adminListRes = await request(app)
+      .get(`/api/modules/${courseModule.id}/lessons`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(adminListRes.status).toBe(200);
+    expect(adminListRes.body.lessons).toHaveLength(1);
+    const adminDetailRes = await request(app)
+      .get(`/api/lessons/${lesson.id}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(adminDetailRes.status).toBe(200);
+    expect(adminDetailRes.body.lesson.id).toBe(lesson.id);
+  });
+
   describe("lesson navigation", () => {
     async function createCourseWithModules(instructorId: string, lessonsPerModule: number[]) {
       const course = await Course.create({

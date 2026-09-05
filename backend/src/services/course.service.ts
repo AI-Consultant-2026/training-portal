@@ -55,6 +55,20 @@ export async function createCourse(input: CreateCourseInput, instructorId: strin
   });
 }
 
+// A course flagged admin-only in its metadata (e.g. internal/experimental content not
+// meant for the public catalog) is invisible to everyone except admins -- not just
+// unlisted, but a 404 on direct access too, so a guessed/shared slug or ID doesn't leak
+// the title, description, module list, or lesson content to instructors or students.
+export function isAdminOnlyCourse(course: Course): boolean {
+  return (course.metadata as { adminOnly?: boolean } | null)?.adminOnly === true;
+}
+
+export function assertCourseAccessible(course: Course, requester: { role: string } | undefined): void {
+  if (isAdminOnlyCourse(course) && requester?.role !== "admin") {
+    throw ApiError.notFound("Course not found");
+  }
+}
+
 export function assertCanManageCourse(
   course: Course,
   requester: { id: string; role: string },

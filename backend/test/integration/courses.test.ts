@@ -221,6 +221,79 @@ describe("Courses", () => {
     expect(secondEnroll.status).toBe(409);
   });
 
+  it("hides an admin-only course from a student's and instructor's catalog, but shows it to an admin", async () => {
+    await Course.create({
+      title: "Admin Only Course",
+      slug: "admin-only-course-list",
+      durationWeeks: 4,
+      status: "published",
+      metadata: { adminOnly: true },
+    });
+
+    await request(app).post("/api/auth/register").send({
+      email: "jest-student-adminonly-list@example.com",
+      password: "Password123!",
+      firstName: "Jest",
+      lastName: "Student",
+    });
+    const studentToken = await loginAs("jest-student-adminonly-list@example.com", "Password123!");
+    const studentRes = await request(app).get("/api/courses").set("Authorization", `Bearer ${studentToken}`);
+    expect(studentRes.body.courses.map((c: { slug: string }) => c.slug)).not.toContain(
+      "admin-only-course-list",
+    );
+
+    await createInstructor();
+    const instructorToken = await loginAs("jest-instructor@example.com", "Password123!");
+    const instructorRes = await request(app)
+      .get("/api/courses")
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(instructorRes.body.courses.map((c: { slug: string }) => c.slug)).not.toContain(
+      "admin-only-course-list",
+    );
+
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com", "Password123!");
+    const adminRes = await request(app).get("/api/courses").set("Authorization", `Bearer ${adminToken}`);
+    expect(adminRes.body.courses.map((c: { slug: string }) => c.slug)).toContain("admin-only-course-list");
+  });
+
+  it("404s a student and an instructor fetching an admin-only course directly, but allows an admin", async () => {
+    await Course.create({
+      title: "Admin Only Course Detail",
+      slug: "admin-only-course-detail",
+      durationWeeks: 4,
+      status: "published",
+      metadata: { adminOnly: true },
+    });
+
+    await request(app).post("/api/auth/register").send({
+      email: "jest-student-adminonly-detail@example.com",
+      password: "Password123!",
+      firstName: "Jest",
+      lastName: "Student",
+    });
+    const studentToken = await loginAs("jest-student-adminonly-detail@example.com", "Password123!");
+    const studentRes = await request(app)
+      .get("/api/courses/admin-only-course-detail")
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(studentRes.status).toBe(404);
+
+    await createInstructor();
+    const instructorToken = await loginAs("jest-instructor@example.com", "Password123!");
+    const instructorRes = await request(app)
+      .get("/api/courses/admin-only-course-detail")
+      .set("Authorization", `Bearer ${instructorToken}`);
+    expect(instructorRes.status).toBe(404);
+
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com", "Password123!");
+    const adminRes = await request(app)
+      .get("/api/courses/admin-only-course-detail")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(adminRes.status).toBe(200);
+    expect(adminRes.body.course.slug).toBe("admin-only-course-detail");
+  });
+
   it("rejects self-service enrollment from a student who hasn't verified their email", async () => {
     const course = await Course.create({
       title: "Unverified Enroll Course",

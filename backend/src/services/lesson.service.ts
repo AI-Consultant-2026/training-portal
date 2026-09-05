@@ -11,6 +11,7 @@ import {
   sequelize,
 } from "../models";
 import { ApiError } from "../utils/ApiError";
+import { assertCourseAccessible } from "./course.service";
 import { getEnrollmentForCourseAndStudent, recalculateProgress } from "./enrollment.service";
 
 // Public preview: the shared demo login (demo@paleontraining.com) can view this one
@@ -45,7 +46,25 @@ async function isDemoPreviewLesson(lesson: Lesson, courseModule: CourseModule, s
   return firstLesson !== null && firstLesson.id === lesson.id;
 }
 
-export async function listLessonsForModule(moduleId: string): Promise<Lesson[]> {
+// requester is only passed (and enforced) from the public listLessonsForModule route --
+// the internal callers below (navigation, progress calculation) already reach a module's
+// lessons via a path that's gated elsewhere, and have no real "requester" persona of
+// their own (e.g. progress recalculation runs off a payment webhook), so they omit it.
+export async function listLessonsForModule(
+  moduleId: string,
+  requester?: { role: string },
+): Promise<Lesson[]> {
+  if (requester) {
+    const courseModule = await CourseModule.findByPk(moduleId);
+    if (!courseModule) {
+      throw ApiError.notFound("Module not found");
+    }
+    const course = await Course.findByPk(courseModule.courseId);
+    if (course) {
+      assertCourseAccessible(course, requester);
+    }
+  }
+
   return Lesson.findAll({ where: { moduleId }, order: [["order", "ASC"]] });
 }
 
@@ -63,13 +82,22 @@ export async function getLessonById(id: string): Promise<Lesson> {
 // to review content (mirrors the frontend's CourseDetailPage lock check).
 export async function getLessonForStudent(id: string, requester: { id: string; role: string }): Promise<Lesson> {
   const lesson = await getLessonById(id);
-  if (requester.role !== "student") {
-    return lesson;
-  }
 
   const courseModule = await CourseModule.findByPk(lesson.moduleId);
   if (!courseModule) {
     throw ApiError.notFound("Module not found");
+  }
+
+  const course = await Course.findByPk(courseModule.courseId);
+  if (course) {
+    // Reuses the same admin-only gate as the course/module/catalog endpoints -- an
+    // instructor bypasses the payment check below like any other lesson, but must not
+    // bypass this one, so it runs before the role branch rather than after it.
+    assertCourseAccessible(course, requester);
+  }
+
+  if (requester.role !== "student") {
+    return lesson;
   }
 
   const enrollment = await getEnrollmentForCourseAndStudent(courseModule.courseId, requester.id);
