@@ -19,7 +19,7 @@ export function buildLeadNotificationEmail(lead: {
   // Surfaced first among the optional fields on purpose -- phone is the fastest way
   // to follow up (WhatsApp/call), so it shouldn't get buried below university/source.
   if (lead.phone) lines.push(`Phone: ${lead.phone}`);
-  if (lead.university) lines.push(`University: ${lead.university}`);
+  if (lead.university) lines.push(`Status: ${lead.university}`);
   if (lead.source) lines.push(`Heard about us via: ${lead.source}`);
 
   return {

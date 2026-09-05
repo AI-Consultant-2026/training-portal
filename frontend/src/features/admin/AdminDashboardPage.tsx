@@ -25,7 +25,7 @@ function toCsvField(value: string): string {
 }
 
 function leadsToCsv(leads: Lead[]): string {
-  const header = ["Name", "Email", "Phone", "Course", "University", "Source", "Submitted"]
+  const header = ["Name", "Email", "Phone", "Course", "Status", "Source", "Submitted"]
     .map(toCsvField)
     .join(",");
   const rows = leads.map((lead) =>
@@ -260,7 +260,7 @@ export function AdminDashboardPage() {
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Phone</th>
                 <th className="px-4 py-2">Course</th>
-                <th className="px-4 py-2">University</th>
+                <th className="px-4 py-2">Status</th>
                 <th className="px-4 py-2">Source</th>
                 <th className="px-4 py-2">Submitted</th>
                 <th className="px-4 py-2" />
