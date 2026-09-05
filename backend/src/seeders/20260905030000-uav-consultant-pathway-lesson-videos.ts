@@ -10,16 +10,22 @@ const COURSE_SLUG = "uav-drone-consultant-pathway";
 
 // Every video below was found via web search and confirmed real + embeddable via the
 // YouTube oEmbed endpoint (curl https://www.youtube.com/oembed?url=...&format=json),
-// then confirmed under 5 minutes by inspecting the video page's own lengthSeconds value
-// directly (curl -A "Mozilla/5.0" <watch-url> | grep lengthSeconds) -- mirroring
+// then (for this first pass only -- see note below) confirmed under 5 minutes by
+// inspecting the video page's own lengthSeconds value directly
+// (curl -A "Mozilla/5.0" <watch-url> | grep lengthSeconds) -- mirroring
 // 20260807180000-cyber-security-lesson-videos.ts and the other lesson-video seeders in
-// this series, with an added duration check per this course's spec (videos must be
-// under 5 minutes). Only 6 of this course's 29 lessons turned up a video meeting both
-// bars from an official or well-established educational source within a reasonable
-// search effort -- the other 23 lessons' own "Recommended Videos" section says so
-// honestly rather than including a weak, overlong, or unverified match. The full
-// reasoning per lesson lives in curriculumUav.ts's "Recommended Videos" sections and in
-// Week 15's "Your UAV Consultant Toolkit" lesson.
+// this series. Only 6 of this course's 29 lessons turned up a video meeting both bars
+// (official/reputable source + under 5 minutes) within a reasonable search effort on
+// this first pass -- the other 23 lessons' own "Recommended Videos" section said so
+// honestly rather than including a weak, overlong, or unverified match.
+//
+// NOTE: the 5-minute duration cap above was a rule for this pass only. It was later
+// lifted at the user's explicit request (a long official/reputable video is preferred
+// over a padded-out short one) -- see 20260905040000-uav-consultant-pathway-lesson-videos-2.ts
+// and 20260905060000-uav-consultant-pathway-lesson-videos-3.ts for the passes made under
+// the no-cap rule, which cover most of the lessons this first pass left uncovered. The
+// full, current reasoning per lesson lives in curriculumUav.ts's "Recommended Videos"
+// sections and in Week 15's "Your UAV Consultant Toolkit" lesson.
 const CONTENT: LessonVideoSeed[] = [
   {
     weekNumber: 1,

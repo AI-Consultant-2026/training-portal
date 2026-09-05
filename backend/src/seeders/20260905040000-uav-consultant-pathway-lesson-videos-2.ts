@@ -10,13 +10,15 @@ const COURSE_SLUG = "uav-drone-consultant-pathway";
 
 // Second pass of video research for this course, following the same verification
 // technique documented at the top of 20260905030000-uav-consultant-pathway-lesson-videos.ts
-// (YouTube oEmbed existence check + a direct lengthSeconds duration check, <=5 minutes,
-// official/reputable sources only). This covers 3 of the 23 lessons that had no video
-// after the first pass; the search effort for the remaining 20 came up empty against the
-// same bar and their "Recommended Videos" sections say so honestly rather than settling
-// for a weak or overlong match. Week 15's "Your UAV Consultant Toolkit" lesson content is
-// also updated (in the companion seeder 20260905050000) to list these in its library, but
-// that lesson itself has no single "primary" video, so it's not in this list.
+// (YouTube oEmbed existence check + a direct lengthSeconds duration check). This pass
+// still applied the first pass's <=5 minute cap (lifted only in the third pass -- see
+// 20260905060000-uav-consultant-pathway-lesson-videos-3.ts), official/reputable sources
+// only. This covers 3 of the 23 lessons that had no video after the first pass; the
+// remaining 20 came up empty against that bar on this pass -- most were later covered
+// once the duration cap was lifted (third pass), a handful still remain uncovered. Week
+// 15's "Your UAV Consultant Toolkit" lesson content is also updated (in the companion
+// seeder 20260905050000) to list these in its library, but that lesson itself has no
+// single "primary" video, so it's not in this list.
 const CONTENT: LessonVideoSeed[] = [
   {
     weekNumber: 12,
