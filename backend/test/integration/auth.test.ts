@@ -47,22 +47,22 @@ describe("Auth flow", () => {
     expect(res.status).toBe(409);
   });
 
-  it("accepts and persists a university from the allow-list", async () => {
+  it("accepts and persists a status from the allow-list", async () => {
     const res = await request(app)
       .post("/api/auth/register")
-      .send({ ...validRegistration, email: "jest-university-student@example.com", university: "University of Lagos" });
+      .send({ ...validRegistration, email: "jest-status-student@example.com", university: "Graduate" });
 
     expect(res.status).toBe(201);
-    expect(res.body.user.university).toBe("University of Lagos");
+    expect(res.body.user.university).toBe("Graduate");
   });
 
-  it("rejects a university that isn't on the allow-list", async () => {
+  it("rejects a status that isn't on the allow-list", async () => {
     const res = await request(app)
       .post("/api/auth/register")
       .send({
         ...validRegistration,
-        email: "jest-baduniversity-student@example.com",
-        university: "Not A Real University",
+        email: "jest-badstatus-student@example.com",
+        university: "Not A Real Status",
       });
 
     expect(res.status).toBe(400);

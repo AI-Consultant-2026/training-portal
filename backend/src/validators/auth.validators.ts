@@ -85,10 +85,15 @@ export const COURSE_INTERESTS = [
   "hse-fundamentals",
 ] as const;
 
-// Nigerian universities offered on the register / lead forms -- federal, state and
-// private, sorted alphabetically. Must match frontend/src/features/auth/RegisterPage.tsx's
-// UNIVERSITIES and backend/src/marketing/welcome.html's <select> exactly -- the request
-// is rejected if the submitted value isn't in this list.
+// Registration status offered on the register form. Must match
+// frontend/src/features/auth/RegisterPage.tsx's REGISTRATION_STATUSES exactly -- the
+// register request is rejected if the submitted value isn't in this list.
+export const REGISTRATION_STATUSES = ["Graduate", "Current Student", "Non-Graduate"] as const;
+
+// Nigerian universities offered on the lead form -- federal, state and private, sorted
+// alphabetically. Must match backend/src/marketing/welcome.html's <select> exactly -- the
+// leads request is rejected if the submitted value isn't in this list. (No longer used by
+// the register form, which now collects REGISTRATION_STATUSES instead.)
 export const UNIVERSITIES = [
   "Abdulkadir Kure University",
   "Abia State University",
@@ -291,7 +296,7 @@ export const registerSchema = z.object({
     // required <select> elements, so every genuine signup still provides both.
     location: z.enum(LOCATIONS).default("Nigeria"),
     courseInterest: z.enum(COURSE_INTERESTS).optional(),
-    university: z.enum(UNIVERSITIES).optional(),
+    university: z.enum(REGISTRATION_STATUSES).optional(),
     // Optional ambassador code from a ?ref= link or word of mouth. Lenient on purpose:
     // an unknown/blank code is silently ignored by referral.service, never a signup error.
     referralCode: z.string().trim().max(40).optional(),
