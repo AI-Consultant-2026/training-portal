@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
+import remarkGfm from "remark-gfm";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
@@ -16,6 +18,28 @@ import { YouTubePlayer } from "../../components/ui/YouTubePlayer";
 import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, PaymentQuote, Quiz } from "../../types/api";
 import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
+import { COURSE_COVER_IMAGES } from "./courseCoverImages";
+
+// Same heading/paragraph/list treatment as LessonDetailPage's markdown rendering, so a
+// course's description (also authored as multi-paragraph markdown, see
+// backend/src/seeders/data/curriculumUav.ts) reads as real paragraphs and headings
+// instead of one unbroken block of text -- <p>{course.description}</p> used to render
+// the raw markdown source as a single plain-text paragraph, collapsing every blank line.
+const DESCRIPTION_MARKDOWN_COMPONENTS = {
+  h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
+    <h2 className="mt-6 text-lg font-semibold text-gray-900" {...props} />
+  ),
+  h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
+    <h3 className="mt-5 text-base font-semibold text-gray-900" {...props} />
+  ),
+  p: (props: React.ComponentPropsWithoutRef<"p">) => <p className="mt-3 text-gray-700" {...props} />,
+  ul: (props: React.ComponentPropsWithoutRef<"ul">) => (
+    <ul className="mt-3 list-disc space-y-1 pl-5 text-gray-700" {...props} />
+  ),
+  ol: (props: React.ComponentPropsWithoutRef<"ol">) => (
+    <ol className="mt-3 list-decimal space-y-1 pl-5 text-gray-700" {...props} />
+  ),
+};
 
 // The shared demo login used to let prospects "feel out" the portal before paying --
 // mirrors the backend's DEMO_ACCOUNT_EMAIL in lesson.service.ts. Only this exact
@@ -229,13 +253,24 @@ export function CourseDetailPage() {
     );
   }
 
+  const coverImage = COURSE_COVER_IMAGES[course.slug];
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
+      {coverImage && (
+        <img
+          src={coverImage}
+          alt=""
+          className="mb-6 h-40 w-full rounded-lg border border-gray-200 object-cover sm:h-48"
+        />
+      )}
       <h1 className="text-2xl font-semibold text-gray-900">{course.title}</h1>
       <p className="mt-2 text-sm text-gray-500">
         {course.level} &middot; {course.durationWeeks} weeks
       </p>
-      <p className="mt-4 text-gray-700">{course.description}</p>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={DESCRIPTION_MARKDOWN_COMPONENTS}>
+        {course.description}
+      </ReactMarkdown>
 
       {user?.role === "student" && (
         <div className="mt-6">

@@ -4,6 +4,7 @@ import gisAndDroneMapping from "../../assets/courseCovers/gis-and-drone-mapping.
 import hseFundamentals from "../../assets/courseCovers/hse-fundamentals.svg";
 import renewableEnergyDigitalSystems from "../../assets/courseCovers/renewable-energy-digital-systems.svg";
 import socialMediaManagementContent from "../../assets/courseCovers/social-media-management-content.svg";
+import uavDroneConsultantPathway from "../../assets/courseCovers/uav-drone-consultant-pathway.svg";
 
 export const COURSE_COVER_IMAGES: Record<string, string> = {
   "cyber-security-fundamentals": cyberSecurityFundamentals,
@@ -12,4 +13,5 @@ export const COURSE_COVER_IMAGES: Record<string, string> = {
   "hse-fundamentals": hseFundamentals,
   "renewable-energy-digital-systems": renewableEnergyDigitalSystems,
   "social-media-management-content": socialMediaManagementContent,
+  "uav-drone-consultant-pathway": uavDroneConsultantPathway,
 };
