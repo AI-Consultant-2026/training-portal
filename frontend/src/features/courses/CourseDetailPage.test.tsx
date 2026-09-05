@@ -140,6 +140,20 @@ function renderCoursePage() {
   );
 }
 
+describe("CourseDetailPage failed course fetch", () => {
+  it("shows an error message instead of an infinite spinner when the course fetch fails (e.g. 404)", async () => {
+    mockCourseData(false);
+    vi.mocked(coursesApi.fetchCourseBySlug).mockRejectedValue(new Error("Request failed with status code 404"));
+
+    renderCoursePage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Could not load course")).toBeInTheDocument();
+    });
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+});
+
 describe("CourseDetailPage assignment payment gate", () => {
   // Regression guard for the payment-gating fix: assignments used to unlock as soon as
   // a student was merely enrolled (free), before the backend or this lock check
