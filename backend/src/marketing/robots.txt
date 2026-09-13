@@ -7,6 +7,7 @@ Allow: /corporate-training-nigeria
 Allow: /banking-telecom-training-nigeria
 Allow: /digital-skills-jobs-nigeria
 Allow: /hse-training-nigeria
+Allow: /digital-skills-training-nigeria
 Allow: /terms
 Allow: /privacy
 Disallow: /api/
@@ -22,5 +23,29 @@ Disallow: /login
 Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password
+# /refer requires a logged-in session (any student) and has no server-side auth gate on
+# the static shell, so crawlers without a session were getting served -- and indexing --
+# the login prompt instead of real content (confirmed indexed in Bing as "Log in / Don't
+# have an account? Sign up" during the 2026-09-13 GEO audit). Disallowed rather than left
+# to be indexed as junk; see the GEO report for the option of making it a public page.
+Disallow: /refer
+
+# No explicit per-bot rules below -- GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot,
+# ClaudeBot, Claude-User, Google-Extended, Bingbot, and every other legitimate crawler
+# already fall under the "User-agent: *" block above and are allowed by default, since
+# nothing here disallows them specifically. Listed explicitly so it's clear on review
+# that no AI crawler is blocked, and so a future edit that adds a bot-specific block
+# does so deliberately rather than by accident.
+# User-agent: GPTBot
+# User-agent: OAI-SearchBot
+# User-agent: ChatGPT-User
+# User-agent: PerplexityBot
+# User-agent: Perplexity-User
+# User-agent: ClaudeBot
+# User-agent: Claude-User
+# User-agent: Google-Extended
+# User-agent: Bingbot
+# (all covered by "User-agent: *" above -- no bot-specific rules needed unless one
+# needs to diverge from it)
 
 Sitemap: https://paleontraining.com/sitemap.xml

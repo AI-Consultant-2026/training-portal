@@ -148,6 +148,12 @@ export function createApp() {
   app.get("/hse-training-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-training-nigeria.html"));
   });
+  // The GEO/AI-search pillar page (2026-09-13): the primary page targeting "digital
+  // skills training Nigeria" and its variants, hub-linked from and to every guide page
+  // above rather than a standalone spoke -- see the GEO report for why.
+  app.get("/digital-skills-training-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-training-nigeria.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));
@@ -193,11 +199,40 @@ export function createApp() {
   const indexHtmlPath = path.join(publicDir, "index.html");
   if (fs.existsSync(publicDir)) {
     app.use(express.static(publicDir));
+    // Kept in sync with frontend/src/routes/AppRouter.tsx's top-level route segments.
+    // Without this allowlist every unmatched path (a typo, an old bookmark, a bot
+    // probing /cgi-bin) got served the SPA shell with an unconditional 200 -- a soft
+    // 404 that search engines happily index as a real page under the site's title
+    // (confirmed indexed in Google as "Paleon Training" / "Page not found" for
+    // /cgi-bin during the 2026-09-13 GEO audit). A path in this list still gets 200 and
+    // renders normally client-side, including that route's own not-found/auth states;
+    // anything else gets the same SPA shell but a real 404 status, which is what fixes
+    // the indexing problem without changing what any real user sees.
+    const knownAppRouteSegments = new Set([
+      "login",
+      "register",
+      "forgot-password",
+      "reset-password",
+      "verify-email",
+      "courses",
+      "lessons",
+      "dashboard",
+      "refer",
+      "assignments",
+      "capstones",
+      "quizzes",
+      "instructor",
+      "admin",
+    ]);
     app.get("*", (req, res, next) => {
-      if (req.method === "GET" && !req.path.startsWith("/api") && fs.existsSync(indexHtmlPath)) {
-        return res.sendFile(indexHtmlPath);
+      if (req.method !== "GET" || req.path.startsWith("/api") || !fs.existsSync(indexHtmlPath)) {
+        return next();
       }
-      next();
+      const firstSegment = req.path.split("/")[1] ?? "";
+      if (!knownAppRouteSegments.has(firstSegment)) {
+        res.status(404);
+      }
+      return res.sendFile(indexHtmlPath);
     });
   }
 
