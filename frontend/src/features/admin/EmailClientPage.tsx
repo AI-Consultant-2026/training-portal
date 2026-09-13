@@ -258,8 +258,19 @@ export function EmailClientPage() {
     });
   }
 
+  const hasSelectedRecipients = recipients.some((r) => r.isSelected && (r.status === "pending" || r.status === "duplicate"));
   const canReachReview = !!current && recipients.length > 0;
-  const canReachCompose = canReachReview;
+  // Requires an actual selected, valid recipient -- not just canReachReview (any rows
+  // imported, valid or not) -- to match the Review step's own "Next" button, which
+  // already blocks on selectedCount === 0. Without this, the step tabs let you bypass
+  // that button entirely and land on an empty, unexplained Preview/Test/Send with
+  // nothing to show (e.g. a spreadsheet with every row invalid for a missing Subject
+  // column still "has recipients" in the loose sense, just none of them usable).
+  // Only enforced while still a draft: once a campaign has been sent (or is sending),
+  // its recipients have already moved on from "pending"/"duplicate" to "sent"/"failed"/
+  // etc, so hasSelectedRecipients would otherwise go false and wrongly lock a completed
+  // or in-progress campaign's own tabs after the fact.
+  const canReachCompose = canReachReview && (current?.status !== "draft" || hasSelectedRecipients);
   const canReachPreview = canReachCompose && !!current?.fromEmail && !!current?.bodyTemplate;
   const canReachTest = canReachPreview;
   const canReachSend = canReachTest;
@@ -683,7 +694,12 @@ function ReviewStep({
         </table>
       </div>
 
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex items-center justify-end gap-3">
+        {selectedCount === 0 && (
+          <p className="text-sm text-red-600">
+            Select at least one valid contact to continue — every row is currently invalid or unselected.
+          </p>
+        )}
         <Button onClick={onNext} disabled={selectedCount === 0}>
           Next: Compose email →
         </Button>
@@ -792,21 +808,27 @@ function PreviewStep({
         Pick a recipient to see exactly what their personalised email will look like.
       </p>
 
-      <div className="mt-4 max-w-sm">
-        <Select
-          label="Recipient"
-          id="preview-recipient"
-          value={selectedId ?? ""}
-          onChange={(e) => onSelect(e.target.value)}
-        >
-          <option value="">Choose a recipient...</option>
-          {recipients.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.contactName} — {r.company}
-            </option>
-          ))}
-        </Select>
-      </div>
+      {recipients.length === 0 ? (
+        <div className="mt-4">
+          <Alert message="No recipients are selected to preview. Go back to Review and select at least one valid contact — an empty list here usually means every row in the spreadsheet failed validation (check the Review step for why)." />
+        </div>
+      ) : (
+        <div className="mt-4 max-w-sm">
+          <Select
+            label="Recipient"
+            id="preview-recipient"
+            value={selectedId ?? ""}
+            onChange={(e) => onSelect(e.target.value)}
+          >
+            <option value="">Choose a recipient...</option>
+            {recipients.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.contactName} — {r.company}
+              </option>
+            ))}
+          </Select>
+        </div>
+      )}
 
       <div className="mt-4">
         {previewStatus === "loading" && (
@@ -893,6 +915,11 @@ function TestStep({
           ))}
         </Select>
       </div>
+      {recipients.length === 0 && (
+        <p className="mt-2 text-xs text-amber-600">
+          No selected contacts to personalise from — the test will use a placeholder example instead.
+        </p>
+      )}
 
       {testEmailStatus === "succeeded" && (
         <div className="mt-4">
