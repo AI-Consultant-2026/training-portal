@@ -1,8 +1,10 @@
 import { Router } from "express";
 import * as adminController from "../controllers/admin.controller";
+import * as emailCampaignsController from "../controllers/emailCampaigns.controller";
 import * as referralsController from "../controllers/referrals.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
+import { uploadExcel } from "../middleware/uploadExcel";
 import { validate } from "../middleware/validate";
 import {
   addEnrollmentSchema,
@@ -12,6 +14,13 @@ import {
   setPaymentConfirmedSchema,
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
+import {
+  campaignIdSchema,
+  removeRecipientSchema,
+  sendTestEmailSchema,
+  toggleRecipientSchema,
+  updateCampaignSchema,
+} from "../validators/emailCampaigns.validators";
 import { createPartnerSchema, updatePartnerSchema } from "../validators/partners.validators";
 import {
   issueRewardSchema,
@@ -71,4 +80,46 @@ adminRouter.patch(
   "/capstones/:id",
   validate(setCapstoneEnabledSchema),
   adminController.setCapstoneEnabled,
+);
+
+adminRouter.get("/email-campaigns", emailCampaignsController.listCampaigns);
+adminRouter.post(
+  "/email-campaigns/upload",
+  uploadExcel,
+  emailCampaignsController.uploadCampaign,
+);
+adminRouter.get(
+  "/email-campaigns/:id",
+  validate(campaignIdSchema),
+  emailCampaignsController.getCampaign,
+);
+adminRouter.patch(
+  "/email-campaigns/:id",
+  validate(updateCampaignSchema),
+  emailCampaignsController.updateCampaign,
+);
+adminRouter.patch(
+  "/email-campaigns/:id/recipients/:recipientId",
+  validate(toggleRecipientSchema),
+  emailCampaignsController.setRecipientSelected,
+);
+adminRouter.delete(
+  "/email-campaigns/:id/recipients/:recipientId",
+  validate(removeRecipientSchema),
+  emailCampaignsController.removeRecipient,
+);
+adminRouter.get(
+  "/email-campaigns/:id/recipients/:recipientId/preview",
+  validate(removeRecipientSchema),
+  emailCampaignsController.previewRecipient,
+);
+adminRouter.post(
+  "/email-campaigns/:id/test-email",
+  validate(sendTestEmailSchema),
+  emailCampaignsController.sendTestEmail,
+);
+adminRouter.post(
+  "/email-campaigns/:id/send",
+  validate(campaignIdSchema),
+  emailCampaignsController.confirmSend,
 );

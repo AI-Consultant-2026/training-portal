@@ -513,3 +513,70 @@ export interface Partner {
   createdAt: string;
   updatedAt: string;
 }
+
+export const CAMPAIGN_FROM_ADDRESSES = ["hello@paleontraining.com", "corporate@paleontraining.com"] as const;
+export type CampaignFromAddress = (typeof CAMPAIGN_FROM_ADDRESSES)[number];
+
+export type CampaignStatus = "draft" | "sending" | "completed";
+
+export type RecipientStatus =
+  | "pending"
+  | "queued"
+  | "sending"
+  | "sent"
+  | "failed"
+  | "skipped"
+  | "invalid"
+  | "duplicate";
+
+export interface EmailCampaignRecipient {
+  id: string;
+  campaignId: string;
+  rowNumber: number;
+  company: string;
+  email: string;
+  contactName: string;
+  subject: string;
+  status: RecipientStatus;
+  isSelected: boolean;
+  validationErrors: string[];
+  errorMessage: string | null;
+  sentAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmailCampaign {
+  id: string;
+  createdBy: string;
+  fromEmail: CampaignFromAddress | null;
+  bodyTemplate: string | null;
+  status: CampaignStatus;
+  originalFilename: string;
+  totalRecipients: number;
+  validRecipients: number;
+  invalidRecipients: number;
+  duplicateRecipients: number;
+  sentCount: number;
+  failedCount: number;
+  createdAt: string;
+  updatedAt: string;
+  recipients?: EmailCampaignRecipient[];
+  creator?: { firstName: string; lastName: string; email: string };
+}
+
+export interface EmailPreview {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+  from: string;
+}
+
+export interface UploadCampaignSummary {
+  campaignId: string;
+  imported: number;
+  valid: number;
+  invalid: number;
+  duplicates: number;
+}

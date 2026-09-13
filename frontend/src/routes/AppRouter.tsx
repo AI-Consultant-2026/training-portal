@@ -12,6 +12,7 @@ import { lazyImport } from "./lazyImport";
 const AdminCandidatesPage = lazyImport(() => import("../features/admin/AdminCandidatesPage"), "AdminCandidatesPage");
 const AdminCapstonesPage = lazyImport(() => import("../features/admin/AdminCapstonesPage"), "AdminCapstonesPage");
 const AdminDashboardPage = lazyImport(() => import("../features/admin/AdminDashboardPage"), "AdminDashboardPage");
+const EmailClientPage = lazyImport(() => import("../features/admin/EmailClientPage"), "EmailClientPage");
 const AssignmentDetailPage = lazyImport(
   () => import("../features/assignments/AssignmentDetailPage"),
   "AssignmentDetailPage",
@@ -120,6 +121,7 @@ export function AppRouter() {
             <Route path="/admin/candidates" element={<AdminCandidatesPage />} />
             <Route path="/admin/capstones" element={<AdminCapstonesPage />} />
             <Route path="/admin/partner-pipeline" element={<PartnerPipelinePage />} />
+            <Route path="/admin/email-client" element={<EmailClientPage />} />
             <Route path="/admin/referrals" element={<AdminReferralsPage />} />
           </Route>
         </Route>

@@ -3,6 +3,7 @@ import { createApp } from "./app";
 import { config } from "./config";
 import { startLeadNurtureJobs } from "./jobs/leadNurture.job";
 import { sequelize } from "./models";
+import { resumeInterruptedCampaigns } from "./services/emailCampaign.service";
 import { logger } from "./utils/logger";
 
 const app = createApp();
@@ -20,6 +21,9 @@ async function start() {
   // createApp() directly and never run this file, but this guard costs nothing).
   if (config.nodeEnv !== "test") {
     startLeadNurtureJobs();
+    resumeInterruptedCampaigns().catch((err) => {
+      logger.error("Failed to resume interrupted email campaigns on startup", err);
+    });
   }
 
   function shutdown(signal: string) {

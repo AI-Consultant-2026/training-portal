@@ -34,7 +34,7 @@ export class SmtpEmailAdapter implements EmailAdapter {
 
   async send(message: EmailMessage): Promise<void> {
     await this.transporter.sendMail({
-      from: this.fromAddress,
+      from: message.from ?? this.fromAddress,
       to: message.to,
       subject: message.subject,
       text: message.text,

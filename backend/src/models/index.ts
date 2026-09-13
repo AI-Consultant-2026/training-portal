@@ -5,6 +5,8 @@ import { Capstone, initCapstoneModel } from "./capstone.model";
 import { CapstoneSubmission, initCapstoneSubmissionModel } from "./capstoneSubmission.model";
 import { Course, initCourseModel } from "./course.model";
 import { CourseModule, initCourseModuleModel } from "./module.model";
+import { EmailCampaign, initEmailCampaignModel } from "./emailCampaign.model";
+import { EmailCampaignRecipient, initEmailCampaignRecipientModel } from "./emailCampaignRecipient.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
 import { Lead, initLeadModel } from "./lead.model";
 import { Lesson, initLessonModel } from "./lesson.model";
@@ -62,6 +64,8 @@ initLeadModel(sequelize);
 initPaymentModel(sequelize);
 initPartnerModel(sequelize);
 initReferralModel(sequelize);
+initEmailCampaignModel(sequelize);
+initEmailCampaignRecipientModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -148,6 +152,12 @@ VideoCheckpoint.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
 VideoCheckpoint.hasMany(VideoCheckpointAnswer, { foreignKey: "checkpointId", as: "answers" });
 VideoCheckpointAnswer.belongsTo(VideoCheckpoint, { foreignKey: "checkpointId", as: "checkpoint" });
 
+User.hasMany(EmailCampaign, { foreignKey: "createdBy", as: "emailCampaigns" });
+EmailCampaign.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
+
+EmailCampaign.hasMany(EmailCampaignRecipient, { foreignKey: "campaignId", as: "recipients" });
+EmailCampaignRecipient.belongsTo(EmailCampaign, { foreignKey: "campaignId", as: "campaign" });
+
 export {
   Assignment,
   AssignmentSubmission,
@@ -155,6 +165,8 @@ export {
   CapstoneSubmission,
   Course,
   CourseModule,
+  EmailCampaign,
+  EmailCampaignRecipient,
   Enrollment,
   Lead,
   Lesson,

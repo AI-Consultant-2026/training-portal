@@ -5,6 +5,7 @@ import assignmentsReducer from "../features/assignments/assignmentsSlice";
 import authReducer from "../features/auth/authSlice";
 import capstonesReducer from "../features/capstones/capstonesSlice";
 import coursesReducer from "../features/courses/coursesSlice";
+import emailCampaignsReducer from "../features/admin/emailCampaignSlice";
 import enrollmentsReducer from "../features/enrollments/enrollmentsSlice";
 import lessonsReducer from "../features/lessons/lessonsSlice";
 import quizzesReducer from "../features/quizzes/quizzesSlice";
@@ -23,6 +24,7 @@ export const rootReducer = {
   admin: adminReducer,
   capstones: capstonesReducer,
   referrals: referralsReducer,
+  emailCampaigns: emailCampaignsReducer,
 };
 
 export const store = configureStore({ reducer: rootReducer });

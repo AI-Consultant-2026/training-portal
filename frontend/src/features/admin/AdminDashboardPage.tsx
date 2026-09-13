@@ -122,6 +122,12 @@ export function AdminDashboardPage() {
           >
             Partner pipeline →
           </Link>
+          <Link
+            to="/admin/email-client"
+            className="text-sm font-medium text-blue-600 hover:underline"
+          >
+            Email client →
+          </Link>
           <Link to="/admin/capstones" className="text-sm font-medium text-blue-600 hover:underline">
             Manage capstone projects →
           </Link>
