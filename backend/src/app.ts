@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node";
+import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
@@ -39,6 +40,9 @@ export function createApp() {
       },
     }),
   );
+  // gzip/brotli for the text-heavy marketing HTML/CSS/JS below (fonts are already
+  // compressed woff2 and get skipped automatically based on content-type).
+  app.use(compression());
   app.use(cors({ origin: config.corsOrigin, credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
@@ -77,6 +81,13 @@ export function createApp() {
   });
   app.get("/welcome.js", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "welcome.js"));
+  });
+  // Shared by every marketing page's inline @font-face rules (same two font files,
+  // byte-for-byte) -- extracted out of the HTML so browsers cache them once across
+  // pages instead of re-downloading ~80KB of base64 on every single page load.
+  app.get("/fonts/:file(source-serif-4-variable.woff2|source-sans-3-variable.woff2)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=31536000, immutable");
+    res.type("font/woff2").sendFile(path.join(__dirname, "marketing", "fonts", req.params.file));
   });
   app.get("/executive-training", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "executive-training.html"));
