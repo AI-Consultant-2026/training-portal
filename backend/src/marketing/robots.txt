@@ -7,6 +7,7 @@ Allow: /corporate-training-nigeria
 Allow: /banking-telecom-training-nigeria
 Allow: /digital-skills-jobs-nigeria
 Allow: /hse-training-nigeria
+Allow: /university-partners
 Allow: /digital-skills-training-nigeria
 Allow: /degree-but-no-job-nigeria
 Allow: /nysc-digital-skills

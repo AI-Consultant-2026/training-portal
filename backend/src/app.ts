@@ -168,6 +168,12 @@ export function createApp() {
   app.get("/hse-training-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-training-nigeria.html"));
   });
+  // University partnerships page -- public, indexed, recruiting the first real
+  // university partners; no partner logos are shown yet (none confirmed), the
+  // page is honest about that and invites universities to be among the first.
+  app.get("/university-partners", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
+  });
   // The GEO/AI-search pillar page (2026-09-13): the primary page targeting "digital
   // skills training Nigeria" and its variants, hub-linked from and to every guide page
   // above rather than a standalone spoke -- see the GEO report for why.
