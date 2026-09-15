@@ -119,6 +119,15 @@ export function createApp() {
   app.get("/management-roles", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "management-roles.html"));
   });
+  // Individual sector-partner proposals (Kayode Akiode / Oil & Gas, Chukwuka Ugha /
+  // Banking) -- same "public but unlisted" pattern as /financing above: real names,
+  // robots noindex, no nav link, not in sitemap.xml, reachable only via direct URL.
+  app.get("/KAkiode-proposal", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "KAkiode-proposal.html"));
+  });
+  app.get("/CUgha-proposal", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "CUgha-proposal.html"));
+  });
   // Internal outreach playbook (directory blurbs, social posts, press release, pitch
   // email templates) for promoting the SEO guide pages below -- same "public but
   // unlisted" pattern as /financing above: robots noindex, no nav link, not in
