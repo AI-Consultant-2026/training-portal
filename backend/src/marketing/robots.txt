@@ -8,6 +8,13 @@ Allow: /banking-telecom-training-nigeria
 Allow: /digital-skills-jobs-nigeria
 Allow: /hse-training-nigeria
 Allow: /digital-skills-training-nigeria
+Allow: /degree-but-no-job-nigeria
+Allow: /nysc-digital-skills
+Allow: /oil-gas-banking-telecoms-digital-skills
+Allow: /six-digital-skills-nigerian-graduates
+Allow: /graduate-to-job-ready-nigeria
+Allow: /paleon-training-six-course-digital-skills-curriculum
+Allow: /paleon-training-employability-content-hub
 Allow: /terms
 Allow: /privacy
 Disallow: /api/

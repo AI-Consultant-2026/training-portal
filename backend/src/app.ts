@@ -165,6 +165,37 @@ export function createApp() {
   app.get("/digital-skills-training-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "digital-skills-training-nigeria.html"));
   });
+  // Employability content cluster (2026-09-15): 5 SEO/GEO articles converted from
+  // approved Markdown drafts in content-drafts/employability-content-cluster/, reusing
+  // the same shared design system (same <style> block, same component classes) as the
+  // guide pages above. Cross-linked with each other and with the existing hub/spoke
+  // guides and the pillar page above; linked from welcome.html's footer Guides list.
+  app.get("/degree-but-no-job-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "degree-but-no-job-nigeria.html"));
+  });
+  app.get("/nysc-digital-skills", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-digital-skills.html"));
+  });
+  app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
+  });
+  app.get("/six-digital-skills-nigerian-graduates", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "six-digital-skills-nigerian-graduates.html"));
+  });
+  app.get("/graduate-to-job-ready-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "graduate-to-job-ready-nigeria.html"));
+  });
+  // Press releases (2026-09-15) announcing the six-course curriculum's completion and
+  // the employability content hub's publication above -- two individual flat-route
+  // pages (not one combined listing), matching this site's one-URL-per-topic convention
+  // for every other marketing page; NewsArticle JSON-LD rather than Article, since these
+  // are dated announcements rather than evergreen guide content.
+  app.get("/paleon-training-six-course-digital-skills-curriculum", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "paleon-training-six-course-digital-skills-curriculum.html"));
+  });
+  app.get("/paleon-training-employability-content-hub", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "paleon-training-employability-content-hub.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));
