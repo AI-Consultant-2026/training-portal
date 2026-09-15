@@ -38,6 +38,16 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Paleon Training", "item": "https://paleontraining.com/welcome" },
+    { "@type": "ListItem", "position": 2, "name": "Digital Skills for NYSC Corps Members", "item": "https://paleontraining.com/nysc-digital-skills" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     {
@@ -280,6 +290,34 @@
     font-size: 12.5px;
     color: var(--dark-text-muted);
     letter-spacing: 0.02em;
+  }
+
+  .reviewed-line {
+    margin-top: 18px;
+    font-size: 12.5px;
+    color: var(--dark-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .mistakes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 700px;
+  }
+  .mistakes-list li {
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 12px;
+    line-height: 1.55;
+  }
+  .mistakes-list li:last-child { margin-bottom: 0; }
+  .mistakes-list li::before {
+    content: "\2717";
+    position: absolute;
+    left: 0;
+    color: var(--dark-text-muted);
+    font-weight: 700;
   }
 
   /* ---------- Body sections ---------- */
@@ -550,6 +588,7 @@
       <div class="stat"><div class="stat-value">5</div><div class="stat-label">realistic habits that build real evidence</div></div>
       <div class="stat"><div class="stat-value">3</div><div class="stat-label">things to have ready by discharge</div></div>
     </div>
+    <p class="reviewed-line">Last reviewed: 15 September 2026 &middot; Reviewed by Paleon Training</p>
   </div>
 </div>
 
@@ -569,6 +608,7 @@
     <p class="section-label">Why it matters</p>
     <p><strong>Why does the NYSC year matter for career building?</strong> Because it is one of the last extended periods before full-time job hunting begins in earnest, and it gives you access to a Primary Place of Assignment (PPA), a peer network from across the country, and &mdash; depending on your posting &mdash; real spare time in evenings and weekends that most working professionals do not have.</p>
       <p>The risk is treating service year purely as a waiting period. Waiting until after discharge to start developing additional skills means you enter the job market at the same moment as everyone else from your set &mdash; all applying at once, all starting from the same point. Corps members who use part of their service year to build a project, a skill, or a portfolio piece are not doing anything guaranteed, but they are starting the race with something already in hand.</p>
+      <p>NYSC already runs its own Skills Acquisition and Entrepreneurship Development (SAED) programme during service, typically skewed toward vocational and entrepreneurial training. Digital-skills courses like the ones covered here sit alongside SAED, not in competition with it &mdash; some corps members do both, since they serve different goals.</p>
   </div>
 </section>
 
@@ -774,6 +814,20 @@
 </section>
 
   <section>
+  <div class="measure">
+    <p class="section-label">Before you start</p>
+    <h2 class="section-title">Common mistakes corps members make</h2>
+    <ul class="mistakes-list">
+      <li><strong>Waiting for camp to end before starting anything</strong> &mdash; camp is only three weeks; most real progress happens during the longer PPA year, so there's no need to wait even that long.</li>
+      <li><strong>Trying to do a demanding course during camp itself</strong> &mdash; camp's schedule leaves little room for structured study; it's a better time for planning which skill to pursue than for actually studying it.</li>
+      <li><strong>Picking a skill with no view to a specific industry</strong> &mdash; see "Which Digital Skill Is Right for Your Career Goals?" above before committing to one.</li>
+      <li><strong>Treating SAED and digital-skills training as an either/or choice</strong> &mdash; they serve different goals and many corps members do both.</li>
+      <li><strong>Assuming a course finished during NYSC guarantees a job at discharge</strong> &mdash; it gives you something concrete to show; the hiring decision is never guaranteed.</li>
+    </ul>
+  </div>
+  </section>
+
+  <section>
   <p class="section-label">Common questions</p>
   <h2 class="section-title">Frequently asked</h2>
   <div class="stages">
@@ -856,6 +910,14 @@
     </div>
   </div>
 </section>
+
+  <section>
+  <div class="measure">
+    <p class="section-label">Sources &amp; methodology</p>
+    <h2 class="section-title">Where this guide's claims come from</h2>
+    <p>NYSC's SAED programme is a real, publicly documented NYSC initiative, referenced here only as context, not as something this guide has inside knowledge of. Course schedules, weekly time commitments, and capstone project structures reflect Paleon Training's own published course details. No completion rates, job-placement statistics, or salary figures are cited on this page, because Paleon does not have verifiable figures for corps-member-specific outcomes.</p>
+  </div>
+  </section>
 
   <section>
   <p class="section-label">Continue reading</p>
