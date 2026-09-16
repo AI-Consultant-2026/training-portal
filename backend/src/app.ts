@@ -196,6 +196,11 @@ export function createApp() {
   app.get("/best-courses-after-nysc", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "best-courses-after-nysc.html"));
   });
+  // Career Intelligence Hub Pillar 10 -- Paleon-course-specific comparison,
+  // deliberately narrower than Pillar 2 (best-courses-after-nysc).
+  app.get("/courses-for-nysc-corps-members", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "courses-for-nysc-corps-members.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
