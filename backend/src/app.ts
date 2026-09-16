@@ -201,6 +201,11 @@ export function createApp() {
   app.get("/courses-for-nysc-corps-members", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "courses-for-nysc-corps-members.html"));
   });
+  // Career Intelligence Hub Pillar 11 -- the "Build"/"Prove" stages of
+  // Learn -> Build -> Prove -> Get Ready, made concrete for NYSC.
+  app.get("/nysc-portfolio-building", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-portfolio-building.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
