@@ -211,6 +211,11 @@ export function createApp() {
   app.get("/nysc-to-employment-roadmap", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "nysc-to-employment-roadmap.html"));
   });
+  // Career Intelligence Hub Pillar 4 -- highest-priority remaining pillar,
+  // since Pillars 2, 11, and 12 all already link to it.
+  app.get("/how-to-build-a-graduate-cv-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-build-a-graduate-cv-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
