@@ -226,6 +226,11 @@ export function createApp() {
   app.get("/digital-skills-for-oil-and-gas-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-oil-and-gas-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 7 -- security/compliance vs.
+  // marketing/content as two genuinely different banking career tracks.
+  app.get("/digital-skills-for-banking-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-banking-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
