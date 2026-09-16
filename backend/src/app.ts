@@ -242,6 +242,11 @@ export function createApp() {
   app.get("/gis-careers-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "gis-careers-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 14 -- names the real NCAA regulator
+  // honestly without fabricating licensing specifics it can't verify.
+  app.get("/drone-mapping-careers-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "drone-mapping-careers-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
