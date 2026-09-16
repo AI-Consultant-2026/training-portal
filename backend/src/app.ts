@@ -221,6 +221,11 @@ export function createApp() {
   app.get("/digital-skills-employers-want-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "digital-skills-employers-want-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 6 -- narrower skills taxonomy than the
+  // /oil-and-gas-careers-nigeria hub; scope difference stated explicitly.
+  app.get("/digital-skills-for-oil-and-gas-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-oil-and-gas-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
