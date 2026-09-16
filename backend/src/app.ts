@@ -206,6 +206,11 @@ export function createApp() {
   app.get("/nysc-portfolio-building", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "nysc-portfolio-building.html"));
   });
+  // Career Intelligence Hub Pillar 12 -- the last of the 4 Month 2 NYSC-family
+  // pillars. HowTo schema for the 8-step roadmap.
+  app.get("/nysc-to-employment-roadmap", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-to-employment-roadmap.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });

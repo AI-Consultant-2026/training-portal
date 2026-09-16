@@ -14,6 +14,7 @@ Allow: /nysc-digital-skills
 Allow: /best-courses-after-nysc
 Allow: /courses-for-nysc-corps-members
 Allow: /nysc-portfolio-building
+Allow: /nysc-to-employment-roadmap
 Allow: /oil-gas-banking-telecoms-digital-skills
 Allow: /six-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria
