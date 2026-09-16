@@ -564,6 +564,9 @@ export function createApp() {
   app.get("/paleon-training-employability-content-hub", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "paleon-training-employability-content-hub.html"));
   });
+  app.get("/digital-skills-nigeria-career-intelligence-guide", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-nigeria-career-intelligence-guide.html"));
+  });
   // Legal pages -- static, no companion .js file, linked from the welcome page footer.
   app.get("/terms", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "terms.html"));

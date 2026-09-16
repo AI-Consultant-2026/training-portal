@@ -119,6 +119,7 @@ Allow: /six-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria
 Allow: /paleon-training-six-course-digital-skills-curriculum
 Allow: /paleon-training-employability-content-hub
+Allow: /digital-skills-nigeria-career-intelligence-guide
 Allow: /terms
 Allow: /privacy
 Disallow: /api/

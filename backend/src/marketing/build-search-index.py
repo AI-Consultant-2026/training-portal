@@ -33,6 +33,7 @@ URLS = [
     "six-digital-skills-nigerian-graduates", "graduate-to-job-ready-nigeria",
     "paleon-training-six-course-digital-skills-curriculum",
     "paleon-training-employability-content-hub",
+    "digital-skills-nigeria-career-intelligence-guide",
     "terms", "privacy",
     # Career Intelligence Hub -- Tier 1 supporting articles (19-article batch,
     # 2 of which -- digital-skills-jobs-nigeria, degree-but-no-job-nigeria --
@@ -141,6 +142,7 @@ CATEGORY = {
     "terms": "Legal", "privacy": "Legal",
     "paleon-training-six-course-digital-skills-curriculum": "Courses",
     "paleon-training-employability-content-hub": "Guides",
+    "digital-skills-nigeria-career-intelligence-guide": "Guides",
     "best-skill-for-corps-members": "NYSC & Graduates",
     "fintech-jobs-nigeria": "Banking",
     "how-to-get-a-bank-job-in-nigeria": "Banking",
