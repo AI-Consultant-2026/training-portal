@@ -231,6 +231,11 @@ export function createApp() {
   app.get("/digital-skills-for-banking-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-banking-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 8 -- the last /career-guides/ pillar.
+  // Honest about thinner search-demand evidence for this exact intersection.
+  app.get("/digital-skills-for-telecommunications-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-telecommunications-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });

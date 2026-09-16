@@ -19,6 +19,7 @@ Allow: /how-to-build-a-graduate-cv-nigeria
 Allow: /digital-skills-employers-want-nigeria
 Allow: /digital-skills-for-oil-and-gas-nigeria
 Allow: /digital-skills-for-banking-nigeria
+Allow: /digital-skills-for-telecommunications-nigeria
 Allow: /oil-gas-banking-telecoms-digital-skills
 Allow: /six-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria
