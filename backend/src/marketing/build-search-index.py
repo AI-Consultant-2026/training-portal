@@ -34,6 +34,26 @@ URLS = [
     "paleon-training-six-course-digital-skills-curriculum",
     "paleon-training-employability-content-hub",
     "terms", "privacy",
+    # Career Intelligence Hub -- Tier 1 supporting articles (19-article batch,
+    # 2 of which -- digital-skills-jobs-nigeria, degree-but-no-job-nigeria --
+    # already existed above; these 17 are the new ones).
+    "high-income-skills-without-a-degree-nigeria",
+    "lucrative-digital-skills-to-learn-in-nigeria",
+    "what-to-do-after-nysc",
+    "best-skill-for-corps-members",
+    "cv-with-no-work-experience-nigeria",
+    "high-demand-tech-skills-nigeria",
+    "high-paying-skills-to-learn-in-nigeria",
+    "warri-oil-and-gas-jobs",
+    "oil-and-gas-entry-level-jobs-nigeria",
+    "gis-mapping-oil-and-gas-nigeria",
+    "oil-and-gas-jobs-in-warri-delta-state",
+    "how-to-get-a-bank-job-in-nigeria",
+    "fintech-jobs-nigeria",
+    "side-hustle-during-nysc",
+    "return-from-nysc-jobless-what-to-do",
+    "what-you-get-from-a-gis-and-drone-mapping-course",
+    "hse-jobs-in-nigeria-oil-and-gas-companies",
 ]
 
 # url -> explicit category label; anything not listed falls through to
@@ -45,6 +65,9 @@ CATEGORY = {
     "terms": "Legal", "privacy": "Legal",
     "paleon-training-six-course-digital-skills-curriculum": "Courses",
     "paleon-training-employability-content-hub": "Guides",
+    "best-skill-for-corps-members": "NYSC & Graduates",
+    "fintech-jobs-nigeria": "Banking",
+    "how-to-get-a-bank-job-in-nigeria": "Banking",
 }
 
 

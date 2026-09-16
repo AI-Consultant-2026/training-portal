@@ -190,5 +190,107 @@
     "description": "",
     "url": "/privacy",
     "category": "Legal"
+  },
+  {
+    "title": "High-Income Digital Skills You Can Learn Without a Degree in Nigeria",
+    "description": "Which digital skills genuinely don't require a university degree in Nigeria, what kind of work they open up, and why \"high-income\" is about demand and skill, not a guarantee.",
+    "url": "/high-income-skills-without-a-degree-nigeria",
+    "category": "Career guides"
+  },
+  {
+    "title": "The Most Lucrative Digital Skills to Learn in Nigeria Right Now",
+    "description": "Which digital skills are worth learning in Nigeria right now, why demand for them is real, and how to think about \"lucrative\" honestly — without invented salary figures.",
+    "url": "/lucrative-digital-skills-to-learn-in-nigeria",
+    "category": "Career guides"
+  },
+  {
+    "title": "What to Do After NYSC: A Practical Options Guide",
+    "description": "A practical, honest look at the real options after NYSC in Nigeria — further study, digital skills training, job search, or starting something — and how to choose.",
+    "url": "/what-to-do-after-nysc",
+    "category": "NYSC & Graduates"
+  },
+  {
+    "title": "The Best Skill for a Corps Member to Learn — By Goal, Not by Ranking",
+    "description": "There's no single best skill for every NYSC corps member. A goal-based way to choose between Paleon's six courses, based on what you actually want next.",
+    "url": "/best-skill-for-corps-members",
+    "category": "NYSC & Graduates"
+  },
+  {
+    "title": "How to Write a CV With No Work Experience in Nigeria",
+    "description": "A practical guide to writing a Nigerian graduate CV with no formal work history — what to lead with instead, and real structure examples.",
+    "url": "/cv-with-no-work-experience-nigeria",
+    "category": "Career guides"
+  },
+  {
+    "title": "High-Demand Tech Skills in Nigeria: A Sector-by-Sector Guide",
+    "description": "Which tech and digital skills are in genuine demand in Nigeria, sector by sector — oil & gas, banking, and telecom — grounded in Paleon's own market research.",
+    "url": "/high-demand-tech-skills-nigeria",
+    "category": "Career guides"
+  },
+  {
+    "title": "High-Paying Digital Skills to Learn in Nigeria",
+    "description": "How to read real employer-demand signals for digital skills in Nigeria — without relying on invented salary figures — and what that means for what's worth learning.",
+    "url": "/high-paying-skills-to-learn-in-nigeria",
+    "category": "Career guides"
+  },
+  {
+    "title": "Oil & Gas Jobs in Warri, Delta State",
+    "description": "What to know about oil & gas job-hunting specifically in Warri, Delta State — Nigeria's Niger Delta hub — and how digital skills fit in.",
+    "url": "/warri-oil-and-gas-jobs",
+    "category": "Oil & Gas"
+  },
+  {
+    "title": "Entry-Level Oil & Gas Jobs in Nigeria (No Experience Needed)",
+    "description": "Which oil & gas-adjacent entry points in Nigeria genuinely don't require prior experience, and how digital skills training fits in.",
+    "url": "/oil-and-gas-entry-level-jobs-nigeria",
+    "category": "Oil & Gas"
+  },
+  {
+    "title": "GIS Mapping in Nigeria's Oil & Gas Industry, Explained",
+    "description": "A plain explanation of how GIS mapping and drone data are actually used in Nigeria's oil & gas industry — pipeline monitoring, site surveying, environmental monitoring.",
+    "url": "/gis-mapping-oil-and-gas-nigeria",
+    "category": "Oil & Gas"
+  },
+  {
+    "title": "Oil & Gas Jobs in Warri and Across Delta State",
+    "description": "The wider Delta State oil & gas job-search picture beyond Warri town itself — the towns, the regional infrastructure, and how digital skills fit.",
+    "url": "/oil-and-gas-jobs-in-warri-delta-state",
+    "category": "Oil & Gas"
+  },
+  {
+    "title": "How to Get a Bank Job in Nigeria",
+    "description": "A practical look at how digital skills — cybersecurity and digital marketing — fit into getting a bank job in Nigeria, alongside traditional banking routes.",
+    "url": "/how-to-get-a-bank-job-in-nigeria",
+    "category": "Banking"
+  },
+  {
+    "title": "Fintech Jobs in Nigeria: Where Digital Skills Fit",
+    "description": "How fintech hiring in Nigeria differs from traditional banks, and where cybersecurity and digital marketing skills genuinely fit in.",
+    "url": "/fintech-jobs-nigeria",
+    "category": "Banking"
+  },
+  {
+    "title": "Digital Skill Side Hustles During NYSC",
+    "description": "Realistic digital-skill side hustles a corps member can start during NYSC service — without guaranteeing a specific income.",
+    "url": "/side-hustle-during-nysc",
+    "category": "NYSC & Graduates"
+  },
+  {
+    "title": "Returned From NYSC With No Job? Here's a Practical Next Step",
+    "description": "A practical, honest next step for graduates who've finished NYSC without a job lined up — without false urgency or promises.",
+    "url": "/return-from-nysc-jobless-what-to-do",
+    "category": "NYSC & Graduates"
+  },
+  {
+    "title": "What You Actually Get From a GIS and Drone Mapping Course",
+    "description": "What Paleon's GIS and Drone Mapping course actually covers — an honest, specific breakdown, not a generic course-marketing description.",
+    "url": "/what-you-get-from-a-gis-and-drone-mapping-course",
+    "category": "Oil & Gas"
+  },
+  {
+    "title": "HSE Jobs at Oil & Gas Companies in Nigeria",
+    "description": "What HSE (Health, Safety, and Environment) roles at Nigerian oil & gas companies actually involve, and how to start toward one.",
+    "url": "/hse-jobs-in-nigeria-oil-and-gas-companies",
+    "category": "Oil & Gas"
   }
 ]

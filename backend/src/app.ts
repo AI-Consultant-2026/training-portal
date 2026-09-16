@@ -270,6 +270,59 @@ export function createApp() {
   app.get("/renewable-energy-careers-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "renewable-energy-careers-nigeria.html"));
   });
+  // Career Intelligence Hub -- Tier 1 supporting articles (highest priority,
+  // from the 94-article content database). Each links up to its pillar.
+  app.get("/high-income-skills-without-a-degree-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "high-income-skills-without-a-degree-nigeria.html"));
+  });
+  app.get("/lucrative-digital-skills-to-learn-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "lucrative-digital-skills-to-learn-in-nigeria.html"));
+  });
+  app.get("/what-to-do-after-nysc", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "what-to-do-after-nysc.html"));
+  });
+  app.get("/best-skill-for-corps-members", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "best-skill-for-corps-members.html"));
+  });
+  app.get("/cv-with-no-work-experience-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cv-with-no-work-experience-nigeria.html"));
+  });
+  app.get("/high-demand-tech-skills-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "high-demand-tech-skills-nigeria.html"));
+  });
+  app.get("/high-paying-skills-to-learn-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "high-paying-skills-to-learn-in-nigeria.html"));
+  });
+  app.get("/warri-oil-and-gas-jobs", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "warri-oil-and-gas-jobs.html"));
+  });
+  app.get("/oil-and-gas-entry-level-jobs-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-entry-level-jobs-nigeria.html"));
+  });
+  app.get("/gis-mapping-oil-and-gas-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gis-mapping-oil-and-gas-nigeria.html"));
+  });
+  app.get("/oil-and-gas-jobs-in-warri-delta-state", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-jobs-in-warri-delta-state.html"));
+  });
+  app.get("/how-to-get-a-bank-job-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-get-a-bank-job-in-nigeria.html"));
+  });
+  app.get("/fintech-jobs-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "fintech-jobs-nigeria.html"));
+  });
+  app.get("/side-hustle-during-nysc", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "side-hustle-during-nysc.html"));
+  });
+  app.get("/return-from-nysc-jobless-what-to-do", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "return-from-nysc-jobless-what-to-do.html"));
+  });
+  app.get("/what-you-get-from-a-gis-and-drone-mapping-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "what-you-get-from-a-gis-and-drone-mapping-course.html"));
+  });
+  app.get("/hse-jobs-in-nigeria-oil-and-gas-companies", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "hse-jobs-in-nigeria-oil-and-gas-companies.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
