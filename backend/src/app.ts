@@ -323,6 +323,227 @@ export function createApp() {
   app.get("/hse-jobs-in-nigeria-oil-and-gas-companies", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-jobs-in-nigeria-oil-and-gas-companies.html"));
   });
+  // Career Intelligence Hub -- Tier 2/3 supporting articles (74-article batch,
+  // 73 new + 1 already-existing page reconciled from the content database).
+  app.get("/digital-skills-for-students-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-students-nigeria.html"));
+  });
+  app.get("/free-vs-paid-digital-skills-training-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "free-vs-paid-digital-skills-training-nigeria.html"));
+  });
+  app.get("/tech-skills-vs-degree-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "tech-skills-vs-degree-nigeria.html"));
+  });
+  app.get("/digital-literacy-vs-digital-skills-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-literacy-vs-digital-skills-nigeria.html"));
+  });
+  app.get("/short-courses-in-nigeria-what-to-check", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "short-courses-in-nigeria-what-to-check.html"));
+  });
+  app.get("/certificate-courses-vs-digital-skills-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "certificate-courses-vs-digital-skills-nigeria.html"));
+  });
+  app.get("/online-courses-with-certificate-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "online-courses-with-certificate-nigeria.html"));
+  });
+  app.get("/professional-certification-courses-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "professional-certification-courses-nigeria.html"));
+  });
+  app.get("/how-to-get-a-remote-job-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-get-a-remote-job-in-nigeria.html"));
+  });
+  app.get("/entry-level-jobs-in-nigeria-no-experience", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "entry-level-jobs-in-nigeria-no-experience.html"));
+  });
+  app.get("/linkedin-profile-tips-nigerian-graduates", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "linkedin-profile-tips-nigerian-graduates.html"));
+  });
+  app.get("/interview-prep-for-digital-roles-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "interview-prep-for-digital-roles-nigeria.html"));
+  });
+  app.get("/how-to-get-a-job-in-nigeria-online", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-get-a-job-in-nigeria-online.html"));
+  });
+  app.get("/unemployment-among-nigerian-graduates-context", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "unemployment-among-nigerian-graduates-context.html"));
+  });
+  app.get("/cv-mistakes-nigerian-graduates-make", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cv-mistakes-nigerian-graduates-make.html"));
+  });
+  app.get("/how-to-list-nysc-on-your-cv", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-list-nysc-on-your-cv.html"));
+  });
+  app.get("/portfolio-vs-cv-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "portfolio-vs-cv-nigeria.html"));
+  });
+  app.get("/skills-companies-are-looking-for-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "skills-companies-are-looking-for-nigeria.html"));
+  });
+  app.get("/most-marketable-skills-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "most-marketable-skills-in-nigeria.html"));
+  });
+  app.get("/employer-demand-digital-marketing-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "employer-demand-digital-marketing-nigeria.html"));
+  });
+  app.get("/what-employers-like-shell-and-chevron-screen-for", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "what-employers-like-shell-and-chevron-screen-for.html"));
+  });
+  app.get("/top-skills-employers-want-in-2026", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "top-skills-employers-want-in-2026.html"));
+  });
+  app.get("/niger-delta-oil-and-gas-companies-jobs", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "niger-delta-oil-and-gas-companies-jobs.html"));
+  });
+  app.get("/how-to-get-a-job-in-oil-and-gas-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-get-a-job-in-oil-and-gas-in-nigeria.html"));
+  });
+  app.get("/oil-and-gas-training-institute-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-training-institute-in-nigeria.html"));
+  });
+  app.get("/oil-and-gas-companies-in-warri", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-companies-in-warri.html"));
+  });
+  app.get("/cyber-security-course-for-bankers", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cyber-security-course-for-bankers.html"));
+  });
+  app.get("/digital-marketing-jobs-in-banks-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-marketing-jobs-in-banks-nigeria.html"));
+  });
+  app.get("/digital-transformation-in-banking-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-transformation-in-banking-nigeria.html"));
+  });
+  app.get("/banking-jobs-in-nigeria-2026", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "banking-jobs-in-nigeria-2026.html"));
+  });
+  app.get("/it-jobs-in-nigerian-banks", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "it-jobs-in-nigerian-banks.html"));
+  });
+  app.get("/telecom-jobs-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "telecom-jobs-in-nigeria.html"));
+  });
+  app.get("/network-security-jobs-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "network-security-jobs-in-nigeria.html"));
+  });
+  app.get("/corporate-communication-jobs-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "corporate-communication-jobs-in-nigeria.html"));
+  });
+  app.get("/digital-marketing-telecom-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-marketing-telecom-nigeria.html"));
+  });
+  app.get("/network-engineer-jobs-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "network-engineer-jobs-nigeria.html"));
+  });
+  app.get("/what-next-after-nysc", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "what-next-after-nysc.html"));
+  });
+  app.get("/how-to-make-money-during-nysc", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-to-make-money-during-nysc.html"));
+  });
+  app.get("/saed-vs-independent-digital-skills-training", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "saed-vs-independent-digital-skills-training.html"));
+  });
+  app.get("/nysc-corpers-jobs-lagos-abuja", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-corpers-jobs-lagos-abuja.html"));
+  });
+  app.get("/nysc-cds-skill-acquisition", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-cds-skill-acquisition.html"));
+  });
+  app.get("/corper-business-ideas", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "corper-business-ideas.html"));
+  });
+  app.get("/free-skill-acquisition-for-corpers-comparison", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "free-skill-acquisition-for-corpers-comparison.html"));
+  });
+  app.get("/documenting-cds-projects-for-your-portfolio", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "documenting-cds-projects-for-your-portfolio.html"));
+  });
+  app.get("/free-tools-to-host-your-portfolio-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "free-tools-to-host-your-portfolio-nigeria.html"));
+  });
+  app.get("/life-after-nysc-what-to-expect", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "life-after-nysc-what-to-expect.html"));
+  });
+  app.get("/nysc-graduate-trainee-jobs-guide", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-graduate-trainee-jobs-guide.html"));
+  });
+  app.get("/what-is-gis-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "what-is-gis-course.html"));
+  });
+  app.get("/qgis-vs-arcgis-for-beginners-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "qgis-vs-arcgis-for-beginners-nigeria.html"));
+  });
+  app.get("/gis-analyst-jobs-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gis-analyst-jobs-in-nigeria.html"));
+  });
+  app.get("/is-gis-a-good-career", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "is-gis-a-good-career.html"));
+  });
+  app.get("/geospatial-data-in-agriculture-and-infrastructure-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "geospatial-data-in-agriculture-and-infrastructure-nigeria.html"));
+  });
+  app.get("/gis-companies-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gis-companies-in-nigeria.html"));
+  });
+  app.get("/drone-survey-cost-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "drone-survey-cost-nigeria.html"));
+  });
+  app.get("/ncaa-drone-regulations-overview", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "ncaa-drone-regulations-overview.html"));
+  });
+  app.get("/drone-technology-in-oil-and-gas-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "drone-technology-in-oil-and-gas-nigeria.html"));
+  });
+  app.get("/hse-officer-salary-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "hse-officer-salary-in-nigeria.html"));
+  });
+  app.get("/is-nebosh-igc-worth-it", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "is-nebosh-igc-worth-it.html"));
+  });
+  app.get("/how-much-is-hse-courses-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "how-much-is-hse-courses-in-nigeria.html"));
+  });
+  app.get("/online-hse-certification-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "online-hse-certification-in-nigeria.html"));
+  });
+  app.get("/safety-officer-vs-hse-officer-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "safety-officer-vs-hse-officer-nigeria.html"));
+  });
+  app.get("/nebosh-igc-training-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nebosh-igc-training-in-nigeria.html"));
+  });
+  app.get("/cyber-security-courses-in-nigeria-and-fees", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cyber-security-courses-in-nigeria-and-fees.html"));
+  });
+  app.get("/where-can-i-study-cyber-security-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "where-can-i-study-cyber-security-in-nigeria.html"));
+  });
+  app.get("/free-cyber-security-training-in-nigeria-comparison", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "free-cyber-security-training-in-nigeria-comparison.html"));
+  });
+  app.get("/cyber-security-training-centres-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cyber-security-training-centres-in-nigeria.html"));
+  });
+  app.get("/what-is-a-soc-analyst", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "what-is-a-soc-analyst.html"));
+  });
+  app.get("/network-security-basics-for-beginners-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "network-security-basics-for-beginners-nigeria.html"));
+  });
+  app.get("/cloud-security-basics-for-beginners-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cloud-security-basics-for-beginners-nigeria.html"));
+  });
+  app.get("/solar-energy-training-in-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "solar-energy-training-in-nigeria.html"));
+  });
+  app.get("/renewable-energy-job-opportunities-guide", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "renewable-energy-job-opportunities-guide.html"));
+  });
+  app.get("/gis-for-solar-site-assessment-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gis-for-solar-site-assessment-nigeria.html"));
+  });
+  app.get("/renewable-energy-vs-oil-and-gas-career-comparison", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "renewable-energy-vs-oil-and-gas-career-comparison.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
