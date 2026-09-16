@@ -16,6 +16,7 @@ Allow: /courses-for-nysc-corps-members
 Allow: /nysc-portfolio-building
 Allow: /nysc-to-employment-roadmap
 Allow: /how-to-build-a-graduate-cv-nigeria
+Allow: /digital-skills-employers-want-nigeria
 Allow: /oil-gas-banking-telecoms-digital-skills
 Allow: /six-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria

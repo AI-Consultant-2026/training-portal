@@ -216,6 +216,11 @@ export function createApp() {
   app.get("/how-to-build-a-graduate-cv-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "how-to-build-a-graduate-cv-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 5 -- job-seeker-side companion to the B2B
+  // /corporate-training-nigeria and /banking-telecom-training-nigeria pages.
+  app.get("/digital-skills-employers-want-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-skills-employers-want-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
