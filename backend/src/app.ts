@@ -68,6 +68,18 @@ export function createApp() {
   app.get("/favicon.svg", (req, res) => {
     res.type("image/svg+xml").sendFile(path.join(__dirname, "marketing", "favicon.svg"));
   });
+  // Site search widget (shared CSS/JS + generated index, loaded on every public
+  // marketing page). The index is built from the same pages listed in sitemap.xml
+  // plus /terms and /privacy -- see content-drafts/ for the generation script.
+  app.get("/search-widget.css", (req, res) => {
+    res.type("text/css").sendFile(path.join(__dirname, "marketing", "search-widget.css"));
+  });
+  app.get("/search.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "search.js"));
+  });
+  app.get("/search-index.json", (req, res) => {
+    res.type("application/json").sendFile(path.join(__dirname, "marketing", "search-index.json"));
+  });
 
   // Standalone marketing page, served same-origin so its registration form can post to
   // /api/leads directly. Lives under src/ (not public/) so it's present in both dev

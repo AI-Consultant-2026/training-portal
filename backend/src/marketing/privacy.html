@@ -64,8 +64,24 @@
     font-size: 14px;
   }
 </style>
+<link rel="stylesheet" href="/search-widget.css">
 </head>
 <body>
+<button class="pt-search-trigger" id="pt-search-trigger" aria-label="Search the site" title="Search (press /)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+</button>
+<div class="pt-search-overlay" id="pt-search-overlay" hidden>
+  <div class="pt-search-panel" role="dialog" aria-modal="true" aria-label="Search Paleon Training">
+    <div class="pt-search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="pt-search-input" id="pt-search-input" type="text" placeholder="Search guides, courses, careers..." autocomplete="off">
+      <button class="pt-search-close" id="pt-search-close">Close</button>
+    </div>
+    <div class="pt-search-results" id="pt-search-results"></div>
+    <div class="pt-search-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+
 
 <header class="top">
   <div class="wrap">
@@ -215,5 +231,6 @@
   </div>
 </footer>
 
+<script src="/search.js" defer></script>
 </body>
 </html>
