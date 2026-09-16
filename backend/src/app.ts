@@ -247,6 +247,11 @@ export function createApp() {
   app.get("/drone-mapping-careers-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "drone-mapping-careers-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 16 -- near-empty-autocomplete topic, written
+  // for durable authority rather than a claim of proven high search demand.
+  app.get("/cybersecurity-oil-and-gas-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cybersecurity-oil-and-gas-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
