@@ -23,6 +23,7 @@ Allow: /digital-skills-for-telecommunications-nigeria
 Allow: /gis-careers-nigeria
 Allow: /drone-mapping-careers-nigeria
 Allow: /cybersecurity-oil-and-gas-nigeria
+Allow: /renewable-energy-careers-nigeria
 Allow: /oil-gas-banking-telecoms-digital-skills
 Allow: /six-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria

@@ -252,6 +252,12 @@ export function createApp() {
   app.get("/cybersecurity-oil-and-gas-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "cybersecurity-oil-and-gas-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 17 -- the last of all 17 pillars. Clarifies
+  // honestly that the Renewable Energy Digital Systems course covers the
+  // digital/monitoring side, not hands-on electrical installation.
+  app.get("/renewable-energy-careers-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "renewable-energy-careers-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
