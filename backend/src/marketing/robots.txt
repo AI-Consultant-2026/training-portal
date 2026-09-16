@@ -11,6 +11,7 @@ Allow: /university-partners
 Allow: /digital-skills-training-nigeria
 Allow: /degree-but-no-job-nigeria
 Allow: /nysc-digital-skills
+Allow: /best-courses-after-nysc
 Allow: /oil-gas-banking-telecoms-digital-skills
 Allow: /six-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria

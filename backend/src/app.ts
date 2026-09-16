@@ -191,6 +191,11 @@ export function createApp() {
   app.get("/nysc-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "nysc-digital-skills.html"));
   });
+  // Career Intelligence Hub Pillar 2 -- Best Courses After NYSC (broader than
+  // Pillar 10, which is Paleon-course-specific and timed during service).
+  app.get("/best-courses-after-nysc", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "best-courses-after-nysc.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
