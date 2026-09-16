@@ -236,6 +236,12 @@ export function createApp() {
   app.get("/digital-skills-for-telecommunications-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "digital-skills-for-telecommunications-nigeria.html"));
   });
+  // Career Intelligence Hub Pillar 13 -- standalone GIS career guide,
+  // names QGIS/ArcGIS as real entities per the architecture doc's
+  // GIS -> QGIS -> Surveying -> Geospatial data entity chain.
+  app.get("/gis-careers-nigeria", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gis-careers-nigeria.html"));
+  });
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
