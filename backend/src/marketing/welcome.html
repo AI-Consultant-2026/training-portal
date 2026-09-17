@@ -588,6 +588,38 @@
   .why-title { font-size: 17px; font-weight: 700; margin-bottom: 9px; }
   .why-desc { font-size: 13.5px; color: #A9B0C2; line-height: 1.6; }
 
+  .founder-strip {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .founder-strip-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--ink-2);
+  }
+  .founder-strip-body { flex: 1 1 260px; display: flex; flex-direction: column; gap: 3px; }
+  .founder-strip-name { font-weight: 700; font-size: 15px; }
+  .founder-strip-cred { font-size: 13px; color: #A9B0C2; }
+  .founder-strip-link {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--signal-2);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .founder-strip-link:hover { text-decoration: underline; }
+  @media (max-width: 560px) {
+    .founder-strip { flex-direction: column; align-items: flex-start; text-align: left; }
+  }
+
   /* ============ Refer & earn ============ */
   .refer-grid {
     display: grid;
@@ -1100,6 +1132,15 @@
             real employer, not just a completion badge.</div>
         </div>
       </div>
+
+      <div class="founder-strip reveal">
+        <img class="founder-strip-photo" src="/images/ken-uwotu.jpg" alt="Ken Uwotu, Founder of Paleon Training" width="56" height="56">
+        <div class="founder-strip-body">
+          <span class="founder-strip-name">Founded by Ken Uwotu</span>
+          <span class="founder-strip-cred">MSc Business Information Technology (Distinction) &mdash; leading UK &amp; Nigeria development teams</span>
+        </div>
+        <a class="founder-strip-link" href="/about/ken-uwotu">Meet the founder &rarr;</a>
+      </div>
     </div>
   </section>
 
@@ -1271,6 +1312,7 @@
     <div>
       <div class="footer-heading">Company</div>
       <ul class="footer-links">
+        <li><a href="/about/ken-uwotu">About the Founder</a></li>
         <li><a href="#why">Why Paleon</a></li>
         <li><a href="#refer-earn">Refer &amp; Earn</a></li>
         <li><a href="#register">Register interest</a></li>
