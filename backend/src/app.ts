@@ -101,6 +101,11 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=31536000, immutable");
     res.type("font/woff2").sendFile(path.join(__dirname, "marketing", "fonts", req.params.file));
   });
+  // Same allowlisted-filename pattern as the fonts route above, for marketing-page photos.
+  app.get("/images/:file(ken-uwotu.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=31536000, immutable");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", req.params.file));
+  });
   app.get("/executive-training", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "executive-training.html"));
   });
