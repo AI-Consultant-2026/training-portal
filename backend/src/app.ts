@@ -186,6 +186,12 @@ export function createApp() {
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
   });
+  // Founder bio page. Nested under /about/ (unlike every other marketing page's flat
+  // slug) at the site owner's specific request -- Express's default non-strict routing
+  // matches this with or without a trailing slash, so no extra route is needed.
+  app.get("/about/ken-uwotu", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "about-ken-uwotu.html"));
+  });
   // The GEO/AI-search pillar page (2026-09-13): the primary page targeting "digital
   // skills training Nigeria" and its variants, hub-linked from and to every guide page
   // above rather than a standalone spoke -- see the GEO report for why.
