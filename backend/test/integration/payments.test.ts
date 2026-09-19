@@ -87,7 +87,7 @@ describe("Payments", () => {
     expect(res.body.quote.card.amount).toBeGreaterThan(0);
     expect(res.body.quote.bankTransfer.currency).toBe("NGN");
     expect(res.body.quote.bankTransfer.amount).toBe(200_000);
-    expect(res.body.quote.bankTransfer.bankDetails.accountName).toBe("Paleon Training UK Limited");
+    expect(res.body.quote.bankTransfer.bankDetails.accountName).toBe("Paleon Training Limited");
   });
 
   it("rejects a card payment for a student who hasn't enrolled in the course", async () => {

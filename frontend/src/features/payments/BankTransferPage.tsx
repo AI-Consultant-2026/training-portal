@@ -101,10 +101,12 @@ export function BankTransferPage() {
                 <dt className="text-gray-500">Account number</dt>
                 <dd className="font-medium">{quote.bankTransfer.bankDetails.accountNumber}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-gray-500">Sort code / IBAN</dt>
-                <dd className="font-medium">{quote.bankTransfer.bankDetails.sortCodeOrIban}</dd>
-              </div>
+              {quote.bankTransfer.bankDetails.sortCodeOrIban && (
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Sort code</dt>
+                  <dd className="font-medium">{quote.bankTransfer.bankDetails.sortCodeOrIban}</dd>
+                </div>
+              )}
             </dl>
             <p className="mt-3 text-xs text-gray-400">
               Make the transfer using the details above, then submit your transaction reference below. Your course

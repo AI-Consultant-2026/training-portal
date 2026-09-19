@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
@@ -98,6 +98,7 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
 export function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { selectedCourse: course, status, error } = useAppSelector((state) => state.courses);
   const { items: enrollments, error: enrollError } = useAppSelector((state) => state.enrollments);
   const { user } = useAppSelector((state) => state.auth);
@@ -107,7 +108,6 @@ export function CourseDetailPage() {
   const [capstone, setCapstone] = useState<Capstone | null>(null);
   const [enrolling, setEnrolling] = useState(false);
   const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null);
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [downloadingCertificate, setDownloadingCertificate] = useState(false);
   const [certificateError, setCertificateError] = useState(false);
   const [downloadingAttendance, setDownloadingAttendance] = useState(false);
@@ -179,12 +179,12 @@ export function CourseDetailPage() {
     }
   }, [course, user]);
 
-  // Enrolment/payment is paused until the next intake -- every student sees the same
-  // "reopens" notice on click instead of reaching the real (card/bank-transfer) payment
-  // pages, not just the demo account's usual "get started" nudge.
-  function handlePayForCourse() {
+  // Every student pays by bank transfer (the card gateway is still a placeholder that
+  // approves any card, so it isn't exposed from here). Also the target for clicking a
+  // locked lesson, since payment is what unlocks it.
+  function goToBankTransfer() {
     if (!course) return;
-    setShowPaymentDialog(true);
+    navigate(`/courses/${course.slug}/pay/bank-transfer`);
   }
 
   useEffect(() => {
@@ -207,6 +207,8 @@ export function CourseDetailPage() {
     const result = await dispatch(enrollInCourse(course.id));
     if (enrollInCourse.fulfilled.match(result)) {
       dispatch(fetchMyEnrollments());
+      goToBankTransfer();
+      return;
     }
     setEnrolling(false);
   }
@@ -296,7 +298,7 @@ export function CourseDetailPage() {
                   : "Payment pending"}
             </Button>
             {isEnrolled && !myEnrollment?.paymentConfirmed && paymentQuote && (
-              <Button variant="secondary" onClick={handlePayForCourse}>
+              <Button variant="secondary" onClick={goToBankTransfer}>
                 Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}
               </Button>
             )}
@@ -380,7 +382,7 @@ export function CourseDetailPage() {
                         <button
                           key={lesson.id}
                           type="button"
-                          onClick={() => setShowPaymentDialog(true)}
+                          onClick={goToBankTransfer}
                           className="text-sm font-medium text-gray-400 hover:text-gray-600"
                           title="This lesson unlocks once your payment has been confirmed"
                         >
@@ -503,20 +505,6 @@ export function CourseDetailPage() {
           >
             View capstone
           </Link>
-        </div>
-      )}
-
-      {showPaymentDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
-            <p className="text-sm text-gray-700">
-              Enrolment for digital skills training reopens 01/01/2026. If you have sign up for
-              any of the courses, you will be contacted to make payment and start. Thank you.
-            </p>
-            <div className="mt-4 flex justify-end">
-              <Button onClick={() => setShowPaymentDialog(false)}>Close</Button>
-            </div>
-          </div>
         </div>
       )}
     </div>

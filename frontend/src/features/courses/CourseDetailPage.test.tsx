@@ -1,4 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import * as assignmentsApi from "../../api/assignments.api";
@@ -122,6 +123,7 @@ function renderCoursePage() {
   return renderWithProviders(
     <Routes>
       <Route path="/courses/:slug" element={<CourseDetailPage />} />
+      <Route path="/courses/:slug/pay/bank-transfer" element={<div>Bank transfer page</div>} />
     </Routes>,
     {
       route: `/courses/${COURSE.slug}`,
@@ -176,5 +178,40 @@ describe("CourseDetailPage assignment payment gate", () => {
       expect(screen.getByRole("link", { name: /Breach Case Study Analysis/ })).toBeInTheDocument(),
     );
     expect(screen.queryByText(/\(locked\)/)).not.toBeInTheDocument();
+  });
+});
+
+describe("CourseDetailPage bank-transfer flow", () => {
+  it("takes the student to the bank transfer page after they click Enroll", async () => {
+    mockCourseData(false);
+    vi.mocked(enrollmentsApi.fetchMyEnrollments).mockResolvedValue([]);
+    vi.mocked(enrollmentsApi.enrollInCourse).mockResolvedValue(enrollment(false));
+    renderCoursePage();
+
+    await userEvent.click(await screen.findByRole("button", { name: "Enroll" }));
+
+    expect(await screen.findByText("Bank transfer page")).toBeInTheDocument();
+    expect(enrollmentsApi.enrollInCourse).toHaveBeenCalledWith(COURSE.id);
+  });
+
+  it("stays on the course page and shows the error when enrolling fails", async () => {
+    mockCourseData(false);
+    vi.mocked(enrollmentsApi.fetchMyEnrollments).mockResolvedValue([]);
+    vi.mocked(enrollmentsApi.enrollInCourse).mockRejectedValue(new Error("Request failed"));
+    renderCoursePage();
+
+    await userEvent.click(await screen.findByRole("button", { name: "Enroll" }));
+
+    await waitFor(() => expect(enrollmentsApi.enrollInCourse).toHaveBeenCalled());
+    expect(screen.queryByText("Bank transfer page")).not.toBeInTheDocument();
+  });
+
+  it("sends an already-enrolled, unpaid student to the bank transfer page from 'Pay for course'", async () => {
+    mockCourseData(false);
+    renderCoursePage();
+
+    await userEvent.click(await screen.findByRole("button", { name: /Pay for course/ }));
+
+    expect(await screen.findByText("Bank transfer page")).toBeInTheDocument();
   });
 });

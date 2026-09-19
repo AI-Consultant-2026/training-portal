@@ -64,7 +64,7 @@ export const config = {
     bankName: process.env.BANK_TRANSFER_BANK_NAME ?? "PLACEHOLDER BANK NAME",
     accountName: process.env.BANK_TRANSFER_ACCOUNT_NAME ?? "Paleon Training Limited",
     accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",
-    sortCodeOrIban: process.env.BANK_TRANSFER_SORT_CODE_OR_IBAN ?? "00-00-00",
+    sortCodeOrIban: process.env.BANK_TRANSFER_SORT_CODE_OR_IBAN ?? "",
   },
   cardGatewayApiKey: process.env.PAYMENT_GATEWAY_API_KEY ?? "",
 };
