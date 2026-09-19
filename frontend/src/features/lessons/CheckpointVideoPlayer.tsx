@@ -40,6 +40,7 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
   // time. Either way, render our own clean "Watch on YouTube" card instead of leaving a
   // black box up or letting YouTube's own raw error UI show inside the iframe.
   const [unavailable, setUnavailable] = useState(false);
+  const [errorCode, setErrorCode] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     setUnavailable(false);
@@ -82,8 +83,11 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
           // handshake can fail and surface as Error 153, especially on mobile browsers.
           playerVars: { rel: 0, origin: window.location.origin },
           events: {
-            onError: () => {
-              if (!cancelled) setUnavailable(true);
+            onError: (event) => {
+              if (!cancelled) {
+                setErrorCode(event.data);
+                setUnavailable(true);
+              }
             },
             onStateChange: (event) => {
               if (event.data === window.YT!.PlayerState.PLAYING) {
@@ -145,7 +149,7 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
   if (unavailable) {
     return (
       <div key="unavailable" className="mt-6">
-        <VideoUnavailableCard videoUrl={videoUrl} />
+        <VideoUnavailableCard videoUrl={videoUrl} errorCode={errorCode} />
       </div>
     );
   }

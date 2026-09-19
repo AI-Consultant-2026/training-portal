@@ -56,7 +56,7 @@ export function loadYouTubeIframeApi(): Promise<void> {
 // an unmonitored frame instead of something we can catch and replace. A plain outbound
 // link, not a re-hosted copy of the video, keeps things resilient without touching
 // anyone else's copyrighted content.
-export function VideoUnavailableCard({ videoUrl }: { videoUrl: string }) {
+export function VideoUnavailableCard({ videoUrl, errorCode }: { videoUrl: string; errorCode?: number }) {
   return (
     <div
       className="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center"
@@ -71,6 +71,9 @@ export function VideoUnavailableCard({ videoUrl }: { videoUrl: string }) {
       >
         Watch on YouTube
       </a>
+      {/* YouTube's own onError code (e.g. 153 = missing referrer/config, 101/150 = embedding
+          disabled) -- shown small so a screenshot from a user's phone says why it failed. */}
+      {errorCode !== undefined && <p className="text-xs text-gray-400">Error code {errorCode}</p>}
     </div>
   );
 }
@@ -89,6 +92,7 @@ export function YouTubePlayer({ videoId, videoUrl, title }: YouTubePlayerProps) 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YT.Player | null>(null);
   const [unavailable, setUnavailable] = useState(false);
+  const [errorCode, setErrorCode] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     setUnavailable(false);
@@ -105,8 +109,11 @@ export function YouTubePlayer({ videoId, videoUrl, title }: YouTubePlayerProps) 
           // Error 153 ("video player configuration error") even for a fully embeddable video.
           playerVars: { rel: 0, origin: window.location.origin },
           events: {
-            onError: () => {
-              if (!cancelled) setUnavailable(true);
+            onError: (event) => {
+              if (!cancelled) {
+                setErrorCode(event.data);
+                setUnavailable(true);
+              }
             },
           },
         });
@@ -123,7 +130,7 @@ export function YouTubePlayer({ videoId, videoUrl, title }: YouTubePlayerProps) 
   }, [videoId]);
 
   if (unavailable) {
-    return <VideoUnavailableCard videoUrl={videoUrl} />;
+    return <VideoUnavailableCard videoUrl={videoUrl} errorCode={errorCode} />;
   }
 
   return (

@@ -38,6 +38,14 @@ export function createApp() {
           "script-src": ["'self'", "https://www.youtube.com"],
         },
       },
+      // helmet's default is "no-referrer", which strips the Referer header from the
+      // page's requests -- including the embedded YouTube player's. YouTube's embed
+      // policy requires a referrer to identify the embedding site, and rejects
+      // referrer-less embeds with onError code 153 ("video player configuration error"),
+      // which phones hit far more than desktop (the lesson/intro videos fell back to
+      // "This video can't be played here" on mobile only). This sends only our own
+      // origin, cross-origin, and nothing at all on downgrades.
+      referrerPolicy: { policy: "strict-origin-when-cross-origin" },
     }),
   );
   // gzip/brotli for the text-heavy marketing HTML/CSS/JS below (fonts are already

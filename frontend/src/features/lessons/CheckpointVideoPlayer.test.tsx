@@ -5,10 +5,10 @@ import { CheckpointVideoPlayer } from "./CheckpointVideoPlayer";
 // Mimics what the real YouTube IFrame API does to the DOM: `new YT.Player(el)` replaces
 // `el` itself with an <iframe> (it does not append inside it), then reports an error.
 class FakePlayer {
-  constructor(el: HTMLElement, opts: { events?: { onError?: () => void } }) {
+  constructor(el: HTMLElement, opts: { events?: { onError?: (e: { data: number }) => void } }) {
     const iframe = document.createElement("iframe");
     el.replaceWith(iframe);
-    setTimeout(() => opts.events?.onError?.(), 0);
+    setTimeout(() => opts.events?.onError?.({ data: 153 }), 0);
   }
   destroy() {}
 }
@@ -35,5 +35,6 @@ describe("CheckpointVideoPlayer", () => {
     );
 
     await waitFor(() => expect(screen.getByText(/can't be played here/i)).toBeInTheDocument());
+    expect(screen.getByText("Error code 153")).toBeInTheDocument();
   });
 });
