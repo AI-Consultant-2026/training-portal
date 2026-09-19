@@ -22,6 +22,18 @@ describe("ErrorBoundary", () => {
     expect(screen.getByRole("button", { name: "Reload page" })).toBeInTheDocument();
   });
 
+  it("shows the error's name, message and current path so a screenshot is diagnosable", () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <ErrorBoundary>
+        <Bomb />
+      </ErrorBoundary>,
+    );
+
+    expect(screen.getByText(/Error: boom \(\/.*\)/)).toBeInTheDocument();
+  });
+
   it("renders children normally when nothing throws", () => {
     render(
       <ErrorBoundary>

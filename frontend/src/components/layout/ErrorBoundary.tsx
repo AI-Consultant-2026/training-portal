@@ -7,6 +7,10 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  // Kept so the fallback can show *what* failed. Production has no Sentry DSN, so without
+  // this a crash reported from a user's phone is undiagnosable -- a screenshot of the
+  // error screen is the only evidence available.
+  errorSummary: string | null;
 }
 
 // Class component because React (as of 18) has no hook-based way to catch render
@@ -15,10 +19,11 @@ interface State {
 // didn't guard against) white-screens the whole app with no way out short of the user
 // guessing to hit reload themselves.
 export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false };
+  state: State = { hasError: false, errorSummary: null };
 
-  static getDerivedStateFromError(): State {
-    return { hasError: true };
+  static getDerivedStateFromError(error: unknown): State {
+    const e = error instanceof Error ? error : new Error(String(error));
+    return { hasError: true, errorSummary: `${e.name}: ${e.message}`.slice(0, 300) };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
@@ -36,6 +41,11 @@ export class ErrorBoundary extends Component<Props, State> {
           <p className="mt-2 text-sm text-gray-600">
             An unexpected error occurred. Reloading the page usually fixes this.
           </p>
+          {this.state.errorSummary && (
+            <p className="mt-3 break-words text-xs text-gray-400">
+              {this.state.errorSummary} ({window.location.pathname})
+            </p>
+          )}
           <button
             type="button"
             onClick={() => window.location.reload()}
