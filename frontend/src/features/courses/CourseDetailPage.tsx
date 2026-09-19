@@ -16,7 +16,7 @@ import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { YouTubePlayer } from "../../components/ui/YouTubePlayer";
 import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, PaymentQuote, Quiz } from "../../types/api";
-import { enrollInCourse, fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
+import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 import { COURSE_COVER_IMAGES } from "./courseCoverImages";
 
@@ -106,7 +106,6 @@ export function CourseDetailPage() {
   const [moduleContent, setModuleContent] = useState<Record<string, ModuleContent>>({});
   const [courseProgress, setCourseProgress] = useState<CourseProgress | null>(null);
   const [capstone, setCapstone] = useState<Capstone | null>(null);
-  const [enrolling, setEnrolling] = useState(false);
   const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null);
   const [downloadingCertificate, setDownloadingCertificate] = useState(false);
   const [certificateError, setCertificateError] = useState(false);
@@ -179,6 +178,8 @@ export function CourseDetailPage() {
     }
   }, [course, user]);
 
+  // Enroll doesn't enrol on its own: it opens the bank-transfer page, and the enrolment
+  // is created when the student submits their transfer (see payment.service.ts).
   // Every student pays by bank transfer (the card gateway is still a placeholder that
   // approves any card, so it isn't exposed from here). Also the target for clicking a
   // locked lesson, since payment is what unlocks it.
@@ -200,18 +201,6 @@ export function CourseDetailPage() {
       fetchCapstoneForCourse(course.id).then(setCapstone);
     }
   }, [course, user]);
-
-  async function handleEnroll() {
-    if (!course) return;
-    setEnrolling(true);
-    const result = await dispatch(enrollInCourse(course.id));
-    if (enrollInCourse.fulfilled.match(result)) {
-      dispatch(fetchMyEnrollments());
-      goToBankTransfer();
-      return;
-    }
-    setEnrolling(false);
-  }
 
   async function handleDownloadCertificate() {
     if (!course || !myEnrollment) return;
@@ -290,7 +279,7 @@ export function CourseDetailPage() {
           )}
           {enrollError && <Alert message={enrollError} />}
           <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={handleEnroll} isLoading={enrolling} disabled={isEnrolled}>
+            <Button onClick={goToBankTransfer} disabled={isEnrolled}>
               {!isEnrolled
                 ? "Enroll"
                 : myEnrollment?.paymentConfirmed

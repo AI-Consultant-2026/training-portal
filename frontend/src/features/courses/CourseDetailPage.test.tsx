@@ -182,28 +182,15 @@ describe("CourseDetailPage assignment payment gate", () => {
 });
 
 describe("CourseDetailPage bank-transfer flow", () => {
-  it("takes the student to the bank transfer page after they click Enroll", async () => {
+  it("opens the bank transfer page when Enroll is clicked, without enrolling yet", async () => {
     mockCourseData(false);
     vi.mocked(enrollmentsApi.fetchMyEnrollments).mockResolvedValue([]);
-    vi.mocked(enrollmentsApi.enrollInCourse).mockResolvedValue(enrollment(false));
     renderCoursePage();
 
     await userEvent.click(await screen.findByRole("button", { name: "Enroll" }));
 
     expect(await screen.findByText("Bank transfer page")).toBeInTheDocument();
-    expect(enrollmentsApi.enrollInCourse).toHaveBeenCalledWith(COURSE.id);
-  });
-
-  it("stays on the course page and shows the error when enrolling fails", async () => {
-    mockCourseData(false);
-    vi.mocked(enrollmentsApi.fetchMyEnrollments).mockResolvedValue([]);
-    vi.mocked(enrollmentsApi.enrollInCourse).mockRejectedValue(new Error("Request failed"));
-    renderCoursePage();
-
-    await userEvent.click(await screen.findByRole("button", { name: "Enroll" }));
-
-    await waitFor(() => expect(enrollmentsApi.enrollInCourse).toHaveBeenCalled());
-    expect(screen.queryByText("Bank transfer page")).not.toBeInTheDocument();
+    expect(enrollmentsApi.enrollInCourse).not.toHaveBeenCalled();
   });
 
   it("sends an already-enrolled, unpaid student to the bank transfer page from 'Pay for course'", async () => {

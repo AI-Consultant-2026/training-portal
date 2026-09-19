@@ -2,8 +2,10 @@ import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { Course, Enrollment, Payment, User } from "../../src/models";
+import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
+const memAdapter = emailAdapter as MemoryEmailAdapter;
 
 async function registerStudent(email: string) {
   await request(app).post("/api/auth/register").send({
@@ -171,5 +173,53 @@ describe("Payments", () => {
 
     const enrollment = await Enrollment.findOne({ where: { courseId: course.id, studentId: student.id } });
     expect(enrollment?.paymentConfirmed).toBe(false);
+  });
+  describe("bank transfer for a student who hasn't enrolled yet (Enroll just opens the page)", () => {
+    it("creates the enrolment on submit, unpaid, with a pending payment and exactly one enrolment email", async () => {
+      const instructor = await createInstructor();
+      const course = await createPricedCourse(instructor.id);
+      const student = await registerStudent("bank-new@example.com");
+      await User.update({ emailVerifiedAt: new Date() }, { where: { id: student.id } });
+      const token = await loginAs("bank-new@example.com");
+
+      memAdapter.clear();
+      const res = await request(app)
+        .post("/api/payments/bank-transfer")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, transferReference: "GTB-NEW-1" });
+
+      expect(res.status).toBe(201);
+      expect(res.body.payment.status).toBe("pending");
+      expect(res.body.enrollment.paymentConfirmed).toBe(false);
+      expect(await Enrollment.count({ where: { courseId: course.id, studentId: student.id } })).toBe(1);
+      await new Promise((r) => setTimeout(r, 100)); // enrolment email is fire-and-forget
+      expect(memAdapter.sentMessages.filter((m) => m.to === "bank-new@example.com")).toHaveLength(1);
+
+      // A second submission reuses the enrolment rather than duplicating it or re-emailing.
+      memAdapter.clear();
+      const again = await request(app)
+        .post("/api/payments/bank-transfer")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, transferReference: "GTB-NEW-2" });
+      expect(again.status).toBe(201);
+      expect(await Enrollment.count({ where: { courseId: course.id, studentId: student.id } })).toBe(1);
+      expect(memAdapter.sentMessages.filter((m) => m.to === "bank-new@example.com")).toHaveLength(0);
+    });
+
+    it("refuses an unverified student and creates no enrolment or payment", async () => {
+      const instructor = await createInstructor();
+      const course = await createPricedCourse(instructor.id);
+      const student = await registerStudent("bank-unverified@example.com");
+      const token = await loginAs("bank-unverified@example.com");
+
+      const res = await request(app)
+        .post("/api/payments/bank-transfer")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, transferReference: "GTB-UNV-1" });
+
+      expect(res.status).toBe(403);
+      expect(await Enrollment.count({ where: { studentId: student.id } })).toBe(0);
+      expect(await Payment.count({ where: { studentId: student.id } })).toBe(0);
+    });
   });
 });

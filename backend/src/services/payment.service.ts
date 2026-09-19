@@ -3,9 +3,10 @@ import { Enrollment, Payment } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { COURSE_PRICES_NGN } from "../constants/coursePricing";
 import * as courseService from "./course.service";
-import { getEnrollmentForCourseAndStudent } from "./enrollment.service";
+import { enrollStudent, getEnrollmentForCourseAndStudent } from "./enrollment.service";
 import * as paymentGateway from "./paymentGateway.service";
 import * as referralService from "./referral.service";
+import * as userService from "./user.service";
 import { logger } from "../utils/logger";
 import { CARD_SETTLEMENT_CURRENCY, convertFromNgn, estimateLocalAmount } from "./currency.service";
 
@@ -123,9 +124,27 @@ export interface BankTransferInput {
 // can't be verified automatically. It only records the attempt (currency, amount, the
 // reference the student says they used) so an admin has what they need to check the real
 // bank account and confirm it manually via the existing admin/enrollments/:id/payment flow.
+//
+// Clicking "Enroll" on the course page only opens the bank-transfer page; the student is
+// enrolled here, when they submit their transfer. So a student with no enrolment yet gets
+// one created (through the same enrollStudent() path, so the confirmation email and
+// duplicate/published checks still apply), subject to the same verified-email rule as
+// POST /courses/:id/enroll.
 export async function submitBankTransfer(input: BankTransferInput): Promise<{ payment: Payment; enrollment: Enrollment }> {
-  const { course, enrollment } = await requireUnpaidEnrollment(input.courseId, input.studentId);
+  const course = await courseService.getCourseByIdOrSlug(input.courseId);
   const baseAmountNgn = requirePriceNgn(course.slug);
+
+  let enrollment = await getEnrollmentForCourseAndStudent(course.id, input.studentId);
+  if (enrollment?.paymentConfirmed) {
+    throw ApiError.conflict("Payment has already been confirmed for this enrollment");
+  }
+  if (!enrollment) {
+    const student = await userService.getUserById(input.studentId);
+    if (!student.emailVerifiedAt) {
+      throw ApiError.forbidden("Please verify your email before enrolling in a course");
+    }
+    enrollment = await enrollStudent(course.id, input.studentId);
+  }
 
   const payment = await Payment.create({
     enrollmentId: enrollment.id,
