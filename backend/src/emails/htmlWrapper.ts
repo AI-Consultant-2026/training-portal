@@ -14,7 +14,15 @@ const BARE_URL_REGEX = /^https?:\/\/\S+$/;
 // quirks either property alone tends to miss.
 const LONG_URL_STYLE = "word-break: break-all; overflow-wrap: break-word;";
 
-function renderLine(line: string): string {
+// A body line is plain text (escaped on render) or, opt-in, pre-built HTML for the few
+// emails that need inline formatting such as bold. Callers passing `{ html }` are
+// responsible for escaping any dynamic values with escapeHtml() themselves.
+export type BodyLine = string | { html: string };
+
+function renderLine(line: BodyLine): string {
+  if (typeof line !== "string") {
+    return `<p style="margin: 0 0 16px;">${line.html}</p>`;
+  }
   if (BARE_URL_REGEX.test(line)) {
     const escaped = escapeHtml(line);
     return `<p style="margin: 0 0 16px; ${LONG_URL_STYLE}"><a href="${escaped}" style="color: #2563eb; ${LONG_URL_STYLE}">${escaped}</a></p>`;
@@ -22,7 +30,7 @@ function renderLine(line: string): string {
   return `<p style="margin: 0 0 16px;">${escapeHtml(line)}</p>`;
 }
 
-export function wrapHtml(bodyLines: string[]): string {
+export function wrapHtml(bodyLines: BodyLine[]): string {
   const paragraphs = bodyLines.map(renderLine).join("\n");
 
   return `<div style="font-family: -apple-system, Helvetica, Arial, sans-serif; background: #f9fafb; padding: 24px;">
