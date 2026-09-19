@@ -109,11 +109,6 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=31536000, immutable");
     res.type("font/woff2").sendFile(path.join(__dirname, "marketing", "fonts", req.params.file));
   });
-  // Same allowlisted-filename pattern as the fonts route above, for marketing-page photos.
-  app.get("/images/:file(ken-uwotu.jpg)", (req, res) => {
-    res.set("Cache-Control", "public, max-age=31536000, immutable");
-    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", req.params.file));
-  });
   app.get("/executive-training", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "executive-training.html"));
   });
@@ -199,11 +194,10 @@ export function createApp() {
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
   });
-  // Founder bio page. Nested under /about/ (unlike every other marketing page's flat
-  // slug) at the site owner's specific request -- Express's default non-strict routing
-  // matches this with or without a trailing slash, so no extra route is needed.
+  // The founder bio page was removed at the site owner's request; send old links and
+  // search-engine results for it to the home page instead of a dead end.
   app.get("/about/ken-uwotu", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "about-ken-uwotu.html"));
+    res.redirect(301, "/welcome");
   });
   // The GEO/AI-search pillar page (2026-09-13): the primary page targeting "digital
   // skills training Nigeria" and its variants, hub-linked from and to every guide page
