@@ -136,9 +136,15 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
     setSelectedAnswerId(null);
   }
 
+  // The two returns below are both a <div> at the same position, so without distinct keys
+  // React reuses one div and tries to remove the old child <div> from it. But the YouTube
+  // IFrame API has already replaced that child (containerRef) with its own <iframe>, so the
+  // removal throws NotFoundError ("The object can not be found here" in Safari) and the
+  // whole page falls into the ErrorBoundary. Distinct keys make React discard the entire
+  // old wrapper instead, never touching the node YouTube swapped out.
   if (unavailable) {
     return (
-      <div className="mt-6">
+      <div key="unavailable" className="mt-6">
         <VideoUnavailableCard videoUrl={videoUrl} />
       </div>
     );
@@ -146,6 +152,7 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
 
   return (
     <div
+      key="player"
       // See YouTubePlayer.tsx for why the injected iframe needs a forced-fill override.
       className="relative mt-6 overflow-hidden rounded-lg bg-black [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
       style={{ aspectRatio: "16 / 9" }}
