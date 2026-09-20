@@ -20,7 +20,7 @@ const CONTENT: LessonVideoSeed[] = [
   },
   {
     weekNumber: 1,
-    lessonTitle: "HSE in Nigeria's Oil & Gas Industry",
+    lessonTitle: "HSE in the country's Oil & Gas Industry",
     videoUrl: "https://www.youtube.com/watch?v=7XMUOBxd8Mg",
   },
   {

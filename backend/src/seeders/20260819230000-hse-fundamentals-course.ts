@@ -32,7 +32,7 @@ module.exports = {
         title: "HSE Fundamentals",
         slug: SLUG,
         description:
-          "A practical introduction to Health, Safety, and Environment (HSE) for Nigeria's oil and gas sector -- hazard identification and risk assessment, PPE and permit-to-work systems, emergency response, incident investigation, environmental management, and the safety culture that ties it all together.",
+          "A practical introduction to Health, Safety, and Environment (HSE) for the country's oil and gas sector -- hazard identification and risk assessment, PPE and permit-to-work systems, emergency response, incident investigation, environmental management, and the safety culture that ties it all together.",
         instructor_id: INSTRUCTOR_ID,
         duration_weeks: 8,
         level: "beginner",

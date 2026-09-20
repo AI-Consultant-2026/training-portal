@@ -34,7 +34,7 @@ export const CAPSTONE = {
 
 **Tasks.**
 1. Design an internal control (a procedure, not a technology purchase) that would make Umbra's customer-care staff significantly harder to social-engineer in the scenario above, referencing least privilege and identity verification from this course's core modules.
-2. Explain, in your own words, how Nigeria's NIN-SIM linkage policy and a tool like the NCC's TIRMS portal reduce (but do not eliminate) SIM-related fraud risk -- and identify one risk that remains even with both in place.
+2. Explain, in your own words, how the country's NIN-SIM linkage policy and a tool like the NCC's TIRMS portal reduce (but do not eliminate) SIM-related fraud risk -- and identify one risk that remains even with both in place.
 3. Identify at least four security considerations Umbra's security team should flag for the 5G rollout (drawing on this course's 5G Security Fundamentals lesson), and explain why each matters at a beginner-appropriate level of detail.
 4. Write a short (200-300 word) DDoS scenario affecting Umbra's customer-facing systems and outline your detection and mitigation response, without providing any attack-execution detail.
 5. Outline a basic incident-response plan for a confirmed customer-data exposure at Umbra, referencing the NDPC's role and Umbra's own notification obligations.

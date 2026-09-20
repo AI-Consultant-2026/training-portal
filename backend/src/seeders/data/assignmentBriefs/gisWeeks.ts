@@ -37,9 +37,9 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
     overview:
       "A map that uses the wrong coordinate system can put a road in the wrong place, or make one region look far bigger than it is. You will complete a guided basic-mapping exercise in QGIS with close attention to **coordinate reference systems (CRS)** and **projections**, then explain what you observed.",
     materials:
-      "**You will need:** QGIS (free), and a free administrative-boundary dataset for Nigeria (for example from GADM, Natural Earth or GRID3 Nigeria). Keep a note of where you downloaded it.",
+      "**You will need:** QGIS (free), and a free administrative-boundary dataset for the country (for example from GADM, Natural Earth or GRID3). Keep a note of where you downloaded it.",
     tasks: [
-      "Install QGIS, create a new project and **add the Nigeria boundary layer**. Open the layer properties and **record the layer's CRS** (name and EPSG code).",
+      "Install QGIS, create a new project and **add the country boundary layer**. Open the layer properties and **record the layer's CRS** (name and EPSG code).",
       "Set the **project CRS to WGS 84 (EPSG:4326)** and note what the map looks like. Then change the project CRS to **WGS 84 / UTM zone 32N (EPSG:32632)**. Take a screenshot of each version.",
       "**Measure the distance** between two cities (for example Lagos and Abuja) in each project CRS using the measure tool, first with the **Cartesian (planar)** setting and then with the **ellipsoidal** setting, and record all four results. Explain any differences between them.",
       "**Create a point layer** of **at least five places** by entering their coordinates (decimal degrees) and give each a label. Confirm that the points land where you expect. Deliberately enter one point with **latitude and longitude swapped** and explain what happens.",
@@ -70,7 +70,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
     overview:
       "Most GIS projects fail because of bad or poorly documented data, not bad software. A **data collection protocol** is the written plan that says what data you need, where it will come from, how accurate it must be and how you will check it. You will write one for a mapping project of your choosing.",
     tasks: [
-      "Choose a **realistic mapping project** in Nigeria (for example mapping public water points in a local government area, health clinics, informal market locations, or farm plots) and state its **purpose and the decision it supports** in 2-3 sentences.",
+      "Choose a **realistic mapping project** in the country (for example mapping public water points in a local government area, health clinics, informal market locations, or farm plots) and state its **purpose and the decision it supports** in 2-3 sentences.",
       "List the **data layers you need** and, for each, whether it is a point, line, polygon or raster.",
       "For **each layer, choose a source**: an authoritative or open dataset, a satellite image, a field survey or crowdsourced data. Justify each choice and note the **licence or permission** needed.",
       "State the **accuracy requirements** for the project (for example horizontal accuracy in metres, how recent the data must be) and **explain why** they are appropriate for the purpose, not just the highest possible.",
@@ -134,7 +134,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
 
   5: {
     overview:
-      "Flying a drone for professional mapping in Nigeria is regulated. A mapping company that ignores the rules risks fines, seized equipment and worse. You will research the regulations of the **Nigeria Civil Aviation Authority (NCAA)** and any related approvals, and turn them into a compliance guide for a professional mapping operation.",
+      "Flying a drone for professional mapping in the country is regulated. A mapping company that ignores the rules risks fines, seized equipment and worse. You will research the regulations of the **Civil Aviation Authority (NCAA)** and any related approvals, and turn them into a compliance guide for a professional mapping operation.",
     tasks: [
       "Find the **official NCAA sources** on unmanned aircraft (drone) operations, such as its regulations and any published guidance or forms. List each source with its title and date.",
       "Build a **compliance table** with columns *Requirement | Source (document, section and date) | What it means in practice for a mapping operation | Evidence you must keep | Who is responsible*. Cover at least **eight** requirements, for example aircraft registration or approval, pilot qualification, operator permission, restricted or no-fly areas, flight limits (height, line of sight), insurance, privacy or consent and incident reporting. Include **any other approvals** you find in official sources.",
@@ -202,7 +202,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
       "A thematic map is a story about one topic on a map. Done well, it makes a decision-maker say *\"I see the problem.\"* Done badly, it confuses. You will create a **series of thematic maps** for a real Nigerian State resource and apply the spatial analysis and design techniques from this day.",
     tasks: [
       "Choose **one theme** for one State: **water**, **agriculture** or **infrastructure**. State the **question** your map series answers (for example *\"Which villages are more than 2 km from a health centre?\"*).",
-      "Gather **open data** (for example from GRID3 Nigeria, OpenStreetMap, DIVA-GIS, WorldPop or satellite data) and list every source.",
+      "Gather **open data** (for example from GRID3, OpenStreetMap, DIVA-GIS, WorldPop or satellite data) and list every source.",
       "Produce **at least three maps** in QGIS, each showing a **different analysis**. Use **at least two** techniques from: **buffering**, **overlay**, **surface analysis** and **network analysis**.",
       "For each map give: **title**, **purpose**, **data used**, **method used** (with any settings such as buffer distance) and a **one-paragraph interpretation** of what it shows.",
       "Apply **good cartographic design** to each map: a suitable **classification method** and colour scheme (with a reason), a legend, scale bar, north arrow and data source.",

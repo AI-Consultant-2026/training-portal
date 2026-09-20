@@ -127,7 +127,7 @@ const CONTENT: CourseContentSeed[] = [
   {
     slug: "renewable-energy-digital-systems",
     assignmentTitle: "Renewable Energy Policy Research",
-    assignmentDescription: "Research renewable energy policies and incentives currently in place in Nigeria.",
+    assignmentDescription: "Research renewable energy policies and incentives currently in place in the country.",
     fileRequired: false,
     questions: [
       {

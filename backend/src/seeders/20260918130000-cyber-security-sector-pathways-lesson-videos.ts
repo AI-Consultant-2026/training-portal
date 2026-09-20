@@ -90,7 +90,7 @@ const CONTENT: LessonVideoSeed[] = [
   },
   {
     weekNumber: 13,
-    lessonTitle: "SCADA, Industrial Control Systems, and Nigeria's Oil & Gas Landscape",
+    lessonTitle: "SCADA, Industrial Control Systems, and the country's Oil & Gas Landscape",
     videoUrl: "https://www.youtube.com/watch?v=jOahDrs33VI",
   },
   {
