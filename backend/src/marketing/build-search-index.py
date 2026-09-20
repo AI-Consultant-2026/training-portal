@@ -34,7 +34,7 @@ URLS = [
     "paleon-training-six-course-digital-skills-curriculum",
     "paleon-training-employability-content-hub",
     "digital-skills-nigeria-career-intelligence-guide",
-    "terms", "privacy",
+    "support", "terms", "privacy",
     # Career Intelligence Hub -- Tier 1 supporting articles (19-article batch,
     # 2 of which -- digital-skills-jobs-nigeria, degree-but-no-job-nigeria --
     # already existed above; these 17 are the new ones).
@@ -139,7 +139,7 @@ CATEGORY = {
     "welcome": "Home", "executive-training": "Corporate", "trainingportalprocess": "How it works",
     "corporate-training-nigeria": "Corporate", "banking-telecom-training-nigeria": "Corporate",
     "university-partners": "Partnerships",
-    "terms": "Legal", "privacy": "Legal",
+    "support": "Support", "terms": "Legal", "privacy": "Legal",
     "paleon-training-six-course-digital-skills-curriculum": "Courses",
     "paleon-training-employability-content-hub": "Guides",
     "digital-skills-nigeria-career-intelligence-guide": "Guides",

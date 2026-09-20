@@ -21,6 +21,14 @@ export function Navbar() {
     navigate("/login");
   }
 
+  // /support is a static server-rendered page, not a React route, so this is a plain
+  // anchor (a full page load) rather than a router <Link>.
+  const supportLink = (
+    <a href="/support" className={linkClassName} onClick={closeMenu}>
+      Support
+    </a>
+  );
+
   const links = user ? (
     <>
       <Link to="/courses" className={linkClassName} onClick={closeMenu}>
@@ -39,6 +47,7 @@ export function Navbar() {
           Admin
         </Link>
       )}
+      {supportLink}
       <span className="text-gray-500">{user.firstName}</span>
       <button onClick={handleLogout} className={linkClassName}>
         Log out
@@ -49,6 +58,7 @@ export function Navbar() {
       <a href="/welcome" className={linkClassName} onClick={closeMenu}>
         Home
       </a>
+      {supportLink}
       <Link to="/login" className={linkClassName} onClick={closeMenu}>
         Log in
       </Link>

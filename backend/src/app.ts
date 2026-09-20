@@ -191,6 +191,15 @@ export function createApp() {
   // University partnerships page -- public, indexed, recruiting the first real
   // university partners; no partner logos are shown yet (none confirmed), the
   // page is honest about that and invites universities to be among the first.
+  // Support page (2026-09-20): how candidates report an issue by email. Static; linked
+  // from the welcome page menu and footer, every marketing page's footer, and the app navbar.
+  app.get("/support", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "support.html"));
+  });
+  app.get("/images/support-example-screenshot.jpg", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "support-example-screenshot.jpg"));
+  });
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
   });

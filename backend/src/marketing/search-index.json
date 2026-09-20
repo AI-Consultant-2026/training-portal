@@ -186,6 +186,12 @@
     "category": "Guides"
   },
   {
+    "title": "Support",
+    "description": "How to report an issue with the Paleon Training portal: what details to include, where to send them (support@paleontraining.com), and an example email with a screenshot.",
+    "url": "/support",
+    "category": "Support"
+  },
+  {
     "title": "Terms of Service — Paleon Training",
     "description": "",
     "url": "/terms",
