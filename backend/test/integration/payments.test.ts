@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
+import { config } from "../../src/config";
 import { Course, Enrollment, Payment, User } from "../../src/models";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
@@ -51,6 +52,16 @@ const validCard = {
 };
 
 describe("Payments", () => {
+  // Bank transfers are switched off by default in production (BANK_TRANSFER_ENABLED); the
+  // existing tests below exercise the enabled flow, and the "paused" block covers the rest.
+  const originalBankTransferEnabled = config.bankTransfer.enabled;
+  beforeAll(() => {
+    config.bankTransfer.enabled = true;
+  });
+  afterAll(() => {
+    config.bankTransfer.enabled = originalBankTransferEnabled;
+  });
+
   it("rejects unauthenticated and non-student callers on every payment route", async () => {
     const instructor = await createInstructor();
     const course = await createPricedCourse(instructor.id);
@@ -220,6 +231,69 @@ describe("Payments", () => {
       expect(res.status).toBe(403);
       expect(await Enrollment.count({ where: { studentId: student.id } })).toBe(0);
       expect(await Payment.count({ where: { studentId: student.id } })).toBe(0);
+    });
+  });
+
+  describe("while bank transfers are paused (BANK_TRANSFER_ENABLED off)", () => {
+    beforeEach(() => {
+      config.bankTransfer.enabled = false;
+    });
+    afterEach(() => {
+      config.bankTransfer.enabled = true;
+    });
+
+    it("rejects a bank transfer submission with a 503 and records nothing", async () => {
+      const instructor = await createInstructor();
+      const course = await createPricedCourse(instructor.id);
+      const student = await registerStudent("paused1@example.com");
+      const token = await loginAs("paused1@example.com");
+
+      const res = await request(app)
+        .post("/api/payments/bank-transfer")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, transferReference: "REF-PAUSED-1" });
+
+      expect(res.status).toBe(503);
+      expect(res.body.error.message).toMatch(/temporarily unavailable/i);
+      expect(res.body.error.details.code).toBe("BANK_TRANSFER_DISABLED");
+      expect(await Payment.count({ where: { studentId: student.id } })).toBe(0);
+      expect(await Enrollment.count({ where: { studentId: student.id } })).toBe(0);
+    });
+
+    it("still returns a quote, but flags the flow as disabled and withholds the account details", async () => {
+      const instructor = await createInstructor("paused-inst@example.com");
+      const course = await createPricedCourse(instructor.id);
+      await registerStudent("paused2@example.com");
+      const token = await loginAs("paused2@example.com");
+
+      const res = await request(app)
+        .get(`/api/payments/quote/${course.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.quote.bankTransfer.enabled).toBe(false);
+      expect(res.body.quote.bankTransfer.bankDetails).toEqual({
+        bankName: "",
+        accountName: "",
+        accountNumber: "",
+        sortCodeOrIban: "",
+      });
+      // The card quote is unaffected.
+      expect(res.body.quote.card.currency).toBe("GBP");
+    });
+
+    it("leaves card payments working", async () => {
+      const instructor = await createInstructor("paused-inst2@example.com");
+      const course = await createPricedCourse(instructor.id);
+      await registerStudent("paused3@example.com");
+      const token = await loginAs("paused3@example.com");
+
+      const res = await request(app)
+        .post("/api/payments/card")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, ...validCard });
+
+      expect(res.status).not.toBe(503);
     });
   });
 });

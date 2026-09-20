@@ -61,6 +61,11 @@ export const config = {
   // vars (and swap paymentGateway.service.ts's mock for a real gateway call) -- nothing
   // else in the payment flow needs to change.
   bankTransfer: {
+    // Master switch for the whole bank-transfer payment flow (the page's details and the
+    // POST /payments/bank-transfer endpoint). OFF unless BANK_TRANSFER_ENABLED=true is set,
+    // so it can be paused and resumed by an env-var change alone. Turning it off does not
+    // touch payments already submitted -- admins can still confirm those as usual.
+    enabled: process.env.BANK_TRANSFER_ENABLED === "true",
     bankName: process.env.BANK_TRANSFER_BANK_NAME ?? "PLACEHOLDER BANK NAME",
     accountName: process.env.BANK_TRANSFER_ACCOUNT_NAME ?? "Paleon Training Limited",
     accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",

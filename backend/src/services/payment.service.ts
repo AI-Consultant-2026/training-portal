@@ -44,7 +44,13 @@ async function requireUnpaidEnrollment(courseIdOrSlug: string, studentId: string
 export interface Quote {
   baseAmountNgn: number;
   card: { currency: string; amount: number };
-  bankTransfer: { currency: string; amount: number; bankDetails: typeof config.bankTransfer };
+  bankTransfer: {
+    currency: string;
+    amount: number;
+    /** False while bank transfers are paused; the details below are then blanked. */
+    enabled: boolean;
+    bankDetails: { bankName: string; accountName: string; accountNumber: string; sortCodeOrIban: string };
+  };
   estimatedLocal: { currency: string; amount: number } | null;
 }
 
@@ -55,7 +61,20 @@ export async function getQuote(courseIdOrSlug: string, billingCountry?: string):
   return {
     baseAmountNgn,
     card: { currency: CARD_SETTLEMENT_CURRENCY, amount: convertFromNgn(baseAmountNgn, CARD_SETTLEMENT_CURRENCY) },
-    bankTransfer: { currency: "NGN", amount: baseAmountNgn, bankDetails: config.bankTransfer },
+    bankTransfer: {
+      currency: "NGN",
+      amount: baseAmountNgn,
+      enabled: config.bankTransfer.enabled,
+      // Don't hand out receiving-account details while the flow is paused.
+      bankDetails: config.bankTransfer.enabled
+        ? {
+            bankName: config.bankTransfer.bankName,
+            accountName: config.bankTransfer.accountName,
+            accountNumber: config.bankTransfer.accountNumber,
+            sortCodeOrIban: config.bankTransfer.sortCodeOrIban,
+          }
+        : { bankName: "", accountName: "", accountNumber: "", sortCodeOrIban: "" },
+    },
     estimatedLocal: billingCountry ? estimateLocalAmount(baseAmountNgn, billingCountry) : null,
   };
 }
@@ -130,7 +149,13 @@ export interface BankTransferInput {
 // one created (through the same enrollStudent() path, so the confirmation email and
 // duplicate/published checks still apply), subject to the same verified-email rule as
 // POST /courses/:id/enroll.
+export const BANK_TRANSFER_DISABLED_MESSAGE =
+  "Bank transfer payments are temporarily unavailable. Please check back soon or contact hello@paleontraining.com.";
+
 export async function submitBankTransfer(input: BankTransferInput): Promise<{ payment: Payment; enrollment: Enrollment }> {
+  if (!config.bankTransfer.enabled) {
+    throw new ApiError(503, BANK_TRANSFER_DISABLED_MESSAGE, { code: "BANK_TRANSFER_DISABLED" });
+  }
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
   const baseAmountNgn = requirePriceNgn(course.slug);
 

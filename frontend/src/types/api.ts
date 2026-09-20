@@ -213,6 +213,8 @@ export interface PaymentQuote {
   bankTransfer: {
     currency: string;
     amount: number;
+    /** False while bank transfers are paused (the details are then blank). */
+    enabled: boolean;
     bankDetails: {
       bankName: string;
       accountName: string;

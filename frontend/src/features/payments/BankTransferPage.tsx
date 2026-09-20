@@ -77,6 +77,24 @@ export function BankTransferPage() {
     );
   }
 
+  // Bank transfers are paused (BANK_TRANSFER_ENABLED is off on the server): show a plain
+  // notice instead of account details or a form that would only be rejected.
+  if (quote && !quote.bankTransfer.enabled) {
+    return (
+      <div className="mx-auto mt-16 max-w-md px-6 text-center" role="status">
+        <h1 className="text-2xl font-semibold text-gray-900">Bank transfer is temporarily unavailable</h1>
+        <p className="mt-3 text-gray-600">
+          We aren&rsquo;t accepting bank transfer payments at the moment. Please check back soon, or contact us at{" "}
+          <span className="font-medium text-gray-800">hello@paleontraining.com</span> and we&rsquo;ll help you get
+          started.
+        </p>
+        <Button className="mt-6" onClick={() => navigate(`/courses/${course.slug}`)}>
+          Back to course
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto mt-10 max-w-md px-6 pb-16">
       <h1 className="text-2xl font-semibold text-gray-900">Pay by bank transfer</h1>

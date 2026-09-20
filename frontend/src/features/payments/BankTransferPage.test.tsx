@@ -43,6 +43,7 @@ function quote(sortCodeOrIban: string): PaymentQuote {
     bankTransfer: {
       currency: "NGN",
       amount: 200000,
+      enabled: true,
       bankDetails: {
         bankName: "Test Bank",
         accountName: "Paleon Training Limited",
@@ -95,5 +96,19 @@ describe("BankTransferPage", () => {
 
     expect(await screen.findByText("Test Bank")).toBeInTheDocument();
     expect(screen.queryByText("Sort code")).not.toBeInTheDocument();
+  });
+
+  it("shows a 'temporarily unavailable' notice, with no account details or form, while bank transfers are paused", async () => {
+    const paused = quote("044150149");
+    paused.bankTransfer.enabled = false;
+    paused.bankTransfer.bankDetails = { bankName: "", accountName: "", accountNumber: "", sortCodeOrIban: "" };
+    renderPage(paused);
+
+    expect(await screen.findByText("Bank transfer is temporarily unavailable")).toBeInTheDocument();
+    expect(screen.getByText(/hello@paleontraining\.com/)).toBeInTheDocument();
+    expect(screen.queryByText(/Amount to transfer/)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/Transaction reference/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /I've made this transfer/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Back to course" })).toBeInTheDocument();
   });
 });
