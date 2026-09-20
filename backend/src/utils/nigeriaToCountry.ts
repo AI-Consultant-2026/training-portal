@@ -7,7 +7,9 @@
 // Used by migration 20260920050000 (stored text) and to rewrite the seeder sources.
 
 // "Nigeria" as a whole word, not "Nigerian" or a longer identifier.
-const N = String.raw`Nigeria(?![A-Za-z])`;
+// "Nigeria (NCAA)", "Nigeria (for example ...)" -- the word followed by a bracketed aside --
+// is kept as written, so a comparison like "Nigeria (NCAA), the UK (CAA)" still reads.
+const N = String.raw`Nigeria(?![A-Za-z])(?! \()`;
 // Start of a sentence/line/heading, where the replacement needs a capital: a literal
 // backslash-n (seeder sources), a real newline (DB text), ". ", markdown bold/heading/list,
 // or an opening quote (a string literal in the seeder sources that starts with the word).

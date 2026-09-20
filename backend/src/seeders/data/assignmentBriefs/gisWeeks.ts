@@ -37,7 +37,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
     overview:
       "A map that uses the wrong coordinate system can put a road in the wrong place, or make one region look far bigger than it is. You will complete a guided basic-mapping exercise in QGIS with close attention to **coordinate reference systems (CRS)** and **projections**, then explain what you observed.",
     materials:
-      "**You will need:** QGIS (free), and a free administrative-boundary dataset for the country (for example from GADM, Natural Earth or GRID3). Keep a note of where you downloaded it.",
+      "**You will need:** QGIS (free), and a free administrative-boundary dataset for Nigeria (for example from GADM, Natural Earth or GRID3). Keep a note of where you downloaded it.",
     tasks: [
       "Install QGIS, create a new project and **add the country boundary layer**. Open the layer properties and **record the layer's CRS** (name and EPSG code).",
       "Set the **project CRS to WGS 84 (EPSG:4326)** and note what the map looks like. Then change the project CRS to **WGS 84 / UTM zone 32N (EPSG:32632)**. Take a screenshot of each version.",
@@ -70,7 +70,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
     overview:
       "Most GIS projects fail because of bad or poorly documented data, not bad software. A **data collection protocol** is the written plan that says what data you need, where it will come from, how accurate it must be and how you will check it. You will write one for a mapping project of your choosing.",
     tasks: [
-      "Choose a **realistic mapping project** in the country (for example mapping public water points in a local government area, health clinics, informal market locations, or farm plots) and state its **purpose and the decision it supports** in 2-3 sentences.",
+      "Choose a **realistic mapping project** in Nigeria (for example mapping public water points in a local government area, health clinics, informal market locations, or farm plots) and state its **purpose and the decision it supports** in 2-3 sentences.",
       "List the **data layers you need** and, for each, whether it is a point, line, polygon or raster.",
       "For **each layer, choose a source**: an authoritative or open dataset, a satellite image, a field survey or crowdsourced data. Justify each choice and note the **licence or permission** needed.",
       "State the **accuracy requirements** for the project (for example horizontal accuracy in metres, how recent the data must be) and **explain why** they are appropriate for the purpose, not just the highest possible.",
