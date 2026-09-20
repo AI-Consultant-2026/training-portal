@@ -60,6 +60,15 @@ export const COURSE_INTERESTS = [
   { slug: "hse-fundamentals", label: "HSE Fundamentals" },
 ];
 
+// Archived from the public catalog (migration 20260920010000). They stay in
+// COURSE_INTERESTS above because the admin candidate filter and partner pipeline still
+// need to label existing records that chose them, and the backend enum still accepts
+// them -- but new signups aren't offered them.
+const ARCHIVED_COURSE_SLUGS = ["social-media-management-content", "renewable-energy-digital-systems"];
+export const REGISTRATION_COURSE_INTERESTS = COURSE_INTERESTS.filter(
+  (course) => !ARCHIVED_COURSE_SLUGS.includes(course.slug),
+);
+
 // Must match backend/src/validators/auth.validators.ts's REGISTRATION_STATUSES exactly --
 // the register request is rejected if the value isn't in that list.
 export const REGISTRATION_STATUSES = ["Graduate", "Current Student", "Non-Graduate"];
@@ -205,7 +214,7 @@ export function RegisterPage() {
           <option value="" disabled>
             Choose a course&hellip;
           </option>
-          {COURSE_INTERESTS.map((course) => (
+          {REGISTRATION_COURSE_INTERESTS.map((course) => (
             <option key={course.slug} value={course.slug}>
               {course.label}
             </option>
