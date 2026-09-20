@@ -1,11 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AiDetectedDialog } from "../../components/ui/AiDetectedDialog";
 import { Alert } from "../../components/ui/Alert";
+import { BriefMarkdown } from "../../components/ui/BriefMarkdown";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
 import {
   clearSubmitStatus,
+  dismissAiDetected,
   fetchCapstone,
   fetchMySubmissionForCapstone,
   submitCapstone,
@@ -14,7 +17,15 @@ import {
 export function CapstoneDetailPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { currentCapstone: capstone, mySubmission, status, submitStatus, error } = useAppSelector(
+  const {
+    currentCapstone: capstone,
+    mySubmission,
+    status,
+    submitStatus,
+    error,
+    aiDetected,
+    aiDetectedMessage,
+  } = useAppSelector(
     (state) => state.capstones,
   );
   const [submissionText, setSubmissionText] = useState("");
@@ -53,6 +64,9 @@ export function CapstoneDetailPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
+      {aiDetected && (
+        <AiDetectedDialog message={aiDetectedMessage} onClose={() => dispatch(dismissAiDetected())} />
+      )}
       <h1 className="text-2xl font-semibold text-gray-900">{capstone.title}</h1>
       <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
         <span>{capstone.pointsTotal} points</span>
@@ -70,7 +84,9 @@ export function CapstoneDetailPage() {
         )}
       </div>
       {capstone.description && (
-        <p className="mt-4 whitespace-pre-wrap text-gray-700">{capstone.description}</p>
+        <div className="mt-4">
+          <BriefMarkdown>{capstone.description}</BriefMarkdown>
+        </div>
       )}
 
       {isGraded ? (

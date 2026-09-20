@@ -11,6 +11,8 @@ export interface CapstonesState {
   submitStatus: "idle" | "loading" | "succeeded" | "failed";
   gradeStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  aiDetected: boolean;
+  aiDetectedMessage: string | null;
 }
 
 const initialState: CapstonesState = {
@@ -22,7 +24,32 @@ const initialState: CapstonesState = {
   submitStatus: "idle",
   gradeStatus: "idle",
   error: null,
+  aiDetected: false,
+  aiDetectedMessage: null,
 };
+
+interface SubmitError {
+  message: string;
+  aiDetected: boolean;
+  instruction?: string;
+}
+
+// The server answers a generated-looking submission with 422 + details.code
+// "AI_GENERATED_CONTENT" (see submissionOriginality.service.ts); the UI turns that into a
+// blocking dialog instead of an inline error.
+function extractSubmitError(err: unknown): SubmitError {
+  const error = (
+    err as {
+      response?: { data?: { error?: { message?: string; details?: { code?: string; instruction?: string } } } };
+    }
+  )?.response?.data?.error;
+  const aiDetected = error?.details?.code === "AI_GENERATED_CONTENT";
+  return {
+    message: error?.message ?? "Something went wrong. Please try again.",
+    aiDetected,
+    instruction: aiDetected ? error?.details?.instruction : undefined,
+  };
+}
 
 function extractErrorMessage(err: unknown): string {
   const message = (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
@@ -40,7 +67,7 @@ export const submitCapstone = createAsyncThunk(
     try {
       return await capstonesApi.submitCapstone(input);
     } catch (err) {
-      return rejectWithValue(extractErrorMessage(err));
+      return rejectWithValue(extractSubmitError(err));
     }
   },
 );
@@ -85,6 +112,13 @@ const capstonesSlice = createSlice({
     clearSubmitStatus(state) {
       state.submitStatus = "idle";
       state.error = null;
+      state.aiDetected = false;
+      state.aiDetectedMessage = null;
+    },
+    dismissAiDetected(state) {
+      state.aiDetected = false;
+      state.aiDetectedMessage = null;
+      state.submitStatus = "idle";
     },
   },
   extraReducers: (builder) => {
@@ -112,7 +146,10 @@ const capstonesSlice = createSlice({
       })
       .addCase(submitCapstone.rejected, (state, action) => {
         state.submitStatus = "failed";
-        state.error = (action.payload as string) ?? "Could not submit capstone";
+        const payload = action.payload as SubmitError | undefined;
+        state.aiDetected = payload?.aiDetected ?? false;
+        state.aiDetectedMessage = payload?.aiDetected ? (payload.instruction ?? null) : null;
+        state.error = payload?.aiDetected ? null : (payload?.message ?? "Could not submit capstone");
       })
       .addCase(fetchMySubmissionForCapstone.fulfilled, (state, action) => {
         state.mySubmission = action.payload;
@@ -157,5 +194,5 @@ const capstonesSlice = createSlice({
   },
 });
 
-export const { clearSubmitStatus } = capstonesSlice.actions;
+export const { clearSubmitStatus, dismissAiDetected } = capstonesSlice.actions;
 export default capstonesSlice.reducer;

@@ -1,11 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AiDetectedDialog } from "../../components/ui/AiDetectedDialog";
 import { Alert } from "../../components/ui/Alert";
+import { BriefMarkdown } from "../../components/ui/BriefMarkdown";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
 import {
   clearSubmitStatus,
+  dismissAiDetected,
   fetchAssignment,
   fetchMySubmissionForAssignment,
   submitAssignment,
@@ -14,7 +17,15 @@ import {
 export function AssignmentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { currentAssignment: assignment, mySubmission, status, submitStatus, error } = useAppSelector(
+  const {
+    currentAssignment: assignment,
+    mySubmission,
+    status,
+    submitStatus,
+    error,
+    aiDetected,
+    aiDetectedMessage,
+  } = useAppSelector(
     (state) => state.assignments,
   );
   const [submissionText, setSubmissionText] = useState("");
@@ -61,6 +72,9 @@ export function AssignmentDetailPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
+      {aiDetected && (
+        <AiDetectedDialog message={aiDetectedMessage} onClose={() => dispatch(dismissAiDetected())} />
+      )}
       <h1 className="text-2xl font-semibold text-gray-900">{assignment.title}</h1>
       <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
         <span>{assignment.pointsTotal} points</span>
@@ -77,7 +91,11 @@ export function AssignmentDetailPage() {
           </>
         )}
       </div>
-      {assignment.description && <p className="mt-4 text-gray-700">{assignment.description}</p>}
+      {assignment.description && (
+        <div className="mt-4">
+          <BriefMarkdown>{assignment.description}</BriefMarkdown>
+        </div>
+      )}
 
       {isGraded ? (
         <div className="mt-8 rounded-lg border border-gray-200 bg-white p-5">

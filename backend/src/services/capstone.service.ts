@@ -1,3 +1,4 @@
+import { assertSubmissionIsOriginal } from "./submissionOriginality.service";
 import * as emails from "../emails";
 import { Capstone, CapstoneSubmission, Course, Enrollment, User, sequelize } from "../models";
 import { ApiError } from "../utils/ApiError";
@@ -77,6 +78,9 @@ export async function submit(capstoneId: string, studentId: string, input: Submi
   if (capstone.fileRequired && !input.file) {
     throw ApiError.badRequest("A file is required for this capstone");
   }
+
+  // Blocks generated answers (typed or in the attached file) before anything is stored.
+  await assertSubmissionIsOriginal({ submissionText: input.submissionText, file: input.file });
 
   let filePath: string | undefined;
   if (input.file) {

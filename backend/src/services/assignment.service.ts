@@ -1,3 +1,4 @@
+import { assertSubmissionIsOriginal } from "./submissionOriginality.service";
 import * as emails from "../emails";
 import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment, User } from "../models";
 import { getEnrollmentForCourseAndStudent } from "./enrollment.service";
@@ -94,6 +95,9 @@ export async function submit(assignmentId: string, studentId: string, input: Sub
   if (assignment.fileRequired && !input.file) {
     throw ApiError.badRequest("A file is required for this assignment");
   }
+
+  // Blocks generated answers (typed or in the attached file) before anything is stored.
+  await assertSubmissionIsOriginal({ submissionText: input.submissionText, file: input.file });
 
   let filePath: string | undefined;
   if (input.file) {
