@@ -132,7 +132,7 @@ export async function start(quizId: string, studentId: string) {
 
   const unlocked = await areAllModuleLessonsCompleted(quiz.moduleId, studentId);
   if (!unlocked) {
-    throw ApiError.forbidden("Complete this week's lessons before you can start the quiz.");
+    throw ApiError.forbidden("Complete this day's lessons before you can start the quiz.");
   }
 
   const existing = await QuizAttempt.findOne({

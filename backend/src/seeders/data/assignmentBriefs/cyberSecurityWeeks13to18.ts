@@ -1,6 +1,6 @@
 import { BriefSpec } from "./briefBuilder";
 
-// Cyber Security Fundamentals, Weeks 13-18 (Oil & Gas, Banking, Telecommunications
+// Cyber Security Fundamentals, Days 13-18 (Oil & Gas, Banking, Telecommunications
 // pathways). Keyed by module week_number. All organisations are fictional.
 export const CYBER_WEEKS_13_TO_18: Record<number, BriefSpec> = {
   13: {

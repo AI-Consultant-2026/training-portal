@@ -229,7 +229,7 @@ module.exports = {
     const quizRows = CONTENT.map((c) => ({
       id: crypto.randomUUID(),
       module_id: moduleIdBySlug.get(c.slug),
-      title: "Week 1 Quiz",
+      title: "Day 1 Quiz",
       description: "A short auto-graded quiz covering this week's topics.",
       due_date: dueDate,
       time_limit_minutes: 15,

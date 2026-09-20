@@ -52,7 +52,7 @@ module.exports = {
        FROM quizzes q
        JOIN modules m ON m.id = q.module_id
        JOIN courses c ON c.id = m.course_id
-       WHERE c.slug IN (${slugs.map(() => "?").join(",")}) AND q.title = 'Week 1 Quiz'`,
+       WHERE c.slug IN (${slugs.map(() => "?").join(",")}) AND q.title = 'Day 1 Quiz'`,
       { replacements: slugs },
     );
     const quizIdBySlug = new Map(
@@ -88,7 +88,7 @@ module.exports = {
        FROM quizzes q
        JOIN modules m ON m.id = q.module_id
        JOIN courses c ON c.id = m.course_id
-       WHERE c.slug IN (${slugs.map(() => "?").join(",")}) AND q.title = 'Week 1 Quiz'`,
+       WHERE c.slug IN (${slugs.map(() => "?").join(",")}) AND q.title = 'Day 1 Quiz'`,
       { replacements: slugs },
     );
     const quizIds = (quizzes as { quiz_id: string }[]).map((q) => q.quiz_id);

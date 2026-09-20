@@ -345,7 +345,7 @@ export function CourseDetailPage() {
           const content = moduleContent[mod.id];
           return (
             <li key={mod.id} className="rounded-md border border-gray-200 bg-white p-3">
-              <span className="text-xs font-medium uppercase text-gray-400">Week {mod.weekNumber}</span>
+              <span className="text-xs font-medium uppercase text-gray-400">Day {mod.weekNumber}</span>
               <p className="font-medium text-gray-900">{mod.title}</p>
               <p className="text-sm text-gray-600">{mod.description}</p>
 
@@ -422,7 +422,7 @@ export function CourseDetailPage() {
                         <span
                           key={q.id}
                           className="text-sm font-medium text-gray-400"
-                          title="Complete this week's lessons to unlock the quiz"
+                          title="Complete this day's lessons to unlock the quiz"
                         >
                           Quiz: {q.title} (locked)
                         </span>
@@ -466,7 +466,7 @@ export function CourseDetailPage() {
 
               {content?.loadError && (
                 <div className="mt-3 border-t border-gray-100 pt-3">
-                  <Alert variant="error" message="Couldn't load this week's lessons, assignment, or quiz." />
+                  <Alert variant="error" message="Couldn't load this day's lessons, assignment, or quiz." />
                   <button
                     type="button"
                     onClick={() => loadModuleContent(mod.id)}

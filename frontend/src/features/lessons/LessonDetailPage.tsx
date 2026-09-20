@@ -285,7 +285,7 @@ function LessonNavLink({
       <button type="button" onClick={onLockedClick} className={className}>
         <span className="text-xs font-medium uppercase text-gray-400">
           {direction === "previous" ? "← Previous" : "Next →"}
-          {isNewWeek && ` · Week ${item.weekNumber}`}
+          {isNewWeek && ` · Day ${item.weekNumber}`}
         </span>
         <span className="mt-1 truncate text-sm font-medium text-gray-900">{item.title}</span>
       </button>
@@ -296,7 +296,7 @@ function LessonNavLink({
     <Link to={`/lessons/${item.id}`} className={className}>
       <span className="text-xs font-medium uppercase text-gray-400">
         {direction === "previous" ? "← Previous" : "Next →"}
-        {isNewWeek && ` · Week ${item.weekNumber}`}
+        {isNewWeek && ` · Day ${item.weekNumber}`}
       </span>
       <span className="mt-1 truncate text-sm font-medium text-gray-900">{item.title}</span>
     </Link>

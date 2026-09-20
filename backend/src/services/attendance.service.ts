@@ -343,7 +343,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
   function drawTableHeader() {
     doc.rect(margin, y, contentWidth, headerHeight).fill("#F2EEE3");
     doc.fillColor(CHARCOAL_SOFT).font("Helvetica-Bold").fontSize(8.5);
-    doc.text("WEEK", colX.week + 8, y + 7);
+    doc.text("DAY", colX.week + 8, y + 7);
     doc.text("LESSONS", colX.lessons + 8, y + 7);
     doc.text("QUIZ", colX.quiz + 8, y + 7);
     doc.text("ASSIGNMENT", colX.assignment + 8, y + 7);
@@ -413,7 +413,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
     .fillColor(INK)
     .font("Helvetica-Bold")
     .fontSize(10.5)
-    .text(`${data.weeksAttended} of ${data.weeks.length} weeks fully attended`, margin, y);
+    .text(`${data.weeksAttended} of ${data.weeks.length} days fully attended`, margin, y);
   y += 15;
 
   doc
@@ -432,7 +432,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
     .font("Helvetica-Oblique")
     .fontSize(8.5)
     .text(
-      "A week counts as attended only once its lessons, quiz, and assignment are all complete, as tracked by the Paleon Training platform -- not lesson viewing alone.",
+      "A day counts as attended only once its lessons, quiz, and assignment are all complete, as tracked by the Paleon Training platform -- not lesson viewing alone.",
       margin,
       y,
       { width: contentWidth, lineGap: 2 },

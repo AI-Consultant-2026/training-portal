@@ -186,7 +186,7 @@ describe("Quizzes", () => {
       .post(`/api/quizzes/${quiz.id}/start`)
       .set("Authorization", `Bearer ${token}`);
     expect(blocked.status).toBe(403);
-    expect(blocked.body.error.message).toMatch(/complete this week's lessons/i);
+    expect(blocked.body.error.message).toMatch(/complete this day's lessons/i);
 
     // Completing only one of the two lessons must still leave it locked.
     await request(app)

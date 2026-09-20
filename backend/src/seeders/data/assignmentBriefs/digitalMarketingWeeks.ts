@@ -1,6 +1,6 @@
 import { BriefSpec } from "./briefBuilder";
 
-// Digital Marketing, Weeks 1-8. Keyed by module week_number.
+// Digital Marketing, Days 1-8. Keyed by module week_number.
 export const DIGITAL_MARKETING_WEEKS: Record<number, BriefSpec> = {
   1: {
     overview:
@@ -225,7 +225,7 @@ export const DIGITAL_MARKETING_WEEKS: Record<number, BriefSpec> = {
       "Name the **specific business** for your capstone (real with permission, or a realistic fictional one) and describe it in 3-4 sentences.",
       "State the **single main business goal** the strategy will pursue, as a SMART goal (specific, measurable, achievable, relevant, time-bound).",
       "Choose **three or four channels** and explain briefly why each is included and why others are **excluded**.",
-      "Write a **one-paragraph audience summary** based on your Week 2 personas.",
+      "Write a **one-paragraph audience summary** based on your Day 2 personas.",
       "Set out your **budget split** by channel, your **timeline** in phases (for example weeks 1-2, 3-4, and so on) and the **KPIs** you will use to measure success for each channel.",
       "List **three risks** to your project (for example limited data or a small budget) and how you will manage each.",
     ],
@@ -241,7 +241,7 @@ export const DIGITAL_MARKETING_WEEKS: Record<number, BriefSpec> = {
       { name: "Clarity and realism", points: 10, description: "Concise, focused and achievable within the course." },
     ],
     example:
-      "*Worked example (extract) for an invented business, \"Zaria Print & Pack\". Do not reuse its wording.*\n\n**SMART goal.** *Generate 120 qualified quote requests from small businesses in Kaduna within 12 weeks, with a marketing budget of ₦400,000.*\n\n| Channel | Role in the funnel | Budget % | KPI | Timeline |\n|---|---|---|---|---|\n| Local SEO and Google Business profile | Awareness and consideration | 20% | Profile views and calls | Weeks 1-12 |\n| Google Search ads | Conversion | 45% | Cost per quote request | Weeks 3-12 |\n| Email | Nurture and follow-up | 15% | Quote-to-order rate | Weeks 4-12 |\n| WhatsApp Business | Conversion and retention | 20% | Response time and orders | Weeks 1-12 |\n\n**Excluded:** TikTok, because the target buyers (shop owners) are not looking for packaging on that platform.",
+      "*Worked example (extract) for an invented business, \"Zaria Print & Pack\". Do not reuse its wording.*\n\n**SMART goal.** *Generate 120 qualified quote requests from small businesses in Kaduna within 12 weeks, with a marketing budget of ₦400,000.*\n\n| Channel | Role in the funnel | Budget % | KPI | Timeline |\n|---|---|---|---|---|\n| Local SEO and Google Business profile | Awareness and consideration | 20% | Profile views and calls | Days 1-12 |\n| Google Search ads | Conversion | 45% | Cost per quote request | Days 3-12 |\n| Email | Nurture and follow-up | 15% | Quote-to-order rate | Days 4-12 |\n| WhatsApp Business | Conversion and retention | 20% | Response time and orders | Days 1-12 |\n\n**Excluded:** TikTok, because the target buyers (shop owners) are not looking for packaging on that platform.",
     tips: [
       "Resist the urge to add every channel. A tight scope shows judgement.",
       "Your goal must have a number and a deadline. \"Increase awareness\" is not SMART.",

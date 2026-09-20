@@ -1,6 +1,6 @@
 import { BriefSpec } from "./briefBuilder";
 
-// GIS and Drone Mapping, Weeks 1-8. Keyed by module week_number.
+// GIS and Drone Mapping, Days 1-8. Keyed by module week_number.
 export const GIS_WEEKS: Record<number, BriefSpec> = {
   1: {
     overview:
@@ -174,7 +174,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
       "Choose the **equipment** (drone type, camera, and positioning method such as **ground control points (GCPs)** or RTK/PPK) and justify it.",
       "Calculate the **flight height** needed for your target GSD using the formula, showing your working. State **front and side overlap**, flight speed, and estimate the **number of flights** needed.",
       "Plan your **ground control points**: how many, where they are placed and how they are surveyed.",
-      "Describe **weather and time conditions**, **safety and regulatory compliance** (linking to Week 5) and the **processing workflow** (software, quality checks, final checks before delivery).",
+      "Describe **weather and time conditions**, **safety and regulatory compliance** (linking to Day 5) and the **processing workflow** (software, quality checks, final checks before delivery).",
     ],
     deliverables: [
       "A specification document of **800-1,200 words** (.docx or .pdf preferred).",

@@ -1,6 +1,6 @@
 import { BriefSpec } from "./briefBuilder";
 
-// HSE Fundamentals (Oil & Gas), Weeks 1-8. Keyed by module week_number. All facilities,
+// HSE Fundamentals (Oil & Gas), Days 1-8. Keyed by module week_number. All facilities,
 // companies and people in scenarios are fictional.
 export const HSE_WEEKS: Record<number, BriefSpec> = {
   1: {

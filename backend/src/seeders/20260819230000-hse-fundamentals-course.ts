@@ -106,7 +106,7 @@ module.exports = {
       quizRows.push({
         id: quizId,
         module_id: moduleId,
-        title: `Week ${week.weekNumber} Quiz`,
+        title: `Day ${week.weekNumber} Quiz`,
         description: "A quiz covering this week's topics, drawn from a larger question bank.",
         due_date: dueDate,
         time_limit_minutes: TIME_LIMIT_MINUTES,

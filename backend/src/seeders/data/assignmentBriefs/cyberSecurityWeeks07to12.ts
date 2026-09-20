@@ -1,6 +1,6 @@
 import { BriefSpec } from "./briefBuilder";
 
-// Cyber Security Fundamentals, Weeks 7-12. Keyed by module week_number.
+// Cyber Security Fundamentals, Days 7-12. Keyed by module week_number.
 export const CYBER_WEEKS_7_TO_12: Record<number, BriefSpec> = {
   7: {
     overview:
