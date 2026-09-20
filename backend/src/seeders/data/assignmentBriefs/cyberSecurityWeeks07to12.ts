@@ -167,7 +167,7 @@ export const CYBER_WEEKS_7_TO_12: Record<number, BriefSpec> = {
       "List **at least six types of data** it holds (for example customer contact details, staff payroll, marketing brochures, medical or financial records, passwords, internal meeting notes).",
       "Classify each into the **four-tier scheme from this day's lesson** (from *Public* to *Restricted*). For each, give a one-sentence reason based on the **harm if exposed**.",
       "For each data type, state whether it must be encrypted **at rest**, **in transit**, or **both**, with a brief reason.",
-      "Write the **breach notification steps and timeline** the organisation must follow under the **Data Protection Act (NDPA)**: what triggers notification, who must be told and by when (including the time limit for the regulator, the NDPC), what information the notice must contain, and when affected individuals must also be told.",
+      "Write the **breach notification steps and timeline** the organisation must follow under the **Nigeria Data Protection Act (NDPA)**: what triggers notification, who must be told and by when (including the time limit for the regulator, the NDPC), what information the notice must contain, and when affected individuals must also be told.",
       "Add **three practical preparations** the organisation should make *before* a breach so it can meet the deadline.",
     ],
     deliverables: [

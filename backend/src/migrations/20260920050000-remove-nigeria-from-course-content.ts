@@ -3,13 +3,14 @@ import { applyBriefs } from "../seeders/data/assignmentBriefs/applyBriefs";
 import { nigeriaToCountry } from "../utils/nigeriaToCountry";
 
 // Course content no longer names the country: "Nigeria's" -> "the country's", "Nigeria" ->
-// "the country", and the word is dropped where it is part of a body's official name or an
-// address (see nigeriaToCountry). "Nigeria (NCAA)"-style mentions -- the word followed by a
-// bracketed aside -- are kept as written. Applies to the stored course text only -- lessons, module
-// and course descriptions, assignment/capstone briefs and quiz / video-checkpoint questions
-// and answers. Marketing pages, legal pages, the company address and payment logic are not
-// touched. Briefs are re-applied from the updated brief data (the earlier briefs migrations
-// have already run in production, so they can't deliver this edit themselves).
+// "the country". Kept as written (see nigeriaToCountry): "Nigerian", "Nigeria (NCAA)"-style
+// mentions followed by a bracketed aside, and official/place names such as "the Nigeria
+// Data Protection Commission", "Central Bank of Nigeria" and "Asaba, Nigeria". Applies to the
+// stored course text only -- lessons, module and course descriptions, assignment/capstone
+// briefs and quiz / video-checkpoint questions and answers. Marketing pages, legal pages,
+// the company address and payment logic are not touched. Briefs are re-applied from the
+// updated brief data (the earlier briefs migrations have already run in production, so they
+// can't deliver this edit themselves).
 const TEXT_COLUMNS: { table: string; columns: string[] }[] = [
   { table: "courses", columns: ["description"] },
   { table: "modules", columns: ["title", "description"] },
