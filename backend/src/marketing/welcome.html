@@ -617,7 +617,10 @@
   @media (max-width: 820px) {
     .register-grid { grid-template-columns: 1fr; }
   }
-  .register-copy .section-title { max-width: 14ch; margin-bottom: 16px; }
+  .register-copy .section-title { max-width: 22ch; margin-bottom: 16px; }
+  .register-copy .register-lede { font-size: 17px; font-weight: 600; color: var(--charcoal, #1F1B14); margin-bottom: 10px; }
+  .register-apply { margin-top: 30px; font-size: 20px; font-weight: 600; color: var(--charcoal, #1F1B14); }
+  .register-apply + p { margin-top: 6px; }
   .register-copy p { font-size: 15px; color: var(--charcoal-soft); line-height: 1.65; max-width: 46ch; }
   .register-list { margin-top: 26px; display: flex; flex-direction: column; gap: 12px; }
   .register-list-item { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
@@ -877,6 +880,92 @@
     </div>
   </div>
 
+  <!-- ============ REGISTER ============ -->
+  <section class="section register-section" id="register">
+    <div class="wrap">
+      <div class="register-grid">
+        <div class="register-copy reveal">
+          <span class="section-eyebrow">Get started</span>
+          <h2 class="section-title">&#127891; FREE training to the first 50 successful candidates</h2>
+          <p class="register-lede">Your opportunity to build practical digital skills starts here.</p>
+          <p>Paleon Training is offering FREE training to the first 50 successful candidates.</p>
+          <div class="register-list">
+            <div class="register-list-item">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><strong>Deadline: Wednesday 30 September 2026</strong></span>
+            </div>
+            <div class="register-list-item">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><strong>Spaces are limited.</strong></span>
+            </div>
+          </div>
+          <h3 class="register-apply">Apply for a Free Training Place</h3>
+          <p>Complete the form and tell us which course you&rsquo;re interested in.</p>
+        </div>
+
+        <form class="register-form reveal" id="registerForm" novalidate>
+          <div class="form-row">
+            <label class="form-label" for="regName">Full name</label>
+            <input class="form-input" type="text" id="regName" name="name" required autocomplete="name" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regEmail">Email address</label>
+            <input class="form-input" type="email" id="regEmail" name="email" required autocomplete="email" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regPhone">WhatsApp / phone number <span style="font-weight:400;color:var(--charcoal-soft,#6B6252);">(optional, for faster follow-up)</span></label>
+            <input class="form-input" type="tel" id="regPhone" name="phone" autocomplete="tel" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regCourse">Course you're interested in</label>
+            <select class="form-select" id="regCourse" name="course" required>
+              <option value="" disabled selected>Choose a course&hellip;</option>
+              <option>Cyber Security Fundamentals</option>
+              <option>GIS and Drone Mapping</option>
+              <option>Digital Marketing</option>
+              <option>HSE Fundamentals</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regUniversity">Status</label>
+            <!-- Keep in sync with backend/src/validators/auth.validators.ts's
+                 REGISTRATION_STATUSES -- this static page can't import that shared list,
+                 so it's a manually-kept copy. -->
+            <select class="form-select" id="regUniversity" name="university" required>
+              <option selected>Graduate</option>
+              <option>Current Student</option>
+              <option>Non-Graduate</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regSource">How did you hear about us?</label>
+            <select class="form-select" id="regSource" name="source" required>
+              <option value="" disabled selected>Choose one&hellip;</option>
+              <option>NYSC Camp</option>
+              <option>WhatsApp/Telegram Group</option>
+              <option>Campus Ambassador</option>
+              <option>Social Media Ads</option>
+              <option>Search/Website</option>
+              <option>Referral</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button class="btn btn-signal" type="submit" id="registerSubmit" style="width:100%;">Submit</button>
+          <p class="form-note">We'll reply by email &mdash; usually within one working day.</p>
+          <div class="form-success" id="formSuccess">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M6.5 10l2.5 2.5 4.5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Thanks &mdash; that's been sent. We'll be in touch shortly.</span>
+          </div>
+          <div class="form-error" id="formError">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M10 6v5M10 14h.01" stroke-linecap="round"/></svg>
+            <span>Something went wrong sending that &mdash; please try again, or email us directly.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ COURSES ============ -->
   <section class="section section-paper" id="courses">
     <div class="wrap">
@@ -1071,94 +1160,6 @@
         payment is confirmed &mdash; allow a few working days for airtime or data. Paleon Training builds
         your skills and employability; it doesn&rsquo;t guarantee a job. Self-referrals and duplicate
         accounts don&rsquo;t qualify, and we may adjust or end the programme at any time.</p>
-    </div>
-  </section>
-
-  <!-- ============ REGISTER ============ -->
-  <section class="section register-section" id="register">
-    <div class="wrap">
-      <div class="register-grid">
-        <div class="register-copy reveal">
-          <span class="section-eyebrow">Get started</span>
-          <h2 class="section-title">Tell us where you want to go.</h2>
-          <p>Register your interest and we'll get back to you with start dates, payment options, and answers
-            to whatever's stopping you from signing up already.</p>
-          <div class="register-list">
-            <div class="register-list-item">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>A real person replies &mdash; usually within one working day</span>
-            </div>
-            <div class="register-list-item">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>No obligation &mdash; this just gets the conversation started</span>
-            </div>
-            <div class="register-list-item">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>Prefer to send us an email? Email: <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a></span>
-            </div>
-          </div>
-        </div>
-
-        <form class="register-form reveal" id="registerForm" novalidate>
-          <div class="form-row">
-            <label class="form-label" for="regName">Full name</label>
-            <input class="form-input" type="text" id="regName" name="name" required autocomplete="name" />
-          </div>
-          <div class="form-row">
-            <label class="form-label" for="regEmail">Email address</label>
-            <input class="form-input" type="email" id="regEmail" name="email" required autocomplete="email" />
-          </div>
-          <div class="form-row">
-            <label class="form-label" for="regPhone">WhatsApp / phone number <span style="font-weight:400;color:var(--charcoal-soft,#6B6252);">(optional, for faster follow-up)</span></label>
-            <input class="form-input" type="tel" id="regPhone" name="phone" autocomplete="tel" />
-          </div>
-          <div class="form-row">
-            <label class="form-label" for="regCourse">Course you're interested in</label>
-            <select class="form-select" id="regCourse" name="course" required>
-              <option value="" disabled selected>Choose a course&hellip;</option>
-              <option>Cyber Security Fundamentals</option>
-              <option>GIS and Drone Mapping</option>
-              <option>Digital Marketing</option>
-              <option>HSE Fundamentals</option>
-              <option>Not sure yet</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label class="form-label" for="regUniversity">Status</label>
-            <!-- Keep in sync with backend/src/validators/auth.validators.ts's
-                 REGISTRATION_STATUSES -- this static page can't import that shared list,
-                 so it's a manually-kept copy. -->
-            <select class="form-select" id="regUniversity" name="university" required>
-              <option selected>Graduate</option>
-              <option>Current Student</option>
-              <option>Non-Graduate</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label class="form-label" for="regSource">How did you hear about us?</label>
-            <select class="form-select" id="regSource" name="source" required>
-              <option value="" disabled selected>Choose one&hellip;</option>
-              <option>NYSC Camp</option>
-              <option>WhatsApp/Telegram Group</option>
-              <option>Campus Ambassador</option>
-              <option>Social Media Ads</option>
-              <option>Search/Website</option>
-              <option>Referral</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <button class="btn btn-signal" type="submit" id="registerSubmit" style="width:100%;">Submit</button>
-          <p class="form-note">We'll reply by email &mdash; usually within one working day.</p>
-          <div class="form-success" id="formSuccess">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M6.5 10l2.5 2.5 4.5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Thanks &mdash; that's been sent. We'll be in touch shortly.</span>
-          </div>
-          <div class="form-error" id="formError">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M10 6v5M10 14h.01" stroke-linecap="round"/></svg>
-            <span>Something went wrong sending that &mdash; please try again, or email us directly.</span>
-          </div>
-        </form>
-      </div>
     </div>
   </section>
 
