@@ -51,9 +51,11 @@ const COMPONENTS = {
   strong: (props: React.ComponentPropsWithoutRef<"strong">) => (
     <strong className="font-semibold text-gray-900" {...props} />
   ),
-  a: (props: React.ComponentPropsWithoutRef<"a">) => (
-    <a className="text-blue-600 hover:underline" target="_blank" rel="noreferrer" {...props} />
-  ),
+  // Links are deliberately rendered as plain text. Some briefs contain sample phishing
+  // messages with fake (but possibly registrable) web addresses; markdown would otherwise
+  // auto-link them into clickable anchors, which is exactly what a phishing exercise must
+  // never do.
+  a: ({ children }: React.ComponentPropsWithoutRef<"a">) => <span className="break-all">{children}</span>,
 };
 
 export function BriefMarkdown({ children }: { children: string }) {

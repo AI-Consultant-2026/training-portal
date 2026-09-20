@@ -43,6 +43,17 @@ describe("AssignmentDetailPage", () => {
     expect(screen.getByRole("columnheader", { name: "Criterion" })).toBeInTheDocument();
   });
 
+  it("never turns links in a brief (such as a sample phishing URL) into clickable anchors", async () => {
+    vi.mocked(assignmentsApi.fetchAssignment).mockResolvedValue({
+      ...ASSIGNMENT,
+      description: "Sample message:\n\n> Verify now: http://bank-verify.example/login and mail <help@bank-verify.example>",
+    });
+    vi.mocked(assignmentsApi.fetchMySubmissionForAssignment).mockResolvedValue(null);
+    renderPage();
+    expect(await screen.findByText(/bank-verify\.example\/login/)).toBeInTheDocument();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
   it("shows the blocking 'AI-Generated Answer Detected' dialog when the server rejects the submission", async () => {
     mockLoad();
     vi.mocked(assignmentsApi.submitAssignment).mockRejectedValue({
