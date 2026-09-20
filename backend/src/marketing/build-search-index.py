@@ -30,7 +30,7 @@ URLS = [
     "gis-careers-nigeria", "drone-mapping-careers-nigeria",
     "cybersecurity-oil-and-gas-nigeria", "renewable-energy-careers-nigeria",
     "oil-gas-banking-telecoms-digital-skills",
-    "six-digital-skills-nigerian-graduates", "graduate-to-job-ready-nigeria",
+    "four-digital-skills-nigerian-graduates", "graduate-to-job-ready-nigeria",
     "paleon-training-six-course-digital-skills-curriculum",
     "paleon-training-employability-content-hub",
     "digital-skills-nigeria-career-intelligence-guide",
@@ -57,7 +57,7 @@ URLS = [
     "hse-jobs-in-nigeria-oil-and-gas-companies",
     # Career Intelligence Hub -- Tier 2/3 supporting articles (73-article batch,
     # completing the 94-article content database alongside the 19 Tier 1 above;
-    # 1 remaining row, /six-digital-skills-nigerian-graduates, already existed.
+    # 1 remaining row, /four-digital-skills-nigerian-graduates, already existed.
     "digital-skills-for-students-nigeria",
     "free-vs-paid-digital-skills-training-nigeria",
     "tech-skills-vs-degree-nigeria",

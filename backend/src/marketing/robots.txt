@@ -115,7 +115,7 @@ Allow: /renewable-energy-job-opportunities-guide
 Allow: /gis-for-solar-site-assessment-nigeria
 Allow: /renewable-energy-vs-oil-and-gas-career-comparison
 Allow: /oil-gas-banking-telecoms-digital-skills
-Allow: /six-digital-skills-nigerian-graduates
+Allow: /four-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria
 Allow: /paleon-training-six-course-digital-skills-curriculum
 Allow: /paleon-training-employability-content-hub

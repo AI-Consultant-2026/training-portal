@@ -560,8 +560,13 @@ export function createApp() {
   app.get("/oil-gas-banking-telecoms-digital-skills", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-gas-banking-telecoms-digital-skills.html"));
   });
+  app.get("/four-digital-skills-nigerian-graduates", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "four-digital-skills-nigerian-graduates.html"));
+  });
+  // Renamed from /six-digital-skills-nigerian-graduates when the catalog dropped to four
+  // courses -- a permanent redirect keeps old links, bookmarks and search results working.
   app.get("/six-digital-skills-nigerian-graduates", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "six-digital-skills-nigerian-graduates.html"));
+    res.redirect(301, "/four-digital-skills-nigerian-graduates");
   });
   app.get("/graduate-to-job-ready-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "graduate-to-job-ready-nigeria.html"));
