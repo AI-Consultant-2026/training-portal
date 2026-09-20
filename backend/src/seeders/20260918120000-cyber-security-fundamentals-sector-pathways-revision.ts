@@ -15,7 +15,7 @@ import {
 } from "./data/curriculumCyberSecurityV1";
 
 // This course is LIVE with real enrolled/paying students, some of whom may already have
-// taken quizzes. Weeks 1-12 already exist, so -- exactly like the HSE Fundamentals
+// taken quizzes. Days 1-12 already exist, so -- exactly like the HSE Fundamentals
 // revision (20260918100000) -- they are UPDATEd in place by their existing ids, never
 // deleted and reinserted, for everything a student could already hold a foreign key
 // against: quiz_responses.question_id -> quiz_questions.id ON DELETE CASCADE (verified
@@ -26,18 +26,18 @@ import {
 // are matched by (module_id + order), never by title, since 5 of the 12 week titles
 // change here.
 //
-// Weeks 13-18 don't exist yet, so they're straightforward fresh inserts -- nothing
+// Days 13-18 don't exist yet, so they're straightforward fresh inserts -- nothing
 // references rows that don't exist yet.
 //
 // 5 of the 12 core weeks (1, 2, 5, 6, 8, 10) are retargeted to an entirely different
 // topic. Their pre-existing video_url (attached by 20260807180000, matched by title at
 // the time it ran, but keyed by lesson id from then on) is now wrong for the new topic,
 // so it's explicitly nulled rather than left pointing at a mismatched video -- a missing
-// video is fine, a wrong one is not. Week 1 order 2 additionally has 3 video_checkpoints
+// video is fine, a wrong one is not. Day 1 order 2 additionally has 3 video_checkpoints
 // (interactive in-video quiz questions, from 20260801020100) asking CIA-Triad-specific
-// questions; since Week 1 order 2 becomes a Vulnerability Management lesson with no CIA
+// questions; since Day 1 order 2 becomes a Vulnerability Management lesson with no CIA
 // Triad content, those checkpoints are deleted outright rather than left orphaned. (The
-// CIA Triad concept isn't lost from the course -- it's still taught in Week 2 order 1,
+// CIA Triad concept isn't lost from the course -- it's still taught in Day 2 order 1,
 // which is unaffected by this revision and keeps its own separate video.)
 
 const COURSE_SLUG = "cyber-security-fundamentals";
@@ -197,7 +197,7 @@ async function insertNewWeeks(queryInterface: QueryInterface, weeks: WeekSeed[],
         id: quizId,
         module_id: moduleId,
         title: `Day ${week.weekNumber} Quiz`,
-        description: "A quiz covering this week's topics, drawn from a larger question bank.",
+        description: "A quiz covering this day's topics, drawn from a larger question bank.",
         due_date: dueDate,
         time_limit_minutes: 20,
         passing_score: 70,

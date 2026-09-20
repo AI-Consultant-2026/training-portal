@@ -132,7 +132,7 @@ export function streamCertificatePdf(data: CertificateData, destination: NodeJS.
     .fillColor(CHARCOAL_SOFT)
     .font("Helvetica")
     .fontSize(10)
-    .text(`${data.durationWeeks}-WEEK PROGRAM`, 0, margin + 302, { align: "center", characterSpacing: 1.5 });
+    .text(`${data.durationWeeks}-DAY PROGRAM`, 0, margin + 302, { align: "center", characterSpacing: 1.5 });
 
   doc
     .fillColor(CHARCOAL_SOFT)

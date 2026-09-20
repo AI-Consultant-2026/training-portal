@@ -257,7 +257,7 @@ export function CourseDetailPage() {
       )}
       <h1 className="text-2xl font-semibold text-gray-900">{course.title}</h1>
       <p className="mt-2 text-sm text-gray-500">
-        {course.level} &middot; {course.durationWeeks} weeks
+        {course.level} &middot; {course.durationWeeks} days
       </p>
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={DESCRIPTION_MARKDOWN_COMPONENTS}>
         {course.description}

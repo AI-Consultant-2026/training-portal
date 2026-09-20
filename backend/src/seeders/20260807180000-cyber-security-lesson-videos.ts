@@ -12,9 +12,9 @@ const COURSE_SLUG = "cyber-security-fundamentals";
 // YouTube oEmbed endpoint (curl https://www.youtube.com/oembed?url=...&format=json)
 // before being included here, mirroring 20260806010000-social-media-lesson-videos.ts,
 // 20260807150000-renewable-energy-lesson-videos.ts, 20260807160000-gis-lesson-videos.ts,
-// and 20260807170000-digital-marketing-lesson-videos.ts. Week 1 Lesson 2 ("The CIA Triad")
-// already had a video from an earlier seeder and is left untouched. Note: Week 1 Lesson 2
-// and Week 2 Lesson 1 share the identical title "The CIA Triad" (Week 2's lesson is a
+// and 20260807170000-digital-marketing-lesson-videos.ts. Day 1 Lesson 2 ("The CIA Triad")
+// already had a video from an earlier seeder and is left untouched. Note: Day 1 Lesson 2
+// and Day 2 Lesson 1 share the identical title "The CIA Triad" (Day 2's lesson is a
 // legitimate deeper revisit covering trade-offs between the three goals, not a duplicate) --
 // the lookup below still resolves each unambiguously because it matches on weekNumber too.
 const CONTENT: LessonVideoSeed[] = [

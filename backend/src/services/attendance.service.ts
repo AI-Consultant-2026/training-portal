@@ -314,7 +314,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
 
   infoLine(leftX, infoTop, "Candidate", data.studentName);
   infoLine(leftX, infoTop + 40, "Course", data.courseTitle);
-  infoLine(rightX, infoTop, "Programme length", `${data.durationWeeks} weeks`);
+  infoLine(rightX, infoTop, "Programme length", `${data.durationWeeks} days`);
   infoLine(rightX, infoTop + 40, "Enrolled", fmtDate(data.enrolledDate));
   infoLine(leftX, infoTop + 80, "Status", STATUS_LABELS[data.status] ?? data.status);
   infoLine(rightX, infoTop + 80, "Record generated", fmtDate(data.generatedAt));

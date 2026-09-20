@@ -10,7 +10,7 @@ export const CYBER_WEEKS_13_TO_18: Record<number, BriefSpec> = {
       "Choose **one fictional Nigerian oil and gas facility** (for example an onshore flow station, an offshore platform, a gas processing plant or a products terminal) and describe it in 2-3 sentences.",
       "List its **IT systems** (for example email, finance, HR and staff laptops) and its **OT systems** (for example SCADA, programmable logic controllers (PLCs), pressure and flow sensors, safety shutdown systems) in **two separate lists**, with one line saying what each does.",
       "Identify **at least three risks specific to the OT environment** (not generic IT risks). For each, name the threat, the weakness, and what the *physical or operational* consequence could be.",
-      "For **at least one** of those risks, explain **in your own words** why the usual priority order for **Confidentiality, Integrity and Availability** changes in OT, as this week's first lesson described, and why *safety* sits above all three.",
+      "For **at least one** of those risks, explain **in your own words** why the usual priority order for **Confidentiality, Integrity and Availability** changes in OT, as this day's first lesson described, and why *safety* sits above all three.",
       "Draw or describe a **simple map** showing where the IT network ends and the OT network begins, and mark **one point where they connect** (for example a data historian) and how that connection should be controlled.",
     ],
     deliverables: [
@@ -102,7 +102,7 @@ export const CYBER_WEEKS_13_TO_18: Record<number, BriefSpec> = {
     materials:
       "**Scenario.** A fictional Nigerian digital bank, *Halcyon Digital Bank*, is building a customer support dashboard. It lets any support agent search for a customer and see their **full transaction history, phone number, address, BVN-linked details and account balance** on one screen. The head of customer service wants it launched in three weeks to reduce complaint times.",
     tasks: [
-      "Identify **at least four distinct risks** the dashboard creates. Draw on earlier weeks: access control, data protection, insider risk, social engineering and monitoring.",
+      "Identify **at least four distinct risks** the dashboard creates. Draw on earlier days: access control, data protection, insider risk, social engineering and monitoring.",
       "For **each risk**, propose **one specific control** (for example role-based access so agents only see what they need, masking of sensitive fields, logging and review of every lookup, or approval for high-risk views).",
       "Present the risks and controls in a table: *Risk | Why it matters | Control*.",
       "Choose the **single most serious risk** and write a short paragraph of **100-150 words** explaining it to a **non-technical bank manager** who is eager to launch quickly. Explain the danger in plain language and propose a way to launch safely rather than just saying \"no\".",

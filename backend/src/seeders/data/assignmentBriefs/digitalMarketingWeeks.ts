@@ -8,7 +8,7 @@ export const DIGITAL_MARKETING_WEEKS: Record<number, BriefSpec> = {
     tasks: [
       "Choose **one real business** with a visible online presence (a Nigerian business is preferred, for example a restaurant, fashion brand, school, salon, fintech or online shop). You must be able to **find evidence** of its marketing online.",
       "Describe the business in 2-3 sentences: what it sells, to whom, and its website or main social pages.",
-      "Map the business's **digital channels to the funnel stages** taught this week (for example Awareness, Consideration, Conversion, Retention or Loyalty). For every channel you list, give **evidence**: a link, a post, an ad, or a screenshot showing it is really used.",
+      "Map the business's **digital channels to the funnel stages** taught this day (for example Awareness, Consideration, Conversion, Retention or Loyalty). For every channel you list, give **evidence**: a link, a post, an ad, or a screenshot showing it is really used.",
       "Identify **at least two gaps**: funnel stages where the business does little or nothing, or channels that seem mismatched to the stage. Explain why each gap costs the business customers.",
       "Make **three practical recommendations** (each 2-3 sentences) to improve the funnel, saying which stage each fixes and how you would know it worked (a metric).",
     ],
@@ -226,7 +226,7 @@ export const DIGITAL_MARKETING_WEEKS: Record<number, BriefSpec> = {
       "State the **single main business goal** the strategy will pursue, as a SMART goal (specific, measurable, achievable, relevant, time-bound).",
       "Choose **three or four channels** and explain briefly why each is included and why others are **excluded**.",
       "Write a **one-paragraph audience summary** based on your Day 2 personas.",
-      "Set out your **budget split** by channel, your **timeline** in phases (for example weeks 1-2, 3-4, and so on) and the **KPIs** you will use to measure success for each channel.",
+      "Set out your **budget split** by channel, your **timeline** in phases (for example days 1-2, 3-4, and so on) and the **KPIs** you will use to measure success for each channel.",
       "List **three risks** to your project (for example limited data or a small budget) and how you will manage each.",
     ],
     deliverables: [

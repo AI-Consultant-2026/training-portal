@@ -11,7 +11,7 @@ const COURSE_SLUG = "renewable-energy-digital-systems";
 // Every video below was found via web search and confirmed real + embeddable via the
 // YouTube oEmbed endpoint (curl https://www.youtube.com/oembed?url=...&format=json)
 // before being included here, mirroring 20260806010000-social-media-lesson-videos.ts.
-// Week 1 Lesson 2 ("Solar PV Technology Overview") already had a video assigned from an
+// Day 1 Lesson 2 ("Solar PV Technology Overview") already had a video assigned from an
 // earlier seeder and is left untouched by not including it here.
 const CONTENT: LessonVideoSeed[] = [
   {

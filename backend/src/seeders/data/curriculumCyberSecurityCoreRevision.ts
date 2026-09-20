@@ -1,6 +1,6 @@
 import { WeekSeed } from "./curriculumTypes";
 
-// Core-module revision (weeks 1-12) for the Cyber Security Fundamentals course rewrite.
+// Core-module revision (days 1-12) for the Cyber Security Fundamentals course rewrite.
 // This file is consumed by the integration migration, not by the original course seeder --
 // it holds UPDATE data for rows that already exist in production, matched by week_number
 // and lesson order, never by title (titles change here).
@@ -28,7 +28,7 @@ These three words get used interchangeably in casual conversation, but precision
 
 ## Common Cyberattacks, at a Glance
 
-You will study each of these in real depth in later weeks, so this is deliberately just an orientation map. **Phishing** tricks people into handing over credentials or clicking something malicious. **Malware** is software designed to damage, disrupt, or gain unauthorised access. **Denial-of-service** floods a system until real users can't get through. **Credential theft** takes a password or access token, then uses it to walk in the front door instead of breaking a window. Notice that most of these don't require exotic technical genius -- they exploit basic oversights, over and over, in different organisations, in different countries.
+You will study each of these in real depth in later days, so this is deliberately just an orientation map. **Phishing** tricks people into handing over credentials or clicking something malicious. **Malware** is software designed to damage, disrupt, or gain unauthorised access. **Denial-of-service** floods a system until real users can't get through. **Credential theft** takes a password or access token, then uses it to walk in the front door instead of breaking a window. Notice that most of these don't require exotic technical genius -- they exploit basic oversights, over and over, in different organisations, in different countries.
 
 ## Attack Surfaces and Threat Actors
 
@@ -74,7 +74,7 @@ Picture a small logistics company running customer records and vehicle-tracking 
 
 ## Bringing It Together
 
-This lesson covered vulnerability management as a repeating, never-finished cycle, the practical difference between insider and external threats, and how to start thinking in terms of acceptable risk rather than an impossible goal of eliminating every weakness. This week's assignment asks you to research three real-world data breaches and identify which attack vectors made them possible -- exactly the pattern-recognition skill this week has been building. Next week moves from vocabulary into one of the single most common ways attackers actually get in: passwords and authentication.`,
+This lesson covered vulnerability management as a repeating, never-finished cycle, the practical difference between insider and external threats, and how to start thinking in terms of acceptable risk rather than an impossible goal of eliminating every weakness. This day's assignment asks you to research three real-world data breaches and identify which attack vectors made them possible -- exactly the pattern-recognition skill this day has been building. Next day moves from vocabulary into one of the single most common ways attackers actually get in: passwords and authentication.`,
       },
     ],
     assignmentTitle: "Real-World Breach Attack Vector Analysis",
@@ -82,9 +82,9 @@ This lesson covered vulnerability management as a repeating, never-finished cycl
       "Research three real-world data breaches (any sector, any country) and, for each one, identify the specific attack vector that made it possible, which vulnerability it exploited, and which threat actor type was likely responsible.",
     fileRequired: true,
     quizQuestions: [
-      { text: "What is a 'threat', as defined in this week's lesson?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Any potential danger, such as a criminal group or human error", isCorrect: true }, { text: "A weakness that could be exploited", isCorrect: false }, { text: "A dollar figure representing annual loss", isCorrect: false }] },
+      { text: "What is a 'threat', as defined in this day's lesson?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Any potential danger, such as a criminal group or human error", isCorrect: true }, { text: "A weakness that could be exploited", isCorrect: false }, { text: "A dollar figure representing annual loss", isCorrect: false }] },
       { text: "What is a 'vulnerability'?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "A specific weakness a threat could exploit", isCorrect: true }, { text: "Any potential danger facing an organisation", isCorrect: false }, { text: "A type of authorised penetration test", isCorrect: false }] },
-      { text: "How is risk informally expressed in this week's lesson?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Risk equals likelihood multiplied by impact", isCorrect: true }, { text: "Risk equals threats divided by vulnerabilities", isCorrect: false }, { text: "Risk equals cost minus budget", isCorrect: false }] },
+      { text: "How is risk informally expressed in this day's lesson?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Risk equals likelihood multiplied by impact", isCorrect: true }, { text: "Risk equals threats divided by vulnerabilities", isCorrect: false }, { text: "Risk equals cost minus budget", isCorrect: false }] },
       { text: "What is an organisation's 'attack surface'?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Every possible point where an unauthorised person could try to get in or extract data", isCorrect: true }, { text: "Only the organisation's public website", isCorrect: false }, { text: "The total number of employees at a company", isCorrect: false }] },
       { text: "Why are insider threats often especially hard to defend against?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "They often already have legitimate, trusted access, past many controls built to stop outsiders", isCorrect: true }, { text: "They are always more technically skilled than external attackers", isCorrect: false }, { text: "Insider threats are purely theoretical and rarely occur", isCorrect: false }] },
       { text: "What does the lesson identify as the single most exploited vulnerability in almost every organisation?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "A person, under time pressure, trusting something that looks legitimate", isCorrect: true }, { text: "Outdated firewall hardware", isCorrect: false }, { text: "Lack of a company logo on the website", isCorrect: false }] },
@@ -159,7 +159,7 @@ A banking customer whose account has MFA enabled is dramatically harder to defra
 
 ## Bringing It Together
 
-This lesson covered the distinction between authentication and authorisation, why multi-factor authentication closes most of the gap a strong password alone leaves open, and how identity verification and secure authentication practices show up, in different shapes, across banking, telecom, and oil and gas. Next week moves to the attack that most often defeats even a strong password in the first place: phishing and social engineering.`,
+This lesson covered the distinction between authentication and authorisation, why multi-factor authentication closes most of the gap a strong password alone leaves open, and how identity verification and secure authentication practices show up, in different shapes, across banking, telecom, and oil and gas. Next day moves to the attack that most often defeats even a strong password in the first place: phishing and social engineering.`,
       },
     ],
     assignmentTitle: "Authentication Hardening Recommendation",
@@ -198,7 +198,7 @@ This lesson covered the distinction between authentication and authorisation, wh
         title: "The OSI Model",
         order: 1,
         durationMinutes: 25,
-        content: `You cannot defend a network you don't understand, so before touching a single security tool, this lesson covers how data actually moves from one computer to another. Fair warning: this involves an abstract model that can feel dry at first. Stick with it -- it becomes concrete fast once real tools enter the picture next week.
+        content: `You cannot defend a network you don't understand, so before touching a single security tool, this lesson covers how data actually moves from one computer to another. Fair warning: this involves an abstract model that can feel dry at first. Stick with it -- it becomes concrete fast once real tools enter the picture next day.
 
 ## Seven Layers, One Model
 
@@ -242,7 +242,7 @@ This is **defence in depth** in practice: never relying on a single control, lay
 
 ## Bringing It Together
 
-This lesson covered TCP/IP's four layers, the three-way handshake, and network segmentation as a practical, high-value defence -- directly connecting back to defence in depth. Next week builds the actual defences on top of this structure: firewalls, intrusion detection, VPNs, and monitoring.`,
+This lesson covered TCP/IP's four layers, the three-way handshake, and network segmentation as a practical, high-value defence -- directly connecting back to defence in depth. Next day builds the actual defences on top of this structure: firewalls, intrusion detection, VPNs, and monitoring.`,
       },
     ],
     assignmentTitle: "Small Organisation Network Architecture Design",
@@ -281,7 +281,7 @@ This lesson covered TCP/IP's four layers, the three-way handshake, and network s
         title: "Firewalls, IDS/IPS, and DDoS",
         order: 1,
         durationMinutes: 30,
-        content: `Last week covered how networks are structured. This week builds the actual defences on top of that structure. By the end of this lesson you'll know the tools that sit at the front line of almost every organisation's network security, and the attack they're built to withstand.
+        content: `Last day covered how networks are structured. This day builds the actual defences on top of that structure. By the end of this lesson you'll know the tools that sit at the front line of almost every organisation's network security, and the attack they're built to withstand.
 
 ## Firewalls: The Checkpoint
 
@@ -325,7 +325,7 @@ This complements IDS and IPS directly: those systems automate detection at scale
 
 ## Bringing Network Security Together
 
-Across these two weeks: firewalls control what's allowed through, IDS and IPS detect and respond to malicious activity, DDoS defences protect availability specifically, VPNs and secure remote access protect data and connections as they travel, and monitoring tools give visibility into what's actually happening. Every organisation, regardless of size, benefits from thinking through all of these together. Next week turns to the attack that most often gets past all of them anyway, by targeting people instead of systems: phishing and social engineering.`,
+Across these two days: firewalls control what's allowed through, IDS and IPS detect and respond to malicious activity, DDoS defences protect availability specifically, VPNs and secure remote access protect data and connections as they travel, and monitoring tools give visibility into what's actually happening. Every organisation, regardless of size, benefits from thinking through all of these together. Next day turns to the attack that most often gets past all of them anyway, by targeting people instead of systems: phishing and social engineering.`,
       },
     ],
     assignmentTitle: "Firewall Rule and Remote Access Documentation",
@@ -412,7 +412,7 @@ Picture a finance officer at a mid-sized telecom receiving an email that appears
 
 ## Bringing It Together
 
-This lesson covered smishing and vishing as phishing's cousins beyond email, social engineering and credential harvesting as the broader pattern beneath all of it, and the layered combination of training, verification procedures, technical controls, and blame-free reporting that actually builds organisational resistance. Next week turns to what often happens after a successful phishing attempt delivers its payload: malware and ransomware.`,
+This lesson covered smishing and vishing as phishing's cousins beyond email, social engineering and credential harvesting as the broader pattern beneath all of it, and the layered combination of training, verification procedures, technical controls, and blame-free reporting that actually builds organisational resistance. Next day turns to what often happens after a successful phishing attempt delivers its payload: malware and ransomware.`,
       },
     ],
     assignmentTitle: "Phishing Email Identification and Response Plan",
@@ -451,7 +451,7 @@ This lesson covered smishing and vishing as phishing's cousins beyond email, soc
         title: "Malware: Types, Delivery, and Endpoint Protection",
         order: 1,
         durationMinutes: 25,
-        content: `Phishing and social engineering, covered last week, are very often the delivery mechanism. This week covers what frequently gets delivered once someone clicks: malware, and its most costly modern form, ransomware.
+        content: `Phishing and social engineering, covered last day, are very often the delivery mechanism. This day covers what frequently gets delivered once someone clicks: malware, and its most costly modern form, ransomware.
 
 ## What Malware Actually Is
 
@@ -501,7 +501,7 @@ Law enforcement and security professionals generally advise against paying: it f
 
 ## Bringing It Together
 
-This lesson covered how ransomware works, including the added pressure of double extortion, how it spreads, and how its real-world impact plays out differently across banking, telecom, and oil and gas operations. Next week moves from threats and attacks into the discipline that decides where limited security effort actually gets spent: basic cybersecurity risk management.`,
+This lesson covered how ransomware works, including the added pressure of double extortion, how it spreads, and how its real-world impact plays out differently across banking, telecom, and oil and gas operations. Next day moves from threats and attacks into the discipline that decides where limited security effort actually gets spent: basic cybersecurity risk management.`,
       },
     ],
     assignmentTitle: "Ransomware Scenario Response Plan",
@@ -540,7 +540,7 @@ This lesson covered how ransomware works, including the added pressure of double
         title: "Identifying Assets and Assessing Risk",
         order: 1,
         durationMinutes: 25,
-        content: `Every lesson so far has focused on a specific threat or defence in the moment. This week shifts up a level, into the discipline that decides where all of that effort actually gets pointed: risk management.
+        content: `Every lesson so far has focused on a specific threat or defence in the moment. This day shifts up a level, into the discipline that decides where all of that effort actually gets pointed: risk management.
 
 ## No Organisation Can Defend Against Everything
 
@@ -552,7 +552,7 @@ Risk identification starts before any threat or vulnerability discussion, with *
 
 ## Threats, Vulnerabilities, and Risk -- Applied
 
-You already have this vocabulary from Module 1: a threat is a potential danger, a vulnerability is a specific weakness, and risk is what emerges when the two meet, informally expressed as **likelihood multiplied by impact**. This week applies that vocabulary systematically, asset by asset, rather than case by case.
+You already have this vocabulary from Module 1: a threat is a potential danger, a vulnerability is a specific weakness, and risk is what emerges when the two meet, informally expressed as **likelihood multiplied by impact**. This day applies that vocabulary systematically, asset by asset, rather than case by case.
 
 ## Assessing Likelihood and Impact
 
@@ -594,7 +594,7 @@ One more concept worth a beginner-level introduction here: even a well-managed r
 
 ## Bringing It Together
 
-This lesson covered risk registers as living documents, third-party risk as a category too many organisations underweight, and how compliance frameworks like the NDPA, GDPR, and PCI-DSS turn some security decisions from a choice into a legal or contractual obligation. Next week turns from managing risk in general to a specific, high-value control this entire course keeps returning to: access control and identity management.`,
+This lesson covered risk registers as living documents, third-party risk as a category too many organisations underweight, and how compliance frameworks like the NDPA, GDPR, and PCI-DSS turn some security decisions from a choice into a legal or contractual obligation. Next day turns from managing risk in general to a specific, high-value control this entire course keeps returning to: access control and identity management.`,
       },
     ],
     assignmentTitle: "Asset and Third-Party Risk Register",
@@ -633,7 +633,7 @@ This lesson covered risk registers as living documents, third-party risk as a ca
         title: "Least Privilege, Role-Based Access, and Privileged Accounts",
         order: 1,
         durationMinutes: 25,
-        content: `Module 2 introduced authentication (proving who you are) and authorisation (what you're allowed to do) as two distinct questions. This week is entirely about the second one -- because getting authorisation wrong, even with perfect authentication, is one of the most common root causes behind real security incidents.
+        content: `Module 2 introduced authentication (proving who you are) and authorisation (what you're allowed to do) as two distinct questions. This day is entirely about the second one -- because getting authorisation wrong, even with perfect authentication, is one of the most common root causes behind real security incidents.
 
 ## The Principle of Least Privilege
 
@@ -673,7 +673,7 @@ Of the three, "leaver" deserves the most emphasis, because it's the stage most o
 
 ## Contractor Access
 
-Contractors, vendors, and other third parties covered under "third-party risk" last week need the same joiner/mover/leaver discipline applied, often with extra care, because they're frequently less visible to an organisation's normal HR-driven access processes -- there's no employee record automatically triggering an access review when a contract ends. A well-run contractor access process grants access scoped tightly to the specific engagement, time-limited to match the contract's actual duration, and revoked automatically when that engagement ends, rather than depending on someone remembering to do it manually months later.
+Contractors, vendors, and other third parties covered under "third-party risk" last day need the same joiner/mover/leaver discipline applied, often with extra care, because they're frequently less visible to an organisation's normal HR-driven access processes -- there's no employee record automatically triggering an access review when a contract ends. A well-run contractor access process grants access scoped tightly to the specific engagement, time-limited to match the contract's actual duration, and revoked automatically when that engagement ends, rather than depending on someone remembering to do it manually months later.
 
 ## Why This Matters Especially in Oil & Gas
 
@@ -681,7 +681,7 @@ This is a genuine, industry-specific pattern worth naming clearly here, ahead of
 
 ## Bringing It Together
 
-This lesson covered the insider threat through an access-control lens, the joiner/mover/leaver lifecycle with particular emphasis on why "leaver" is so often mishandled, and contractor access as a category needing the same discipline, often with extra rigor given how easily it slips outside normal HR-driven processes -- especially relevant to oil and gas, where this course returns to the topic in depth. Next week turns from planned access control to what happens when something goes wrong anyway: incident response.`,
+This lesson covered the insider threat through an access-control lens, the joiner/mover/leaver lifecycle with particular emphasis on why "leaver" is so often mishandled, and contractor access as a category needing the same discipline, often with extra rigor given how easily it slips outside normal HR-driven processes -- especially relevant to oil and gas, where this course returns to the topic in depth. Next day turns from planned access control to what happens when something goes wrong anyway: incident response.`,
       },
     ],
     assignmentTitle: "Access Control Policy and Contractor Offboarding Checklist",
@@ -708,7 +708,7 @@ This lesson covered the insider threat through an access-control lens, the joine
       { text: "In one or two sentences, explain why contractor access in oil & gas gets particular attention in this lesson.", type: "short_answer", points: 1, explanation: "Specialist contractors often need remote access to monitoring or control-adjacent systems for a limited project duration, and access left active after the engagement ends is a commonly cited real-world failure, with consequences that can reach beyond a typical data breach.", answers: [] },
       { text: "What should happen to an employee's old permissions when they move to a new role?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "The old, no-longer-relevant permissions should be removed, not simply left in place alongside the new ones", isCorrect: true }, { text: "They should remain permanently active regardless of the new role", isCorrect: false }, { text: "They should be transferred unchanged to the employee's replacement", isCorrect: false }] },
       { text: "What kind of monitoring is typically applied to privileged accounts beyond what a standard account gets?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Closer logging and monitoring of what the account actually does", isCorrect: true }, { text: "No monitoring at all, since privileged users are assumed fully trustworthy", isCorrect: false }, { text: "Monitoring only during the account's first week of use", isCorrect: false }] },
-      { text: "What connects this week's access control content to Module 2's authentication/authorisation distinction?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "This week focuses entirely on authorisation -- what an authenticated user is actually allowed to do", isCorrect: true }, { text: "This week replaces the need for authentication entirely", isCorrect: false }, { text: "The two topics are unrelated", isCorrect: false }] },
+      { text: "What connects this day's access control content to Module 2's authentication/authorisation distinction?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "This day focuses entirely on authorisation -- what an authenticated user is actually allowed to do", isCorrect: true }, { text: "This day replaces the need for authentication entirely", isCorrect: false }, { text: "The two topics are unrelated", isCorrect: false }] },
     ],
   },
   {
@@ -724,7 +724,7 @@ This lesson covered the insider threat through an access-control lens, the joine
 
 ## What Counts as an Incident
 
-An **incident** is any event that threatens the confidentiality, integrity, or availability of a system or data -- from the CIA Triad concepts you've been applying since Week 1. Not every incident is a dramatic breach: a phishing email a few employees clicked, a laptop infected with malware, an account showing signs of compromise, are all genuine incidents deserving a structured response, not just the headline-making ones.
+An **incident** is any event that threatens the confidentiality, integrity, or availability of a system or data -- from the CIA Triad concepts you've been applying since Day 1. Not every incident is a dramatic breach: a phishing email a few employees clicked, a laptop infected with malware, an account showing signs of compromise, are all genuine incidents deserving a structured response, not just the headline-making ones.
 
 ## 1. Preparation
 
@@ -778,7 +778,7 @@ A bank's SIEM correlating an unusual login pattern against sudden large transfer
 
 ## Bringing It Together
 
-This lesson covered SIEM systems and the alert-tuning trade-off, and how incidents get classified by type and prioritised by severity. This week's assignment asks you to build an incident response playbook for a malware infection, applying the full six-phase lifecycle. Next week turns to what keeps every individual employee -- not just the security team -- genuinely equipped to prevent incidents in the first place: security awareness.`,
+This lesson covered SIEM systems and the alert-tuning trade-off, and how incidents get classified by type and prioritised by severity. This day's assignment asks you to build an incident response playbook for a malware infection, applying the full six-phase lifecycle. Next day turns to what keeps every individual employee -- not just the security team -- genuinely equipped to prevent incidents in the first place: security awareness.`,
       },
     ],
     assignmentTitle: "Incident Response Playbook: Malware Infection",
@@ -863,7 +863,7 @@ Across this module: security is not a specialist's job alone. Cyber hygiene, pro
 
 ## Bringing It Together
 
-This lesson covered reporting suspicious activity as the single most valuable habit a non-specialist can build, remote-working security considerations like public Wi-Fi and screen visibility, and physical security awareness including tailgating as a low-tech but genuinely effective attack. Next week turns to infrastructure most organisations no longer fully control themselves: cloud security fundamentals.`,
+This lesson covered reporting suspicious activity as the single most valuable habit a non-specialist can build, remote-working security considerations like public Wi-Fi and screen visibility, and physical security awareness including tailgating as a low-tech but genuinely effective attack. Next day turns to infrastructure most organisations no longer fully control themselves: cloud security fundamentals.`,
       },
     ],
     assignmentTitle: "Employee Security Awareness Guide",
@@ -950,7 +950,7 @@ A Nigerian bank running core banking functions partly on cloud infrastructure ne
 
 ## Bringing It Together
 
-This lesson covered the shared responsibility model, why customer misconfiguration causes so many real cloud incidents, and IAM, monitoring, and configuration assessment as the tools customers use to meet their side of the responsibility. Cloud security comes down to understanding exactly where the dividing line sits for whatever service model is in use, then actually doing the work on your side of it. Next week covers the data itself -- classification, encryption, and what protects it directly, wherever it happens to live.`,
+This lesson covered the shared responsibility model, why customer misconfiguration causes so many real cloud incidents, and IAM, monitoring, and configuration assessment as the tools customers use to meet their side of the responsibility. Cloud security comes down to understanding exactly where the dividing line sits for whatever service model is in use, then actually doing the work on your side of it. Next day covers the data itself -- classification, encryption, and what protects it directly, wherever it happens to live.`,
       },
     ],
     assignmentTitle: "Cloud Misconfiguration Risk Assessment",
@@ -1067,7 +1067,7 @@ This lesson covered breach notification requirements under GDPR and Nigeria's ND
       { text: "In one or two sentences, explain the difference between encryption at rest and encryption in transit.", type: "short_answer", points: 1, explanation: "Encryption at rest protects data while it's stored, like on a hard drive or in a database, while encryption in transit protects data while it's moving between systems, like over HTTPS or a VPN.", answers: [] },
       { text: "In one or two sentences, explain why an organisation's data protection efforts before a breach matter to regulators and customers, not just the response after.", type: "short_answer", points: 1, explanation: "Regulators and customers judge an organisation on whether it took data protection seriously beforehand (classification, encryption), not only on how it responds once a breach has already happened.", answers: [] },
       { text: "What is the relationship between data classification and encryption, per the lesson's closing summary?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "They work as a pair -- classification decides how much protection is needed, encryption delivers it", isCorrect: true }, { text: "They are unrelated and address completely separate problems", isCorrect: false }, { text: "Encryption makes data classification unnecessary", isCorrect: false }] },
-      { text: "What does this course move on to immediately after completing this core, transferable foundation?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Three dedicated sector pathways showing how these principles operate inside real Nigerian industries, starting with Oil & Gas", isCorrect: true }, { text: "A repeat of the same twelve weeks with no new content", isCorrect: false }, { text: "An unrelated course on an entirely different subject", isCorrect: false }] },
+      { text: "What does this course move on to immediately after completing this core, transferable foundation?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Three dedicated sector pathways showing how these principles operate inside real Nigerian industries, starting with Oil & Gas", isCorrect: true }, { text: "A repeat of the same twelve days with no new content", isCorrect: false }, { text: "An unrelated course on an entirely different subject", isCorrect: false }] },
       { text: "Which tier of data classification would an organisation's internal meeting schedule most likely fall under?", type: "multiple_choice", points: 1, explanation: null, answers: [{ text: "Internal", isCorrect: true }, { text: "Restricted", isCorrect: false }, { text: "Public", isCorrect: false }] },
     ],
   },

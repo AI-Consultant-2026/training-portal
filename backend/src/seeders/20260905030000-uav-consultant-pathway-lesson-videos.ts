@@ -25,7 +25,7 @@ const COURSE_SLUG = "uav-drone-consultant-pathway";
 // and 20260905060000-uav-consultant-pathway-lesson-videos-3.ts for the passes made under
 // the no-cap rule, which cover most of the lessons this first pass left uncovered. The
 // full, current reasoning per lesson lives in curriculumUav.ts's "Recommended Videos"
-// sections and in Week 15's "Your UAV Consultant Toolkit" lesson.
+// sections and in Day 15's "Your UAV Consultant Toolkit" lesson.
 const CONTENT: LessonVideoSeed[] = [
   {
     weekNumber: 1,

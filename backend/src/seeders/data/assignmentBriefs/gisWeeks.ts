@@ -199,7 +199,7 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
 
   7: {
     overview:
-      "A thematic map is a story about one topic on a map. Done well, it makes a decision-maker say *\"I see the problem.\"* Done badly, it confuses. You will create a **series of thematic maps** for a real Nigerian State resource and apply the spatial analysis and design techniques from this week.",
+      "A thematic map is a story about one topic on a map. Done well, it makes a decision-maker say *\"I see the problem.\"* Done badly, it confuses. You will create a **series of thematic maps** for a real Nigerian State resource and apply the spatial analysis and design techniques from this day.",
     tasks: [
       "Choose **one theme** for one State: **water**, **agriculture** or **infrastructure**. State the **question** your map series answers (for example *\"Which villages are more than 2 km from a health centre?\"*).",
       "Gather **open data** (for example from GRID3 Nigeria, OpenStreetMap, DIVA-GIS, WorldPop or satellite data) and list every source.",

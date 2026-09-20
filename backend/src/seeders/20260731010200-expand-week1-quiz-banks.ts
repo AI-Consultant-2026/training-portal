@@ -159,7 +159,7 @@ const EXPANSIONS: CourseExpansion[] = [
         { text: "Facebook's launch year versus TikTok's launch year", isCorrect: false },
         { text: "Reach versus impressions", isCorrect: false },
       ]),
-      mc("What is this week's assignment, according to the lecture?", [
+      mc("What is this day's assignment, according to the lecture?", [
         { text: "Analyze three brands on social media and document observations about their strategy", isCorrect: true },
         { text: "Build a full 8-week content calendar", isCorrect: false },
         { text: "Design a paid advertising campaign", isCorrect: false },
@@ -231,7 +231,7 @@ const EXPANSIONS: CourseExpansion[] = [
         { text: "A paid, subscription-only GIS software package", isCorrect: false },
         { text: "A type of drone used for aerial surveys", isCorrect: false },
       ]),
-      mc("What is the goal of this week's very first practical exercise in QGIS, according to the lecture?", [
+      mc("What is the goal of this day's very first practical exercise in QGIS, according to the lecture?", [
         { text: "Simply comfort and familiarity with the interface itself", isCorrect: true },
         { text: "Producing a polished, publication-ready final map", isCorrect: false },
         { text: "Calibrating a drone's GPS accuracy", isCorrect: false },

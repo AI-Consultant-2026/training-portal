@@ -230,7 +230,7 @@ module.exports = {
       id: crypto.randomUUID(),
       module_id: moduleIdBySlug.get(c.slug),
       title: "Day 1 Quiz",
-      description: "A short auto-graded quiz covering this week's topics.",
+      description: "A short auto-graded quiz covering this day's topics.",
       due_date: dueDate,
       time_limit_minutes: 15,
       passing_score: 70,

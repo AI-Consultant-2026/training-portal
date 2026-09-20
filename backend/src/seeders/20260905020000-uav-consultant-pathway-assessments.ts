@@ -25,7 +25,7 @@ interface AssessmentSeed {
   questions: QuestionSeed[];
 }
 
-// 7 milestone assessments, each attached to the module (week) of the last week in the
+// 7 milestone assessments, each attached to the module (week) of the last day in the
 // range it covers. Each bank has 15 questions; a real attempt draws QUESTION_COUNT (10)
 // at random (shuffleQuestions: true). Weekly self-testing itself lives in each lesson's
 // own "Knowledge Check" section (see curriculumUav.ts) -- these are the graded,
@@ -34,7 +34,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "Beginner Assessment",
     weekNumber: 2,
-    description: "Covers Weeks 1-2: UAV/UAS terminology, aircraft categories, components, and flight principles.",
+    description: "Covers Days 1-2: UAV/UAS terminology, aircraft categories, components, and flight principles.",
     questions: [
       { text: "What does UAS stand for?", type: "multiple_choice", explanation: null, answers: [{ text: "Uncrewed Aircraft System", isCorrect: true }, { text: "Universal Aerial Sensor", isCorrect: false }, { text: "Unmanned Airspace Standard", isCorrect: false }] },
       { text: "What is a UAV's payload?", type: "multiple_choice", explanation: null, answers: [{ text: "Whatever it carries to do its job, e.g. a camera or sensor", isCorrect: true }, { text: "The battery only", isCorrect: false }, { text: "The remote control", isCorrect: false }] },
@@ -56,7 +56,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "Navigation Assessment",
     weekNumber: 4,
-    description: "Covers Weeks 3-4: GPS/GNSS, latitude/longitude/altitude, coordinate systems, waypoints, headings, bearings, and distance.",
+    description: "Covers Days 3-4: GPS/GNSS, latitude/longitude/altitude, coordinate systems, waypoints, headings, bearings, and distance.",
     questions: [
       { text: "Which term correctly refers to ALL satellite navigation systems, not just the American one?", type: "multiple_choice", explanation: null, answers: [{ text: "GPS", isCorrect: false }, { text: "GNSS", isCorrect: true }, { text: "HDOP", isCorrect: false }] },
       { text: "A lower HDOP value generally means:", type: "multiple_choice", explanation: null, answers: [{ text: "A more accurate position fix", isCorrect: true }, { text: "A less accurate position fix", isCorrect: false }, { text: "No effect on accuracy", isCorrect: false }] },
@@ -78,7 +78,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "UAV Systems Assessment",
     weekNumber: 7,
-    description: "Covers Weeks 5-7: flight controllers, autopilots, firmware, telemetry, GCS, MAVLink, PX4, ArduPilot, and simulation.",
+    description: "Covers Days 5-7: flight controllers, autopilots, firmware, telemetry, GCS, MAVLink, PX4, ArduPilot, and simulation.",
     questions: [
       { text: "Which term describes the physical circuit board, not the software running on it?", type: "multiple_choice", explanation: null, answers: [{ text: "Autopilot", isCorrect: false }, { text: "Firmware", isCorrect: false }, { text: "Flight controller", isCorrect: true }] },
       { text: "What is firmware?", type: "multiple_choice", explanation: null, answers: [{ text: "The specific version of software installed and running on the flight controller", isCorrect: true }, { text: "The aircraft's frame material", isCorrect: false }, { text: "A type of sensor", isCorrect: false }] },
@@ -100,7 +100,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "Programming Assessment",
     weekNumber: 9,
-    description: "Covers Weeks 8-9: Python foundations, coordinate/GPS data handling, files, MAVSDK, and telemetry logging.",
+    description: "Covers Days 8-9: Python foundations, coordinate/GPS data handling, files, MAVSDK, and telemetry logging.",
     questions: [
       { text: "Which Python structure would you use to group a latitude, longitude, and altitude that all belong to ONE waypoint?", type: "multiple_choice", explanation: null, answers: [{ text: "A list", isCorrect: false }, { text: "A dictionary", isCorrect: true }, { text: "A function", isCorrect: false }] },
       { text: "A function must be written fresh every time you need to use it, and can't be reused.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -122,7 +122,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "Mission-Planning Assessment",
     weekNumber: 11,
-    description: "Covers Weeks 10-11: client requirements, mission design (altitude/overlap/geofence), simulation, safety, risk, and Nigeria's UAV regulation.",
+    description: "Covers Days 10-11: client requirements, mission design (altitude/overlap/geofence), simulation, safety, risk, and Nigeria's UAV regulation.",
     questions: [
       { text: "What is an Area of Interest (AOI)?", type: "multiple_choice", explanation: null, answers: [{ text: "The specific geographic boundary a job needs to cover", isCorrect: true }, { text: "The client's budget", isCorrect: false }, { text: "The UAV's flight controller", isCorrect: false }] },
       { text: "\"We need a drone\" is usually a complete and sufficient starting point for designing a mission plan.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -144,7 +144,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "GIS Assessment",
     weekNumber: 13,
-    description: "Covers Weeks 12-13: GIS foundations, QGIS, coordinate reference systems, photogrammetry, orthomosaics, DEMs, and UAV sensors.",
+    description: "Covers Days 12-13: GIS foundations, QGIS, coordinate reference systems, photogrammetry, orthomosaics, DEMs, and UAV sensors.",
     questions: [
       { text: "Which geometry type would best represent a farm's boundary?", type: "multiple_choice", explanation: null, answers: [{ text: "Point", isCorrect: false }, { text: "Line", isCorrect: false }, { text: "Polygon", isCorrect: true }] },
       { text: "A real GIS map is typically built from a single layer containing every kind of feature mixed together.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -166,7 +166,7 @@ const ASSESSMENTS: AssessmentSeed[] = [
   {
     title: "UAV Consultancy Assessment",
     weekNumber: 14,
-    description: "Covers Week 14: UAV applications across industries and the full UAV consulting framework, equipment selection, costs, and deliverables.",
+    description: "Covers Day 14: UAV applications across industries and the full UAV consulting framework, equipment selection, costs, and deliverables.",
     questions: [
       { text: "Which sensor is most associated with spotting crop stress before it's visible to the naked eye?", type: "multiple_choice", explanation: null, answers: [{ text: "LiDAR", isCorrect: false }, { text: "Multispectral", isCorrect: true }, { text: "Thermal", isCorrect: false }] },
       { text: "This course considers UAV weaponisation or targeting a person to be within the scope of legitimate, lawful UAV consultancy.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },

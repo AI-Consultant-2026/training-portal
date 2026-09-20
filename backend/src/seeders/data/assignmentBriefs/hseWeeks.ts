@@ -8,7 +8,7 @@ export const HSE_WEEKS: Record<number, BriefSpec> = {
       "New starters on an oil and gas site are often surprised by how many organisations have a say in how they work. You are writing a short **HSE landscape brief** for a new colleague: what HSE means on a Nigerian oil and gas operation, who regulates it and how that regulation affects everyday decisions.",
     tasks: [
       "In your own words, explain **what HSE means** (health, safety and environment) and why it is treated as a core business function in oil and gas, not an optional extra. Give **one example each** for health, safety and environment.",
-      "Name **at least three of the regulatory bodies** covered this week (NUPRC, NMDPRA, NESREA, NOSDRA). For each, state what it oversees, and **which side of the wellhead** it primarily covers (or that it applies across both).",
+      "Name **at least three of the regulatory bodies** covered this day (NUPRC, NMDPRA, NESREA, NOSDRA). For each, state what it oversees, and **which side of the wellhead** it primarily covers (or that it applies across both).",
       "Choose **one regulator** and describe **one real way its oversight would change a day-to-day decision on a production site**. Be concrete: say who makes the decision, what they must check, and what would happen if they ignored the rule.",
       "Write a **short closing paragraph (80-120 words)** explaining why a site worker who knows *which* regulator to expect matters for safety, not just paperwork.",
     ],
@@ -24,7 +24,7 @@ export const HSE_WEEKS: Record<number, BriefSpec> = {
       { name: "Clarity", points: 10, description: "Readable brief with a complete table." },
     ],
     example:
-      "*Worked example (extract) using an invented regulator so it shows the format only. Do not reuse its wording. Your answer must use the real regulators from this week.*\n\n| Regulator | What it oversees | Side |\n|---|---|---|\n| Example Marine Authority (invented) | Ship-to-shore transfer of fuel at jetties | Downstream |\n\n**How oversight changes a decision.** *Before a tanker discharges at a jetty, the terminal supervisor must confirm that the transfer plan and equipment checks have been approved under the Authority's rules. If the supervisor skips the check to save time, the terminal can lose its licence for the jetty, and a hose failure would have no approved emergency plan. So the supervisor holds the transfer until the paperwork and equipment inspection are complete.*",
+      "*Worked example (extract) using an invented regulator so it shows the format only. Do not reuse its wording. Your answer must use the real regulators from this day.*\n\n| Regulator | What it oversees | Side |\n|---|---|---|\n| Example Marine Authority (invented) | Ship-to-shore transfer of fuel at jetties | Downstream |\n\n**How oversight changes a decision.** *Before a tanker discharges at a jetty, the terminal supervisor must confirm that the transfer plan and equipment checks have been approved under the Authority's rules. If the supervisor skips the check to save time, the terminal can lose its licence for the jetty, and a hose failure would have no approved emergency plan. So the supervisor holds the transfer until the paperwork and equipment inspection are complete.*",
     tips: [
       "Do not just list the regulators' names. Explain what each one *does* and where it stops.",
       "\"They make sure everything is safe\" is too vague. Name the specific activity or decision affected.",
@@ -39,7 +39,7 @@ export const HSE_WEEKS: Record<number, BriefSpec> = {
       "**Simple risk matrix to use.** Score each hazard on **likelihood (1-5)** and **severity (1-5)**, then multiply.\n\n| Score | Risk level | Action |\n|---|---|---|\n| 1-4 | Low | Manage by routine procedures |\n| 5-9 | Medium | Add controls; supervisor awareness |\n| 10-16 | High | Do not start until controls are in place |\n| 20-25 | Extreme | Do not do the work; redesign |",
     tasks: [
       "Choose **one realistic oil and gas work scenario** (for example a pipeline maintenance task, a rig floor operation, or tank cleaning). Describe it in 3-4 sentences: the task, the location, who is involved and the conditions.",
-      "Identify **at least four hazards** that fall across **at least three different hazard categories** from this week's lesson. Include **at least one occupational health hazard** (for example noise, heat stress, chemical exposure or manual handling).",
+      "Identify **at least four hazards** that fall across **at least three different hazard categories** from this day's lesson. Include **at least one occupational health hazard** (for example noise, heat stress, chemical exposure or manual handling).",
       "For each hazard, **score likelihood and severity**, calculate the **risk level** using the matrix, and note **who could be harmed and how**.",
       "For each hazard, propose **one control measure** and state **which level of the hierarchy of controls** it belongs to (elimination, substitution, engineering controls, administrative controls or PPE).",
       "Re-score each hazard **after the control** to show the **residual risk**. Explain briefly any hazard that remains High.",
@@ -155,7 +155,7 @@ export const HSE_WEEKS: Record<number, BriefSpec> = {
     materials:
       "**Incident (fictional).** During a routine planned maintenance job at a pump station, a fitter (Emeka) was replacing a worn guard on a **standby pump**. While his right hand was inside the guard, another operator, who was starting up the pump for a quick test on the next shift's instructions, switched it on. Emeka's hand was caught briefly. He was treated at the site clinic with **four stitches** and returned to light duties the **next day**. No one was aware that Emeka was working on the pump. The pump's isolation point had **no lock or tag**, and the job card listed the task as \"quick guard change, no isolation needed\".",
     tasks: [
-      "**Classify the incident** using this week's classification scheme (near miss, first-aid case, medical treatment case, lost-time injury and so on). Justify your choice using the facts, and say **who should be notified**, internally and (if relevant) externally.",
+      "**Classify the incident** using this day's classification scheme (near miss, first-aid case, medical treatment case, lost-time injury and so on). Justify your choice using the facts, and say **who should be notified**, internally and (if relevant) externally.",
       "Apply the **5 Whys** technique. Write the chain: *Why did the injury happen? ... because ... Why? ...* Continue until you reach a cause you can fix, usually five levels. Make sure each answer is supported by a fact from the scenario or is clearly marked as an assumption.",
       "State the **root cause** in one sentence, and explain why it is a root cause and not just the immediate cause.",
       "Propose **one corrective action** that addresses the root cause specifically. Explain why it would work, who owns it and when it should be done.",
@@ -183,11 +183,11 @@ export const HSE_WEEKS: Record<number, BriefSpec> = {
 
   7: {
     overview:
-      "The first hour of a spill response decides whether it stays a manageable incident or becomes an environmental disaster, especially near waterways. You will draft a **spill response protocol** for a small pipeline leak near a creek, following the **7-step framework** taught this week.",
+      "The first hour of a spill response decides whether it stays a manageable incident or becomes an environmental disaster, especially near waterways. You will draft a **spill response protocol** for a small pipeline leak near a creek, following the **7-step framework** taught this day.",
     materials:
       "**Scenario (fictional).** A patrol operator at *Ogboinbiri Delta Pipeline* discovers oil seeping from a small pipeline joint about **60 m from a creek** used by a nearby fishing community. He estimates the leak at **a few barrels per hour**. It is 06:30 on a calm morning. The nearest response equipment store is **30 minutes away by road**. The site supervisor is at the base, 45 minutes away.",
     tasks: [
-      "Write the protocol as a **table with the seven steps** from this week's framework: **detect and confirm, notify, assess, contain, recover, clean up, document**.",
+      "Write the protocol as a **table with the seven steps** from this day's framework: **detect and confirm, notify, assess, contain, recover, clean up, document**.",
       "For **each step**, state **what is done**, **who is responsible** (by role), **what resources or equipment are needed** and a **target time** (for example within 15 minutes).",
       "In the **notify** step, list **who is told** (internal and external, including the regulator responsible for oil spills and, where relevant, the affected community) and in what order.",
       "In the **contain** and **recover** steps, explain how you would protect the creek and what equipment you would use (for example booms, absorbents, pumps and storage), and how the waste is handled.",

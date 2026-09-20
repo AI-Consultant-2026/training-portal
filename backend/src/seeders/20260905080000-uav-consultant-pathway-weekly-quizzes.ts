@@ -25,9 +25,9 @@ interface WeeklyQuizSeed {
   questions: QuestionSeed[];
 }
 
-// 7 weekly quizzes, one each for weeks 1, 3, 5, 6, 8, 10, 12 -- the 7 module weeks NOT
+// 7 weekly quizzes, one each for days 1, 3, 5, 6, 8, 10, 12 -- the 7 module weeks NOT
 // already covered by a milestone assessment in 20260905020000-uav-consultant-pathway-assessments.ts
-// (weeks 2, 4, 7, 9, 11, 13, 14). Together the two sets cover every content week 1-14 with
+// (days 2, 4, 7, 9, 11, 13, 14). Together the two sets cover every content day 1-14 with
 // no gaps and no overlaps. Unlike the milestone assessments (which each span a range of
 // weeks), each of these covers only that single week's own 2 lessons -- a narrower scope,
 // so a smaller bank (11 questions) and questionCount (8) than the milestones' 15/10.
@@ -37,7 +37,7 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
   {
     title: "UAV Foundations I Quiz",
     weekNumber: 1,
-    description: "Covers Week 1: UAV/UAS/drone terminology, payload, and the four main UAV categories.",
+    description: "Covers Day 1: UAV/UAS/drone terminology, payload, and the four main UAV categories.",
     questions: [
       { text: "What does UAS stand for?", type: "multiple_choice", explanation: null, answers: [{ text: "Uncrewed Aircraft System", isCorrect: true }, { text: "Unified Aerial Sensor", isCorrect: false }, { text: "Universal Autopilot System", isCorrect: false }] },
       { text: "What is a UAV's payload?", type: "multiple_choice", explanation: null, answers: [{ text: "Whatever it carries to do its job, e.g. a camera or sensor", isCorrect: true }, { text: "Its battery only", isCorrect: false }, { text: "Its remote control", isCorrect: false }] },
@@ -55,7 +55,7 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
   {
     title: "Navigation I Quiz",
     weekNumber: 3,
-    description: "Covers Week 3: GPS/GNSS, trilateration, HDOP, RTK, latitude, longitude, altitude, and AGL vs. AMSL.",
+    description: "Covers Day 3: GPS/GNSS, trilateration, HDOP, RTK, latitude, longitude, altitude, and AGL vs. AMSL.",
     questions: [
       { text: "Which term correctly refers to ALL satellite navigation systems, not just the American one?", type: "multiple_choice", explanation: null, answers: [{ text: "GPS", isCorrect: false }, { text: "GNSS", isCorrect: true }, { text: "WGS84", isCorrect: false }] },
       { text: "What does HDOP describe?", type: "multiple_choice", explanation: null, answers: [{ text: "How good the current satellite geometry is for an accurate position fix", isCorrect: true }, { text: "The aircraft's battery health", isCorrect: false }, { text: "The camera's resolution", isCorrect: false }] },
@@ -73,7 +73,7 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
   {
     title: "UAV Systems Quiz",
     weekNumber: 5,
-    description: "Covers Week 5: flight controllers, autopilots, firmware, flight modes, telemetry, and Ground Control Stations.",
+    description: "Covers Day 5: flight controllers, autopilots, firmware, flight modes, telemetry, and Ground Control Stations.",
     questions: [
       { text: "Which term describes the physical circuit board, not the software running on it?", type: "multiple_choice", explanation: null, answers: [{ text: "Autopilot", isCorrect: false }, { text: "Firmware", isCorrect: false }, { text: "Flight controller", isCorrect: true }] },
       { text: "What is firmware?", type: "multiple_choice", explanation: null, answers: [{ text: "The specific version of software installed and running on the flight controller", isCorrect: true }, { text: "A type of GPS sensor", isCorrect: false }, { text: "The physical frame of the aircraft", isCorrect: false }] },
@@ -91,7 +91,7 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
   {
     title: "Communication & Software Quiz",
     weekNumber: 6,
-    description: "Covers Week 6: MAVLink, and the PX4 and ArduPilot autopilot projects.",
+    description: "Covers Day 6: MAVLink, and the PX4 and ArduPilot autopilot projects.",
     questions: [
       { text: "What problem does MAVLink primarily solve?", type: "multiple_choice", explanation: null, answers: [{ text: "Different systems being unable to communicate with each other", isCorrect: true }, { text: "Battery life", isCorrect: false }, { text: "Propeller design", isCorrect: false }] },
       { text: "MAVLink is a private protocol owned by a single UAV manufacturer.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -109,7 +109,7 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
   {
     title: "Programming I Quiz",
     weekNumber: 8,
-    description: "Covers Week 8: Python foundations (variables, lists, dictionaries, functions) and coordinates/CSV files in Python.",
+    description: "Covers Day 8: Python foundations (variables, lists, dictionaries, functions) and coordinates/CSV files in Python.",
     questions: [
       { text: "Which Python structure would you use to group a latitude, longitude, and altitude that all belong to ONE waypoint?", type: "multiple_choice", explanation: null, answers: [{ text: "A list", isCorrect: false }, { text: "A dictionary", isCorrect: true }, { text: "A function", isCorrect: false }] },
       { text: "A function must be written fresh every time you need to use it, and can't be reused.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -121,13 +121,13 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
       { text: "What is a \"parameter\" in the context of a Python function?", type: "multiple_choice", explanation: null, answers: [{ text: "An input value the function accepts", isCorrect: true }, { text: "The function's name", isCorrect: false }, { text: "A type of loop", isCorrect: false }] },
       { text: "In the lesson's `is_valid_nigeria_coordinate` function, why does it return `lat_ok and lon_ok` rather than just `lat_ok`?", type: "short_answer", explanation: "A coordinate is only genuinely valid if BOTH latitude and longitude fall within range -- a coordinate could have a fine latitude but a wildly wrong longitude and still be a bad coordinate overall.", answers: [] },
       { text: "What does the Haversine formula calculate?", type: "multiple_choice", explanation: null, answers: [{ text: "The true straight-line distance between two coordinates, accounting for Earth's curvature", isCorrect: true }, { text: "A drone's remaining battery life", isCorrect: false }, { text: "The exact area of a polygon", isCorrect: false }] },
-      { text: "Which Python module/library is used to read and write CSV files, as covered in this week's lesson?", type: "multiple_choice", explanation: null, answers: [{ text: "csv", isCorrect: true }, { text: "math", isCorrect: false }, { text: "mavsdk", isCorrect: false }] },
+      { text: "Which Python module/library is used to read and write CSV files, as covered in this day's lesson?", type: "multiple_choice", explanation: null, answers: [{ text: "csv", isCorrect: true }, { text: "math", isCorrect: false }, { text: "mavsdk", isCorrect: false }] },
     ],
   },
   {
     title: "Mission Planning Quiz",
     weekNumber: 10,
-    description: "Covers Week 10: turning a client requirement into a mission plan, and altitude, overlap, and geofence design.",
+    description: "Covers Day 10: turning a client requirement into a mission plan, and altitude, overlap, and geofence design.",
     questions: [
       { text: "What is an Area of Interest (AOI)?", type: "multiple_choice", explanation: null, answers: [{ text: "The specific geographic boundary a job needs to cover", isCorrect: true }, { text: "The client's budget", isCorrect: false }, { text: "The UAV's flight controller", isCorrect: false }] },
       { text: "\"We need a drone\" is usually a complete and sufficient starting point for designing a mission plan.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -139,13 +139,13 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
       { text: "What is a \"lawnmower pattern\" in mission planning?", type: "multiple_choice", explanation: null, answers: [{ text: "A systematic back-and-forth parallel-line survey flight path", isCorrect: true }, { text: "A random flight path", isCorrect: false }, { text: "A single circular orbit around one point", isCorrect: false }] },
       { text: "A client needs to spot 5 cm cracks on a rooftop. Should survey altitude be higher or lower than a general boundary-mapping mission, and why?", type: "short_answer", explanation: "Lower -- finding small cracks requires fine detail (small GSD), which needs a lower survey altitude.", answers: [] },
       { text: "Which of these is a genuine reason to reject the \"best\" (most advanced) UAV on the market for a job?", type: "multiple_choice", explanation: null, answers: [{ text: "It may have far more range/speed/payload than the job actually needs, at unnecessary cost", isCorrect: true }, { text: "The best aircraft is always the wrong technical choice", isCorrect: false }, { text: "Advanced aircraft can't run any autopilot software", isCorrect: false }] },
-      { text: "Give an example of a client's \"want\" versus their real underlying requirement, based on this week's framing.", type: "short_answer", explanation: "Any reasonable answer showing the distinction, e.g. \"we want a drone\" (a want/guessed solution) versus the client's actual need being answered by a specific operational objective established through questioning.", answers: [] },
+      { text: "Give an example of a client's \"want\" versus their real underlying requirement, based on this day's framing.", type: "short_answer", explanation: "Any reasonable answer showing the distinction, e.g. \"we want a drone\" (a want/guessed solution) versus the client's actual need being answered by a specific operational objective established through questioning.", answers: [] },
     ],
   },
   {
     title: "GIS Foundations Quiz",
     weekNumber: 12,
-    description: "Covers Week 12: points, lines, polygons, layers, vector vs. raster, and hands-on QGIS with CRS and Areas of Interest.",
+    description: "Covers Day 12: points, lines, polygons, layers, vector vs. raster, and hands-on QGIS with CRS and Areas of Interest.",
     questions: [
       { text: "Which geometry type would best represent a farm's boundary?", type: "multiple_choice", explanation: null, answers: [{ text: "Point", isCorrect: false }, { text: "Line", isCorrect: false }, { text: "Polygon", isCorrect: true }] },
       { text: "A real GIS map is typically built from a single layer containing every kind of feature mixed together.", type: "true_false", explanation: null, answers: [{ text: "True", isCorrect: false }, { text: "False", isCorrect: true }] },
@@ -157,7 +157,7 @@ const WEEKLY_QUIZZES: WeeklyQuizSeed[] = [
       { text: "What is a \"layer\" in GIS?", type: "multiple_choice", explanation: null, answers: [{ text: "A set of related features grouped together and shown/hidden independently", isCorrect: true }, { text: "A single pixel in a raster image", isCorrect: false }, { text: "A type of coordinate reference system", isCorrect: false }] },
       { text: "Why would a UAV consultant import a Python-generated waypoint CSV into QGIS rather than just reading the raw numbers in a spreadsheet?", type: "short_answer", explanation: "QGIS can plot the coordinates visually on an actual interactive map, letting the consultant see flight path/coverage at a glance and compare it against the intended AOI, far easier than scanning rows of numbers.", answers: [] },
       { text: "What is an EPSG code?", type: "multiple_choice", explanation: null, answers: [{ text: "A standard reference number identifying a specific coordinate reference system", isCorrect: true }, { text: "A type of drone sensor", isCorrect: false }, { text: "A GPS satellite identifier", isCorrect: false }] },
-      { text: "What is QGIS's Field Calculator used for in this week's practical activity?", type: "short_answer", explanation: "Calculating a polygon's real, accurate (ellipsoidal) area in hectares or square metres, rather than relying on the raw degree-based coordinates.", answers: [] },
+      { text: "What is QGIS's Field Calculator used for in this day's practical activity?", type: "short_answer", explanation: "Calculating a polygon's real, accurate (ellipsoidal) area in hectares or square metres, rather than relying on the raw degree-based coordinates.", answers: [] },
     ],
   },
 ];

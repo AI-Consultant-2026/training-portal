@@ -19,7 +19,7 @@ export function CourseCard({ course, isEnrolled }: CourseCardProps) {
         <div className="flex items-center gap-3 text-xs text-gray-500">
           <span className="capitalize">{course.level}</span>
           <span>&middot;</span>
-          <span>{course.durationWeeks} weeks</span>
+          <span>{course.durationWeeks} days</span>
         </div>
         <Link
           to={`/courses/${course.slug}`}

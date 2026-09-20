@@ -28,7 +28,7 @@ const STAGE_COPY: Record<ReminderStage, StageCopy> = {
   "14d": {
     subject: (lead) => `What you'll build in ${lead.course}`,
     body: (lead) => [
-      `Two weeks out from registration closing, so here's what the next 8 weeks of ${lead.course} actually look like: illustrated lessons, real assignments, and a capstone project you finish with — something concrete to show, not just a certificate.`,
+      `Two weeks out from registration closing, so here's what the next 8 days of ${lead.course} actually look like: illustrated lessons, real assignments, and a capstone project you finish with — something concrete to show, not just a certificate.`,
       "Most people who register do it in this window, once they've seen the syllabus rather than just the headline.",
     ],
   },

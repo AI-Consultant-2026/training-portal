@@ -8,8 +8,8 @@ interface LessonImageSeed {
 
 const COURSE_SLUG = "gis-and-drone-mapping";
 
-// Illustrative diagrams for GIS and Drone Mapping weeks 4-8, completing
-// illustration coverage for the whole course (weeks 1-3 were illustrated
+// Illustrative diagrams for GIS and Drone Mapping days 4-8, completing
+// illustration coverage for the whole course (days 1-3 were illustrated
 // earlier via 20260807030000-gis-lesson-images.ts). Matches the inline-SVG
 // format used across the platform (bg #F9FAFB, primary blue #2563EB, dark
 // text #111827) -- hand-drawn icon-style SVGs embedded as base64 data URIs

@@ -67,7 +67,7 @@ module.exports = {
           id: quizId,
           module_id: moduleId,
           title: `Day ${week.weekNumber} Quiz`,
-          description: "A quiz covering this week's topics, drawn from a larger question bank.",
+          description: "A quiz covering this day's topics, drawn from a larger question bank.",
           due_date: dueDate,
           time_limit_minutes: TIME_LIMIT_MINUTES,
           passing_score: PASSING_SCORE,

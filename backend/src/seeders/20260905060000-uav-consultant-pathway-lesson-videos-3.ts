@@ -19,8 +19,8 @@ const COURSE_SLUG = "uav-drone-consultant-pathway";
 //
 // This pass covers 17 of the 20 lessons that had no video after the first two passes.
 // 3 lessons still have no verified match despite real, repeated search effort across all
-// three passes: Week 2 "How Drones Fly: Flight Principles and Onboard Sensors", Week 4
-// "Headings, Distance, and Bearings", and Week 5 "Telemetry and Ground Control Stations".
+// three passes: Day 2 "How Drones Fly: Flight Principles and Onboard Sensors", Day 4
+// "Headings, Distance, and Bearings", and Day 5 "Telemetry and Ground Control Stations".
 // That's an accepted, honestly-noted outcome, not a gap papered over with a weak match.
 const CONTENT: LessonVideoSeed[] = [
   {

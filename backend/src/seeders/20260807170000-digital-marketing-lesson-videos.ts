@@ -12,7 +12,7 @@ const COURSE_SLUG = "digital-marketing";
 // YouTube oEmbed endpoint (curl https://www.youtube.com/oembed?url=...&format=json)
 // before being included here, mirroring 20260806010000-social-media-lesson-videos.ts,
 // 20260807150000-renewable-energy-lesson-videos.ts, and 20260807160000-gis-lesson-videos.ts.
-// Week 1 Lesson 1 ("The Digital Marketing Funnel") already had a video from an earlier
+// Day 1 Lesson 1 ("The Digital Marketing Funnel") already had a video from an earlier
 // seeder and is left untouched.
 const CONTENT: LessonVideoSeed[] = [
   {

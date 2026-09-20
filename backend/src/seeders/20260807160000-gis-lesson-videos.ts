@@ -11,7 +11,7 @@ const COURSE_SLUG = "gis-and-drone-mapping";
 // Every video below was found via web search and confirmed real + embeddable via the
 // YouTube oEmbed endpoint (curl https://www.youtube.com/oembed?url=...&format=json)
 // before being included here, mirroring 20260806010000-social-media-lesson-videos.ts and
-// 20260807150000-renewable-energy-lesson-videos.ts. Week 1 Lesson 1 ("Raster vs. Vector
+// 20260807150000-renewable-energy-lesson-videos.ts. Day 1 Lesson 1 ("Raster vs. Vector
 // Data") already had a video from an earlier seeder and is left untouched.
 const CONTENT: LessonVideoSeed[] = [
   {

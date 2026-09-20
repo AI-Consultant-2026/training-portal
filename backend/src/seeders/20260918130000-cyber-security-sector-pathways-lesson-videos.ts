@@ -8,14 +8,14 @@ interface LessonVideoSeed {
 
 const COURSE_SLUG = "cyber-security-fundamentals";
 
-// The 20260918120000 revision retargeted weeks 1, 2, 5, 6, 8, and 10 to entirely
+// The 20260918120000 revision retargeted days 1, 2, 5, 6, 8, and 10 to entirely
 // different topics and nulled their now-mismatched video_url values (the old videos
 // belonged to Ethical Hacking / Pentest Tools / Digital Forensics / CIA Triad & OWASP,
 // not the new Password & Auth / Phishing & Social Engineering / Malware & Ransomware /
 // Access Control & IAM / Security Awareness content sitting there now), and it inserted
-// 12 brand-new lessons across weeks 13-18 (the Oil & Gas, Banking, and Telecom sector
+// 12 brand-new lessons across days 13-18 (the Oil & Gas, Banking, and Telecom sector
 // pathways) that never had videos at all. This seeder fills in all 24 of those lessons.
-// Weeks 3, 4, 7, 9, 11, and 12 already have correct videos from 20260807180000 and are
+// Days 3, 4, 7, 9, 11, and 12 already have correct videos from 20260807180000 and are
 // left untouched.
 //
 // Every video below was found via web search and confirmed real + embeddable via the

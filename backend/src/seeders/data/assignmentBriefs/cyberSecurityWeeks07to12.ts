@@ -69,11 +69,11 @@ export const CYBER_WEEKS_7_TO_12: Record<number, BriefSpec> = {
 
   9: {
     overview:
-      "An incident response playbook is a set of ready-made instructions so that in the middle of a crisis, people do not have to invent a plan. You will write a playbook for a **malware infection**, walking through each of the six phases of the incident response lifecycle from this week's lessons, and showing how the incident would be classified and prioritised.",
+      "An incident response playbook is a set of ready-made instructions so that in the middle of a crisis, people do not have to invent a plan. You will write a playbook for a **malware infection**, walking through each of the six phases of the incident response lifecycle from this day's lessons, and showing how the incident would be classified and prioritised.",
     materials:
       "**Scenario (fictional company: Lagoon Insurance Ltd).** At 08:15, a finance officer reports that her laptop is slow and shows pop-ups. The antivirus tool has raised an alert named *\"Trojan.Generic\"*. The IT help desk notices that the laptop has been sending unusual amounts of data to an unfamiliar internet address overnight. The laptop is used to access the claims payment system.",
     tasks: [
-      "Write the playbook for the scenario using the **six phases** taught this week (Preparation, Detection, Containment, Eradication, Recovery and Lessons Learned). For **each phase** give **at least three concrete actions**, and say who performs each one.",
+      "Write the playbook for the scenario using the **six phases** taught this day (Preparation, Detection, Containment, Eradication, Recovery and Lessons Learned). For **each phase** give **at least three concrete actions**, and say who performs each one.",
       "Create a **classification table** with four severity levels (for example *Low, Medium, High, Critical*), the criteria for each, and the response time expected. Then **classify the scenario above** and justify your choice in 2-3 sentences.",
       "State **what evidence to preserve** and why (for example the antivirus alert, timestamps and the isolated laptop), and what must *not* be done (for example wiping the laptop before investigation).",
       "Write a **communication order**: who is told first, second and third (for example incident lead, IT manager, finance director, legal), by what channel, and what each person needs to know.",
@@ -165,7 +165,7 @@ export const CYBER_WEEKS_7_TO_12: Record<number, BriefSpec> = {
     tasks: [
       "Choose a fictional Nigerian organisation and describe it in 2-3 sentences.",
       "List **at least six types of data** it holds (for example customer contact details, staff payroll, marketing brochures, medical or financial records, passwords, internal meeting notes).",
-      "Classify each into the **four-tier scheme from this week's lesson** (from *Public* to *Restricted*). For each, give a one-sentence reason based on the **harm if exposed**.",
+      "Classify each into the **four-tier scheme from this day's lesson** (from *Public* to *Restricted*). For each, give a one-sentence reason based on the **harm if exposed**.",
       "For each data type, state whether it must be encrypted **at rest**, **in transit**, or **both**, with a brief reason.",
       "Write the **breach notification steps and timeline** the organisation must follow under the **Nigeria Data Protection Act (NDPA)**: what triggers notification, who must be told and by when (including the time limit for the regulator, the NDPC), what information the notice must contain, and when affected individuals must also be told.",
       "Add **three practical preparations** the organisation should make *before* a breach so it can meet the deadline.",
