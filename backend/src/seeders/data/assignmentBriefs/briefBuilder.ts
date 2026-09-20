@@ -35,6 +35,9 @@ export interface BuiltBrief {
   rubric: { totalPoints: number; criteria: Criterion[] };
 }
 
+/** Shown at the end of every "What to submit" section. */
+export const AI_NOT_ACCEPTED_SENTENCE = "AI generated answers will not be accepted.";
+
 const ORIGINALITY_NOTE =
   "Every typed answer and attached file is automatically checked before it is accepted. " +
   "Answers that read as AI-generated are rejected and must be rewritten in your own words, " +
@@ -50,7 +53,9 @@ export function buildBrief(spec: BriefSpec): BuiltBrief {
   parts.push(`## Overview\n\n${spec.overview.trim()}`);
   if (spec.materials) parts.push(`## Material you will work with\n\n${spec.materials.trim()}`);
   parts.push(`## What you must do\n\n${spec.tasks.map((t, i) => `${i + 1}. ${t.trim()}`).join("\n")}`);
-  parts.push(`## What to submit\n\n${spec.deliverables.map((d) => `- ${d.trim()}`).join("\n")}`);
+  parts.push(
+    `## What to submit\n\n${spec.deliverables.map((d) => `- ${d.trim()}`).join("\n")}\n\n**${AI_NOT_ACCEPTED_SENTENCE}**`,
+  );
   parts.push(
     `## How you will be assessed (100 points)\n\n| Criterion | Points | What earns full marks |\n|---|---|---|\n` +
       spec.criteria.map((c) => `| ${c.name} | ${c.points} | ${c.description} |`).join("\n"),

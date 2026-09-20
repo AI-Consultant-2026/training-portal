@@ -69,6 +69,18 @@ describe("Assignment and capstone briefs", () => {
     expect(d).toMatch(/Legitimate/);
   });
 
+  it("ends every 'What to submit' section with the AI-answers-not-accepted sentence", () => {
+    const all = [
+      ...Object.values(ASSIGNMENT_BRIEFS).flatMap((weeks) => Object.values(weeks)),
+      ...Object.values(CAPSTONE_BRIEFS),
+    ];
+    expect(all).toHaveLength(46);
+    for (const b of all) {
+      const submitSection = b.description.split("## What to submit")[1].split("## How you will be assessed")[0];
+      expect(submitSection).toContain("AI generated answers will not be accepted.");
+    }
+  });
+
   it("notes that answers are checked for AI-generated content", () => {
     for (const weeks of Object.values(ASSIGNMENT_BRIEFS)) {
       for (const b of Object.values(weeks)) {
