@@ -38,6 +38,8 @@
     var success = document.getElementById("formSuccess");
     var errorBox = document.getElementById("formError");
     var submitBtn = document.getElementById("registerSubmit");
+    // Remember the button's own label so a failed send restores it, whatever it says.
+    var submitLabel = submitBtn ? submitBtn.textContent : "";
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -78,7 +80,7 @@
           .catch(function () {
             errorBox.classList.add("show");
             submitBtn.disabled = false;
-            submitBtn.textContent = "Submit";
+            submitBtn.textContent = submitLabel;
           });
       });
     }
