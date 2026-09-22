@@ -257,4 +257,35 @@ export const GIS_WEEKS: Record<number, BriefSpec> = {
       "Do not forget contingency and permits. They are the usual causes of overrun.",
     ],
   },
+
+  9: {
+    overview:
+      "Today's lecture covered seven sectors: oil and gas, banking, telecommunications, mining, environmental management, construction, and infrastructure. In this assignment you pick **one** of them and write a short **sector application brief** — the kind of one-page pitch a consultant would use to open a real conversation with a client, and a direct warm-up for choosing your capstone track.",
+    tasks: [
+      "Choose **one sector** from today's lecture and name a **specific, plausible organisation** in it (fictional is fine): for example a mid-sized oil and gas operator, a retail bank, a mobile network operator, a quarry, an environmental agency, a construction firm, or a state road agency.",
+      "State **one real decision** that organisation needs to make, in a single sentence (for example *\"where should the bank open its next three branches\"* or *\"has the pipeline right-of-way been encroached on since last year\"*).",
+      "Name **three data layers** the analysis needs, and for each, say whether it is vector or raster **and why**.",
+      "Name **one specific technique** from Days 1-8 (for example buffering, weighted overlay, NDVI change detection, photogrammetry) that answers the decision, and explain in 2-3 sentences how it would be applied here.",
+      "Answer directly: **does this problem genuinely need a drone flight, or does existing satellite imagery, vector data or a desk analysis already answer it?** Justify your answer using today's lecture, not just a guess.",
+      "Finish with a **short recommendation (100-150 words)** to the organisation: what you would analyse first, and why.",
+    ],
+    deliverables: [
+      "A written brief of **500-800 words** (.docx, .pdf or .txt).",
+      "A small table: *Data layer | Vector or raster | Why*.",
+    ],
+    criteria: [
+      { name: "Decision and organisation", points: 20, description: "A specific, plausible organisation and a single clear decision it needs to make." },
+      { name: "Data layers and reasoning", points: 25, description: "Three sensible layers, each correctly classified as vector or raster with a genuine reason." },
+      { name: "Technique and application", points: 25, description: "A named technique from Days 1-8, correctly applied to the stated decision." },
+      { name: "Drone-or-not judgement", points: 20, description: "A justified, honest answer about whether a drone genuinely adds value here, drawing on the lecture rather than a default assumption." },
+      { name: "Recommendation and clarity", points: 10, description: "A clear, well-organised recommendation that follows from the analysis." },
+    ],
+    example:
+      "*Worked example (extract) for a sector NOT on today's list -- a fictional port operator -- so it cannot be reused directly. Do not copy its wording.*\n\n**Organisation and decision.** *Meridian Port Services* (fictional) needs to know whether its container yard has enough spare capacity for a planned volume increase.\n\n| Data layer | Vector or raster | Why |\n|---|---|---|\n| Yard boundary and stacking blocks | Vector (polygons) | Discrete, precisely defined areas with clear edges |\n| Container stack heights | Raster (from a drone-built DSM) | Height varies continuously across the yard, cell by cell |\n| Vehicle access routes | Vector (lines) | Discrete paths with a clear start and end |\n\n**Technique.** A drone-based digital surface model (day six) measures the yard's current stacking volume far more accurately than a manual estimate, and comparing two flights a month apart (day four's change-detection logic) shows whether utilisation is trending up.\n\n**Drone-or-not.** Yes, genuinely -- the yard is a small, well-defined area, the measurement needs to be current, and no existing satellite dataset has anywhere near the resolution needed to measure individual stack heights.\n\n**Recommendation (extract).** *\"Fly the yard now to get a volume baseline, then repeat monthly. If utilisation is already above 80% before the volume increase, the yard needs either a taller stacking policy or more land -- not just better scheduling.\"*",
+    tips: [
+      "Pick a decision specific enough that you could actually start the analysis tomorrow. \"Improve operations\" is not a decision.",
+      "The drone-or-not judgement is the point of this assignment. Do not default to \"yes, use a drone\" without a genuine reason tied to area size, detail, or currency.",
+      "Reuse a technique exactly as taught in Days 1-8 -- do not invent a new one.",
+    ],
+  },
 };
