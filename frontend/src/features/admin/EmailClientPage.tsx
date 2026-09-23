@@ -13,6 +13,7 @@ import { CAMPAIGN_FROM_ADDRESSES, CampaignFromAddress, EmailCampaignRecipient, R
 import {
   clearCurrentCampaign,
   confirmSend,
+  deleteCampaign,
   fetchCampaign,
   fetchCampaignHistory,
   previewRecipient,
@@ -331,6 +332,7 @@ export function EmailClientPage() {
               history={history}
               historyStatus={historyStatus}
               onOpen={handleOpenCampaign}
+              onDelete={(id) => dispatch(deleteCampaign(id)).unwrap()}
             />
           </div>
         </div>
@@ -511,11 +513,37 @@ function CampaignHistory({
   history,
   historyStatus,
   onOpen,
+  onDelete,
 }: {
   history: import("../../types/api").EmailCampaign[];
   historyStatus: string;
   onOpen: (id: string) => void;
+  onDelete: (id: string) => Promise<unknown>;
 }) {
+  const [pendingDelete, setPendingDelete] = useState<import("../../types/api").EmailCampaign | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  function closeDeleteModal() {
+    if (deleting) return;
+    setPendingDelete(null);
+    setDeleteError(null);
+  }
+
+  async function handleConfirmDelete() {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await onDelete(pendingDelete.id);
+      setPendingDelete(null);
+    } catch (err) {
+      setDeleteError(typeof err === "string" ? err : "Could not delete this campaign.");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
       <h2 className="text-sm font-semibold text-gray-900">Campaign history</h2>
@@ -529,16 +557,16 @@ function CampaignHistory({
       )}
       <ul className="mt-2 divide-y divide-gray-100">
         {history.map((c) => (
-          <li key={c.id} className="py-2">
+          <li key={c.id} className="flex items-start gap-2 py-2">
             <button
               type="button"
               onClick={() => onOpen(c.id)}
-              className="w-full text-left text-sm text-gray-700 hover:text-blue-600"
+              className="min-w-0 flex-1 text-left text-sm text-gray-700 hover:text-blue-600"
             >
-              <div className="flex items-center justify-between">
-                <span className="font-medium">{c.originalFilename}</span>
+              <div className="flex items-center justify-between gap-2">
+                <span className="truncate font-medium">{c.originalFilename}</span>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
                     c.status === "completed"
                       ? "bg-green-100 text-green-700"
                       : c.status === "sending"
@@ -554,9 +582,44 @@ function CampaignHistory({
                 {new Date(c.createdAt).toLocaleDateString()}
               </div>
             </button>
+            <button
+              type="button"
+              onClick={() => setPendingDelete(c)}
+              disabled={c.status === "sending"}
+              title={c.status === "sending" ? "Can't delete while the campaign is sending" : "Delete this campaign"}
+              aria-label={`Delete campaign ${c.originalFilename}`}
+              className="shrink-0 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
+
+      {pendingDelete && (
+        <Modal title="Delete campaign?" onClose={closeDeleteModal}>
+          <p className="text-sm text-gray-700">
+            <span className="font-medium">{pendingDelete.originalFilename}</span> and its recipient list will be
+            permanently deleted.
+            {pendingDelete.status === "completed" &&
+              " Its delivery log (who was sent to, and any failures) will be deleted too. Emails already sent are not affected."}{" "}
+            This can't be undone.
+          </p>
+          {deleteError && (
+            <div className="mt-3">
+              <Alert message={deleteError} />
+            </div>
+          )}
+          <div className="mt-6 flex justify-end gap-3">
+            <Button variant="secondary" onClick={closeDeleteModal} disabled={deleting}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete} isLoading={deleting}>
+              Delete campaign
+            </Button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

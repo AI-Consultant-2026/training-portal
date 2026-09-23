@@ -26,6 +26,10 @@ export async function fetchCampaign(id: string): Promise<EmailCampaign> {
   return res.data.campaign;
 }
 
+export async function deleteCampaign(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/email-campaigns/${id}`);
+}
+
 export interface UpdateCampaignInput {
   fromEmail?: CampaignFromAddress;
   bodyTemplate?: string;

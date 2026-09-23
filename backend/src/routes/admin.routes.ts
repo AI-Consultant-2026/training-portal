@@ -98,6 +98,11 @@ adminRouter.patch(
   validate(updateCampaignSchema),
   emailCampaignsController.updateCampaign,
 );
+adminRouter.delete(
+  "/email-campaigns/:id",
+  validate(campaignIdSchema),
+  emailCampaignsController.deleteCampaign,
+);
 adminRouter.patch(
   "/email-campaigns/:id/recipients/:recipientId",
   validate(toggleRecipientSchema),

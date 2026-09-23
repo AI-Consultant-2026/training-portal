@@ -29,6 +29,11 @@ export const updateCampaign = asyncHandler(async (req: Request, res: Response) =
   res.json({ campaign });
 });
 
+export const deleteCampaign = asyncHandler(async (req: Request, res: Response) => {
+  await emailCampaignService.deleteCampaign(req.params.id as string);
+  res.status(204).end();
+});
+
 export const setRecipientSelected = asyncHandler(async (req: Request, res: Response) => {
   const recipient = await emailCampaignService.setRecipientSelected(
     req.params.id as string,

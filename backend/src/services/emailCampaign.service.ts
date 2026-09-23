@@ -262,6 +262,20 @@ export async function setRecipientSelected(campaignId: string, recipientId: stri
   return recipient;
 }
 
+// Deletes a campaign and (via ON DELETE CASCADE) its recipient rows / delivery log.
+// Allowed for drafts and finished campaigns, but never while a send is in progress --
+// the in-process worker would be writing to rows that vanish under it. The status check
+// is part of the DELETE itself, so a send that starts at the same moment can't slip past.
+export async function deleteCampaign(campaignId: string): Promise<void> {
+  const deleted = await EmailCampaign.destroy({
+    where: { id: campaignId, status: { [Op.ne]: "sending" } },
+  });
+  if (deleted > 0) return;
+  const campaign = await EmailCampaign.findByPk(campaignId);
+  if (!campaign) throw ApiError.notFound("Campaign not found");
+  throw ApiError.conflict("This campaign is still sending. Wait until it finishes, then delete it.");
+}
+
 export async function removeRecipient(campaignId: string, recipientId: string): Promise<void> {
   const campaign = await EmailCampaign.findByPk(campaignId);
   if (!campaign) throw ApiError.notFound("Campaign not found");

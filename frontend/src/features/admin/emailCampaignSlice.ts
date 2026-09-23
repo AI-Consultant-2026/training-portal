@@ -150,6 +150,18 @@ export const confirmSend = createAsyncThunk(
   },
 );
 
+export const deleteCampaign = createAsyncThunk(
+  "emailCampaigns/delete",
+  async (campaignId: string, { rejectWithValue }) => {
+    try {
+      await emailCampaignsApi.deleteCampaign(campaignId);
+      return campaignId;
+    } catch (err: unknown) {
+      return rejectWithValue(errorMessageFrom(err, "Could not delete this campaign"));
+    }
+  },
+);
+
 export const fetchCampaignHistory = createAsyncThunk("emailCampaigns/fetchHistory", async () => {
   return emailCampaignsApi.fetchCampaigns();
 });
@@ -259,6 +271,14 @@ const emailCampaignSlice = createSlice({
       .addCase(confirmSend.rejected, (state, action) => {
         state.sendStatus = "failed";
         state.sendError = (action.payload as string) ?? "Could not start sending this campaign";
+      })
+      .addCase(deleteCampaign.fulfilled, (state, action) => {
+        state.history = state.history.filter((c) => c.id !== action.payload);
+        if (state.current?.id === action.payload) {
+          state.current = null;
+          state.currentStatus = "idle";
+          state.preview = null;
+        }
       })
       .addCase(fetchCampaignHistory.pending, (state) => {
         state.historyStatus = "loading";
