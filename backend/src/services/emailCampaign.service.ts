@@ -7,6 +7,7 @@ import { EmailCampaign, EmailCampaignRecipient, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { emailAdapter, EmailMessage } from "../utils/email";
 import { logger } from "../utils/logger";
+import { htmlToPlainText, inlineEmailStyles, looksLikeHtml, sanitizeCampaignHtml } from "../utils/email/campaignBodyHtml";
 
 const REQUIRED_COLUMNS = ["Company", "Email", "Subject", "Contact Name"] as const;
 
@@ -287,20 +288,26 @@ export async function removeRecipient(campaignId: string, recipientId: string): 
 
 function personalize(template: string, vars: { contactName: string; company: string }): string {
   return template
-    .replace(/\{\{\s*Contact Name\s*\}\}/gi, vars.contactName)
-    .replace(/\{\{\s*Company\s*\}\}/gi, vars.company);
+    // Function replacements, so a "$&" / "$1" in a spreadsheet cell is inserted literally
+    // instead of being read as a String.replace pattern.
+    .replace(/\{\{\s*Contact Name\s*\}\}/gi, () => vars.contactName)
+    .replace(/\{\{\s*Company\s*\}\}/gi, () => vars.company);
 }
 
 // Escaping happens AFTER personalisation, on the fully merged string -- so a malicious
 // value in an uploaded Company/Contact Name cell (e.g. "<script>...") is escaped exactly
 // like the admin's own template text, closing off HTML injection via spreadsheet data.
+function wrapBodyHtml(inner: string): string {
+  return `<div style="font-family: -apple-system, Helvetica, Arial, sans-serif; color: #111827; font-size: 15px; line-height: 1.5;">
+${inner}
+</div>`;
+}
+
 function renderBodyHtml(personalizedText: string): string {
   const paragraphs = personalizedText
     .split(/\n{2,}/)
     .map((para) => escapeHtml(para).replace(/\n/g, "<br>"));
-  return `<div style="font-family: -apple-system, Helvetica, Arial, sans-serif; color: #111827; font-size: 15px; line-height: 1.5;">
-${paragraphs.map((p) => `<p style="margin: 0 0 16px;">${p}</p>`).join("\n")}
-</div>`;
+  return wrapBodyHtml(paragraphs.map((p) => `<p style="margin: 0 0 16px;">${p}</p>`).join("\n"));
 }
 
 interface RecipientLike {
@@ -316,6 +323,25 @@ export function buildEmailForRecipient(
 ): EmailMessage {
   const vars = { contactName: recipient.contactName, company: recipient.company };
   const personalizedSubject = personalize(recipient.subject, vars);
+
+  // Formatted body from the Compose editor: sanitise the admin's markup first, then merge
+  // in HTML-escaped spreadsheet values (quotes too, in case a variable sits in a link).
+  if (looksLikeHtml(campaign.bodyTemplate)) {
+    const escapeValue = (v: string) => escapeHtml(v).replace(/"/g, "&quot;");
+    const html = personalize(sanitizeCampaignHtml(campaign.bodyTemplate), {
+      contactName: escapeValue(vars.contactName),
+      company: escapeValue(vars.company),
+    });
+    return {
+      to: recipient.email,
+      subject: personalizedSubject,
+      text: htmlToPlainText(html),
+      html: wrapBodyHtml(inlineEmailStyles(html)),
+      from: campaign.fromEmail,
+    };
+  }
+
+  // Plain-text body (campaigns saved before the formatting editor existed).
   const personalizedText = personalize(campaign.bodyTemplate, vars);
   return {
     to: recipient.email,

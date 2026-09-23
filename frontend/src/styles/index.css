@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Admin Email Client: formatted email body in the Compose editor. Tailwind's preflight
+   strips paragraph spacing and list bullets, so restore email-like defaults. */
+.email-body p { margin: 0 0 1em; }
+.email-body p:last-child { margin-bottom: 0; }
+.email-body ul { list-style: disc; padding-left: 1.5em; margin: 0 0 1em; }
+.email-body ol { list-style: decimal; padding-left: 1.5em; margin: 0 0 1em; }
+.email-body h2 { font-size: 1.25em; font-weight: 600; margin: 0 0 0.6em; }
+.email-body h3 { font-size: 1.1em; font-weight: 600; margin: 0 0 0.6em; }
+.email-body a { color: #1d4ed8; text-decoration: underline; }
+.email-body blockquote { border-left: 3px solid #d1d5db; padding-left: 1em; margin: 0 0 1em; }

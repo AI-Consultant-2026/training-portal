@@ -6,6 +6,7 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Modal } from "../../components/ui/Modal";
 import { ProgressBar } from "../../components/ui/ProgressBar";
+import { RichTextEditor } from "../../components/ui/RichTextEditor";
 import { Select } from "../../components/ui/Select";
 import { Spinner } from "../../components/ui/Spinner";
 import { CAMPAIGN_FROM_ADDRESSES, CampaignFromAddress, EmailCampaignRecipient, RecipientStatus } from "../../types/api";
@@ -746,16 +747,15 @@ function ComposeStep({
       </div>
 
       <div className="mt-4">
-        <label htmlFor="body" className="text-sm font-medium text-gray-700">
-          Email body
-        </label>
-        <textarea
-          id="body"
-          rows={14}
+        <span className="text-sm font-medium text-gray-700">Email body</span>
+        <p className="mt-0.5 text-xs text-gray-500">
+          Paste or type your message and format it with the toolbar. A blank line in pasted text starts a new
+          paragraph; bold, italics, lists and links pasted from Word or Google Docs are kept.
+        </p>
+        <RichTextEditor
           value={bodyDraft}
-          onChange={(e) => setBodyDraft(e.target.value)}
-          placeholder={"Dear {{Contact Name}},\n\nI am contacting you on behalf of Paleon Training regarding partnership opportunities with {{Company}}..."}
-          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          onChange={setBodyDraft}
+          placeholder="Dear {{Contact Name}}, …"
         />
         <div className="mt-2 rounded-md bg-gray-50 p-3 text-xs text-gray-500">
           <p className="font-medium text-gray-600">Available variables</p>
@@ -785,6 +785,26 @@ function ComposeStep({
 }
 
 // --- Step 5: Preview ---------------------------------------------------
+
+// Shows the exact HTML the recipient will get (already sanitised server-side) in a
+// sandboxed iframe: no scripts can run, and the email's inline styles can't leak into
+// the admin page. Height follows the content once it has loaded.
+function EmailHtmlPreview({ html }: { html: string }) {
+  const [height, setHeight] = useState(240);
+  return (
+    <iframe
+      title="Email preview"
+      sandbox="allow-same-origin"
+      srcDoc={`<!doctype html><html><body style="margin:0;padding:16px;background:#fff">${html}</body></html>`}
+      onLoad={(e) => {
+        const doc = e.currentTarget.contentDocument;
+        if (doc) setHeight(Math.max(120, doc.documentElement.scrollHeight + 4));
+      }}
+      style={{ height }}
+      className="mt-3 w-full rounded-md border border-gray-200 bg-white"
+    />
+  );
+}
 
 function PreviewStep({
   recipients,
@@ -847,9 +867,7 @@ function PreviewStep({
             <p className="text-sm text-gray-600">
               <span className="font-medium text-gray-900">Subject:</span> {preview.subject}
             </p>
-            <div className="mt-3 whitespace-pre-wrap rounded-md border border-gray-200 bg-white p-4 text-sm text-gray-800">
-              {preview.text}
-            </div>
+            <EmailHtmlPreview html={preview.html} />
           </div>
         )}
       </div>
