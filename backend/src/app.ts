@@ -328,6 +328,20 @@ export function createApp() {
   app.get("/oil-and-gas-entry-level-jobs-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-entry-level-jobs-nigeria.html"));
   });
+  // Public course pages (2026-09-24): one indexable page per course, since the SPA's
+  // /courses/* routes are behind login and disallowed in robots.txt.
+  app.get("/cyber-security-fundamentals-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "cyber-security-fundamentals-course.html"));
+  });
+  app.get("/gis-and-drone-mapping-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gis-and-drone-mapping-course.html"));
+  });
+  app.get("/digital-marketing-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "digital-marketing-course.html"));
+  });
+  app.get("/hse-fundamentals-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "hse-fundamentals-course.html"));
+  });
   // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
   // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.
   app.get("/nysc-digital-skills-oil-and-gas-career", (req, res) => {
@@ -335,6 +349,11 @@ export function createApp() {
   });
   app.get("/practical-digital-skills-nigerian-graduates", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "practical-digital-skills-nigerian-graduates.html"));
+  });
+  // Per-page share images (og:image) for the rest of the public marketing pages.
+  app.get("/images/og/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "og", req.params.file));
   });
   // Article featured / og:image files. Whitelisted by pattern so the route can't be
   // used to read anything outside images/articles/.

@@ -604,6 +604,19 @@
     color: var(--charcoal-soft);
     margin: 0 0 8px !important;
   }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1.5px solid transparent; border-radius: 3px; padding: 13px 24px;
+    font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1;
+    text-decoration: none; white-space: nowrap; cursor: pointer;
+  }
+  .btn-signal { background: var(--signal); color: var(--ink); }
+  .btn-signal:hover { background: var(--signal-2); }
+  .btn-whatsapp { background: #25D366; color: var(--ink); }
+  .btn-whatsapp:hover { background: #3EE07A; }
+  .btn:focus-visible { outline: 2px solid var(--signal-2); outline-offset: 2px; }
+  .price-note { margin-top: 14px; font-size: 13.5px; color: var(--dark-text-muted); }
   ol.sources { padding-left: 22px; margin: 0; font-size: 15px; }
   ol.sources li { margin-bottom: 8px; line-height: 1.5; }
   @media (max-width: 640px) {
@@ -690,7 +703,7 @@
         <dt>Practical project</dt><dd>Write a one-page risk assessment for a fictional Niger Delta flow station: list its assets (engineering workstation, remote telemetry units, office network, contractor laptops), map the likely threats, and recommend five controls, such as MFA, network segmentation and a tested backup.</dd>
         <dt>Career relevance</dt><dd>Entry routes include SOC analyst, IT/OT security support and GRC (governance, risk and compliance) assistant roles. See <a href="/cybersecurity-oil-and-gas-nigeria">cybersecurity careers in oil &amp; gas</a> for more.</dd>
       </dl>
-      <p>Paleon's <a href="/welcome#courses">Cyber Security Fundamentals course</a> includes a dedicated Oil &amp; Gas pathway alongside the core material.</p>
+      <p>Paleon's <a href="/cyber-security-fundamentals-course">Cyber Security Fundamentals course</a> includes a dedicated Oil &amp; Gas pathway alongside the core material.</p>
     </div>
   </section>
 
@@ -705,7 +718,7 @@
         <dt>Practical project</dt><dd>Download spill records from NOSDRA's Oil Spill Monitor for one state. Map them in QGIS by cause and year, then write a half-page summary of the patterns you see.</dd>
         <dt>Career relevance</dt><dd>GIS technician/analyst, drone data processor, and environmental or survey support roles. Regulated survey work still requires registered surveyors.</dd>
       </dl>
-      <p>For the full technical picture, read <a href="/gis-mapping-oil-and-gas-nigeria">how GIS is used across oil &amp; gas operations</a>. The <a href="/welcome#courses">GIS and Drone Mapping course</a> covers the tools and ends in a sector-based capstone project.</p>
+      <p>For the full technical picture, read <a href="/gis-mapping-oil-and-gas-nigeria">how GIS is used across oil &amp; gas operations</a>. The <a href="/gis-and-drone-mapping-course">GIS and Drone Mapping course</a> covers the tools and ends in a sector-based capstone project.</p>
     </div>
   </section>
 
@@ -734,7 +747,7 @@
         <dt>Practical project</dt><dd>Design a digital near-miss reporting form (Google Forms or Microsoft Forms is fine), log ten fictional entries, and produce a monthly summary chart with two recommended corrective actions.</dd>
         <dt>Career relevance</dt><dd>HSE officer and assistant roles, permit coordinators, and HSE data or reporting support. See <a href="/hse-training-nigeria">HSE careers and training in Nigeria</a>.</dd>
       </dl>
-      <p><a href="/welcome#courses">HSE Fundamentals</a> is Paleon's practical HSE course for the oil &amp; gas and industrial sectors.</p>
+      <p><a href="/hse-fundamentals-course">HSE Fundamentals</a> is Paleon's practical HSE course for the oil &amp; gas and industrial sectors.</p>
     </div>
   </section>
 
@@ -762,10 +775,10 @@
           <tr><th>Skill</th><th>Typical teams</th><th>Starter project</th><th>Paleon course</th></tr>
         </thead>
         <tbody>
-          <tr><td class="course-name">Cybersecurity</td><td>IT/OT security, GRC</td><td>Flow station risk assessment</td><td><a href="/welcome#courses">Cyber Security Fundamentals</a></td></tr>
-          <tr><td class="course-name">GIS &amp; drone mapping</td><td>Survey, environment, pipelines</td><td>Map NOSDRA spill records in QGIS</td><td><a href="/welcome#courses">GIS and Drone Mapping</a></td></tr>
+          <tr><td class="course-name">Cybersecurity</td><td>IT/OT security, GRC</td><td>Flow station risk assessment</td><td><a href="/cyber-security-fundamentals-course">Cyber Security Fundamentals</a></td></tr>
+          <tr><td class="course-name">GIS &amp; drone mapping</td><td>Survey, environment, pipelines</td><td>Map NOSDRA spill records in QGIS</td><td><a href="/gis-and-drone-mapping-course">GIS and Drone Mapping</a></td></tr>
           <tr><td class="course-name">Data analytics</td><td>Planning, reporting, finance</td><td>NUPRC production dashboard</td><td>&mdash;</td></tr>
-          <tr><td class="course-name">Digital HSE systems</td><td>HSE, operations, maintenance</td><td>Near-miss reporting form + summary</td><td><a href="/welcome#courses">HSE Fundamentals</a></td></tr>
+          <tr><td class="course-name">Digital HSE systems</td><td>HSE, operations, maintenance</td><td>Near-miss reporting form + summary</td><td><a href="/hse-fundamentals-course">HSE Fundamentals</a></td></tr>
           <tr><td class="course-name">Automation &amp; AI literacy</td><td>Any data-heavy team</td><td>Python report automation</td><td>&mdash;</td></tr>
         </tbody>
       </table>
@@ -906,7 +919,7 @@
 
 <div class="band footer-band">
   <div class="wrap">
-    <p>Paleon's <a href="/welcome#courses">Cyber Security Fundamentals, GIS and Drone Mapping and HSE Fundamentals courses</a> are built around practical lessons, assignments and a capstone project with oil &amp; gas applications. <a href="/register">Create an account</a> to get started.</p>
+    <p>Paleon's <a href="/cyber-security-fundamentals-course">Cyber Security Fundamentals</a>, <a href="/gis-and-drone-mapping-course">GIS and Drone Mapping</a> and <a href="/hse-fundamentals-course">HSE Fundamentals</a> courses are built around practical lessons, assignments and a capstone project with oil &amp; gas applications. <a href="/register">Create an account</a> to get started.</p>
     <div class="signoff">
       <span>Paleon Training &mdash; Digital Skills for the Long Run</span>
       <span>Oil &amp; Gas</span>
@@ -932,10 +945,10 @@
     <div>
       <div class="footer-heading">Courses</div>
       <ul class="footer-links">
-        <li><a href="/welcome#courses">Cyber Security Fundamentals</a></li>
-        <li><a href="/welcome#courses">GIS and Drone Mapping</a></li>
-        <li><a href="/welcome#courses">Digital Marketing</a></li>
-        <li><a href="/welcome#courses">HSE Fundamentals</a></li>
+        <li><a href="/cyber-security-fundamentals-course">Cyber Security Fundamentals</a></li>
+        <li><a href="/gis-and-drone-mapping-course">GIS and Drone Mapping</a></li>
+        <li><a href="/digital-marketing-course">Digital Marketing</a></li>
+        <li><a href="/hse-fundamentals-course">HSE Fundamentals</a></li>
       </ul>
     </div>
 

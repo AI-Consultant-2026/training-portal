@@ -37,6 +37,11 @@ Allow: /gis-mapping-oil-and-gas-nigeria
 Allow: /nysc-digital-skills-oil-and-gas-career
 Allow: /practical-digital-skills-nigerian-graduates
 Allow: /images/articles/
+Allow: /images/og/
+Allow: /cyber-security-fundamentals-course
+Allow: /gis-and-drone-mapping-course
+Allow: /digital-marketing-course
+Allow: /hse-fundamentals-course
 Allow: /oil-and-gas-jobs-in-warri-delta-state
 Allow: /how-to-get-a-bank-job-in-nigeria
 Allow: /fintech-jobs-nigeria

@@ -604,6 +604,19 @@
     color: var(--charcoal-soft);
     margin: 0 0 8px !important;
   }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1.5px solid transparent; border-radius: 3px; padding: 13px 24px;
+    font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1;
+    text-decoration: none; white-space: nowrap; cursor: pointer;
+  }
+  .btn-signal { background: var(--signal); color: var(--ink); }
+  .btn-signal:hover { background: var(--signal-2); }
+  .btn-whatsapp { background: #25D366; color: var(--ink); }
+  .btn-whatsapp:hover { background: #3EE07A; }
+  .btn:focus-visible { outline: 2px solid var(--signal-2); outline-offset: 2px; }
+  .price-note { margin-top: 14px; font-size: 13.5px; color: var(--dark-text-muted); }
   ol.sources { padding-left: 22px; margin: 0; font-size: 15px; }
   ol.sources li { margin-bottom: 8px; line-height: 1.5; }
   @media (max-width: 640px) {
@@ -877,10 +890,10 @@
     <div>
       <div class="footer-heading">Courses</div>
       <ul class="footer-links">
-        <li><a href="/welcome#courses">Cyber Security Fundamentals</a></li>
-        <li><a href="/welcome#courses">GIS and Drone Mapping</a></li>
-        <li><a href="/welcome#courses">Digital Marketing</a></li>
-        <li><a href="/welcome#courses">HSE Fundamentals</a></li>
+        <li><a href="/cyber-security-fundamentals-course">Cyber Security Fundamentals</a></li>
+        <li><a href="/gis-and-drone-mapping-course">GIS and Drone Mapping</a></li>
+        <li><a href="/digital-marketing-course">Digital Marketing</a></li>
+        <li><a href="/hse-fundamentals-course">HSE Fundamentals</a></li>
       </ul>
     </div>
 

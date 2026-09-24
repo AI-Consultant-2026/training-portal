@@ -16,6 +16,7 @@ MARKETING_DIR = os.path.dirname(os.path.abspath(__file__))
 # /privacy, which are public utility pages left out of the sitemap on purpose.
 URLS = [
     "welcome", "executive-training", "trainingportalprocess",
+    "cyber-security-fundamentals-course", "gis-and-drone-mapping-course", "digital-marketing-course", "hse-fundamentals-course",
     "oil-and-gas-careers-nigeria", "corporate-training-nigeria",
     "banking-telecom-training-nigeria", "digital-skills-jobs-nigeria",
     "hse-training-nigeria", "university-partners",
@@ -141,6 +142,8 @@ CATEGORY = {
     "corporate-training-nigeria": "Corporate", "banking-telecom-training-nigeria": "Corporate",
     "university-partners": "Partnerships",
     "support": "Support", "terms": "Legal", "privacy": "Legal",
+    "cyber-security-fundamentals-course": "Courses", "gis-and-drone-mapping-course": "Courses",
+    "digital-marketing-course": "Courses", "hse-fundamentals-course": "Courses",
     "paleon-training-six-course-digital-skills-curriculum": "Courses",
     "paleon-training-employability-content-hub": "Guides",
     "digital-skills-nigeria-career-intelligence-guide": "Guides",

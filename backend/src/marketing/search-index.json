@@ -18,6 +18,30 @@
     "category": "How it works"
   },
   {
+    "title": "Cyber Security Fundamentals Course (Nigeria)",
+    "description": "Beginner cybersecurity course with Oil & Gas, Banking and Telecoms pathways: 18 days, 36 illustrated video lessons, assignments, quizzes and a sector capstone.",
+    "url": "/cyber-security-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "GIS and Drone Mapping Course (Nigeria)",
+    "description": "Beginner GIS and drone mapping course: QGIS, coordinate systems, remote sensing, drone planning, photogrammetry and a sector capstone. 9 days, 18 lessons.",
+    "url": "/gis-and-drone-mapping-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Digital Marketing Course (Nigeria)",
+    "description": "Beginner digital marketing course: SEO, Google Ads, content, email, analytics and automation. 8 days, 16 illustrated video lessons and a capstone.",
+    "url": "/digital-marketing-course",
+    "category": "Courses"
+  },
+  {
+    "title": "HSE Fundamentals Course for Oil & Gas (Nigeria)",
+    "description": "Beginner HSE course for oil & gas: hazards, risk assessment, Nigerian regulations, permit to work, emergencies and incident investigation. 8 days.",
+    "url": "/hse-fundamentals-course",
+    "category": "Courses"
+  },
+  {
     "title": "How to Get a Job in Nigeria's Oil & Gas Industry in 2026",
     "description": "A practical, no-experience-needed guide to oil and gas jobs in Nigeria in 2026 — where the jobs are, what NCDMB requires, and the skills employers actually screen for at graduate-trainee stage.",
     "url": "/oil-and-gas-careers-nigeria",
@@ -25,7 +49,7 @@
   },
   {
     "title": "Corporate Training Providers in Nigeria — Staff Digital Skills",
-    "description": "Corporate training and employee upskilling programmes in Nigeria — digital skills, cybersecurity, GIS & drone mapping, and renewable energy courses, delivered as customized, NCDMB-aligned packages for your whole team.",
+    "description": "Corporate training and staff upskilling in Nigeria: cybersecurity, GIS & drone mapping, HSE and digital marketing, delivered as project-based packages for your team.",
     "url": "/corporate-training-nigeria",
     "category": "Corporate"
   },
