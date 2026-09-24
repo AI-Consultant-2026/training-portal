@@ -81,21 +81,14 @@ function renderPage(q: PaymentQuote) {
 }
 
 describe("BankTransferPage", () => {
-  it("shows the amount and bank details, including the sort code when one is set", async () => {
+  it("shows the amount and bank details, but never a sort code (not needed for Naira transfers)", async () => {
     renderPage(quote("044150149"));
 
     expect(await screen.findByText("Amount to transfer: ₦200,000")).toBeInTheDocument();
     expect(screen.getByText("Test Bank")).toBeInTheDocument();
     expect(screen.getByText("0123456789")).toBeInTheDocument();
-    expect(screen.getByText("Sort code")).toBeInTheDocument();
-    expect(screen.getByText("044150149")).toBeInTheDocument();
-  });
-
-  it("hides the sort-code row when none is configured", async () => {
-    renderPage(quote(""));
-
-    expect(await screen.findByText("Test Bank")).toBeInTheDocument();
     expect(screen.queryByText("Sort code")).not.toBeInTheDocument();
+    expect(screen.queryByText("044150149")).not.toBeInTheDocument();
   });
 
   it("shows the temporary-account notice above the bank details", async () => {
