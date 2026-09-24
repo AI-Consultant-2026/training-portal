@@ -163,4 +163,33 @@
       resize();
       requestAnimationFrame(draw);
     }
+
+    // Floating WhatsApp button: only shown once the hero's own WhatsApp CTA has
+    // scrolled out of view, and hidden again while the registration form is on
+    // screen so it can't sit over the form fields or submit button.
+    var waFloat = document.getElementById("waFloat");
+    var heroCtas = document.querySelector(".hero-ctas");
+    var registerForm = document.querySelector("#register form");
+    if (waFloat && heroCtas && "IntersectionObserver" in window) {
+      var heroVisible = true;
+      var formVisible = false;
+      var update = function () {
+        waFloat.classList.toggle("is-visible", !heroVisible && !formVisible);
+      };
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.target === heroCtas) heroVisible = entry.isIntersecting;
+          else formVisible = entry.isIntersecting;
+        });
+        update();
+      }).observe(heroCtas);
+      if (registerForm) {
+        new IntersectionObserver(function (entries) {
+          formVisible = entries[0].isIntersecting;
+          update();
+        }).observe(registerForm);
+      }
+    } else if (waFloat) {
+      waFloat.classList.add("is-visible");
+    }
   })();
