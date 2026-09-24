@@ -100,6 +100,23 @@ export function BankTransferPage() {
       <h1 className="text-2xl font-semibold text-gray-900">Pay by bank transfer</h1>
       <p className="mt-1 text-sm text-gray-500">{course.title}</p>
 
+      {/* Temporary notice while Paleon Training's Nigerian business bank account is being set up. */}
+      <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900" role="note">
+        <p className="font-semibold">Temporary payment arrangement</p>
+        <p className="mt-2">
+          We are currently finalising Paleon Training&rsquo;s Nigerian business bank account. Until this process is
+          complete, you may temporarily make your training payment to the authorised account details displayed below.
+        </p>
+        <p className="mt-2">
+          Please use your name + course name as the payment reference and send your transfer confirmation to us after
+          payment.
+        </p>
+        <p className="mt-2">
+          This is a temporary arrangement, and the account details will be replaced with Paleon Training&rsquo;s
+          business account once it is operational.
+        </p>
+      </div>
+
       <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
         {quote ? (
           <>

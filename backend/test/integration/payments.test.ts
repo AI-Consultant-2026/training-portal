@@ -52,7 +52,7 @@ const validCard = {
 };
 
 describe("Payments", () => {
-  // Bank transfers are switched off by default in production (BANK_TRANSFER_ENABLED); the
+  // Bank transfers are on by default but can be switched off (BANK_TRANSFER_ENABLED); the
   // existing tests below exercise the enabled flow, and the "paused" block covers the rest.
   const originalBankTransferEnabled = config.bankTransfer.enabled;
   beforeAll(() => {

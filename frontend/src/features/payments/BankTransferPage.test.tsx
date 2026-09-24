@@ -98,6 +98,14 @@ describe("BankTransferPage", () => {
     expect(screen.queryByText("Sort code")).not.toBeInTheDocument();
   });
 
+  it("shows the temporary-account notice above the bank details", async () => {
+    renderPage(quote(""));
+
+    expect(await screen.findByText("Temporary payment arrangement")).toBeInTheDocument();
+    expect(screen.getByText(/finalising Paleon Training.s Nigerian business bank account/)).toBeInTheDocument();
+    expect(screen.getByText(/use your name \+ course name as the payment reference/)).toBeInTheDocument();
+  });
+
   it("shows a 'temporarily unavailable' notice, with no account details or form, while bank transfers are paused", async () => {
     const paused = quote("044150149");
     paused.bankTransfer.enabled = false;
