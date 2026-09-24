@@ -1,0 +1,42 @@
+/* Paleon Training -- floating "Chat with Paleon on WhatsApp" button. Loaded on every
+   public marketing page next to search-widget.css; the button itself is created by
+   whatsapp-float.js. Sits bottom-left because the search trigger owns bottom-right.
+   Starts hidden; the script reveals it when no WhatsApp CTA or form is on screen. */
+
+.wa-float {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 900;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  /* WhatsApp green (not the brand signal orange) so the channel is recognisable at a
+     glance; ink on #25D366 is ~10:1 contrast. */
+  background: #25D366;
+  color: var(--ink, #10151F);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(16, 21, 31, 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
+}
+.wa-float.is-visible { opacity: 1; visibility: visible; transform: none; }
+.wa-float:hover { background: #3EE07A; }
+.wa-float:focus-visible { outline: 2px solid var(--signal, #E8863C); outline-offset: 3px; }
+.wa-float svg { width: 26px; height: 26px; }
+
+@media (max-width: 640px) {
+  .wa-float { left: 16px; bottom: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-float { transition: none; }
+}
+
+@media print {
+  .wa-float { display: none; }
+}

@@ -85,6 +85,13 @@ export function createApp() {
   app.get("/search.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "search.js"));
   });
+  // Floating "Chat with Paleon on WhatsApp" button, same shared-asset pattern as search.
+  app.get("/whatsapp-float.css", (req, res) => {
+    res.type("text/css").sendFile(path.join(__dirname, "marketing", "whatsapp-float.css"));
+  });
+  app.get("/whatsapp-float.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "whatsapp-float.js"));
+  });
   app.get("/search-index.json", (req, res) => {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "search-index.json"));
   });
