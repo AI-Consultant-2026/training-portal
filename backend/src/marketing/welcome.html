@@ -233,6 +233,20 @@
     color: var(--charcoal-soft);
     margin-top: 3px;
   }
+  /* On phones the tagline and a two-line wordmark made this sticky header ~120px tall,
+     permanently covering a seventh of the screen. */
+  @media (max-width: 560px) {
+    .header-row { padding-top: 10px; padding-bottom: 10px; gap: 10px; }
+    .logo { gap: 8px; }
+    .logo-mark { width: 30px; height: 30px; }
+    .logo-word { white-space: nowrap; font-size: 18px; }
+    .logo-sub { display: none; }
+    .main-nav .btn { padding: 9px 12px; font-size: 14px; }
+    .nav-toggle { flex-shrink: 0; }
+  }
+  @media (max-width: 370px) {
+    .logo-word { white-space: normal; }
+  }
 
   .main-nav { display: flex; align-items: center; gap: 30px; }
   .nav-links { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; }

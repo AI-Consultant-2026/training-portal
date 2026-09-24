@@ -20,7 +20,7 @@ const STATUS_LABELS: Record<Enrollment["status"], string> = {
 // is worth calling out visually, so it gets its own gold medal badge instead.
 function CompletedBadge() {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+    <span className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
       <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 text-amber-500">
         <path d="M7 11 L4 17 L7 16 L8.5 18.5 L10.8 13" fill="currentColor" opacity="0.5" />
         <path d="M13 11 L16 17 L13 16 L11.5 18.5 L9.2 13" fill="currentColor" opacity="0.5" />
@@ -73,20 +73,20 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
     <div className="flex flex-col gap-3 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
       {coverImage && <img src={coverImage} alt="" className="h-32 w-full object-cover" />}
       <div className="flex flex-col gap-3 p-5">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold text-gray-900">{course?.title ?? "Course"}</h3>
           {enrollment.status === "completed" ? (
             <CompletedBadge />
           ) : (
-            <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+            <span className="shrink-0 whitespace-nowrap rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
               {STATUS_LABELS[enrollment.status]}
             </span>
           )}
         </div>
         <ProgressBar percent={enrollment.progressPercent} />
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm text-gray-500">
           <span>{enrollment.progressPercent}% complete</span>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             {enrollment.status === "completed" && course && (
               <button
                 type="button"
