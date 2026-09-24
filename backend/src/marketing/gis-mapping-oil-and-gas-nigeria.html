@@ -4,32 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>GIS Mapping in Nigeria's Oil & Gas Industry, Explained | Paleon Training</title>
-<meta name="description" content="A plain explanation of how GIS mapping and drone data are actually used in Nigeria's oil & gas industry — pipeline monitoring, site surveying, environmental monitoring.">
+<title>How GIS Is Used in Oil &amp; Gas Operations (Nigeria Guide) | Paleon Training</title>
+<meta name="description" content="How GIS is used in oil &amp; gas: exploration, pipelines, environment, HSE, assets, drones and communities, plus the data workflow and Nigerian scenarios.">
 <link rel="canonical" href="https://paleontraining.com/gis-mapping-oil-and-gas-nigeria">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Paleon Training">
-<meta property="og:title" content="GIS Mapping in Nigeria's Oil & Gas Industry, Explained">
-<meta property="og:description" content="A plain explanation of how GIS mapping and drone data are actually used in Nigeria's oil & gas industry — pipeline monitoring, site surveying, environmental monitoring.">
+<meta property="og:title" content="How GIS Is Used Across Oil &amp; Gas Operations">
+<meta property="og:description" content="The technical guide to GIS in oil &amp; gas: eight applications, the data-to-decision workflow, Nigerian coordinate systems and three illustrative Niger Delta scenarios.">
 <meta property="og:url" content="https://paleontraining.com/gis-mapping-oil-and-gas-nigeria">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GIS Mapping in Nigeria's Oil & Gas Industry, Explained">
-<meta name="twitter:description" content="A plain explanation of how GIS mapping and drone data are actually used in Nigeria's oil & gas industry — pipeline monitoring, site surveying, environmental monitoring.">
+<meta property="og:image" content="https://paleontraining.com/images/articles/gis-mapping-oil-and-gas-nigeria.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GIS workflow for oil and gas operations: data collection, GIS database, spatial analysis, visualisation, decision support and reporting, over layered map sheets of a pipeline corridor.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How GIS Is Used Across Oil &amp; Gas Operations">
+<meta name="twitter:description" content="The technical guide to GIS in oil &amp; gas: eight applications, the data-to-decision workflow, Nigerian coordinate systems and three illustrative Niger Delta scenarios.">
+<meta name="twitter:image" content="https://paleontraining.com/images/articles/gis-mapping-oil-and-gas-nigeria.jpg">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "GIS Mapping in Nigeria's Oil & Gas Industry, Explained",
-  "description": "A plain explanation of how GIS mapping and drone data are actually used in Nigeria's oil & gas industry \u2014 pipeline monitoring, site surveying, environmental monitoring.",
-  "author": { "@type": "Organization", "name": "Paleon Training" },
+  "headline": "How GIS Is Used Across Oil & Gas Operations",
+  "description": "How GIS is used in oil & gas: exploration, pipelines, environment, HSE, assets, drones and communities, plus the data workflow and Nigerian scenarios.",
+  "image": "https://paleontraining.com/images/articles/gis-mapping-oil-and-gas-nigeria.jpg",
+  "author": {
+    "@type": "Organization",
+    "name": "Paleon Training"
+  },
   "publisher": {
     "@type": "EducationalOrganization",
     "name": "Paleon Training",
     "url": "https://paleontraining.com/welcome"
   },
   "datePublished": "2026-09-16",
-  "dateModified": "2026-09-16",
-  "mainEntityOfPage": "https://paleontraining.com/gis-mapping-oil-and-gas-nigeria"
+  "dateModified": "2026-09-24",
+  "mainEntityOfPage": "https://paleontraining.com/gis-mapping-oil-and-gas-nigeria",
+  "keywords": "GIS in oil and gas, GIS oil and gas Nigeria, pipeline GIS mapping, drone mapping oil and gas, remote sensing oil spill Niger Delta, GIS applications petroleum industry, Minna datum Nigeria GIS"
 }
 </script>
 <script type="application/ld+json">
@@ -37,9 +47,24 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Paleon Training", "item": "https://paleontraining.com/welcome" },
-    { "@type": "ListItem", "position": 2, "name": "Digital Skills for Oil & Gas Careers", "item": "https://paleontraining.com/digital-skills-for-oil-and-gas-nigeria" },
-    { "@type": "ListItem", "position": 3, "name": "GIS Mapping in Nigeria's Oil & Gas Industry, Explained", "item": "https://paleontraining.com/gis-mapping-oil-and-gas-nigeria" }
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Paleon Training",
+      "item": "https://paleontraining.com/welcome"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "5 Digital Skills for Oil & Gas",
+      "item": "https://paleontraining.com/digital-skills-for-oil-and-gas-nigeria"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How GIS Is Used Across Oil & Gas Operations",
+      "item": "https://paleontraining.com/gis-mapping-oil-and-gas-nigeria"
+    }
   ]
 }
 </script>
@@ -50,34 +75,50 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What does GIS mapping actually involve in oil & gas?",
+      "name": "What is GIS used for in the oil & gas industry?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Collecting, managing, and analysing spatial data to support real decisions \u2014 pipeline route and corridor monitoring, site surveying, and environmental monitoring are the three genuine, ongoing applications."
+        "text": "Planning exploration surveys, siting wells and flowlines, managing pipeline rights of way, environmental baselines and spill mapping, HSE emergency planning, asset management, and land and host community management."
       }
     },
     {
       "@type": "Question",
-      "name": "How is drone mapping different from GIS?",
+      "name": "What coordinate system should I use for Niger Delta data?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Drone mapping is one method of collecting the spatial data that GIS software then processes and analyses \u2014 they're closely paired but distinct skills. See Drone Mapping Careers in Nigeria for that side specifically."
+        "text": "It depends on the dataset. Legacy records often use the Minna datum with a Nigeria belt projection (EPSG:26391\u201326393), while GPS, drone and satellite data use WGS 84, often UTM zone 32N (EPSG:32632) in the Niger Delta. Transform everything into one CRS before analysis."
       }
     },
     {
       "@type": "Question",
-      "name": "What software is used for this work?",
+      "name": "Can drones replace pipeline inspection or land surveying?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "QGIS (free, open-source) is a widely-used starting point; ArcGIS is a commercial platform many employers also use. Starting with QGIS is a reasonable, low-cost way to build foundational skill."
+        "text": "No. Drone imagery supplements regulated land surveying, engineering inspection and statutory integrity testing; it does not replace them. Drone flights must also comply with NCAA regulations."
       }
     },
     {
       "@type": "Question",
-      "name": "Do I need an engineering degree for GIS work in oil & gas?",
+      "name": "Is there public oil & gas GIS data for Nigeria?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No, not for many entry-level and support roles \u2014 demonstrable tool skill (QGIS) and a portfolio project matter more than a specific degree for these particular roles."
+        "text": "Yes. NOSDRA's Nigerian Oil Spill Monitor publishes spill records, and its Gas Flare Tracker publishes satellite-based flare detections. Both are useful for practice projects."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which software is used for GIS in oil & gas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "QGIS (free, open source) and ArcGIS (commercial) are the main desktop platforms, with PostGIS for spatial databases and photogrammetry software for processing drone imagery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a degree in geography to work in oil & gas GIS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not necessarily. Graduates of geography, geology, surveying, environmental science and engineering commonly enter GIS roles. Demonstrable tool skill and a portfolio project matter, and survey-grade work requires professional registration."
       }
     }
   ]
@@ -513,6 +554,62 @@
     .stage { grid-template-columns: 1fr; gap: 6px; }
     .stat { flex: 1 1 45%; }
   }
+
+  /* ---------- Long-form article additions (2026-09-24 oil & gas cluster) ---------- */
+  figure.featured { margin: 36px 0 0; }
+  figure.featured img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line-dark); }
+  .prose h3 { font-size: 19px; font-weight: 600; margin: 28px 0 8px; }
+  .prose ul, .prose ol { margin: 0 0 16px; padding-left: 22px; }
+  .prose li { margin-bottom: 8px; line-height: 1.55; }
+  .answer {
+    background: var(--white);
+    border: 1px solid var(--line-light);
+    border-left: 3px solid var(--signal);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 0 0 20px;
+  }
+  .answer p { margin: 0; }
+  .answer-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--signal-deep);
+    margin: 0 0 6px !important;
+  }
+  dl.skill-facts { display: grid; grid-template-columns: 150px 1fr; gap: 10px 18px; margin: 0 0 16px; font-size: 16px; }
+  dl.skill-facts dt {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--signal-deep);
+    padding-top: 4px;
+  }
+  dl.skill-facts dd { margin: 0; line-height: 1.55; }
+  .scenario {
+    background: var(--paper-2);
+    border: 1px solid var(--line-light);
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin: 0 0 18px;
+  }
+  .scenario h3 { margin-top: 0; }
+  .scenario-tag {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charcoal-soft);
+    margin: 0 0 8px !important;
+  }
+  ol.sources { padding-left: 22px; margin: 0; font-size: 15px; }
+  ol.sources li { margin-bottom: 8px; line-height: 1.5; }
+  @media (max-width: 640px) {
+    dl.skill-facts { grid-template-columns: 1fr; gap: 2px; }
+    dl.skill-facts dd { margin-bottom: 12px; }
+  }
 </style>
 <link rel="stylesheet" href="/search-widget.css">
 <link rel="stylesheet" href="/whatsapp-float.css">
@@ -532,13 +629,17 @@
     <div class="pt-search-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
   </div>
 </div>
+
 <div class="band">
   <div class="wrap masthead">
     <a class="wordmark" href="/welcome"><span class="dot"></span>Paleon Training</a>
-    <p class="eyebrow">Oil & Gas</p>
-    <h1 class="title">GIS Mapping in Nigeria's Oil & Gas Industry, Explained</h1>
-    <p class="subhead">GIS mapping in oil &amp; gas gets mentioned often without explanation. This guide breaks down what it actually involves, in plain terms.</p>
-    <p class="reviewed-line">Last reviewed: 16 September 2026 &middot; Reviewed by Paleon Training</p>
+    <p class="eyebrow">Oil &amp; Gas &middot; GIS</p>
+    <h1 class="title" style="max-width: 20ch;">How GIS Is Used Across Oil &amp; Gas Operations</h1>
+    <p class="subhead">A technical guide to where geographic information systems fit across the oil &amp; gas lifecycle &mdash; with the data workflow, Nigerian coordinate systems and three illustrative Niger Delta scenarios.</p>
+    <p class="reviewed-line">Last reviewed: 24 September 2026 &middot; Reviewed by Paleon Training</p>
+    <figure class="featured">
+      <img src="/images/articles/gis-mapping-oil-and-gas-nigeria.jpg" width="1200" height="630" alt="GIS workflow for oil and gas operations: data collection, GIS database, spatial analysis, visualisation, decision support and reporting, over layered map sheets of a pipeline corridor." fetchpriority="high">
+    </figure>
   </div>
 </div>
 
@@ -546,9 +647,12 @@
 
   <section>
     <div class="measure">
-      <p class="section-label">Overview</p>
-      <p class="lede">GIS mapping in oil &amp; gas gets mentioned often without explanation. This guide breaks down what it actually involves, in plain terms.</p>
-      <p>GIS (Geographic Information Systems) work in oil &amp; gas is about collecting, managing, and analysing spatial data to support real operational decisions — not an abstract technical specialty. Drone-captured imagery is one of the data sources GIS software then processes.</p>
+      <p class="section-label">Short answer</p>
+      <h2 class="section-title">How is GIS used in oil &amp; gas?</h2>
+      <div class="answer">
+        <p class="answer-label">Answer</p>
+        <p>GIS (Geographic Information Systems) is used in oil &amp; gas to <strong>store, analyse and map location-based data</strong> across the whole lifecycle. That includes planning exploration surveys, siting wells and flowlines, managing pipeline rights of way, mapping environmental baselines and spills, and planning HSE emergency response. It also covers managing assets and land, and working with host communities. Drones and satellites supply much of the data; GIS turns it into decisions and reports.</p>
+      </div>
     </div>
   </section>
 
@@ -556,22 +660,116 @@
     <p class="section-label">Key takeaways</p>
     <div class="measure">
       <ul class="key-takeaways">
-        <li>GIS in oil &amp; gas means collecting, managing, and analysing spatial data to support real operational decisions.</li>
-        <li>Pipeline route and corridor monitoring, site surveying, and environmental monitoring are the three genuine, ongoing applications in the sector.</li>
-        <li>Drone-captured imagery is a data source GIS software then processes and analyses — the two skills are closely paired in practice.</li>
-        <li>QGIS (free, open-source) and ArcGIS (commercial) are the two real, widely-used platforms.</li>
-        <li>No engineering degree is required for many entry-level and support GIS roles — demonstrable tool skill and a portfolio matter more.</li>
+        <li>GIS supports eight broad areas: exploration, field development, pipelines, environment, HSE, asset management, drone and remote sensing, and land and community management.</li>
+        <li>Every application follows the same workflow: data collection &rarr; GIS database &rarr; spatial analysis &rarr; visualisation &rarr; decision support &rarr; reporting.</li>
+        <li>Nigerian data often mixes the Minna datum and WGS 84. Getting the coordinate reference system wrong can shift features on the order of a hundred metres.</li>
+        <li>Public Nigerian datasets exist, including NOSDRA's Oil Spill Monitor and its satellite-based Gas Flare Tracker.</li>
+        <li>Drones supplement, but do not replace, regulated land surveying, engineering inspection or statutory integrity checks.</li>
       </ul>
     </div>
   </section>
 
   <section>
-    <p class="section-label">What it actually involves</p>
-    <h2 class="section-title">Three genuine applications</h2>
-    <div class="measure">
-      <p><strong>Pipeline route and corridor monitoring</strong>: tracking the state of pipeline infrastructure across large, often remote areas using spatial data rather than manual physical inspection alone. <strong>Site surveying</strong>: mapping and assessing land for operational planning. <strong>Environmental and vegetation monitoring</strong>: tracking environmental conditions around operational sites over time.</p>
-      <p>Drone mapping is the data-collection side of this pairing — a drone captures imagery, and GIS software then processes and analyses it. See <a href="/drone-mapping-careers-nigeria">Drone Mapping Careers in Nigeria</a> for that side in depth, and <a href="/gis-careers-nigeria">GIS Careers in Nigeria</a> for the analysis side, including the real tools (QGIS, ArcGIS) used.</p>
-      <p>This is one of four digital skills relevant to oil &amp; gas work at Paleon — see the <a href="/digital-skills-for-oil-and-gas-nigeria">full skills taxonomy</a> for how it fits alongside HSE, cybersecurity, and renewable energy.</p>
+    <p class="section-label">The workflow</p>
+    <h2 class="section-title">From raw data to a decision</h2>
+    <div class="measure"><p>Whatever the application, GIS work in oil &amp; gas moves through the same six stages.</p></div>
+    <div class="stages">
+      <div class="stage"><div class="stage-tag">01</div><div class="stage-body"><h3>Data collection</h3><p>Field GPS/GNSS surveys, drone imagery, satellite imagery (optical and radar), seismic survey positions, engineering drawings, spill and incident records, and community and land records.</p></div></div>
+      <div class="stage"><div class="stage-tag">02</div><div class="stage-body"><h3>GIS database</h3><p>Data is checked, given a correct coordinate reference system, and stored in a structured database (for example a file geodatabase, GeoPackage or PostGIS). This is usually aligned to an industry data model, such as the PODS pipeline data model.</p></div></div>
+      <div class="stage"><div class="stage-tag">03</div><div class="stage-body"><h3>Spatial analysis</h3><p>Buffers around pipelines, overlay of constraints (mangrove, settlements, waterways), proximity and route analysis, terrain analysis from elevation models, and change detection between image dates.</p></div></div>
+      <div class="stage"><div class="stage-tag">04</div><div class="stage-body"><h3>Visualisation</h3><p>Maps, web map dashboards and 3D views that make the analysis readable to engineers, managers, regulators and community representatives.</p></div></div>
+      <div class="stage"><div class="stage-tag">05</div><div class="stage-body"><h3>Decision support</h3><p>Choosing a route, prioritising a patrol, dispatching a response team, scheduling maintenance, or scoping an environmental assessment.</p></div></div>
+      <div class="stage"><div class="stage-tag">06</div><div class="stage-body"><h3>Reporting</h3><p>Regulatory submissions, incident reports, EIA figures, internal management reports, and records that support audit and compliance.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="measure prose">
+      <p class="section-label">Technical foundations</p>
+      <h2 class="section-title">Coordinate systems and data: the Nigerian specifics</h2>
+      <p>The single most common technical error in Nigerian oil &amp; gas GIS is mixing coordinate reference systems (CRS). Two families are in everyday use:</p>
+      <ul>
+        <li><strong>Minna datum</strong> (Clarke 1880 ellipsoid) with the Nigeria Transverse Mercator belts &mdash; <code class="inline">EPSG:26391</code> West Belt, <code class="inline">EPSG:26392</code> Mid Belt, <code class="inline">EPSG:26393</code> East Belt. Many legacy survey, land and engineering records use these.</li>
+        <li><strong>WGS 84</strong>, as used by GPS, most drones and satellite imagery &mdash; often projected to UTM. Most of the Niger Delta falls in <code class="inline">EPSG:32632</code> (UTM zone 32N); western Nigeria, including Lagos, falls in zone 31N.</li>
+      </ul>
+      <p>The offset between Minna and WGS 84 is on the order of a hundred metres. Overlaying drone imagery on an untransformed Minna-based pipeline layer can put a line on the wrong side of a creek. Always confirm which datum each dataset uses and which transformation was applied. The EPSG Geodetic Parameter Dataset is the reference for these definitions; it is maintained by the Geomatics Committee of IOGP, the international oil &amp; gas producers' association.</p>
+      <p>Common formats include vector data (shapefile, GeoPackage, GeoJSON), rasters (GeoTIFF orthomosaics and elevation models) and spatial databases (PostGIS). QGIS (free, open source) and ArcGIS (commercial) are the main desktop platforms &mdash; see <a href="/qgis-vs-arcgis-for-beginners-nigeria">QGIS vs. ArcGIS for beginners</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="measure prose">
+      <p class="section-label">Applications</p>
+      <h2 class="section-title">Eight ways GIS is used across oil &amp; gas operations</h2>
+
+      <h3>1. Exploration</h3>
+      <p>Licence and block boundaries, geological maps, existing wells and prior surveys are combined into a basemap. GIS is used to plan seismic survey lines around settlements, waterways and protected areas, and to track survey progress. Geoscientists interpret the subsurface in specialist software. GIS provides the surface context and integrates their results with everything else.</p>
+
+      <h3>2. Field development</h3>
+      <p>Siting well pads, flow stations and flowline routes is a constraint problem: terrain, flood risk, mangrove and swamp, settlements, access by road or water, and existing infrastructure. Weighted overlay analysis narrows the options before engineers carry out detailed design.</p>
+
+      <h3>3. Pipeline management</h3>
+      <p>Pipelines are linear assets running through many communities and ecosystems. GIS holds the centreline, right of way (RoW), crossings (rivers, roads, other lines), valve locations, inspection history and incident records. Buffer analysis identifies structures and activities inside the RoW. Comparing imagery across dates helps flag new encroachment or ground disturbance for surveillance teams to verify on the ground.</p>
+
+      <h3>4. Environmental management</h3>
+      <p>Environmental Impact Assessments need baseline maps of vegetation, water bodies, sensitive habitats and land use. After spills, GIS maps the affected area and nearby sensitive receptors such as mangroves, fishing grounds and water intakes. UNEP's 2011 <em>Environmental Assessment of Ogoniland</em> surveyed 122 km of pipeline rights of way and used remote sensing to link artisanal refining at Bodo West to a roughly 10% loss of healthy mangrove cover between 2007 and 2011. NOSDRA's Gas Flare Tracker estimates flare locations and volumes from VIIRS satellite data.</p>
+
+      <h3>5. Health, safety and environment (HSE)</h3>
+      <p>Emergency response plans rely on maps of muster points, evacuation and access routes, the nearest medical facilities, and exclusion zones around hazards. Incident and near-miss locations can be mapped to reveal clusters. During a response, a shared map is often the single source of truth for everyone involved.</p>
+
+      <h3>6. Asset management</h3>
+      <p>Linking each asset (well, valve, tank, cathodic protection test point) to its location, attributes and maintenance history lets teams plan work by area, see overdue inspections on a map, and support integrity management. Industry data models such as PODS standardise how pipeline assets are stored.</p>
+
+      <h3>7. Drone mapping and remote sensing</h3>
+      <p>Drones capture high-resolution imagery that photogrammetry software turns into orthomosaics and elevation models, useful for site mapping, RoW checks and earthworks monitoring. Satellites cover wider areas: optical imagery for land-cover change, and radar (which sees through cloud) for applications such as oil slick detection on water. Drone flights require compliance with Nigerian Civil Aviation Authority rules (see <a href="/ncaa-drone-regulations-overview">NCAA drone regulations</a>). Drone data <strong>does not replace</strong> regulated land surveying by registered surveyors, engineering inspection, or statutory integrity testing; it supplements them.</p>
+
+      <h3>8. Land and community management</h3>
+      <p>Land acquisition, compensation records, community boundaries and stakeholder locations are all spatial. Under the Petroleum Industry Act 2021, operators must set up Host Communities Development Trusts. Mapping which communities host which assets supports that process, as well as consultation and grievance tracking. Community boundaries can be contested, so maps should record the source and status of each boundary rather than presenting one as definitive.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Scenarios</p>
+    <h2 class="section-title">Three illustrative Niger Delta scenarios</h2>
+    <div class="measure prose">
+      <p>These are <strong>illustrative composites</strong> of typical workflows, not accounts of specific companies or incidents.</p>
+      <div class="scenario">
+        <p class="scenario-tag">Illustrative scenario A &middot; Delta State</p>
+        <h3>Right-of-way encroachment review</h3>
+        <p>A pipeline team holds an older RoW layer in Minna / Nigeria Mid Belt, plus a new drone orthomosaic in WGS 84 / UTM 32N. The GIS analyst transforms the RoW layer to match the imagery, then buffers the centreline to the RoW width. Next they digitise new structures visible in the imagery and run an intersect. The output is a map and a table of possible encroachments, ranked by distance to the pipe, for the RoW and community-relations teams to verify on the ground. The GIS does not decide; it prioritises field checks.</p>
+      </div>
+      <div class="scenario">
+        <p class="scenario-tag">Illustrative scenario B &middot; Bayelsa State</p>
+        <h3>Spill impact and access mapping</h3>
+        <p>After a reported spill at a creek crossing, the response team needs to know what is at risk and how to get there. The analyst plots the spill point and applies a tidal-creek flow direction. They overlay mangrove cover, fishing settlements and water intakes, then map boat access routes and staging points. Satellite imagery from before and after the spill helps estimate the affected shoreline. The maps support the response plan and feed the documentation reviewed during the Joint Investigation Visit (JIV).</p>
+      </div>
+      <div class="scenario">
+        <p class="scenario-tag">Illustrative scenario C &middot; Rivers State</p>
+        <h3>Gas flare and community proximity analysis</h3>
+        <p>An environmental team compares its own flare records with public satellite detections from the NOSDRA Gas Flare Tracker. The analyst maps flare sites, draws distance bands to nearby communities, and tracks detections over time. Discrepancies between internal and satellite records are flagged for investigation. The result supports environmental reporting and flare-reduction planning, and gives community-engagement teams a clear, sourced basis for discussion.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="measure prose">
+      <p class="section-label">Limits</p>
+      <h2 class="section-title">Limitations and responsible use</h2>
+      <ul>
+        <li><strong>Accuracy is only as good as the input.</strong> Consumer GPS, uncorrected drone imagery and mixed datums all introduce error. Record accuracy with the data.</li>
+        <li><strong>Ground truth still matters.</strong> Imagery suggests; field verification confirms.</li>
+        <li><strong>Security.</strong> Detailed pipeline and facility maps are sensitive infrastructure data. Access should be controlled, and precise locations should not be published publicly.</li>
+        <li><strong>Regulation.</strong> Survey-grade work, drone operations and environmental assessments each have their own legal and professional requirements.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="measure prose">
+      <p class="section-label">Skills</p>
+      <h2 class="section-title">What skills does this work need?</h2>
+      <p>Entry-level GIS work in oil &amp; gas needs QGIS or ArcGIS fluency, a solid grasp of coordinate systems, basic drone data processing, careful data management and clear map-making. Many roles are open to geography, geology, surveying, environmental science and engineering graduates. GIS is one of the <a href="/digital-skills-for-oil-and-gas-nigeria">five digital skills Nigerian graduates can use in oil &amp; gas</a>.</p>
+      <p>Paleon's <a href="/welcome#courses">GIS and Drone Mapping course</a> covers GIS, drone mapping, photogrammetry and satellite data. It includes an industry-applications lesson spanning oil &amp; gas and other sectors, and ends in a capstone project. See also <a href="/drone-mapping-careers-nigeria">drone mapping careers in Nigeria</a> and <a href="/gis-careers-nigeria">GIS careers in Nigeria</a>.</p>
     </div>
   </section>
 
@@ -582,29 +780,43 @@
       <div class="stage">
         <div class="stage-tag">Q1</div>
         <div class="stage-body">
-          <h3>What does GIS mapping actually involve in oil & gas?</h3>
-          <p>Collecting, managing, and analysing spatial data to support real decisions — pipeline route and corridor monitoring, site surveying, and environmental monitoring are the three genuine, ongoing applications.</p>
+          <h3>What is GIS used for in the oil &amp; gas industry?</h3>
+          <p>Planning exploration surveys, siting wells and flowlines, managing pipeline rights of way, environmental baselines and spill mapping, HSE emergency planning, asset management, and land and host community management.</p>
         </div>
       </div>
       <div class="stage">
         <div class="stage-tag">Q2</div>
         <div class="stage-body">
-          <h3>How is drone mapping different from GIS?</h3>
-          <p>Drone mapping is one method of collecting the spatial data that GIS software then processes and analyses — they're closely paired but distinct skills. See Drone Mapping Careers in Nigeria for that side specifically.</p>
+          <h3>What coordinate system should I use for Niger Delta data?</h3>
+          <p>It depends on the dataset. Legacy records often use the Minna datum with a Nigeria belt projection (EPSG:26391&ndash;26393), while GPS, drone and satellite data use WGS 84, often UTM zone 32N (EPSG:32632) in the Niger Delta. Transform everything into one CRS before analysis.</p>
         </div>
       </div>
       <div class="stage">
         <div class="stage-tag">Q3</div>
         <div class="stage-body">
-          <h3>What software is used for this work?</h3>
-          <p>QGIS (free, open-source) is a widely-used starting point; ArcGIS is a commercial platform many employers also use. Starting with QGIS is a reasonable, low-cost way to build foundational skill.</p>
+          <h3>Can drones replace pipeline inspection or land surveying?</h3>
+          <p>No. Drone imagery supplements regulated land surveying, engineering inspection and statutory integrity testing; it does not replace them. Drone flights must also comply with NCAA regulations.</p>
         </div>
       </div>
       <div class="stage">
         <div class="stage-tag">Q4</div>
         <div class="stage-body">
-          <h3>Do I need an engineering degree for GIS work in oil & gas?</h3>
-          <p>No, not for many entry-level and support roles — demonstrable tool skill (QGIS) and a portfolio project matter more than a specific degree for these particular roles.</p>
+          <h3>Is there public oil &amp; gas GIS data for Nigeria?</h3>
+          <p>Yes. NOSDRA's Nigerian Oil Spill Monitor publishes spill records, and its Gas Flare Tracker publishes satellite-based flare detections. Both are useful for practice projects.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q5</div>
+        <div class="stage-body">
+          <h3>Which software is used for GIS in oil &amp; gas?</h3>
+          <p>QGIS (free, open source) and ArcGIS (commercial) are the main desktop platforms, with PostGIS for spatial databases and photogrammetry software for processing drone imagery.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q6</div>
+        <div class="stage-body">
+          <h3>Do I need a degree in geography to work in oil &amp; gas GIS?</h3>
+          <p>Not necessarily. Graduates of geography, geology, surveying, environmental science and engineering commonly enter GIS roles. Demonstrable tool skill and a portfolio project matter, and survey-grade work requires professional registration.</p>
         </div>
       </div>
     </div>
@@ -614,7 +826,16 @@
     <div class="measure">
       <p class="section-label">Sources &amp; methodology</p>
       <h2 class="section-title">Where this guide's claims come from</h2>
-      <p>QGIS and ArcGIS are named here as real, widely-used industry platforms. The three sector applications (pipeline monitoring, site surveying, environmental monitoring) reflect Paleon's own review of how GIS is actually used in Nigeria's oil &amp; gas sector, not a single external study. No hiring-rate or salary figures are cited.</p>
+      <p>Application areas and workflow reflect standard oil &amp; gas geomatics practice. Nigerian specifics come from the regulators and datasets cited below. The three scenarios are illustrative composites, not descriptions of real incidents or companies. No market-size or salary figures are cited.</p>
+      <ol class="sources">
+        <li><a href="https://www.unep.org/resources/report/environmental-assessment-ogoniland" rel="noopener">UNEP &mdash; Environmental Assessment of Ogoniland (2011)</a> (pipeline RoW survey and mangrove-loss remote sensing).</li>
+        <li><a href="https://nosdra.gasflaretracker.ng/" rel="noopener">NOSDRA &mdash; Nigerian Gas Flare Tracker</a> (VIIRS Nightfire satellite data) and <a href="https://nosdra.oilspillmonitor.ng/" rel="noopener">Nigerian Oil Spill Monitor</a>.</li>
+        <li><a href="https://epsg.org/home.html" rel="noopener">EPSG Geodetic Parameter Dataset</a>, maintained by the <a href="https://www.iogp.org/about-us/structure-and-governance/our-committees/geomatics/" rel="noopener">IOGP Geomatics Committee</a> (Minna datum and Nigeria belt definitions).</li>
+        <li><a href="https://ngfcp.nuprc.gov.ng/wp-content/uploads/2022/09/Petroleum-Industry-Act-2021-pdf-searchable.pdf" rel="noopener">Petroleum Industry Act 2021</a> (Host Communities Development Trusts).</li>
+        <li><a href="https://ncaa.gov.ng/" rel="noopener">Nigerian Civil Aviation Authority</a> (drone operations) and <a href="https://surcon.gov.ng/" rel="noopener">Surveyors Council of Nigeria (SURCON)</a> (registered survey practice).</li>
+        <li><a href="https://hyprep.gov.ng/" rel="noopener">HYPREP &mdash; Hydrocarbon Pollution Remediation Project</a>.</li>
+        <li><a href="https://qgis.org/" rel="noopener">QGIS</a>.</li>
+      </ol>
     </div>
   </section>
 
@@ -625,22 +846,29 @@
       <div class="stage">
         <div class="stage-tag">&rarr;</div>
         <div class="stage-body">
+          <h3><a href="/digital-skills-for-oil-and-gas-nigeria">5 Digital Skills Nigerian Graduates Can Use in Oil &amp; Gas</a></h3>
+          <p>Where GIS sits alongside cybersecurity, data, HSE and automation.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">&rarr;</div>
+        <div class="stage-body">
+          <h3><a href="/drone-technology-in-oil-and-gas-nigeria">Drone Technology in Nigeria's Oil &amp; Gas Industry</a></h3>
+          <p>The drone side of this work in more detail.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">&rarr;</div>
+        <div class="stage-body">
           <h3><a href="/gis-careers-nigeria">GIS Careers in Nigeria</a></h3>
-          <p>The full GIS career guide, including real tools and entry pathways.</p>
+          <p>Roles, tools and entry pathways.</p>
         </div>
       </div>
       <div class="stage">
         <div class="stage-tag">&rarr;</div>
         <div class="stage-body">
-          <h3><a href="/drone-mapping-careers-nigeria">Drone Mapping Careers in Nigeria</a></h3>
-          <p>The data-collection side of this pairing.</p>
-        </div>
-      </div>
-      <div class="stage">
-        <div class="stage-tag">&rarr;</div>
-        <div class="stage-body">
-          <h3><a href="/digital-skills-for-oil-and-gas-nigeria">Digital Skills for Oil & Gas Careers</a></h3>
-          <p>How GIS fits alongside the other three relevant skills.</p>
+          <h3><a href="/what-you-get-from-a-gis-and-drone-mapping-course">What You Get From a GIS and Drone Mapping Course</a></h3>
+          <p>What a practical course should include.</p>
         </div>
       </div>
     </div>
@@ -650,10 +878,10 @@
 
 <div class="band footer-band">
   <div class="wrap">
-    <p>See Paleon's GIS and Drone Mapping courses. <a href="/welcome#courses">See the course catalog</a> or <a href="/register">create an account</a> to get started.</p>
+    <p>Paleon's <a href="/welcome#courses">GIS and Drone Mapping course</a> covers GIS, drone mapping, photogrammetry and satellite data. It ends in a capstone project you can base on an oil &amp; gas scenario. <a href="/register">Create an account</a> to get started.</p>
     <div class="signoff">
       <span>Paleon Training &mdash; Digital Skills for the Long Run</span>
-      <span>Oil & Gas</span>
+      <span>Oil &amp; Gas &middot; GIS</span>
     </div>
   </div>
 </div>

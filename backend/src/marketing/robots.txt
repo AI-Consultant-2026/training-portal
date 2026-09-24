@@ -34,6 +34,9 @@ Allow: /high-paying-skills-to-learn-in-nigeria
 Allow: /warri-oil-and-gas-jobs
 Allow: /oil-and-gas-entry-level-jobs-nigeria
 Allow: /gis-mapping-oil-and-gas-nigeria
+Allow: /nysc-digital-skills-oil-and-gas-career
+Allow: /practical-digital-skills-nigerian-graduates
+Allow: /images/articles/
 Allow: /oil-and-gas-jobs-in-warri-delta-state
 Allow: /how-to-get-a-bank-job-in-nigeria
 Allow: /fintech-jobs-nigeria

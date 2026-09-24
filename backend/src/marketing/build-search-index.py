@@ -48,6 +48,7 @@ URLS = [
     "warri-oil-and-gas-jobs",
     "oil-and-gas-entry-level-jobs-nigeria",
     "gis-mapping-oil-and-gas-nigeria",
+    "nysc-digital-skills-oil-and-gas-career", "practical-digital-skills-nigerian-graduates",
     "oil-and-gas-jobs-in-warri-delta-state",
     "how-to-get-a-bank-job-in-nigeria",
     "fintech-jobs-nigeria",

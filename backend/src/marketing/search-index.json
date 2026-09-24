@@ -108,8 +108,8 @@
     "category": "Career guides"
   },
   {
-    "title": "Digital Skills for Oil & Gas Careers in Nigeria",
-    "description": "Which digital skills actually matter for oil & gas careers in Nigeria -- GIS and drone mapping, cybersecurity, and HSE -- and how they map to real roles.",
+    "title": "5 Digital Skills Nigerian Graduates Can Use in Oil & Gas",
+    "description": "Five digital skills Nigerian graduates can use in oil & gas: cybersecurity, GIS, data analytics, digital HSE and automation, with real examples and projects.",
     "url": "/digital-skills-for-oil-and-gas-nigeria",
     "category": "Oil & Gas"
   },
@@ -258,10 +258,22 @@
     "category": "Oil & Gas"
   },
   {
-    "title": "GIS Mapping in Nigeria's Oil & Gas Industry, Explained",
-    "description": "A plain explanation of how GIS mapping and drone data are actually used in Nigeria's oil & gas industry — pipeline monitoring, site surveying, environmental monitoring.",
+    "title": "How GIS Is Used in Oil & Gas Operations (Nigeria Guide)",
+    "description": "How GIS is used in oil & gas: exploration, pipelines, environment, HSE, assets, drones and communities, plus the data workflow and Nigerian scenarios.",
     "url": "/gis-mapping-oil-and-gas-nigeria",
     "category": "Oil & Gas"
+  },
+  {
+    "title": "What to Learn During NYSC for an Oil & Gas Career",
+    "description": "What to learn during NYSC for an oil & gas career: one digital skill, sector knowledge, a real project and a 12-day learning roadmap for corps members.",
+    "url": "/nysc-digital-skills-oil-and-gas-career",
+    "category": "NYSC & Graduates"
+  },
+  {
+    "title": "Practical Digital Skills for Nigerian Graduates (Employers)",
+    "description": "For employers: why degrees and certificates still matter, what practical digital evidence adds, and how to assess a Nigerian graduate's digital skills.",
+    "url": "/practical-digital-skills-nigerian-graduates",
+    "category": "Career guides"
   },
   {
     "title": "Oil & Gas Jobs in Warri and Across Delta State",

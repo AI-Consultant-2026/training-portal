@@ -328,6 +328,20 @@ export function createApp() {
   app.get("/oil-and-gas-entry-level-jobs-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-entry-level-jobs-nigeria.html"));
   });
+  // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
+  // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.
+  app.get("/nysc-digital-skills-oil-and-gas-career", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "nysc-digital-skills-oil-and-gas-career.html"));
+  });
+  app.get("/practical-digital-skills-nigerian-graduates", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "practical-digital-skills-nigerian-graduates.html"));
+  });
+  // Article featured / og:image files. Whitelisted by pattern so the route can't be
+  // used to read anything outside images/articles/.
+  app.get("/images/articles/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "articles", req.params.file));
+  });
   app.get("/gis-mapping-oil-and-gas-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "gis-mapping-oil-and-gas-nigeria.html"));
   });
