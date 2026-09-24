@@ -108,8 +108,11 @@ export function BankTransferPage() {
           complete, you may temporarily make your training payment to the authorised account details displayed below.
         </p>
         <p className="mt-2">
-          Please use your name + course name as the payment reference and send your transfer confirmation to us after
-          payment.
+          Please use your name + course name as the payment reference and send your transfer confirmation to{" "}
+          <a href="mailto:enrolment@paleontraining.com" className="font-medium underline">
+            enrolment@paleontraining.com
+          </a>{" "}
+          after payment.
         </p>
         <p className="mt-2">
           This is a temporary arrangement, and the account details will be replaced with Paleon Training&rsquo;s

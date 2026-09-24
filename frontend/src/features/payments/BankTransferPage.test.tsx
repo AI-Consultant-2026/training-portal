@@ -104,6 +104,10 @@ describe("BankTransferPage", () => {
     expect(await screen.findByText("Temporary payment arrangement")).toBeInTheDocument();
     expect(screen.getByText(/finalising Paleon Training.s Nigerian business bank account/)).toBeInTheDocument();
     expect(screen.getByText(/use your name \+ course name as the payment reference/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "enrolment@paleontraining.com" })).toHaveAttribute(
+      "href",
+      "mailto:enrolment@paleontraining.com",
+    );
   });
 
   it("shows a 'temporarily unavailable' notice, with no account details or form, while bank transfers are paused", async () => {
