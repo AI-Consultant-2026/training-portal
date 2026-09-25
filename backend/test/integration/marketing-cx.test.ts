@@ -68,4 +68,10 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
     expect(res.text).not.toContain("Social Media Management");
     expect(res.text).not.toContain("Renewable Energy");
   });
+
+  it("lists the four free-lesson pages in the sitemap and allows them in robots.txt", async () => {
+    const sitemap = (await request(app).get("/sitemap.xml")).text;
+    for (const slug of COURSES) expect(sitemap).toContain(`<loc>https://paleontraining.com/preview/${slug}</loc>`);
+    expect((await request(app).get("/robots.txt")).text).toContain("Allow: /preview/");
+  });
 });

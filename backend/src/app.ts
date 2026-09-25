@@ -5,6 +5,8 @@ import cors from "cors";
 import express from "express";
 import fs from "fs";
 import helmet from "helmet";
+import { getPublicCoursePreview } from "./services/course.service";
+import { renderPreviewPage } from "./services/previewPage.service";
 import morgan from "morgan";
 import path from "path";
 import { config } from "./config";
@@ -766,6 +768,21 @@ export function createApp() {
       "instructor",
       "admin",
     ]);
+    // Free-lesson pages are server-rendered for crawlers (see previewPage.service.ts);
+    // an unknown or unpublished course gets the SPA shell with a 404 status.
+    app.get("/preview/:slug", async (req, res, next) => {
+      if (!fs.existsSync(indexHtmlPath)) return next();
+      try {
+        const preview = await getPublicCoursePreview(req.params.slug);
+        const html = renderPreviewPage(fs.readFileSync(indexHtmlPath, "utf8"), req.params.slug, preview);
+        res.set("Cache-Control", "public, max-age=300");
+        return res.type("html").send(html);
+      } catch {
+        // Unknown/unpublished course: same SPA shell (it shows its own "couldn't find
+        // that course" message) but a real 404, not a soft 200.
+        return res.status(404).sendFile(indexHtmlPath);
+      }
+    });
     app.get("*", (req, res, next) => {
       if (req.method !== "GET" || req.path.startsWith("/api") || !fs.existsSync(indexHtmlPath)) {
         return next();

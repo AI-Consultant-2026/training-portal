@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /welcome
+Allow: /preview/
 Allow: /executive-training
 Allow: /trainingportalprocess
 Allow: /oil-and-gas-careers-nigeria
