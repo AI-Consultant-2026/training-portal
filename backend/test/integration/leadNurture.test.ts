@@ -2,6 +2,10 @@ import bcrypt from "bcryptjs";
 import { Course, Enrollment, Lead, sequelize, User } from "../../src/models";
 import { sendPendingFollowUpEmails, sendPendingWelcomeEmails } from "../../src/services/leadNurture.service";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
+import request from "supertest";
+import { createApp } from "../../src/app";
+
+const app = createApp();
 
 const memAdapter = emailAdapter as MemoryEmailAdapter;
 
@@ -167,6 +171,67 @@ describe("Lead nurture", () => {
 
       expect((await sendPendingFollowUpEmails()).sent).toBe(0);
       expect(memAdapter.sentMessages).toHaveLength(0);
+    });
+  });
+
+  describe("unsubscribe", () => {
+    function unsubscribeLink(text: string): string {
+      const m = text.match(/https?:\/\/\S+\/api\/leads\/unsubscribe\?id=[^&\s]+&t=[A-Za-z0-9_-]+/);
+      if (!m) throw new Error("no unsubscribe link in email");
+      return m[0];
+    }
+
+    it("puts a signed unsubscribe link (no email address in it) and List-Unsubscribe headers on every lead email", async () => {
+      const lead = await createLead({ sector: "Banking", course: "Cyber Security Fundamentals" });
+      await sendPendingWelcomeEmails();
+      const msg = memAdapter.sentMessages[0];
+      const link = unsubscribeLink(msg.text);
+      expect(link).toContain(`id=${lead.id}`);
+      expect(link).not.toContain("amara");
+      expect(msg.headers?.["List-Unsubscribe"]).toBe(`<${link}>`);
+      expect(msg.headers?.["List-Unsubscribe-Post"]).toBe("List-Unsubscribe=One-Click");
+
+      memAdapter.clear();
+      await ageLead(lead, 2);
+      await sendPendingFollowUpEmails();
+      expect(unsubscribeLink(memAdapter.sentMessages[0].text)).toBe(link);
+    });
+
+    it("unsubscribes every record for that address via the link, and stops all further emails", async () => {
+      const first = await createLead();
+      const second = await createLead({ email: "AMARA.CHUKWU@example.com", course: "HSE Fundamentals" });
+      await sendPendingWelcomeEmails();
+      const link = unsubscribeLink(memAdapter.sentMessages[0].text);
+      memAdapter.clear();
+
+      const res = await request(app).get(new URL(link).pathname + new URL(link).search);
+      expect(res.status).toBe(200);
+      expect(res.text).toContain("You're unsubscribed");
+      expect((await Lead.findByPk(first.id))?.unsubscribedAt).toBeInstanceOf(Date);
+      expect((await Lead.findByPk(second.id))?.unsubscribedAt).toBeInstanceOf(Date);
+
+      await ageLead(first, 2);
+      await ageLead(second, 2);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
+
+      // A later form submission from the same address gets no emails either.
+      await createLead({ course: "Digital Marketing" });
+      expect((await sendPendingWelcomeEmails()).sent).toBe(0);
+      expect(memAdapter.sentMessages).toHaveLength(0);
+    });
+
+    it("supports mail apps' one-click POST, and rejects a tampered link", async () => {
+      const lead = await createLead();
+      await sendPendingWelcomeEmails();
+      const url = new URL(unsubscribeLink(memAdapter.sentMessages[0].text));
+
+      const bad = await request(app).get(`/api/leads/unsubscribe?id=${lead.id}&t=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`);
+      expect(bad.status).toBe(400);
+      expect((await Lead.findByPk(lead.id))?.unsubscribedAt).toBeNull();
+
+      const oneClick = await request(app).post(url.pathname + url.search).send("List-Unsubscribe=One-Click");
+      expect(oneClick.status).toBe(200);
+      expect((await Lead.findByPk(lead.id))?.unsubscribedAt).toBeInstanceOf(Date);
     });
   });
 });

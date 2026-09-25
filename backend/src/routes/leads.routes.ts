@@ -17,6 +17,17 @@ const leadsRateLimiter = rateLimit({
   skip: () => config.nodeEnv === "test",
 });
 
+// Unsubscribe links from lead emails -- registered before the form's stricter limiter.
+const unsubscribeRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => config.nodeEnv === "test",
+});
+leadsRouter.get("/unsubscribe", unsubscribeRateLimiter, leadsController.unsubscribe);
+leadsRouter.post("/unsubscribe", unsubscribeRateLimiter, leadsController.unsubscribe);
+
 leadsRouter.use(leadsRateLimiter);
 
 leadsRouter.post("/", validate(createLeadSchema), leadsController.create);

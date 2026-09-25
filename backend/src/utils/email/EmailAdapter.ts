@@ -12,6 +12,8 @@ export interface EmailMessage {
   // straight to the student and see their screenshot.
   replyTo?: string;
   attachments?: { filename: string; content: Buffer; contentType: string }[];
+  // Extra headers, e.g. List-Unsubscribe on lead follow-up emails.
+  headers?: Record<string, string>;
 }
 
 export interface EmailAdapter {

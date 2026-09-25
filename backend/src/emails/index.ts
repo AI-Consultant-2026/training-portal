@@ -71,6 +71,7 @@ export async function sendLeadNotificationEmail(lead: {
 }
 
 export async function sendLeadWelcomeEmail(lead: {
+  id: string;
   name: string;
   email: string;
   course: string;
@@ -82,7 +83,7 @@ export async function sendLeadWelcomeEmail(lead: {
 // Returns false when there was nothing to send (leads whose course isn't one of the
 // four live courses only get the welcome email).
 export async function sendLeadFollowUpEmail(
-  lead: { name: string; email: string; course: string; sector?: string | null },
+  lead: { id: string; name: string; email: string; course: string; sector?: string | null },
   step: FollowUpStep,
 ): Promise<boolean> {
   const message = buildLeadFollowUpEmail(lead, step);

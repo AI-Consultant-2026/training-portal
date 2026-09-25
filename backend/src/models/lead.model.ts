@@ -20,6 +20,7 @@ export interface LeadAttributes {
   followUp1SentAt: Date | null;
   followUp2SentAt: Date | null;
   followUp3SentAt: Date | null;
+  unsubscribedAt: Date | null;
   createdAt?: Date;
 }
 
@@ -41,6 +42,7 @@ export type LeadCreationAttributes = Optional<
   | "followUp1SentAt"
   | "followUp2SentAt"
   | "followUp3SentAt"
+  | "unsubscribedAt"
   | "createdAt"
 >;
 
@@ -64,6 +66,7 @@ export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implemen
   declare followUp1SentAt: Date | null;
   declare followUp2SentAt: Date | null;
   declare followUp3SentAt: Date | null;
+  declare unsubscribedAt: Date | null;
   declare readonly createdAt: Date;
 }
 
@@ -89,6 +92,7 @@ export function initLeadModel(sequelize: Sequelize) {
       followUp1SentAt: { type: DataTypes.DATE, allowNull: true, field: "follow_up_1_sent_at" },
       followUp2SentAt: { type: DataTypes.DATE, allowNull: true, field: "follow_up_2_sent_at" },
       followUp3SentAt: { type: DataTypes.DATE, allowNull: true, field: "follow_up_3_sent_at" },
+      unsubscribedAt: { type: DataTypes.DATE, allowNull: true, field: "unsubscribed_at" },
     },
     {
       sequelize,

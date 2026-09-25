@@ -2,6 +2,7 @@ import * as emails from "../emails";
 import { FollowUpStep } from "../emails/templates/leadNurture";
 import { Enrollment, Lead, User } from "../models";
 import { logger } from "../utils/logger";
+import { isEmailUnsubscribed } from "./leadUnsubscribe.service";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
@@ -42,10 +43,14 @@ export async function sendPendingWelcomeEmails(): Promise<{ sent: number }> {
 
   for (const lead of leads) {
     try {
-      await emails.sendLeadWelcomeEmail(lead);
+      // Someone who unsubscribed (on this or an earlier form submission) gets no lead
+      // emails; stamp it so we don't check again. The on-page match still works.
+      if (!lead.unsubscribedAt && !(await isEmailUnsubscribed(lead.email))) {
+        await emails.sendLeadWelcomeEmail(lead);
+        sent++;
+      }
       lead.welcomeEmailSentAt = new Date();
       await lead.save();
-      sent++;
     } catch (err) {
       logger.error(`Failed to send lead welcome email (leadId=${lead.id})`, err);
     }
@@ -59,7 +64,7 @@ export async function sendPendingFollowUpEmails(): Promise<{ sent: number }> {
   let sent = 0;
 
   for (const lead of leads) {
-    if (!lead.welcomeEmailSentAt || !lead.createdAt) continue;
+    if (!lead.welcomeEmailSentAt || !lead.createdAt || lead.unsubscribedAt) continue;
     const age = daysSince(lead.createdAt);
     const due = FOLLOW_UP_STEPS.filter((s) => age >= s.day && lead[s.field] === null);
     if (due.length === 0) continue;
@@ -70,7 +75,7 @@ export async function sendPendingFollowUpEmails(): Promise<{ sent: number }> {
     const latest = due[due.length - 1];
     const tooLate = age > latest.day + GRACE_DAYS;
 
-    if (!tooLate && !(await hasConfirmedPayment(lead.email))) {
+    if (!tooLate && !(await hasConfirmedPayment(lead.email)) && !(await isEmailUnsubscribed(lead.email))) {
       try {
         const didSend = await emails.sendLeadFollowUpEmail(lead, latest.step);
         if (didSend) sent++;

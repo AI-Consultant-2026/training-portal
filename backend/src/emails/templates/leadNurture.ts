@@ -1,5 +1,6 @@
 import { config } from "../../config";
 import { coursePriceNgn, findPublicCourseByTitle, PublicCourse } from "../../constants/publicCourses";
+import { leadUnsubscribeUrl } from "../../services/leadUnsubscribe.service";
 import { EmailMessage } from "../../utils/email";
 import { wrapHtml } from "../htmlWrapper";
 
@@ -10,6 +11,7 @@ import { wrapHtml } from "../htmlWrapper";
 export type FollowUpStep = 1 | 2 | 3;
 
 interface LeadFields {
+  id: string;
   name: string;
   email: string;
   course: string;
@@ -40,8 +42,26 @@ function facts(course: PublicCourse): string {
   return `${course.days} days, ${course.lessons} illustrated video lessons${fee} — self-paced, with lifetime access and a certificate of completion.`;
 }
 
+// Every lead email ends with why they're getting it and a one-click unsubscribe link,
+// and carries List-Unsubscribe headers so mail apps can show their own button.
 function message(lead: LeadFields, subject: string, lines: string[]): EmailMessage {
-  return { to: lead.email, subject, text: lines.join("\n\n"), html: wrapHtml(lines) };
+  const unsubscribe = leadUnsubscribeUrl(lead.id);
+  const all = [
+    ...lines,
+    "\u2014",
+    "You're receiving this because you asked about a Paleon Training course on paleontraining.com. To stop these emails, unsubscribe here:",
+    unsubscribe,
+  ];
+  return {
+    to: lead.email,
+    subject,
+    text: all.join("\n\n"),
+    html: wrapHtml(all),
+    headers: {
+      "List-Unsubscribe": `<${unsubscribe}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
+  };
 }
 
 // Leads whose course isn't one of the four live courses (e.g. "Not sure yet" from the

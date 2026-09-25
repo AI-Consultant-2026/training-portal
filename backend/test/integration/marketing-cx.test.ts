@@ -44,4 +44,28 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
     expect(res.text).toContain("We reply within 1 working day");
     expect(res.text.indexOf("report-in-portal")).toBeLessThan(res.text.indexOf("Tell us these five things"));
   });
+
+  it.each(["/privacy", "/terms"])("%s describes the business as the owner specified, not as a registered company", async (page) => {
+    const res = await request(app).get(page);
+    expect(res.status).toBe(200);
+    expect(res.text).not.toContain("registered in Nigeria");
+    expect(res.text).toContain("Principal place of business / Nigerian operations:");
+    expect(res.text).toContain("where Paleon Training will be registered");
+    expect(res.text).toContain("Technology and management support:");
+    expect(res.text).toContain("Market served:");
+  });
+
+  it("privacy policy covers the Career Match, follow-up emails, unsubscribing and problem reports", async () => {
+    const res = await request(app).get("/privacy");
+    for (const phrase of ["Career Match", "You can unsubscribe", "Problem reports", "screenshot", "WhatsApp"]) {
+      expect(res.text).toContain(phrase);
+    }
+  });
+
+  it("terms list only the current courses", async () => {
+    const res = await request(app).get("/terms");
+    expect(res.text).toContain("HSE\n      Fundamentals");
+    expect(res.text).not.toContain("Social Media Management");
+    expect(res.text).not.toContain("Renewable Energy");
+  });
 });
