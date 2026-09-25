@@ -1,10 +1,16 @@
 import { Transaction } from "sequelize";
 import * as emails from "../emails";
-import { Course, Enrollment, User } from "../models";
+import { Course, Enrollment, Payment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 
-export async function enrollStudent(courseId: string, studentId: string): Promise<Enrollment> {
+// sendConfirmationEmail: false lets a caller send its own, more specific email instead
+// (the bank-transfer submit sends one combined "enrolled + payment received" email).
+export async function enrollStudent(
+  courseId: string,
+  studentId: string,
+  { sendConfirmationEmail = true }: { sendConfirmationEmail?: boolean } = {},
+): Promise<Enrollment> {
   const course = await Course.findByPk(courseId);
   if (!course || course.status !== "published") {
     throw ApiError.notFound("Course not found");
@@ -17,7 +23,7 @@ export async function enrollStudent(courseId: string, studentId: string): Promis
 
   const enrollment = await Enrollment.create({ courseId, studentId });
 
-  const student = await User.findByPk(studentId);
+  const student = sendConfirmationEmail ? await User.findByPk(studentId) : null;
   if (student) {
     // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang
     // enrolling in a course; the enrollment itself is already committed at this point.
@@ -78,4 +84,12 @@ export async function recalculateProgress(
   }
   await enrollment.save({ transaction });
   return enrollment;
+}
+
+export async function getPendingPaymentSubmittedAt(enrollmentId: string): Promise<Date | null> {
+  const payment = await Payment.findOne({
+    where: { enrollmentId, method: "bank_transfer", status: "pending" },
+    order: [["createdAt", "DESC"]],
+  });
+  return payment ? payment.createdAt : null;
 }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { downloadAttendanceRecord, downloadCertificate } from "../../../api/enrollments.api";
 import { ProgressBar } from "../../../components/ui/ProgressBar";
 import { COURSE_COVER_IMAGES } from "../../courses/courseCoverImages";
+import { PAYMENT_CONFIRMATION_PROMISE } from "../../payments/paymentCopy";
 import { Enrollment } from "../../../types/api";
 
 interface EnrollmentCardProps {
@@ -83,6 +84,27 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
             </span>
           )}
         </div>
+        {!enrollment.paymentConfirmed && (
+          <p
+            className={`rounded-md px-3 py-2 text-sm ${enrollment.paymentSubmittedAt ? "bg-amber-50 text-amber-800" : "bg-gray-50 text-gray-700"}`}
+          >
+            {enrollment.paymentSubmittedAt ? (
+              <>
+                <strong>Payment submitted</strong> on {new Date(enrollment.paymentSubmittedAt).toLocaleDateString("en-GB")}{" "}
+                &mdash; we&rsquo;re confirming it. Your lessons unlock {PAYMENT_CONFIRMATION_PROMISE}.
+              </>
+            ) : (
+              <>
+                <strong>Awaiting payment.</strong> The first lesson is free &mdash; pay for the course to unlock the rest.{" "}
+                {course && (
+                  <Link to={`/courses/${course.slug}/pay/bank-transfer`} className="font-medium text-blue-600 hover:underline">
+                    Pay now
+                  </Link>
+                )}
+              </>
+            )}
+          </p>
+        )}
         <ProgressBar percent={enrollment.progressPercent} />
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm text-gray-500">
           <span>{enrollment.progressPercent}% complete</span>

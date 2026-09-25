@@ -17,6 +17,9 @@ export interface PaymentAttributes {
   cardLast4: string | null;
   gatewayReference: string | null;
   notes: string | null;
+  receiptPath: string | null;
+  receiptName: string | null;
+  receiptMimeType: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +32,9 @@ export type PaymentCreationAttributes = Optional<
   | "cardLast4"
   | "gatewayReference"
   | "notes"
+  | "receiptPath"
+  | "receiptName"
+  | "receiptMimeType"
   | "createdAt"
   | "updatedAt"
 >;
@@ -50,6 +56,9 @@ export class Payment
   declare cardLast4: string | null;
   declare gatewayReference: string | null;
   declare notes: string | null;
+  declare receiptPath: string | null;
+  declare receiptName: string | null;
+  declare receiptMimeType: string | null;
   declare createdAt: Date;
   declare updatedAt: Date;
 }
@@ -91,6 +100,9 @@ export function initPaymentModel(sequelize: Sequelize) {
       cardLast4: { type: DataTypes.STRING(4), allowNull: true, field: "card_last4" },
       gatewayReference: { type: DataTypes.STRING, allowNull: true, field: "gateway_reference" },
       notes: { type: DataTypes.TEXT, allowNull: true },
+      receiptPath: { type: DataTypes.STRING, allowNull: true, field: "receipt_path" },
+      receiptName: { type: DataTypes.STRING, allowNull: true, field: "receipt_name" },
+      receiptMimeType: { type: DataTypes.STRING, allowNull: true, field: "receipt_mime_type" },
       createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: "created_at" },
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: "updated_at" },
     },

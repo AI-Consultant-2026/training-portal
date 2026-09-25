@@ -15,6 +15,14 @@ export const payWithCard = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const submitBankTransfer = asyncHandler(async (req: Request, res: Response) => {
-  const result = await paymentService.submitBankTransfer({ ...req.body, studentId: req.user!.id });
+  const result = await paymentService.submitBankTransfer({
+    courseId: req.body.courseId,
+    transferReference: req.body.transferReference,
+    notes: req.body.notes,
+    studentId: req.user!.id,
+    receipt: req.file
+      ? { buffer: req.file.buffer, originalName: req.file.originalname, mimeType: req.file.mimetype }
+      : undefined,
+  });
   res.status(201).json(result);
 });

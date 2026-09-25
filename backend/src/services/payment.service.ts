@@ -8,6 +8,8 @@ import * as paymentGateway from "./paymentGateway.service";
 import * as referralService from "./referral.service";
 import * as userService from "./user.service";
 import { logger } from "../utils/logger";
+import { storageAdapter } from "../utils/storage";
+import * as emails from "../emails";
 import { CARD_SETTLEMENT_CURRENCY, convertFromNgn, estimateLocalAmount } from "./currency.service";
 
 // A referred student's first confirmed payment qualifies their referrer's reward. Kept
@@ -157,6 +159,8 @@ export interface BankTransferInput {
   studentId: string;
   transferReference: string;
   notes?: string;
+  // Optional proof of payment (image or PDF) uploaded with the transfer.
+  receipt?: { buffer: Buffer; originalName: string; mimeType: string };
 }
 
 // Unlike chargeCourseCard, this never confirms payment itself -- a claimed bank transfer
@@ -180,6 +184,7 @@ export async function submitBankTransfer(input: BankTransferInput): Promise<{ pa
   const baseAmountNgn = requirePriceNgn(course.slug);
 
   let enrollment = await getEnrollmentForCourseAndStudent(course.id, input.studentId);
+  let newlyEnrolled = false;
   if (enrollment?.paymentConfirmed) {
     throw ApiError.conflict("Payment has already been confirmed for this enrollment");
   }
@@ -188,8 +193,18 @@ export async function submitBankTransfer(input: BankTransferInput): Promise<{ pa
     if (!student.emailVerifiedAt) {
       throw ApiError.forbidden("Please verify your email before enrolling in a course");
     }
-    enrollment = await enrollStudent(course.id, input.studentId);
+    enrollment = await enrollStudent(course.id, input.studentId, { sendConfirmationEmail: false });
+    newlyEnrolled = true;
   }
+
+  const saved = input.receipt
+    ? await storageAdapter.save({
+        buffer: input.receipt.buffer,
+        originalName: input.receipt.originalName,
+        mimeType: input.receipt.mimeType,
+        keyPrefix: "payment-receipts",
+      })
+    : null;
 
   const payment = await Payment.create({
     enrollmentId: enrollment.id,
@@ -202,7 +217,29 @@ export async function submitBankTransfer(input: BankTransferInput): Promise<{ pa
     billingCountry: "Nigeria",
     gatewayReference: input.transferReference,
     notes: input.notes ?? null,
+    receiptPath: saved?.storagePath ?? null,
+    receiptName: input.receipt?.originalName ?? null,
+    receiptMimeType: input.receipt?.mimeType ?? null,
   });
+
+  // Best-effort, not awaited: the transfer is recorded either way. The alert gives the
+  // team everything needed to confirm it; the student gets a receipt with the timeline.
+  const student = await userService.getUserById(input.studentId);
+  const details = { student, courseTitle: course.title, amount: baseAmountNgn, reference: input.transferReference };
+  // One email to the student, not two: when this submit also enrolled them, the
+  // "payment received" email doubles as the enrolment confirmation.
+  emails
+    .sendBankTransferAlertEmail({
+      ...details,
+      notes: input.notes ?? null,
+      receipt: input.receipt
+        ? { filename: input.receipt.originalName, content: input.receipt.buffer, contentType: input.receipt.mimeType }
+        : null,
+    })
+    .catch((err) => logger.error("Failed to send bank transfer alert email", err));
+  emails
+    .sendBankTransferReceivedEmail({ ...details, newlyEnrolled })
+    .catch((err) => logger.error("Failed to send bank transfer received email", err));
 
   return { payment, enrollment };
 }

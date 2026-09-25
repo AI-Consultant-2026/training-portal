@@ -45,6 +45,7 @@ adminRouter.get(
   adminController.listCoursePayments,
 );
 adminRouter.get("/candidates", adminController.listCandidates);
+adminRouter.get("/payments/:id/receipt", adminController.downloadPaymentReceipt);
 adminRouter.post("/candidates", validate(createCandidateSchema), adminController.createCandidate);
 // Must come before "/candidates/:id" -- otherwise Express would match "inactive" as
 // the :id param and route this to deactivateCandidate instead.

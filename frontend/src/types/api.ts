@@ -199,6 +199,8 @@ export interface Enrollment {
   paymentConfirmedAt: string | null;
   course?: Course;
   nextLessonId: string | null;
+  // Set while a submitted bank transfer awaits confirmation (my-enrollments only).
+  paymentSubmittedAt?: string | null;
 }
 
 export type PaymentMethod = "card" | "bank_transfer";
@@ -438,6 +440,8 @@ export interface CandidateEnrollment {
     amount: number;
     gatewayReference: string | null;
     notes: string | null;
+    id?: string;
+    hasReceipt?: boolean;
     createdAt: string;
   } | null;
 }

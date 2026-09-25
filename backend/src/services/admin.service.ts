@@ -242,6 +242,8 @@ function serializeLatestPayment(payments: Payment[]) {
         amount: latestPayment.amount,
         gatewayReference: latestPayment.gatewayReference,
         notes: latestPayment.notes,
+        id: latestPayment.id,
+        hasReceipt: Boolean(latestPayment.receiptPath),
         createdAt: latestPayment.createdAt,
       }
     : null;
@@ -421,8 +423,33 @@ export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed
   // referred student's referral qualifies, alongside self-service card checkout.
   if (paymentConfirmed && !wasConfirmed) {
     await creditReferralIfAny(enrollment);
+    await sendPaymentConfirmedEmailIfPossible(enrollment);
   }
   return enrollment;
+}
+
+// Best-effort: tells the student their lessons are unlocked (2026-09-25).
+async function sendPaymentConfirmedEmailIfPossible(enrollment: Enrollment): Promise<void> {
+  try {
+    const [student, course] = await Promise.all([
+      User.findByPk(enrollment.studentId),
+      Course.findByPk(enrollment.courseId),
+    ]);
+    if (student && course) {
+      await emails.sendPaymentConfirmedEmail({ student, courseTitle: course.title, courseSlug: course.slug });
+    }
+  } catch (err) {
+    logger.error("Failed to send payment confirmed email", err);
+  }
+}
+
+// The receipt a student uploaded with a bank transfer, for the admin to check.
+export async function getPaymentReceipt(paymentId: string) {
+  const payment = await Payment.findByPk(paymentId);
+  if (!payment || !payment.receiptPath) {
+    throw ApiError.notFound("Receipt not found");
+  }
+  return { path: payment.receiptPath, name: payment.receiptName ?? "receipt", mimeType: payment.receiptMimeType };
 }
 
 // Best-effort, non-fatal -- same reasoning as payment.service.ts's copy: a problem

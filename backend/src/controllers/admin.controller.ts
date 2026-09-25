@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { storageAdapter } from "../utils/storage";
 import * as adminService from "../services/admin.service";
 import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -128,4 +129,16 @@ export const setCapstoneEnabled = asyncHandler(async (req: Request, res: Respons
   }
   const capstone = await adminService.setCapstoneEnabled(req.params.id, req.body.isEnabled);
   res.json({ capstone });
+});
+
+export const downloadPaymentReceipt = asyncHandler(async (req: Request, res: Response) => {
+  const receipt = await adminService.getPaymentReceipt(req.params.id);
+  const safeName = receipt.name.replace(/[^A-Za-z0-9._-]+/g, "_");
+  if (receipt.mimeType) res.type(receipt.mimeType);
+  res.setHeader("Content-Disposition", `inline; filename="${safeName}"`);
+  const stream = storageAdapter.getReadStream(receipt.path);
+  stream.on("error", () => {
+    if (!res.headersSent) res.status(404).json({ error: { message: "File not found" } });
+  });
+  stream.pipe(res);
 });

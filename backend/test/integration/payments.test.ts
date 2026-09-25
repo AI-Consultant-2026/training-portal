@@ -284,9 +284,13 @@ describe("Payments", () => {
       expect(res.body.enrollment.paymentConfirmed).toBe(false);
       expect(await Enrollment.count({ where: { courseId: course.id, studentId: student.id } })).toBe(1);
       await new Promise((r) => setTimeout(r, 100)); // enrolment email is fire-and-forget
-      expect(memAdapter.sentMessages.filter((m) => m.to === "bank-new@example.com")).toHaveLength(1);
+      // One combined email: enrolled + payment details received (no separate enrolment email).
+      const first = memAdapter.sentMessages.filter((m) => m.to === "bank-new@example.com");
+      expect(first).toHaveLength(1);
+      expect(first[0].subject).toBe("You're enrolled in Cyber Security Fundamentals \u2014 payment details received");
 
-      // A second submission reuses the enrolment rather than duplicating it or re-emailing.
+      // A second submission reuses the enrolment rather than duplicating it; the student gets
+      // an acknowledgement of the new reference, not another enrolment email.
       memAdapter.clear();
       const again = await request(app)
         .post("/api/payments/bank-transfer")
@@ -294,7 +298,9 @@ describe("Payments", () => {
         .send({ courseId: course.id, transferReference: "GTB-NEW-2" });
       expect(again.status).toBe(201);
       expect(await Enrollment.count({ where: { courseId: course.id, studentId: student.id } })).toBe(1);
-      expect(memAdapter.sentMessages.filter((m) => m.to === "bank-new@example.com")).toHaveLength(0);
+      await new Promise((r) => setTimeout(r, 100));
+      const second = memAdapter.sentMessages.filter((m) => m.to === "bank-new@example.com");
+      expect(second.map((m) => m.subject)).toEqual(["We've received your payment details \u2014 Cyber Security Fundamentals"]);
     });
 
     it("refuses an unverified student and creates no enrolment or payment", async () => {

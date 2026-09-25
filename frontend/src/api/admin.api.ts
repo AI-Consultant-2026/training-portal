@@ -111,3 +111,13 @@ export async function setCapstoneEnabled(capstoneId: string, isEnabled: boolean)
   });
   return res.data.capstone;
 }
+
+// Opens the receipt a student uploaded with a bank transfer in a new tab (the endpoint
+// needs the admin's token, so it's fetched as a blob rather than linked directly).
+export async function openPaymentReceipt(paymentId: string): Promise<void> {
+  const tab = window.open("", "_blank");
+  const res = await axiosClient.get(`/admin/payments/${paymentId}/receipt`, { responseType: "blob" });
+  const url = window.URL.createObjectURL(res.data as Blob);
+  if (tab) tab.location.href = url;
+  else window.location.href = url;
+}

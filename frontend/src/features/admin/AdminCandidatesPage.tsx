@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { COURSE_INTERESTS, LOCATIONS } from "../auth/RegisterPage";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { sendCompletionEmail } from "../../api/admin.api";
+import { openPaymentReceipt, sendCompletionEmail } from "../../api/admin.api";
 import { fetchCourses } from "../../api/courses.api";
 import { downloadAttendanceRecord } from "../../api/enrollments.api";
 import { Alert } from "../../components/ui/Alert";
@@ -346,6 +346,18 @@ export function AdminCandidatesPage() {
                                 {e.latestPayment.amount.toLocaleString()}, ref{" "}
                                 <span className="font-mono">{e.latestPayment.gatewayReference}</span> &mdash; verify
                                 against your bank account before confirming.
+                                {e.latestPayment.hasReceipt && e.latestPayment.id && (
+                                  <>
+                                    {" "}
+                                    <button
+                                      type="button"
+                                      onClick={() => openPaymentReceipt(e.latestPayment!.id!).catch(() => undefined)}
+                                      className="font-medium text-blue-600 hover:underline"
+                                    >
+                                      View receipt
+                                    </button>
+                                  </>
+                                )}
                               </p>
                             )}
                             {e.status === "completed" && (

@@ -34,6 +34,11 @@ export const listMyEnrollments = asyncHandler(async (req: Request, res: Response
       nextLessonId: enrollment.paymentConfirmed
         ? await lessonService.getNextLessonId(enrollment.courseId, req.user!.id)
         : null,
+      // When the student last submitted a bank transfer that's still awaiting
+      // confirmation -- drives the dashboard's "payment submitted" status.
+      paymentSubmittedAt: enrollment.paymentConfirmed
+        ? null
+        : await enrollmentService.getPendingPaymentSubmittedAt(enrollment.id),
     })),
   );
   res.json({ enrollments: enriched });

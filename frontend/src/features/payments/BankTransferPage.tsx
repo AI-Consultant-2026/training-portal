@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchPaymentQuote, submitBankTransfer } from "../../api/payments.api";
+import { PAYMENT_CONFIRMATION_PROMISE } from "./paymentCopy";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
@@ -21,6 +22,7 @@ export function BankTransferPage() {
   const [quoteError, setQuoteError] = useState(false);
   const [transferReference, setTransferReference] = useState("");
   const [notes, setNotes] = useState("");
+  const [receipt, setReceipt] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -40,10 +42,14 @@ export function BankTransferPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!course) return;
+    if (receipt && receipt.size > 5 * 1024 * 1024) {
+      setError("That receipt file is too large (5 MB maximum).");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
-      await submitBankTransfer({ courseId: course.id, transferReference, notes: notes || undefined });
+      await submitBankTransfer({ courseId: course.id, transferReference, notes: notes || undefined, receipt });
       track("bank_transfer_submitted", {
         currency: "NGN",
         value: quote?.bankTransfer.amount,
@@ -71,14 +77,21 @@ export function BankTransferPage() {
 
   if (submitted) {
     return (
-      <div className="mx-auto mt-16 max-w-md text-center">
+      <div className="mx-auto mt-16 max-w-md px-6 text-center">
         <Alert
           variant="success"
-          message="Thanks -- we've recorded your transfer. Our team will confirm it and unlock the course within 24 hours."
+          message={`Thanks \u2014 we've received your transfer details. We'll confirm the payment and unlock your lessons ${PAYMENT_CONFIRMATION_PROMISE} (Monday to Friday, Nigerian time), and email you as soon as they're unlocked.`}
         />
-        <Button className="mt-4" onClick={() => navigate(`/courses/${course.slug}`)}>
-          Back to course
-        </Button>
+        <p className="mt-3 text-sm text-gray-600">
+          Meanwhile, the course&rsquo;s first lesson is already open. You can check your payment status on your
+          dashboard at any time.
+        </p>
+        <div className="mt-4 flex justify-center gap-3">
+          <Button onClick={() => navigate(`/courses/${course.slug}`)}>Back to course</Button>
+          <Button variant="secondary" onClick={() => navigate("/dashboard")}>
+            Go to dashboard
+          </Button>
+        </div>
       </div>
     );
   }
@@ -158,8 +171,8 @@ export function BankTransferPage() {
               </div>
             </dl>
             <p className="mt-3 text-xs text-gray-400">
-              Make the transfer using the details above, then submit your transaction reference below. Your course
-              unlocks once our team confirms the transfer.
+              Make the transfer using the details above, then submit your transaction reference below. We confirm
+              transfers and unlock your lessons {PAYMENT_CONFIRMATION_PROMISE}.
             </p>
           </>
         ) : quoteError ? (
@@ -178,6 +191,19 @@ export function BankTransferPage() {
           onChange={(e) => setTransferReference(e.target.value)}
           required
         />
+        <div>
+          <label htmlFor="receipt" className="block text-sm font-medium text-gray-700">
+            Receipt or screenshot <span className="font-normal text-gray-500">(optional, but speeds things up)</span>
+          </label>
+          <input
+            id="receipt"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,application/pdf"
+            onChange={(e) => setReceipt(e.target.files?.[0] ?? null)}
+            className="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium"
+          />
+          <p className="mt-1 text-xs text-gray-500">A photo, screenshot or PDF of your bank&rsquo;s confirmation.</p>
+        </div>
         <Input
           id="notes"
           label="Notes (optional)"
