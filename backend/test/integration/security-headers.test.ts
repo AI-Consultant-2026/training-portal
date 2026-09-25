@@ -15,4 +15,11 @@ describe("Security headers", () => {
     const res = await request(app).get("/api/health");
     expect(res.headers["content-security-policy"]).toContain("frame-src 'self' https://www.youtube.com");
   });
+
+  it("lets the browser send Sentry error reports (US and EU ingest hosts)", async () => {
+    const res = await request(app).get("/api/health");
+    const connectSrc = (res.headers["content-security-policy"] as string).match(/connect-src ([^;]*)/)?.[1] ?? "";
+    expect(connectSrc).toContain("https://*.ingest.sentry.io");
+    expect(connectSrc).toContain("https://*.ingest.de.sentry.io");
+  });
 });

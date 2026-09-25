@@ -45,6 +45,11 @@ export function createApp() {
             "https://*.google-analytics.com",
             "https://*.analytics.google.com",
             "https://*.googletagmanager.com",
+            // Sentry browser error reports (frontend/src/instrument.ts, only active once
+            // VITE_SENTRY_DSN is set). US-region DSNs use *.ingest.sentry.io, EU-region
+            // ones *.ingest.de.sentry.io.
+            "https://*.ingest.sentry.io",
+            "https://*.ingest.de.sentry.io",
           ],
           "img-src": ["'self'", "data:", "https://*.google-analytics.com", "https://*.googletagmanager.com"],
         },
