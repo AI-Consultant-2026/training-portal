@@ -37,20 +37,6 @@ export const config = {
   leadsNotifyEmail: process.env.LEADS_NOTIFY_EMAIL ?? "hello@paleontraining.com",
   // Where the in-portal "Report a problem" form sends reports (2026-09-25).
   supportEmail: process.env.SUPPORT_EMAIL ?? "support@paleontraining.com",
-  // The active intake's registration deadline and destination link, used by the
-  // lead-nurture countdown job (backend/src/jobs/leadNurture.job.ts) to send the
-  // welcome/T-21/T-7/T-1 emails in backend/src/emails/templates/lead*.ts. Deliberately
-  // env-overridable rather than hardcoded: the next cohort just needs a new date, which
-  // should ship as a config change, not a code change.
-  enrolment: {
-    nextDeadline: process.env.ENROLMENT_DEADLINE ?? "2026-10-01",
-    registrationUrl: process.env.ENROLMENT_REGISTRATION_URL ?? "https://paleontraining.com/welcome",
-    // Empty by default -- the following cohort's deadline usually isn't decided yet
-    // when this one opens. Leave unset and the recycle email
-    // (backend/src/emails/templates/leadRecycle.ts) simply never sends; set it once the
-    // next intake's date is known to start inviting leads who missed this one.
-    followingDeadline: process.env.NEXT_ENROLMENT_DEADLINE ?? "",
-  },
   // Optional, same reasoning as `email` above: error tracking is genuinely off (not
   // silently broken) until a Sentry project exists and this is set -- see
   // src/instrument.ts, which no-ops entirely when this is empty.

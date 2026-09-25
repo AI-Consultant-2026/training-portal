@@ -17,6 +17,9 @@ export interface LeadAttributes {
   reminder1dSentAt: Date | null;
   reminder0dSentAt: Date | null;
   recycleEmailSentAt: Date | null;
+  followUp1SentAt: Date | null;
+  followUp2SentAt: Date | null;
+  followUp3SentAt: Date | null;
   createdAt?: Date;
 }
 
@@ -35,6 +38,9 @@ export type LeadCreationAttributes = Optional<
   | "reminder1dSentAt"
   | "reminder0dSentAt"
   | "recycleEmailSentAt"
+  | "followUp1SentAt"
+  | "followUp2SentAt"
+  | "followUp3SentAt"
   | "createdAt"
 >;
 
@@ -55,6 +61,9 @@ export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implemen
   declare reminder1dSentAt: Date | null;
   declare reminder0dSentAt: Date | null;
   declare recycleEmailSentAt: Date | null;
+  declare followUp1SentAt: Date | null;
+  declare followUp2SentAt: Date | null;
+  declare followUp3SentAt: Date | null;
   declare readonly createdAt: Date;
 }
 
@@ -77,6 +86,9 @@ export function initLeadModel(sequelize: Sequelize) {
       reminder1dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_1d_sent_at" },
       reminder0dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_0d_sent_at" },
       recycleEmailSentAt: { type: DataTypes.DATE, allowNull: true, field: "recycle_email_sent_at" },
+      followUp1SentAt: { type: DataTypes.DATE, allowNull: true, field: "follow_up_1_sent_at" },
+      followUp2SentAt: { type: DataTypes.DATE, allowNull: true, field: "follow_up_2_sent_at" },
+      followUp3SentAt: { type: DataTypes.DATE, allowNull: true, field: "follow_up_3_sent_at" },
     },
     {
       sequelize,

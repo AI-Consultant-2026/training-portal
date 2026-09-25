@@ -7,9 +7,7 @@ import { buildCourseCompletedEmail } from "./templates/courseCompleted";
 import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
 import { buildLeadNotificationEmail } from "./templates/leadNotification";
-import { buildLeadRecycleEmail } from "./templates/leadRecycle";
-import { buildLeadReminderEmail, ReminderStage } from "./templates/leadReminder";
-import { buildLeadWelcomeEmail } from "./templates/leadWelcome";
+import { buildLeadFollowUpEmail, buildLeadWelcomeEmail, FollowUpStep } from "./templates/leadNurture";
 import { buildPasswordResetEmail } from "./templates/passwordReset";
 import { buildQuizGradedEmail } from "./templates/quizGraded";
 import { buildWelcomeEmail } from "./templates/welcome";
@@ -76,23 +74,21 @@ export async function sendLeadWelcomeEmail(lead: {
   name: string;
   email: string;
   course: string;
+  sector?: string | null;
 }): Promise<void> {
   await sendEmail(buildLeadWelcomeEmail(lead));
 }
 
-export async function sendLeadReminderEmail(
-  lead: { name: string; email: string; course: string },
-  stage: ReminderStage,
-): Promise<void> {
-  await sendEmail(buildLeadReminderEmail(lead, stage));
-}
-
-export async function sendLeadRecycleEmail(lead: {
-  name: string;
-  email: string;
-  course: string;
-}): Promise<void> {
-  await sendEmail(buildLeadRecycleEmail(lead));
+// Returns false when there was nothing to send (leads whose course isn't one of the
+// four live courses only get the welcome email).
+export async function sendLeadFollowUpEmail(
+  lead: { name: string; email: string; course: string; sector?: string | null },
+  step: FollowUpStep,
+): Promise<boolean> {
+  const message = buildLeadFollowUpEmail(lead, step);
+  if (!message) return false;
+  await sendEmail(message);
+  return true;
 }
 
 export async function sendCapstoneGradedEmail(

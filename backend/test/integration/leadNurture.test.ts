@@ -1,22 +1,13 @@
 import bcrypt from "bcryptjs";
-import { config } from "../../src/config";
-import { Course, Enrollment, Lead, User } from "../../src/models";
-import {
-  sendPendingRecycleEmails,
-  sendPendingReminderEmails,
-  sendPendingWelcomeEmails,
-} from "../../src/services/leadNurture.service";
+import { Course, Enrollment, Lead, sequelize, User } from "../../src/models";
+import { sendPendingFollowUpEmails, sendPendingWelcomeEmails } from "../../src/services/leadNurture.service";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const memAdapter = emailAdapter as MemoryEmailAdapter;
 
-function daysFromNow(days: number): string {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
-async function createLead(overrides: Partial<{ name: string; email: string; course: string }> = {}) {
+async function createLead(
+  overrides: Partial<{ name: string; email: string; course: string; sector: string | null }> = {},
+) {
   return Lead.create({
     name: "Amara Chukwu",
     email: "amara.chukwu@example.com",
@@ -25,30 +16,49 @@ async function createLead(overrides: Partial<{ name: string; email: string; cour
   });
 }
 
+// createdAt is managed by Sequelize, so backdate it with SQL to simulate an older lead.
+async function ageLead(lead: Lead, days: number, welcomed = true) {
+  await sequelize.query(
+    `UPDATE leads SET created_at = NOW() - (:days || ' days')::interval,
+       welcome_email_sent_at = CASE WHEN :welcomed THEN NOW() - (:days || ' days')::interval ELSE NULL END
+     WHERE id = :id`,
+    { replacements: { days: String(days), welcomed, id: lead.id } },
+  );
+  return (await Lead.findByPk(lead.id)) as Lead;
+}
+
 describe("Lead nurture", () => {
-  const originalDeadline = config.enrolment.nextDeadline;
-  const originalFollowingDeadline = config.enrolment.followingDeadline;
-
-  afterEach(() => {
-    config.enrolment.nextDeadline = originalDeadline;
-    config.enrolment.followingDeadline = originalFollowingDeadline;
-  });
-
-  describe("sendPendingWelcomeEmails", () => {
-    it("sends a welcome email to a new lead and stamps it as sent", async () => {
-      const lead = await createLead();
+  describe("welcome email", () => {
+    it("sends a Career Match lead their matched course, with the free lesson, course page and enrol links", async () => {
+      const lead = await createLead({ sector: "Oil & Gas" });
 
       const result = await sendPendingWelcomeEmails();
 
       expect(result.sent).toBe(1);
-      expect(memAdapter.sentMessages).toHaveLength(1);
-      expect(memAdapter.sentMessages[0]).toMatchObject({
-        to: lead.email,
-        subject: expect.stringContaining(lead.course),
-      });
+      const msg = memAdapter.sentMessages[0];
+      expect(msg.to).toBe(lead.email);
+      expect(msg.subject).toBe("Your Career Match: GIS and Drone Mapping");
+      expect(msg.text).toContain("Hi Amara,");
+      expect(msg.text).toContain("/preview/gis-and-drone-mapping");
+      expect(msg.text).toContain("/gis-and-drone-mapping-course");
+      expect(msg.text).toContain("/register?course=gis-and-drone-mapping");
+      expect(msg.text).toContain("₦200,000");
+      expect(msg.text).toContain("self-paced, with lifetime access");
+      expect(msg.text).not.toMatch(/deadline|closes|intake|spaces are limited/i);
+      expect((await Lead.findByPk(lead.id))?.welcomeEmailSentAt).toBeInstanceOf(Date);
+    });
 
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.welcomeEmailSentAt).toBeInstanceOf(Date);
+    it("words the welcome as plain interest for leads that didn't come through the Career Match", async () => {
+      await createLead({ course: "HSE Fundamentals" });
+      await sendPendingWelcomeEmails();
+      expect(memAdapter.sentMessages[0].subject).toBe("Welcome to Paleon Training — HSE Fundamentals");
+      expect(memAdapter.sentMessages[0].text).toContain("/preview/hse-fundamentals");
+    });
+
+    it("points leads without a known course at the Career Match", async () => {
+      await createLead({ course: "Not sure yet" });
+      await sendPendingWelcomeEmails();
+      expect(memAdapter.sentMessages[0].text).toContain("/welcome#career-match");
     });
 
     it("does not resend a welcome email once it's already been sent", async () => {
@@ -63,89 +73,66 @@ describe("Lead nurture", () => {
     });
   });
 
-  describe("sendPendingReminderEmails", () => {
-    it("does not send a reminder before the 21-day threshold is reached", async () => {
-      await createLead();
-      config.enrolment.nextDeadline = daysFromNow(25);
-
-      const result = await sendPendingReminderEmails();
-
-      expect(result.sent).toBe(0);
-      expect(memAdapter.sentMessages).toHaveLength(0);
+  describe("follow-up emails", () => {
+    it("sends nothing before day 2", async () => {
+      await ageLead(await createLead(), 1);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
     });
 
-    it("sends the 21-day reminder once within 21 days of the deadline, and doesn't resend it same-day", async () => {
-      const lead = await createLead();
-      config.enrolment.nextDeadline = daysFromNow(20);
+    it("sends the day-2 free-lesson follow-up once, with the course highlights", async () => {
+      const lead = await ageLead(await createLead(), 2);
 
-      const result = await sendPendingReminderEmails();
-
-      expect(result.sent).toBe(1);
-      expect(memAdapter.sentMessages[0]).toMatchObject({
-        to: lead.email,
-        subject: "3 weeks left to register",
-      });
-
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.reminder21dSentAt).toBeInstanceOf(Date);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(1);
+      const msg = memAdapter.sentMessages[0];
+      expect(msg.subject).toBe("Have you tried the free GIS and Drone Mapping lesson?");
+      expect(msg.text).toContain("/preview/gis-and-drone-mapping");
+      expect(msg.text).toContain("photogrammetry");
 
       memAdapter.clear();
-      const second = await sendPendingReminderEmails();
-      expect(second.sent).toBe(0);
-      expect(memAdapter.sentMessages).toHaveLength(0);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
+      expect((await Lead.findByPk(lead.id))?.followUp1SentAt).toBeInstanceOf(Date);
     });
 
-    it("sends the 14-day value-add reminder once within 14 days but before the 7-day mark", async () => {
-      const lead = await createLead();
-      config.enrolment.nextDeadline = daysFromNow(20);
-      await sendPendingReminderEmails(); // sends the 21d stage first
-      memAdapter.clear();
-
-      config.enrolment.nextDeadline = daysFromNow(12);
-      const result = await sendPendingReminderEmails();
-
-      expect(result.sent).toBe(1);
-      expect(memAdapter.sentMessages[0].subject).toContain(lead.course);
-
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.reminder14dSentAt).toBeInstanceOf(Date);
-    });
-
-    it("sends only the most urgent stage when multiple thresholds are crossed at once, and backfills the others", async () => {
-      const lead = await createLead();
-      config.enrolment.nextDeadline = daysFromNow(0);
-
-      const result = await sendPendingReminderEmails();
-
-      expect(result.sent).toBe(1);
+    it("sends the day-5 'how it works' and day-10 last emails as separate touches", async () => {
+      const lead = await ageLead(await createLead({ course: "Cyber Security Fundamentals" }), 5);
+      await sendPendingFollowUpEmails();
       expect(memAdapter.sentMessages).toHaveLength(1);
-      expect(memAdapter.sentMessages[0].subject).toBe("Today's the last day to register");
+      expect(memAdapter.sentMessages[0].subject).toBe("How Cyber Security Fundamentals works");
+      expect(memAdapter.sentMessages[0].text).toContain("keep access for life");
 
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.reminder21dSentAt).toBeInstanceOf(Date);
-      expect(reloaded?.reminder14dSentAt).toBeInstanceOf(Date);
-      expect(reloaded?.reminder7dSentAt).toBeInstanceOf(Date);
-      expect(reloaded?.reminder1dSentAt).toBeInstanceOf(Date);
-      expect(reloaded?.reminder0dSentAt).toBeInstanceOf(Date);
+      memAdapter.clear();
+      await ageLead(lead, 10);
+      await sendPendingFollowUpEmails();
+      expect(memAdapter.sentMessages).toHaveLength(1);
+      expect(memAdapter.sentMessages[0].subject).toBe("Still thinking about Cyber Security Fundamentals?");
     });
 
-    it("sends the day-before and day-of reminders as two distinct touches when reached on separate days", async () => {
-      const lead = await createLead();
-      config.enrolment.nextDeadline = daysFromNow(1);
+    it("never sends a follow-up late: old leads are skipped and stamped", async () => {
+      const lead = await ageLead(await createLead(), 40);
 
-      const first = await sendPendingReminderEmails();
-      expect(first.sent).toBe(1);
-      expect(memAdapter.sentMessages[0].subject).toBe("Last call — registration closes tomorrow");
-      memAdapter.clear();
-
-      config.enrolment.nextDeadline = daysFromNow(0);
-      const second = await sendPendingReminderEmails();
-      expect(second.sent).toBe(1);
-      expect(memAdapter.sentMessages[0].subject).toBe("Today's the last day to register");
-
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
+      expect(memAdapter.sentMessages).toHaveLength(0);
       const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.reminder1dSentAt).toBeInstanceOf(Date);
-      expect(reloaded?.reminder0dSentAt).toBeInstanceOf(Date);
+      expect(reloaded?.followUp1SentAt).toBeInstanceOf(Date);
+      expect(reloaded?.followUp3SentAt).toBeInstanceOf(Date);
+    });
+
+    it("sends only the latest due step when an earlier one was missed", async () => {
+      const lead = await ageLead(await createLead(), 6);
+      await sendPendingFollowUpEmails();
+      expect(memAdapter.sentMessages.map((m) => m.subject)).toEqual(["How GIS and Drone Mapping works"]);
+      expect((await Lead.findByPk(lead.id))?.followUp1SentAt).toBeInstanceOf(Date);
+    });
+
+    it("waits until the welcome email has gone out", async () => {
+      await ageLead(await createLead(), 2, false);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
+    });
+
+    it("sends no follow-ups to leads without a known course", async () => {
+      await ageLead(await createLead({ course: "Not sure yet" }), 2);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
+      expect(memAdapter.sentMessages).toHaveLength(0);
     });
 
     it("skips a lead whose email belongs to a user with a confirmed payment", async () => {
@@ -157,9 +144,9 @@ describe("Lead nurture", () => {
         role: "instructor",
       });
       const course = await Course.create({
-        title: "Cyber Security Fundamentals",
-        slug: "cyber-security-fundamentals",
-        durationWeeks: 12,
+        title: "GIS and Drone Mapping",
+        slug: "gis-and-drone-mapping",
+        durationWeeks: 9,
         status: "published",
         instructorId: instructor.id,
       });
@@ -176,112 +163,10 @@ describe("Lead nurture", () => {
         paymentConfirmed: true,
         paymentConfirmedAt: new Date(),
       });
-      const lead = await createLead({ email: "amara.chukwu@example.com" });
-      config.enrolment.nextDeadline = daysFromNow(20);
+      await ageLead(await createLead(), 2);
 
-      const result = await sendPendingReminderEmails();
-
-      expect(result.sent).toBe(0);
+      expect((await sendPendingFollowUpEmails()).sent).toBe(0);
       expect(memAdapter.sentMessages).toHaveLength(0);
-
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.reminder21dSentAt).toBeNull();
-    });
-
-    it("does not send reminders once the deadline has passed", async () => {
-      await createLead();
-      config.enrolment.nextDeadline = daysFromNow(-1);
-
-      const result = await sendPendingReminderEmails();
-
-      expect(result.sent).toBe(0);
-    });
-  });
-
-  describe("sendPendingRecycleEmails", () => {
-    it("does nothing while the current deadline hasn't passed yet, even with a following deadline set", async () => {
-      await createLead();
-      config.enrolment.nextDeadline = daysFromNow(5);
-      config.enrolment.followingDeadline = daysFromNow(90);
-
-      const result = await sendPendingRecycleEmails();
-
-      expect(result.sent).toBe(0);
-      expect(memAdapter.sentMessages).toHaveLength(0);
-    });
-
-    it("does nothing once the deadline has passed if no following deadline is configured", async () => {
-      await createLead();
-      config.enrolment.nextDeadline = daysFromNow(-2);
-      config.enrolment.followingDeadline = "";
-
-      const result = await sendPendingRecycleEmails();
-
-      expect(result.sent).toBe(0);
-      expect(memAdapter.sentMessages).toHaveLength(0);
-    });
-
-    it("invites a non-converted lead to the next cohort once the deadline has passed, and doesn't resend it", async () => {
-      const lead = await createLead();
-      config.enrolment.nextDeadline = daysFromNow(-2);
-      config.enrolment.followingDeadline = daysFromNow(90);
-
-      const result = await sendPendingRecycleEmails();
-
-      expect(result.sent).toBe(1);
-      expect(memAdapter.sentMessages[0]).toMatchObject({
-        to: lead.email,
-        subject: expect.stringContaining("next Paleon Training intake"),
-      });
-
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.recycleEmailSentAt).toBeInstanceOf(Date);
-
-      memAdapter.clear();
-      const second = await sendPendingRecycleEmails();
-      expect(second.sent).toBe(0);
-      expect(memAdapter.sentMessages).toHaveLength(0);
-    });
-
-    it("does not recycle a lead who converted before the deadline passed", async () => {
-      const instructor = await User.create({
-        email: "jest-instructor2@example.com",
-        passwordHash: await bcrypt.hash("Password123!", 4),
-        firstName: "Jest",
-        lastName: "Instructor",
-        role: "instructor",
-      });
-      const course = await Course.create({
-        title: "Digital Marketing",
-        slug: "digital-marketing",
-        durationWeeks: 8,
-        status: "published",
-        instructorId: instructor.id,
-      });
-      const student = await User.create({
-        email: "amara.chukwu@example.com",
-        passwordHash: await bcrypt.hash("Password123!", 4),
-        firstName: "Amara",
-        lastName: "Chukwu",
-        role: "student",
-      });
-      await Enrollment.create({
-        courseId: course.id,
-        studentId: student.id,
-        paymentConfirmed: true,
-        paymentConfirmedAt: new Date(),
-      });
-      const lead = await createLead({ email: "amara.chukwu@example.com" });
-      config.enrolment.nextDeadline = daysFromNow(-2);
-      config.enrolment.followingDeadline = daysFromNow(90);
-
-      const result = await sendPendingRecycleEmails();
-
-      expect(result.sent).toBe(0);
-      expect(memAdapter.sentMessages).toHaveLength(0);
-
-      const reloaded = await Lead.findByPk(lead.id);
-      expect(reloaded?.recycleEmailSentAt).toBeInstanceOf(Date);
     });
   });
 });
