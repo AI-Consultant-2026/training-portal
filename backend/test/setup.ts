@@ -6,6 +6,7 @@ afterEach(async () => {
 
   const tables = [
     "leads",
+    "course_feedback",
     "partners",
     "referrals",
     "refresh_tokens",

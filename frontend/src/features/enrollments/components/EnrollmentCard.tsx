@@ -4,6 +4,7 @@ import { downloadAttendanceRecord, downloadCertificate } from "../../../api/enro
 import { ProgressBar } from "../../../components/ui/ProgressBar";
 import { COURSE_COVER_IMAGES } from "../../courses/courseCoverImages";
 import { PAYMENT_CONFIRMATION_PROMISE } from "../../payments/paymentCopy";
+import { FeedbackDialog } from "./FeedbackDialog";
 import { Enrollment } from "../../../types/api";
 
 interface EnrollmentCardProps {
@@ -40,6 +41,7 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
   const course = enrollment.course;
   const coverImage = course ? COURSE_COVER_IMAGES[course.slug] : undefined;
   const [downloading, setDownloading] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [downloadFailed, setDownloadFailed] = useState(false);
   const [downloadingAttendance, setDownloadingAttendance] = useState(false);
   const [attendanceDownloadFailed, setAttendanceDownloadFailed] = useState(false);
@@ -112,6 +114,15 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
             {enrollment.status === "completed" && course && (
               <button
                 type="button"
+                onClick={() => setShowFeedback(true)}
+                className="font-medium text-blue-600 hover:underline"
+              >
+                Share feedback
+              </button>
+            )}
+            {enrollment.status === "completed" && course && (
+              <button
+                type="button"
                 onClick={handleDownloadCertificate}
                 disabled={downloading}
                 className="font-medium text-amber-700 hover:underline disabled:opacity-60"
@@ -140,6 +151,13 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
           </div>
         </div>
         {downloadFailed && <p className="text-xs text-red-600">Could not download the certificate.</p>}
+        {showFeedback && course && (
+          <FeedbackDialog
+            enrollmentId={enrollment.id}
+            courseTitle={course.title}
+            onClose={() => setShowFeedback(false)}
+          />
+        )}
         {attendanceDownloadFailed && (
           <p className="text-xs text-red-600">Could not download the attendance record.</p>
         )}

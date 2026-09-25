@@ -15,6 +15,7 @@ import {
   fetchCoursePayments,
   fetchLeads,
 } from "./adminSlice";
+import { AdminFeedbackSection } from "./AdminFeedbackSection";
 
 function formatNumberOrDash(value: number | null): string {
   return value === null ? "—" : String(value);
@@ -321,6 +322,8 @@ export function AdminDashboardPage() {
       ) : (
         <p className="mt-3 text-sm text-gray-500">No leads yet.</p>
       )}
+
+      <AdminFeedbackSection />
 
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Referrals</h2>
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">

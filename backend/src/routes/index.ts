@@ -17,6 +17,7 @@ import { quizAttemptsRouter } from "./quizAttempts.routes";
 import { quizzesRouter } from "./quizzes.routes";
 import { referralsRouter } from "./referrals.routes";
 import { supportRouter } from "./support.routes";
+import * as feedbackController from "../controllers/feedback.controller";
 import { usersRouter } from "./users.routes";
 
 export const apiRouter = Router();
@@ -40,3 +41,5 @@ apiRouter.use("/capstone-submissions", capstoneSubmissionsRouter);
 apiRouter.use("/leads", leadsRouter);
 apiRouter.use("/referrals", referralsRouter);
 apiRouter.use("/support", supportRouter);
+// Public: approved learner testimonials for the marketing pages (2026-09-25).
+apiRouter.get("/testimonials", feedbackController.listPublic);

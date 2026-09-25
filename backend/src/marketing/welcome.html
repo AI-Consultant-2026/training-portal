@@ -579,6 +579,14 @@
   .match-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .match-note { margin: 18px 0 0; font-size: 14px; color: var(--charcoal-soft); line-height: 1.6; }
   .match-note a { color: var(--signal-deep); font-weight: 600; }
+  /* Learner voices (filled by /learner-voices.js; hidden until approved feedback exists) */
+  .learner-voices[hidden] { display: none; }
+  .voice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+  .voice-card { margin: 0; background: #fff; border: 1px solid var(--line-light, #DED7C4); border-radius: 4px; padding: 20px; }
+  .voice-stars { color: var(--signal, #E8863C); letter-spacing: 2px; margin-bottom: 8px; }
+  .voice-card blockquote { margin: 0 0 12px; line-height: 1.6; }
+  .voice-card figcaption { font-size: 14px; font-weight: 600; opacity: .8; }
+  .voice-note { font-size: 13px; opacity: .7; margin-top: 14px; }
   /* Start here strip + course card free-lesson link (2026-09-25) */
   .start-section { background: var(--paper-2); padding: clamp(48px, 7vw, 80px) 0; }
   .start-steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -1224,6 +1232,15 @@
   </section>
 
   <!-- ============ REFER & EARN ============ -->
+  <section class="section learner-voices" data-learner-voices hidden>
+    <div class="wrap">
+      <p class="section-eyebrow">From our learners</p>
+      <h2 class="section-title">What learners say</h2>
+      <div class="voice-grid" data-learner-voices-list></div>
+      <p class="voice-note">Real feedback from students who completed the course, shared with their permission.</p>
+    </div>
+  </section>
+
   <section class="section section-paper" id="refer-earn">
     <div class="wrap">
       <div class="section-head reveal">
@@ -1353,5 +1370,6 @@
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
 <script src="/analytics.js" defer></script>
+<script src="/learner-voices.js" defer></script>
 </body>
 </html>

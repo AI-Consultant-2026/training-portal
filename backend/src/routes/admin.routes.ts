@@ -4,6 +4,8 @@ import * as emailCampaignsController from "../controllers/emailCampaigns.control
 import * as referralsController from "../controllers/referrals.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
+import * as feedbackController from "../controllers/feedback.controller";
+import { approveFeedbackSchema } from "../validators/feedback.validators";
 import { uploadExcel } from "../middleware/uploadExcel";
 import { validate } from "../middleware/validate";
 import {
@@ -46,6 +48,8 @@ adminRouter.get(
 );
 adminRouter.get("/candidates", adminController.listCandidates);
 adminRouter.get("/payments/:id/receipt", adminController.downloadPaymentReceipt);
+adminRouter.get("/feedback", feedbackController.listForAdmin);
+adminRouter.patch("/feedback/:id", validate(approveFeedbackSchema), feedbackController.setApproved);
 adminRouter.post("/candidates", validate(createCandidateSchema), adminController.createCandidate);
 // Must come before "/candidates/:id" -- otherwise Express would match "inactive" as
 // the :id param and route this to deactivateCandidate instead.

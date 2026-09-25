@@ -11,6 +11,7 @@ export function buildCourseCompletedEmail(
     `Hi ${user.firstName},`,
     `Congratulations on completing "${course.title}"! Your certificate of completion is ready to download from your dashboard.`,
     dashboardUrl,
+    `We'd love to hear how it went. Use "Share feedback" next to the course on your dashboard \u2014 it takes a minute, and it helps future learners decide.`,
   ];
 
   return {

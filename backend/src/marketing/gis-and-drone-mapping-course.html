@@ -659,6 +659,14 @@
   .sample-cert { margin: 22px 0 0; }
   .sample-cert img { width: 100%; max-width: 720px; height: auto; border: 1px solid var(--line-light); border-radius: 4px; display: block; }
   .sample-cert figcaption { font-size: 13px; margin-top: 8px; opacity: .75; }
+  /* Learner voices (filled by /learner-voices.js; hidden until approved feedback exists) */
+  .learner-voices[hidden] { display: none; }
+  .voice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+  .voice-card { margin: 0; background: #fff; border: 1px solid var(--line-light, #DED7C4); border-radius: 4px; padding: 20px; }
+  .voice-stars { color: var(--signal, #E8863C); letter-spacing: 2px; margin-bottom: 8px; }
+  .voice-card blockquote { margin: 0 0 12px; line-height: 1.6; }
+  .voice-card figcaption { font-size: 14px; font-weight: 600; opacity: .8; }
+  .voice-note { font-size: 13px; opacity: .7; margin-top: 14px; }
   .btn-whatsapp { background: #25D366; color: var(--ink); }
   .btn-whatsapp:hover { background: #3EE07A; }
   .btn:focus-visible { outline: 2px solid var(--signal-2); outline-offset: 2px; }
@@ -762,6 +770,15 @@
         <li><strong>Certificate of completion</strong> when you finish the course.</li>
       </ul>
       <p>For the oil &amp; gas side in depth, see <a href="/gis-mapping-oil-and-gas-nigeria">how GIS is used across oil &amp; gas operations</a>. Drone flights in Nigeria must follow NCAA rules &mdash; see <a href="/ncaa-drone-regulations-overview">drone regulations in Nigeria</a>.</p>
+    </div>
+  </section>
+
+  <section class="learner-voices" data-learner-voices data-course="gis-and-drone-mapping" hidden>
+    <div class="measure prose">
+      <p class="section-label">From our learners</p>
+      <h2 class="section-title">What learners say</h2>
+      <div class="voice-grid" data-learner-voices-list></div>
+      <p class="voice-note">Real feedback from students who completed the course, shared with their permission.</p>
     </div>
   </section>
 
@@ -972,5 +989,6 @@
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
 <script src="/analytics.js" defer></script>
+<script src="/learner-voices.js" defer></script>
 </body>
 </html>

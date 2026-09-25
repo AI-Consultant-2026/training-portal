@@ -405,6 +405,10 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "og", req.params.file));
   });
+  // Approved learner testimonials widget for the marketing pages (2026-09-25).
+  app.get("/learner-voices.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "learner-voices.js"));
+  });
   // Sample certificate images for the course pages' "Before you enrol" section
   // (2026-09-25), generated from the real certificate PDF by
   // scripts/generate-sample-certificates.ts.
