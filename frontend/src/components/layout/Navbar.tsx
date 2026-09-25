@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { logoutUser } from "../../features/auth/authSlice";
+import { ReportProblemDialog } from "./ReportProblemDialog";
 
 const linkClassName = "text-gray-600 hover:text-gray-900";
 
@@ -10,6 +11,7 @@ export function Navbar() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -48,6 +50,16 @@ export function Navbar() {
         </Link>
       )}
       {supportLink}
+      <button
+        type="button"
+        className={`${linkClassName} text-left`}
+        onClick={() => {
+          closeMenu();
+          setIsReportOpen(true);
+        }}
+      >
+        Report a problem
+      </button>
       <span className="text-gray-500">{user.firstName}</span>
       <button onClick={handleLogout} className={linkClassName}>
         Log out
@@ -96,6 +108,7 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="mt-4 flex flex-col gap-3 border-t border-gray-200 pt-4 text-sm md:hidden">{links}</div>
       )}
+      {isReportOpen && <ReportProblemDialog onClose={() => setIsReportOpen(false)} />}
     </nav>
   );
 }

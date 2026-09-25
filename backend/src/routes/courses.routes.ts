@@ -1,4 +1,6 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
+import { config } from "../config";
 import * as coursesController from "../controllers/courses.controller";
 import * as enrollmentsController from "../controllers/enrollments.controller";
 import * as modulesController from "../controllers/modules.controller";
@@ -20,6 +22,16 @@ coursesRouter.post(
   validate(createCourseSchema),
   coursesController.createCourse,
 );
+// Public (no login): a published course's free first lesson, for the marketing site's
+// "Try Day 1 free" links. Rate-limited because it's unauthenticated.
+const previewRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => config.nodeEnv === "test",
+});
+coursesRouter.get("/:id/preview", previewRateLimiter, coursesController.getCoursePreview);
 coursesRouter.get("/:id", authenticate, coursesController.getCourse);
 coursesRouter.put(
   "/:id",

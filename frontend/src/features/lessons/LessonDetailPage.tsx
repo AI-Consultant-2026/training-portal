@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
-import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
-import { LessonImage, LessonNavItem } from "../../types/api";
+import { LessonNavItem } from "../../types/api";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
+import { LessonContent } from "./LessonContent";
 import {
   fetchCheckpoints,
   fetchLesson,
@@ -17,62 +15,6 @@ import {
   fetchLessonNavigation,
   markLessonComplete,
 } from "./lessonsSlice";
-
-// Markdown/HTML-formatted lesson content. `rehypeRaw` allows literal HTML in
-// content since lessons are only ever authored by instructors/admins via
-// seeders and scripts, never from user input.
-const MARKDOWN_COMPONENTS = {
-  h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
-    <h2 className="mt-6 text-lg font-semibold text-gray-900" {...props} />
-  ),
-  h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
-    <h3 className="mt-5 text-base font-semibold text-gray-900" {...props} />
-  ),
-  p: (props: React.ComponentPropsWithoutRef<"p">) => <p className="text-gray-700" {...props} />,
-  ul: (props: React.ComponentPropsWithoutRef<"ul">) => (
-    <ul className="list-disc space-y-1 pl-5 text-gray-700" {...props} />
-  ),
-  ol: (props: React.ComponentPropsWithoutRef<"ol">) => (
-    <ol className="list-decimal space-y-1 pl-5 text-gray-700" {...props} />
-  ),
-  blockquote: (props: React.ComponentPropsWithoutRef<"blockquote">) => (
-    <blockquote className="border-l-4 border-gray-200 pl-4 italic text-gray-600" {...props} />
-  ),
-  a: (props: React.ComponentPropsWithoutRef<"a">) => (
-    <a className="text-blue-600 hover:underline" target="_blank" rel="noreferrer" {...props} />
-  ),
-  img: (props: React.ComponentPropsWithoutRef<"img">) => (
-    <img className="w-full rounded-lg border border-gray-200" {...props} />
-  ),
-};
-
-type ContentSegment = { kind: "markdown"; text: string } | { kind: "image"; image: LessonImage };
-
-// Groups the plain-text/markdown content into chunks split at each image's
-// `afterParagraph` boundary (paragraphs are blank-line-separated blocks),
-// so each chunk still parses as valid, self-contained markdown.
-function buildContentSegments(content: string, images: LessonImage[]): ContentSegment[] {
-  const paragraphs = content.split("\n\n");
-  const segments: ContentSegment[] = [];
-  let buffer: string[] = [];
-
-  paragraphs.forEach((paragraph, index) => {
-    buffer.push(paragraph);
-    images
-      .filter((image) => image.afterParagraph === index)
-      .forEach((image) => {
-        segments.push({ kind: "markdown", text: buffer.join("\n\n") });
-        buffer = [];
-        segments.push({ kind: "image", image });
-      });
-  });
-
-  if (buffer.length > 0) {
-    segments.push({ kind: "markdown", text: buffer.join("\n\n") });
-  }
-
-  return segments;
-}
 
 export function LessonDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -126,15 +68,17 @@ export function LessonDetailPage() {
 
   const links = lesson.resources?.links ?? [];
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
-  const segments = buildContentSegments(lesson.content, lesson.images ?? []);
 
   // Reaching this page as a student at all means the current lesson is unlocked --
-  // either the enrollment is paid, or (for the demo account) this is its one exempted
-  // preview lesson. Either way, "next" is only guaranteed unlocked if payment is
+  // either the enrollment is paid, or this is the course's free preview lesson. Either way, "next" is only guaranteed unlocked if payment is
   // confirmed; otherwise clicking through would just hit the same 403 the backend
   // already enforces, so intercept it with the same upsell dialog as a locked lesson.
   const myEnrollment = navigation ? enrollments.find((e) => e.courseId === navigation.course.id) : undefined;
   const isNextLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
+  // An unpaid student here is on the free preview lesson: mark-complete needs a paid
+  // enrollment, so show the way to unlock the rest of the course instead.
+  const isFreePreview = isNextLocked;
+  const payHref = navigation ? `/courses/${navigation.course.slug}/pay/bank-transfer` : "/courses";
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -143,36 +87,7 @@ export function LessonDetailPage() {
 
       {error && <Alert message={error} />}
 
-      <div className="mt-4 flex flex-col gap-4">
-        {segments.map((segment, index) =>
-          segment.kind === "markdown" ? (
-            <ReactMarkdown
-              key={index}
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw]}
-              components={MARKDOWN_COMPONENTS}
-            >
-              {segment.text}
-            </ReactMarkdown>
-          ) : (
-            <figure key={index}>
-              {/* Diagram labels are too small to read at phone width, so the image opens
-                  full size in a new tab where it can be pinch-zoomed. */}
-              <a href={segment.image.url} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={segment.image.url}
-                  alt={segment.image.caption}
-                  className="w-full rounded-lg border border-gray-200"
-                />
-              </a>
-              <figcaption className="mt-2 text-sm text-gray-500">
-                {segment.image.caption}
-                <span className="mt-1 block text-xs text-gray-400 sm:hidden">Tap the image to enlarge it.</span>
-              </figcaption>
-            </figure>
-          ),
-        )}
-      </div>
+      <LessonContent content={lesson.content} images={lesson.images ?? []} />
 
       {youtubeVideoId ? (
         <CheckpointVideoPlayer
@@ -216,7 +131,23 @@ export function LessonDetailPage() {
         </div>
       )}
 
-      {user?.role === "student" && (
+      {isFreePreview && (
+        <div className="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-5">
+          <p className="text-sm font-semibold text-gray-900">You&rsquo;re viewing the free preview lesson.</p>
+          <p className="mt-1 text-sm text-gray-700">
+            Pay for the course to unlock every lesson, the assignments, quizzes, capstone project and your certificate.
+            Self-paced, with lifetime access.
+          </p>
+          <Link
+            to={payHref}
+            className="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            Unlock the full course
+          </Link>
+        </div>
+      )}
+
+      {user?.role === "student" && !isFreePreview && (
         <div className="mt-8">
           <Button
             onClick={handleMarkComplete}
@@ -249,11 +180,19 @@ export function LessonDetailPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
             <p className="text-sm text-gray-700">
-              Thanks for your interest in Paleon Training. If you would like to enrol in any of
-              our digital skills courses, make payment for the course and get started.
+              The next lesson unlocks once your course payment is confirmed. Pay for the course to
+              continue with every lesson, assignment and your certificate.
             </p>
-            <div className="mt-4 flex justify-end">
-              <Button onClick={() => setShowPaymentDialog(false)}>Close</Button>
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              <Button variant="secondary" onClick={() => setShowPaymentDialog(false)}>
+                Not now
+              </Button>
+              <Link
+                to={payHref}
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                Unlock the full course
+              </Link>
             </div>
           </div>
         </div>

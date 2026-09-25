@@ -35,6 +35,8 @@ export const config = {
     fromAddress: process.env.EMAIL_FROM_ADDRESS ?? "no-reply@trainingportal.local",
   },
   leadsNotifyEmail: process.env.LEADS_NOTIFY_EMAIL ?? "hello@paleontraining.com",
+  // Where the in-portal "Report a problem" form sends reports (2026-09-25).
+  supportEmail: process.env.SUPPORT_EMAIL ?? "support@paleontraining.com",
   // The active intake's registration deadline and destination link, used by the
   // lead-nurture countdown job (backend/src/jobs/leadNurture.job.ts) to send the
   // welcome/T-21/T-7/T-1 emails in backend/src/emails/templates/lead*.ts. Deliberately

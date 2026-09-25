@@ -41,11 +41,6 @@ const DESCRIPTION_MARKDOWN_COMPONENTS = {
   ),
 };
 
-// The shared demo login used to let prospects "feel out" the portal before paying --
-// mirrors the backend's DEMO_ACCOUNT_EMAIL in lesson.service.ts. Only this exact
-// account gets the Week 1 Lesson 1 preview exemption below.
-const DEMO_ACCOUNT_EMAIL = "demo@paleontraining.com";
-
 interface ModuleContent {
   lessons: Lesson[];
   assignments: Assignment[];
@@ -163,10 +158,9 @@ export function CourseDetailPage() {
   const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
   const isEnrolled = myEnrollment !== undefined;
 
-  // Demo-account preview: only the very first lesson of the course's first module
-  // (lowest weekNumber) is exempt from the payment lock -- mirrors the backend
-  // exemption in lesson.service.ts's isDemoPreviewLesson().
-  const isDemoAccount = user?.email === DEMO_ACCOUNT_EMAIL;
+  // Free preview: the very first lesson of the course's first module (lowest
+  // weekNumber) is open to every student before payment -- mirrors the backend
+  // exemption in lesson.service.ts's getFreePreviewLesson().
   const firstModuleId =
     modules.length > 0
       ? modules.reduce((min, m) => (m.weekNumber < min.weekNumber ? m : min), modules[0]).id
@@ -358,10 +352,11 @@ export function CourseDetailPage() {
                     // Disabled by default: lessons only open once an admin has confirmed
                     // payment for this student's enrollment -- enrolling alone isn't
                     // enough. Only gates students -- instructors/admins aren't enrollees
-                    // and should always be able to review content. The demo account gets
-                    // one exemption: the course's very first lesson, for preview purposes.
-                    const isCourseFirstLesson =
-                      isDemoAccount && mod.id === firstModuleId && content.lessons[0]?.id === lesson.id;
+                    // and should always be able to review content. Every course's very
+                    // first lesson is a free preview, open before payment.
+                    const isCourseFirstLesson = mod.id === firstModuleId && content.lessons[0]?.id === lesson.id;
+                    const isFreePreview =
+                      isCourseFirstLesson && user?.role === "student" && !myEnrollment?.paymentConfirmed;
                     const isLocked =
                       user?.role === "student" && !myEnrollment?.paymentConfirmed && !isCourseFirstLesson;
                     const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
@@ -386,6 +381,11 @@ export function CourseDetailPage() {
                         className="text-sm font-medium text-blue-600 hover:underline"
                       >
                         Lesson: {lesson.title}
+                        {isFreePreview && (
+                          <span className="ml-1 rounded bg-green-100 px-1.5 py-0.5 text-xs font-semibold text-green-800">
+                            Free preview
+                          </span>
+                        )}
                         {isCompleted && <span className="ml-1 text-green-700">(completed)</span>}
                       </Link>
                     );

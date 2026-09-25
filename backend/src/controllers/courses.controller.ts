@@ -53,3 +53,8 @@ export const getCourseCapstone = asyncHandler(async (req: Request, res: Response
   const capstone = await capstoneService.getByCourse(course.id);
   res.json({ capstone });
 });
+
+export const getCoursePreview = asyncHandler(async (req: Request, res: Response) => {
+  const preview = await courseService.getPublicCoursePreview(req.params.id);
+  res.json(preview);
+});

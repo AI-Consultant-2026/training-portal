@@ -1,4 +1,4 @@
-import { Course, CourseModule, CourseProgress } from "../types/api";
+import { Course, CourseModule, CourseProgress, CoursePreview } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchCourses(): Promise<Course[]> {
@@ -18,5 +18,11 @@ export async function fetchModulesForCourse(courseId: string): Promise<CourseMod
 
 export async function fetchCourseProgress(courseId: string): Promise<CourseProgress> {
   const res = await axiosClient.get<CourseProgress>(`/courses/${courseId}/progress`);
+  return res.data;
+}
+
+// Public (no login needed): a published course's free first lesson.
+export async function fetchCoursePreview(slug: string): Promise<CoursePreview> {
+  const res = await axiosClient.get<CoursePreview>(`/courses/${encodeURIComponent(slug)}/preview`);
   return res.data;
 }

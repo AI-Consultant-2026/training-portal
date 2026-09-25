@@ -16,6 +16,7 @@ import { paymentsRouter } from "./payments.routes";
 import { quizAttemptsRouter } from "./quizAttempts.routes";
 import { quizzesRouter } from "./quizzes.routes";
 import { referralsRouter } from "./referrals.routes";
+import { supportRouter } from "./support.routes";
 import { usersRouter } from "./users.routes";
 
 export const apiRouter = Router();
@@ -38,3 +39,4 @@ apiRouter.use("/capstones", capstonesRouter);
 apiRouter.use("/capstone-submissions", capstoneSubmissionsRouter);
 apiRouter.use("/leads", leadsRouter);
 apiRouter.use("/referrals", referralsRouter);
+apiRouter.use("/support", supportRouter);

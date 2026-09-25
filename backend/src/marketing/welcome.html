@@ -566,6 +566,18 @@
   .course-meta span { display: flex; align-items: center; gap: 5px; }
   .course-meta svg { width: 13px; height: 13px; opacity: 0.7; }
 
+  /* Start here strip + course card free-lesson link (2026-09-25) */
+  .start-section { background: var(--paper-2); padding: clamp(48px, 7vw, 80px) 0; }
+  .start-steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 860px) { .start-steps { grid-template-columns: 1fr; } }
+  .start-step { background: #fff; border: 1px solid var(--line-light, #DED7C4); border-radius: 4px; padding: 22px 22px 20px; }
+  .start-step h3 { font-size: 19px; margin: 12px 0 6px; color: var(--charcoal); }
+  .start-step p { font-size: 15px; color: var(--charcoal-soft); line-height: 1.6; margin: 0; }
+  .start-step a { color: var(--signal-deep, #C96A26); font-weight: 600; }
+  .start-links { margin-top: 10px !important; font-size: 14px !important; }
+  .start-num { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--signal-2, #F2A65A); font-weight: 700; }
+  .course-actions { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+  .course-try { font-size: 13px; font-weight: 600; color: var(--signal-deep, #C96A26); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
   .course-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .course-price {
     font-family: var(--font-body);
@@ -844,7 +856,7 @@
         <span>Paleon Training Limited</span>
       </span>
     </div>
-    <span class="util-note">Mon&ndash;Fri, 9am&ndash;6pm GMT</span>
+    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
 
@@ -873,7 +885,7 @@
         <li><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>
       </ul>
-      <a class="btn btn-signal" href="#register">Contact Us</a>
+      <a class="btn btn-signal" href="#start">Get started</a>
     </nav>
 
     <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
@@ -893,8 +905,8 @@
       <p class="hero-sub">Build the digital skills employers need to compete for opportunities in Oil &amp; Gas, Banking, Telecommunications and Nigeria’s fastest-growing industries.<br>
         <strong>Led from London, delivered in Nigeria.</strong></p>
       <div class="hero-ctas">
-        <a class="btn btn-signal btn-lg" href="#courses">Explore courses</a>
-        <a class="btn btn-outline-light btn-lg" href="#register">Register your interest</a>
+        <a class="btn btn-signal btn-lg" href="#start">Start here</a>
+        <a class="btn btn-outline-light btn-lg" href="#courses">See courses &amp; fees</a>
         <a class="btn btn-whatsapp btn-lg" href="https://wa.me/447508823495?text=Hello%20Paleon%20Training%2C%20I%20would%20like%20to%20find%20out%20more%20about%20your%20training%20programmes." target="_blank" rel="noopener" aria-label="Chat with Paleon Training on WhatsApp (opens WhatsApp)"><span aria-hidden="true">&#128172;</span> Chat with Paleon on WhatsApp</a>
       </div>
       <p class="hero-whatsapp-note">Need help choosing a course, making a payment or getting support? Chat with Paleon Training on WhatsApp.</p>
@@ -916,6 +928,37 @@
     </div>
   </div>
 
+  <!-- ============ START HERE (one path, 2026-09-25) ============ -->
+  <section class="section start-section" id="start">
+    <div class="wrap">
+      <span class="section-eyebrow">Start here</span>
+      <h2 class="section-title">Three steps to start learning</h2>
+      <ol class="start-steps">
+        <li class="start-step">
+          <span class="start-num">1</span>
+          <h3>Choose a course</h3>
+          <p>Four practical courses for Oil &amp; Gas, Banking and Telecoms. <a href="#courses">Compare courses and fees</a>.</p>
+        </li>
+        <li class="start-step">
+          <span class="start-num">2</span>
+          <h3>Try Day 1 free</h3>
+          <p>Read and watch the course&rsquo;s first lesson before you pay &mdash; no account needed.</p>
+          <p class="start-links">
+            <a href="/preview/cyber-security-fundamentals">Cyber Security</a> &middot;
+            <a href="/preview/gis-and-drone-mapping">GIS &amp; Drones</a> &middot;
+            <a href="/preview/digital-marketing">Digital Marketing</a> &middot;
+            <a href="/preview/hse-fundamentals">HSE</a>
+          </p>
+        </li>
+        <li class="start-step">
+          <span class="start-num">3</span>
+          <h3>Enrol</h3>
+          <p><a href="/register">Create a free account</a>, pay the course fee and start straight away &mdash; self-paced, with lifetime access. Or <a href="#register">apply for one of 50 free places</a> by Friday 30 October 2026.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <!-- ============ REGISTER ============ -->
   <section class="section register-section" id="register">
     <div class="wrap">
@@ -936,7 +979,7 @@
             </div>
           </div>
           <h3 class="register-apply">Apply for a Free Training Place</h3>
-          <p>Complete the form and tell us which course you&rsquo;re interested in.</p>
+          <p>Complete the form and tell us which course you&rsquo;re interested in. Not sure yet? <a href="#start">Try a free lesson first</a>.</p>
         </div>
 
         <form class="register-form reveal" id="registerForm" novalidate>
@@ -988,7 +1031,7 @@
             </select>
           </div>
           <button class="btn btn-signal" type="submit" id="registerSubmit" style="width:100%;">Apply for a Free Training Place</button>
-          <p class="form-note">We'll confirm your place on your selected course by email &mdash; usually within 48 hours.</p>
+          <p class="form-note">We'll confirm your place on your selected course by email &mdash; usually within 48 hours. If the 50 free places are already taken, we&rsquo;ll tell you, and you can still enrol at the standard course fee.</p>
           <div class="form-success" id="formSuccess">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M6.5 10l2.5 2.5 4.5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span>Thanks &mdash; that's been sent. We'll be in touch shortly.</span>
@@ -1034,7 +1077,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;200,000</div>
-          <a class="btn btn-outline-dark btn-sm" href="/login">Enrol Now</a>
+          <span class="course-actions"><a class="course-try" href="/preview/cyber-security-fundamentals">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=cyber-security-fundamentals">Enrol Now</a></span>
         </div>
       </article>
       <article class="course-card reveal">
@@ -1060,7 +1103,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;200,000</div>
-          <a class="btn btn-outline-dark btn-sm" href="/login">Enrol Now</a>
+          <span class="course-actions"><a class="course-try" href="/preview/gis-and-drone-mapping">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=gis-and-drone-mapping">Enrol Now</a></span>
         </div>
       </article>
       <article class="course-card reveal">
@@ -1082,7 +1125,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;150,000</div>
-          <a class="btn btn-outline-dark btn-sm" href="/login">Enrol Now</a>
+          <span class="course-actions"><a class="course-try" href="/preview/digital-marketing">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=digital-marketing">Enrol Now</a></span>
         </div>
       </article>
       <article class="course-card reveal">
@@ -1105,7 +1148,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;100,000</div>
-          <a class="btn btn-outline-dark btn-sm" href="/login">Enrol Now</a>
+          <span class="course-actions"><a class="course-try" href="/preview/hse-fundamentals">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=hse-fundamentals">Enrol Now</a></span>
         </div>
       </article>
     </div>
@@ -1232,7 +1275,7 @@
       <ul class="footer-links">
         <li><a href="#why">Why Paleon</a></li>
         <li><a href="#refer-earn">Refer &amp; Earn</a></li>
-        <li><a href="#register">Register interest</a></li>
+        <li><a href="#register">Apply for a free place</a></li>
         <li><a href="/support">Support</a></li>
         <li><a href="#top">Home</a></li>
         <li><a href="/digital-skills-training-nigeria">Digital Skills Training Guide</a></li>
@@ -1259,7 +1302,11 @@
         </div>
         <div class="footer-contact-item">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="16" height="12" rx="1.5"/><path d="M3 5.5 10 11l7-5.5"/></svg>
-          <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>
+          <span>Questions about courses &amp; fees: <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a></span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg>
+          <span>Problems with the portal: <a href="/support">Support</a> &middot; <a href="mailto:support@paleontraining.com">support@paleontraining.com</a></span>
         </div>
         <div class="footer-contact-item">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 18s6-5.2 6-9.6A6 6 0 0 0 4 8.4C4 12.8 10 18 10 18Z" stroke-linejoin="round"/><circle cx="10" cy="8.3" r="2"/></svg>

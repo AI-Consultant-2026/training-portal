@@ -405,6 +405,13 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "og", req.params.file));
   });
+  // Sample certificate images for the course pages' "Before you enrol" section
+  // (2026-09-25), generated from the real certificate PDF by
+  // scripts/generate-sample-certificates.ts.
+  app.get("/images/certificates/:file(sample-[a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "certificates", req.params.file));
+  });
   // Article featured / og:image files. Whitelisted by pattern so the route can't be
   // used to read anything outside images/articles/.
   app.get("/images/articles/:file([a-z0-9-]+\\.jpg)", (req, res) => {
@@ -745,6 +752,7 @@ export function createApp() {
       "reset-password",
       "verify-email",
       "courses",
+      "preview",
       "lessons",
       "dashboard",
       "refer",

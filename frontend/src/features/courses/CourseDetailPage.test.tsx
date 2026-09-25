@@ -204,3 +204,47 @@ describe("CourseDetailPage bank-transfer flow", () => {
     expect(await screen.findByText("Bank transfer page")).toBeInTheDocument();
   });
 });
+
+describe("CourseDetailPage free preview lesson", () => {
+  // Every course's very first lesson is open before payment (mirrors the backend's
+  // getFreePreviewLesson); every later lesson stays locked until payment is confirmed.
+  function lesson(id: string, title: string, order: number) {
+    return {
+      id,
+      moduleId: "module-1",
+      title,
+      content: "",
+      videoUrl: null,
+      resources: {},
+      images: [],
+      order,
+      durationMinutes: 10,
+    };
+  }
+
+  it("opens the first lesson with a Free preview label and locks the rest when unpaid", async () => {
+    mockCourseData(false);
+    vi.mocked(lessonsApi.fetchModuleLessons).mockResolvedValue([
+      lesson("lesson-1", "Intro to Security", 1),
+      lesson("lesson-2", "Threat Landscape", 2),
+    ]);
+    renderCoursePage();
+
+    const first = await screen.findByRole("link", { name: /Intro to Security/ });
+    expect(first).toHaveAttribute("href", "/lessons/lesson-1");
+    expect(screen.getByText("Free preview")).toBeInTheDocument();
+    expect(screen.getByText(/Lesson: Threat Landscape \(locked\)/)).toBeInTheDocument();
+  });
+
+  it("drops the Free preview label once payment is confirmed", async () => {
+    mockCourseData(true);
+    vi.mocked(lessonsApi.fetchModuleLessons).mockResolvedValue([
+      lesson("lesson-1", "Intro to Security", 1),
+      lesson("lesson-2", "Threat Landscape", 2),
+    ]);
+    renderCoursePage();
+
+    await screen.findByRole("link", { name: /Threat Landscape/ });
+    expect(screen.queryByText("Free preview")).not.toBeInTheDocument();
+  });
+});

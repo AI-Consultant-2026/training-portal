@@ -5,7 +5,6 @@ import {
   Enrollment,
   Lesson,
   ProgressTracking,
-  User,
   VideoCheckpoint,
   VideoCheckpointAnswer,
   sequelize,
@@ -14,36 +13,30 @@ import { ApiError } from "../utils/ApiError";
 import { assertCourseAccessible } from "./course.service";
 import { getEnrollmentForCourseAndStudent, recalculateProgress } from "./enrollment.service";
 
-// Public preview: the shared demo login (demo@paleontraining.com) can view this one
-// course's very first lesson without paying, so prospects can "feel out" the portal
-// before enrolling. Everything else stays gated behind payment like any other student.
-const DEMO_ACCOUNT_EMAIL = "demo@paleontraining.com";
-const DEMO_PREVIEW_COURSE_SLUG = "social-media-management-content";
-
-async function isDemoPreviewLesson(lesson: Lesson, courseModule: CourseModule, studentId: string): Promise<boolean> {
-  const course = await Course.findByPk(courseModule.courseId);
-  if (!course || course.slug !== DEMO_PREVIEW_COURSE_SLUG) {
-    return false;
-  }
-
-  const student = await User.findByPk(studentId);
-  if (!student || student.email !== DEMO_ACCOUNT_EMAIL) {
-    return false;
-  }
-
+// Free preview (2026-09-25): every course's very first lesson -- the first lesson of the
+// module with the lowest weekNumber -- is open to anyone, so prospects can try the real
+// thing before paying. Logged-in students reach it through the normal lesson route below
+// (no payment needed); logged-out visitors through the public /api/courses/:slug/preview
+// endpoint. Everything after it stays gated behind a confirmed payment. (Replaces the old
+// demo-account-only preview of a single, since-archived course.)
+export async function getFreePreviewLesson(courseId: string): Promise<{ lesson: Lesson; module: CourseModule } | null> {
   const firstModule = await CourseModule.findOne({
-    where: { courseId: course.id },
+    where: { courseId },
     order: [["weekNumber", "ASC"]],
   });
-  if (!firstModule || firstModule.id !== courseModule.id) {
-    return false;
+  if (!firstModule) {
+    return null;
   }
-
   const firstLesson = await Lesson.findOne({
     where: { moduleId: firstModule.id },
     order: [["order", "ASC"]],
   });
-  return firstLesson !== null && firstLesson.id === lesson.id;
+  return firstLesson ? { lesson: firstLesson, module: firstModule } : null;
+}
+
+async function isFreePreviewLesson(lesson: Lesson, courseModule: CourseModule): Promise<boolean> {
+  const preview = await getFreePreviewLesson(courseModule.courseId);
+  return preview !== null && preview.lesson.id === lesson.id;
 }
 
 // requester is only passed (and enforced) from the public listLessonsForModule route --
@@ -76,8 +69,8 @@ export async function getLessonById(id: string): Promise<Lesson> {
   return lesson;
 }
 
-// Every week has exactly two lessons, so gating "lessons" here means gating all of
-// them -- locked until the student's enrollment has payment_confirmed set by an admin.
+// Lessons are locked until the student's enrollment has payment_confirmed set by an
+// admin -- except each course's free preview lesson (see getFreePreviewLesson above).
 // Only gates students -- instructors/admins aren't enrollees and should always be able
 // to review content (mirrors the frontend's CourseDetailPage lock check).
 export async function getLessonForStudent(id: string, requester: { id: string; role: string }): Promise<Lesson> {
@@ -102,7 +95,7 @@ export async function getLessonForStudent(id: string, requester: { id: string; r
 
   const enrollment = await getEnrollmentForCourseAndStudent(courseModule.courseId, requester.id);
   if (!enrollment || !enrollment.paymentConfirmed) {
-    if (await isDemoPreviewLesson(lesson, courseModule, requester.id)) {
+    if (await isFreePreviewLesson(lesson, courseModule)) {
       return lesson;
     }
     throw ApiError.forbidden("This lesson unlocks once your payment has been confirmed");

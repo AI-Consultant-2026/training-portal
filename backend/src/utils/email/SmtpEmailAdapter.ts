@@ -39,6 +39,8 @@ export class SmtpEmailAdapter implements EmailAdapter {
       subject: message.subject,
       text: message.text,
       html: message.html,
+      replyTo: message.replyTo,
+      attachments: message.attachments,
     });
   }
 }

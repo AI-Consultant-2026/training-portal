@@ -81,8 +81,12 @@ export function RegisterPage() {
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState("");
   const [university, setUniversity] = useState(REGISTRATION_STATUSES[0]);
-  const [courseInterest, setCourseInterest] = useState("");
   const [searchParams] = useSearchParams();
+  // Pre-selected when arriving from a course's free preview (/register?course=<slug>).
+  const [courseInterest, setCourseInterest] = useState(() => {
+    const fromLink = searchParams.get("course") ?? "";
+    return REGISTRATION_COURSE_INTERESTS.some((c) => c.slug === fromLink) ? fromLink : "";
+  });
   const [referralCode, setReferralCode] = useState(searchParams.get("ref")?.trim().toUpperCase() ?? "");
   const [referralCheck, setReferralCheck] = useState<
     { state: "idle" | "checking" } | { state: "valid"; name: string | null } | { state: "invalid" }

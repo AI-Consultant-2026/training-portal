@@ -1,4 +1,5 @@
-import { Course } from "../models";
+import { COURSE_PRICES_NGN } from "../constants/coursePricing";
+import { Course, CourseModule, Lesson } from "../models";
 import { CourseLevel } from "../models/course.model";
 import { ApiError } from "../utils/ApiError";
 
@@ -99,4 +100,50 @@ export async function updateCourse(
 export async function deleteCourse(idOrSlug: string): Promise<void> {
   const course = await getCourseByIdOrSlug(idOrSlug);
   await course.destroy();
+}
+
+export interface PublicCoursePreview {
+  course: { slug: string; title: string; dayCount: number; lessonCount: number; priceNgn: number | null };
+  module: { title: string; weekNumber: number };
+  lesson: Pick<Lesson, "title" | "content" | "videoUrl" | "images" | "resources" | "durationMinutes">;
+}
+
+// Public, no-login preview of a published course's free first lesson (see
+// lesson.service.ts getFreePreviewLesson) for the "Try Day 1 free" links on the
+// marketing site. Drafts, archived and admin-only courses 404 exactly like an unknown
+// slug, so this can't be used to read anything that isn't already in the catalog.
+export async function getPublicCoursePreview(slug: string): Promise<PublicCoursePreview> {
+  const course = await Course.findOne({ where: { slug } });
+  if (!course || course.status !== "published" || isAdminOnlyCourse(course)) {
+    throw ApiError.notFound("Course not found");
+  }
+  // Imported lazily: lesson.service imports this module too.
+  const { getFreePreviewLesson } = await import("./lesson.service");
+  const preview = await getFreePreviewLesson(course.id);
+  if (!preview) {
+    throw ApiError.notFound("This course has no preview lesson yet");
+  }
+  const modules = await CourseModule.findAll({ where: { courseId: course.id }, attributes: ["id"] });
+  const lessonCount = modules.length
+    ? await Lesson.count({ where: { moduleId: modules.map((m) => m.id) } })
+    : 0;
+  const { lesson, module } = preview;
+  return {
+    course: {
+      slug: course.slug,
+      title: course.title,
+      dayCount: modules.length,
+      lessonCount,
+      priceNgn: COURSE_PRICES_NGN[course.slug] ?? null,
+    },
+    module: { title: module.title, weekNumber: module.weekNumber },
+    lesson: {
+      title: lesson.title,
+      content: lesson.content,
+      videoUrl: lesson.videoUrl,
+      images: lesson.images,
+      resources: lesson.resources,
+      durationMinutes: lesson.durationMinutes,
+    },
+  };
 }

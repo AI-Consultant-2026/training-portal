@@ -130,6 +130,12 @@ export interface Lesson {
   durationMinutes: number;
 }
 
+export interface CoursePreview {
+  course: { slug: string; title: string; dayCount: number; lessonCount: number; priceNgn: number | null };
+  module: { title: string; weekNumber: number };
+  lesson: Pick<Lesson, "title" | "content" | "videoUrl" | "images" | "resources" | "durationMinutes">;
+}
+
 export interface LessonNavItem {
   id: string;
   title: string;

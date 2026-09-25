@@ -178,7 +178,10 @@
         "@type": "Answer",
         "text": "No. The course builds practical skills and a portfolio project; hiring decisions are made by employers."
       }
-    }
+    },
+    {"@type": "Question", "name": "Can I try the course before paying?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The first lesson of Day 1 is free to read and watch, with no account needed: go to paleontraining.com/preview/cyber-security-fundamentals."}},
+    {"@type": "Question", "name": "Is the course self-paced?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can start as soon as your payment is confirmed and work through the lessons at your own pace."}},
+    {"@type": "Question", "name": "How long do I keep access?", "acceptedAnswer": {"@type": "Answer", "text": "For life. Once your payment is confirmed you keep access to every lesson and video, with no expiry."}}
   ]
 }
 </script>
@@ -671,6 +674,15 @@
   }
   .btn-signal { background: var(--signal); color: var(--ink); }
   .btn-signal:hover { background: var(--signal-2); }
+  .btn-preview { background: transparent; border-color: var(--signal-2); color: var(--signal-2); }
+  .btn-preview:hover { background: rgba(242,166,90,.12); }
+  .enrol-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 18px; }
+  .enrol-fact { border: 1px solid var(--line-light); border-radius: 4px; padding: 18px 18px 16px; background: #fff; }
+  .enrol-fact h3 { font-size: 17px; margin: 0 0 6px; }
+  .enrol-fact p { margin: 0; font-size: 15px; }
+  .sample-cert { margin: 22px 0 0; }
+  .sample-cert img { width: 100%; max-width: 720px; height: auto; border: 1px solid var(--line-light); border-radius: 4px; display: block; }
+  .sample-cert figcaption { font-size: 13px; margin-top: 8px; opacity: .75; }
   .btn-whatsapp { background: #25D366; color: var(--ink); }
   .btn-whatsapp:hover { background: #3EE07A; }
   .btn:focus-visible { outline: 2px solid var(--signal-2); outline-offset: 2px; }
@@ -714,7 +726,8 @@
       <div class="stat"><div class="stat-value">&#8358;200,000</div><div class="stat-label">course fee</div></div>
     </div>
     <div class="cta-row">
-      <a class="btn btn-signal" href="/register">Enrol now</a>
+      <a class="btn btn-signal" href="/register?course=cyber-security-fundamentals">Enrol now</a>
+      <a class="btn btn-preview" href="/preview/cyber-security-fundamentals">Try Day 1 free</a>
       <a class="btn btn-whatsapp" href="https://wa.me/447508823495?text=Hello%20Paleon%20Training%2C%20I%20would%20like%20to%20find%20out%20more%20about%20the%20Cyber%20Security%20Fundamentals%20course." target="_blank" rel="noopener" aria-label="Chat with Paleon on WhatsApp about Cyber Security Fundamentals (opens WhatsApp)"><span aria-hidden="true">&#128172;</span> Chat with Paleon on WhatsApp</a>
     </div>
     <p class="price-note">Already have an account? <a href="/login" style="color:var(--signal-2);">Log in to enrol</a>.</p>
@@ -782,11 +795,29 @@
     </div>
   </section>
 
+  <section id="before-you-enrol">
+    <div class="measure prose">
+      <p class="section-label">Before you enrol</p>
+      <h2 class="section-title">What you get, and how it works</h2>
+      <div class="enrol-facts">
+        <div class="enrol-fact"><h3>Try it free first</h3><p>The first lesson of Day 1 is free to read and watch &mdash; no account needed. <a href="/preview/cyber-security-fundamentals">Open the free lesson</a>.</p></div>
+        <div class="enrol-fact"><h3>Self-paced, start anytime</h3><p>Start as soon as your payment is confirmed and study at your own pace, on your phone or laptop.</p></div>
+        <div class="enrol-fact"><h3>Lifetime access</h3><p>Once you&rsquo;ve paid, you keep access to every lesson and video &mdash; it doesn&rsquo;t expire.</p></div>
+        <div class="enrol-fact"><h3>Certificate of completion</h3><p>Finish every lesson and you can download your certificate from your dashboard. A sample is below.</p></div>
+        <div class="enrol-fact"><h3>Help when you&rsquo;re stuck</h3><p>Report a problem from inside the portal and we reply within 1 working day (Monday to Friday, Nigerian time).</p></div>
+      </div>
+      <figure class="sample-cert">
+        <img src="/images/certificates/sample-cyber-security-fundamentals.jpg" width="1200" height="848" loading="lazy" alt="Sample Cyber Security Fundamentals certificate of completion from Paleon Training, showing the student name, course title, completion date and certificate reference.">
+        <figcaption>Sample certificate. Yours shows your name, completion date and a unique certificate reference.</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section>
     <div class="measure prose">
       <p class="section-label">Enrolment</p>
       <h2 class="section-title">Fees and how to enrol</h2>
-      <p>The course fee is <strong>&#8358;200,000</strong>. <a href="/register">Create an account</a>, choose Cyber Security Fundamentals, and follow the payment instructions shown when you enrol. Lessons unlock once your payment is confirmed. For team or company training, see <a href="/corporate-training-nigeria">corporate training</a>.</p>
+      <p>The course fee is <strong>&#8358;200,000</strong>. <a href="/register?course=cyber-security-fundamentals">Create an account</a>, choose Cyber Security Fundamentals, and follow the payment instructions shown when you enrol. Lessons unlock once your payment is confirmed. For team or company training, see <a href="/corporate-training-nigeria">corporate training</a>.</p>
       <p>Questions before you enrol? <a href="https://wa.me/447508823495?text=Hello%20Paleon%20Training%2C%20I%20would%20like%20to%20find%20out%20more%20about%20the%20Cyber%20Security%20Fundamentals%20course." target="_blank" rel="noopener">Chat with Paleon on WhatsApp</a> or email <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>.</p>
     </div>
   </section>
@@ -828,6 +859,27 @@
         <div class="stage-body">
           <h3>Does completing the course guarantee a job?</h3>
           <p>No. The course builds practical skills and a portfolio project; hiring decisions are made by employers.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q6</div>
+        <div class="stage-body">
+          <h3>Can I try the course before paying?</h3>
+          <p>Yes. The first lesson of Day 1 is free to read and watch, with no account needed: go to <a href="/preview/cyber-security-fundamentals">paleontraining.com/preview/cyber-security-fundamentals</a>.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q7</div>
+        <div class="stage-body">
+          <h3>Is the course self-paced?</h3>
+          <p>Yes. You can start as soon as your payment is confirmed and work through the lessons at your own pace.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q8</div>
+        <div class="stage-body">
+          <h3>How long do I keep access?</h3>
+          <p>For life. Once your payment is confirmed you keep access to every lesson and video, with no expiry.</p>
         </div>
       </div>
     </div>

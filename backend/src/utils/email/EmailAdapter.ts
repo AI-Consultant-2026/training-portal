@@ -8,6 +8,10 @@ export interface EmailMessage {
   // rather than the fixed transactional EMAIL_FROM_ADDRESS. Left unset, every other
   // caller keeps sending from that one fixed address exactly as before.
   from?: string;
+  // Optional, used by the in-portal "Report a problem" email so support can reply
+  // straight to the student and see their screenshot.
+  replyTo?: string;
+  attachments?: { filename: string; content: Buffer; contentType: string }[];
 }
 
 export interface EmailAdapter {
