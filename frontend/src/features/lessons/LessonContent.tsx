@@ -77,19 +77,9 @@ export function LessonContent({ content, images }: { content: string; images: Le
           </ReactMarkdown>
         ) : (
           <figure key={index}>
-            {/* Diagram labels are too small to read at phone width, so the image opens
-                  full size in a new tab where it can be pinch-zoomed. */}
-            <a href={segment.image.url} target="_blank" rel="noopener noreferrer">
-              <img
-                src={segment.image.url}
-                alt={segment.image.caption}
-                className="w-full rounded-lg border border-gray-200"
-              />
-            </a>
-            <figcaption className="mt-2 text-sm text-gray-500">
-              {segment.image.caption}
-              <span className="mt-1 block text-xs text-gray-400 sm:hidden">Tap the image to enlarge it.</span>
-            </figcaption>
+            {/* Illustrations are deliberately not links (2026-09-25, owner request). */}
+            <img src={segment.image.url} alt={segment.image.caption} className="w-full rounded-lg border border-gray-200" />
+            <figcaption className="mt-2 text-sm text-gray-500">{segment.image.caption}</figcaption>
           </figure>
         ),
       )}
