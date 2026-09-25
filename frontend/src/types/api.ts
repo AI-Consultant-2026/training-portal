@@ -209,7 +209,12 @@ export interface Payment {
 
 export interface PaymentQuote {
   baseAmountNgn: number;
-  card: { currency: string; amount: number };
+  card: {
+    currency: string;
+    amount: number;
+    /** False while card payments are switched off on the server (CARD_PAYMENTS_ENABLED). */
+    enabled: boolean;
+  };
   bankTransfer: {
     currency: string;
     amount: number;

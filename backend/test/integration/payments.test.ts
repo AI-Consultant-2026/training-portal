@@ -54,12 +54,67 @@ const validCard = {
 describe("Payments", () => {
   // Bank transfers are on by default but can be switched off (BANK_TRANSFER_ENABLED); the
   // existing tests below exercise the enabled flow, and the "paused" block covers the rest.
+  // Card payments are OFF by default (CARD_PAYMENTS_ENABLED, since the gateway is a mock);
+  // the existing card tests switch them on to exercise the flow a real gateway will use,
+  // and the "card payments off" block covers the default.
   const originalBankTransferEnabled = config.bankTransfer.enabled;
+  const originalCardEnabled = config.card.enabled;
   beforeAll(() => {
     config.bankTransfer.enabled = true;
+    config.card.enabled = true;
   });
   afterAll(() => {
     config.bankTransfer.enabled = originalBankTransferEnabled;
+    config.card.enabled = originalCardEnabled;
+  });
+
+  it("defaults card payments to off when CARD_PAYMENTS_ENABLED isn't set", () => {
+    expect(process.env.CARD_PAYMENTS_ENABLED).toBeUndefined();
+    expect(originalCardEnabled).toBe(false);
+  });
+
+  describe("while card payments are off (the default)", () => {
+    beforeEach(() => {
+      config.card.enabled = false;
+    });
+    afterEach(() => {
+      config.card.enabled = true;
+    });
+
+    it("rejects a card payment with a 503, records nothing, and leaves the course locked", async () => {
+      const instructor = await createInstructor("card-off-inst@example.com");
+      const course = await createPricedCourse(instructor.id);
+      const student = await registerStudent("card-off1@example.com");
+      const token = await loginAs("card-off1@example.com");
+      await Enrollment.create({ courseId: course.id, studentId: student.id });
+
+      const res = await request(app)
+        .post("/api/payments/card")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, ...validCard });
+
+      expect(res.status).toBe(503);
+      expect(res.body.error.message).toMatch(/temporarily unavailable/i);
+      expect(res.body.error.details.code).toBe("CARD_PAYMENTS_DISABLED");
+      expect(await Payment.count({ where: { studentId: student.id } })).toBe(0);
+      const enrollment = await Enrollment.findOne({ where: { courseId: course.id, studentId: student.id } });
+      expect(enrollment?.paymentConfirmed).toBe(false);
+    });
+
+    it("flags card payments as disabled in the quote", async () => {
+      const instructor = await createInstructor("card-off-inst2@example.com");
+      const course = await createPricedCourse(instructor.id);
+      await registerStudent("card-off2@example.com");
+      const token = await loginAs("card-off2@example.com");
+
+      const res = await request(app)
+        .get(`/api/payments/quote/${course.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.quote.card.enabled).toBe(false);
+      expect(res.body.quote.bankTransfer.enabled).toBe(true);
+    });
   });
 
   it("rejects unauthenticated and non-student callers on every payment route", async () => {

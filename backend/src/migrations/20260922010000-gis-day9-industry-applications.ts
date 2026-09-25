@@ -39,13 +39,15 @@ const LESSON_VIDEOS: Record<number, string> = {
   2: "https://www.youtube.com/watch?v=vuh9OX2E6ek", // "5 Key Benefits of Drones in Surveying and Mapping" (Geospatial World)
 };
 
-async function getCourseId(queryInterface: QueryInterface): Promise<string> {
+// Returns null when the course doesn't exist (a fresh or test database, where seeders
+// haven't run): the migration then does nothing, matching applyBriefs' convention that
+// courses missing from the database are simply skipped.
+async function getCourseId(queryInterface: QueryInterface): Promise<string | null> {
   const [rows] = await queryInterface.sequelize.query(`SELECT id FROM courses WHERE slug = ?`, {
     replacements: [COURSE_SLUG],
   });
   const row = (rows as { id: string }[])[0];
-  if (!row) throw new Error(`Could not find course "${COURSE_SLUG}"`);
-  return row.id;
+  return row ? row.id : null;
 }
 
 const OLD_CAPSTONE_TITLE = "Sustainable Agriculture GIS Capstone";
@@ -105,6 +107,7 @@ module.exports = {
     if (!week) throw new Error("Day 9 not found in curriculumGis WEEKS");
 
     const courseId = await getCourseId(queryInterface);
+    if (!courseId) return;
     const now = new Date();
 
     const moduleId = crypto.randomUUID();
@@ -209,6 +212,7 @@ module.exports = {
 
   down: async (queryInterface: QueryInterface) => {
     const courseId = await getCourseId(queryInterface);
+    if (!courseId) return;
     await deleteDay9(queryInterface, courseId);
     await updateCapstoneTitle(queryInterface, courseId, OLD_CAPSTONE_TITLE);
     await updateCourseRow(queryInterface, courseId, OLD_DESCRIPTION, OLD_DURATION_WEEKS);

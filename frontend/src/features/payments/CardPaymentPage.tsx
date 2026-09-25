@@ -128,6 +128,27 @@ export function CardPaymentPage() {
     );
   }
 
+  // Card payments are switched off on the server (CARD_PAYMENTS_ENABLED isn't "true" while
+  // the gateway is a placeholder): point to bank transfer instead of a form that would
+  // only be rejected.
+  if (quote && !quote.card.enabled) {
+    return (
+      <div className="mx-auto mt-16 max-w-md px-6 text-center" role="status">
+        <h1 className="text-2xl font-semibold text-gray-900">Card payments are temporarily unavailable</h1>
+        <p className="mt-3 text-gray-600">
+          Please pay for {course.title} by bank transfer instead. If you need help, contact us at{" "}
+          <span className="font-medium text-gray-800">hello@paleontraining.com</span>.
+        </p>
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <Button onClick={() => navigate(`/courses/${course.slug}/pay/bank-transfer`)}>Pay by bank transfer</Button>
+          <Button variant="secondary" onClick={() => navigate(`/courses/${course.slug}`)}>
+            Back to course
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto mt-10 max-w-md px-6 pb-16">
       <h1 className="text-2xl font-semibold text-gray-900">Pay by card</h1>

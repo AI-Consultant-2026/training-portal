@@ -43,7 +43,12 @@ async function requireUnpaidEnrollment(courseIdOrSlug: string, studentId: string
 
 export interface Quote {
   baseAmountNgn: number;
-  card: { currency: string; amount: number };
+  card: {
+    currency: string;
+    amount: number;
+    /** False while card payments are switched off (CARD_PAYMENTS_ENABLED not "true"). */
+    enabled: boolean;
+  };
   bankTransfer: {
     currency: string;
     amount: number;
@@ -60,7 +65,11 @@ export async function getQuote(courseIdOrSlug: string, billingCountry?: string):
 
   return {
     baseAmountNgn,
-    card: { currency: CARD_SETTLEMENT_CURRENCY, amount: convertFromNgn(baseAmountNgn, CARD_SETTLEMENT_CURRENCY) },
+    card: {
+      currency: CARD_SETTLEMENT_CURRENCY,
+      amount: convertFromNgn(baseAmountNgn, CARD_SETTLEMENT_CURRENCY),
+      enabled: config.card.enabled,
+    },
     bankTransfer: {
       currency: "NGN",
       amount: baseAmountNgn,
@@ -93,7 +102,15 @@ export interface CardPaymentInput {
   billingPostalCode: string;
 }
 
+export const CARD_PAYMENTS_DISABLED_MESSAGE =
+  "Card payments are temporarily unavailable. Please pay by bank transfer, or contact hello@paleontraining.com.";
+
 export async function chargeCourseCard(input: CardPaymentInput): Promise<{ payment: Payment; enrollment: Enrollment }> {
+  // Checked before anything else: while the gateway is a mock, an enabled card flow would
+  // unlock a paid course for any made-up card number.
+  if (!config.card.enabled) {
+    throw new ApiError(503, CARD_PAYMENTS_DISABLED_MESSAGE, { code: "CARD_PAYMENTS_DISABLED" });
+  }
   const { course, enrollment } = await requireUnpaidEnrollment(input.courseId, input.studentId);
   const baseAmountNgn = requirePriceNgn(course.slug);
   const amount = convertFromNgn(baseAmountNgn, CARD_SETTLEMENT_CURRENCY);

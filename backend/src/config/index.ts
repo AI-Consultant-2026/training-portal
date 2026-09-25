@@ -71,6 +71,13 @@ export const config = {
     accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",
     sortCodeOrIban: process.env.BANK_TRANSFER_SORT_CODE_OR_IBAN ?? "",
   },
+  card: {
+    // Master switch for card payments (POST /payments/card). OFF unless
+    // CARD_PAYMENTS_ENABLED=true is set -- the opposite default to bank transfer, because
+    // paymentGateway.service.ts is still a mock that approves any card number. Only turn
+    // this on once chargeCard() calls a real gateway.
+    enabled: process.env.CARD_PAYMENTS_ENABLED === "true",
+  },
   cardGatewayApiKey: process.env.PAYMENT_GATEWAY_API_KEY ?? "",
 };
 

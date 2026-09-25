@@ -103,7 +103,7 @@ function mockCourseData(enrollmentPaymentConfirmed: boolean) {
   vi.mocked(capstonesApi.fetchCapstoneForCourse).mockResolvedValue(null);
   vi.mocked(paymentsApi.fetchPaymentQuote).mockResolvedValue({
     baseAmountNgn: 200000,
-    card: { currency: "GBP", amount: 100 },
+    card: { currency: "GBP", amount: 100, enabled: false },
     bankTransfer: {
       currency: "NGN",
       amount: 200000,

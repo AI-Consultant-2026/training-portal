@@ -3,7 +3,7 @@ import { ASSIGNMENT_BRIEFS, CAPSTONE_BRIEFS } from "../../src/seeders/data/assig
 const EXPECTED_WEEKS: Record<string, number> = {
   "cyber-security-fundamentals": 18,
   "digital-marketing": 8,
-  "gis-and-drone-mapping": 8,
+  "gis-and-drone-mapping": 9, // Day 9 (industry applications) added 2026-09-22
   "hse-fundamentals": 8,
 };
 
@@ -36,7 +36,7 @@ describe("Assignment and capstone briefs", () => {
       ),
       ...Object.entries(CAPSTONE_BRIEFS).map(([slug, b]) => ({ id: `${slug} capstone`, b })),
     ];
-    expect(all).toHaveLength(42 + 4);
+    expect(all).toHaveLength(43 + 4);
     for (const { id, b } of all) {
       for (const section of REQUIRED_SECTIONS) {
         expect({ id, has: b.description.includes(section) }).toEqual({ id, has: true });
@@ -74,7 +74,7 @@ describe("Assignment and capstone briefs", () => {
       ...Object.values(ASSIGNMENT_BRIEFS).flatMap((weeks) => Object.values(weeks)),
       ...Object.values(CAPSTONE_BRIEFS),
     ];
-    expect(all).toHaveLength(46);
+    expect(all).toHaveLength(47);
     for (const b of all) {
       const submitSection = b.description.split("## What to submit")[1].split("## How you will be assessed")[0];
       expect(submitSection).toContain("AI generated answers will not be accepted.");
