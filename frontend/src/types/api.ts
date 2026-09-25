@@ -494,6 +494,8 @@ export interface Lead {
   course: string;
   university: string | null;
   source: string | null;
+  sector: string | null;
+  interest: string | null;
   createdAt: string;
 }
 

@@ -2,6 +2,7 @@ import request from "supertest";
 import { createApp } from "../../src/app";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 import { config } from "../../src/config";
+import { Lead } from "../../src/models";
 
 const app = createApp();
 const memAdapter = emailAdapter as MemoryEmailAdapter;
@@ -81,5 +82,24 @@ describe("Leads", () => {
     const res = await request(app).post("/api/leads").send({ ...validLead, phone: "call me maybe" });
 
     expect(res.status).toBe(400);
+  });
+
+  it("accepts the Career Match industry and interest, persists them and includes them in the notification email", async () => {
+    const res = await request(app)
+      .post("/api/leads")
+      .send({ ...validLead, sector: "Oil & Gas", interest: "Maps, drones and location data" });
+    expect(res.status).toBe(201);
+    const lead = await Lead.findByPk(res.body.id);
+    expect(lead?.sector).toBe("Oil & Gas");
+    expect(lead?.interest).toBe("Maps, drones and location data");
+    expect(memAdapter.sentMessages[0].text).toContain("Aiming for: Oil & Gas");
+    expect(memAdapter.sentMessages[0].text).toContain("Interested in: Maps, drones and location data");
+  });
+
+  it("rejects an industry or interest outside the allow-lists", async () => {
+    const badSector = await request(app).post("/api/leads").send({ ...validLead, sector: "Agriculture" });
+    expect(badSector.status).toBe(400);
+    const badInterest = await request(app).post("/api/leads").send({ ...validLead, interest: "Anything" });
+    expect(badInterest.status).toBe(400);
   });
 });

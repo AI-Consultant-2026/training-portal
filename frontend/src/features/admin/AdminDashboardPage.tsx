@@ -25,7 +25,7 @@ function toCsvField(value: string): string {
 }
 
 function leadsToCsv(leads: Lead[]): string {
-  const header = ["Name", "Email", "Phone", "Course", "Status", "Source", "Submitted"]
+  const header = ["Name", "Email", "Phone", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted"]
     .map(toCsvField)
     .join(",");
   const rows = leads.map((lead) =>
@@ -35,6 +35,8 @@ function leadsToCsv(leads: Lead[]): string {
       lead.phone ?? "",
       lead.course,
       lead.university ?? "",
+      lead.sector ?? "",
+      lead.interest ?? "",
       lead.source ?? "",
       new Date(lead.createdAt).toISOString(),
     ]
@@ -267,6 +269,8 @@ export function AdminDashboardPage() {
                 <th className="px-4 py-2">Phone</th>
                 <th className="px-4 py-2">Course</th>
                 <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Aiming for</th>
+                <th className="px-4 py-2">Interested in</th>
                 <th className="px-4 py-2">Source</th>
                 <th className="px-4 py-2">Submitted</th>
                 <th className="px-4 py-2" />
@@ -294,6 +298,8 @@ export function AdminDashboardPage() {
                   </td>
                   <td className="px-4 py-2 text-gray-600">{lead.course}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.university ?? "—"}</td>
+                  <td className="px-4 py-2 text-gray-600">{lead.sector ?? "—"}</td>
+                  <td className="px-4 py-2 text-gray-600">{lead.interest ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.source ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">
                     {new Date(lead.createdAt).toLocaleDateString()}

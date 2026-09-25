@@ -31,7 +31,10 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
       expect(res.text).toContain(`href="/register?course=${slug}"`);
     }
     expect(res.text).not.toContain('href="/login">Enrol Now</a>');
-    expect(res.text).toContain("you can still enrol at the standard course fee");
+    expect(res.text).not.toMatch(/50 FREE|free training place|first 50/i);
+    expect(res.text).toContain('id="career-match"');
+    expect(res.text).toContain("Get my free Career Match");
+    expect(res.text).not.toContain("Try Day 1 free");
     expect(res.text).toContain("10am&ndash;7pm WAT");
   });
 

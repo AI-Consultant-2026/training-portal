@@ -9,6 +9,8 @@ export interface CreateLeadInput {
   course: string;
   university?: string;
   source?: string;
+  sector?: string;
+  interest?: string;
 }
 
 export async function createLead(input: CreateLeadInput): Promise<Lead> {

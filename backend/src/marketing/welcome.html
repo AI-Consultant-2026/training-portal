@@ -566,6 +566,19 @@
   .course-meta span { display: flex; align-items: center; gap: 5px; }
   .course-meta svg { width: 13px; height: 13px; opacity: 0.7; }
 
+  /* Free Career Match result (2026-09-25) */
+  .anchor-alias { position: relative; top: -90px; display: block; height: 0; }
+  .register-aside { margin-top: 18px; font-size: 15px; }
+  .register-aside a { color: var(--signal-deep); font-weight: 600; }
+  .form-note a { color: inherit; text-decoration: underline; }
+  .match-result { background: #fff; border: 1px solid var(--line-light); border-top: 4px solid var(--signal); border-radius: 4px; padding: 28px; align-self: start; }
+  .match-result[hidden] { display: none; }
+  .match-title { font-size: clamp(24px, 3vw, 30px); margin: 10px 0 10px; color: var(--charcoal); }
+  .match-why { color: var(--charcoal-soft); line-height: 1.65; margin: 0 0 12px; }
+  .match-meta { font-size: 14px; font-weight: 600; color: var(--charcoal); margin: 0 0 20px; }
+  .match-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .match-note { margin: 18px 0 0; font-size: 14px; color: var(--charcoal-soft); line-height: 1.6; }
+  .match-note a { color: var(--signal-deep); font-weight: 600; }
   /* Start here strip + course card free-lesson link (2026-09-25) */
   .start-section { background: var(--paper-2); padding: clamp(48px, 7vw, 80px) 0; }
   .start-steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -923,8 +936,8 @@
   <!-- ============ ANNOUNCEMENT TICKER ============ -->
   <div class="ticker" role="note" aria-label="Announcement">
     <div class="ticker-track" aria-hidden="true">
-      <span class="ticker-item">50 FREE Training Places &mdash; Build digital skills for Oil &amp; Gas, Banking &amp; Telecoms. &#127891;&#127475;&#127468;</span>
-      <span class="ticker-item">50 FREE Training Places &mdash; Build digital skills for Oil &amp; Gas, Banking &amp; Telecoms. &#127891;&#127475;&#127468;</span>
+      <span class="ticker-item">FREE Career Match &mdash; find the digital skill that fits Oil &amp; Gas, Banking or Telecoms in 2 minutes. &#127891;&#127475;&#127468;</span>
+      <span class="ticker-item">FREE Career Match &mdash; find the digital skill that fits Oil &amp; Gas, Banking or Telecoms in 2 minutes. &#127891;&#127475;&#127468;</span>
     </div>
   </div>
 
@@ -937,11 +950,11 @@
         <li class="start-step">
           <span class="start-num">1</span>
           <h3>Choose a course</h3>
-          <p>Four practical courses for Oil &amp; Gas, Banking and Telecoms. <a href="#courses">Compare courses and fees</a>.</p>
+          <p>Four practical courses for Oil &amp; Gas, Banking and Telecoms. <a href="#courses">Compare courses and fees</a>, or <a href="#career-match">get matched free</a>.</p>
         </li>
         <li class="start-step">
           <span class="start-num">2</span>
-          <h3>Try Day 1 free</h3>
+          <h3>Try a free lesson</h3>
           <p>Read and watch the course&rsquo;s first lesson before you pay &mdash; no account needed.</p>
           <p class="start-links">
             <a href="/preview/cyber-security-fundamentals">Cyber Security</a> &middot;
@@ -953,33 +966,27 @@
         <li class="start-step">
           <span class="start-num">3</span>
           <h3>Enrol</h3>
-          <p><a href="/register">Create a free account</a>, pay the course fee and start straight away &mdash; self-paced, with lifetime access. Or <a href="#register">apply for one of 50 free places</a> by Friday 30 October 2026.</p>
+          <p><a href="/register">Create a free account</a>, pay the course fee and start straight away &mdash; self-paced, with lifetime access. Not sure which course? <a href="#career-match">Get your free Career Match</a>.</p>
         </li>
       </ol>
     </div>
   </section>
 
-  <!-- ============ REGISTER ============ -->
+  <!-- ============ FREE CAREER MATCH (lead capture, 2026-09-25; replaced the earlier free-places offer) ============ -->
   <section class="section register-section" id="register">
+    <span id="career-match" class="anchor-alias" aria-hidden="true"></span>
     <div class="wrap">
       <div class="register-grid">
         <div class="register-copy reveal">
-          <span class="section-eyebrow">Get started</span>
-          <h2 class="section-title">&#127891; FREE training to the first 50 successful candidates</h2>
-          <p class="register-lede">Your opportunity to build practical digital skills starts here.</p>
-          <p>Paleon Training is offering FREE training to the first 50 successful candidates.</p>
+          <span class="section-eyebrow">Free Career Match</span>
+          <h2 class="section-title">Not sure which skill will get you hired? Find your match in 2 minutes.</h2>
+          <p class="register-lede">Tell us where you are and the industry you&rsquo;re aiming for &mdash; Oil &amp; Gas, Banking or Telecoms. We&rsquo;ll instantly match you to the course that fits, with a free lesson you can start today.</p>
           <div class="register-list">
-            <div class="register-list-item">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Deadline: Friday 30 October 2026</strong></span>
-            </div>
-            <div class="register-list-item">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Spaces are limited.</strong></span>
-            </div>
+            <div class="register-list-item"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Your recommended course, instantly</strong> &mdash; and why it fits your goal</span></div>
+            <div class="register-list-item"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>A free lesson</strong> you can open straight away, no account needed</span></div>
+            <div class="register-list-item"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Free, no obligation</strong> &mdash; no payment details, ever</span></div>
           </div>
-          <h3 class="register-apply">Apply for a Free Training Place</h3>
-          <p>Complete the form and tell us which course you&rsquo;re interested in. Not sure yet? <a href="#start">Try a free lesson first</a>.</p>
+          <p class="register-aside">Already know what you want? <a href="#courses">Compare courses and fees</a>.</p>
         </div>
 
         <form class="register-form reveal" id="registerForm" novalidate>
@@ -992,22 +999,34 @@
             <input class="form-input" type="email" id="regEmail" name="email" required autocomplete="email" />
           </div>
           <div class="form-row">
-            <label class="form-label" for="regPhone">WhatsApp / phone number <span style="font-weight:400;color:var(--charcoal-soft,#6B6252);">(optional, for faster follow-up)</span></label>
+            <label class="form-label" for="regPhone">WhatsApp / phone number <span style="font-weight:400;color:var(--charcoal-soft,#6B6252);">(optional)</span></label>
             <input class="form-input" type="tel" id="regPhone" name="phone" autocomplete="tel" />
           </div>
+          <!-- Keep the two lists below in sync with backend/src/validators/leads.validators.ts
+               (LEAD_SECTORS, LEAD_INTERESTS) and the match rules in welcome.js. -->
           <div class="form-row">
-            <label class="form-label" for="regCourse">Course you're interested in</label>
-            <select class="form-select" id="regCourse" name="course" required>
-              <option value="" disabled selected>Choose a course&hellip;</option>
-              <option>Cyber Security Fundamentals</option>
-              <option>GIS and Drone Mapping</option>
-              <option>Digital Marketing</option>
-              <option>HSE Fundamentals</option>
+            <label class="form-label" for="regSector">Which industry are you aiming for?</label>
+            <select class="form-select" id="regSector" name="sector" required>
+              <option value="" disabled selected>Choose one&hellip;</option>
+              <option>Oil &amp; Gas</option>
+              <option>Banking</option>
+              <option>Telecoms</option>
               <option>Not sure yet</option>
             </select>
           </div>
           <div class="form-row">
-            <label class="form-label" for="regUniversity">Status</label>
+            <label class="form-label" for="regInterest">What kind of work interests you most?</label>
+            <select class="form-select" id="regInterest" name="interest" required>
+              <option value="" disabled selected>Choose one&hellip;</option>
+              <option>Protecting systems and data</option>
+              <option>Maps, drones and location data</option>
+              <option>Marketing, content and online growth</option>
+              <option>Health, safety and site operations</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="regUniversity">Where are you now?</label>
             <!-- Keep in sync with backend/src/validators/auth.validators.ts's
                  REGISTRATION_STATUSES -- this static page can't import that shared list,
                  so it's a manually-kept copy. -->
@@ -1030,17 +1049,25 @@
               <option>Other</option>
             </select>
           </div>
-          <button class="btn btn-signal" type="submit" id="registerSubmit" style="width:100%;">Apply for a Free Training Place</button>
-          <p class="form-note">We'll confirm your place on your selected course by email &mdash; usually within 48 hours. If the 50 free places are already taken, we&rsquo;ll tell you, and you can still enrol at the standard course fee.</p>
-          <div class="form-success" id="formSuccess">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M6.5 10l2.5 2.5 4.5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Thanks &mdash; that's been sent. We'll be in touch shortly.</span>
-          </div>
+          <button class="btn btn-signal" type="submit" id="registerSubmit" style="width:100%;">Get my free Career Match</button>
+          <p class="form-note">Free and instant. Our team may follow up by email or WhatsApp to help you get started &mdash; see our <a href="/privacy">privacy policy</a>.</p>
           <div class="form-error" id="formError">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M10 6v5M10 14h.01" stroke-linecap="round"/></svg>
-            <span>Something went wrong sending that &mdash; please try again, or email us directly.</span>
+            <span>Something went wrong sending that &mdash; please try again, or email <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>.</span>
           </div>
         </form>
+
+        <div class="match-result" id="matchResult" hidden aria-live="polite">
+          <span class="section-eyebrow">Your Career Match</span>
+          <h3 class="match-title" id="matchTitle"></h3>
+          <p class="match-why" id="matchWhy"></p>
+          <p class="match-meta" id="matchMeta"></p>
+          <div class="match-actions">
+            <a class="btn btn-signal" id="matchPreview" href="#">Try a free lesson</a>
+            <a class="btn btn-outline-dark" id="matchCourse" href="#">See the course</a>
+          </div>
+          <p class="match-note">Ready to start? <a id="matchEnrol" href="/register">Create your account and enrol</a> &mdash; self-paced, with lifetime access. Questions? <a href="https://wa.me/447508823495" target="_blank" rel="noopener">Chat with us on WhatsApp</a>.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1077,7 +1104,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;200,000</div>
-          <span class="course-actions"><a class="course-try" href="/preview/cyber-security-fundamentals">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=cyber-security-fundamentals">Enrol Now</a></span>
+          <span class="course-actions"><a class="course-try" href="/preview/cyber-security-fundamentals">Try a free lesson</a><a class="btn btn-outline-dark btn-sm" href="/register?course=cyber-security-fundamentals">Enrol Now</a></span>
         </div>
       </article>
       <article class="course-card reveal">
@@ -1103,7 +1130,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;200,000</div>
-          <span class="course-actions"><a class="course-try" href="/preview/gis-and-drone-mapping">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=gis-and-drone-mapping">Enrol Now</a></span>
+          <span class="course-actions"><a class="course-try" href="/preview/gis-and-drone-mapping">Try a free lesson</a><a class="btn btn-outline-dark btn-sm" href="/register?course=gis-and-drone-mapping">Enrol Now</a></span>
         </div>
       </article>
       <article class="course-card reveal">
@@ -1125,7 +1152,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;150,000</div>
-          <span class="course-actions"><a class="course-try" href="/preview/digital-marketing">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=digital-marketing">Enrol Now</a></span>
+          <span class="course-actions"><a class="course-try" href="/preview/digital-marketing">Try a free lesson</a><a class="btn btn-outline-dark btn-sm" href="/register?course=digital-marketing">Enrol Now</a></span>
         </div>
       </article>
       <article class="course-card reveal">
@@ -1148,7 +1175,7 @@
         </div>
         <div class="course-foot">
           <div class="course-price"><small>Course fee</small>&#8358;100,000</div>
-          <span class="course-actions"><a class="course-try" href="/preview/hse-fundamentals">Try Day 1 free</a><a class="btn btn-outline-dark btn-sm" href="/register?course=hse-fundamentals">Enrol Now</a></span>
+          <span class="course-actions"><a class="course-try" href="/preview/hse-fundamentals">Try a free lesson</a><a class="btn btn-outline-dark btn-sm" href="/register?course=hse-fundamentals">Enrol Now</a></span>
         </div>
       </article>
     </div>
@@ -1275,7 +1302,7 @@
       <ul class="footer-links">
         <li><a href="#why">Why Paleon</a></li>
         <li><a href="#refer-earn">Refer &amp; Earn</a></li>
-        <li><a href="#register">Apply for a free place</a></li>
+        <li><a href="#career-match">Free Career Match</a></li>
         <li><a href="/support">Support</a></li>
         <li><a href="#top">Home</a></li>
         <li><a href="/digital-skills-training-nigeria">Digital Skills Training Guide</a></li>

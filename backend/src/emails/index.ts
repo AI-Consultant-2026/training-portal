@@ -66,6 +66,8 @@ export async function sendLeadNotificationEmail(lead: {
   course: string;
   university?: string | null;
   source?: string | null;
+  sector?: string | null;
+  interest?: string | null;
 }): Promise<void> {
   await sendEmail(buildLeadNotificationEmail(lead));
 }

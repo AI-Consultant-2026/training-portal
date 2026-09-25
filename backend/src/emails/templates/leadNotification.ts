@@ -9,6 +9,8 @@ export function buildLeadNotificationEmail(lead: {
   course: string;
   university?: string | null;
   source?: string | null;
+  sector?: string | null;
+  interest?: string | null;
 }): EmailMessage {
   const lines = [
     "New course interest submitted via the website.",
@@ -20,6 +22,8 @@ export function buildLeadNotificationEmail(lead: {
   // to follow up (WhatsApp/call), so it shouldn't get buried below university/source.
   if (lead.phone) lines.push(`Phone: ${lead.phone}`);
   if (lead.university) lines.push(`Status: ${lead.university}`);
+  if (lead.sector) lines.push(`Aiming for: ${lead.sector}`);
+  if (lead.interest) lines.push(`Interested in: ${lead.interest}`);
   if (lead.source) lines.push(`Heard about us via: ${lead.source}`);
 
   return {

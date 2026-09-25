@@ -21,6 +21,18 @@ export const LEAD_SOURCES = [
 // Permissive on purpose -- Nigerian numbers show up in several written forms
 // (+234..., 0..., with spaces/dashes) and this is a lead-capture form, not a payment
 // flow, so rejecting a real but oddly-formatted number costs more than it protects.
+// Free Career Match form (2026-09-25): the industry the visitor is aiming for, and the
+// kind of work they're drawn to -- the homepage maps these to a recommended course.
+// Keep in sync with the <select> options in marketing/welcome.html.
+export const LEAD_SECTORS = ["Oil & Gas", "Banking", "Telecoms", "Not sure yet"] as const;
+export const LEAD_INTERESTS = [
+  "Protecting systems and data",
+  "Maps, drones and location data",
+  "Marketing, content and online growth",
+  "Health, safety and site operations",
+  "Not sure yet",
+] as const;
+
 const PHONE_REGEX = /^[0-9+()\s-]{7,20}$/;
 
 export const createLeadSchema = z.object({
@@ -31,5 +43,7 @@ export const createLeadSchema = z.object({
     course: z.string().min(1),
     university: z.enum(REGISTRATION_STATUSES).optional(),
     source: z.enum(LEAD_SOURCES).optional(),
+    sector: z.enum(LEAD_SECTORS).optional(),
+    interest: z.enum(LEAD_INTERESTS).optional(),
   }),
 });
