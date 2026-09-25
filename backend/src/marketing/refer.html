@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Refer &amp; Earn: Paleon Training Referral Programme | Paleon Training</title>
+<meta name="description" content="Refer a friend to Paleon Training and earn airtime, data or course credit when they join and pay for a digital skills course. Your friend gets a welcome reward too.">
+<link rel="canonical" href="https://paleontraining.com/refer">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Paleon Training">
+<meta property="og:title" content="Refer &amp; Earn with Paleon Training">
+<meta property="og:description" content="Share your code. When a friend joins and pays for a course, you both get rewarded: airtime, data or course credit.">
+<meta property="og:url" content="https://paleontraining.com/refer">
+<meta property="og:image" content="https://paleontraining.com/images/articles/refer.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Paleon Training Refer and Earn programme: share your code, your friend joins and pays, you both get rewarded.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Refer &amp; Earn with Paleon Training">
+<meta name="twitter:description" content="Share your code. When a friend joins and pays for a course, you both get rewarded: airtime, data or course credit.">
+<meta name="twitter:image" content="https://paleontraining.com/images/articles/refer.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Refer a Friend to Paleon Training",
+  "description": "Refer a friend to Paleon Training and earn airtime, data or course credit when they join and pay for a digital skills course. Your friend gets a welcome reward too.",
+  "url": "https://paleontraining.com/refer",
+  "image": "https://paleontraining.com/images/articles/refer.jpg",
+  "inLanguage": "en",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Paleon Training",
+    "url": "https://paleontraining.com/welcome"
+  },
+  "dateModified": "2026-09-25"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Paleon Training",
+      "item": "https://paleontraining.com/welcome"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Refer a Friend to Paleon Training",
+      "item": "https://paleontraining.com/refer"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Who can refer friends to Paleon Training?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Any student with a Paleon Training account. Log in and open your referral page to get your personal code and invite link."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much do I earn for each referral?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You earn {{REFERRER_REWARD}} for every friend who joins with your code and pays for a course. There's no limit on how many friends you can refer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does my friend get?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your friend earns a {{REFEREE_REWARD}} welcome reward once their first course payment is confirmed, as airtime, a data bundle or course credit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When are rewards paid?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "After the referred friend's first course payment is confirmed. The Paleon team issues rewards by hand, so allow a few working days for airtime or data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I refer myself or use a second account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Self-referrals and duplicate accounts don't qualify."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  @font-face {
+    font-family: "Source Serif 4";
+    font-weight: 300 900;
+    font-style: normal;
+    font-display: optional;
+    src: url(/fonts/source-serif-4-variable.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: "Source Sans 3";
+    font-weight: 300 800;
+    font-style: normal;
+    font-display: optional;
+    src: url(/fonts/source-sans-3-variable.woff2) format("woff2");
+  }
+
+  :root {
+    --ink: #10151F;
+    --ink-2: #171E2C;
+    --paper: #F7F4EC;
+    --paper-2: #EFEADA;
+    --signal: #E8863C;
+    --signal-2: #F2A65A;
+    --signal-deep: #C96A26;
+    --signal-tint: #FBE7D2;
+    --line-light: #DED7C4;
+    --line-dark: #2A3344;
+    --charcoal: #211D17;
+    --charcoal-soft: #6B6252;
+    --dark-text: #F7F4EC;
+    --dark-text-muted: #A9B0C2;
+    --white: #FFFFFF;
+    --font-display: "Source Serif 4", Georgia, serif;
+    --font-body: "Source Sans 3", system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: inherit; }
+
+  a { color: var(--signal-deep); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--signal-deep); outline-offset: 2px; }
+
+  .band {
+    background: var(--ink);
+    color: var(--dark-text);
+  }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .measure {
+    max-width: 700px;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead {
+    padding: 56px 0 48px;
+  }
+
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal-2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    text-decoration: none;
+  }
+
+  .wordmark .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--signal);
+    display: inline-block;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dark-text-muted);
+    margin: 0 0 14px;
+  }
+
+  h1.title {
+    font-size: clamp(32px, 4.4vw, 46px);
+    font-weight: 600;
+    line-height: 1.12;
+    max-width: 14ch;
+  }
+
+  .subhead {
+    margin: 20px 0 0;
+    max-width: 56ch;
+    font-size: 18px;
+    color: var(--dark-text-muted);
+    line-height: 1.55;
+  }
+
+  .stat-strip {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-top: 1px solid var(--line-dark);
+  }
+
+  .stat {
+    flex: 1 1 140px;
+    padding: 18px 22px 0 0;
+    border-right: 1px solid var(--line-dark);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+    color: var(--dark-text);
+  }
+
+  .stat-label {
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--dark-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .reviewed-line {
+    margin-top: 18px;
+    font-size: 12.5px;
+    color: var(--dark-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .mistakes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 700px;
+  }
+  .mistakes-list li {
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 12px;
+    line-height: 1.55;
+  }
+  .mistakes-list li:last-child { margin-bottom: 0; }
+  .mistakes-list li::before {
+    content: "\2717";
+    position: absolute;
+    left: 0;
+    color: var(--dark-text-muted);
+    font-weight: 700;
+  }
+
+  /* ---------- Body sections ---------- */
+
+  section { padding: 56px 0; }
+  section + section { border-top: 1px solid var(--line-light); }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--signal-deep);
+    margin: 0 0 16px;
+  }
+
+  h2.section-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+
+  p { margin: 0 0 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .lede {
+    font-size: 18px;
+    color: var(--charcoal);
+  }
+
+  .lede strong { font-weight: 600; }
+
+  code.inline {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--paper-2);
+    border: 1px solid var(--line-light);
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+  }
+
+  /* ---------- Diagram ---------- */
+
+  figure.diagram {
+    margin: 8px 0 0;
+    background: var(--paper-2);
+    border: 1px solid var(--line-light);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  figure.diagram svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: var(--font-body);
+  }
+
+  figcaption {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-light);
+    font-size: 14.5px;
+    color: var(--charcoal-soft);
+    line-height: 1.55;
+  }
+
+  .diagram-scroll {
+    overflow-x: auto;
+  }
+
+  /* ---------- Stage list ---------- */
+
+  .stages {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 20px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line-light);
+  }
+  .stage:first-child { border-top: none; padding-top: 0; }
+
+  .stage-tag {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--signal-deep);
+    letter-spacing: 0.02em;
+    padding-top: 3px;
+  }
+
+  .stage-body h3 {
+    font-size: 18.5px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .stage-body p {
+    font-size: 15.5px;
+    color: var(--charcoal-soft);
+    max-width: 62ch;
+    margin-bottom: 0;
+  }
+
+  .stage-body .note {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--signal-deep);
+    background: var(--signal-tint);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  /* ---------- Catalog table ---------- */
+
+  table.catalog {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+
+  table.catalog th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--charcoal-soft);
+    font-weight: 500;
+    padding: 0 12px 10px 0;
+    border-bottom: 1px solid var(--charcoal);
+  }
+
+  table.catalog td {
+    padding: 13px 12px 13px 0;
+    border-bottom: 1px solid var(--line-light);
+    vertical-align: baseline;
+  }
+
+  table.catalog td.num, table.catalog th.num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  table.catalog tr.total td {
+    border-bottom: none;
+    border-top: 1px solid var(--charcoal);
+    font-weight: 600;
+    padding-top: 13px;
+  }
+
+  table.catalog td.course-name { font-weight: 500; }
+
+  /* ---------- Footer band ---------- */
+
+  .footer-band {
+    padding: 44px 0 40px;
+  }
+
+  .footer-band p {
+    max-width: 60ch;
+    color: var(--dark-text-muted);
+    font-size: 15px;
+  }
+
+  .footer-band .signoff {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--dark-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ============ Site footer ============ */
+  .site-footer { background: var(--ink); color: var(--dark-text-muted); margin-top: 0; }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 40px;
+    padding-top: 56px;
+    padding-bottom: 44px;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  @media (max-width: 760px) {
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .footer-top { grid-template-columns: 1fr; }
+  }
+  .footer-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .footer-logo-mark { width: 34px; height: 34px; flex-shrink: 0; }
+  .footer-logo-word { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: -0.01em; line-height: 1; color: var(--paper); }
+  .footer-tag { font-size: 13.5px; color: var(--dark-text-muted); margin-top: 14px; max-width: 32ch; line-height: 1.6; }
+  .footer-heading {
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #C7CCDA;
+    margin-bottom: 16px;
+  }
+  .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .footer-links a { text-decoration: none; font-size: 13.5px; color: var(--dark-text-muted); }
+  .footer-links a:hover { color: var(--signal-2); }
+  .footer-contact { display: flex; flex-direction: column; gap: 12px; font-size: 13.5px; }
+  .footer-contact-item { display: flex; gap: 10px; align-items: flex-start; }
+  .footer-contact-item svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; opacity: 0.8; }
+  .footer-contact-item a { text-decoration: none; color: var(--dark-text-muted); }
+  .footer-contact-item a:hover { color: var(--signal-2); }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 22px;
+    padding-bottom: 22px;
+    font-size: 12.5px;
+    color: var(--dark-text-muted);
+    font-family: var(--font-body);
+  }
+
+  .footer-legal a { color: var(--dark-text-muted); text-decoration: underline; text-underline-offset: 2px; }
+  .footer-legal a:hover { color: var(--signal-2); }
+
+  @media (max-width: 640px) {
+    .footer-tag { font-size: 14.5px; }
+    .footer-links a { font-size: 14.5px; }
+    .footer-contact { font-size: 14.5px; }
+    .footer-heading { font-size: 12.5px; }
+    .footer-bottom { font-size: 13px; }
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+    .stage { grid-template-columns: 1fr; gap: 6px; }
+    .stat { flex: 1 1 45%; }
+  }
+
+  /* ---------- Long-form article additions (2026-09-24 oil & gas cluster) ---------- */
+  figure.featured { margin: 36px 0 0; }
+  figure.featured img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line-dark); }
+  .prose h3 { font-size: 19px; font-weight: 600; margin: 28px 0 8px; }
+  .prose ul, .prose ol { margin: 0 0 16px; padding-left: 22px; }
+  .prose li { margin-bottom: 8px; line-height: 1.55; }
+  .answer {
+    background: var(--white);
+    border: 1px solid var(--line-light);
+    border-left: 3px solid var(--signal);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 0 0 20px;
+  }
+  .answer p { margin: 0; }
+  .answer-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--signal-deep);
+    margin: 0 0 6px !important;
+  }
+  dl.skill-facts { display: grid; grid-template-columns: 150px 1fr; gap: 10px 18px; margin: 0 0 16px; font-size: 16px; }
+  dl.skill-facts dt {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--signal-deep);
+    padding-top: 4px;
+  }
+  dl.skill-facts dd { margin: 0; line-height: 1.55; }
+  .scenario {
+    background: var(--paper-2);
+    border: 1px solid var(--line-light);
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin: 0 0 18px;
+  }
+  .scenario h3 { margin-top: 0; }
+  .scenario-tag {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charcoal-soft);
+    margin: 0 0 8px !important;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1.5px solid transparent; border-radius: 3px; padding: 13px 24px;
+    font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1;
+    text-decoration: none; white-space: nowrap; cursor: pointer;
+  }
+  .btn-signal { background: var(--signal); color: var(--ink); }
+  .btn-signal:hover { background: var(--signal-2); }
+  .btn-outline { border-color: rgba(247,244,236,0.45); color: var(--dark-text); background: transparent; }
+  .btn-outline:hover { border-color: var(--dark-text); background: rgba(247,244,236,0.08); }
+  .btn-whatsapp { background: #25D366; color: var(--ink); }
+  .btn-whatsapp:hover { background: #3EE07A; }
+  .btn:focus-visible { outline: 2px solid var(--signal-2); outline-offset: 2px; }
+  .price-note { margin-top: 14px; font-size: 13.5px; color: var(--dark-text-muted); }
+  ol.sources { padding-left: 22px; margin: 0; font-size: 15px; }
+  ol.sources li { margin-bottom: 8px; line-height: 1.5; }
+  @media (max-width: 640px) {
+    dl.skill-facts { grid-template-columns: 1fr; gap: 2px; }
+    dl.skill-facts dd { margin-bottom: 12px; }
+  }
+</style>
+<link rel="stylesheet" href="/search-widget.css">
+<link rel="stylesheet" href="/whatsapp-float.css">
+</head>
+<body>
+<button class="pt-search-trigger" id="pt-search-trigger" aria-label="Search the site" title="Search (press /)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+</button>
+<div class="pt-search-overlay" id="pt-search-overlay" hidden>
+  <div class="pt-search-panel" role="dialog" aria-modal="true" aria-label="Search Paleon Training">
+    <div class="pt-search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="pt-search-input" id="pt-search-input" type="text" placeholder="Search guides, courses, careers..." autocomplete="off">
+      <button class="pt-search-close" id="pt-search-close">Close</button>
+    </div>
+    <div class="pt-search-results" id="pt-search-results"></div>
+    <div class="pt-search-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+
+<div class="band">
+  <div class="wrap masthead">
+    <a class="wordmark" href="/welcome"><span class="dot"></span>Paleon Training</a>
+    <p class="eyebrow">Refer &amp; earn</p>
+    <h1 class="title" style="max-width: 20ch;">Refer a friend. Earn {{REFERRER_REWARD}}.</h1>
+    <p class="subhead">Know someone who wants job-ready digital skills? Share your personal code. When they join and pay for a course, you earn {{REFERRER_REWARD}} and they get a {{REFEREE_REWARD}} welcome reward.</p>
+    <div class="cta-row">
+      <a class="btn btn-signal" href="/refer/me">Get your referral code</a>
+      <a class="btn btn-outline" href="/register">New here? Create an account</a>
+    </div>
+    <p class="price-note">Your code and invite link are in your account. Log in to see them.</p>
+    <p class="reviewed-line">Last reviewed: 25 September 2026 &middot; Reviewed by Paleon Training</p>
+    <figure class="featured">
+      <img src="/images/articles/refer.jpg" width="1200" height="630" alt="Paleon Training Refer and Earn programme: share your code, your friend joins and pays, you both get rewarded." fetchpriority="high">
+    </figure>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Three steps</h2>
+    <div class="stages">
+      <div class="stage"><div class="stage-tag">01</div><div class="stage-body"><h3>Share your code</h3><p>Every student with a Paleon account gets a personal referral code and invite link. Log in and open <a href="/refer/me">your referral page</a>, then send them to friends, coursemates or your NYSC set, on WhatsApp or anywhere else.</p></div></div>
+      <div class="stage"><div class="stage-tag">02</div><div class="stage-body"><h3>They join and pay</h3><p>Your friend enters your code when they register (your invite link fills it in for them), then enrols and pays for any Paleon course.</p></div></div>
+      <div class="stage"><div class="stage-tag">03</div><div class="stage-body"><h3>You both get rewarded</h3><p>Once their first course payment is confirmed, you earn {{REFERRER_REWARD}} and your friend earns a {{REFEREE_REWARD}} welcome reward. Each of you chooses airtime, a data bundle or credit towards a Paleon course.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="measure prose">
+      <p class="section-label">The rewards</p>
+      <h2 class="section-title">What you and your friend get</h2>
+      <div class="diagram-scroll">
+        <table class="catalog">
+          <thead><tr><th>Who</th><th>Reward</th><th>When</th></tr></thead>
+          <tbody>
+            <tr><td class="course-name">You (the referrer)</td><td>{{REFERRER_REWARD}} per friend: airtime, data or course credit</td><td>After your friend's first course payment is confirmed</td></tr>
+            <tr><td class="course-name">Your friend</td><td>{{REFEREE_REWARD}} welcome reward: airtime, data or course credit</td><td>After their first course payment is confirmed</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul style="margin-top:18px;">
+        <li><strong>No limit.</strong> Earn for every friend who joins and pays.</li>
+        <li><strong>A leaderboard</strong> in your referral page shows the top ambassadors.</li>
+        <li><strong>Rewards are issued by the Paleon team</strong> once a payment is confirmed. Allow a few working days for airtime or data.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="measure">
+      <p class="section-label">The rules</p>
+      <h2 class="section-title">Good to know</h2>
+      <ul class="mistakes-list">
+        <li><strong>Self-referrals and duplicate accounts don't qualify.</strong></li>
+        <li><strong>A referral counts once</strong>, on the friend's first confirmed course payment.</li>
+        <li><strong>Codes are entered at registration</strong>, so share yours before your friend signs up.</li>
+        <li><strong>Paleon Training builds skills and employability; it doesn't guarantee a job</strong>, so please don't promise one when you share.</li>
+        <li><strong>We may adjust or end the programme at any time.</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Common questions</p>
+    <h2 class="section-title">Frequently asked</h2>
+    <div class="stages">
+      <div class="stage">
+        <div class="stage-tag">Q1</div>
+        <div class="stage-body">
+          <h3>Who can refer friends to Paleon Training?</h3>
+          <p>Any student with a Paleon Training account. Log in and open your referral page to get your personal code and invite link.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q2</div>
+        <div class="stage-body">
+          <h3>How much do I earn for each referral?</h3>
+          <p>You earn {{REFERRER_REWARD}} for every friend who joins with your code and pays for a course. There's no limit on how many friends you can refer.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q3</div>
+        <div class="stage-body">
+          <h3>What does my friend get?</h3>
+          <p>Your friend earns a {{REFEREE_REWARD}} welcome reward once their first course payment is confirmed, as airtime, a data bundle or course credit.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q4</div>
+        <div class="stage-body">
+          <h3>When are rewards paid?</h3>
+          <p>After the referred friend's first course payment is confirmed. The Paleon team issues rewards by hand, so allow a few working days for airtime or data.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">Q5</div>
+        <div class="stage-body">
+          <h3>Can I refer myself or use a second account?</h3>
+          <p>No. Self-referrals and duplicate accounts don't qualify.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section>
+    <p class="section-label">Continue reading</p>
+    <h2 class="section-title">Related guides</h2>
+    <div class="stages">
+      <div class="stage">
+        <div class="stage-tag">&rarr;</div>
+        <div class="stage-body">
+          <h3><a href="/welcome#courses">The four Paleon courses</a></h3>
+          <p>What your friends can join.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">&rarr;</div>
+        <div class="stage-body">
+          <h3><a href="/nysc-digital-skills">NYSC and Your Career</a></h3>
+          <p>Useful to share with corps members.</p>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-tag">&rarr;</div>
+        <div class="stage-body">
+          <h3><a href="/support">Support</a></h3>
+          <p>Questions about your code or rewards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="band footer-band">
+  <div class="wrap">
+    <p>Ready to share? <a href="/refer/me">Get your referral code</a>, or <a href="/register">create your Paleon account</a> first. Browse the <a href="/welcome#courses">four courses</a> your friends can join.</p>
+    <div class="signoff">
+      <span>Paleon Training &mdash; Digital Skills for the Long Run</span>
+      <span>Refer &amp; earn</span>
+    </div>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand">
+      <a class="footer-logo" href="/welcome">
+        <svg class="footer-logo-mark" viewBox="0 0 40 40" fill="none">
+          <rect x="1" y="1" width="38" height="38" rx="4" stroke="#F7F4EC" stroke-width="1.4"/>
+          <path d="M8 27 L15 14 L20 21 L25 11 L32 27" stroke="#E8863C" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+          <circle cx="15" cy="14" r="1.8" fill="#F7F4EC"/>
+          <circle cx="25" cy="11" r="1.8" fill="#F7F4EC"/>
+        </svg>
+        <span class="footer-logo-word">Paleon Training</span>
+      </a>
+      <p class="footer-tag">Build the digital skills employers need to compete for opportunities in Oil &amp; Gas, Banking, Telecommunications and Nigeria’s fastest-growing industries.<br>
+        Led from London, delivered in Nigeria.</p>
+    </div>
+
+    <div>
+      <div class="footer-heading">Courses</div>
+      <ul class="footer-links">
+        <li><a href="/cyber-security-fundamentals-course">Cyber Security Fundamentals</a></li>
+        <li><a href="/gis-and-drone-mapping-course">GIS and Drone Mapping</a></li>
+        <li><a href="/digital-marketing-course">Digital Marketing</a></li>
+        <li><a href="/hse-fundamentals-course">HSE Fundamentals</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="/welcome#why">Why Paleon</a></li>
+        <li><a href="/welcome#register">Register interest</a></li>
+        <li><a href="/support">Support</a></li>
+        <li><a href="/welcome">Home</a></li>
+        <li><a href="/digital-skills-training-nigeria">Digital Skills Training Guide</a></li>
+        <li><a href="/digital-skills-jobs-nigeria">Digital Skills &amp; Jobs Guide</a></li>
+        <li><a href="/oil-and-gas-careers-nigeria">Oil &amp; Gas Careers Guide</a></li>
+        <li><a href="/hse-training-nigeria">HSE Careers &amp; Training</a></li>
+        <li><a href="/corporate-training-nigeria">Corporate Training</a></li>
+        <li><a href="/banking-telecom-training-nigeria">Banking &amp; Telecom Training</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-heading">Contact</div>
+      <div class="footer-contact">
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h3l2 5-2 1a10 10 0 0 0 5 5l1-2 5 2v3a2 2 0 0 1-2 2C9.5 20 0 10.5 0 4a2 2 0 0 1 2-2h2z" stroke-linejoin="round"/></svg>
+          <span><a href="tel:+447508823495">+44 750 882 3495 (WhatsApp/Call)</a></span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="16" height="12" rx="1.5"/><path d="M3 5.5 10 11l7-5.5"/></svg>
+          <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 18s6-5.2 6-9.6A6 6 0 0 0 4 8.4C4 12.8 10 18 10 18Z" stroke-linejoin="round"/><circle cx="10" cy="8.3" r="2"/></svg>
+          <span>Paleon Training Limited<br />42 Okemore Gardens<br />Orpington, Kent BR5 3PH<br />United Kingdom</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap footer-bottom">
+    <span>&copy; 2026 Paleon Training. All rights reserved.</span>
+    <span class="footer-legal"><a href="/terms">Terms of Service</a> &middot; <a href="/privacy">Privacy Policy</a></span>
+  </div>
+</footer>
+
+<script src="/search.js" defer></script>
+<script src="/whatsapp-float.js" defer></script>
+<script src="/analytics.js" defer></script>
+</body>
+</html>

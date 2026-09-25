@@ -21,7 +21,7 @@ export function StudentDashboardPage() {
       <h1 className="text-2xl font-semibold text-gray-900">Welcome back, {user?.firstName}</h1>
 
       <Link
-        to="/refer"
+        to="/refer/me"
         className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm hover:bg-blue-100"
       >
         <span className="text-blue-900">

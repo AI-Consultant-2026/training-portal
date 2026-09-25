@@ -35,6 +35,7 @@ Allow: /warri-oil-and-gas-jobs
 Allow: /oil-and-gas-entry-level-jobs-nigeria
 Allow: /gis-mapping-oil-and-gas-nigeria
 Allow: /nysc-digital-skills-oil-and-gas-career
+Allow: /refer$
 Allow: /practical-digital-skills-nigerian-graduates
 Allow: /images/articles/
 Allow: /images/og/
@@ -144,12 +145,10 @@ Disallow: /login
 Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password
-# /refer requires a logged-in session (any student) and has no server-side auth gate on
-# the static shell, so crawlers without a session were getting served -- and indexing --
-# the login prompt instead of real content (confirmed indexed in Bing as "Log in / Don't
-# have an account? Sign up" during the 2026-09-13 GEO audit). Disallowed rather than left
-# to be indexed as junk; see the GEO report for the option of making it a public page.
-Disallow: /refer
+# /refer is the public Refer & Earn landing page (static, since 2026-09-25). Students'
+# own code/stats dashboard moved to /refer/me, which needs a login, so crawlers without a
+# session would only see the login prompt there.
+Disallow: /refer/me
 
 # No explicit per-bot rules below -- GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot,
 # ClaudeBot, Claude-User, Google-Extended, Bingbot, and every other legitimate crawler

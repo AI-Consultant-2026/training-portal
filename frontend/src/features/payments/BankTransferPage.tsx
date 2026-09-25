@@ -9,6 +9,7 @@ import { Spinner } from "../../components/ui/Spinner";
 import { PaymentQuote } from "../../types/api";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "../courses/coursesSlice";
+import { track } from "../../lib/analytics";
 
 export function BankTransferPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -43,6 +44,11 @@ export function BankTransferPage() {
     setError(null);
     try {
       await submitBankTransfer({ courseId: course.id, transferReference, notes: notes || undefined });
+      track("bank_transfer_submitted", {
+        currency: "NGN",
+        value: quote?.bankTransfer.amount,
+        course_slug: course.slug,
+      });
       setSubmitted(true);
       dispatch(fetchMyEnrollments());
     } catch (err) {
@@ -100,25 +106,36 @@ export function BankTransferPage() {
       <h1 className="text-2xl font-semibold text-gray-900">Pay by bank transfer</h1>
       <p className="mt-1 text-sm text-gray-500">{course.title}</p>
 
-      {/* Temporary notice while Paleon Training's Nigerian business bank account is being set up. */}
-      <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900" role="note">
-        <p className="font-semibold">Temporary payment arrangement</p>
-        <p className="mt-2">
-          We are currently finalising Paleon Training&rsquo;s Nigerian business bank account. Until this process is
-          complete, you may temporarily make your training payment to the authorised account details displayed below.
-        </p>
-        <p className="mt-2">
+      {/* Interim-account notice (BANK_TRANSFER_TEMPORARY_NOTICE on the server). Once the permanent
+          business account is live the notice goes, but the reference/confirmation instructions stay. */}
+      {quote?.bankTransfer.temporaryNotice ? (
+        <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900" role="note">
+          <p className="font-semibold">Temporary payment arrangement</p>
+          <p className="mt-2">
+            We are currently finalising Paleon Training&rsquo;s Nigerian business bank account. Until this process is
+            complete, you may temporarily make your training payment to the authorised account details displayed below.
+          </p>
+          <p className="mt-2">
+            Please use your name + course name as the payment reference and send your transfer confirmation to{" "}
+            <a href="mailto:enrolment@paleontraining.com" className="font-medium underline">
+              enrolment@paleontraining.com
+            </a>{" "}
+            after payment.
+          </p>
+          <p className="mt-2">
+            This is a temporary arrangement, and the account details will be replaced with Paleon Training&rsquo;s
+            business account once it is operational.
+          </p>
+        </div>
+      ) : quote ? (
+        <p className="mt-4 text-sm text-gray-600" role="note">
           Please use your name + course name as the payment reference and send your transfer confirmation to{" "}
           <a href="mailto:enrolment@paleontraining.com" className="font-medium underline">
             enrolment@paleontraining.com
           </a>{" "}
           after payment.
         </p>
-        <p className="mt-2">
-          This is a temporary arrangement, and the account details will be replaced with Paleon Training&rsquo;s
-          business account once it is operational.
-        </p>
-      </div>
+      ) : null}
 
       <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
         {quote ? (

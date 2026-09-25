@@ -44,6 +44,7 @@ function quote(cardEnabled: boolean): PaymentQuote {
       currency: "NGN",
       amount: 100000,
       enabled: true,
+      temporaryNotice: true,
       bankDetails: { bankName: "Test Bank", accountName: "Paleon Training Limited", accountNumber: "0123456789", sortCodeOrIban: "" },
     },
     estimatedLocal: null,

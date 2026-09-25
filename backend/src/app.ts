@@ -8,6 +8,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { config } from "./config";
+import { REFEREE_REWARD_NGN, REFERRER_REWARD_NGN } from "./constants/referral";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import { apiRouter } from "./routes";
@@ -35,7 +36,17 @@ export function createApp() {
         directives: {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
           "frame-src": ["'self'", "https://www.youtube.com"],
-          "script-src": ["'self'", "https://www.youtube.com"],
+          // googletagmanager.com / google-analytics.com: GA4 via /analytics.js (only
+          // loaded once GA4_MEASUREMENT_ID is set). connect-src and img-src aren't in
+          // helmet's defaults (they fall back to default-src 'self'), so they're listed here.
+          "script-src": ["'self'", "https://www.youtube.com", "https://www.googletagmanager.com"],
+          "connect-src": [
+            "'self'",
+            "https://*.google-analytics.com",
+            "https://*.analytics.google.com",
+            "https://*.googletagmanager.com",
+          ],
+          "img-src": ["'self'", "data:", "https://*.google-analytics.com", "https://*.googletagmanager.com"],
         },
       },
       // helmet's default is "no-referrer", which strips the Referer header from the
@@ -206,6 +217,40 @@ export function createApp() {
   app.get("/images/support-example-screenshot.jpg", (req, res) => {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "support-example-screenshot.jpg"));
+  });
+  // Google Analytics 4 + consent banner (2026-09-25), loaded by every public marketing page
+  // and the React app. Off until GA4_MEASUREMENT_ID is set: then this serves a no-op stub
+  // so pages' ptTrack() calls are harmless and nothing loads from Google.
+  let analyticsJs: string | null = null;
+  app.get("/analytics.js", (req, res) => {
+    res.set("Cache-Control", "public, max-age=3600");
+    res.type("application/javascript");
+    const id = config.analytics.ga4MeasurementId;
+    if (!id) {
+      return res.send("/* analytics off: GA4_MEASUREMENT_ID not set */window.ptTrack=function(){};window.ptConsent={open:function(){}};");
+    }
+    if (!analyticsJs) {
+      analyticsJs = fs
+        .readFileSync(path.join(__dirname, "marketing", "analytics.js"), "utf8")
+        .replace(/__GA4_MEASUREMENT_ID__/g, id);
+    }
+    return res.send(analyticsJs);
+  });
+
+  // Public Refer & Earn landing page (2026-09-25). Students' own code/stats dashboard is the
+  // SPA route /refer/me. The reward amounts are filled in here from constants/referral.ts
+  // (the programme's single source of truth) so the page can never drift from what the
+  // app actually pays; the file itself only holds {{REFERRER_REWARD}}/{{REFEREE_REWARD}}.
+  let referPageHtml: string | null = null;
+  app.get("/refer", (req, res) => {
+    if (!referPageHtml) {
+      const naira = (n: number) => `\u20A6${n.toLocaleString("en-NG")}`;
+      referPageHtml = fs
+        .readFileSync(path.join(__dirname, "marketing", "refer.html"), "utf8")
+        .replace(/\{\{REFERRER_REWARD\}\}/g, naira(REFERRER_REWARD_NGN))
+        .replace(/\{\{REFEREE_REWARD\}\}/g, naira(REFEREE_REWARD_NGN));
+    }
+    res.type("html").send(referPageHtml);
   });
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));

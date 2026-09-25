@@ -117,6 +117,31 @@ describe("Payments", () => {
     });
   });
 
+  describe("interim bank account notice (BANK_TRANSFER_TEMPORARY_NOTICE)", () => {
+    const originalNotice = config.bankTransfer.temporaryNotice;
+    afterEach(() => {
+      config.bankTransfer.temporaryNotice = originalNotice;
+    });
+
+    it("is on by default and can be switched off by config alone", async () => {
+      expect(process.env.BANK_TRANSFER_TEMPORARY_NOTICE).toBeUndefined();
+      expect(originalNotice).toBe(true);
+
+      const instructor = await createInstructor("notice-inst@example.com");
+      const course = await createPricedCourse(instructor.id);
+      await registerStudent("notice1@example.com");
+      const token = await loginAs("notice1@example.com");
+
+      const on = await request(app).get(`/api/payments/quote/${course.id}`).set("Authorization", `Bearer ${token}`);
+      expect(on.body.quote.bankTransfer.temporaryNotice).toBe(true);
+
+      config.bankTransfer.temporaryNotice = false;
+      const off = await request(app).get(`/api/payments/quote/${course.id}`).set("Authorization", `Bearer ${token}`);
+      expect(off.body.quote.bankTransfer.temporaryNotice).toBe(false);
+      expect(off.body.quote.bankTransfer.enabled).toBe(true);
+    });
+  });
+
   it("rejects unauthenticated and non-student callers on every payment route", async () => {
     const instructor = await createInstructor();
     const course = await createPricedCourse(instructor.id);

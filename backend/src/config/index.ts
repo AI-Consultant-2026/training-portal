@@ -66,6 +66,11 @@ export const config = {
     // so it can be paused and resumed by an env-var change alone. Turning it off does not
     // touch payments already submitted -- admins can still confirm those as usual.
     enabled: process.env.BANK_TRANSFER_ENABLED !== "false",
+    // Shows the amber "Temporary payment arrangement" notice on the bank-transfer page
+    // (payments currently go to an authorised interim account). ON unless
+    // BANK_TRANSFER_TEMPORARY_NOTICE=false. Switching to the permanent business account is
+    // then env-only: set the BANK_TRANSFER_* details below and turn this off.
+    temporaryNotice: process.env.BANK_TRANSFER_TEMPORARY_NOTICE !== "false",
     bankName: process.env.BANK_TRANSFER_BANK_NAME ?? "PLACEHOLDER BANK NAME",
     accountName: process.env.BANK_TRANSFER_ACCOUNT_NAME ?? "Paleon Training Limited",
     accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",
@@ -79,6 +84,14 @@ export const config = {
     enabled: process.env.CARD_PAYMENTS_ENABLED === "true",
   },
   cardGatewayApiKey: process.env.PAYMENT_GATEWAY_API_KEY ?? "",
+  analytics: {
+    // Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Unset or malformed = analytics
+    // off: /analytics.js serves a no-op stub, so no Google script loads and no consent
+    // banner shows. See marketing/analytics.js for the consent behaviour.
+    ga4MeasurementId: /^G-[A-Z0-9]{4,}$/.test(process.env.GA4_MEASUREMENT_ID ?? "")
+      ? (process.env.GA4_MEASUREMENT_ID as string)
+      : "",
+  },
 };
 
 function parseRefreshDays(value: string): number {

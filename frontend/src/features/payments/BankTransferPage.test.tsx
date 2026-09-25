@@ -44,6 +44,7 @@ function quote(sortCodeOrIban: string): PaymentQuote {
       currency: "NGN",
       amount: 200000,
       enabled: true,
+      temporaryNotice: true,
       bankDetails: {
         bankName: "Test Bank",
         accountName: "Paleon Training Limited",
@@ -101,6 +102,18 @@ describe("BankTransferPage", () => {
       "href",
       "mailto:enrolment@paleontraining.com",
     );
+  });
+
+  it("drops the temporary-account notice but keeps the reference instructions once the permanent account is live", async () => {
+    const permanent = quote("");
+    permanent.bankTransfer.temporaryNotice = false;
+    renderPage(permanent);
+
+    expect(await screen.findByText("Amount to transfer: ₦200,000")).toBeInTheDocument();
+    expect(screen.queryByText("Temporary payment arrangement")).not.toBeInTheDocument();
+    expect(screen.queryByText(/finalising Paleon Training.s Nigerian business bank account/)).not.toBeInTheDocument();
+    expect(screen.getByText(/use your name \+ course name as the payment reference/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "enrolment@paleontraining.com" })).toBeInTheDocument();
   });
 
   it("shows a 'temporarily unavailable' notice, with no account details or form, while bank transfers are paused", async () => {

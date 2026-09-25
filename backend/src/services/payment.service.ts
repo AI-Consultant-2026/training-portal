@@ -54,6 +54,8 @@ export interface Quote {
     amount: number;
     /** False while bank transfers are paused; the details below are then blanked. */
     enabled: boolean;
+    /** True while payments go to the interim account (BANK_TRANSFER_TEMPORARY_NOTICE). */
+    temporaryNotice: boolean;
     bankDetails: { bankName: string; accountName: string; accountNumber: string; sortCodeOrIban: string };
   };
   estimatedLocal: { currency: string; amount: number } | null;
@@ -74,6 +76,7 @@ export async function getQuote(courseIdOrSlug: string, billingCountry?: string):
       currency: "NGN",
       amount: baseAmountNgn,
       enabled: config.bankTransfer.enabled,
+      temporaryNotice: config.bankTransfer.temporaryNotice,
       // Don't hand out receiving-account details while the flow is paused.
       bankDetails: config.bankTransfer.enabled
         ? {

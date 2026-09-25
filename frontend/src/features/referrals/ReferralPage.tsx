@@ -235,9 +235,9 @@ function HowItWorks({ summary }: { summary: MyReferralSummary }) {
     },
     {
       title: "They sign up & pay",
-      body: `They enter ${summary.code} when registering and pay for any course — and get ${formatNgn(
+      body: `They enter ${summary.code} when registering and pay for any course — and earn a ${formatNgn(
         summary.welcomeBonusNgn,
-      )} off.`,
+      )} welcome reward once their payment is confirmed.`,
     },
     {
       title: "You both get rewarded",

@@ -220,6 +220,8 @@ export interface PaymentQuote {
     amount: number;
     /** False while bank transfers are paused (the details are then blank). */
     enabled: boolean;
+    /** True while payments go to the interim account: show the temporary-arrangement notice. */
+    temporaryNotice: boolean;
     bankDetails: {
       bankName: string;
       accountName: string;

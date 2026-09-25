@@ -42,6 +42,8 @@
   main { padding: 48px 0 80px; }
   h1 { font-family: var(--font-display); font-size: 34px; margin: 0 0 8px; }
   .meta { color: var(--charcoal-soft); font-size: 14px; margin-bottom: 32px; }
+  .pt-cookie-settings { font: inherit; font-weight: 600; color: var(--signal-deep); background: none; border: 1.5px solid currentColor; border-radius: 4px; padding: 6px 12px; cursor: pointer; }
+  .pt-cookie-settings:focus-visible { outline: 2px solid var(--signal-deep); outline-offset: 2px; }
   h2 {
     font-family: var(--font-display);
     font-size: 21px;
@@ -97,7 +99,7 @@
 <main>
   <div class="wrap">
     <h1>Privacy Policy</h1>
-    <p class="meta">Last updated: 23 September 2026</p>
+    <p class="meta">Last updated: 25 September 2026</p>
 
     <h2>1. Who we are</h2>
     <p>
@@ -154,6 +156,8 @@
         application and its database;</li>
       <li><strong>Our email delivery provider (InMotion Hosting)</strong>, to send
         transactional emails (password resets, receipts, notifications);</li>
+      <li><strong>Google (Google Analytics 4)</strong>, to measure how our website is
+        used, as described in section 9;</li>
       <li><strong>Instructors and administrators</strong> at Paleon Training, to grade
         your work and manage your enrolment;</li>
       <li>law enforcement or regulators, where we're legally required to.</li>
@@ -190,11 +194,25 @@
       Protection Commission (NDPC)</a>, which enforces the Nigeria Data Protection Act 2023.
     </p>
 
-    <h2>9. Cookies</h2>
+    <h2 id="cookies">9. Cookies and analytics</h2>
     <p>
       We use strictly necessary cookies/tokens to keep you logged in and to protect your
-      account. We do not currently use third-party advertising or tracking cookies.
+      account. These don't need your consent.
     </p>
+    <p>
+      We also use <strong>Google Analytics 4</strong> to understand how visitors use our
+      website (for example which pages are visited, and whether someone registered or
+      contacted us), so we can improve it. Google Analytics only sets its cookies
+      (<code>_ga</code> and <code>_ga_*</code>) if you click <strong>Accept</strong> in the
+      banner shown on your first visit. If you decline or haven't chosen yet, it runs in
+      "consent mode": no analytics cookies are set and Google receives only anonymous,
+      cookieless signals. We never send your name, email address or phone number to Google
+      Analytics, and we don't use advertising cookies or share data for advertising.
+    </p>
+    <p>
+      You can change your choice at any time by clearing this site's data in your browser.
+    </p>
+    <p data-pt-cookie-settings-slot hidden>Or change it here: </p>
 
     <h2>10. Children's privacy</h2>
     <p>
@@ -232,5 +250,6 @@
 
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
+<script src="/analytics.js" defer></script>
 </body>
 </html>

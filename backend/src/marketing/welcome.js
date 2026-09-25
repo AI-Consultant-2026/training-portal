@@ -71,6 +71,9 @@
         })
           .then(function (res) {
             if (!res.ok) throw new Error("request failed");
+            // GA4 conversion (a no-op until analytics is switched on). Coarse fields only,
+            // never the visitor's name, email or phone.
+            if (window.ptTrack) window.ptTrack("generate_lead", { course: payload.course, source: payload.source });
             submitBtn.textContent = "Sent";
             success.classList.add("show");
             form.querySelectorAll(".form-input, .form-select, button[type=submit]").forEach(function (el) {

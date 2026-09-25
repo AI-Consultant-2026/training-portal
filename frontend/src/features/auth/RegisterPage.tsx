@@ -7,6 +7,7 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { registerUser } from "./authSlice";
+import { track } from "../../lib/analytics";
 
 export const LOCATIONS = [
   "Abia",
@@ -130,6 +131,7 @@ export function RegisterPage() {
       }),
     );
     if (registerUser.fulfilled.match(result)) {
+      track("sign_up", { method: "email", referred: Boolean(referralCode.trim()), course_interest: courseInterest });
       // Send the student straight to the course they said they're interested in,
       // instead of the generic dashboard.
       navigate(`/courses/${courseInterest}`);

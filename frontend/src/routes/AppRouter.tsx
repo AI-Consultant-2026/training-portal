@@ -97,7 +97,11 @@ export function AppRouter() {
           <Route path="/courses/:slug/pay/bank-transfer" element={<BankTransferPage />} />
           <Route path="/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/dashboard" element={<StudentDashboardPage />} />
-          <Route path="/refer" element={<ReferralPage />} />
+          {/* Students' own referral code + stats. The public Refer & Earn page at /refer is
+              served by the backend (a static marketing page); in-app links that still point at
+              /refer land here instead of doing a full page load. */}
+          <Route path="/refer/me" element={<ReferralPage />} />
+          <Route path="/refer" element={<Navigate to="/refer/me" replace />} />
           <Route path="/assignments/:id" element={<AssignmentDetailPage />} />
           <Route path="/capstones/:id" element={<CapstoneDetailPage />} />
           <Route path="/quizzes/:id" element={<QuizTakingPage />} />

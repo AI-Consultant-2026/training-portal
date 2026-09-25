@@ -108,6 +108,7 @@ function mockCourseData(enrollmentPaymentConfirmed: boolean) {
       currency: "NGN",
       amount: 200000,
       enabled: true,
+      temporaryNotice: true,
       bankDetails: {
         bankName: "Test Bank",
         accountName: "Paleon Training",
