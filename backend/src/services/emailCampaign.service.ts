@@ -7,6 +7,7 @@ import { EmailCampaign, EmailCampaignRecipient, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { emailAdapter, EmailMessage } from "../utils/email";
 import { logger } from "../utils/logger";
+import { emailUnsubscribeUrl, findSuppressedEmails } from "./emailUnsubscribe.service";
 import { htmlToPlainText, inlineEmailStyles, looksLikeHtml, sanitizeCampaignHtml } from "../utils/email/campaignBodyHtml";
 
 const REQUIRED_COLUMNS = ["Company", "Email", "Subject", "Contact Name"] as const;
@@ -167,13 +168,20 @@ export async function uploadCampaign(
   }
 
   const seenEmails = new Set<string>();
+  const suppressed = await findSuppressedEmails(rows.map((r) => r.email));
   let validCount = 0;
   let invalidCount = 0;
   let duplicateCount = 0;
 
   const recipientRows = rows.map((row) => {
-    const { status, errors } = classifyRow(row, seenEmails);
+    let { status, errors } = classifyRow(row, seenEmails);
+    // Opted-out addresses are unsendable, so they're counted with the invalid rows.
+    if ((status === "pending" || status === "duplicate") && suppressed.has(row.email.toLowerCase())) {
+      status = "unsubscribed";
+      errors = ["This address has unsubscribed from Paleon Training emails."];
+    }
     if (status === "pending") validCount++;
+    else if (status === "unsubscribed") invalidCount++;
     else if (status === "invalid") invalidCount++;
     else if (status === "duplicate") duplicateCount++;
     return {
@@ -257,6 +265,9 @@ export async function setRecipientSelected(campaignId: string, recipientId: stri
   if (isSelected && recipient.status === "invalid") {
     throw ApiError.badRequest("Invalid records cannot be selected for sending.");
   }
+  if (isSelected && recipient.status === "unsubscribed") {
+    throw ApiError.badRequest("This address has unsubscribed and cannot be selected for sending.");
+  }
   recipient.isSelected = isSelected;
   await recipient.save();
   return recipient;
@@ -288,7 +299,7 @@ export async function removeRecipient(campaignId: string, recipientId: string): 
   const countField =
     recipient.status === "pending"
       ? ("validRecipients" as const)
-      : recipient.status === "invalid"
+      : recipient.status === "invalid" || recipient.status === "unsubscribed"
         ? ("invalidRecipients" as const)
         : recipient.status === "duplicate"
           ? ("duplicateRecipients" as const)
@@ -331,7 +342,34 @@ interface RecipientLike {
   subject: string;
 }
 
+// Every campaign email carries an unsubscribe link and List-Unsubscribe headers (2026-09-26),
+// so mail apps can show their own button. The footer is added after the admin's body and is
+// not editable from Compose.
+function withUnsubscribe(message: EmailMessage): EmailMessage {
+  const url = emailUnsubscribeUrl(message.to);
+  const footerText = `You're receiving this email from Paleon Training. To stop receiving these emails, unsubscribe here: ${url}`;
+  const footerHtml = `<p style="margin: 24px 0 0; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">You're receiving this email from Paleon Training. <a href="${escapeHtml(url)}" style="color: #6b7280;">Unsubscribe</a></p>`;
+  return {
+    ...message,
+    text: `${message.text}\n\n--\n${footerText}`,
+    // Inside wrapBodyHtml's outer <div>, so the footer picks up the same font.
+    html: message.html.replace(/<\/div>\s*$/, `${footerHtml}\n</div>`),
+    headers: {
+      ...message.headers,
+      "List-Unsubscribe": `<${url}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
+  };
+}
+
 export function buildEmailForRecipient(
+  campaign: { fromEmail: string; bodyTemplate: string },
+  recipient: RecipientLike,
+): EmailMessage {
+  return withUnsubscribe(buildCampaignBody(campaign, recipient));
+}
+
+function buildCampaignBody(
   campaign: { fromEmail: string; bodyTemplate: string },
   recipient: RecipientLike,
 ): EmailMessage {
@@ -486,11 +524,20 @@ export async function processCampaignSend(campaignId: string): Promise<void> {
     order: [["rowNumber", "ASC"]],
   });
 
+  // Re-checked at send time: someone may have unsubscribed after the spreadsheet was uploaded.
+  const suppressed = await findSuppressedEmails(recipients.map((r) => r.email));
+
   let cursor = 0;
   async function worker() {
     for (;;) {
       const recipient = recipients[cursor++];
       if (!recipient) return;
+      if (suppressed.has(recipient.email.toLowerCase())) {
+        recipient.status = "unsubscribed";
+        recipient.errorMessage = "Not sent: this address has unsubscribed from Paleon Training emails.";
+        await recipient.save();
+        continue;
+      }
       recipient.status = "sending";
       await recipient.save();
       try {

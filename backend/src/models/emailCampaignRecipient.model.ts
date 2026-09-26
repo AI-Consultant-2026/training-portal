@@ -5,6 +5,8 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 // Failed, Skipped, Invalid, Duplicate") is a single progression, not two separate concepts:
 // a row is either not sendable (invalid/duplicate) or moves pending -> sending -> sent/failed.
 // "Skipped" is a row the admin explicitly deselected before confirming send.
+// "Unsubscribed" (2026-09-26) is an address that opted out of Paleon email -- found at upload
+// or re-checked just before sending -- and is never sent to.
 export type RecipientStatus =
   | "pending"
   | "queued"
@@ -13,7 +15,8 @@ export type RecipientStatus =
   | "failed"
   | "skipped"
   | "invalid"
-  | "duplicate";
+  | "duplicate"
+  | "unsubscribed";
 
 export interface EmailCampaignRecipientAttributes {
   id: string;

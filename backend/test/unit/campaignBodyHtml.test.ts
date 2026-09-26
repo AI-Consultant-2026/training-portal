@@ -41,6 +41,10 @@ describe("inlineEmailStyles", () => {
   });
 });
 
+// Every campaign email ends with an unsubscribe footer (see email-client-unsubscribe.test.ts);
+// these tests are about the admin's own body, so they compare the text before it.
+const bodyText = (text: string) => text.split("\n\n--\n")[0];
+
 describe("buildEmailForRecipient", () => {
   it("renders a formatted body with escaped personalisation values", () => {
     const msg = buildEmailForRecipient(
@@ -49,7 +53,8 @@ describe("buildEmailForRecipient", () => {
     );
     expect(msg.html).toContain('<p style="margin: 0 0 16px;">Dear &lt;b&gt;Ada&lt;/b&gt;,</p>');
     expect(msg.html).toContain("<strong>Acme &amp; Sons</strong>");
-    expect(msg.text).toBe("Dear <b>Ada</b>,\n\nWelcome Acme & Sons.");
+    expect(bodyText(msg.text)).toBe("Dear <b>Ada</b>,\n\nWelcome Acme & Sons.");
+    expect(msg.text).toContain("unsubscribe here: ");
     expect(msg.subject).toBe("Hello Acme & Sons");
   });
 
@@ -60,7 +65,7 @@ describe("buildEmailForRecipient", () => {
     );
     expect(msg.html).toContain('<p style="margin: 0 0 16px;">Dear Ada,</p>');
     expect(msg.html).toContain('<p style="margin: 0 0 16px;">Thanks.<br>Ken</p>');
-    expect(msg.text).toBe("Dear Ada,\n\nThanks.\nKen");
+    expect(bodyText(msg.text)).toBe("Dear Ada,\n\nThanks.\nKen");
   });
 
   it("inserts values containing $ patterns literally", () => {
@@ -68,7 +73,7 @@ describe("buildEmailForRecipient", () => {
       { fromEmail: "info@paleontraining.com", bodyTemplate: "Hi {{Company}}" },
       { ...recipient, company: "Cash $& Co" },
     );
-    expect(msg.text).toBe("Hi Cash $& Co");
+    expect(bodyText(msg.text)).toBe("Hi Cash $& Co");
   });
 
   it("detects HTML vs plain text", () => {

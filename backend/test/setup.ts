@@ -5,6 +5,9 @@ afterEach(async () => {
   (emailAdapter as MemoryEmailAdapter).clear();
 
   const tables = [
+    "email_campaign_recipients",
+    "email_campaigns",
+    "email_unsubscribes",
     "leads",
     "course_feedback",
     "partners",

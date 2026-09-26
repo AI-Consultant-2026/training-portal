@@ -36,6 +36,7 @@ const STATUS_LABELS: Record<RecipientStatus, string> = {
   skipped: "Skipped",
   invalid: "Invalid",
   duplicate: "Duplicate",
+  unsubscribed: "Unsubscribed",
 };
 
 const STATUS_CLASSES: Record<RecipientStatus, string> = {
@@ -47,6 +48,7 @@ const STATUS_CLASSES: Record<RecipientStatus, string> = {
   skipped: "bg-gray-100 text-gray-500",
   invalid: "bg-red-100 text-red-700",
   duplicate: "bg-amber-100 text-amber-700",
+  unsubscribed: "bg-gray-200 text-gray-600",
 };
 
 function StatusBadge({ status }: { status: RecipientStatus }) {
@@ -645,7 +647,7 @@ function ReviewStep({
 }) {
   const [showInvalidOnly, setShowInvalidOnly] = useState(false);
   const rows = showInvalidOnly
-    ? table.filtered.filter((r) => r.status === "invalid" || r.status === "duplicate")
+    ? table.filtered.filter((r) => r.status === "invalid" || r.status === "duplicate" || r.status === "unsubscribed")
     : table.filtered;
   const selectedCount = recipients.filter((r) => r.isSelected).length;
 
@@ -698,7 +700,7 @@ function ReviewStep({
               checked={showInvalidOnly}
               onChange={(e) => setShowInvalidOnly(e.target.checked)}
             />
-            Show invalid/duplicate only
+            Show invalid/duplicate/unsubscribed only
           </label>
         </div>
         <div className="flex items-center gap-3">
@@ -729,7 +731,7 @@ function ReviewStep({
                   <input
                     type="checkbox"
                     checked={r.isSelected}
-                    disabled={r.status === "invalid"}
+                    disabled={r.status === "invalid" || r.status === "unsubscribed"}
                     onChange={(e) => onToggle(r.id, e.target.checked)}
                   />
                 </td>

@@ -26,7 +26,7 @@ function toCsvField(value: string): string {
 }
 
 function leadsToCsv(leads: Lead[]): string {
-  const header = ["Name", "Email", "Phone", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted"]
+  const header = ["Name", "Email", "Phone", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted", "Unsubscribed"]
     .map(toCsvField)
     .join(",");
   const rows = leads.map((lead) =>
@@ -40,6 +40,7 @@ function leadsToCsv(leads: Lead[]): string {
       lead.interest ?? "",
       lead.source ?? "",
       new Date(lead.createdAt).toISOString(),
+      lead.unsubscribedAt ? new Date(lead.unsubscribedAt).toISOString() : "",
     ]
       .map(toCsvField)
       .join(","),
@@ -274,6 +275,7 @@ export function AdminDashboardPage() {
                 <th className="px-4 py-2">Interested in</th>
                 <th className="px-4 py-2">Source</th>
                 <th className="px-4 py-2">Submitted</th>
+                <th className="px-4 py-2">Emails</th>
                 <th className="px-4 py-2" />
               </tr>
             </thead>
@@ -304,6 +306,18 @@ export function AdminDashboardPage() {
                   <td className="px-4 py-2 text-gray-600">{lead.source ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">
                     {new Date(lead.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2 text-gray-600">
+                    {lead.unsubscribedAt ? (
+                      <span
+                        className="inline-block rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-600"
+                        title={`Unsubscribed ${new Date(lead.unsubscribedAt).toLocaleDateString()}`}
+                      >
+                        Unsubscribed
+                      </span>
+                    ) : (
+                      "Subscribed"
+                    )}
                   </td>
                   <td className="px-4 py-2 text-right">
                     <button

@@ -500,6 +500,8 @@ export interface Lead {
   source: string | null;
   sector: string | null;
   interest: string | null;
+  // Set when the lead opted out of Paleon emails (lead follow-ups or an email-client campaign).
+  unsubscribedAt: string | null;
   createdAt: string;
 }
 
@@ -548,7 +550,8 @@ export type RecipientStatus =
   | "failed"
   | "skipped"
   | "invalid"
-  | "duplicate";
+  | "duplicate"
+  | "unsubscribed";
 
 export interface EmailCampaignRecipient {
   id: string;

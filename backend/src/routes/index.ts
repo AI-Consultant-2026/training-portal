@@ -10,6 +10,7 @@ import { enrollmentsRouter } from "./enrollments.routes";
 import { healthRouter } from "./health.routes";
 import { instructorRouter } from "./instructor.routes";
 import { leadsRouter } from "./leads.routes";
+import { emailPreferencesRouter } from "./emailPreferences.routes";
 import { lessonsRouter } from "./lessons.routes";
 import { modulesRouter } from "./modules.routes";
 import { paymentsRouter } from "./payments.routes";
@@ -39,6 +40,7 @@ apiRouter.use("/quiz-attempts", quizAttemptsRouter);
 apiRouter.use("/capstones", capstonesRouter);
 apiRouter.use("/capstone-submissions", capstoneSubmissionsRouter);
 apiRouter.use("/leads", leadsRouter);
+apiRouter.use("/email", emailPreferencesRouter);
 apiRouter.use("/referrals", referralsRouter);
 apiRouter.use("/support", supportRouter);
 // Public: approved learner testimonials for the marketing pages (2026-09-25).

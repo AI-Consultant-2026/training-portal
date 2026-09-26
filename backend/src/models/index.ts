@@ -8,6 +8,7 @@ import { CourseFeedback, initCourseFeedbackModel } from "./courseFeedback.model"
 import { CourseModule, initCourseModuleModel } from "./module.model";
 import { EmailCampaign, initEmailCampaignModel } from "./emailCampaign.model";
 import { EmailCampaignRecipient, initEmailCampaignRecipientModel } from "./emailCampaignRecipient.model";
+import { EmailUnsubscribe, initEmailUnsubscribeModel } from "./emailUnsubscribe.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
 import { Lead, initLeadModel } from "./lead.model";
 import { Lesson, initLessonModel } from "./lesson.model";
@@ -68,6 +69,7 @@ initReferralModel(sequelize);
 initCourseFeedbackModel(sequelize);
 initEmailCampaignModel(sequelize);
 initEmailCampaignRecipientModel(sequelize);
+initEmailUnsubscribeModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -174,6 +176,7 @@ export {
   CourseModule,
   EmailCampaign,
   EmailCampaignRecipient,
+  EmailUnsubscribe,
   Enrollment,
   Lead,
   Lesson,
