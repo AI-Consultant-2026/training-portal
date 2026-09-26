@@ -227,9 +227,9 @@ function isOnline(lastActiveAt: Date | null): boolean {
   return lastActiveAt !== null && Date.now() - lastActiveAt.getTime() < ONLINE_THRESHOLD_MS;
 }
 
-// Most recent payment attempt among the given ones, if any -- surfaced mainly for
-// pending bank transfers, so the admin has the reference to look up when reconciling
-// their bank account before ticking "payment confirmed".
+// Most recent payment attempt among the given ones, if any -- surfaced so the admin can
+// see a pending payment (and any reference or receipt on older records) to check before
+// ticking "payment confirmed".
 function serializeLatestPayment(payments: Payment[]) {
   const latestPayment = [...payments].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -419,8 +419,8 @@ export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed
   enrollment.paymentConfirmedAt = paymentConfirmed ? new Date() : null;
   await enrollment.save();
 
-  // Confirming a payment (typically a verified bank transfer) is the other way a
-  // referred student's referral qualifies, alongside self-service card checkout.
+  // Confirming a payment (checked against the Paystack dashboard) is how a referred
+  // student's referral qualifies.
   if (paymentConfirmed && !wasConfirmed) {
     await creditReferralIfAny(enrollment);
     await sendPaymentConfirmedEmailIfPossible(enrollment);
@@ -443,7 +443,7 @@ async function sendPaymentConfirmedEmailIfPossible(enrollment: Enrollment): Prom
   }
 }
 
-// The receipt a student uploaded with a bank transfer, for the admin to check.
+// A payment receipt a student uploaded (older payment records only), for the admin to check.
 export async function getPaymentReceipt(paymentId: string) {
   const payment = await Payment.findByPk(paymentId);
   if (!payment || !payment.receiptPath) {

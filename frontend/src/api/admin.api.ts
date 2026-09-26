@@ -112,7 +112,7 @@ export async function setCapstoneEnabled(capstoneId: string, isEnabled: boolean)
   return res.data.capstone;
 }
 
-// Opens the receipt a student uploaded with a bank transfer in a new tab (the endpoint
+// Opens the receipt a student uploaded with an older payment record in a new tab (the endpoint
 // needs the admin's token, so it's fetched as a blob rather than linked directly).
 export async function openPaymentReceipt(paymentId: string): Promise<void> {
   const tab = window.open("", "_blank");

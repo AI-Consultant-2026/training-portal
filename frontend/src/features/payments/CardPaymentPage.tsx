@@ -13,7 +13,7 @@ import { track } from "../../lib/analytics";
 // Card payments are taken in Naira on the course's Paystack Payment Page: this page only
 // shows the price and sends the student there, so card details are never entered on
 // Paleon's own site. Paystack doesn't report back to the portal, so the payment is then
-// confirmed by the team (like a bank transfer), matched by the email the student pays with.
+// confirmed by the team, matched by the email the student pays with.
 export function CardPaymentPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
@@ -63,22 +63,20 @@ export function CardPaymentPage() {
     );
   }
 
-  // No Paystack link for this course yet: point to bank transfer instead of a button that
-  // would only be rejected.
+  // No Paystack link for this course (e.g. an archived course): nothing to pay here, so
+  // point to support instead of a button that would only be rejected.
   if (quote && !quote.card.enabled) {
     return (
       <div className="mx-auto mt-16 max-w-md px-6 text-center" role="status">
-        <h1 className="text-2xl font-semibold text-gray-900">Card payment isn&rsquo;t available yet</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Payment isn&rsquo;t available for this course yet</h1>
         <p className="mt-3 text-gray-600">
-          Please pay for {course.title} by bank transfer instead. If you need help, contact us at{" "}
-          <span className="font-medium text-gray-800">hello@paleontraining.com</span>.
+          If you&rsquo;d like to take {course.title}, contact us at{" "}
+          <span className="font-medium text-gray-800">hello@paleontraining.com</span> and we&rsquo;ll help you get
+          started.
         </p>
-        <div className="mt-6 flex flex-col items-center gap-3">
-          <Button onClick={() => navigate(`/courses/${course.slug}/pay/bank-transfer`)}>Pay by bank transfer</Button>
-          <Button variant="secondary" onClick={() => navigate(`/courses/${course.slug}`)}>
-            Back to course
-          </Button>
-        </div>
+        <Button className="mt-6" onClick={() => navigate(`/courses/${course.slug}`)}>
+          Back to course
+        </Button>
       </div>
     );
   }
@@ -126,18 +124,9 @@ export function CardPaymentPage() {
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-3">
-        <Button onClick={handlePay} isLoading={starting} disabled={!quote}>
-          {quote ? `Pay ₦${quote.card.amount.toLocaleString()} with Paystack` : "Pay with Paystack"}
-        </Button>
-        <button
-          type="button"
-          onClick={() => navigate(`/courses/${course.slug}/pay/bank-transfer`)}
-          className="text-sm font-medium text-blue-700 hover:underline"
-        >
-          Prefer to pay by bank transfer?
-        </button>
-      </div>
+      <Button className="mt-6 w-full" onClick={handlePay} isLoading={starting} disabled={!quote}>
+        {quote ? `Pay \u20A6${quote.card.amount.toLocaleString()} with Paystack` : "Pay with Paystack"}
+      </Button>
     </div>
   );
 }

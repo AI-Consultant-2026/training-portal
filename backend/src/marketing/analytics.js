@@ -72,7 +72,7 @@
   var META_EVENTS = {
     generate_lead: "Lead",
     sign_up: "CompleteRegistration",
-    bank_transfer_submitted: "AddPaymentInfo",
+    card_payment_started: "InitiateCheckout",
     whatsapp_chat_click: "Contact",
   };
   var pixelLoaded = false;

@@ -41,28 +41,6 @@ export const config = {
   // silently broken) until a Sentry project exists and this is set -- see
   // src/instrument.ts, which no-ops entirely when this is empty.
   sentryDsn: process.env.SENTRY_DSN ?? "",
-  // Placeholder receiving-bank details shown on the bank-transfer payment page.
-  // Intentionally always optional/defaulted, same reasoning as `email` above: no real
-  // receiving bank account has been confirmed yet. Once Paleon Training Limited's account
-  // details are confirmed, set these env vars -- nothing else in the payment flow needs to
-  // change. (Card payments need no config: they go through the per-course Paystack links
-  // in constants/paystackPaymentLinks.ts.)
-  bankTransfer: {
-    // Master switch for the whole bank-transfer payment flow (the page's details and the
-    // POST /payments/bank-transfer endpoint). ON unless BANK_TRANSFER_ENABLED=false is set,
-    // so it can be paused and resumed by an env-var change alone. Turning it off does not
-    // touch payments already submitted -- admins can still confirm those as usual.
-    enabled: process.env.BANK_TRANSFER_ENABLED !== "false",
-    // Shows the amber "Temporary payment arrangement" notice on the bank-transfer page
-    // (payments currently go to an authorised interim account). ON unless
-    // BANK_TRANSFER_TEMPORARY_NOTICE=false. Switching to the permanent business account is
-    // then env-only: set the BANK_TRANSFER_* details below and turn this off.
-    temporaryNotice: process.env.BANK_TRANSFER_TEMPORARY_NOTICE !== "false",
-    bankName: process.env.BANK_TRANSFER_BANK_NAME ?? "PLACEHOLDER BANK NAME",
-    accountName: process.env.BANK_TRANSFER_ACCOUNT_NAME ?? "Paleon Training Limited",
-    accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",
-    sortCodeOrIban: process.env.BANK_TRANSFER_SORT_CODE_OR_IBAN ?? "",
-  },
   analytics: {
     // Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Unset or malformed = analytics
     // off: /analytics.js serves a no-op stub, so no Google script loads and no consent

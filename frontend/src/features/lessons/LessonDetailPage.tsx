@@ -78,7 +78,7 @@ export function LessonDetailPage() {
   // An unpaid student here is on the free preview lesson: mark-complete needs a paid
   // enrollment, so show the way to unlock the rest of the course instead.
   const isFreePreview = isNextLocked;
-  const payHref = navigation ? `/courses/${navigation.course.slug}/pay/bank-transfer` : "/courses";
+  const payHref = navigation ? `/courses/${navigation.course.slug}/pay/card` : "/courses";
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">

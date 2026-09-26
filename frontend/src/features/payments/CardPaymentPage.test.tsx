@@ -41,13 +41,6 @@ function quote(cardEnabled: boolean): PaymentQuote {
   return {
     baseAmountNgn: 100000,
     card: { currency: "NGN", amount: 100000, enabled: cardEnabled },
-    bankTransfer: {
-      currency: "NGN",
-      amount: 100000,
-      enabled: true,
-      temporaryNotice: true,
-      bankDetails: { bankName: "Test Bank", accountName: "Paleon Training Limited", accountNumber: "0123456789", sortCodeOrIban: "" },
-    },
   };
 }
 
@@ -77,11 +70,11 @@ function renderPage(q: PaymentQuote) {
 }
 
 describe("CardPaymentPage", () => {
-  it("shows an unavailable notice and a bank-transfer route while the course has no Paystack link", async () => {
+  it("shows an unavailable notice with a contact address while the course has no Paystack link", async () => {
     renderPage(quote(false));
 
-    expect(await screen.findByText(/card payment isn.t available yet/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /pay by bank transfer/i })).toBeInTheDocument();
+    expect(await screen.findByText(/payment isn.t available for this course yet/i)).toBeInTheDocument();
+    expect(screen.getByText("hello@paleontraining.com")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /with Paystack/i })).not.toBeInTheDocument();
   });
 

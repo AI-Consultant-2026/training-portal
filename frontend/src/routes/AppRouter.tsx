@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
 import { RoleRoute } from "../components/layout/RoleRoute";
 import { Spinner } from "../components/ui/Spinner";
@@ -47,7 +47,6 @@ const StudentDashboardPage = lazyImport(
 );
 const LessonDetailPage = lazyImport(() => import("../features/lessons/LessonDetailPage"), "LessonDetailPage");
 const PreviewLessonPage = lazyImport(() => import("../features/lessons/PreviewLessonPage"), "PreviewLessonPage");
-const BankTransferPage = lazyImport(() => import("../features/payments/BankTransferPage"), "BankTransferPage");
 const CardPaymentPage = lazyImport(() => import("../features/payments/CardPaymentPage"), "CardPaymentPage");
 const GradeQuizAttemptPage = lazyImport(
   () => import("../features/quizzes/GradeQuizAttemptPage"),
@@ -81,6 +80,13 @@ function RouteFallback() {
   );
 }
 
+// Bank transfer was retired (card on Paystack is the only way to pay); old links to its
+// page, e.g. in emails already sent, land on the card page instead of a 404.
+function OldPaymentLinkRedirect() {
+  const { slug } = useParams<{ slug: string }>();
+  return <Navigate to={`/courses/${slug}/pay/card`} replace />;
+}
+
 export function AppRouter() {
   return (
     <Suspense fallback={<RouteFallback />}>
@@ -97,7 +103,7 @@ export function AppRouter() {
           <Route path="/courses" element={<CourseListPage />} />
           <Route path="/courses/:slug" element={<CourseDetailPage />} />
           <Route path="/courses/:slug/pay/card" element={<CardPaymentPage />} />
-          <Route path="/courses/:slug/pay/bank-transfer" element={<BankTransferPage />} />
+          <Route path="/courses/:slug/pay/bank-transfer" element={<OldPaymentLinkRedirect />} />
           <Route path="/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/dashboard" element={<StudentDashboardPage />} />
           {/* Students' own referral code + stats. The public Refer & Earn page at /refer is

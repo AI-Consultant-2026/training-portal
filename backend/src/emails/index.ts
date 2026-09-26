@@ -8,8 +8,6 @@ import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
 import { buildLeadNotificationEmail } from "./templates/leadNotification";
 import {
-  buildBankTransferAlertEmail,
-  buildBankTransferReceivedEmail,
   buildPaymentConfirmedEmail,
 } from "./templates/payments";
 import { buildLeadFollowUpEmail, buildLeadWelcomeEmail, FollowUpStep } from "./templates/leadNurture";
@@ -120,15 +118,6 @@ export async function sendCourseCompletedEmail(
   await emailAdapter.send(buildCourseCompletedEmail(user, course, dashboardUrl));
 }
 
-export async function sendBankTransferAlertEmail(input: Parameters<typeof buildBankTransferAlertEmail>[0]): Promise<void> {
-  await sendEmail(buildBankTransferAlertEmail(input));
-}
-
-export async function sendBankTransferReceivedEmail(
-  input: Parameters<typeof buildBankTransferReceivedEmail>[0],
-): Promise<void> {
-  await sendEmail(buildBankTransferReceivedEmail(input));
-}
 
 export async function sendPaymentConfirmedEmail(input: Parameters<typeof buildPaymentConfirmedEmail>[0]): Promise<void> {
   await sendEmail(buildPaymentConfirmedEmail(input));

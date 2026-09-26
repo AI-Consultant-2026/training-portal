@@ -199,10 +199,11 @@ export interface Enrollment {
   paymentConfirmedAt: string | null;
   course?: Course;
   nextLessonId: string | null;
-  // Set while a submitted bank transfer awaits confirmation (my-enrollments only).
+  // Set while a started payment awaits confirmation (my-enrollments only).
   paymentSubmittedAt?: string | null;
 }
 
+// "bank_transfer" only appears on older payment records (bank transfer has been retired).
 export type PaymentMethod = "card" | "bank_transfer";
 export type PaymentStatus = "pending" | "succeeded" | "failed";
 
@@ -222,20 +223,6 @@ export interface PaymentQuote {
     amount: number;
     /** False until the course has a Paystack payment link on the server. */
     enabled: boolean;
-  };
-  bankTransfer: {
-    currency: string;
-    amount: number;
-    /** False while bank transfers are paused (the details are then blank). */
-    enabled: boolean;
-    /** True while payments go to the interim account: show the temporary-arrangement notice. */
-    temporaryNotice: boolean;
-    bankDetails: {
-      bankName: string;
-      accountName: string;
-      accountNumber: string;
-      sortCodeOrIban: string;
-    };
   };
 }
 

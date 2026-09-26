@@ -172,13 +172,13 @@ export function CourseDetailPage() {
     }
   }, [course, user]);
 
-  // Enroll doesn't enrol on its own: it opens a payment page, and the enrolment is created
-  // when the student commits to paying (see payment.service.ts). Card (Paystack, in Naira)
-  // when the course has a Paystack link, otherwise bank transfer; each page links to the
-  // other. Also the target for clicking a locked lesson, since payment is what unlocks it.
+  // Enroll doesn't enrol on its own: it opens the payment page (card, on Paystack, in
+  // Naira), and the enrolment is created when the student heads off to pay (see
+  // payment.service.ts). Also the target for clicking a locked lesson, since payment is
+  // what unlocks it.
   function goToPayment() {
     if (!course) return;
-    navigate(`/courses/${course.slug}/pay/${paymentQuote?.card.enabled ? "card" : "bank-transfer"}`);
+    navigate(`/courses/${course.slug}/pay/card`);
   }
 
   useEffect(() => {

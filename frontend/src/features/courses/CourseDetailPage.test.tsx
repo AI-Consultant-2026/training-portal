@@ -104,18 +104,6 @@ function mockCourseData(enrollmentPaymentConfirmed: boolean) {
   vi.mocked(paymentsApi.fetchPaymentQuote).mockResolvedValue({
     baseAmountNgn: 200000,
     card: { currency: "NGN", amount: 200000, enabled: false },
-    bankTransfer: {
-      currency: "NGN",
-      amount: 200000,
-      enabled: true,
-      temporaryNotice: true,
-      bankDetails: {
-        bankName: "Test Bank",
-        accountName: "Paleon Training",
-        accountNumber: "0000000000",
-        sortCodeOrIban: "000000",
-      },
-    },
   });
   vi.mocked(enrollmentsApi.fetchMyEnrollments).mockResolvedValue([enrollment(enrollmentPaymentConfirmed)]);
 }
@@ -124,7 +112,6 @@ function renderCoursePage() {
   return renderWithProviders(
     <Routes>
       <Route path="/courses/:slug" element={<CourseDetailPage />} />
-      <Route path="/courses/:slug/pay/bank-transfer" element={<div>Bank transfer page</div>} />
       <Route path="/courses/:slug/pay/card" element={<div>Card payment page</div>} />
     </Routes>,
     {
@@ -184,30 +171,19 @@ describe("CourseDetailPage assignment payment gate", () => {
 });
 
 describe("CourseDetailPage payment flow", () => {
-  it("opens the bank transfer page when Enroll is clicked, without enrolling yet", async () => {
+  it("opens the card payment page when Enroll is clicked, without enrolling yet", async () => {
     mockCourseData(false);
     vi.mocked(enrollmentsApi.fetchMyEnrollments).mockResolvedValue([]);
     renderCoursePage();
 
     await userEvent.click(await screen.findByRole("button", { name: "Enroll" }));
 
-    expect(await screen.findByText("Bank transfer page")).toBeInTheDocument();
+    expect(await screen.findByText("Card payment page")).toBeInTheDocument();
     expect(enrollmentsApi.enrollInCourse).not.toHaveBeenCalled();
   });
 
-  it("sends an already-enrolled, unpaid student to the bank transfer page from 'Pay for course'", async () => {
+  it("sends an already-enrolled, unpaid student to the card payment page from 'Pay for course'", async () => {
     mockCourseData(false);
-    renderCoursePage();
-
-    await userEvent.click(await screen.findByRole("button", { name: /Pay for course/ }));
-
-    expect(await screen.findByText("Bank transfer page")).toBeInTheDocument();
-  });
-
-  it("sends the student to the card page instead once the course has a Paystack link", async () => {
-    mockCourseData(false);
-    const quote = await paymentsApi.fetchPaymentQuote("course-1");
-    vi.mocked(paymentsApi.fetchPaymentQuote).mockResolvedValue({ ...quote, card: { ...quote.card, enabled: true } });
     renderCoursePage();
 
     await userEvent.click(await screen.findByRole("button", { name: /Pay for course/ }));

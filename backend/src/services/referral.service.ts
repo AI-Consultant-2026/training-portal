@@ -92,8 +92,8 @@ export async function attachReferralOnRegister(refereeId: string, rawCode?: stri
   });
 }
 
-// The reward trigger. Called after any code path confirms a course payment (self-service
-// card, admin bank-transfer confirmation, admin manual enrolment). Idempotent and safe to
+// The reward trigger. Called after any code path confirms a course payment (admin payment
+// confirmation, admin manual enrolment). Idempotent and safe to
 // call on every payment: it only acts on a still-"pending" referral for this student, and
 // only the first time.
 export async function handleQualifyingPayment(enrollment: Enrollment): Promise<void> {

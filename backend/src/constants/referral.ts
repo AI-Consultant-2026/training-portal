@@ -2,7 +2,7 @@
 // (and both sides earn a reward) only when the referred student's FIRST course payment is
 // confirmed -- see referral.service.ts's handleQualifyingPayment. Rewards are recorded as
 // pending and paid out manually by an admin from /admin/referrals: there is no automated
-// airtime/data disbursement, the same way bank transfers are verified by hand.
+// airtime/data disbursement, the same way payments are verified by hand.
 
 export const REFERRAL_REWARD_TYPES = ["airtime", "data", "discount"] as const;
 export type ReferralRewardType = (typeof REFERRAL_REWARD_TYPES)[number];

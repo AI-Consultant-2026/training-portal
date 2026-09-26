@@ -92,14 +92,20 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
           >
             {enrollment.paymentSubmittedAt ? (
               <>
-                <strong>Payment submitted</strong> on {new Date(enrollment.paymentSubmittedAt).toLocaleDateString("en-GB")}{" "}
-                &mdash; we&rsquo;re confirming it. Your lessons unlock {PAYMENT_CONFIRMATION_PROMISE}.
+                <strong>Payment started</strong> on {new Date(enrollment.paymentSubmittedAt).toLocaleDateString("en-GB")}.{" "}
+                If you&rsquo;ve paid on Paystack, we&rsquo;re confirming it and your lessons unlock{" "}
+                {PAYMENT_CONFIRMATION_PROMISE}.{" "}
+                {course && (
+                  <Link to={`/courses/${course.slug}/pay/card`} className="font-medium text-amber-900 underline">
+                    Haven&rsquo;t paid yet? Pay now
+                  </Link>
+                )}
               </>
             ) : (
               <>
                 <strong>Awaiting payment.</strong> The first lesson is free &mdash; pay for the course to unlock the rest.{" "}
                 {course && (
-                  <Link to={`/courses/${course.slug}/pay/bank-transfer`} className="font-medium text-blue-600 hover:underline">
+                  <Link to={`/courses/${course.slug}/pay/card`} className="font-medium text-blue-600 hover:underline">
                     Pay now
                   </Link>
                 )}

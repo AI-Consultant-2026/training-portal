@@ -17,23 +17,3 @@ export async function startCardPayment(
   );
   return res.data;
 }
-
-export interface BankTransferInput {
-  courseId: string;
-  transferReference: string;
-  notes?: string;
-  receipt?: File | null;
-}
-
-export async function submitBankTransfer(
-  input: BankTransferInput,
-): Promise<{ payment: Payment; enrollment: Enrollment }> {
-  // Multipart, so an optional receipt image/PDF can go with it.
-  const form = new FormData();
-  form.append("courseId", input.courseId);
-  form.append("transferReference", input.transferReference);
-  if (input.notes) form.append("notes", input.notes);
-  if (input.receipt) form.append("receipt", input.receipt);
-  const res = await axiosClient.post<{ payment: Payment; enrollment: Enrollment }>("/payments/bank-transfer", form);
-  return res.data;
-}
