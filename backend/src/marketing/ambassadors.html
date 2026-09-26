@@ -661,6 +661,9 @@
   body.presenting [data-slide].is-current { display: block; min-height: 100vh; padding-top: 7vh; padding-bottom: 110px; border-top: none; }
   body.presenting .no-present, body.presenting .site-footer, body.presenting .pt-search-trigger, body.presenting .wa-float { display: none !important; }
   body.presenting .footer-band { padding: 0; }
+  .join-band { padding: 0; margin: 8px 0; }
+  .join-band section { padding: 48px 32px; }
+  @media (max-width: 640px) { .join-band section { padding: 40px 20px; } }
   body.presenting h2.section-title { font-size: 38px; margin-bottom: 26px; }
   body.presenting h1.title { font-size: 56px; }
   body.presenting .stage-body p, body.presenting table.catalog { font-size: 18px; }
@@ -699,7 +702,8 @@
       <div class="stat"><div class="stat-value">&#8358;0</div><div class="stat-label">to join: no fee, no purchase needed</div></div>
     </div>
     <div class="cta-row no-present">
-      <a class="btn btn-signal" href="#get-started">How to join</a>
+      <a class="btn btn-signal" href="/register">Create your free account</a>
+      <a class="btn btn-outline" href="#join">How to join</a>
       <a class="btn btn-whatsapp" href="https://wa.me/447508823495?text=Hi%20Paleon%20Training%2C%20I%27d%20like%20to%20become%20a%20Student%20Ambassador." target="_blank" rel="noopener">Tell us you're interested on WhatsApp</a>
       <button type="button" class="btn btn-outline" data-present-start>Present this page</button>
     </div>
@@ -817,6 +821,21 @@
     </div>
   </section>
 
+</div>
+
+<div class="band footer-band join-band" id="join">
+  <section class="wrap slide" data-slide aria-label="Join now">
+    <p class="section-label" style="color:var(--signal-2)">Ready?</p>
+    <h2 class="section-title">Join in five minutes</h2>
+    <p>Create your free account, get your code at <a href="/refer/me" style="color:var(--signal-2)">/refer/me</a>, and send it to us on WhatsApp. We'll welcome you and send your personal links. The steps are below.</p>
+    <div class="cta-row">
+      <a class="btn btn-signal" href="/register">Create your free account</a>
+      <a class="btn btn-whatsapp" href="https://wa.me/447508823495?text=Hi%20Paleon%20Training%2C%20I%27d%20like%20to%20become%20a%20Student%20Ambassador." target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
   <section id="get-started" class="slide" data-slide>
     <p class="section-label">05 &middot; How to join</p>
     <h2 class="section-title">Get started in five steps</h2>
@@ -987,22 +1006,6 @@ Tell me what you think.</pre>
       <div class="stage"><div class="stage-tag">Q7</div><div class="stage-body"><h3>Can I refer myself or use a second account?</h3><p>No. Self-referrals and duplicate accounts don't qualify.</p></div></div>
       <div class="stage"><div class="stage-tag">Q8</div><div class="stage-body"><h3>Can I promise my friends a job?</h3><p>No. Paleon Training builds practical skills and employability, but it doesn't guarantee a job, placement or salary. Please don't promise one.</p></div></div>
       <div class="stage"><div class="stage-tag">Q9</div><div class="stage-body"><h3>Who do I contact with questions?</h3><p>Message us on WhatsApp at <a href="https://wa.me/447508823495" target="_blank" rel="noopener">+44 750 882 3495</a> or email <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>. Account problems: <a href="/support">Support</a>.</p></div></div>
-    </div>
-  </section>
-</div>
-
-<div class="band footer-band">
-  <section class="wrap slide" data-slide aria-label="Next steps">
-    <p class="section-label" style="color:var(--signal-2)">Ready?</p>
-    <h2 class="section-title">Join in five minutes</h2>
-    <p>Create your free account, get your code at <a href="/refer/me" style="color:var(--signal-2)">/refer/me</a>, and send it to us on WhatsApp. We'll welcome you and send your personal links.</p>
-    <div class="cta-row">
-      <a class="btn btn-signal" href="/register">Create your free account</a>
-      <a class="btn btn-whatsapp" href="https://wa.me/447508823495?text=Hi%20Paleon%20Training%2C%20I%27d%20like%20to%20become%20a%20Student%20Ambassador." target="_blank" rel="noopener">Message us on WhatsApp</a>
-    </div>
-    <div class="signoff">
-      <span>Paleon Training &mdash; Digital Skills for the Long Run</span>
-      <span>Student Ambassador Programme</span>
     </div>
   </section>
 </div>

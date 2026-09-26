@@ -42,6 +42,16 @@ describe("Student Ambassador Programme page", () => {
     expect(js.text).toContain("data-present-start");
   });
 
+  it("puts the sign-up call to action in the hero and straight after the rewards, not only at the bottom", async () => {
+    const html = (await request(app).get("/ambassadors")).text;
+    const hero = html.slice(0, html.indexOf('id="what"'));
+    expect(hero).toContain('<a class="btn btn-signal" href="/register">Create your free account</a>');
+    const join = html.indexOf('id="join"');
+    expect(join).toBeGreaterThan(html.indexOf('id="rewards"'));
+    expect(join).toBeLessThan(html.indexOf('id="get-started"'));
+    expect(html.slice(join, html.indexOf('id="get-started"'))).toContain('href="/register"');
+  });
+
   it("is crawlable, in the sitemap, and linked from /refer and the homepage", async () => {
     expect((await request(app).get("/robots.txt")).text).toContain("Allow: /ambassadors");
     expect((await request(app).get("/sitemap.xml")).text).toContain("https://paleontraining.com/ambassadors<");
