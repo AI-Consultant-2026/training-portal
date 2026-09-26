@@ -1,18 +1,24 @@
-/* Paleon Training -- Google Analytics 4 with Consent Mode v2 and a small consent banner.
-   app.ts serves this at /analytics.js with __GA4_MEASUREMENT_ID__ filled in from the
-   GA4_MEASUREMENT_ID env var; while that isn't set it serves a no-op stub instead, so no
-   Google script loads and no banner shows. Loaded on every public marketing page and in
-   the React app (frontend/index.html). External file because the CSP blocks inline JS.
+/* Paleon Training -- Google Analytics 4 with Consent Mode v2, the Meta Pixel, and a small
+   consent banner. app.ts serves this at /analytics.js with the IDs filled in from the
+   GA4_MEASUREMENT_ID and META_PIXEL_ID env vars (either may be empty); while neither is set
+   it serves a no-op stub instead, so nothing loads and no banner shows. Loaded on every
+   public marketing page and in the React app (frontend/index.html). External file because
+   the CSP blocks inline JS.
 
    Consent: analytics cookies are only set after the visitor clicks Accept. Until then
    (or after Decline) GA runs in consent mode with analytics_storage denied -- no cookies,
-   only anonymous cookieless pings. Advertising signals are always denied. The choice is
-   kept in localStorage and can be changed from the privacy policy page. */
+   only anonymous cookieless pings. Google advertising signals are always denied. The Meta
+   Pixel (2026-09-26, for measuring Facebook/Instagram ads) is stricter: it isn't loaded at
+   all until Accept. One Accept/Decline covers both; the choices are kept in localStorage
+   and can be changed from the privacy policy page. A visitor who accepted GA before the
+   Pixel existed is asked once more, since they never agreed to Meta. */
 (function () {
   "use strict";
 
   var ID = "__GA4_MEASUREMENT_ID__";
+  var PIXEL = "__META_PIXEL_ID__";
   var KEY = "pt_analytics_consent"; // "granted" | "denied"
+  var ADS_KEY = "pt_ads_consent"; // "granted" | "denied" -- the Meta Pixel
   // Paleon's own WhatsApp number: clicks on these links are chats. Other wa.me links
   // (e.g. "share on WhatsApp" on the student referral page) are shares, not chats.
   var CHAT_LINK = 'a[href*="wa.me/447508823495"]';
@@ -23,41 +29,96 @@
   }
   window.gtag = gtag;
 
-  function readChoice() {
+  function readChoice(key) {
     try {
-      return localStorage.getItem(KEY);
+      return localStorage.getItem(key);
     } catch (e) {
       return null;
     }
   }
-  function saveChoice(value) {
+  function saveChoice(key, value) {
     try {
-      localStorage.setItem(KEY, value);
+      localStorage.setItem(key, value);
     } catch (e) {
       // Private mode etc.: the banner will simply ask again next visit.
     }
   }
 
-  var choice = readChoice();
-  gtag("consent", "default", {
-    analytics_storage: choice === "granted" ? "granted" : "denied",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
-    wait_for_update: 500,
-  });
-  gtag("js", new Date());
-  // SPA route changes are picked up by GA4 enhanced measurement ("page changes based on
-  // browser history events", on by default), so no manual page_view calls are needed.
-  gtag("config", ID);
+  var choice = readChoice(KEY);
+  var adsChoice = readChoice(ADS_KEY);
 
-  var tag = document.createElement("script");
-  tag.async = true;
-  tag.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(ID);
-  document.head.appendChild(tag);
+  if (ID) {
+    gtag("consent", "default", {
+      analytics_storage: choice === "granted" ? "granted" : "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      wait_for_update: 500,
+    });
+    gtag("js", new Date());
+    // SPA route changes are picked up by GA4 enhanced measurement ("page changes based on
+    // browser history events", on by default), so no manual page_view calls are needed.
+    gtag("config", ID);
+
+    var tag = document.createElement("script");
+    tag.async = true;
+    tag.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(ID);
+    document.head.appendChild(tag);
+  }
+
+  /* ---------------- Meta Pixel (only after Accept) ---------------- */
+
+  // Our own event names -> Meta standard events. Anything not listed isn't sent to Meta.
+  var META_EVENTS = {
+    generate_lead: "Lead",
+    sign_up: "CompleteRegistration",
+    bank_transfer_submitted: "AddPaymentInfo",
+    whatsapp_chat_click: "Contact",
+  };
+  var pixelLoaded = false;
+  var lastPixelPath = null;
+
+  function pixelPageView() {
+    if (!pixelLoaded || location.pathname === lastPixelPath) return;
+    lastPixelPath = location.pathname;
+    window.fbq("track", "PageView");
+  }
+
+  function loadPixel() {
+    if (!PIXEL || pixelLoaded) return;
+    pixelLoaded = true;
+    // Meta's standard base code, unminified: queue calls until fbevents.js arrives.
+    var fbq = function () {
+      if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments);
+      else fbq.queue.push(arguments);
+    };
+    if (!window._fbq) window._fbq = fbq;
+    fbq.push = fbq;
+    fbq.loaded = true;
+    fbq.version = "2.0";
+    fbq.queue = [];
+    window.fbq = fbq;
+    var script = document.createElement("script");
+    script.async = true;
+    script.src = "https://connect.facebook.net/en_US/fbevents.js";
+    document.head.appendChild(script);
+    fbq("init", PIXEL);
+    pixelPageView();
+    // The React app changes pages with pushState/popstate; count those as page views too.
+    var push = history.pushState;
+    history.pushState = function () {
+      var result = push.apply(this, arguments);
+      pixelPageView();
+      return result;
+    };
+    window.addEventListener("popstate", pixelPageView);
+  }
+
+  if (PIXEL && adsChoice === "granted") loadPixel();
 
   window.ptTrack = function (name, params) {
-    gtag("event", name, params || {});
+    if (ID) gtag("event", name, params || {});
+    if (pixelLoaded && META_EVENTS[name]) window.fbq("track", META_EVENTS[name]);
   };
 
   document.addEventListener(
@@ -106,8 +167,13 @@
   }
 
   function decide(value) {
-    saveChoice(value);
-    gtag("consent", "update", { analytics_storage: value });
+    saveChoice(KEY, value);
+    if (PIXEL) saveChoice(ADS_KEY, value);
+    if (ID) gtag("consent", "update", { analytics_storage: value });
+    if (PIXEL) {
+      if (value === "granted") loadPixel();
+      else if (pixelLoaded) window.fbq("consent", "revoke");
+    }
     hideBanner();
   }
 
@@ -123,8 +189,13 @@
     banner.id = "pt-consent";
     banner.setAttribute("role", "region");
     banner.setAttribute("aria-label", "Cookie consent");
+    var what = ID && PIXEL
+      ? "Google Analytics and Meta Pixel cookies to understand how our site is used and how well our adverts work"
+      : PIXEL
+        ? "Meta Pixel cookies to understand how well our adverts work"
+        : "Google Analytics cookies to understand how our site is used and to improve it";
     banner.innerHTML =
-      '<p>We use Google Analytics cookies to understand how our site is used and to improve it. ' +
+      "<p>We use " + what + ". " +
       'They’re only set if you accept. <a href="/privacy#cookies">Privacy policy</a></p>' +
       '<div class="pt-c-actions"><button type="button" class="pt-c-decline">Decline</button>' +
       '<button type="button" class="pt-c-accept">Accept</button></div>';
@@ -156,7 +227,7 @@
 
   function onReady() {
     addSettingsButtons();
-    if (!choice) showBanner();
+    if ((ID && !choice) || (PIXEL && !adsChoice)) showBanner();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", onReady);
   else onReady();

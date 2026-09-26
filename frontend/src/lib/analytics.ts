@@ -1,5 +1,5 @@
 // Thin wrapper over window.ptTrack, which /analytics.js defines (served by the backend:
-// real GA4 + consent banner once GA4_MEASUREMENT_ID is set, a no-op stub before that, and
+// real GA4 / Meta Pixel + consent banner once GA4_MEASUREMENT_ID or META_PIXEL_ID is set, a no-op stub before that, and
 // absent entirely under the Vite dev server). Analytics must never break the app, so this
 // never throws and never sends personal data -- event names and coarse parameters only.
 declare global {

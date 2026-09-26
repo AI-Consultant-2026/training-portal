@@ -79,6 +79,10 @@ export const config = {
     ga4MeasurementId: /^G-[A-Z0-9]{4,}$/.test(process.env.GA4_MEASUREMENT_ID ?? "")
       ? (process.env.GA4_MEASUREMENT_ID as string)
       : "",
+    // Meta Pixel ID (digits only, from Meta Events Manager), for measuring Facebook/Instagram
+    // ads (2026-09-26). Unset or malformed = no Pixel. Only loads after the visitor accepts
+    // cookies -- see marketing/analytics.js.
+    metaPixelId: /^\d{10,20}$/.test(process.env.META_PIXEL_ID ?? "") ? (process.env.META_PIXEL_ID as string) : "",
   },
 };
 

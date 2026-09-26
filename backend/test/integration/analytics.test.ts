@@ -4,8 +4,10 @@ import { config } from "../../src/config";
 
 describe("GA4 analytics (/analytics.js)", () => {
   const original = config.analytics.ga4MeasurementId;
+  const originalPixel = config.analytics.metaPixelId;
   afterEach(() => {
     config.analytics.ga4MeasurementId = original;
+    config.analytics.metaPixelId = originalPixel;
   });
 
   it("is off by default: serves a no-op stub that loads nothing from Google", async () => {
@@ -28,6 +30,19 @@ describe("GA4 analytics (/analytics.js)", () => {
     expect(res.text).toMatch(/analytics_storage: choice === "granted" \? "granted" : "denied"/);
     expect(res.text).toContain('ad_storage: "denied"');
     expect(res.text).toContain("whatsapp_chat_click");
+    expect(res.text).toContain('var PIXEL = ""');
+  });
+
+  it("serves the Meta Pixel, loaded only after Accept, once META_PIXEL_ID is set", async () => {
+    config.analytics.metaPixelId = "1234567890123";
+    const res = await request(createApp()).get("/analytics.js");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('var PIXEL = "1234567890123"');
+    expect(res.text).toContain('var ID = ""');
+    expect(res.text).not.toContain("__META_PIXEL_ID__");
+    // The only unconditional loadPixel() call is gated on a stored "granted" choice.
+    expect(res.text).toContain('if (PIXEL && adsChoice === "granted") loadPixel();');
+    expect(res.text).toContain('generate_lead: "Lead"');
   });
 
   it("allows Google Analytics in the CSP without loosening anything else", async () => {
@@ -36,6 +51,8 @@ describe("GA4 analytics (/analytics.js)", () => {
     expect(csp).toContain("connect-src 'self' https://*.google-analytics.com");
     expect(csp).not.toContain("'unsafe-inline' https://www.googletagmanager.com");
     expect(csp).not.toMatch(/script-src[^;]*'unsafe-inline'/);
+    expect(csp).toMatch(/script-src[^;]*https:\/\/connect\.facebook\.net/);
+    expect(csp).toMatch(/img-src[^;]*https:\/\/www\.facebook\.com/);
   });
 
   it("is loaded by the public marketing pages", async () => {

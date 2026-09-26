@@ -39,21 +39,36 @@ export function createApp() {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
           "frame-src": ["'self'", "https://www.youtube.com"],
           // googletagmanager.com / google-analytics.com: GA4 via /analytics.js (only
-          // loaded once GA4_MEASUREMENT_ID is set). connect-src and img-src aren't in
-          // helmet's defaults (they fall back to default-src 'self'), so they're listed here.
-          "script-src": ["'self'", "https://www.youtube.com", "https://www.googletagmanager.com"],
+          // loaded once GA4_MEASUREMENT_ID is set). connect.facebook.net / facebook.com: the
+          // Meta Pixel, same file, only once META_PIXEL_ID is set and the visitor accepts.
+          // connect-src and img-src aren't in helmet's defaults (they fall back to
+          // default-src 'self'), so they're listed here.
+          "script-src": [
+            "'self'",
+            "https://www.youtube.com",
+            "https://www.googletagmanager.com",
+            "https://connect.facebook.net",
+          ],
           "connect-src": [
             "'self'",
             "https://*.google-analytics.com",
             "https://*.analytics.google.com",
             "https://*.googletagmanager.com",
+            "https://www.facebook.com",
+            "https://connect.facebook.net",
             // Sentry browser error reports (frontend/src/instrument.ts, only active once
             // VITE_SENTRY_DSN is set). US-region DSNs use *.ingest.sentry.io, EU-region
             // ones *.ingest.de.sentry.io.
             "https://*.ingest.sentry.io",
             "https://*.ingest.de.sentry.io",
           ],
-          "img-src": ["'self'", "data:", "https://*.google-analytics.com", "https://*.googletagmanager.com"],
+          "img-src": [
+            "'self'",
+            "data:",
+            "https://*.google-analytics.com",
+            "https://*.googletagmanager.com",
+            "https://www.facebook.com",
+          ],
         },
       },
       // helmet's default is "no-referrer", which strips the Referer header from the
@@ -225,21 +240,23 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "support-example-screenshot.jpg"));
   });
-  // Google Analytics 4 + consent banner (2026-09-25), loaded by every public marketing page
-  // and the React app. Off until GA4_MEASUREMENT_ID is set: then this serves a no-op stub
-  // so pages' ptTrack() calls are harmless and nothing loads from Google.
+  // Google Analytics 4 + Meta Pixel + consent banner (2026-09-25, Pixel 2026-09-26), loaded
+  // by every public marketing page and the React app. While neither GA4_MEASUREMENT_ID nor
+  // META_PIXEL_ID is set this serves a no-op stub, so pages' ptTrack() calls are harmless
+  // and nothing loads from Google or Meta.
   let analyticsJs: string | null = null;
   app.get("/analytics.js", (req, res) => {
     res.set("Cache-Control", "public, max-age=3600");
     res.type("application/javascript");
-    const id = config.analytics.ga4MeasurementId;
-    if (!id) {
-      return res.send("/* analytics off: GA4_MEASUREMENT_ID not set */window.ptTrack=function(){};window.ptConsent={open:function(){}};");
+    const { ga4MeasurementId, metaPixelId } = config.analytics;
+    if (!ga4MeasurementId && !metaPixelId) {
+      return res.send("/* analytics off: GA4_MEASUREMENT_ID and META_PIXEL_ID not set */window.ptTrack=function(){};window.ptConsent={open:function(){}};");
     }
     if (!analyticsJs) {
       analyticsJs = fs
         .readFileSync(path.join(__dirname, "marketing", "analytics.js"), "utf8")
-        .replace(/__GA4_MEASUREMENT_ID__/g, id);
+        .replace(/__GA4_MEASUREMENT_ID__/g, ga4MeasurementId)
+        .replace(/__META_PIXEL_ID__/g, metaPixelId);
     }
     return res.send(analyticsJs);
   });
