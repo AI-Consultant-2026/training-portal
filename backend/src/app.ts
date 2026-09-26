@@ -276,6 +276,25 @@ export function createApp() {
     }
     res.type("html").send(referPageHtml);
   });
+  // Student Ambassador Programme page (2026-09-26): the detailed version of /refer, for
+  // recruiting ambassadors and for presenting on their welcome call (ambassadors.js adds a
+  // one-section-per-screen present mode). Amounts come from constants/referral.ts, like /refer.
+  let ambassadorsPageHtml: string | null = null;
+  app.get("/ambassadors", (req, res) => {
+    if (!ambassadorsPageHtml) {
+      const naira = (n: number) => `\u20A6${n.toLocaleString("en-NG")}`;
+      ambassadorsPageHtml = fs
+        .readFileSync(path.join(__dirname, "marketing", "ambassadors.html"), "utf8")
+        .replace(/\{\{REFERRER_REWARD_X5\}\}/g, naira(REFERRER_REWARD_NGN * 5))
+        .replace(/\{\{REFERRER_REWARD_X10\}\}/g, naira(REFERRER_REWARD_NGN * 10))
+        .replace(/\{\{REFERRER_REWARD\}\}/g, naira(REFERRER_REWARD_NGN))
+        .replace(/\{\{REFEREE_REWARD\}\}/g, naira(REFEREE_REWARD_NGN));
+    }
+    res.type("html").send(ambassadorsPageHtml);
+  });
+  app.get("/ambassadors.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "ambassadors.js"));
+  });
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
   });

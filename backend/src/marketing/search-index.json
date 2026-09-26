@@ -48,6 +48,12 @@
     "category": "Refer & Earn"
   },
   {
+    "title": "Student Ambassador Programme",
+    "description": "Become a Paleon Training Student Ambassador. Share the free Career Match and free lessons with coursemates and corps members, and earn airtime, data or course credit for every friend who joins and pays.",
+    "url": "/ambassadors",
+    "category": "Refer & Earn"
+  },
+  {
     "title": "How to Get a Job in Nigeria's Oil & Gas Industry in 2026",
     "description": "A practical, no-experience-needed guide to oil and gas jobs in Nigeria in 2026 — where the jobs are, what NCDMB requires, and the skills employers actually screen for at graduate-trainee stage.",
     "url": "/oil-and-gas-careers-nigeria",
@@ -217,7 +223,7 @@
   },
   {
     "title": "Support",
-    "description": "How to report an issue with the Paleon Training portal: what details to include, where to send them (support@paleontraining.com), and an example email with a screenshot.",
+    "description": "How to get help with the Paleon Training portal: report a problem from inside the portal (fastest), or email support@paleontraining.com with a screenshot. We reply within 1 working day.",
     "url": "/support",
     "category": "Support"
   },
