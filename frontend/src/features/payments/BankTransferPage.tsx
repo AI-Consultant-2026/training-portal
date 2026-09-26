@@ -213,6 +213,15 @@ export function BankTransferPage() {
         <Button type="submit" isLoading={submitting} disabled={!quote}>
           I've made this transfer
         </Button>
+        {quote?.card.enabled && (
+          <button
+            type="button"
+            onClick={() => navigate(`/courses/${course.slug}/pay/card`)}
+            className="text-sm font-medium text-blue-700 hover:underline"
+          >
+            Prefer to pay by card?
+          </button>
+        )}
       </form>
     </div>
   );

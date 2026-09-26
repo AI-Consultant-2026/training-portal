@@ -2,26 +2,13 @@ import { config } from "../config";
 import { Enrollment, Payment } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { COURSE_PRICES_NGN } from "../constants/coursePricing";
+import { getPaystackPaymentLink } from "../constants/paystackPaymentLinks";
 import * as courseService from "./course.service";
 import { enrollStudent, getEnrollmentForCourseAndStudent } from "./enrollment.service";
-import * as paymentGateway from "./paymentGateway.service";
-import * as referralService from "./referral.service";
 import * as userService from "./user.service";
 import { logger } from "../utils/logger";
 import { storageAdapter } from "../utils/storage";
 import * as emails from "../emails";
-import { CARD_SETTLEMENT_CURRENCY, convertFromNgn, estimateLocalAmount } from "./currency.service";
-
-// A referred student's first confirmed payment qualifies their referrer's reward. Kept
-// best-effort and non-fatal: a hiccup crediting the referral must never turn a
-// successful payment into an error response for the student who just paid.
-async function creditReferralIfAny(enrollment: Enrollment): Promise<void> {
-  try {
-    await referralService.handleQualifyingPayment(enrollment);
-  } catch (err) {
-    logger.error("Failed to credit referral after confirmed payment", err);
-  }
-}
 
 function requirePriceNgn(courseSlug: string): number {
   const priceNgn = COURSE_PRICES_NGN[courseSlug];
@@ -31,24 +18,36 @@ function requirePriceNgn(courseSlug: string): number {
   return priceNgn;
 }
 
-async function requireUnpaidEnrollment(courseIdOrSlug: string, studentId: string) {
-  const course = await courseService.getCourseByIdOrSlug(courseIdOrSlug);
-  const enrollment = await getEnrollmentForCourseAndStudent(course.id, studentId);
-  if (!enrollment) {
-    throw ApiError.badRequest("Enroll in this course before paying for it");
-  }
-  if (enrollment.paymentConfirmed) {
+// Clicking "Enroll" on the course page only opens a payment page; the student is enrolled
+// when they commit to paying (submitting a bank transfer, or heading off to Paystack). A
+// student with no enrolment yet gets one created through the same enrollStudent() path
+// (so the duplicate/published checks still apply), subject to the same verified-email
+// rule as POST /courses/:id/enroll.
+async function ensureUnpaidEnrollment(
+  courseId: string,
+  studentId: string,
+  { sendConfirmationEmail }: { sendConfirmationEmail: boolean },
+): Promise<{ enrollment: Enrollment; newlyEnrolled: boolean }> {
+  const existing = await getEnrollmentForCourseAndStudent(courseId, studentId);
+  if (existing?.paymentConfirmed) {
     throw ApiError.conflict("Payment has already been confirmed for this enrollment");
   }
-  return { course, enrollment };
+  if (existing) return { enrollment: existing, newlyEnrolled: false };
+
+  const student = await userService.getUserById(studentId);
+  if (!student.emailVerifiedAt) {
+    throw ApiError.forbidden("Please verify your email before enrolling in a course");
+  }
+  const enrollment = await enrollStudent(courseId, studentId, { sendConfirmationEmail });
+  return { enrollment, newlyEnrolled: true };
 }
 
 export interface Quote {
   baseAmountNgn: number;
   card: {
-    currency: string;
+    currency: "NGN";
     amount: number;
-    /** False while card payments are switched off (CARD_PAYMENTS_ENABLED not "true"). */
+    /** False until this course has a Paystack payment link (see paystackPaymentLinks.ts). */
     enabled: boolean;
   };
   bankTransfer: {
@@ -60,19 +59,18 @@ export interface Quote {
     temporaryNotice: boolean;
     bankDetails: { bankName: string; accountName: string; accountNumber: string; sortCodeOrIban: string };
   };
-  estimatedLocal: { currency: string; amount: number } | null;
 }
 
-export async function getQuote(courseIdOrSlug: string, billingCountry?: string): Promise<Quote> {
+export async function getQuote(courseIdOrSlug: string): Promise<Quote> {
   const course = await courseService.getCourseByIdOrSlug(courseIdOrSlug);
   const baseAmountNgn = requirePriceNgn(course.slug);
 
   return {
     baseAmountNgn,
     card: {
-      currency: CARD_SETTLEMENT_CURRENCY,
-      amount: convertFromNgn(baseAmountNgn, CARD_SETTLEMENT_CURRENCY),
-      enabled: config.card.enabled,
+      currency: "NGN",
+      amount: baseAmountNgn,
+      enabled: getPaystackPaymentLink(course.slug) !== null,
     },
     bankTransfer: {
       currency: "NGN",
@@ -89,69 +87,54 @@ export async function getQuote(courseIdOrSlug: string, billingCountry?: string):
           }
         : { bankName: "", accountName: "", accountNumber: "", sortCodeOrIban: "" },
     },
-    estimatedLocal: billingCountry ? estimateLocalAmount(baseAmountNgn, billingCountry) : null,
   };
 }
 
-export interface CardPaymentInput {
+export const CARD_PAYMENTS_UNAVAILABLE_MESSAGE =
+  "Card payment isn't available for this course yet. Please pay by bank transfer, or contact hello@paleontraining.com.";
+
+// Marks a pending card payment in the admin view, where it's matched by hand against the
+// Paystack dashboard.
+export const PAYSTACK_PENDING_REFERENCE = "Paystack payment page";
+
+// Card payments are taken in Naira on a Paystack Payment Page (one per course, see
+// paystackPaymentLinks.ts), so card details never touch Paleon's servers. Paystack doesn't
+// tell this server when a payment page is paid, so like a bank transfer this never
+// confirms payment itself: it enrols the student if needed and records one pending card
+// payment (reused if they click Pay again), so the payment shows as pending in the admin
+// view. The team confirms it by hand once it appears in the Paystack dashboard, which also
+// emails them about every successful payment.
+export async function startCardPayment(input: {
   courseId: string;
   studentId: string;
-  cardholderName: string;
-  cardNumber: string;
-  expMonth: number;
-  expYear: number;
-  cvv: string;
-  billingCountry: string;
-  billingAddressLine1: string;
-  billingCity: string;
-  billingPostalCode: string;
-}
-
-export const CARD_PAYMENTS_DISABLED_MESSAGE =
-  "Card payments are temporarily unavailable. Please pay by bank transfer, or contact hello@paleontraining.com.";
-
-export async function chargeCourseCard(input: CardPaymentInput): Promise<{ payment: Payment; enrollment: Enrollment }> {
-  // Checked before anything else: while the gateway is a mock, an enabled card flow would
-  // unlock a paid course for any made-up card number.
-  if (!config.card.enabled) {
-    throw new ApiError(503, CARD_PAYMENTS_DISABLED_MESSAGE, { code: "CARD_PAYMENTS_DISABLED" });
+}): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
+  const course = await courseService.getCourseByIdOrSlug(input.courseId);
+  const paymentLink = getPaystackPaymentLink(course.slug);
+  if (!paymentLink) {
+    throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
-  const { course, enrollment } = await requireUnpaidEnrollment(input.courseId, input.studentId);
   const baseAmountNgn = requirePriceNgn(course.slug);
-  const amount = convertFromNgn(baseAmountNgn, CARD_SETTLEMENT_CURRENCY);
+  const { enrollment } = await ensureUnpaidEnrollment(course.id, input.studentId, { sendConfirmationEmail: true });
 
-  const chargeResult = await paymentGateway.chargeCard({
-    amount,
-    currency: CARD_SETTLEMENT_CURRENCY,
-    cardholderName: input.cardholderName,
-    cardNumber: input.cardNumber,
-    expMonth: input.expMonth,
-    expYear: input.expYear,
-    cvv: input.cvv,
+  const existing = await Payment.findOne({
+    where: { enrollmentId: enrollment.id, method: "card", status: "pending" },
   });
+  const payment =
+    existing ??
+    (await Payment.create({
+      enrollmentId: enrollment.id,
+      studentId: input.studentId,
+      method: "card",
+      status: "pending",
+      currency: "NGN",
+      amount: baseAmountNgn,
+      baseAmountNgn,
+      // Paystack collects the card's billing details, so there's nothing to record here.
+      billingCountry: "",
+      gatewayReference: PAYSTACK_PENDING_REFERENCE,
+    }));
 
-  const payment = await Payment.create({
-    enrollmentId: enrollment.id,
-    studentId: input.studentId,
-    method: "card",
-    status: chargeResult.status,
-    currency: CARD_SETTLEMENT_CURRENCY,
-    amount,
-    baseAmountNgn,
-    billingCountry: input.billingCountry,
-    cardBrand: chargeResult.cardBrand,
-    cardLast4: chargeResult.cardLast4,
-    gatewayReference: chargeResult.gatewayReference,
-  });
-
-  if (chargeResult.status === "succeeded") {
-    enrollment.paymentConfirmed = true;
-    enrollment.paymentConfirmedAt = new Date();
-    await enrollment.save();
-    await creditReferralIfAny(enrollment);
-  }
-
-  return { payment, enrollment };
+  return { paymentLink, payment, enrollment };
 }
 
 export interface BankTransferInput {
@@ -163,16 +146,11 @@ export interface BankTransferInput {
   receipt?: { buffer: Buffer; originalName: string; mimeType: string };
 }
 
-// Unlike chargeCourseCard, this never confirms payment itself -- a claimed bank transfer
+// This never confirms payment itself -- a claimed bank transfer
 // can't be verified automatically. It only records the attempt (currency, amount, the
 // reference the student says they used) so an admin has what they need to check the real
 // bank account and confirm it manually via the existing admin/enrollments/:id/payment flow.
-//
-// Clicking "Enroll" on the course page only opens the bank-transfer page; the student is
-// enrolled here, when they submit their transfer. So a student with no enrolment yet gets
-// one created (through the same enrollStudent() path, so the confirmation email and
-// duplicate/published checks still apply), subject to the same verified-email rule as
-// POST /courses/:id/enroll.
+// A student who hasn't enrolled yet is enrolled here (see ensureUnpaidEnrollment).
 export const BANK_TRANSFER_DISABLED_MESSAGE =
   "Bank transfer payments are temporarily unavailable. Please check back soon or contact hello@paleontraining.com.";
 
@@ -183,19 +161,10 @@ export async function submitBankTransfer(input: BankTransferInput): Promise<{ pa
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
   const baseAmountNgn = requirePriceNgn(course.slug);
 
-  let enrollment = await getEnrollmentForCourseAndStudent(course.id, input.studentId);
-  let newlyEnrolled = false;
-  if (enrollment?.paymentConfirmed) {
-    throw ApiError.conflict("Payment has already been confirmed for this enrollment");
-  }
-  if (!enrollment) {
-    const student = await userService.getUserById(input.studentId);
-    if (!student.emailVerifiedAt) {
-      throw ApiError.forbidden("Please verify your email before enrolling in a course");
-    }
-    enrollment = await enrollStudent(course.id, input.studentId, { sendConfirmationEmail: false });
-    newlyEnrolled = true;
-  }
+  // No separate enrolment email: the "payment details received" email doubles as one.
+  const { enrollment, newlyEnrolled } = await ensureUnpaidEnrollment(course.id, input.studentId, {
+    sendConfirmationEmail: false,
+  });
 
   const saved = input.receipt
     ? await storageAdapter.save({

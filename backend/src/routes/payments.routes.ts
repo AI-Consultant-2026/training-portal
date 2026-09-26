@@ -4,7 +4,7 @@ import * as paymentsController from "../controllers/payments.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import { validate } from "../middleware/validate";
-import { bankTransferSchema, cardPaymentSchema, getQuoteSchema } from "../validators/payments.validators";
+import { bankTransferSchema, cardPaymentStartSchema, getQuoteSchema } from "../validators/payments.validators";
 
 export const paymentsRouter = Router();
 
@@ -28,12 +28,14 @@ paymentsRouter.get(
   validate(getQuoteSchema),
   paymentsController.getQuote,
 );
+// Enrols the student if needed, records a pending card payment and returns the course's
+// Paystack payment link; the card itself is only ever entered on Paystack's page.
 paymentsRouter.post(
   "/card",
   authenticate,
   authorize("student"),
-  validate(cardPaymentSchema),
-  paymentsController.payWithCard,
+  validate(cardPaymentStartSchema),
+  paymentsController.startCardPayment,
 );
 paymentsRouter.post(
   "/bank-transfer",

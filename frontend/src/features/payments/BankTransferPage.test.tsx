@@ -39,7 +39,7 @@ const COURSE = {
 function quote(sortCodeOrIban: string): PaymentQuote {
   return {
     baseAmountNgn: 200000,
-    card: { currency: "GBP", amount: 100, enabled: false },
+    card: { currency: "NGN", amount: 100000, enabled: false },
     bankTransfer: {
       currency: "NGN",
       amount: 200000,
@@ -52,7 +52,6 @@ function quote(sortCodeOrIban: string): PaymentQuote {
         sortCodeOrIban,
       },
     },
-    estimatedLocal: null,
   };
 }
 

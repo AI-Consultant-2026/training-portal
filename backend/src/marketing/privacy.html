@@ -130,8 +130,8 @@
       <tr><td>Account information</td><td>Name, email address, password (stored as a
         secure hash, never in plain text), country/location, course of interest</td></tr>
       <tr><td>Payment information</td><td>Payment method, amount, currency, and a
-        transaction reference. Full card numbers are handled by our payment processor,
-        not stored on our servers; bank transfer payments include the reference you
+        transaction reference. Card details are entered on and handled by our payment
+        processor, Paystack, and never reach or are stored on our servers; bank transfer payments include the reference you
         provide for manual confirmation</td></tr>
       <tr><td>Course activity</td><td>Lessons viewed and completed, quiz answers and
         scores, assignment and capstone submissions, progress and grades</td></tr>
@@ -190,7 +190,7 @@
 
     <h2>5. Who we share it with</h2>
     <ul>
-      <li><strong>Payment processors</strong>, to process card payments;</li>
+      <li><strong>Paystack</strong>, our payment processor, to process card payments;</li>
       <li><strong>Our hosting provider (Render)</strong>, which runs the application and
         stores its database and uploaded files;</li>
       <li><strong>Cloudflare</strong>, which delivers our website and protects it from

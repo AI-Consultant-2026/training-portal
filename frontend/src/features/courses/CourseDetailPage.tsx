@@ -172,14 +172,13 @@ export function CourseDetailPage() {
     }
   }, [course, user]);
 
-  // Enroll doesn't enrol on its own: it opens the bank-transfer page, and the enrolment
-  // is created when the student submits their transfer (see payment.service.ts).
-  // Every student pays by bank transfer (the card gateway is still a placeholder that
-  // approves any card, so it isn't exposed from here). Also the target for clicking a
-  // locked lesson, since payment is what unlocks it.
-  function goToBankTransfer() {
+  // Enroll doesn't enrol on its own: it opens a payment page, and the enrolment is created
+  // when the student commits to paying (see payment.service.ts). Card (Paystack, in Naira)
+  // when the course has a Paystack link, otherwise bank transfer; each page links to the
+  // other. Also the target for clicking a locked lesson, since payment is what unlocks it.
+  function goToPayment() {
     if (!course) return;
-    navigate(`/courses/${course.slug}/pay/bank-transfer`);
+    navigate(`/courses/${course.slug}/pay/${paymentQuote?.card.enabled ? "card" : "bank-transfer"}`);
   }
 
   useEffect(() => {
@@ -273,7 +272,7 @@ export function CourseDetailPage() {
           )}
           {enrollError && <Alert message={enrollError} />}
           <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={goToBankTransfer} disabled={isEnrolled}>
+            <Button onClick={goToPayment} disabled={isEnrolled}>
               {!isEnrolled
                 ? "Enroll"
                 : myEnrollment?.paymentConfirmed
@@ -281,7 +280,7 @@ export function CourseDetailPage() {
                   : "Payment pending"}
             </Button>
             {isEnrolled && !myEnrollment?.paymentConfirmed && paymentQuote && (
-              <Button variant="secondary" onClick={goToBankTransfer}>
+              <Button variant="secondary" onClick={goToPayment}>
                 Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}
               </Button>
             )}
@@ -366,7 +365,7 @@ export function CourseDetailPage() {
                         <button
                           key={lesson.id}
                           type="button"
-                          onClick={goToBankTransfer}
+                          onClick={goToPayment}
                           className="text-sm font-medium text-gray-400 hover:text-gray-600"
                           title="This lesson unlocks once your payment has been confirmed"
                         >

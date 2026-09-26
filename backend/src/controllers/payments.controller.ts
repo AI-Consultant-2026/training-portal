@@ -3,14 +3,12 @@ import * as paymentService from "../services/payment.service";
 import { asyncHandler } from "../utils/asyncHandler";
 
 export const getQuote = asyncHandler(async (req: Request, res: Response) => {
-  const billingCountry =
-    typeof req.query.billingCountry === "string" ? req.query.billingCountry : undefined;
-  const quote = await paymentService.getQuote(req.params.courseId, billingCountry);
+  const quote = await paymentService.getQuote(req.params.courseId);
   res.json({ quote });
 });
 
-export const payWithCard = asyncHandler(async (req: Request, res: Response) => {
-  const result = await paymentService.chargeCourseCard({ ...req.body, studentId: req.user!.id });
+export const startCardPayment = asyncHandler(async (req: Request, res: Response) => {
+  const result = await paymentService.startCardPayment({ courseId: req.body.courseId, studentId: req.user!.id });
   res.status(201).json(result);
 });
 

@@ -1,4 +1,5 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import * as coursesApi from "../../api/courses.api";
@@ -20,7 +21,7 @@ const STUDENT: User = {
   role: "student",
   status: "active",
   profileData: {},
-  location: "United Kingdom",
+  location: "Lagos",
   courseInterest: null,
   university: null,
   referralCode: null,
@@ -39,7 +40,7 @@ const COURSE = {
 function quote(cardEnabled: boolean): PaymentQuote {
   return {
     baseAmountNgn: 100000,
-    card: { currency: "GBP", amount: 50, enabled: cardEnabled },
+    card: { currency: "NGN", amount: 100000, enabled: cardEnabled },
     bankTransfer: {
       currency: "NGN",
       amount: 100000,
@@ -47,7 +48,6 @@ function quote(cardEnabled: boolean): PaymentQuote {
       temporaryNotice: true,
       bankDetails: { bankName: "Test Bank", accountName: "Paleon Training Limited", accountNumber: "0123456789", sortCodeOrIban: "" },
     },
-    estimatedLocal: null,
   };
 }
 
@@ -77,19 +77,42 @@ function renderPage(q: PaymentQuote) {
 }
 
 describe("CardPaymentPage", () => {
-  it("shows an unavailable notice and a bank-transfer route, with no card form, while card payments are off", async () => {
+  it("shows an unavailable notice and a bank-transfer route while the course has no Paystack link", async () => {
     renderPage(quote(false));
 
-    expect(await screen.findByText(/card payments are temporarily unavailable/i)).toBeInTheDocument();
+    expect(await screen.findByText(/card payment isn.t available yet/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /pay by bank transfer/i })).toBeInTheDocument();
-    expect(screen.queryByLabelText(/card number/i)).not.toBeInTheDocument();
-    expect(paymentsApi.payWithCard).not.toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: /with Paystack/i })).not.toBeInTheDocument();
   });
 
-  it("shows the card form when card payments are enabled", async () => {
+  it("shows the Naira price with no card fields of its own, and sends the student to Paystack", async () => {
+    const assign = vi.fn();
+    vi.stubGlobal("location", { ...window.location, assign });
+    vi.mocked(paymentsApi.startCardPayment).mockResolvedValue({
+      paymentLink: "https://paystack.com/pay/hse",
+    } as Awaited<ReturnType<typeof paymentsApi.startCardPayment>>);
     renderPage(quote(true));
 
-    expect(await screen.findByLabelText(/card number/i)).toBeInTheDocument();
-    expect(screen.queryByText(/card payments are temporarily unavailable/i)).not.toBeInTheDocument();
+    const pay = await screen.findByRole("button", { name: /Pay \u20A6100,000 with Paystack/ });
+    expect(screen.queryByLabelText(/card number/i)).not.toBeInTheDocument();
+    expect(screen.getByText("student@example.com")).toBeInTheDocument();
+    expect(screen.queryByText(/GBP/)).not.toBeInTheDocument();
+
+    await userEvent.click(pay);
+
+    await waitFor(() => expect(assign).toHaveBeenCalledWith("https://paystack.com/pay/hse"));
+    expect(paymentsApi.startCardPayment).toHaveBeenCalledWith(COURSE.id);
+    vi.unstubAllGlobals();
+  });
+
+  it("stays on the page and shows the error if the payment can't be started", async () => {
+    vi.mocked(paymentsApi.startCardPayment).mockRejectedValue({
+      response: { data: { error: { message: "Please verify your email before enrolling in a course" } } },
+    });
+    renderPage(quote(true));
+
+    await userEvent.click(await screen.findByRole("button", { name: /with Paystack/i }));
+
+    expect(await screen.findByText(/verify your email/i)).toBeInTheDocument();
   });
 });

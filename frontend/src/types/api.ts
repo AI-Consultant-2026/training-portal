@@ -218,9 +218,9 @@ export interface Payment {
 export interface PaymentQuote {
   baseAmountNgn: number;
   card: {
-    currency: string;
+    currency: "NGN";
     amount: number;
-    /** False while card payments are switched off on the server (CARD_PAYMENTS_ENABLED). */
+    /** False until the course has a Paystack payment link on the server. */
     enabled: boolean;
   };
   bankTransfer: {
@@ -237,7 +237,6 @@ export interface PaymentQuote {
       sortCodeOrIban: string;
     };
   };
-  estimatedLocal: { currency: string; amount: number } | null;
 }
 
 export interface Assignment {

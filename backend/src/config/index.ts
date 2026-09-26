@@ -41,13 +41,12 @@ export const config = {
   // silently broken) until a Sentry project exists and this is set -- see
   // src/instrument.ts, which no-ops entirely when this is empty.
   sentryDsn: process.env.SENTRY_DSN ?? "",
-  // Placeholder receiving-bank details shown on the bank-transfer payment page, and a
-  // placeholder card-gateway API key (currently unused by paymentGateway.service.ts's
-  // mock implementation). Intentionally always optional/defaulted, same reasoning as
-  // `email` above: no real merchant account or receiving bank account has been confirmed
-  // yet. Once Paleon Training Limited's account details are confirmed, set these env
-  // vars (and swap paymentGateway.service.ts's mock for a real gateway call) -- nothing
-  // else in the payment flow needs to change.
+  // Placeholder receiving-bank details shown on the bank-transfer payment page.
+  // Intentionally always optional/defaulted, same reasoning as `email` above: no real
+  // receiving bank account has been confirmed yet. Once Paleon Training Limited's account
+  // details are confirmed, set these env vars -- nothing else in the payment flow needs to
+  // change. (Card payments need no config: they go through the per-course Paystack links
+  // in constants/paystackPaymentLinks.ts.)
   bankTransfer: {
     // Master switch for the whole bank-transfer payment flow (the page's details and the
     // POST /payments/bank-transfer endpoint). ON unless BANK_TRANSFER_ENABLED=false is set,
@@ -64,14 +63,6 @@ export const config = {
     accountNumber: process.env.BANK_TRANSFER_ACCOUNT_NUMBER ?? "0000000000",
     sortCodeOrIban: process.env.BANK_TRANSFER_SORT_CODE_OR_IBAN ?? "",
   },
-  card: {
-    // Master switch for card payments (POST /payments/card). OFF unless
-    // CARD_PAYMENTS_ENABLED=true is set -- the opposite default to bank transfer, because
-    // paymentGateway.service.ts is still a mock that approves any card number. Only turn
-    // this on once chargeCard() calls a real gateway.
-    enabled: process.env.CARD_PAYMENTS_ENABLED === "true",
-  },
-  cardGatewayApiKey: process.env.PAYMENT_GATEWAY_API_KEY ?? "",
   analytics: {
     // Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Unset or malformed = analytics
     // off: /analytics.js serves a no-op stub, so no Google script loads and no consent

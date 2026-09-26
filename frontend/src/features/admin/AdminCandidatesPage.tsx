@@ -360,6 +360,15 @@ export function AdminCandidatesPage() {
                                 )}
                               </p>
                             )}
+                            {!e.paymentConfirmed &&
+                              e.latestPayment?.method === "card" &&
+                              e.latestPayment.status === "pending" && (
+                                <p className="ml-5 text-xs text-gray-500">
+                                  Went to pay by card on Paystack: {e.latestPayment.currency}{" "}
+                                  {e.latestPayment.amount.toLocaleString()} &mdash; find this student&rsquo;s email in
+                                  your Paystack dashboard&rsquo;s transactions before confirming.
+                                </p>
+                              )}
                             {e.status === "completed" && (
                               <div className="ml-5 mt-1 flex items-center gap-2">
                                 <button

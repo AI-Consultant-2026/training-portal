@@ -393,7 +393,7 @@
       <div class="stat"><div class="stat-value">4</div><div class="stat-label">live courses</div></div>
       <div class="stat"><div class="stat-value">42</div><div class="stat-label">days of curriculum</div></div>
       <div class="stat"><div class="stat-value">84</div><div class="stat-label">lessons</div></div>
-      <div class="stat"><div class="stat-value">2</div><div class="stat-label">markets &mdash; NGN &amp; GBP</div></div>
+      <div class="stat"><div class="stat-value">2</div><div class="stat-label">ways to pay &mdash; card &amp; transfer, in NGN</div></div>
     </div>
   </div>
 </div>
@@ -404,7 +404,7 @@
     <div class="measure">
       <p class="section-label">Overview</p>
       <p class="lede">Paleon Training sells four project-based courses &mdash; cyber security, digital marketing, GIS &amp; drone mapping, and HSE fundamentals &mdash; directly through its own portal, no marketplace in between.</p>
-      <p>Every student moves through the same pipeline: an enrolment record is created the moment someone picks a course, but the lesson content itself stays locked behind a single flag &mdash; <code class="inline">paymentConfirmed</code> &mdash; until payment is verified. That verification happens two different ways depending on where the student is billing from: instantly for a card charge, by a member of staff for a Nigerian bank transfer. That fork, and the flag it sets, is the mechanism worth understanding before anything else &mdash; it's the diagram below.</p>
+      <p>Every student moves through the same pipeline: an enrolment record is created the moment someone picks a course, but the lesson content itself stays locked behind a single flag &mdash; <code class="inline">paymentConfirmed</code> &mdash; until payment is verified. Students pay in Naira, either by card on Paystack or by bank transfer, and either way a member of staff verifies the money arrived before setting the flag. That fork, and the flag it sets, is the mechanism worth understanding before anything else &mdash; it's the diagram below.</p>
     </div>
   </section>
 
@@ -413,7 +413,7 @@
     <h2 class="section-title">From enrolment to completed course</h2>
     <div class="diagram-scroll">
       <figure class="diagram">
-        <svg viewBox="0 0 1160 650" role="img" aria-label="Flow diagram: a student registers and enrols, then payment forks by billing country &mdash; a card charge confirms the enrolment instantly through a gateway, while a Nigerian bank transfer stays pending until a staff member verifies it by hand. Both paths set the same paymentConfirmed flag, which unlocks the course and its daily lessons, assignments, and final capstone project.">
+        <svg viewBox="0 0 1160 650" role="img" aria-label="Flow diagram: a student registers and enrols, then payment forks by method &mdash; a card payment on Paystack or a bank transfer, both in Naira, each pending until a staff member verifies it. Both paths set the same paymentConfirmed flag, which unlocks the course and its daily lessons, assignments, and final capstone project.">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <polygon points="0,0 10,5 0,10" style="fill: var(--charcoal-soft);"></polygon>
@@ -437,7 +437,7 @@
           <text x="662" y="60" font-size="11" text-anchor="middle" style="fill: var(--charcoal-soft);">charge</text>
 
           <line x1="840" y1="98" x2="1000" y2="163" style="stroke: var(--charcoal-soft); stroke-width: 1.5;" marker-end="url(#arrow)"></line>
-          <text x="900" y="112" font-size="11" style="fill: var(--charcoal-soft);">succeeded &mdash; instant</text>
+          <text x="900" y="112" font-size="11" style="fill: var(--charcoal-soft);">pending &mdash; staff check Paystack</text>
 
           <!-- bank lane -->
           <line x1="640" y1="320" x2="684" y2="320" style="stroke: var(--charcoal-soft); stroke-width: 1.5;" marker-end="url(#arrow)"></line>
@@ -483,13 +483,13 @@
           <g>
             <rect x="470" y="40" width="170" height="60" rx="8" style="fill: var(--white); stroke: var(--charcoal-soft); stroke-width: 1.4;"></rect>
             <text x="555" y="66" text-anchor="middle" font-size="13.5" style="fill: var(--charcoal); font-weight: 600;">Pay by card</text>
-            <text x="555" y="83" text-anchor="middle" font-size="10.5" style="fill: var(--charcoal-soft);">GBP</text>
+            <text x="555" y="83" text-anchor="middle" font-size="10.5" style="fill: var(--charcoal-soft);">NGN</text>
           </g>
 
           <g>
             <rect x="690" y="40" width="150" height="60" rx="8" stroke-dasharray="4 3" style="fill: var(--white); stroke: var(--signal-deep); stroke-width: 1.4;"></rect>
-            <text x="765" y="66" text-anchor="middle" font-size="13.5" style="fill: var(--charcoal); font-weight: 600;">Gateway</text>
-            <text x="765" y="83" text-anchor="middle" font-size="10.5" style="fill: var(--signal-deep);">placeholder today</text>
+            <text x="765" y="66" text-anchor="middle" font-size="13.5" style="fill: var(--charcoal); font-weight: 600;">Paystack</text>
+            <text x="765" y="83" text-anchor="middle" font-size="10.5" style="fill: var(--signal-deep);">hosted payment page</text>
           </g>
 
           <!-- bank lane boxes -->
@@ -547,7 +547,7 @@
             <text x="1063" y="565" text-anchor="middle" font-size="13" style="fill: var(--charcoal); font-weight: 600;">Completion</text>
           </g>
         </svg>
-        <figcaption>The pipeline forks at payment. A card charge (billing outside Nigeria, settled in GBP) confirms the enrolment automatically through today's placeholder gateway &mdash; no real processor is wired up yet. A Nigerian bank transfer instead sits as <em>pending</em> until a Paleon staff member checks the actual bank account and confirms it by hand &mdash; the one manual step in an otherwise automated pipeline. Both paths write the same <code class="inline">paymentConfirmed</code> flag, and it's the only thing standing between an enrolled student and their first lesson &mdash; checked again on the server on every request, not just hidden in the interface.</figcaption>
+        <figcaption>The pipeline forks at payment. A card payment is taken in Naira on the course's Paystack payment page &mdash; card details never touch Paleon's servers &mdash; and sits as <em>pending</em> until a Paleon staff member finds it in the Paystack dashboard. A bank transfer likewise sits as <em>pending</em> until staff check the actual bank account &mdash; the one manual step in an otherwise automated pipeline. Both paths write the same <code class="inline">paymentConfirmed</code> flag, and it's the only thing standing between an enrolled student and their first lesson &mdash; checked again on the server on every request, not just hidden in the interface.</figcaption>
       </figure>
     </div>
   </section>
@@ -581,8 +581,8 @@
         <div class="stage-tag">STEP 04</div>
         <div class="stage-body">
           <h3>Payment &mdash; two markets, two paths</h3>
-          <p>Billing country decides the route. Outside Nigeria, a card charge in GBP confirms the enrolment in one automatic step. Inside Nigeria, a student submits an NGN bank transfer reference instead &mdash; nothing confirms automatically.</p>
-          <span class="note">card payments run on a placeholder gateway today</span>
+          <p>The student picks how to pay, both in Naira: by card on Paystack's secure page, or by submitting a bank transfer reference. Neither confirms automatically.</p>
+          <span class="note">card payments go through Paystack payment pages</span>
         </div>
       </div>
       <div class="stage">
@@ -662,7 +662,7 @@
 
 <div class="band footer-band">
   <div class="wrap">
-    <p>This reflects the platform as it runs in production today. The main open item on the business side is the card gateway &mdash; currently a placeholder that always succeeds, standing in until a real processor is connected. Bank transfer, the production path for the Nigerian market, is fully manual by design: a human checks the money before access is granted.</p>
+    <p>This reflects the platform as it runs in production today. Card payments run through Paystack payment pages and bank transfers through the business account; both are confirmed by hand by design &mdash; a human checks the money before access is granted. Automatic confirmation of card payments from Paystack is a possible next step.</p>
     <div class="signoff">
       <span>Paleon Training &mdash; Digital Skills for the Long Run</span>
       <span>Partner briefing</span>
