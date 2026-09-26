@@ -118,7 +118,7 @@ export function PreviewLessonPage() {
 
       <p className="mt-6 text-sm">
         <a href={`/${course.slug}-course`} className="text-blue-600 hover:underline">
-          &larr; Visit the {course.title} course page
+          Visit the {course.title} course page
         </a>
       </p>
     </div>
