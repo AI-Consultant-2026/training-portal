@@ -45,12 +45,13 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
     expect(res.text.indexOf("report-in-portal")).toBeLessThan(res.text.indexOf("Tell us these five things"));
   });
 
-  it.each(["/privacy", "/terms"])("%s describes the business as the owner specified, not as a registered company", async (page) => {
+  it.each(["/privacy", "/terms"])("%s describes the business as registered in Nigeria, with the Warri address", async (page) => {
     const res = await request(app).get(page);
     expect(res.status).toBe(200);
-    expect(res.text).not.toContain("registered in Nigeria");
-    expect(res.text).toContain("Principal place of business / Nigerian operations:");
-    expect(res.text).toContain("where Paleon Training will be registered");
+    expect(res.text).toContain("Paleon Training Limited is registered in Nigeria");
+    expect(res.text).toContain("No.5 Beji Court");
+    expect(res.text).not.toContain("Okemore");
+    expect(res.text).not.toContain("will be registered");
     expect(res.text).toContain("Technology and management support:");
     expect(res.text).toContain("Market served:");
   });

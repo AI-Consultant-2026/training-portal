@@ -9,7 +9,7 @@ import { track } from "../../lib/analytics";
 import { CoursePreview } from "../../types/api";
 import { LessonContent } from "./LessonContent";
 
-const WHATSAPP_URL = "https://wa.me/447508823495";
+const WHATSAPP_URL = "https://wa.me/2347077149989";
 
 // Public "Try Day 1 free" page (2026-09-25): the first lesson of a course, readable
 // without an account, so people can see the real lesson format -- text, illustration

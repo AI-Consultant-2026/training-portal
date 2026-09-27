@@ -18,7 +18,7 @@ interface LeadFields {
   sector?: string | null;
 }
 
-const WHATSAPP = "+44 7508 823495";
+const WHATSAPP = "+234 707 714 9989";
 
 function site(path: string): string {
   return `${config.corsOrigin.replace(/\/$/, "")}${path}`;

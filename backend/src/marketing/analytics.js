@@ -21,7 +21,7 @@
   var ADS_KEY = "pt_ads_consent"; // "granted" | "denied" -- the Meta Pixel
   // Paleon's own WhatsApp number: clicks on these links are chats. Other wa.me links
   // (e.g. "share on WhatsApp" on the student referral page) are shares, not chats.
-  var CHAT_LINK = 'a[href*="wa.me/447508823495"]';
+  var CHAT_LINK = 'a[href*="wa.me/2347077149989"]';
 
   window.dataLayer = window.dataLayer || [];
   function gtag() {
