@@ -119,7 +119,7 @@ export function AdminCandidatesPage() {
       setDeleteInactiveMessage({
         text:
           skippedCount > 0
-            ? `Deleted ${deletedCount}. Skipped ${skippedCount} with payment history (kept for records).`
+            ? `Deleted ${deletedCount}. Kept ${skippedCount} who paid for a course, for the records.`
             : `Deleted ${deletedCount} inactive candidate${deletedCount === 1 ? "" : "s"}.`,
         variant: "success",
       });

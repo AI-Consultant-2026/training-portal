@@ -16,6 +16,7 @@ import {
   Quiz,
   QuizAttempt,
   User,
+  sequelize,
 } from "../models";
 import * as authService from "./auth.service";
 import * as enrollmentService from "./enrollment.service";
@@ -364,20 +365,29 @@ export interface DeleteInactiveCandidatesResult {
 // assignment/capstone submissions, and refresh tokens all cascade-delete with the user
 // (see their migrations' onDelete: "CASCADE" on student_id/user_id) -- but payments
 // deliberately don't cascade, since those are financial records worth keeping even
-// after the account is gone. A candidate with any payment history is skipped rather
-// than deleted, so this can't silently erase an audit trail.
+// after the account is gone. A candidate who really paid (a succeeded payment, or a
+// course marked paid by an admin) is skipped rather than deleted, so this can't silently
+// erase an audit trail. Pending/failed payments aren't money received -- with Paystack
+// Payment Pages one is recorded whenever someone just clicks Pay -- so those are
+// deleted along with the candidate instead of blocking it.
 export async function deleteInactiveCandidates(): Promise<DeleteInactiveCandidatesResult> {
   const inactiveCandidates = await User.findAll({ where: { role: "student", status: "inactive" } });
 
   let deletedCount = 0;
   let skippedCount = 0;
   for (const candidate of inactiveCandidates) {
-    const paymentCount = await Payment.count({ where: { studentId: candidate.id } });
-    if (paymentCount > 0) {
+    const [succeededPayments, paidEnrollments] = await Promise.all([
+      Payment.count({ where: { studentId: candidate.id, status: "succeeded" } }),
+      Enrollment.count({ where: { studentId: candidate.id, paymentConfirmed: true } }),
+    ]);
+    if (succeededPayments > 0 || paidEnrollments > 0) {
       skippedCount += 1;
       continue;
     }
-    await candidate.destroy();
+    await sequelize.transaction(async (transaction) => {
+      await Payment.destroy({ where: { studentId: candidate.id }, transaction });
+      await candidate.destroy({ transaction });
+    });
     deletedCount += 1;
   }
 

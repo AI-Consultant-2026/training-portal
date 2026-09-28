@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
-import { Course, Enrollment, User } from "../../src/models";
+import { Course, Enrollment, Payment, User } from "../../src/models";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
@@ -229,5 +229,61 @@ describe("Admin candidate management", () => {
       .send({ courseId: course.id });
 
     expect(res.status).toBe(409);
+  });
+
+  it("delete-inactive removes candidates with only pending payments but keeps ones who paid", async () => {
+    await createAdmin();
+    const adminToken = await loginAs("jest-admin@example.com");
+    const course = await Course.create({
+      title: "Delete Inactive Course",
+      slug: "delete-inactive-course",
+      description: "d",
+      status: "published",
+      durationWeeks: 1,
+      level: "beginner",
+    });
+    const payment = (studentId: string, enrollmentId: string, status: "pending" | "succeeded") =>
+      Payment.create({
+        enrollmentId,
+        studentId,
+        method: "card",
+        status,
+        currency: "NGN",
+        amount: 150000,
+        baseAmountNgn: 150000,
+        billingCountry: "",
+        gatewayReference: "Paystack payment page",
+      });
+
+    // Clicked Pay on Paystack but never paid: should be deleted, pending payment and all.
+    const clickedPay = await registerStudent("clickedpay@example.com");
+    const pendingEnrollment = await Enrollment.create({ courseId: course.id, studentId: clickedPay.id });
+    await payment(clickedPay.id, pendingEnrollment.id, "pending");
+
+    // Admin marked the course paid: kept.
+    const markedPaid = await registerStudent("markedpaid@example.com");
+    await Enrollment.create({ courseId: course.id, studentId: markedPaid.id, paymentConfirmed: true });
+
+    // Succeeded payment on record: kept.
+    const succeeded = await registerStudent("succeeded@example.com");
+    const succeededEnrollment = await Enrollment.create({ courseId: course.id, studentId: succeeded.id });
+    await payment(succeeded.id, succeededEnrollment.id, "succeeded");
+
+    await User.update(
+      { status: "inactive" },
+      { where: { id: [clickedPay.id, markedPaid.id, succeeded.id] } },
+    );
+
+    const res = await request(app)
+      .delete("/api/admin/candidates/inactive")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ deletedCount: 1, skippedCount: 2 });
+    expect(await User.findByPk(clickedPay.id)).toBeNull();
+    expect(await Payment.count({ where: { studentId: clickedPay.id } })).toBe(0);
+    expect(await User.findByPk(markedPaid.id)).not.toBeNull();
+    expect(await User.findByPk(succeeded.id)).not.toBeNull();
+    expect(await Payment.count({ where: { studentId: succeeded.id } })).toBe(1);
   });
 });
