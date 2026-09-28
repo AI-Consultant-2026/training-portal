@@ -14,6 +14,7 @@ import { REFEREE_REWARD_NGN, REFERRER_REWARD_NGN } from "./constants/referral";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import { apiRouter } from "./routes";
+import * as paymentsController from "./controllers/payments.controller";
 
 export function createApp() {
   const app = express();
@@ -85,6 +86,13 @@ export function createApp() {
   // compressed woff2 and get skipped automatically based on content-type).
   app.use(compression());
   app.use(cors({ origin: config.corsOrigin, credentials: true }));
+  // Paystack's webhook needs the raw body to check its signature, so it's registered before
+  // express.json() parses (and discards) the original bytes. Server-to-server: no auth/CORS.
+  app.post(
+    "/api/payments/paystack/webhook",
+    express.raw({ type: "*/*", limit: "1mb" }),
+    paymentsController.paystackWebhook,
+  );
   app.use(express.json());
   app.use(cookieParser());
 

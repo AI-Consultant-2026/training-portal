@@ -75,3 +75,7 @@ services:
         sync: false
       - key: VITE_SENTRY_DSN
         sync: false
+      # Paystack secret key: verifies the webhook at /api/payments/paystack/webhook, which
+      # confirms card payments automatically. Unset = webhook off, confirm by hand.
+      - key: PAYSTACK_SECRET_KEY
+        sync: false

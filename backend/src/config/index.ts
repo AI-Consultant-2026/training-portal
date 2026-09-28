@@ -41,6 +41,10 @@ export const config = {
   // silently broken) until a Sentry project exists and this is set -- see
   // src/instrument.ts, which no-ops entirely when this is empty.
   sentryDsn: process.env.SENTRY_DSN ?? "",
+  // Paystack secret key (sk_live_... / sk_test_...), used only to verify the signature on
+  // Paystack's webhook calls (2026-09-28). Optional: unset = the webhook refuses every
+  // call with 503 and payments are confirmed by hand on /admin/candidates, as before.
+  paystackSecretKey: process.env.PAYSTACK_SECRET_KEY ?? "",
   analytics: {
     // Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Unset or malformed = analytics
     // off: /analytics.js serves a no-op stub, so no Google script loads and no consent
