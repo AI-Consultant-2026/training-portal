@@ -727,13 +727,18 @@ export function createApp() {
   app.get("/graduate-to-job-ready-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "graduate-to-job-ready-nigeria.html"));
   });
-  // Press releases (2026-09-15) announcing the six-course curriculum's completion and
+  // Press releases (2026-09-15) announcing the curriculum's completion and
   // the employability content hub's publication above -- two individual flat-route
   // pages (not one combined listing), matching this site's one-URL-per-topic convention
   // for every other marketing page; NewsArticle JSON-LD rather than Article, since these
   // are dated announcements rather than evergreen guide content.
+  app.get("/paleon-training-four-course-digital-skills-curriculum", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "paleon-training-four-course-digital-skills-curriculum.html"));
+  });
+  // Renamed from /paleon-training-six-course-digital-skills-curriculum when the catalog
+  // dropped to four courses -- a permanent redirect keeps old links and search results working.
   app.get("/paleon-training-six-course-digital-skills-curriculum", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "paleon-training-six-course-digital-skills-curriculum.html"));
+    res.redirect(301, "/paleon-training-four-course-digital-skills-curriculum");
   });
   app.get("/paleon-training-employability-content-hub", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "paleon-training-employability-content-hub.html"));

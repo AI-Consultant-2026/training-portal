@@ -128,7 +128,7 @@ Allow: /renewable-energy-vs-oil-and-gas-career-comparison
 Allow: /oil-gas-banking-telecoms-digital-skills
 Allow: /four-digital-skills-nigerian-graduates
 Allow: /graduate-to-job-ready-nigeria
-Allow: /paleon-training-six-course-digital-skills-curriculum
+Allow: /paleon-training-four-course-digital-skills-curriculum
 Allow: /paleon-training-employability-content-hub
 Allow: /digital-skills-nigeria-career-intelligence-guide
 Allow: /support
