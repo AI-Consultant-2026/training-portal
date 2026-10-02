@@ -29,6 +29,13 @@ function rewardPreferenceOf(user: User): ReferralRewardType {
   return isRewardType(stored) ? stored : DEFAULT_REWARD_TYPE;
 }
 
+// The phone number airtime/data rewards are sent to. Registration doesn't collect a phone,
+// so the student supplies it on /refer; it lives on profileData beside the preference.
+function payoutPhoneOf(user: User): string | null {
+  const stored = (user.profileData as Record<string, unknown>)?.referralPayoutPhone;
+  return typeof stored === "string" && stored ? stored : null;
+}
+
 function generateCandidateCode(): string {
   let body = "";
   for (let i = 0; i < REFERRAL_CODE_BODY_LENGTH; i += 1) {
@@ -130,6 +137,7 @@ export interface MyReferralSummary {
   code: string;
   shareUrl: string;
   rewardType: ReferralRewardType;
+  payoutPhone: string | null;
   rewardPerReferralNgn: number;
   welcomeBonusNgn: number;
   counts: { invited: number; joined: number; qualified: number };
@@ -171,6 +179,7 @@ export async function getMyReferralSummary(userId: string, appOrigin: string): P
     code,
     shareUrl: `${appOrigin}/register?ref=${code}`,
     rewardType: rewardPreferenceOf(user),
+    payoutPhone: payoutPhoneOf(user),
     rewardPerReferralNgn: REFERRER_REWARD_NGN,
     welcomeBonusNgn: REFEREE_REWARD_NGN,
     counts: {
@@ -206,6 +215,17 @@ export async function setRewardPreference(userId: string, rewardType: ReferralRe
   );
 
   return rewardType;
+}
+
+// Empty string clears it. Whitespace is collapsed so the admin sees one consistent format.
+export async function setPayoutPhone(userId: string, rawPhone: string): Promise<string | null> {
+  const user = await User.findByPk(userId);
+  if (!user) throw ApiError.notFound("User not found");
+
+  const phone = rawPhone.trim().replace(/\s+/g, " ");
+  user.profileData = { ...(user.profileData as Record<string, unknown>), referralPayoutPhone: phone || null };
+  await user.save();
+  return phone || null;
 }
 
 export interface CodeValidation {
@@ -273,12 +293,19 @@ export async function getLeaderboard(): Promise<{ allTime: LeaderboardEntry[]; t
 
 /* ---------------------------------- admin ---------------------------------- */
 
+export interface AdminReferralPerson {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+}
+
 export interface AdminReferralRow {
   id: string;
   code: string;
   status: "pending" | "qualified" | "void";
-  referrer: { id: string; name: string; email: string } | null;
-  referee: { id: string; name: string; email: string } | null;
+  referrer: AdminReferralPerson | null;
+  referee: AdminReferralPerson | null;
   referrerReward: { type: string; amountNgn: number; status: "pending" | "issued"; issuedAt: string | null };
   refereeReward: { type: string; amountNgn: number; status: "pending" | "issued"; issuedAt: string | null };
   joinedAt: string;
@@ -286,9 +313,14 @@ export interface AdminReferralRow {
   notes: string | null;
 }
 
-function personOf(user?: User | null): { id: string; name: string; email: string } | null {
+function personOf(user?: User | null): AdminReferralPerson | null {
   if (!user) return null;
-  return { id: user.id, name: `${user.firstName} ${user.lastName}`.trim(), email: user.email };
+  return {
+    id: user.id,
+    name: `${user.firstName} ${user.lastName}`.trim(),
+    email: user.email,
+    phone: payoutPhoneOf(user),
+  };
 }
 
 function serializeAdminRow(row: Referral): AdminReferralRow {
@@ -325,8 +357,8 @@ export async function listReferralsForAdmin(filter?: {
   const rows = await Referral.findAll({
     where,
     include: [
-      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email"] },
-      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email"] },
+      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
+      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
     ],
     order: [["createdAt", "DESC"]],
   });
@@ -344,8 +376,8 @@ export async function listReferralsForAdmin(filter?: {
 export async function markRewardIssued(referralId: string, party: RewardParty): Promise<AdminReferralRow> {
   const referral = await Referral.findByPk(referralId, {
     include: [
-      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email"] },
-      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email"] },
+      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
+      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
     ],
   });
   if (!referral) throw ApiError.notFound("Referral not found");
@@ -367,8 +399,8 @@ export async function markRewardIssued(referralId: string, party: RewardParty): 
 export async function voidReferral(referralId: string, reason?: string): Promise<AdminReferralRow> {
   const referral = await Referral.findByPk(referralId, {
     include: [
-      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email"] },
-      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email"] },
+      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
+      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
     ],
   });
   if (!referral) throw ApiError.notFound("Referral not found");

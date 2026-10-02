@@ -183,6 +183,30 @@ describe("Referrals", () => {
     expect(row?.referrerRewardType).toBe("data");
   });
 
+  it("saves, normalises and clears the payout phone, and rejects junk", async () => {
+    await register("phoner@example.com");
+    const token = await loginAs("phoner@example.com");
+    const patch = (phone: string) =>
+      request(app)
+        .patch("/api/referrals/me/payout-phone")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ phone });
+
+    const saved = await patch("  0803   123 4567 ");
+    expect(saved.status).toBe(200);
+    expect(saved.body.phone).toBe("0803 123 4567");
+
+    const me = await request(app).get("/api/referrals/me").set("Authorization", `Bearer ${token}`);
+    expect(me.body.referral.payoutPhone).toBe("0803 123 4567");
+
+    expect((await patch("0803")).status).toBe(400);
+    expect((await patch("call me")).status).toBe(400);
+
+    const cleared = await patch("");
+    expect(cleared.status).toBe(200);
+    expect(cleared.body.phone).toBeNull();
+  });
+
   describe("admin", () => {
     it("rejects non-admins", async () => {
       await register("plainstudent@example.com");
@@ -202,12 +226,19 @@ describe("Referrals", () => {
       await register("amb@example.com");
       const code = await myCode("amb@example.com");
       await referAndPay("ref-friend@example.com", code, course, adminToken);
+      const friendToken = await loginAs("ref-friend@example.com");
+      await request(app)
+        .patch("/api/referrals/me/payout-phone")
+        .set("Authorization", `Bearer ${friendToken}`)
+        .send({ phone: "+234 803 123 4567" });
 
       const list = await request(app)
         .get("/api/admin/referrals?status=qualified")
         .set("Authorization", `Bearer ${adminToken}`);
       expect(list.body.referrals).toHaveLength(1);
       expect(list.body.overview.rewardsToPayNgn).toBeGreaterThan(0);
+      expect(list.body.referrals[0].referrer.phone).toBeNull();
+      expect(list.body.referrals[0].referee.phone).toBe("+234 803 123 4567");
 
       const id = list.body.referrals[0].id;
       const issued = await request(app)

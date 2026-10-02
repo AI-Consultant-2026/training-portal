@@ -19,6 +19,11 @@ export async function setRewardPreference(rewardType: ReferralRewardType): Promi
   return res.data.rewardType;
 }
 
+export async function setPayoutPhone(phone: string): Promise<string | null> {
+  const res = await axiosClient.patch<{ phone: string | null }>("/referrals/me/payout-phone", { phone });
+  return res.data.phone;
+}
+
 export async function fetchLeaderboard(): Promise<ReferralLeaderboard> {
   const res = await axiosClient.get<{ leaderboard: ReferralLeaderboard }>("/referrals/leaderboard");
   return res.data.leaderboard;

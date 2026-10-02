@@ -44,6 +44,17 @@ export const updateRewardPreference = createAsyncThunk(
   },
 );
 
+export const updatePayoutPhone = createAsyncThunk(
+  "referrals/updatePayoutPhone",
+  async (phone: string, { rejectWithValue }) => {
+    try {
+      return await referralsApi.setPayoutPhone(phone);
+    } catch (err) {
+      return rejectWithValue(errorMessage(err, "Could not save your phone number"));
+    }
+  },
+);
+
 const referralsSlice = createSlice({
   name: "referrals",
   initialState,
@@ -74,6 +85,12 @@ const referralsSlice = createSlice({
       })
       .addCase(updateRewardPreference.fulfilled, (state, action) => {
         if (state.summary) state.summary.rewardType = action.payload;
+      })
+      .addCase(updatePayoutPhone.fulfilled, (state, action) => {
+        if (state.summary) state.summary.payoutPhone = action.payload;
+      })
+      .addCase(updatePayoutPhone.rejected, (state, action) => {
+        state.error = (action.payload as string) ?? "Could not save your phone number";
       })
       .addCase(updateRewardPreference.rejected, (state, action) => {
         state.error = (action.payload as string) ?? "Could not update your reward preference";

@@ -13,6 +13,11 @@ export const setRewardPreference = asyncHandler(async (req: Request, res: Respon
   res.json({ rewardType });
 });
 
+export const setPayoutPhone = asyncHandler(async (req: Request, res: Response) => {
+  const phone = await referralService.setPayoutPhone(req.user!.id, req.body.phone);
+  res.json({ phone });
+});
+
 export const getLeaderboard = asyncHandler(async (_req: Request, res: Response) => {
   const leaderboard = await referralService.getLeaderboard();
   res.json({ leaderboard });

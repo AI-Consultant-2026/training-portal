@@ -166,10 +166,12 @@ export function AdminReferralsPage() {
                   <td className="px-4 py-3">
                     <div className="font-medium text-gray-900">{r.referrer?.name ?? "—"}</div>
                     <div className="text-xs text-gray-500">{r.referrer?.email}</div>
+                    {r.referrer && <PhoneLine phone={r.referrer.phone} />}
                   </td>
                   <td className="px-4 py-3">
                     <div className="font-medium text-gray-900">{r.referee?.name ?? "—"}</div>
                     <div className="text-xs text-gray-500">{r.referee?.email}</div>
+                    {r.referee && <PhoneLine phone={r.referee.phone} />}
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-600">{r.code}</td>
                   <td className="px-4 py-3">
@@ -261,3 +263,14 @@ export function AdminReferralsPage() {
 }
 
 export default AdminReferralsPage;
+
+// Airtime/data rewards go to the number the student saved on /refer. Registration doesn't
+// collect a phone, so a missing one means emailing them for it before paying out.
+function PhoneLine({ phone }: { phone: string | null }) {
+  if (!phone) return <div className="text-xs text-amber-600">No phone saved</div>;
+  return (
+    <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="text-xs text-blue-700 hover:underline">
+      {phone}
+    </a>
+  );
+}

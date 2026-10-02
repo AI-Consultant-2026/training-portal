@@ -24,6 +24,7 @@ export interface MyReferralSummary {
   code: string;
   shareUrl: string;
   rewardType: ReferralRewardType;
+  payoutPhone: string | null;
   rewardPerReferralNgn: number;
   welcomeBonusNgn: number;
   counts: { invited: number; joined: number; qualified: number };
@@ -59,12 +60,19 @@ export interface AdminReferralReward {
   issuedAt: string | null;
 }
 
+export interface AdminReferralPerson {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+}
+
 export interface AdminReferral {
   id: string;
   code: string;
   status: ReferralStatus;
-  referrer: { id: string; name: string; email: string } | null;
-  referee: { id: string; name: string; email: string } | null;
+  referrer: AdminReferralPerson | null;
+  referee: AdminReferralPerson | null;
   referrerReward: AdminReferralReward;
   refereeReward: AdminReferralReward;
   joinedAt: string;
