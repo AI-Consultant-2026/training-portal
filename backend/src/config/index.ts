@@ -45,6 +45,18 @@ export const config = {
   // Paystack's webhook calls (2026-09-28). Optional: unset = the webhook refuses every
   // call with 503 and payments are confirmed by hand on /admin/candidates, as before.
   paystackSecretKey: process.env.PAYSTACK_SECRET_KEY ?? "",
+  // VTpass (2026-10-02): sends referral airtime/data rewards from /admin/referrals. Optional:
+  // with no keys the "Send airtime/data" button is hidden and rewards are paid by hand as
+  // before. VTPASS_ENV defaults to sandbox, so real money only moves once it is set to
+  // "live" deliberately.
+  vtpass: {
+    apiKey: process.env.VTPASS_API_KEY ?? "",
+    secretKey: process.env.VTPASS_SECRET_KEY ?? "",
+    publicKey: process.env.VTPASS_PUBLIC_KEY ?? "",
+    live: process.env.VTPASS_ENV === "live",
+    // Only if VTpass ever moves its API host; otherwise leave unset.
+    baseUrlOverride: process.env.VTPASS_BASE_URL ?? "",
+  },
   analytics: {
     // Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Unset or malformed = analytics
     // off: /analytics.js serves a no-op stub, so no Google script loads and no consent

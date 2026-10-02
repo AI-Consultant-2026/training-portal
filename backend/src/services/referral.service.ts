@@ -11,11 +11,11 @@ import {
   REFERRAL_REWARD_TYPES,
   ReferralRewardType,
 } from "../constants/referral";
-import { Enrollment, Referral, User } from "../models";
+import { Enrollment, Referral, ReferralPayout, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 
-type RewardParty = "referrer" | "referee";
+export type RewardParty = "referrer" | "referee";
 
 function isRewardType(value: unknown): value is ReferralRewardType {
   return typeof value === "string" && (REFERRAL_REWARD_TYPES as readonly string[]).includes(value);
@@ -31,7 +31,7 @@ function rewardPreferenceOf(user: User): ReferralRewardType {
 
 // The phone number airtime/data rewards are sent to. Registration doesn't collect a phone,
 // so the student supplies it on /refer; it lives on profileData beside the preference.
-function payoutPhoneOf(user: User): string | null {
+export function payoutPhoneOf(user: User): string | null {
   const stored = (user.profileData as Record<string, unknown>)?.referralPayoutPhone;
   return typeof stored === "string" && stored ? stored : null;
 }
@@ -293,6 +293,56 @@ export async function getLeaderboard(): Promise<{ allTime: LeaderboardEntry[]; t
 
 /* ---------------------------------- admin ---------------------------------- */
 
+// The latest VTpass send for one side's reward, if any (see referralPayout.service.ts).
+export interface AdminPayoutView {
+  id: string;
+  kind: string;
+  network: string;
+  phone: string;
+  amountNgn: number;
+  planName: string | null;
+  status: "processing" | "delivered" | "failed";
+  message: string | null;
+  providerTransactionId: string | null;
+  live: boolean;
+  sentAt: string;
+}
+
+function adminInclude() {
+  return [
+    { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
+    { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
+    { model: ReferralPayout, as: "payouts" },
+  ];
+}
+
+export async function loadAdminReferral(referralId: string): Promise<Referral> {
+  const referral = await Referral.findByPk(referralId, { include: adminInclude() });
+  if (!referral) throw ApiError.notFound("Referral not found");
+  return referral;
+}
+
+function latestPayout(row: Referral, party: RewardParty): AdminPayoutView | null {
+  const payouts = ((row as unknown as { payouts?: ReferralPayout[] }).payouts ?? [])
+    .filter((p) => p.party === party)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  const p = payouts[0];
+  if (!p) return null;
+  return {
+    id: p.id,
+    kind: p.kind,
+    network: p.network,
+    phone: p.phone,
+    amountNgn: Number(p.amountNgn),
+    planName: p.variationName,
+    status: p.status,
+    message: p.providerMessage,
+    providerTransactionId: p.providerTransactionId,
+    live: p.live,
+    sentAt: p.createdAt.toISOString(),
+  };
+}
+
 export interface AdminReferralPerson {
   id: string;
   name: string;
@@ -308,6 +358,7 @@ export interface AdminReferralRow {
   referee: AdminReferralPerson | null;
   referrerReward: { type: string; amountNgn: number; status: "pending" | "issued"; issuedAt: string | null };
   refereeReward: { type: string; amountNgn: number; status: "pending" | "issued"; issuedAt: string | null };
+  payouts: { referrer: AdminPayoutView | null; referee: AdminPayoutView | null };
   joinedAt: string;
   qualifiedAt: string | null;
   notes: string | null;
@@ -323,7 +374,7 @@ function personOf(user?: User | null): AdminReferralPerson | null {
   };
 }
 
-function serializeAdminRow(row: Referral): AdminReferralRow {
+export function serializeAdminRow(row: Referral): AdminReferralRow {
   return {
     id: row.id,
     code: row.code,
@@ -342,6 +393,7 @@ function serializeAdminRow(row: Referral): AdminReferralRow {
       status: row.refereeRewardStatus as "pending" | "issued",
       issuedAt: row.refereeRewardIssuedAt ? row.refereeRewardIssuedAt.toISOString() : null,
     },
+    payouts: { referrer: latestPayout(row, "referrer"), referee: latestPayout(row, "referee") },
     joinedAt: row.createdAt.toISOString(),
     qualifiedAt: row.qualifiedAt ? row.qualifiedAt.toISOString() : null,
     notes: row.notes,
@@ -356,10 +408,7 @@ export async function listReferralsForAdmin(filter?: {
 
   const rows = await Referral.findAll({
     where,
-    include: [
-      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
-      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
-    ],
+    include: adminInclude(),
     order: [["createdAt", "DESC"]],
   });
 
@@ -375,14 +424,16 @@ export async function listReferralsForAdmin(filter?: {
 
 export async function markRewardIssued(referralId: string, party: RewardParty): Promise<AdminReferralRow> {
   const referral = await Referral.findByPk(referralId, {
-    include: [
-      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
-      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
-    ],
+    include: adminInclude(),
   });
   if (!referral) throw ApiError.notFound("Referral not found");
   if (referral.status !== "qualified") {
     throw ApiError.badRequest("Only a qualified referral has a reward to issue");
+  }
+  // A VTpass send that hasn't settled may still deliver; marking it paid by hand now could
+  // lead to it being paid a second way too. Check the send's status first.
+  if (latestPayout(referral, party)?.status === "processing") {
+    throw ApiError.badRequest("A VTpass top-up for this reward is still processing; check its status first");
   }
 
   if (party === "referrer") {
@@ -398,14 +449,14 @@ export async function markRewardIssued(referralId: string, party: RewardParty): 
 
 export async function voidReferral(referralId: string, reason?: string): Promise<AdminReferralRow> {
   const referral = await Referral.findByPk(referralId, {
-    include: [
-      { model: User, as: "referrer", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
-      { model: User, as: "referee", attributes: ["id", "firstName", "lastName", "email", "profileData"] },
-    ],
+    include: adminInclude(),
   });
   if (!referral) throw ApiError.notFound("Referral not found");
   if (referral.referrerRewardStatus === "issued" || referral.refereeRewardStatus === "issued") {
     throw ApiError.badRequest("This referral has an already-issued reward and cannot be voided");
+  }
+  if (latestPayout(referral, "referrer")?.status === "processing" || latestPayout(referral, "referee")?.status === "processing") {
+    throw ApiError.badRequest("A VTpass top-up for this referral is still processing; check its status first");
   }
 
   referral.status = "void";

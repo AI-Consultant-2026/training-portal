@@ -1,5 +1,10 @@
 import {
   AdminReferral,
+  DataPlan,
+  PayoutConfig,
+  PayoutOutcome,
+  PayoutPreview,
+  VtpassNetwork,
   AdminReferralOverview,
   MyReferralSummary,
   ReferralLeaderboard,
@@ -65,4 +70,38 @@ export async function issueReferralReward(
 export async function voidReferral(id: string, reason?: string): Promise<AdminReferral> {
   const res = await axiosClient.post<{ referral: AdminReferral }>(`/admin/referrals/${id}/void`, { reason });
   return res.data.referral;
+}
+
+/* ------------------------- admin: VTpass airtime/data ------------------------ */
+
+export async function fetchPayoutConfig(): Promise<PayoutConfig> {
+  const res = await axiosClient.get<PayoutConfig>("/admin/referral-payouts/config");
+  return res.data;
+}
+
+export async function fetchPayoutPreview(id: string, party: "referrer" | "referee"): Promise<PayoutPreview> {
+  const res = await axiosClient.get<{ preview: PayoutPreview }>(`/admin/referrals/${id}/payout-preview`, {
+    params: { party },
+  });
+  return res.data.preview;
+}
+
+export async function fetchDataPlans(network: VtpassNetwork, maxNgn: number): Promise<DataPlan[]> {
+  const res = await axiosClient.get<{ plans: DataPlan[] }>("/admin/referral-payouts/data-plans", {
+    params: { network, maxNgn },
+  });
+  return res.data.plans;
+}
+
+export async function sendReferralReward(
+  id: string,
+  body: { party: "referrer" | "referee"; network: VtpassNetwork; variationCode?: string },
+): Promise<PayoutOutcome> {
+  const res = await axiosClient.post<PayoutOutcome>(`/admin/referrals/${id}/send-reward`, body);
+  return res.data;
+}
+
+export async function refreshReferralPayout(payoutId: string): Promise<PayoutOutcome> {
+  const res = await axiosClient.post<PayoutOutcome>(`/admin/referral-payouts/${payoutId}/refresh`);
+  return res.data;
 }

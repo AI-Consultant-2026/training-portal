@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
-import { AdminReferral, AdminReferralOverview } from "../../types/api";
+import { AdminPayout, AdminReferral, AdminReferralOverview, PayoutConfig } from "../../types/api";
 import * as referralsApi from "../../api/referrals.api";
+import { SendRewardDialog } from "./SendRewardDialog";
 
 function formatNgn(amount: number): string {
   return `₦${amount.toLocaleString("en-NG")}`;
@@ -12,6 +13,9 @@ function formatNgn(amount: number): string {
 
 type RewardFilter = "all" | "pending" | "issued";
 type StatusFilter = "all" | "pending" | "qualified" | "void";
+type Party = "referrer" | "referee";
+
+const NETWORK_LABEL: Record<string, string> = { mtn: "MTN", airtel: "Airtel", glo: "Glo", etisalat: "9mobile" };
 
 export function AdminReferralsPage() {
   const [referrals, setReferrals] = useState<AdminReferral[]>([]);
@@ -21,6 +25,9 @@ export function AdminReferralsPage() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [rewardFilter, setRewardFilter] = useState<RewardFilter>("all");
+  const [payoutConfig, setPayoutConfig] = useState<PayoutConfig | null>(null);
+  const [sending, setSending] = useState<{ referral: AdminReferral; party: Party } | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setStatus("loading");
@@ -40,6 +47,69 @@ export function AdminReferralsPage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  const loadPayoutConfig = useCallback(() => {
+    referralsApi
+      .fetchPayoutConfig()
+      .then(setPayoutConfig)
+      .catch(() => setPayoutConfig(null));
+  }, []);
+
+  useEffect(() => {
+    loadPayoutConfig();
+  }, [loadPayoutConfig]);
+
+  async function refreshOverview() {
+    const data = await referralsApi.fetchAdminReferrals({
+      status: statusFilter === "all" ? undefined : statusFilter,
+      rewardStatus: rewardFilter === "all" ? undefined : rewardFilter,
+    });
+    setOverview(data.overview);
+  }
+
+  function afterPayout(updated: AdminReferral, message: string) {
+    replaceRow(updated);
+    if (message) setNotice(message);
+    refreshOverview().catch(() => {});
+    loadPayoutConfig();
+  }
+
+  async function checkStatus(referralId: string, payout: AdminPayout) {
+    setBusyId(referralId);
+    setError(null);
+    setNotice(null);
+    try {
+      const outcome = await referralsApi.refreshReferralPayout(payout.id);
+      afterPayout(
+        outcome.referral,
+        outcome.status === "delivered"
+          ? "VTpass confirmed delivery. Reward marked paid."
+          : outcome.status === "failed"
+            ? `VTpass says it failed: ${outcome.message}. You can send it again.`
+            : "Still processing at VTpass. Try again in a few minutes.",
+      );
+    } catch (err) {
+      setError(
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error
+          ?.message ?? "Could not check that payout",
+      );
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  // VTpass can only send airtime/data, only once nothing is already in flight for that reward.
+  function canSend(r: AdminReferral, party: Party): boolean {
+    const reward = party === "referrer" ? r.referrerReward : r.refereeReward;
+    return (
+      !!payoutConfig?.enabled &&
+      r.status === "qualified" &&
+      reward.status === "pending" &&
+      (reward.type === "airtime" || reward.type === "data") &&
+      !!r[party]?.phone &&
+      r.payouts[party]?.status !== "processing"
+    );
+  }
 
   function replaceRow(updated: AdminReferral) {
     setReferrals((rows) => rows.map((r) => (r.id === updated.id ? updated : r)));
@@ -90,9 +160,24 @@ export function AdminReferralsPage() {
         </Link>
       </div>
       <p className="mt-1 text-sm text-gray-600">
-        A referral qualifies when the referred student&apos;s first course payment is confirmed. Pay
-        rewards out manually (airtime, data, or course credit) then mark them issued here.
+        A referral qualifies when the referred student&apos;s first course payment is confirmed.{" "}
+        {payoutConfig?.enabled
+          ? "Send airtime and data through VTpass from here; pay course credit by hand, then mark it paid."
+          : "Pay rewards out manually (airtime, data, or course credit) then mark them issued here."}
       </p>
+      {payoutConfig?.enabled && (
+        <p
+          className={`mt-3 inline-block rounded-md px-3 py-1.5 text-xs ${
+            payoutConfig.live ? "bg-green-50 text-green-800" : "bg-amber-50 text-amber-800"
+          }`}
+        >
+          VTpass: <strong>{payoutConfig.live ? "Live" : "Test mode (sandbox)"}</strong>
+          {payoutConfig.balanceNgn !== null && <> · wallet balance {formatNgn(payoutConfig.balanceNgn)}</>}
+        </p>
+      )}
+      {notice && (
+        <p className="mt-3 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-900">{notice}</p>
+      )}
 
       {overview && (
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -202,6 +287,13 @@ export function AdminReferralsPage() {
                       >
                         {r.referrerReward.status === "issued" ? "issued" : "awaiting"}
                       </span>
+                      {r.payouts.referrer && (
+                        <PayoutLine
+                          payout={r.payouts.referrer}
+                          busy={busyId === r.id}
+                          onCheck={() => checkStatus(r.id, r.payouts.referrer!)}
+                        />
+                      )}
                     </div>
                     <div>
                       Friend: {formatNgn(r.refereeReward.amountNgn)} {r.refereeReward.type} —{" "}
@@ -212,12 +304,32 @@ export function AdminReferralsPage() {
                       >
                         {r.refereeReward.status === "issued" ? "issued" : "awaiting"}
                       </span>
+                      {r.payouts.referee && (
+                        <PayoutLine
+                          payout={r.payouts.referee}
+                          busy={busyId === r.id}
+                          onCheck={() => checkStatus(r.id, r.payouts.referee!)}
+                        />
+                      )}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     {r.status === "qualified" && (
                       <div className="flex flex-col items-end gap-1">
-                        {r.referrerReward.status === "pending" && (
+                        {canSend(r, "referrer") && (
+                          <button
+                            type="button"
+                            disabled={busyId === r.id}
+                            onClick={() => {
+                              setNotice(null);
+                              setSending({ referral: r, party: "referrer" });
+                            }}
+                            className="text-xs font-semibold text-green-700 hover:underline disabled:opacity-50"
+                          >
+                            Send {r.referrerReward.type} to ambassador
+                          </button>
+                        )}
+                        {r.referrerReward.status === "pending" && r.payouts.referrer?.status !== "processing" && (
                           <button
                             type="button"
                             disabled={busyId === r.id}
@@ -227,7 +339,20 @@ export function AdminReferralsPage() {
                             Mark ambassador paid
                           </button>
                         )}
-                        {r.refereeReward.status === "pending" && (
+                        {canSend(r, "referee") && (
+                          <button
+                            type="button"
+                            disabled={busyId === r.id}
+                            onClick={() => {
+                              setNotice(null);
+                              setSending({ referral: r, party: "referee" });
+                            }}
+                            className="text-xs font-semibold text-green-700 hover:underline disabled:opacity-50"
+                          >
+                            Send {r.refereeReward.type} to friend
+                          </button>
+                        )}
+                        {r.refereeReward.status === "pending" && r.payouts.referee?.status !== "processing" && (
                           <button
                             type="button"
                             disabled={busyId === r.id}
@@ -241,7 +366,9 @@ export function AdminReferralsPage() {
                     )}
                     {r.status !== "void" &&
                       r.referrerReward.status === "pending" &&
-                      r.refereeReward.status === "pending" && (
+                      r.refereeReward.status === "pending" &&
+                      r.payouts.referrer?.status !== "processing" &&
+                      r.payouts.referee?.status !== "processing" && (
                         <button
                           type="button"
                           disabled={busyId === r.id}
@@ -258,11 +385,46 @@ export function AdminReferralsPage() {
           </table>
         </div>
       )}
+      {sending && (
+        <SendRewardDialog
+          referral={sending.referral}
+          party={sending.party}
+          onClose={() => setSending(null)}
+          onDone={afterPayout}
+        />
+      )}
     </div>
   );
 }
 
 export default AdminReferralsPage;
+
+function PayoutLine({ payout, busy, onCheck }: { payout: AdminPayout; busy: boolean; onCheck: () => void }) {
+  const what = `${payout.planName ?? `${formatNgn(payout.amountNgn)} ${payout.kind}`} → ${payout.phone} (${NETWORK_LABEL[payout.network] ?? payout.network})${payout.live ? "" : " [test]"}`;
+  if (payout.status === "delivered") {
+    return (
+      <div className="text-green-700">
+        VTpass delivered {what}
+        {payout.providerTransactionId && <span className="text-gray-400"> · ref {payout.providerTransactionId}</span>}
+      </div>
+    );
+  }
+  if (payout.status === "failed") {
+    return (
+      <div className="text-red-700">
+        VTpass failed: {payout.message ?? "unknown error"} ({what})
+      </div>
+    );
+  }
+  return (
+    <div className="text-amber-700">
+      VTpass processing {what} ·{" "}
+      <button type="button" onClick={onCheck} disabled={busy} className="font-medium underline disabled:opacity-50">
+        Check status
+      </button>
+    </div>
+  );
+}
 
 // Airtime/data rewards go to the number the student saved on /refer. Registration doesn't
 // collect a phone, so a missing one means emailing them for it before paying out.

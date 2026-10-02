@@ -16,6 +16,7 @@ import { Partner, initPartnerModel } from "./partner.model";
 import { Payment, initPaymentModel } from "./payment.model";
 import { ProgressTracking, initProgressTrackingModel } from "./progressTracking.model";
 import { Referral, initReferralModel } from "./referral.model";
+import { ReferralPayout, initReferralPayoutModel } from "./referralPayout.model";
 import { Quiz, initQuizModel } from "./quiz.model";
 import { QuizAnswer, initQuizAnswerModel } from "./quizAnswer.model";
 import { QuizAttempt, initQuizAttemptModel } from "./quizAttempt.model";
@@ -66,6 +67,7 @@ initLeadModel(sequelize);
 initPaymentModel(sequelize);
 initPartnerModel(sequelize);
 initReferralModel(sequelize);
+initReferralPayoutModel(sequelize);
 initCourseFeedbackModel(sequelize);
 initEmailCampaignModel(sequelize);
 initEmailCampaignRecipientModel(sequelize);
@@ -102,6 +104,8 @@ Referral.belongsTo(User, { foreignKey: "referrerId", as: "referrer" });
 User.hasOne(Referral, { foreignKey: "refereeId", as: "referralReceived" });
 Referral.belongsTo(User, { foreignKey: "refereeId", as: "referee" });
 Referral.belongsTo(Enrollment, { foreignKey: "qualifyingEnrollmentId", as: "qualifyingEnrollment" });
+Referral.hasMany(ReferralPayout, { foreignKey: "referralId", as: "payouts" });
+ReferralPayout.belongsTo(Referral, { foreignKey: "referralId", as: "referral" });
 
 CourseModule.hasMany(Assignment, { foreignKey: "moduleId", as: "assignments" });
 Assignment.belongsTo(CourseModule, { foreignKey: "moduleId", as: "module" });
@@ -184,6 +188,7 @@ export {
   Payment,
   ProgressTracking,
   Referral,
+  ReferralPayout,
   Quiz,
   QuizAnswer,
   QuizAttempt,

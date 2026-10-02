@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { config } from "../config";
+import * as referralPayoutService from "../services/referralPayout.service";
 import * as referralService from "../services/referral.service";
 import { asyncHandler } from "../utils/asyncHandler";
 
@@ -47,4 +48,41 @@ export const issueReward = asyncHandler(async (req: Request, res: Response) => {
 export const voidReferral = asyncHandler(async (req: Request, res: Response) => {
   const referral = await referralService.voidReferral(req.params.id as string, req.body.reason);
   res.json({ referral });
+});
+
+/* --------------------------- admin: VTpass payouts -------------------------- */
+
+export const getPayoutConfig = asyncHandler(async (_req: Request, res: Response) => {
+  res.json(await referralPayoutService.getPayoutConfig());
+});
+
+export const previewPayout = asyncHandler(async (req: Request, res: Response) => {
+  const preview = await referralPayoutService.previewPayout(
+    req.params.id as string,
+    req.query.party as "referrer" | "referee",
+  );
+  res.json({ preview });
+});
+
+export const listDataPlans = asyncHandler(async (req: Request, res: Response) => {
+  const plans = await referralPayoutService.listDataPlansWithin(
+    req.query.network as "mtn" | "airtel" | "glo" | "etisalat",
+    Number(req.query.maxNgn),
+  );
+  res.json({ plans });
+});
+
+export const sendReward = asyncHandler(async (req: Request, res: Response) => {
+  const outcome = await referralPayoutService.sendReward({
+    referralId: req.params.id as string,
+    party: req.body.party,
+    network: req.body.network,
+    variationCode: req.body.variationCode,
+    adminId: req.user!.id,
+  });
+  res.json(outcome);
+});
+
+export const refreshPayout = asyncHandler(async (req: Request, res: Response) => {
+  res.json(await referralPayoutService.refreshPayout(req.params.id as string));
 });

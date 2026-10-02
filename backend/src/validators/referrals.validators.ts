@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { REFERRAL_REWARD_TYPES } from "../constants/referral";
+import { VTPASS_NETWORKS } from "../constants/vtpass";
 
 export const setRewardPreferenceSchema = z.object({
   body: z.object({
@@ -41,5 +42,26 @@ export const issueRewardSchema = z.object({
 export const voidReferralSchema = z.object({
   body: z.object({
     reason: z.string().max(500).optional(),
+  }),
+});
+
+export const payoutPreviewSchema = z.object({
+  query: z.object({
+    party: z.enum(["referrer", "referee"]),
+  }),
+});
+
+export const dataPlansSchema = z.object({
+  query: z.object({
+    network: z.enum(VTPASS_NETWORKS),
+    maxNgn: z.coerce.number().positive(),
+  }),
+});
+
+export const sendRewardSchema = z.object({
+  body: z.object({
+    party: z.enum(["referrer", "referee"]),
+    network: z.enum(VTPASS_NETWORKS),
+    variationCode: z.string().min(1).max(100).optional(),
   }),
 });

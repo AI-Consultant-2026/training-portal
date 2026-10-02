@@ -25,8 +25,11 @@ import {
 } from "../validators/emailCampaigns.validators";
 import { createPartnerSchema, updatePartnerSchema } from "../validators/partners.validators";
 import {
+  dataPlansSchema,
   issueRewardSchema,
   listReferralsSchema,
+  payoutPreviewSchema,
+  sendRewardSchema,
   voidReferralSchema,
 } from "../validators/referrals.validators";
 
@@ -73,6 +76,15 @@ adminRouter.post(
   referralsController.issueReward,
 );
 adminRouter.post("/referrals/:id/void", validate(voidReferralSchema), referralsController.voidReferral);
+adminRouter.get("/referral-payouts/config", referralsController.getPayoutConfig);
+adminRouter.get("/referral-payouts/data-plans", validate(dataPlansSchema), referralsController.listDataPlans);
+adminRouter.post("/referral-payouts/:id/refresh", referralsController.refreshPayout);
+adminRouter.get(
+  "/referrals/:id/payout-preview",
+  validate(payoutPreviewSchema),
+  referralsController.previewPayout,
+);
+adminRouter.post("/referrals/:id/send-reward", validate(sendRewardSchema), referralsController.sendReward);
 
 adminRouter.get("/quizzes", adminController.listQuizzes);
 adminRouter.patch(

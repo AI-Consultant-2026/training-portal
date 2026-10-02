@@ -67,6 +67,49 @@ export interface AdminReferralPerson {
   phone: string | null;
 }
 
+export type VtpassNetwork = "mtn" | "airtel" | "glo" | "etisalat";
+
+export interface AdminPayout {
+  id: string;
+  kind: string;
+  network: VtpassNetwork | string;
+  phone: string;
+  amountNgn: number;
+  planName: string | null;
+  status: "processing" | "delivered" | "failed";
+  message: string | null;
+  providerTransactionId: string | null;
+  live: boolean;
+  sentAt: string;
+}
+
+export interface PayoutConfig {
+  enabled: boolean;
+  live: boolean;
+  balanceNgn: number | null;
+}
+
+export interface PayoutPreview {
+  kind: "airtime" | "data";
+  amountNgn: number;
+  name: string;
+  phone: string;
+  suggestedNetwork: VtpassNetwork | null;
+  live: boolean;
+}
+
+export interface DataPlan {
+  code: string;
+  name: string;
+  amountNgn: number;
+}
+
+export interface PayoutOutcome {
+  referral: AdminReferral;
+  status: AdminPayout["status"];
+  message: string;
+}
+
 export interface AdminReferral {
   id: string;
   code: string;
@@ -75,6 +118,7 @@ export interface AdminReferral {
   referee: AdminReferralPerson | null;
   referrerReward: AdminReferralReward;
   refereeReward: AdminReferralReward;
+  payouts: { referrer: AdminPayout | null; referee: AdminPayout | null };
   joinedAt: string;
   qualifiedAt: string | null;
   notes: string | null;
