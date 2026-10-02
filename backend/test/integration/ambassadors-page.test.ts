@@ -16,8 +16,10 @@ describe("Student Ambassador Programme page", () => {
     expect(res.text).toContain(naira(REFERRER_REWARD_NGN * 10));
     expect(res.text).not.toMatch(/\{\{[A-Z0-9_]+\}\}/);
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ambassadors">');
-    // Describes the friend's reward correctly: paid after payment, never money off.
-    expect(res.text).toContain("welcome reward after their first payment");
+    // Describes the friend's reward correctly: airtime paid after payment, never money off,
+    // and never a choice (the friend's reward is always airtime).
+    expect(res.text).toContain(`${naira(REFEREE_REWARD_NGN)} in airtime after their first payment`);
+    expect(res.text).not.toMatch(/their choice/i);
     expect(res.text).not.toMatch(/off (their|your) first course/i);
   });
 
