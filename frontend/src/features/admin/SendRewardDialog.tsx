@@ -116,8 +116,8 @@ export function SendRewardDialog({
         <div className="space-y-4">
           {preview.live ? (
             <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-800">
-              <strong>Live:</strong> this spends real money from the VTpass wallet. Airtime sent to a
-              wrong number can&apos;t be got back.
+              <strong>Live:</strong> this spends real money from the VTpass wallet.{" "}
+              {preview.kind === "data" ? "Data" : "Airtime"} sent to a wrong number can&apos;t be got back.
             </p>
           ) : (
             <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
