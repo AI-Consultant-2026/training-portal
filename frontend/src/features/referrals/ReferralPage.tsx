@@ -115,7 +115,7 @@ type CopyTarget = "code" | "link" | "instagram";
 function ShareCard({ summary }: { summary: MyReferralSummary }) {
   const [copied, setCopied] = useState<CopyTarget | null>(null);
 
-  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up to receive your discount: ${summary.shareUrl}`;
+  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatNgn(summary.welcomeBonusNgn)} in airtime once your first course payment is confirmed: ${summary.shareUrl}`;
   const encodedUrl = encodeURIComponent(summary.shareUrl);
   const encodedMessage = encodeURIComponent(shareMessage);
   const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
@@ -140,7 +140,7 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
         Earn {formatNgn(summary.rewardPerReferralNgn)} for every friend who joins and pays.
       </p>
       <p className="text-sm text-blue-800">
-        They get {formatNgn(summary.welcomeBonusNgn)} off their first course for using your code.
+        They get {formatNgn(summary.welcomeBonusNgn)} in airtime once their first course payment is confirmed.
       </p>
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
@@ -238,7 +238,7 @@ function HowItWorks({ summary }: { summary: MyReferralSummary }) {
       title: "They sign up & pay",
       body: `They enter ${summary.code} when registering and pay for any course — and earn a ${formatNgn(
         summary.welcomeBonusNgn,
-      )} welcome reward once their payment is confirmed.`,
+      )} airtime welcome reward once their payment is confirmed.`,
     },
     {
       title: "You both get rewarded",
