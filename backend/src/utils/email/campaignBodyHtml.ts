@@ -21,6 +21,26 @@ function safeHref(attrs: string): string | null {
   return /^(https?:|mailto:|tel:)/i.test(href) ? href : null;
 }
 
+function attrValue(attrs: string, name: string): string {
+  const m = attrs.match(new RegExp(`\\b${name}\\s*=\\s*("([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"));
+  return (m?.[2] ?? m?.[3] ?? m?.[4] ?? "").trim();
+}
+
+// Images are only allowed from our own /images/ folder (e.g. a poster added under
+// marketing/images/email/), so a campaign can't carry third-party tracking pixels.
+const OWN_IMAGE_SRC = /^https:\/\/paleontraining\.com\/images\/[a-z0-9/-]+\.(jpg|png)$/;
+
+function safeImg(attrs: string): string | null {
+  const src = decodeAttr(attrValue(attrs, "src"));
+  if (!OWN_IMAGE_SRC.test(src)) return null;
+  const alt = decodeAttr(attrValue(attrs, "alt"));
+  return `<img src="${src}" alt="${escapeHtml(alt).replace(/"/g, "&quot;")}" width="560">`;
+}
+
+function decodeAttr(value: string): string {
+  return value.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+
 // Server-side allowlist, independent of what the browser sent: every tag is either
 // rebuilt from the allowlist with no attributes (bar a checked link href) or dropped,
 // comments and script/style blocks are removed, and any "<" left over in text is escaped.
@@ -38,6 +58,10 @@ export function sanitizeCampaignHtml(html: string): string {
     if (tag === "div") tag = "p";
     if (tag === "h1") tag = "h2";
     if (tag === "h4" || tag === "h5" || tag === "h6") tag = "h3";
+    if (tag === "img") {
+      if (!closing) out += safeImg(m[3]) ?? "";
+      continue;
+    }
     if (!ALLOWED_TAGS.has(tag)) continue;
     if (tag === "br") {
       if (!closing) out += "<br>";
@@ -64,11 +88,12 @@ const INLINE_STYLES: Record<string, string> = {
   h3: "margin: 0 0 12px; font-size: 17px; font-weight: 600;",
   blockquote: "margin: 0 0 16px; padding-left: 12px; border-left: 3px solid #d1d5db;",
   a: "color: #1d4ed8;",
+  img: "display: block; max-width: 100%; height: auto; border: 0; margin: 0 0 16px;",
 };
 
 // Most email clients ignore <style> blocks, so spacing goes inline on each element.
 export function inlineEmailStyles(html: string): string {
-  return html.replace(/<(p|ul|ol|h2|h3|blockquote|a)(\s[^>]*)?>/g, (_m, tag: string, attrs = "") =>
+  return html.replace(/<(p|ul|ol|h2|h3|blockquote|a|img)(\s[^>]*)?>/g, (_m, tag: string, attrs = "") =>
     `<${tag}${attrs} style="${INLINE_STYLES[tag]}">`,
   );
 }

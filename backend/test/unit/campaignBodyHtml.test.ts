@@ -17,6 +17,19 @@ describe("sanitizeCampaignHtml", () => {
     expect(out).toBe("<p>Hi</p><a>bad</a>");
   });
 
+  it("keeps an image hosted under our own /images/ folder, with only src and alt", () => {
+    expect(
+      sanitizeCampaignHtml('<p>Hi</p><img src="https://paleontraining.com/images/email/ambassador-zoom-saturdays.jpg" alt="Zoom &amp; you" onerror="x()" style="width:9px">'),
+    ).toBe('<p>Hi</p><img src="https://paleontraining.com/images/email/ambassador-zoom-saturdays.jpg" alt="Zoom &amp; you" width="560">');
+  });
+
+  it("drops images from anywhere else (tracking pixels, http, other paths)", () => {
+    const out = sanitizeCampaignHtml(
+      '<img src="https://evil.example/pixel.png"><img src="http://paleontraining.com/images/a.jpg"><img src="https://paleontraining.com/api/x.jpg"><img src="https://paleontraining.com/images/a.jpg?u=1"><img src="https://paleontraining.com.evil.example/images/a.jpg">',
+    );
+    expect(out).toBe("");
+  });
+
   it("maps divs to paragraphs and escapes stray angle brackets in text", () => {
     expect(sanitizeCampaignHtml("<div>a < b</div>")).toBe("<p>a &lt; b</p>");
   });
@@ -34,6 +47,12 @@ describe("htmlToPlainText", () => {
 });
 
 describe("inlineEmailStyles", () => {
+  it("makes images responsive", () => {
+    expect(inlineEmailStyles('<img src="https://paleontraining.com/images/email/a.jpg" alt="" width="560">')).toBe(
+      '<img src="https://paleontraining.com/images/email/a.jpg" alt="" width="560" style="display: block; max-width: 100%; height: auto; border: 0; margin: 0 0 16px;">',
+    );
+  });
+
   it("adds inline spacing to paragraphs and lists", () => {
     expect(inlineEmailStyles("<p>x</p><ul><li>y</li></ul>")).toBe(
       '<p style="margin: 0 0 16px;">x</p><ul style="margin: 0 0 16px; padding-left: 24px;"><li>y</li></ul>',

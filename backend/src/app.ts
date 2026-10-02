@@ -477,6 +477,13 @@ export function createApp() {
   app.get("/learner-voices.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "learner-voices.js"));
   });
+  // Images embedded in Admin Email Client campaigns (2026-10-02). Campaign bodies may
+  // only reference images under /images/ on this site (see campaignBodyHtml.ts), and
+  // they need to stay put after sending because mail clients fetch them when opened.
+  app.get("/images/email/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "email", req.params.file));
+  });
   // Sample certificate images for the course pages' "Before you enrol" section
   // (2026-09-25), generated from the real certificate PDF by
   // scripts/generate-sample-certificates.ts.
