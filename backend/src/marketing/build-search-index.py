@@ -16,7 +16,7 @@ MARKETING_DIR = os.path.dirname(os.path.abspath(__file__))
 # /privacy, which are public utility pages left out of the sitemap on purpose.
 URLS = [
     "welcome", "executive-training", "trainingportalprocess",
-    "cyber-security-fundamentals-course", "gis-and-drone-mapping-course", "digital-marketing-course", "hse-fundamentals-course", "refer", "ambassadors",
+    "cyber-security-fundamentals-course", "gis-and-drone-mapping-course", "digital-marketing-course", "hse-fundamentals-course", "refer", "ambassadors", "ambassador-walkthrough",
     "oil-and-gas-careers-nigeria", "corporate-training-nigeria",
     "banking-telecom-training-nigeria", "digital-skills-jobs-nigeria",
     "hse-training-nigeria", "university-partners",

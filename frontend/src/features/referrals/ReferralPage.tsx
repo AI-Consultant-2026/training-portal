@@ -60,7 +60,10 @@ export function ReferralPage() {
       <h1 className="text-2xl font-semibold text-gray-900">Refer &amp; earn</h1>
       <p className="mt-1 text-sm text-gray-600">
         Invite friends who want to build employable digital skills. When they join and pay for a course,
-        you both get rewarded.
+        you both get rewarded.{" "}
+        <a href="/ambassador-walkthrough" className="font-medium text-blue-600 hover:underline">
+          New here? See how it works, step by step
+        </a>
       </p>
 
       {error && (
@@ -323,8 +326,8 @@ function RewardPreference({
           Phone number for airtime or data
         </label>
         <p className="mt-1 text-xs text-gray-600">
-          We send airtime and data rewards to this number. Include your network if it&apos;s a ported
-          number.
+          We send airtime and data rewards to this Nigerian mobile number. If you&apos;ve moved it to
+          a different network, tell us on WhatsApp so we send it on the right one.
         </p>
         <div className="mt-2 flex gap-2">
           <input

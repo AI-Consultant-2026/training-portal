@@ -38,6 +38,8 @@ Allow: /gis-mapping-oil-and-gas-nigeria
 Allow: /nysc-digital-skills-oil-and-gas-career
 Allow: /refer$
 Allow: /ambassadors
+Allow: /ambassador-walkthrough
+Allow: /images/ambassador-walkthrough/
 Allow: /practical-digital-skills-nigerian-graduates
 Allow: /images/articles/
 Allow: /images/og/

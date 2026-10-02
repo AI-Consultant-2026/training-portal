@@ -303,6 +303,28 @@ export function createApp() {
   app.get("/ambassadors.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "ambassadors.js"));
   });
+  // New-ambassador walkthrough (2026-10-02): an interactive, screenshot-led tour of getting a
+  // PLN code and being paid in airtime or data. Amounts are filled in from constants/referral.ts
+  // like /refer and /ambassadors; the step-by-step behaviour is in ambassador-walkthrough.js.
+  let ambassadorWalkthroughHtml: string | null = null;
+  app.get("/ambassador-walkthrough", (req, res) => {
+    if (!ambassadorWalkthroughHtml) {
+      const naira = (n: number) => `\u20A6${n.toLocaleString("en-NG")}`;
+      ambassadorWalkthroughHtml = fs
+        .readFileSync(path.join(__dirname, "marketing", "ambassador-walkthrough.html"), "utf8")
+        .replace(/\{\{REFERRER_REWARD\}\}/g, naira(REFERRER_REWARD_NGN))
+        .replace(/\{\{REFEREE_REWARD\}\}/g, naira(REFEREE_REWARD_NGN));
+    }
+    res.type("html").send(ambassadorWalkthroughHtml);
+  });
+  app.get("/ambassador-walkthrough.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "ambassador-walkthrough.js"));
+  });
+  // Its screenshots. The pattern keeps this from serving anything outside that folder.
+  app.get("/images/ambassador-walkthrough/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "ambassador-walkthrough", req.params.file));
+  });
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
   });
