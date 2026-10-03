@@ -312,9 +312,6 @@ export function RegisterPage() {
           Log in
         </Link>
       </p>
-      <p className="mt-6 border-t border-gray-200 pt-4 text-xs text-gray-500">
-        Paleon Training &middot; Warri, Delta State, Nigeria &middot; Course fees in naira (&#8358;)
-      </p>
     </div>
   );
 }
