@@ -14,6 +14,7 @@ import {
 import { Enrollment, Referral, ReferralPayout, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
+import { VTPASS_NETWORKS, type VtpassNetwork } from "../constants/vtpass";
 
 export type RewardParty = "referrer" | "referee";
 
@@ -29,11 +30,20 @@ function rewardPreferenceOf(user: User): ReferralRewardType {
   return isRewardType(stored) ? stored : DEFAULT_REWARD_TYPE;
 }
 
-// The phone number airtime/data rewards are sent to. Registration doesn't collect a phone,
-// so the student supplies it on /refer; it lives on profileData beside the preference.
+// The phone number airtime/data rewards are sent to. Collected at registration (since
+// 2026-10-03) and editable on /refer; it lives on profileData beside the preference.
 export function payoutPhoneOf(user: User): string | null {
   const stored = (user.profileData as Record<string, unknown>)?.referralPayoutPhone;
   return typeof stored === "string" && stored ? stored : null;
+}
+
+// The mobile network the student picked at registration, if any. Numbers can be ported, so
+// the admin payout dialog still asks the admin to confirm it.
+export function mobileNetworkOf(user: User): VtpassNetwork | null {
+  const stored = (user.profileData as Record<string, unknown>)?.mobileNetwork;
+  return typeof stored === "string" && (VTPASS_NETWORKS as readonly string[]).includes(stored)
+    ? (stored as VtpassNetwork)
+    : null;
 }
 
 function generateCandidateCode(): string {

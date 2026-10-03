@@ -15,6 +15,7 @@ import {
   AdminReferralRow,
   RewardParty,
   loadAdminReferral,
+  mobileNetworkOf,
   payoutPhoneOf,
   serializeAdminRow,
 } from "./referral.service";
@@ -93,7 +94,7 @@ export async function previewPayout(referralId: string, party: RewardParty): Pro
     amountNgn: reward.amountNgn,
     name: `${person.firstName} ${person.lastName}`.trim(),
     phone,
-    suggestedNetwork: guessNetwork(phone),
+    suggestedNetwork: mobileNetworkOf(person) ?? guessNetwork(phone),
     live: config.vtpass.live,
   };
 }

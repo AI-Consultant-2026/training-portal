@@ -10,6 +10,8 @@ export interface RegisterInput {
   courseInterest: string;
   university: string;
   referralCode?: string;
+  phone: string;
+  mobileNetwork: string;
 }
 
 export interface LoginInput {

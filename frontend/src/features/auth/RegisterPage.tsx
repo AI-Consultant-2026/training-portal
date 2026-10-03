@@ -74,11 +74,22 @@ export const REGISTRATION_COURSE_INTERESTS = COURSE_INTERESTS.filter(
 // the register request is rejected if the value isn't in that list.
 export const REGISTRATION_STATUSES = ["Graduate", "Current Student", "Non-Graduate"];
 
+// Values are VTpass's network names (backend/src/constants/vtpass.ts), so the admin payout
+// dialog can use the student's choice directly. 9mobile is still "etisalat" there.
+export const MOBILE_NETWORKS = [
+  { value: "mtn", label: "MTN" },
+  { value: "airtel", label: "Airtel" },
+  { value: "glo", label: "Glo" },
+  { value: "etisalat", label: "9Mobile" },
+];
+
 export function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [mobileNetwork, setMobileNetwork] = useState("");
   const [location, setLocation] = useState("");
   const [university, setUniversity] = useState(REGISTRATION_STATUSES[0]);
   const [searchParams] = useSearchParams();
@@ -132,6 +143,8 @@ export function RegisterPage() {
         university,
         courseInterest,
         referralCode: referralCode.trim() || undefined,
+        phone: phone.trim(),
+        mobileNetwork,
       }),
     );
     if (registerUser.fulfilled.match(result)) {
@@ -169,6 +182,34 @@ export function RegisterPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        <Input
+          id="phone"
+          label="Phone number"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="e.g. 08031234567"
+          required
+        />
+        <Select
+          id="mobileNetwork"
+          label="Mobile network"
+          value={mobileNetwork}
+          onChange={(e) => setMobileNetwork(e.target.value)}
+          required
+        >
+          <option value="" disabled>
+            Choose network&hellip;
+          </option>
+          {MOBILE_NETWORKS.map((network) => (
+            <option key={network.value} value={network.value}>
+              {network.label}
+            </option>
+          ))}
+        </Select>
+        <p className="-mt-2 text-xs text-gray-500">We use this to send any airtime or data rewards you earn.</p>
         <Input
           id="password"
           label="Password"

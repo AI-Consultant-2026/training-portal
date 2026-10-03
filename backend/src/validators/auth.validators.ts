@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { VTPASS_NETWORKS, toLocalNigerianMobile } from "../constants/vtpass";
 
 // Exact matches only (case-insensitive) -- catches the passwords people actually type
 // when a form merely demands "8+ characters", not a general strength estimator. Includes
@@ -106,6 +107,15 @@ export const registerSchema = z.object({
     // Optional ambassador code from a ?ref= link or word of mouth. Lenient on purpose:
     // an unknown/blank code is silently ignored by referral.service, never a signup error.
     referralCode: z.string().trim().max(40).optional(),
+    // Where airtime/data referral rewards are sent. Optional at the API level for the same
+    // reason as location; the register form requires both.
+    phone: z
+      .string()
+      .trim()
+      .max(25)
+      .refine((v) => toLocalNigerianMobile(v) !== null, "Enter a Nigerian mobile number, e.g. 08031234567")
+      .optional(),
+    mobileNetwork: z.enum(VTPASS_NETWORKS).optional(),
   }),
 });
 

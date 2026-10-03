@@ -13,6 +13,7 @@ import {
   revokeRefreshToken,
   rotateRefreshToken,
 } from "./token.service";
+import { toLocalNigerianMobile } from "../constants/vtpass";
 
 export interface RegisterInput {
   email: string;
@@ -23,6 +24,8 @@ export interface RegisterInput {
   courseInterest?: string;
   university?: string;
   referralCode?: string;
+  phone?: string;
+  mobileNetwork?: string;
 }
 
 export interface LoginInput {
@@ -66,6 +69,11 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     location: input.location ?? "Nigeria",
     courseInterest: input.courseInterest ?? null,
     university: input.university ?? null,
+    // Stored where /refer and the admin payout flow already look for the payout number.
+    profileData: {
+      ...(input.phone ? { referralPayoutPhone: toLocalNigerianMobile(input.phone) ?? input.phone } : {}),
+      ...(input.mobileNetwork ? { mobileNetwork: input.mobileNetwork } : {}),
+    },
   });
 
   // Best-effort: a malformed or unknown referral code must never fail a real signup.

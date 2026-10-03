@@ -1,5 +1,6 @@
 import request from "supertest";
 import { createApp } from "../../src/app";
+import { User } from "../../src/models";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 const app = createApp();
@@ -66,6 +67,29 @@ describe("Auth flow", () => {
       });
 
     expect(res.status).toBe(400);
+  });
+
+  it("saves the phone (in local form) and mobile network for reward payouts", async () => {
+    const res = await request(app)
+      .post("/api/auth/register")
+      .send({ ...validRegistration, email: "jest-phone-student@example.com", phone: "+234 803 123 4567", mobileNetwork: "mtn" });
+
+    expect(res.status).toBe(201);
+    const user = await User.findOne({ where: { email: "jest-phone-student@example.com" } });
+    expect(user?.profileData).toMatchObject({ referralPayoutPhone: "08031234567", mobileNetwork: "mtn" });
+  });
+
+  it("rejects a phone that isn't a Nigerian mobile, and an unknown network", async () => {
+    const badPhone = await request(app)
+      .post("/api/auth/register")
+      .send({ ...validRegistration, email: "jest-badphone-student@example.com", phone: "0803", mobileNetwork: "mtn" });
+    expect(badPhone.status).toBe(400);
+    expect(JSON.stringify(badPhone.body)).toContain("Enter a Nigerian mobile number");
+
+    const badNetwork = await request(app)
+      .post("/api/auth/register")
+      .send({ ...validRegistration, email: "jest-badnet-student@example.com", phone: "08031234567", mobileNetwork: "vodafone" });
+    expect(badNetwork.status).toBe(400);
   });
 
   it("logs in and can access a protected route with the access token", async () => {
