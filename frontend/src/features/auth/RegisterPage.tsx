@@ -168,8 +168,9 @@ export function RegisterPage() {
       </div>
       <h1 className="text-2xl font-semibold text-gray-900">Create your account</h1>
       <p className="mb-6 mt-1 text-sm text-gray-600">
-        Practical, job-ready skills for Nigerian graduates, corps members and professionals. Learn online from
-        anywhere in Nigeria.
+        Practical, job-ready digital skills for Nigerian graduates, corps members and professionals preparing for
+        careers in the Oil &amp; Gas, Banking and Telecoms sectors. Learn online from anywhere in Nigeria and build the
+        skills employers need.
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {error && <Alert message={error} />}
