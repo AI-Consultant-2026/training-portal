@@ -156,8 +156,21 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-sm">
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900">Create your account</h1>
+    <div className="mx-auto mt-16 max-w-sm px-4 sm:px-0">
+      <div className="mb-3 flex items-center gap-2">
+        {/* Nigerian flag (green-white-green), decorative */}
+        <span className="flex h-3.5 w-6 overflow-hidden rounded-sm border border-gray-300" aria-hidden="true">
+          <span className="flex-1 bg-[#008751]" />
+          <span className="flex-1 bg-white" />
+          <span className="flex-1 bg-[#008751]" />
+        </span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-[#008751]">Built for Nigerians</span>
+      </div>
+      <h1 className="text-2xl font-semibold text-gray-900">Create your account</h1>
+      <p className="mb-6 mt-1 text-sm text-gray-600">
+        Practical, job-ready skills for Nigerian graduates, corps members and professionals. Learn online from
+        anywhere in Nigeria.
+      </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {error && <Alert message={error} />}
         <Input
@@ -190,7 +203,7 @@ export function RegisterPage() {
           autoComplete="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="e.g. 08031234567"
+          placeholder="e.g. 0803 123 4567"
           required
         />
         <Select
@@ -298,6 +311,9 @@ export function RegisterPage() {
         <Link to="/login" className="text-blue-600 hover:underline">
           Log in
         </Link>
+      </p>
+      <p className="mt-6 border-t border-gray-200 pt-4 text-xs text-gray-500">
+        Paleon Training &middot; Warri, Delta State, Nigeria &middot; Course fees in naira (&#8358;)
       </p>
     </div>
   );
