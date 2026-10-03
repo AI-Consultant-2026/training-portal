@@ -200,14 +200,33 @@ export async function listDataPlans(serviceId: string): Promise<DataPlan[]> {
     .filter((v) => Number.isFinite(v.amountNgn) && v.amountNgn > 0);
 }
 
-export async function getBalance(): Promise<number | null> {
+export interface BalanceResult {
+  balanceNgn: number | null;
+  // Why the balance couldn't be read (e.g. VTpass rejected the keys), shown on the admin page.
+  problem: string | null;
+}
+
+export async function getBalance(): Promise<BalanceResult> {
   try {
     // Short timeout: the balance is a nice-to-have on the admin page, not worth stalling it.
-    const body = (await call("GET", "/balance", undefined, 8_000)) as { contents?: { balance?: number | string } };
+    const body = (await call("GET", "/balance", undefined, 8_000)) as {
+      code?: string;
+      message?: string;
+      response_description?: string;
+      contents?: { balance?: number | string };
+    };
     const balance = Number(body.contents?.balance);
-    return Number.isFinite(balance) ? balance : null;
+    if (Number.isFinite(balance)) return { balanceNgn: balance, problem: null };
+    // VTpass answered but refused (e.g. 087 bad keys). Log the code only, never the keys.
+    const code = body.code ?? "";
+    const description = body.response_description ?? body.message ?? "";
+    logger.error(`VTpass balance check refused: code ${code || "none"} ${description}`.trim());
+    return {
+      balanceNgn: null,
+      problem: FAILED_CODES[code] ?? (description ? `VTpass: ${description}` : "VTpass didn't return a balance"),
+    };
   } catch (err) {
     logger.error("VTpass balance check failed", err);
-    return null;
+    return { balanceNgn: null, problem: "Couldn't reach VTpass to check the balance" };
   }
 }

@@ -173,6 +173,7 @@ export function AdminReferralsPage() {
         >
           VTpass: <strong>{payoutConfig.live ? "Live" : "Test mode (sandbox)"}</strong>
           {payoutConfig.balanceNgn !== null && <> · wallet balance {formatNgn(payoutConfig.balanceNgn)}</>}
+          {payoutConfig.balanceProblem && <> · balance unavailable: {payoutConfig.balanceProblem}</>}
         </p>
       )}
       {notice && (

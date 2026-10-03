@@ -105,7 +105,7 @@ describe("Referral payouts via VTpass", () => {
     const { adminToken, referralId } = await qualifiedReferral({ phone: "08031234567" });
 
     const cfg = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
-    expect(cfg.body).toEqual({ enabled: false, live: false, balanceNgn: null });
+    expect(cfg.body).toEqual({ enabled: false, live: false, balanceNgn: null, balanceProblem: null });
 
     const send = await request(app)
       .post(`/api/admin/referrals/${referralId}/send-reward`)
@@ -113,6 +113,24 @@ describe("Referral payouts via VTpass", () => {
       .send({ party: "referrer", network: "mtn" });
     expect(send.status).toBe(400);
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("shows the wallet balance, or why VTpass refused to give it", async () => {
+    const admin = await createUser("payout-admin@example.com", "admin");
+    const adminToken = await loginAs(admin.email);
+
+    fetchSpy.mockImplementationOnce(() => vtpassReply({ code: "1", contents: { balance: "5000.50" } }));
+    const ok = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
+    expect(ok.body).toEqual({ enabled: true, live: false, balanceNgn: 5000.5, balanceProblem: null });
+
+    fetchSpy.mockImplementationOnce(() => vtpassReply({ code: "087", message: "INVALID CREDENTIALS" }));
+    const refused = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
+    expect(refused.body.balanceNgn).toBeNull();
+    expect(refused.body.balanceProblem).toBe("VTpass rejected the API keys; check VTPASS_* settings");
+
+    Object.assign(config.vtpass, { publicKey: "" });
+    const noKey = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
+    expect(noKey.body.balanceProblem).toBe("VTPASS_PUBLIC_KEY isn't set");
   });
 
   it("previews the payout with the number in local form and a network guess", async () => {

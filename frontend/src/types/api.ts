@@ -87,6 +87,7 @@ export interface PayoutConfig {
   enabled: boolean;
   live: boolean;
   balanceNgn: number | null;
+  balanceProblem: string | null;
 }
 
 export interface PayoutPreview {

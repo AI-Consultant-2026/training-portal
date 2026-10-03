@@ -30,12 +30,16 @@ export interface PayoutConfig {
   enabled: boolean;
   live: boolean;
   balanceNgn: number | null;
+  balanceProblem: string | null;
 }
 
 export async function getPayoutConfig(): Promise<PayoutConfig> {
-  if (!vtpass.isVtpassConfigured()) return { enabled: false, live: false, balanceNgn: null };
-  const balanceNgn = config.vtpass.publicKey ? await vtpass.getBalance() : null;
-  return { enabled: true, live: config.vtpass.live, balanceNgn };
+  if (!vtpass.isVtpassConfigured()) return { enabled: false, live: false, balanceNgn: null, balanceProblem: null };
+  if (!config.vtpass.publicKey) {
+    return { enabled: true, live: config.vtpass.live, balanceNgn: null, balanceProblem: "VTPASS_PUBLIC_KEY isn't set" };
+  }
+  const { balanceNgn, problem } = await vtpass.getBalance();
+  return { enabled: true, live: config.vtpass.live, balanceNgn, balanceProblem: problem };
 }
 
 function requireConfigured() {
