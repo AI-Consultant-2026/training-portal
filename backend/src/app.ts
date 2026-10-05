@@ -70,6 +70,10 @@ export function createApp() {
             "https://*.googletagmanager.com",
             "https://www.facebook.com",
           ],
+          // blob: lets /refer/me play an ambassador's personalised video, which the page
+          // fetches with their login and plays from memory (ShareKit.tsx). Without it
+          // media-src falls back to default-src 'self' and the player stays blank.
+          "media-src": ["'self'", "blob:"],
         },
       },
       // helmet's default is "no-referrer", which strips the Referer header from the

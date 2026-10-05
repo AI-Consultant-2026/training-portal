@@ -67,6 +67,13 @@ describe("Personalised ambassador videos (2026-10-05)", () => {
     return Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString());
   }
 
+  // The page plays the personalised file from a blob: URL; production CSP blocked that
+  // until media-src allowed it (the player just stayed blank).
+  it("lets pages play videos from blob: URLs", async () => {
+    const res = await request(app).get("/api/health");
+    expect(res.headers["content-security-policy"]).toMatch(/media-src 'self' blob:/);
+  });
+
   it("requires auth", async () => {
     const res = await request(app).get("/api/referrals/me/videos/01-gis-good-cgpa");
     expect(res.status).toBe(401);
