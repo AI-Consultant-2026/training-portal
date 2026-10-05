@@ -129,6 +129,28 @@ function Chips<T extends string>({
   );
 }
 
+// Shown above the buttons because people expect the file to arrive already attached, and
+// from a website it can't (raised by the owner 2026-10-05).
+function HowToShare({ media }: { media: "image" | "video" }) {
+  const phone = canUseShareSheet();
+  return (
+    <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+      <p className="font-semibold">How the share buttons work</p>
+      <ol className="mt-1 list-decimal space-y-0.5 pl-4">
+        <li>Tap WhatsApp, Facebook, Instagram, LinkedIn or X. Your {media} saves to your device and the app opens with your message.</li>
+        <li>In the app, attach the saved {media} (look in Downloads, or Photos/Gallery on a phone).</li>
+        <li>For Facebook, LinkedIn and Instagram, paste the message too: it&apos;s already copied.</li>
+      </ol>
+      <p className="mt-1">
+        Social apps don&apos;t let websites attach files for you.{" "}
+        {phone
+          ? `To skip step 2, use “Share to Status & other apps”: it attaches the ${media} for you.`
+          : `On your phone, “Share to Status & other apps” attaches the ${media} for you.`}
+      </p>
+    </div>
+  );
+}
+
 interface PlatformTexts {
   whatsapp: string; // also used for Facebook and LinkedIn, which only take a link
   instagram: string;
@@ -342,6 +364,7 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
             Show my first name on the card
           </label>
 
+          <HowToShare media="image" />
           <PlatformButtons
             texts={platformTexts}
             shareUrl={summary.shareUrl}
@@ -378,11 +401,6 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
             </button>
           </div>
           {message && <p className="text-sm text-blue-800">{message}</p>}
-          <p className="text-xs text-gray-500">
-            Websites can&apos;t attach an image to a post for you, so each button saves the image and opens the
-            app with your message: just add the image.{" "}
-            {phone ? "On your phone, “Share to Status & other apps” attaches it for you." : "On your phone, this page can attach it for you."}
-          </p>
         </div>
 
         <div className="flex justify-center md:block">
@@ -421,12 +439,15 @@ export function VideoPack({ summary }: { summary: MyReferralSummary }) {
       <h2 className="text-lg font-semibold text-gray-900">Video pack</h2>
       <p className="mt-1 text-sm text-gray-600">
         Ten short Paleon videos made for WhatsApp Status, Reels and TikTok, each with a caption that already has
-        your code <strong>{summary.code}</strong> and your link. Each button saves the video and opens the app with
-        the caption ready: just attach the video.
+        your code <strong>{summary.code}</strong> and your link.
       </p>
 
       <div className="mt-4">
         <Chips label="Caption for" options={CAPTION_PLATFORMS} value={platform} onChange={setPlatform} />
+      </div>
+
+      <div className="mt-4">
+        <HowToShare media="video" />
       </div>
 
       <ul className="mt-4 grid gap-4 sm:grid-cols-2">
