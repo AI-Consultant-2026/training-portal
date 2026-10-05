@@ -33,6 +33,17 @@ export const printKitSchema = z.object({
   }),
 });
 
+// Personalised video on /refer/me: the stock video with the ambassador's name and code on
+// its end card. The slug is checked against the video manifest in the service.
+export const personalisedVideoSchema = z.object({
+  params: z.object({
+    file: z.string().regex(/^[0-9]{2}-[a-z0-9-]+$/),
+  }),
+  query: z.object({
+    showName: z.enum(["true", "false"]).default("true"),
+  }),
+});
+
 export const validateCodeSchema = z.object({
   body: z.object({
     code: z.string().min(1).max(40),

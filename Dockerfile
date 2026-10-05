@@ -26,6 +26,9 @@ COPY backend/ ./
 RUN npm run build
 
 FROM node:20-alpine
+# ffmpeg puts the ambassador's name and code on the end card of the /refer/me videos
+# (services/ambassadorVideo.service.ts). Alpine's build includes drawtext.
+RUN apk add --no-cache ffmpeg
 WORKDIR /app/backend
 # The whole backend-build output is copied (not just dist/), because .sequelizerc loads
 # migrations via ts-node/register at runtime rather than from compiled dist/migrations,

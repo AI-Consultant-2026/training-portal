@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { fetchPersonalisedVideo } from "../../api/referrals.api";
 import { MyReferralSummary } from "../../types/api";
 import {
   AMBASSADOR_VIDEOS,
@@ -7,7 +8,6 @@ import {
   CaptionContext,
   CaptionPlatform,
   posterUrl,
-  videoDownloadUrl,
   videoUrl,
 } from "./ambassadorVideos";
 import {
@@ -431,6 +431,8 @@ const INITIAL_VIDEOS = 4;
 export function VideoPack({ summary }: { summary: MyReferralSummary }) {
   const [platform, setPlatform] = useState<CaptionPlatform>("whatsapp");
   const [showAll, setShowAll] = useState(false);
+  const [personalise, setPersonalise] = useState(true);
+  const [showName, setShowName] = useState(true);
   const ctx = captionContext(summary);
   const videos = showAll ? AMBASSADOR_VIDEOS : AMBASSADOR_VIDEOS.slice(0, INITIAL_VIDEOS);
 
@@ -444,6 +446,29 @@ export function VideoPack({ summary }: { summary: MyReferralSummary }) {
 
       <div className="mt-4">
         <Chips label="Caption for" options={CAPTION_PLATFORMS} value={platform} onChange={setPlatform} />
+      </div>
+
+      <div className="mt-4 space-y-2">
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={personalise}
+            onChange={(e) => setPersonalise(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          Put my code on the last 3 seconds of the video
+        </label>
+        {personalise && (
+          <label className="ml-6 flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={showName}
+              onChange={(e) => setShowName(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            Show my first name too (&ldquo;Recommended by &hellip;&rdquo;)
+          </label>
+        )}
       </div>
 
       <div className="mt-4">
@@ -462,6 +487,7 @@ export function VideoPack({ summary }: { summary: MyReferralSummary }) {
               short: buildCaption(video, "short", ctx),
             }}
             shareUrl={summary.shareUrl}
+            personalised={personalise ? { showName, code: summary.code } : null}
           />
         ))}
       </ul>
@@ -488,24 +514,78 @@ function VideoCard({
   caption,
   texts,
   shareUrl,
+  personalised,
 }: {
   video: AmbassadorVideo;
   caption: string;
   texts: PlatformTexts;
   shareUrl: string;
+  // null = the stock video; otherwise the server adds the ambassador's code (and name).
+  personalised: { showName: boolean; code: string } | null;
 }) {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
-  const fileRef = useRef<File | null>(null);
+  // Fetched files by variant, so switching the checkboxes back and forth doesn't refetch.
+  const filesRef = useRef(new Map<string, File>());
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const shareable = canUseShareSheet();
+  const variant = personalised ? (personalised.showName ? "named" : "code") : "stock";
 
-  function saveVideo() {
-    const link = document.createElement("a");
-    link.href = videoDownloadUrl(video);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+  useEffect(() => {
+    // The player shows the ambassador's own version once it has been fetched.
+    const file = filesRef.current.get(variant);
+    setPreviewSrc((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return file && variant !== "stock" ? URL.createObjectURL(file) : null;
+    });
+  }, [variant]);
+
+  useEffect(
+    () => () => {
+      setPreviewSrc((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return null;
+      });
+    },
+    [],
+  );
+
+  async function getFile(): Promise<File> {
+    const cached = filesRef.current.get(variant);
+    if (cached) return cached;
+    let blob: Blob;
+    let name: string;
+    if (personalised) {
+      blob = await fetchPersonalisedVideo(video.file, personalised.showName);
+      name = `paleon-${video.file}-${personalised.code}.mp4`;
+    } else {
+      const res = await fetch(videoUrl(video));
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      blob = await res.blob();
+      name = `paleon-${video.file}.mp4`;
+    }
+    const file = new File([blob], name, { type: "video/mp4" });
+    filesRef.current.set(variant, file);
+    if (variant !== "stock") {
+      setPreviewSrc((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return URL.createObjectURL(file);
+      });
+    }
+    return file;
+  }
+
+  async function saveVideo() {
+    setBusy(true);
+    try {
+      const file = await getFile();
+      saveBlob(file, file.name);
+    } catch {
+      setNote("Couldn't prepare the video. Check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function copyCaption() {
@@ -520,13 +600,7 @@ function VideoCard({
     setNote(null);
     try {
       await copyText(caption);
-      if (!fileRef.current) {
-        const res = await fetch(videoUrl(video));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const blob = await res.blob();
-        fileRef.current = new File([blob], `paleon-${video.file}.mp4`, { type: "video/mp4" });
-      }
-      const outcome = await shareFile(fileRef.current, caption);
+      const outcome = await shareFile(await getFile(), caption);
       if (outcome === "needs-tap") setNote("Video ready. Tap Share again to open your apps.");
       else if (outcome === "unsupported") setNote("Sharing isn't available here. Use Download, then post it.");
       else if (outcome === "shared") setNote("Shared. The caption is also copied, in case the app dropped it.");
@@ -540,8 +614,8 @@ function VideoCard({
   return (
     <li className="flex flex-col rounded-lg border border-gray-200 bg-white p-3">
       <video
-        src={videoUrl(video)}
-        poster={posterUrl(video)}
+        src={previewSrc ?? videoUrl(video)}
+        poster={previewSrc ? undefined : posterUrl(video)}
         controls
         playsInline
         preload="none"
@@ -549,6 +623,18 @@ function VideoCard({
       />
       <p className="mt-3 font-medium text-gray-900">{video.title}</p>
       <p className="text-xs text-gray-500">{video.course}</p>
+      {personalised && !previewSrc && (
+        <button
+          type="button"
+          onClick={() => {
+            setNote(null);
+            getFile().catch(() => setNote("Couldn't prepare the video. Check your connection and try again."));
+          }}
+          className="mt-1 self-start text-xs font-medium text-blue-600 hover:underline"
+        >
+          Preview my version (code at the end)
+        </button>
+      )}
       <textarea
         readOnly
         value={caption}
@@ -577,12 +663,14 @@ function VideoCard({
         >
           {copied ? "Copied!" : "Copy caption"}
         </button>
-        <a
-          href={videoDownloadUrl(video)}
-          className="rounded-md border border-blue-300 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+        <button
+          type="button"
+          onClick={saveVideo}
+          disabled={busy}
+          className="rounded-md border border-blue-300 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
         >
-          Download video
-        </a>
+          {busy ? "Preparing…" : "Download video"}
+        </button>
       </div>
       {note && <p className="mt-2 text-xs text-blue-800">{note}</p>}
     </li>

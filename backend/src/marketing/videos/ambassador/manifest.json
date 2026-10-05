@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "width": 720,
+  "height": 1280,
+  "fps": 30,
+  "endCardSeconds": 3,
+  "slots": {
+    "name": {
+      "y": 657,
+      "size": 31,
+      "color": "#6B6252",
+      "font": "SourceSans3-Bold.ttf"
+    },
+    "code": {
+      "y": 790,
+      "size": 83,
+      "color": "#FFFFFF",
+      "font": "SourceSans3-Bold.ttf"
+    },
+    "reward": {
+      "y": 923,
+      "size": 37,
+      "color": "#C96A26",
+      "font": "SourceSans3-Bold.ttf"
+    }
+  },
+  "videos": {
+    "01-gis-good-cgpa": {
+      "endStart": 15.033333333333333
+    },
+    "02-hse-spot-the-hazard": {
+      "endStart": 15.033333333333333
+    },
+    "03-cyber-one-click-bank": {
+      "endStart": 14.5
+    },
+    "04-cyber-telecoms-mast": {
+      "endStart": 15.033333333333333
+    },
+    "05-digital-marketing-nysc": {
+      "endStart": 15.0
+    },
+    "06-self-paced-lagos-traffic": {
+      "endStart": 15.033333333333333
+    },
+    "07-mummy-certificate": {
+      "endStart": 14.8
+    },
+    "08-gis-niger-delta-drone": {
+      "endStart": 15.033333333333333
+    },
+    "09-career-match-campus": {
+      "endStart": 15.033333333333333
+    },
+    "10-ambassador-airtime": {
+      "endStart": 15.033333333333333
+    }
+  }
+}

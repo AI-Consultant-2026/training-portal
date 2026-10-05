@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { config } from "../config";
+import * as ambassadorVideoService from "../services/ambassadorVideo.service";
 import * as referralPayoutService from "../services/referralPayout.service";
 import * as referralPrintService from "../services/referralPrint.service";
 import * as referralService from "../services/referral.service";
@@ -31,6 +32,18 @@ export const downloadPrintKit = asyncHandler(async (req: Request, res: Response)
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", `attachment; filename="${referralPrintService.printFilename(kind, data)}"`);
   referralPrintService.streamPrintPdf(kind, data, res);
+});
+
+export const downloadPersonalisedVideo = asyncHandler(async (req: Request, res: Response) => {
+  const { filePath, filename } = await ambassadorVideoService.getPersonalisedVideoForUser(
+    req.user!.id,
+    req.params.file as string,
+    req.query.showName !== "false",
+  );
+  res.setHeader("Content-Type", "video/mp4");
+  res.setHeader("Cache-Control", "private, max-age=3600");
+  res.attachment(filename);
+  res.sendFile(filePath);
 });
 
 export const getLeaderboard = asyncHandler(async (_req: Request, res: Response) => {

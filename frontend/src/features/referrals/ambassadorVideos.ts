@@ -113,10 +113,6 @@ export function videoUrl(video: AmbassadorVideo): string {
   return `${SITE_ORIGIN}/videos/ambassador/${video.file}.mp4`;
 }
 
-export function videoDownloadUrl(video: AmbassadorVideo): string {
-  return `${videoUrl(video)}?download=1`;
-}
-
 export function posterUrl(video: AmbassadorVideo): string {
   return `${SITE_ORIGIN}/videos/ambassador/${video.file}.jpg`;
 }

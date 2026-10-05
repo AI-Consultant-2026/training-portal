@@ -67,6 +67,18 @@ export async function downloadPrintKit(
   window.URL.revokeObjectURL(url);
 }
 
+// One of the /refer/me promo videos with the ambassador's name and code on its last 3
+// seconds, rendered by the server (ambassadorVideo.service.ts). Takes about a second the
+// first time, then it's cached.
+export async function fetchPersonalisedVideo(file: string, showName: boolean): Promise<Blob> {
+  const res = await axiosClient.get(`/referrals/me/videos/${file}`, {
+    params: { showName: String(showName) },
+    responseType: "blob",
+    timeout: 90_000,
+  });
+  return res.data as Blob;
+}
+
 export async function fetchLeaderboard(): Promise<ReferralLeaderboard> {
   const res = await axiosClient.get<{ leaderboard: ReferralLeaderboard }>("/referrals/leaderboard");
   return res.data.leaderboard;

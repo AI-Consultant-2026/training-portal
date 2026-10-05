@@ -5,6 +5,7 @@ import * as referralsController from "../controllers/referrals.controller";
 import { authenticate } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
 import {
+  personalisedVideoSchema,
   printKitSchema,
   setPayoutPhoneSchema,
   setRewardPreferenceSchema,
@@ -46,3 +47,21 @@ referralsRouter.patch(
   referralsController.setPayoutPhone,
 );
 referralsRouter.get("/me/print/:kind", authenticate, validate(printKitSchema), referralsController.downloadPrintKit);
+
+// Each new name/code/video combination costs an ffmpeg run (cached after that), so cap
+// how many one account can ask for.
+const personalisedVideoLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 40,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.user?.id ?? req.ip ?? "anonymous",
+  skip: () => config.nodeEnv === "test",
+});
+referralsRouter.get(
+  "/me/videos/:file",
+  authenticate,
+  personalisedVideoLimiter,
+  validate(personalisedVideoSchema),
+  referralsController.downloadPersonalisedVideo,
+);
