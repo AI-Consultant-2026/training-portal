@@ -25,8 +25,9 @@ const FONT_DIR = path.join(__dirname, "..", "marketing", "fonts", "pdf");
 const CACHE_DIR = path.join(os.tmpdir(), "paleon-ambassador-videos");
 const CACHE_MAX_FILES = 200; // ~2.5MB each
 const FFMPEG_TIMEOUT_MS = 60_000;
-// Bump when the end-card text or layout changes, so cached videos aren't reused.
-const TEMPLATE_VERSION = 1;
+// Bump when the end-card text or layout changes, or a stock video is replaced, so cached
+// personalised videos aren't reused. 2 = video 03 re-cut (hand matte + lip sync), 2026-10-05.
+const TEMPLATE_VERSION = 2;
 
 // Must match ENCODE in build.py: a mismatch makes the joined file glitch at the cut.
 // No B-frames (-bf 0), so timestamps stay in order across the join.

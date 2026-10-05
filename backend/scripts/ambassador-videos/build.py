@@ -1,6 +1,7 @@
 """Builds the ambassador video pack assets in backend/src/marketing/videos/ambassador/.
 
-Run on a Mac with Pillow and ffmpeg:  python3 backend/scripts/ambassador-videos/build.py
+Run on a Mac with Pillow and ffmpeg:  python3 backend/scripts/ambassador-videos/build.py [NN ...]
+(no arguments = all videos; e.g. "03" rebuilds just that one)
 Source: the finished 1080x1920 videos in ~/Desktop/Paleon Viral Video Scripts/Final/
 (15s clip + 3s branded end card, made by make_final.py in that folder).
 
@@ -146,7 +147,7 @@ def probe_duration(path):
     return float(out)
 
 
-def main():
+def main(only=None):
     manifest = {
         "version": 1,
         "width": OW,
@@ -160,7 +161,13 @@ def main():
         },
         "videos": {},
     }
+    existing = os.path.join(OUT, "manifest.json")
+    if only and os.path.exists(existing):
+        with open(existing) as f:
+            manifest["videos"] = json.load(f)["videos"]
     for slug, (num, head, sub, url) in VIDEOS.items():
+        if only and num not in only:
+            continue
         src = glob.glob(os.path.join(SRC, f"Paleon {num} - *.mp4"))[0]
         dur = probe_duration(src)
         # Whole frames, so the cut lands on a frame boundary.
@@ -179,4 +186,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(set(sys.argv[1:]) or None)
