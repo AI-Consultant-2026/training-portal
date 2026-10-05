@@ -44,6 +44,17 @@ function canShareFiles(): boolean {
   }
 }
 
+// The browser's share sheet only helps on a phone. On a Mac or PC it lists the computer's
+// own apps (AirDrop, Messages, Notes...), not WhatsApp, Facebook or Instagram (reported
+// 2026-10-05), so computers get the per-platform buttons below instead.
+function isPhone(): boolean {
+  return typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches === true;
+}
+
+function canUseShareSheet(): boolean {
+  return isPhone() && canShareFiles();
+}
+
 type ShareOutcome = "shared" | "cancelled" | "needs-tap" | "unsupported";
 
 async function shareFile(file: File, text: string): Promise<ShareOutcome> {
@@ -118,6 +129,107 @@ function Chips<T extends string>({
   );
 }
 
+interface PlatformTexts {
+  whatsapp: string; // also used for Facebook and LinkedIn, which only take a link
+  instagram: string;
+  short: string; // X
+}
+
+// Websites can't attach an image or video to a WhatsApp, Facebook, LinkedIn or X post, and
+// Instagram has no web share link at all. So each button saves the file, copies the
+// caption where the platform can't take text, and opens the platform: the ambassador then
+// attaches the saved file.
+function PlatformButtons({
+  texts,
+  shareUrl,
+  media,
+  onSave,
+  onNote,
+  disabled = false,
+}: {
+  texts: PlatformTexts;
+  shareUrl: string;
+  media: "image" | "video";
+  onSave: () => void;
+  onNote: (note: string) => void;
+  disabled?: boolean;
+}) {
+  const Media = media === "image" ? "Image" : "Video";
+  const url = encodeURIComponent(shareUrl);
+  const link = "rounded-md px-3 py-1.5 text-sm font-medium text-white";
+  const off = disabled ? "pointer-events-none opacity-50" : "";
+
+  function opened(platform: string, captionCopied: boolean) {
+    onSave();
+    onNote(
+      captionCopied
+        ? `${Media} saved and caption copied. In ${platform}, add the ${media} and paste the caption.`
+        : `${Media} saved. Attach it to your ${platform} message; the caption is already filled in.`,
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      <a
+        href={`https://wa.me/?text=${encodeURIComponent(texts.whatsapp)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => opened("WhatsApp", false)}
+        className={`${link} ${off} bg-green-600 hover:bg-green-700`}
+      >
+        WhatsApp
+      </a>
+      <a
+        href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => {
+          void copyText(texts.whatsapp);
+          opened("Facebook", true);
+        }}
+        className={`${link} ${off} bg-[#1877F2] hover:bg-[#1462c8]`}
+      >
+        Facebook
+      </a>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => {
+          void copyText(texts.instagram);
+          onSave();
+          onNote(
+            `${Media} saved and caption copied. Instagram can't be opened from a website: open the Instagram app, add the ${media} and paste the caption.`,
+          );
+        }}
+        className={`${link} bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 disabled:opacity-50`}
+      >
+        Instagram
+      </button>
+      <a
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${url}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => {
+          void copyText(texts.whatsapp);
+          opened("LinkedIn", true);
+        }}
+        className={`${link} ${off} bg-[#0A66C2] hover:bg-[#08528f]`}
+      >
+        LinkedIn
+      </a>
+      <a
+        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(texts.short)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => opened("X", false)}
+        className={`${link} ${off} bg-gray-900 hover:bg-black`}
+      >
+        X
+      </a>
+    </div>
+  );
+}
+
 /* --------------------------------- share cards -------------------------------- */
 
 const CARD_DESIGNS: { value: ShareCardDesign; label: string }[] = [
@@ -150,6 +262,12 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
     welcomeBonus: formatNgn(summary.welcomeBonusNgn),
   };
   const shareText = `Use my code ${summary.code} when you sign up and you'll get ${input.welcomeBonus} airtime once your first course payment is confirmed. First lesson free: ${summary.shareUrl}`;
+  const platformTexts: PlatformTexts = {
+    whatsapp: shareText,
+    instagram: `Use my code ${summary.code} when you sign up at paleontraining.com/register and you'll get ${input.welcomeBonus} airtime once your first course payment is confirmed. First lesson free.`,
+    short: `${input.welcomeBonus} airtime for you when you join with my code ${summary.code} and pay for your first course. First lesson free 👉 ${summary.shareUrl}`,
+  };
+  const phone = canUseShareSheet();
 
   useEffect(() => {
     let cancelled = false;
@@ -224,15 +342,25 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
             Show my first name on the card
           </label>
 
+          <PlatformButtons
+            texts={platformTexts}
+            shareUrl={summary.shareUrl}
+            media="image"
+            onSave={download}
+            onNote={setMessage}
+            disabled={!fontsLoaded}
+          />
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={share}
-              disabled={!fontsLoaded || busy}
-              className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {busy ? "Preparing…" : "Share"}
-            </button>
+            {phone && (
+              <button
+                type="button"
+                onClick={share}
+                disabled={!fontsLoaded || busy}
+                className="rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {busy ? "Preparing…" : "Share to Status & other apps"}
+              </button>
+            )}
             <button
               type="button"
               onClick={download}
@@ -251,8 +379,9 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
           </div>
           {message && <p className="text-sm text-blue-800">{message}</p>}
           <p className="text-xs text-gray-500">
-            Links in images can&apos;t be tapped, so post the message with the image. It has your sign-up link
-            in it.
+            Websites can&apos;t attach an image to a post for you, so each button saves the image and opens the
+            app with your message: just add the image.{" "}
+            {phone ? "On your phone, “Share to Status & other apps” attaches it for you." : "On your phone, this page can attach it for you."}
           </p>
         </div>
 
@@ -292,8 +421,8 @@ export function VideoPack({ summary }: { summary: MyReferralSummary }) {
       <h2 className="text-lg font-semibold text-gray-900">Video pack</h2>
       <p className="mt-1 text-sm text-gray-600">
         Ten short Paleon videos made for WhatsApp Status, Reels and TikTok, each with a caption that already has
-        your code <strong>{summary.code}</strong> and your link. Share or download the video, then paste the
-        caption.
+        your code <strong>{summary.code}</strong> and your link. Each button saves the video and opens the app with
+        the caption ready: just attach the video.
       </p>
 
       <div className="mt-4">
@@ -302,7 +431,17 @@ export function VideoPack({ summary }: { summary: MyReferralSummary }) {
 
       <ul className="mt-4 grid gap-4 sm:grid-cols-2">
         {videos.map((video) => (
-          <VideoCard key={video.file} video={video} caption={buildCaption(video, platform, ctx)} />
+          <VideoCard
+            key={video.file}
+            video={video}
+            caption={buildCaption(video, platform, ctx)}
+            texts={{
+              whatsapp: buildCaption(video, "whatsapp", ctx),
+              instagram: buildCaption(video, "instagram", ctx),
+              short: buildCaption(video, "short", ctx),
+            }}
+            shareUrl={summary.shareUrl}
+          />
         ))}
       </ul>
 
@@ -323,12 +462,30 @@ export function VideoPack({ summary }: { summary: MyReferralSummary }) {
   );
 }
 
-function VideoCard({ video, caption }: { video: AmbassadorVideo; caption: string }) {
+function VideoCard({
+  video,
+  caption,
+  texts,
+  shareUrl,
+}: {
+  video: AmbassadorVideo;
+  caption: string;
+  texts: PlatformTexts;
+  shareUrl: string;
+}) {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const fileRef = useRef<File | null>(null);
-  const shareable = canShareFiles();
+  const shareable = canUseShareSheet();
+
+  function saveVideo() {
+    const link = document.createElement("a");
+    link.href = videoDownloadUrl(video);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
 
   async function copyCaption() {
     if (await copyText(caption)) {
@@ -378,21 +535,24 @@ function VideoCard({ video, caption }: { video: AmbassadorVideo; caption: string
         aria-label={`Caption for ${video.title}`}
         className="mt-2 w-full flex-1 resize-none rounded-md border border-gray-200 bg-gray-50 p-2 text-xs text-gray-700"
       />
+      <div className="mt-2">
+        <PlatformButtons texts={texts} shareUrl={shareUrl} media="video" onSave={saveVideo} onNote={setNote} />
+      </div>
       <div className="mt-2 flex flex-wrap gap-2">
         {shareable && (
           <button
             type="button"
             onClick={share}
             disabled={busy}
-            className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+            className="rounded-md bg-gray-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-900 disabled:opacity-50"
           >
-            {busy ? "Preparing…" : "Share"}
+            {busy ? "Preparing…" : "Share to Status & other apps"}
           </button>
         )}
         <button
           type="button"
           onClick={copyCaption}
-          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md border border-blue-300 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
           {copied ? "Copied!" : "Copy caption"}
         </button>
