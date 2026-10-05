@@ -1,4 +1,12 @@
-import { AdminCapstone, AdminStats, Candidate, CoursePayment, Lead, Partner } from "../types/api";
+import {
+  AdminCapstone,
+  AdminStats,
+  Candidate,
+  CoursePayment,
+  CourseProgressSummary,
+  Lead,
+  Partner,
+} from "../types/api";
 import { axiosClient } from "./axiosClient";
 
 export async function fetchAdminStats(): Promise<AdminStats> {
@@ -17,6 +25,13 @@ export interface AddCandidateInput {
   email: string;
   location: string;
   courseInterest?: string;
+}
+
+export async function fetchCourseProgress(): Promise<{ courses: CourseProgressSummary[]; stalledAfterDays: number }> {
+  const res = await axiosClient.get<{ courses: CourseProgressSummary[]; stalledAfterDays: number }>(
+    "/admin/course-progress",
+  );
+  return res.data;
 }
 
 export async function addCandidate(input: AddCandidateInput): Promise<Candidate> {

@@ -643,3 +643,46 @@ export interface UploadCampaignSummary {
   invalid: number;
   duplicates: number;
 }
+
+export type CourseProgressState = "awaiting_payment" | "not_started" | "in_progress" | "stalled" | "completed";
+
+export interface CandidateCourseProgress {
+  enrollmentId: string;
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  paymentConfirmed: boolean;
+  enrolledAt: string;
+  completedAt: string | null;
+  lessonsCompleted: number;
+  lessonsTotal: number;
+  progressPercent: number;
+  quizzesSubmitted: number;
+  quizzesTotal: number;
+  assignmentsSubmitted: number;
+  assignmentsTotal: number;
+  capstoneSubmitted: boolean | null;
+  currentWeek: number | null;
+  nextLessonTitle: string | null;
+  lastProgressAt: string | null;
+  lastActiveAt: string | null;
+  state: CourseProgressState;
+}
+
+export interface CourseProgressSummary {
+  courseId: string;
+  title: string;
+  slug: string;
+  status: string;
+  totals: {
+    enrolled: number;
+    paid: number;
+    notStarted: number;
+    inProgress: number;
+    stalled: number;
+    completed: number;
+    averageProgressPercent: number | null;
+  };
+  candidates: CandidateCourseProgress[];
+}

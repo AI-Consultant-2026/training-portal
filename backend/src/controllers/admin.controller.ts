@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { storageAdapter } from "../utils/storage";
 import * as adminService from "../services/admin.service";
+import * as courseProgressService from "../services/courseProgress.service";
 import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
 
@@ -12,6 +13,11 @@ export const getDashboardStats = asyncHandler(async (_req: Request, res: Respons
 export const listCandidates = asyncHandler(async (_req: Request, res: Response) => {
   const candidates = await adminService.listCandidates();
   res.json({ candidates });
+});
+
+export const getCourseProgress = asyncHandler(async (_req: Request, res: Response) => {
+  const courses = await courseProgressService.getCourseProgressOverview();
+  res.json({ courses, stalledAfterDays: courseProgressService.STALLED_AFTER_DAYS });
 });
 
 export const createCandidate = asyncHandler(async (req: Request, res: Response) => {

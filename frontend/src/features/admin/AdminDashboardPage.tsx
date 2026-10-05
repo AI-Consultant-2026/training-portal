@@ -117,6 +117,9 @@ export function AdminDashboardPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Link to="/admin/course-progress" className="text-sm font-medium text-blue-600 hover:underline">
+            Course progress →
+          </Link>
           <Link to="/admin/referrals" className="text-sm font-medium text-blue-600 hover:underline">
             Referrals →
           </Link>
@@ -197,6 +200,9 @@ export function AdminDashboardPage() {
         <p className="mt-1 text-sm text-gray-600">
           {formatNumberOrDash(stats.enrollments.averageProgressPercent)}%
         </p>
+        <Link to="/admin/course-progress" className="mt-2 inline-block text-xs text-blue-600 hover:underline">
+          See each candidate&apos;s progress by course →
+        </Link>
       </div>
 
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Payments</h2>

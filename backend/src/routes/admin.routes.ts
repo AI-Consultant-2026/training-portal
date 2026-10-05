@@ -50,6 +50,7 @@ adminRouter.get(
   adminController.listCoursePayments,
 );
 adminRouter.get("/candidates", adminController.listCandidates);
+adminRouter.get("/course-progress", adminController.getCourseProgress);
 adminRouter.get("/payments/:id/receipt", adminController.downloadPaymentReceipt);
 adminRouter.get("/feedback", feedbackController.listForAdmin);
 adminRouter.patch("/feedback/:id", validate(approveFeedbackSchema), feedbackController.setApproved);
