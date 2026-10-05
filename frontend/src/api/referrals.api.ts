@@ -29,6 +29,44 @@ export async function setPayoutPhone(phone: string): Promise<string | null> {
   return res.data.phone;
 }
 
+export type PrintKind = "flyer-a4" | "flyer-a5" | "cards";
+export type PrintDesign =
+  | "general"
+  | "cyber-security-fundamentals"
+  | "gis-and-drone-mapping"
+  | "digital-marketing"
+  | "hse-fundamentals";
+
+// Same blob-download pattern as downloadCertificate: a plain <a href> can't carry the
+// bearer token. The filename is built here rather than read from Content-Disposition,
+// which the browser hides on cross-origin API responses (local dev) unless CORS exposes it.
+const PRINT_FILE_LABEL: Record<PrintKind, string> = {
+  "flyer-a4": "a4-poster",
+  "flyer-a5": "a5-handbills",
+  cards: "pocket-cards",
+};
+
+export async function downloadPrintKit(
+  kind: PrintKind,
+  design: PrintDesign,
+  showName: boolean,
+  code: string,
+): Promise<void> {
+  const res = await axiosClient.get(`/referrals/me/print/${kind}`, {
+    params: { design, showName: String(showName) },
+    responseType: "blob",
+  });
+  const filename = `paleon-${design}-${PRINT_FILE_LABEL[kind]}-${code}.pdf`;
+  const url = window.URL.createObjectURL(res.data as Blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 export async function fetchLeaderboard(): Promise<ReferralLeaderboard> {
   const res = await axiosClient.get<{ leaderboard: ReferralLeaderboard }>("/referrals/leaderboard");
   return res.data.leaderboard;

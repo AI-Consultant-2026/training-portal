@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { REFERRAL_REWARD_TYPES } from "../constants/referral";
+import { PRINT_DESIGNS, PRINT_KINDS, REFERRAL_REWARD_TYPES } from "../constants/referral";
 import { VTPASS_NETWORKS } from "../constants/vtpass";
 
 export const setRewardPreferenceSchema = z.object({
@@ -17,6 +17,19 @@ export const setPayoutPhoneSchema = z.object({
       .max(25)
       .refine((v) => v.trim() === "" || /^\+?[\d\s()-]+$/.test(v.trim()), "Use digits only (a leading + is fine)")
       .refine((v) => v.trim() === "" || v.replace(/\D/g, "").length >= 10, "That number looks too short"),
+  }),
+});
+
+// Printable flyer/card PDFs on /refer/me. showName defaults to on: a named recommendation
+// ("Recommended by Ada") is the point of a personal flyer, but ambassadors posting on a
+// public noticeboard can switch it off.
+export const printKitSchema = z.object({
+  params: z.object({
+    kind: z.enum(PRINT_KINDS),
+  }),
+  query: z.object({
+    design: z.enum(PRINT_DESIGNS).default("general"),
+    showName: z.enum(["true", "false"]).default("true"),
   }),
 });
 

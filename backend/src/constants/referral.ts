@@ -24,3 +24,16 @@ export const REFERRAL_CODE_ALPHABET = "ABCDEFGHJKMNPQRTUVWXY346789";
 export const REFERRAL_CODE_BODY_LENGTH = 6;
 
 export const REFERRAL_LEADERBOARD_SIZE = 10;
+
+// Printable ambassador collateral on /refer/me (see referralPrint.service.ts).
+export const PRINT_KINDS = ["flyer-a4", "flyer-a5", "cards"] as const;
+export type PrintKind = (typeof PRINT_KINDS)[number];
+
+export const PRINT_DESIGNS = [
+  "general",
+  "cyber-security-fundamentals",
+  "gis-and-drone-mapping",
+  "digital-marketing",
+  "hse-fundamentals",
+] as const;
+export type PrintDesign = (typeof PRINT_DESIGNS)[number];

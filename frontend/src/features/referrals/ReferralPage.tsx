@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
+import { downloadPrintKit, PrintDesign, PrintKind } from "../../api/referrals.api";
 import { MyReferralSummary, ReferralLeaderboard, ReferralRewardType } from "../../types/api";
 import {
   fetchMyReferralSummary,
@@ -73,6 +74,8 @@ export function ReferralPage() {
       )}
 
       <ShareCard summary={summary} />
+
+      <PrintKit code={summary.code} />
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile label="Friends invited" value={summary.counts.invited} />
@@ -227,6 +230,110 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
           into a story, a DM, or your bio.
         </p>
       )}
+    </div>
+  );
+}
+
+const PRINT_DESIGNS: { value: PrintDesign; label: string }[] = [
+  { value: "general", label: "All courses" },
+  { value: "cyber-security-fundamentals", label: "Cyber Security" },
+  { value: "gis-and-drone-mapping", label: "GIS & Drone Mapping" },
+  { value: "digital-marketing", label: "Digital Marketing" },
+  { value: "hse-fundamentals", label: "HSE" },
+];
+
+const PRINT_KINDS: { value: PrintKind; label: string; hint: string }[] = [
+  { value: "flyer-a4", label: "A4 poster", hint: "For noticeboards, hostels and church or mosque boards." },
+  { value: "flyer-a5", label: "A5 handbills", hint: "Two per A4 sheet. Cut once down the dashed line." },
+  { value: "cards", label: "Pocket cards", hint: "Ten business cards per A4 sheet, with cutting guides." },
+];
+
+function PrintKit({ code }: { code: string }) {
+  const [design, setDesign] = useState<PrintDesign>("general");
+  const [showName, setShowName] = useState(true);
+  const [busy, setBusy] = useState<PrintKind | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  async function download(kind: PrintKind) {
+    setBusy(kind);
+    setFailed(false);
+    try {
+      await downloadPrintKit(kind, design, showName, code);
+    } catch {
+      setFailed(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <div className="mt-8">
+      <h2 className="text-lg font-semibold text-gray-900">Print flyers and cards</h2>
+      <p className="mt-1 text-sm text-gray-600">
+        Paleon-designed flyers and pocket cards with your code <strong>{code}</strong> and a QR code that
+        signs people up with your code already filled in. Download, print, and hand them out on campus, at
+        your CDS or NYSC camp, or in your area.
+      </p>
+
+      <fieldset className="mt-4">
+        <legend className="text-sm font-medium text-gray-900">Which course should it promote?</legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {PRINT_DESIGNS.map((option) => {
+            const selected = option.value === design;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setDesign(option.value)}
+                aria-pressed={selected}
+                className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                  selected
+                    ? "border-blue-500 bg-blue-50 font-medium text-blue-800 ring-1 ring-blue-500"
+                    : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
+                }`}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <label className="mt-4 flex items-center gap-2 text-sm text-gray-700">
+        <input
+          type="checkbox"
+          checked={showName}
+          onChange={(e) => setShowName(e.target.checked)}
+          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+        Show my first name (&ldquo;Recommended by &hellip;&rdquo;)
+      </label>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        {PRINT_KINDS.map((kind) => (
+          <div key={kind.value} className="flex flex-col rounded-lg border border-gray-200 bg-white p-4">
+            <p className="font-medium text-gray-900">{kind.label}</p>
+            <p className="mt-1 flex-1 text-xs text-gray-600">{kind.hint}</p>
+            <button
+              type="button"
+              onClick={() => download(kind.value)}
+              disabled={busy !== null}
+              className="mt-3 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {busy === kind.value ? "Preparing…" : "Download PDF"}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {failed && (
+        <p className="mt-2 text-sm text-red-600">That download didn&apos;t work. Please try again.</p>
+      )}
+
+      <p className="mt-3 text-xs text-gray-500">
+        Print in colour if you can; the QR code also works in black and white. Scan one copy with your phone
+        before printing lots, and only post flyers where you&apos;re allowed to.
+      </p>
     </div>
   );
 }

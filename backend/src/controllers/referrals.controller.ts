@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { config } from "../config";
 import * as referralPayoutService from "../services/referralPayout.service";
+import * as referralPrintService from "../services/referralPrint.service";
 import * as referralService from "../services/referral.service";
 import { asyncHandler } from "../utils/asyncHandler";
 
@@ -17,6 +18,19 @@ export const setRewardPreference = asyncHandler(async (req: Request, res: Respon
 export const setPayoutPhone = asyncHandler(async (req: Request, res: Response) => {
   const phone = await referralService.setPayoutPhone(req.user!.id, req.body.phone);
   res.json({ phone });
+});
+
+export const downloadPrintKit = asyncHandler(async (req: Request, res: Response) => {
+  const kind = req.params.kind as referralPrintService.PrintKind;
+  const data = await referralPrintService.getPrintData(
+    req.user!.id,
+    config.corsOrigin,
+    (req.query.design as referralPrintService.PrintDesign | undefined) ?? "general",
+    req.query.showName !== "false",
+  );
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="${referralPrintService.printFilename(kind, data)}"`);
+  referralPrintService.streamPrintPdf(kind, data, res);
 });
 
 export const getLeaderboard = asyncHandler(async (_req: Request, res: Response) => {

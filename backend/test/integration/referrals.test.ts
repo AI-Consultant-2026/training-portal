@@ -207,6 +207,63 @@ describe("Referrals", () => {
     expect(cleared.body.phone).toBeNull();
   });
 
+  describe("print kit", () => {
+    function getPdf(path: string, token: string) {
+      return request(app)
+        .get(path)
+        .set("Authorization", `Bearer ${token}`)
+        .buffer(true)
+        .parse((r, cb) => {
+          const chunks: Buffer[] = [];
+          r.on("data", (chunk) => chunks.push(chunk));
+          r.on("end", () => cb(null, Buffer.concat(chunks)));
+        });
+    }
+
+    it("requires auth", async () => {
+      const res = await request(app).get("/api/referrals/me/print/flyer-a4");
+      expect(res.status).toBe(401);
+    });
+
+    it("streams each kind as a one-page PDF named with the ambassador's code", async () => {
+      await register("printer@example.com");
+      const code = await myCode("printer@example.com");
+      const token = await loginAs("printer@example.com");
+
+      for (const kind of ["flyer-a4", "flyer-a5", "cards"]) {
+        const res = await getPdf(`/api/referrals/me/print/${kind}?design=digital-marketing`, token);
+        expect(res.status).toBe(200);
+        expect(res.headers["content-type"]).toBe("application/pdf");
+        expect(res.headers["content-disposition"]).toContain(`paleon-digital-marketing-`);
+        expect(res.headers["content-disposition"]).toContain(`${code}.pdf`);
+        const body = res.body as Buffer;
+        expect(body.subarray(0, 5).toString("latin1")).toBe("%PDF-");
+        // The A5 sheet draws under a scale transform; pdfkit's auto-paging once spilled it
+        // across 19 pages, so pin the page count.
+        expect(body.toString("latin1").match(/\/Type \/Page\b/g)).toHaveLength(1);
+      }
+    });
+
+    it("defaults to the general design and rejects unknown kinds and designs", async () => {
+      await register("printer2@example.com");
+      const token = await loginAs("printer2@example.com");
+
+      const general = await getPdf("/api/referrals/me/print/cards", token);
+      expect(general.status).toBe(200);
+      expect(general.headers["content-disposition"]).toContain("paleon-general-pocket-cards-");
+
+      const badKind = await request(app)
+        .get("/api/referrals/me/print/billboard")
+        .set("Authorization", `Bearer ${token}`);
+      expect(badKind.status).toBe(400);
+
+      const badDesign = await request(app)
+        .get("/api/referrals/me/print/flyer-a4?design=renewable-energy-digital-systems")
+        .set("Authorization", `Bearer ${token}`);
+      expect(badDesign.status).toBe(400);
+    });
+  });
+
   describe("admin", () => {
     it("rejects non-admins", async () => {
       await register("plainstudent@example.com");

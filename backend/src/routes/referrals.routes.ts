@@ -4,7 +4,12 @@ import { config } from "../config";
 import * as referralsController from "../controllers/referrals.controller";
 import { authenticate } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
-import { setPayoutPhoneSchema, setRewardPreferenceSchema, validateCodeSchema } from "../validators/referrals.validators";
+import {
+  printKitSchema,
+  setPayoutPhoneSchema,
+  setRewardPreferenceSchema,
+  validateCodeSchema,
+} from "../validators/referrals.validators";
 
 export const referralsRouter = Router();
 
@@ -40,3 +45,4 @@ referralsRouter.patch(
   validate(setPayoutPhoneSchema),
   referralsController.setPayoutPhone,
 );
+referralsRouter.get("/me/print/:kind", authenticate, validate(printKitSchema), referralsController.downloadPrintKit);
