@@ -173,11 +173,11 @@ describe("Quizzes", () => {
     expect(res.body.error.message).toMatch(/not available/i);
   });
 
-  it("locks the quiz until every lesson in its module is completed", async () => {
+  it("locks the quiz until the first lesson of its day is completed", async () => {
     const instructor = await createInstructor();
     const { course, courseModule, quiz } = await createCourseWithQuiz(instructor.id);
     const lesson1 = await Lesson.create({ moduleId: courseModule.id, title: "Lesson 1", order: 1 });
-    const lesson2 = await Lesson.create({ moduleId: courseModule.id, title: "Lesson 2", order: 2 });
+    await Lesson.create({ moduleId: courseModule.id, title: "Lesson 2", order: 2 });
     const student = await registerStudent("quizstudent-locked@example.com");
     await Enrollment.create({ courseId: course.id, studentId: student.id });
     const token = await loginAs("quizstudent-locked@example.com");
@@ -186,20 +186,12 @@ describe("Quizzes", () => {
       .post(`/api/quizzes/${quiz.id}/start`)
       .set("Authorization", `Bearer ${token}`);
     expect(blocked.status).toBe(403);
-    expect(blocked.body.error.message).toMatch(/complete this day's lessons/i);
+    expect(blocked.body.error.message).toMatch(/complete this day's first lesson/i);
 
-    // Completing only one of the two lessons must still leave it locked.
+    // Completing the day's first lesson is enough -- lesson 2 is gated on this quiz,
+    // so requiring it here too would deadlock.
     await request(app)
       .post(`/api/lessons/${lesson1.id}/mark-complete`)
-      .set("Authorization", `Bearer ${token}`);
-    const stillBlocked = await request(app)
-      .post(`/api/quizzes/${quiz.id}/start`)
-      .set("Authorization", `Bearer ${token}`);
-    expect(stillBlocked.status).toBe(403);
-
-    // Completing the second lesson unlocks it.
-    await request(app)
-      .post(`/api/lessons/${lesson2.id}/mark-complete`)
       .set("Authorization", `Bearer ${token}`);
     const unlocked = await request(app)
       .post(`/api/quizzes/${quiz.id}/start`)

@@ -10,7 +10,7 @@ import * as lessonsApi from "../../api/lessons.api";
 import * as paymentsApi from "../../api/payments.api";
 import * as quizzesApi from "../../api/quizzes.api";
 import { renderWithProviders } from "../../test/test-utils";
-import { Assignment, Course, CourseModule, Enrollment, User } from "../../types/api";
+import { Assignment, Course, CourseModule, Enrollment, Lesson, Quiz, User } from "../../types/api";
 import { CourseDetailPage } from "./CourseDetailPage";
 
 vi.mock("../../api/courses.api");
@@ -96,6 +96,8 @@ function mockCourseData(enrollmentPaymentConfirmed: boolean) {
     totalLessons: 0,
     progressPercent: 0,
     completedLessonIds: [],
+    submittedQuizIds: [],
+    submittedAssignmentIds: [],
   });
   vi.mocked(lessonsApi.fetchModuleLessons).mockResolvedValue([]);
   vi.mocked(assignmentsApi.fetchModuleAssignments).mockResolvedValue([ASSIGNMENT]);
@@ -231,7 +233,52 @@ describe("CourseDetailPage free preview lesson", () => {
     ]);
     renderCoursePage();
 
-    await screen.findByRole("link", { name: /Threat Landscape/ });
+    // Lesson 2 itself is held by the day gate (assignment not submitted yet) -- see the
+    // "day gate" tests below -- so check the first lesson's label here.
+    await screen.findByRole("link", { name: /Intro to Security/ });
     expect(screen.queryByText("Free preview")).not.toBeInTheDocument();
+  });
+});
+
+describe("CourseDetailPage day gate", () => {
+  const LESSON_1 = { id: "lesson-1", moduleId: MODULE.id, title: "Intro", order: 1 } as Lesson;
+  const LESSON_2 = { id: "lesson-2", moduleId: MODULE.id, title: "Threats", order: 2 } as Lesson;
+  const QUIZ = { id: "quiz-1", moduleId: MODULE.id, title: "Day 1 Quiz", isEnabled: true } as Quiz;
+
+  function mockDay(progress: { completedLessonIds: string[]; submittedQuizIds: string[]; submittedAssignmentIds: string[] }) {
+    mockCourseData(true);
+    vi.mocked(lessonsApi.fetchModuleLessons).mockResolvedValue([LESSON_1, LESSON_2]);
+    vi.mocked(quizzesApi.fetchModuleQuizzes).mockResolvedValue([QUIZ]);
+    vi.mocked(coursesApi.fetchCourseProgress).mockResolvedValue({
+      completedLessons: progress.completedLessonIds.length,
+      totalLessons: 2,
+      progressPercent: 0,
+      ...progress,
+    });
+  }
+
+  it("locks lesson 2 and pops up the outstanding quiz and assignment when clicked", async () => {
+    mockDay({ completedLessonIds: ["lesson-1"], submittedQuizIds: ["quiz-1"], submittedAssignmentIds: [] });
+    renderCoursePage();
+
+    expect(await screen.findByRole("link", { name: /Lesson: Intro/ })).toBeInTheDocument();
+    const locked = await screen.findByRole("button", { name: /Lesson: Threats \(locked\)/ });
+    await userEvent.click(locked);
+
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent(/complete Day 1.s quiz and assignment to proceed to the next lesson/i);
+    expect(dialog).toHaveTextContent(/Done/);
+    expect(screen.getByRole("link", { name: "Submit" })).toHaveAttribute("href", "/assignments/assignment-1");
+  });
+
+  it("opens lesson 2 once the quiz and assignment are submitted", async () => {
+    mockDay({
+      completedLessonIds: ["lesson-1"],
+      submittedQuizIds: ["quiz-1"],
+      submittedAssignmentIds: ["assignment-1"],
+    });
+    renderCoursePage();
+
+    expect(await screen.findByRole("link", { name: /Lesson: Threats/ })).toHaveAttribute("href", "/lessons/lesson-2");
   });
 });

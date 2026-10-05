@@ -13,7 +13,7 @@ export const getLesson = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getLessonNavigation = asyncHandler(async (req: Request, res: Response) => {
-  const navigation = await lessonService.getLessonNavigation(req.params.id);
+  const navigation = await lessonService.getLessonNavigation(req.params.id, req.user);
   res.json(navigation);
 });
 

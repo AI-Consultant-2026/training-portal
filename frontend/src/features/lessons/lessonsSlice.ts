@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as lessonsApi from "../../api/lessons.api";
-import { Lesson, LessonNavigation, VideoCheckpoint } from "../../types/api";
+import {
+  Lesson,
+  LessonNavigation,
+  MODULE_TASKS_INCOMPLETE_CODE,
+  ModuleTaskStatus,
+  VideoCheckpoint,
+} from "../../types/api";
 
 export interface LessonsState {
   currentLesson: Lesson | null;
@@ -10,6 +16,8 @@ export interface LessonsState {
   status: "idle" | "loading" | "succeeded" | "failed";
   markCompleteStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  // Set when the lesson itself is held back by the day gate (quiz/assignment outstanding).
+  taskGate: ModuleTaskStatus | null;
 }
 
 const initialState: LessonsState = {
@@ -20,6 +28,7 @@ const initialState: LessonsState = {
   status: "idle",
   markCompleteStatus: "idle",
   error: null,
+  taskGate: null,
 };
 
 function extractErrorMessage(err: unknown): string {
@@ -28,13 +37,19 @@ function extractErrorMessage(err: unknown): string {
   return message ?? "Something went wrong. Please try again.";
 }
 
+function extractTaskGate(err: unknown): ModuleTaskStatus | null {
+  const details = (err as { response?: { data?: { error?: { details?: unknown } } } })?.response?.data?.error
+    ?.details as (ModuleTaskStatus & { code?: string }) | undefined;
+  return details?.code === MODULE_TASKS_INCOMPLETE_CODE ? details : null;
+}
+
 export const fetchLesson = createAsyncThunk(
   "lessons/fetchOne",
   async (lessonId: string, { rejectWithValue }) => {
     try {
       return await lessonsApi.fetchLesson(lessonId);
     } catch (err) {
-      return rejectWithValue(extractErrorMessage(err));
+      return rejectWithValue({ message: extractErrorMessage(err), taskGate: extractTaskGate(err) });
     }
   },
 );
@@ -83,6 +98,7 @@ const lessonsSlice = createSlice({
         state.navigation = null;
         state.completed = null;
         state.checkpoints = [];
+        state.taskGate = null;
       })
       .addCase(fetchLesson.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -90,7 +106,9 @@ const lessonsSlice = createSlice({
       })
       .addCase(fetchLesson.rejected, (state, action) => {
         state.status = "failed";
-        state.error = (action.payload as string) ?? "Could not load lesson";
+        const payload = action.payload as { message: string; taskGate: ModuleTaskStatus | null } | undefined;
+        state.error = payload?.message ?? "Could not load lesson";
+        state.taskGate = payload?.taskGate ?? null;
       })
       .addCase(fetchLessonNavigation.fulfilled, (state, action) => {
         state.navigation = action.payload;

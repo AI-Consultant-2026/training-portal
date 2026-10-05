@@ -1,10 +1,14 @@
 import { Op, Transaction } from "sequelize";
 import {
+  Assignment,
+  AssignmentSubmission,
   Course,
   CourseModule,
   Enrollment,
   Lesson,
   ProgressTracking,
+  Quiz,
+  QuizAttempt,
   VideoCheckpoint,
   VideoCheckpointAnswer,
   sequelize,
@@ -101,7 +105,91 @@ export async function getLessonForStudent(id: string, requester: { id: string; r
     throw ApiError.forbidden("This lesson unlocks once your payment has been confirmed");
   }
 
+  const taskGate = await getLessonTaskGate(lesson, requester.id);
+  if (taskGate) {
+    throw new ApiError(403, MODULE_TASKS_INCOMPLETE_MESSAGE, {
+      code: MODULE_TASKS_INCOMPLETE_CODE,
+      ...taskGate,
+    });
+  }
+
   return lesson;
+}
+
+// Day gate (2026-10-05): within a day (module), every lesson after the first stays
+// locked until the student has submitted that day's quiz and assignment. The quiz and
+// assignment unlock as soon as the day's first lesson is complete (see
+// isFirstModuleLessonCompleted), so the order a student works through is lesson 1 ->
+// quiz + assignment -> lesson 2. Only enabled quizzes count -- an admin-disabled quiz
+// can't be taken, so it must not block anyone. A quiz counts once an attempt has been
+// submitted (any score); an assignment once anything has been submitted.
+export const MODULE_TASKS_INCOMPLETE_CODE = "MODULE_TASKS_INCOMPLETE";
+export const MODULE_TASKS_INCOMPLETE_MESSAGE =
+  "Complete this day's quiz and assignment to proceed to the next lesson.";
+
+export interface ModuleTaskItem {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface ModuleTaskStatus {
+  moduleId: string;
+  quizzes: ModuleTaskItem[];
+  assignments: ModuleTaskItem[];
+  complete: boolean;
+}
+
+export async function getModuleTaskStatus(moduleId: string, studentId: string): Promise<ModuleTaskStatus> {
+  const [quizzes, assignments] = await Promise.all([
+    Quiz.findAll({ where: { moduleId, isEnabled: true }, order: [["createdAt", "ASC"]] }),
+    Assignment.findAll({ where: { moduleId }, order: [["createdAt", "ASC"]] }),
+  ]);
+  const [attempts, submissions] = await Promise.all([
+    quizzes.length === 0
+      ? []
+      : QuizAttempt.findAll({
+          where: {
+            studentId,
+            quizId: { [Op.in]: quizzes.map((q) => q.id) },
+            status: { [Op.in]: ["submitted", "graded"] },
+          },
+          attributes: ["quizId"],
+        }),
+    assignments.length === 0
+      ? []
+      : AssignmentSubmission.findAll({
+          where: { studentId, assignmentId: { [Op.in]: assignments.map((a) => a.id) } },
+          attributes: ["assignmentId"],
+        }),
+  ]);
+  const doneQuizIds = new Set(attempts.map((a) => a.quizId));
+  const doneAssignmentIds = new Set(submissions.map((s) => s.assignmentId));
+
+  const quizItems = quizzes.map((q) => ({ id: q.id, title: q.title, completed: doneQuizIds.has(q.id) }));
+  const assignmentItems = assignments.map((a) => ({
+    id: a.id,
+    title: a.title,
+    completed: doneAssignmentIds.has(a.id),
+  }));
+  return {
+    moduleId,
+    quizzes: quizItems,
+    assignments: assignmentItems,
+    complete: [...quizItems, ...assignmentItems].every((item) => item.completed),
+  };
+}
+
+// Returns the outstanding day tasks when `lesson` is held back by the day gate, or null
+// when it's open. The day's first lesson is never gated, and neither is a lesson the
+// student already completed (so anyone who got ahead before this rule existed can still
+// revisit what they've done).
+export async function getLessonTaskGate(lesson: Lesson, studentId: string): Promise<ModuleTaskStatus | null> {
+  const siblings = await listLessonsForModule(lesson.moduleId);
+  if (siblings.length === 0 || siblings[0].id === lesson.id) return null;
+  if (await isLessonCompletedByStudent(lesson.id, studentId)) return null;
+  const status = await getModuleTaskStatus(lesson.moduleId, studentId);
+  return status.complete ? null : status;
 }
 
 export interface LessonNavItem {
@@ -115,6 +203,9 @@ export interface LessonNavigation {
   module: { id: string; title: string; weekNumber: number };
   previous: LessonNavItem | null;
   next: LessonNavItem | null;
+  // Students only: set when `next` is held back by the day gate (quiz/assignment
+  // outstanding), so the lesson page can explain why instead of linking to a 403.
+  nextTaskGate?: ModuleTaskStatus | null;
 }
 
 // Powers the Previous/Next lesson buttons on the lesson page. Navigation stays within
@@ -122,7 +213,10 @@ export interface LessonNavigation {
 // crosses into the last lesson of the previous module or the first lesson of the next
 // one -- ordered by weekNumber then order, so "next" always means "the next thing a
 // student would work through," not just "next within this week."
-export async function getLessonNavigation(lessonId: string): Promise<LessonNavigation> {
+export async function getLessonNavigation(
+  lessonId: string,
+  requester?: { id: string; role: string },
+): Promise<LessonNavigation> {
   const lesson = await getLessonById(lessonId);
   const courseModule = await CourseModule.findByPk(lesson.moduleId);
   if (!courseModule) {
@@ -173,11 +267,18 @@ export async function getLessonNavigation(lessonId: string): Promise<LessonNavig
     }
   }
 
+  let nextTaskGate: ModuleTaskStatus | null = null;
+  if (requester?.role === "student" && next) {
+    const nextLesson = await getLessonById(next.id);
+    nextTaskGate = await getLessonTaskGate(nextLesson, requester.id);
+  }
+
   return {
     course: { id: course.id, slug: course.slug, title: course.title },
     module: { id: courseModule.id, title: courseModule.title, weekNumber: courseModule.weekNumber },
     previous,
     next,
+    ...(requester?.role === "student" ? { nextTaskGate } : {}),
   };
 }
 
@@ -239,19 +340,14 @@ async function countCompletedLessons(
   });
 }
 
-// Gates quiz access: a quiz stays locked until every lesson in its own module is
-// completed. A module with zero lessons is never locked -- there's nothing to gate on.
-export async function areAllModuleLessonsCompleted(
-  moduleId: string,
-  studentId: string,
-): Promise<boolean> {
+// Gates quiz access: a quiz unlocks once the first lesson of its own module (day) is
+// completed -- the quiz then has to be submitted before the rest of the day's lessons
+// open (see getLessonTaskGate). It used to need every lesson in the module, which would
+// now deadlock against that gate. A module with zero lessons is never locked.
+export async function isFirstModuleLessonCompleted(moduleId: string, studentId: string): Promise<boolean> {
   const lessons = await listLessonsForModule(moduleId);
   if (lessons.length === 0) return true;
-  const completedCount = await countCompletedLessons(
-    studentId,
-    lessons.map((l) => l.id),
-  );
-  return completedCount >= lessons.length;
+  return isLessonCompletedByStudent(lessons[0].id, studentId);
 }
 
 // Distinct from enrollment.service.ts's getEnrollmentForCourseAndStudent (which allows
@@ -284,6 +380,16 @@ export async function markLessonComplete(
   }
 
   const enrollment = await getActiveEnrollmentOrThrow(courseModule.courseId, studentId);
+
+  // Same day gate as getLessonForStudent: without this a gated lesson could be marked
+  // complete straight through the API, which would then exempt it from the gate.
+  const taskGate = await getLessonTaskGate(lesson, studentId);
+  if (taskGate) {
+    throw new ApiError(403, MODULE_TASKS_INCOMPLETE_MESSAGE, {
+      code: MODULE_TASKS_INCOMPLETE_CODE,
+      ...taskGate,
+    });
+  }
 
   return sequelize.transaction(async (transaction) => {
     // Locking the enrollment row first serializes concurrent mark-complete calls for
@@ -348,6 +454,9 @@ export interface CourseProgress {
   completedLessons: number;
   progressPercent: number;
   completedLessonIds: string[];
+  // For the course page's day gate (see getLessonTaskGate).
+  submittedQuizIds: string[];
+  submittedAssignmentIds: string[];
 }
 
 export async function getCourseProgressForStudent(
@@ -368,11 +477,41 @@ export async function getCourseProgressForStudent(
       ? []
       : await ProgressTracking.findAll({ where: { studentId, lessonId: { [Op.in]: lessonIds } } });
 
+  const modules = await CourseModule.findAll({ where: { courseId }, attributes: ["id"] });
+  const moduleIds = modules.map((m) => m.id);
+  const [quizzes, assignments] =
+    moduleIds.length === 0
+      ? [[], []]
+      : await Promise.all([
+          Quiz.findAll({ where: { moduleId: { [Op.in]: moduleIds } }, attributes: ["id"] }),
+          Assignment.findAll({ where: { moduleId: { [Op.in]: moduleIds } }, attributes: ["id"] }),
+        ]);
+  const [attempts, submissions] = await Promise.all([
+    quizzes.length === 0
+      ? []
+      : QuizAttempt.findAll({
+          where: {
+            studentId,
+            quizId: { [Op.in]: quizzes.map((q) => q.id) },
+            status: { [Op.in]: ["submitted", "graded"] },
+          },
+          attributes: ["quizId"],
+        }),
+    assignments.length === 0
+      ? []
+      : AssignmentSubmission.findAll({
+          where: { studentId, assignmentId: { [Op.in]: assignments.map((a) => a.id) } },
+          attributes: ["assignmentId"],
+        }),
+  ]);
+
   return {
     totalLessons: lessonIds.length,
     completedLessons: completedRecords.length,
     progressPercent: enrollment.progressPercent,
     completedLessonIds: completedRecords.map((r) => r.lessonId),
+    submittedQuizIds: [...new Set(attempts.map((a) => a.quizId))],
+    submittedAssignmentIds: [...new Set(submissions.map((s) => s.assignmentId))],
   };
 }
 

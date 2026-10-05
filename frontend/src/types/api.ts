@@ -200,7 +200,25 @@ export interface LessonNavigation {
   module: { id: string; title: string; weekNumber: number };
   previous: LessonNavItem | null;
   next: LessonNavItem | null;
+  // Students only: set when `next` is held back until this day's quiz and assignment
+  // are submitted (see lesson.service.ts's getLessonTaskGate).
+  nextTaskGate?: ModuleTaskStatus | null;
 }
+
+export interface ModuleTaskItem {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface ModuleTaskStatus {
+  moduleId: string;
+  quizzes: ModuleTaskItem[];
+  assignments: ModuleTaskItem[];
+  complete: boolean;
+}
+
+export const MODULE_TASKS_INCOMPLETE_CODE = "MODULE_TASKS_INCOMPLETE";
 
 export interface VideoCheckpointAnswer {
   id: string;
@@ -229,6 +247,8 @@ export interface CourseProgress {
   completedLessons: number;
   progressPercent: number;
   completedLessonIds: string[];
+  submittedQuizIds: string[];
+  submittedAssignmentIds: string[];
 }
 
 export interface MarkLessonCompleteResult {

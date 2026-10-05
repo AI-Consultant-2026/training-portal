@@ -13,7 +13,7 @@ import {
   User,
   sequelize,
 } from "../models";
-import { areAllModuleLessonsCompleted } from "./lesson.service";
+import { isFirstModuleLessonCompleted } from "./lesson.service";
 import { ApiError } from "../utils/ApiError";
 import { shuffle } from "../utils/shuffle";
 
@@ -130,9 +130,9 @@ export async function start(quizId: string, studentId: string) {
     throw ApiError.forbidden("This quiz is not available right now.");
   }
 
-  const unlocked = await areAllModuleLessonsCompleted(quiz.moduleId, studentId);
+  const unlocked = await isFirstModuleLessonCompleted(quiz.moduleId, studentId);
   if (!unlocked) {
-    throw ApiError.forbidden("Complete this day's lessons before you can start the quiz.");
+    throw ApiError.forbidden("Complete this day's first lesson before you can start the quiz.");
   }
 
   const existing = await QuizAttempt.findOne({

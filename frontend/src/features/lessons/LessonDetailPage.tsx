@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
@@ -7,6 +7,7 @@ import { Spinner } from "../../components/ui/Spinner";
 import { LessonNavItem } from "../../types/api";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
+import { DayTasksDialog } from "./DayTasksDialog";
 import { LessonContent } from "./LessonContent";
 import {
   fetchCheckpoints,
@@ -27,10 +28,13 @@ export function LessonDetailPage() {
     status,
     markCompleteStatus,
     error,
+    taskGate,
   } = useAppSelector((state) => state.lessons);
   const { user } = useAppSelector((state) => state.auth);
   const { items: enrollments } = useAppSelector((state) => state.enrollments);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showTasksDialog, setShowTasksDialog] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -48,6 +52,22 @@ export function LessonDetailPage() {
     if (id) {
       dispatch(markLessonComplete(id));
     }
+  }
+
+  // Opened a lesson that's still held back by the day gate (e.g. from a bookmark or the
+  // Continue button): explain what to do instead of showing a bare error.
+  if (status === "failed" && taskGate) {
+    const backHref = navigation ? `/courses/${navigation.course.slug}` : "/dashboard";
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-10">
+        <DayTasksDialog
+          gate={taskGate}
+          dayNumber={navigation?.module.weekNumber}
+          onClose={() => navigate(backHref)}
+          closeLabel="Back to course"
+        />
+      </div>
+    );
   }
 
   if (status === "failed") {
@@ -79,6 +99,9 @@ export function LessonDetailPage() {
   // enrollment, so show the way to unlock the rest of the course instead.
   const isFreePreview = isNextLocked;
   const payHref = navigation ? `/courses/${navigation.course.slug}/pay/card` : "/courses";
+  // Day gate: the next lesson waits for this day's quiz and assignment. Only relevant
+  // once payment is confirmed -- before that, the payment lock above wins.
+  const nextTaskGate = !isNextLocked ? (navigation?.nextTaskGate ?? null) : null;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -159,6 +182,18 @@ export function LessonDetailPage() {
         </div>
       )}
 
+      {nextTaskGate && (
+        <div className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-gray-900">Next step: this day&rsquo;s quiz and assignment</p>
+          <p className="mt-1 text-sm text-gray-700">
+            Complete Day {navigation?.module.weekNumber}&rsquo;s quiz and assignment to unlock the next lesson.
+          </p>
+          <Button className="mt-3" onClick={() => setShowTasksDialog(true)}>
+            See what&rsquo;s left
+          </Button>
+        </div>
+      )}
+
       {navigation && (navigation.previous || navigation.next) && (
         <div className="mt-8 flex items-center justify-between gap-4 border-t border-gray-200 pt-6">
           <LessonNavLink
@@ -170,10 +205,18 @@ export function LessonDetailPage() {
             item={navigation.next}
             currentWeekNumber={navigation.module.weekNumber}
             direction="next"
-            locked={isNextLocked}
-            onLockedClick={() => setShowPaymentDialog(true)}
+            locked={isNextLocked || nextTaskGate !== null}
+            onLockedClick={() => (isNextLocked ? setShowPaymentDialog(true) : setShowTasksDialog(true))}
           />
         </div>
+      )}
+
+      {showTasksDialog && nextTaskGate && (
+        <DayTasksDialog
+          gate={nextTaskGate}
+          dayNumber={navigation?.module.weekNumber}
+          onClose={() => setShowTasksDialog(false)}
+        />
       )}
 
       {showPaymentDialog && (

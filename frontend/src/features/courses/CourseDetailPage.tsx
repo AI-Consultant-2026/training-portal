@@ -15,7 +15,17 @@ import { Button } from "../../components/ui/Button";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { YouTubePlayer } from "../../components/ui/YouTubePlayer";
-import { Assignment, Capstone, CourseModule, CourseProgress, Lesson, PaymentQuote, Quiz } from "../../types/api";
+import {
+  Assignment,
+  Capstone,
+  CourseModule,
+  CourseProgress,
+  Lesson,
+  ModuleTaskStatus,
+  PaymentQuote,
+  Quiz,
+} from "../../types/api";
+import { DayTasksDialog } from "../lessons/DayTasksDialog";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 import { COURSE_COVER_IMAGES } from "./courseCoverImages";
@@ -106,6 +116,10 @@ export function CourseDetailPage() {
   const [certificateError, setCertificateError] = useState(false);
   const [downloadingAttendance, setDownloadingAttendance] = useState(false);
   const [attendanceError, setAttendanceError] = useState(false);
+  const [tasksDialog, setTasksDialog] = useState<{
+    gate: Pick<ModuleTaskStatus, "quizzes" | "assignments">;
+    dayNumber: number;
+  } | null>(null);
 
   useEffect(() => {
     if (slug) {
@@ -336,6 +350,95 @@ export function CourseDetailPage() {
       <ul className="mt-3 flex flex-col gap-2">
         {modules.map((mod) => {
           const content = moduleContent[mod.id];
+          // This day's quiz + assignment status, for the day gate. Admin-disabled
+          // quizzes can't be taken, so they don't count (same rule as the backend).
+          const dayTasks =
+            content && courseProgress
+              ? (() => {
+                  const quizzes = content.quizzes
+                    .filter((q) => q.isEnabled)
+                    .map((q) => ({
+                      id: q.id,
+                      title: q.title,
+                      completed: courseProgress.submittedQuizIds.includes(q.id),
+                    }));
+                  const assignments = content.assignments.map((a) => ({
+                    id: a.id,
+                    title: a.title,
+                    completed: courseProgress.submittedAssignmentIds.includes(a.id),
+                  }));
+                  return {
+                    quizzes,
+                    assignments,
+                    complete: [...quizzes, ...assignments].every((t) => t.completed),
+                  };
+                })()
+              : null;
+          const renderLesson = (lesson: Lesson, index: number) => {
+              // Disabled by default: lessons only open once an admin has confirmed
+              // payment for this student's enrollment -- enrolling alone isn't
+              // enough. Only gates students -- instructors/admins aren't enrollees
+              // and should always be able to review content. Every course's very
+              // first lesson is a free preview, open before payment.
+              const isCourseFirstLesson = mod.id === firstModuleId && content.lessons[0]?.id === lesson.id;
+              const isFreePreview =
+                isCourseFirstLesson && user?.role === "student" && !myEnrollment?.paymentConfirmed;
+              const isLocked =
+                user?.role === "student" && !myEnrollment?.paymentConfirmed && !isCourseFirstLesson;
+              const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
+              // Day gate: after the day's first lesson, the rest wait for that day's
+              // quiz and assignment (lesson.service.ts's getLessonTaskGate). A lesson
+              // already completed stays open.
+              const isTaskLocked =
+                user?.role === "student" &&
+                !!myEnrollment?.paymentConfirmed &&
+                index > 0 &&
+                !isCompleted &&
+                dayTasks !== null &&
+                !dayTasks.complete;
+
+              if (isLocked) {
+                return (
+                  <button
+                    key={lesson.id}
+                    type="button"
+                    onClick={goToPayment}
+                    className="text-sm font-medium text-gray-400 hover:text-gray-600"
+                    title="This lesson unlocks once your payment has been confirmed"
+                  >
+                    Lesson: {lesson.title} (locked)
+                  </button>
+                );
+              }
+              if (isTaskLocked) {
+                return (
+                  <button
+                    key={lesson.id}
+                    type="button"
+                    onClick={() => setTasksDialog({ gate: dayTasks!, dayNumber: mod.weekNumber })}
+                    className="text-sm font-medium text-gray-400 hover:text-gray-600"
+                    title="Complete this day's quiz and assignment to unlock this lesson"
+                  >
+                    Lesson: {lesson.title} (locked)
+                  </button>
+                );
+              }
+              return (
+                <Link
+                  key={lesson.id}
+                  to={`/lessons/${lesson.id}`}
+                  className="text-sm font-medium text-blue-600 hover:underline"
+                >
+                  Lesson: {lesson.title}
+                  {isFreePreview && (
+                    <span className="ml-1 rounded bg-green-100 px-1.5 py-0.5 text-xs font-semibold text-green-800">
+                      Free preview
+                    </span>
+                  )}
+                  {isCompleted && <span className="ml-1 text-green-700">(completed)</span>}
+                </Link>
+              );
+          };
           return (
             <li key={mod.id} className="rounded-md border border-gray-200 bg-white p-3">
               <span className="text-xs font-medium uppercase text-gray-400">Day {mod.weekNumber}</span>
@@ -347,48 +450,7 @@ export function CourseDetailPage() {
                   content.assignments.length > 0 ||
                   content.quizzes.length > 0) && (
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-3">
-                  {content.lessons.map((lesson) => {
-                    // Disabled by default: lessons only open once an admin has confirmed
-                    // payment for this student's enrollment -- enrolling alone isn't
-                    // enough. Only gates students -- instructors/admins aren't enrollees
-                    // and should always be able to review content. Every course's very
-                    // first lesson is a free preview, open before payment.
-                    const isCourseFirstLesson = mod.id === firstModuleId && content.lessons[0]?.id === lesson.id;
-                    const isFreePreview =
-                      isCourseFirstLesson && user?.role === "student" && !myEnrollment?.paymentConfirmed;
-                    const isLocked =
-                      user?.role === "student" && !myEnrollment?.paymentConfirmed && !isCourseFirstLesson;
-                    const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
-
-                    if (isLocked) {
-                      return (
-                        <button
-                          key={lesson.id}
-                          type="button"
-                          onClick={goToPayment}
-                          className="text-sm font-medium text-gray-400 hover:text-gray-600"
-                          title="This lesson unlocks once your payment has been confirmed"
-                        >
-                          Lesson: {lesson.title} (locked)
-                        </button>
-                      );
-                    }
-                    return (
-                      <Link
-                        key={lesson.id}
-                        to={`/lessons/${lesson.id}`}
-                        className="text-sm font-medium text-blue-600 hover:underline"
-                      >
-                        Lesson: {lesson.title}
-                        {isFreePreview && (
-                          <span className="ml-1 rounded bg-green-100 px-1.5 py-0.5 text-xs font-semibold text-green-800">
-                            Free preview
-                          </span>
-                        )}
-                        {isCompleted && <span className="ml-1 text-green-700">(completed)</span>}
-                      </Link>
-                    );
-                  })}
+                  {content.lessons.slice(0, 1).map((lesson) => renderLesson(lesson, 0))}
                   {content.quizzes.map((q) => {
                     // Admin-disabled takes precedence over everything else -- an instructor
                     // pulled this quiz from availability, which is a different, stronger
@@ -405,23 +467,23 @@ export function CourseDetailPage() {
                         </span>
                       );
                     }
-                    // Disabled by default: a quiz only unlocks once every lesson in its
-                    // own week is completed. Only gates students -- instructors/admins
-                    // can't start a quiz attempt anyway (authorize("student") on the
-                    // backend), so there's nothing to lock for them here.
-                    const allLessonsCompleted =
+                    // Disabled by default: a quiz unlocks once the first lesson of its
+                    // day is completed (the rest of the day's lessons then wait for it --
+                    // see quiz.service.ts's start()). Only gates students --
+                    // instructors/admins can't start a quiz attempt anyway
+                    // (authorize("student") on the backend), so there's nothing to lock.
+                    const firstLessonCompleted =
                       content.lessons.length === 0 ||
-                      content.lessons.every((lesson) =>
-                        courseProgress?.completedLessonIds.includes(lesson.id),
-                      );
-                    const isLocked = user?.role === "student" && !allLessonsCompleted;
+                      !!courseProgress?.completedLessonIds.includes(content.lessons[0].id);
+                    const isLocked = user?.role === "student" && !firstLessonCompleted;
+                    const isSubmitted = courseProgress?.submittedQuizIds.includes(q.id);
 
                     if (isLocked) {
                       return (
                         <span
                           key={q.id}
                           className="text-sm font-medium text-gray-400"
-                          title="Complete this day's lessons to unlock the quiz"
+                          title="Complete this day's first lesson to unlock the quiz"
                         >
                           Quiz: {q.title} (locked)
                         </span>
@@ -434,6 +496,7 @@ export function CourseDetailPage() {
                         className="text-sm font-medium text-blue-600 hover:underline"
                       >
                         Quiz: {q.title}
+                        {isSubmitted && <span className="ml-1 text-green-700">(submitted)</span>}
                       </Link>
                     );
                   })}
@@ -457,9 +520,13 @@ export function CourseDetailPage() {
                         className="text-sm font-medium text-blue-600 hover:underline"
                       >
                         Assignment: {a.title}
+                        {courseProgress?.submittedAssignmentIds.includes(a.id) && (
+                          <span className="ml-1 text-green-700">(submitted)</span>
+                        )}
                       </Link>
                     );
                   })}
+                  {content.lessons.slice(1).map((lesson, i) => renderLesson(lesson, i + 1))}
                 </div>
               )}
 
@@ -494,6 +561,14 @@ export function CourseDetailPage() {
             View capstone
           </Link>
         </div>
+      )}
+
+      {tasksDialog && (
+        <DayTasksDialog
+          gate={tasksDialog.gate}
+          dayNumber={tasksDialog.dayNumber}
+          onClose={() => setTasksDialog(null)}
+        />
       )}
     </div>
   );
