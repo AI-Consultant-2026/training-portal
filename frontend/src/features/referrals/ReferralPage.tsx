@@ -5,6 +5,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { downloadPrintKit, PrintDesign, PrintKind } from "../../api/referrals.api";
+import { ShareCardMaker, VideoPack } from "./ShareKit";
 import { MyReferralSummary, ReferralLeaderboard, ReferralRewardType } from "../../types/api";
 import {
   fetchMyReferralSummary,
@@ -35,6 +36,7 @@ export function ReferralPage() {
     (state) => state.referrals,
   );
   const currentUserId = useAppSelector((state) => state.auth.user?.id ?? null);
+  const firstName = useAppSelector((state) => state.auth.user?.firstName ?? null);
 
   useEffect(() => {
     dispatch(fetchMyReferralSummary());
@@ -74,6 +76,10 @@ export function ReferralPage() {
       )}
 
       <ShareCard summary={summary} />
+
+      <ShareCardMaker summary={summary} firstName={firstName} />
+
+      <VideoPack summary={summary} />
 
       <PrintKit code={summary.code} />
 

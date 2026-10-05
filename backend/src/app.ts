@@ -484,6 +484,20 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "email", req.params.file));
   });
+  // Ambassador video pack on /refer/me (2026-10-05): the 10 Paleon promo videos (720p,
+  // ~2-3MB each) plus their poster frames. sendFile handles Range requests, which the
+  // <video> player needs for seeking. ?download=1 makes the browser save the file instead
+  // of playing it (an <a download> is ignored cross-origin, e.g. in local dev).
+  // Cross-Origin-Resource-Policy is relaxed so the Vite dev server's page can play them.
+  app.get("/videos/ambassador/:file([0-9]{2}-[a-z0-9-]+\\.(?:mp4|jpg))", (req, res) => {
+    const file = req.params.file;
+    res.set("Cache-Control", "public, max-age=86400");
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+    if (req.query.download === "1") {
+      res.attachment(`paleon-${file}`);
+    }
+    res.sendFile(path.join(__dirname, "marketing", "videos", "ambassador", file));
+  });
   // Sample certificate images for the course pages' "Before you enrol" section
   // (2026-09-25), generated from the real certificate PDF by
   // scripts/generate-sample-certificates.ts.
