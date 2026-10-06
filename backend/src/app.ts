@@ -14,6 +14,7 @@ import { REFEREE_REWARD_NGN, REFERRER_REWARD_NGN } from "./constants/referral";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import { apiRouter } from "./routes";
+import { shareLinksRouter } from "./routes/shareLinks.routes";
 import * as paymentsController from "./controllers/payments.controller";
 
 export function createApp() {
@@ -502,6 +503,10 @@ export function createApp() {
     }
     res.sendFile(path.join(__dirname, "marketing", "videos", "ambassador", file));
   });
+  // Ambassador share links (2026-10-06): a public page per share card / promo video whose
+  // og:image is the card, so the picture shows up in a WhatsApp, Facebook, LinkedIn or X
+  // post on its own. See services/shareLink.service.ts.
+  app.use("/s", shareLinksRouter);
   // Sample certificate images for the course pages' "Before you enrol" section
   // (2026-09-25), generated from the real certificate PDF by
   // scripts/generate-sample-certificates.ts.

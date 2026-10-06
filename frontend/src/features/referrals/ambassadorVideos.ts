@@ -107,7 +107,7 @@ export const AMBASSADOR_VIDEOS: AmbassadorVideo[] = [
 
 // VITE_API_BASE_URL is "http://localhost:4000/api" in local dev and same-origin in
 // production; the videos are served by the backend next to /api, not under it.
-const SITE_ORIGIN = String(import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/api\/?$/, "");
+export const SITE_ORIGIN = String(import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/api\/?$/, "");
 
 export function videoUrl(video: AmbassadorVideo): string {
   return `${SITE_ORIGIN}/videos/ambassador/${video.file}.mp4`;

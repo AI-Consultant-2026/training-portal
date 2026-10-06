@@ -5,6 +5,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { downloadPrintKit, PrintDesign, PrintKind } from "../../api/referrals.api";
+import { cardShareLink } from "./shareCard";
 import { ShareCardMaker, VideoPack } from "./ShareKit";
 import { MyReferralSummary, ReferralLeaderboard, ReferralRewardType } from "../../types/api";
 import {
@@ -122,25 +123,28 @@ export function ReferralPage() {
   );
 }
 
-type CopyTarget = "code" | "link" | "instagram";
+type CopyTarget = "code" | "link" | "instagram" | "facebook";
 
 function ShareCard({ summary }: { summary: MyReferralSummary }) {
   const [copied, setCopied] = useState<CopyTarget | null>(null);
 
-  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatNgn(summary.welcomeBonusNgn)} in airtime once your first course payment is confirmed: ${summary.shareUrl}`;
-  const encodedUrl = encodeURIComponent(summary.shareUrl);
+  // The friend card's share link (2026-10-06): its preview image is the "₦3,000 airtime for
+  // you" card, so WhatsApp, Facebook, LinkedIn and X show the picture with the message.
+  const shareLink = cardShareLink(summary.code, "friend", false);
+  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatNgn(summary.welcomeBonusNgn)} in airtime once your first course payment is confirmed: ${shareLink}`;
+  const encodedUrl = encodeURIComponent(shareLink);
   const encodedMessage = encodeURIComponent(shareMessage);
   const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
+  const twitterUrl = `https://x.com/intent/post?text=${encodedMessage}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
   const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedMessage}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+  const linkedinUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodedMessage}`;
 
   async function copy(value: string, which: CopyTarget) {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(which);
-      window.setTimeout(() => setCopied(null), which === "instagram" ? 5000 : 2000);
+      window.setTimeout(() => setCopied(null), which === "instagram" || which === "facebook" ? 5000 : 2000);
     } catch {
       setCopied(null);
     }
@@ -194,6 +198,7 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
           href={facebookUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => copy(shareMessage, "facebook")}
           className="rounded-md bg-[#1877F2] px-3 py-2 text-sm font-medium text-white hover:bg-[#1462c8]"
         >
           Facebook
@@ -223,13 +228,18 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
         </button>
         <button
           type="button"
-          onClick={() => copy(summary.shareUrl, "link")}
+          onClick={() => copy(shareLink, "link")}
           className="rounded-md border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
           {copied === "link" ? "Link copied!" : "Copy invite link"}
         </button>
       </div>
 
+      {copied === "facebook" && (
+        <p className="mt-2 text-xs text-blue-800">
+          Facebook shows your invite card in the post. Your message is copied: paste it in the post box, then press Post.
+        </p>
+      )}
       {copied === "instagram" && (
         <p className="mt-2 text-xs text-blue-800">
           Instagram has no direct share link — your message and code are on the clipboard. Paste them
