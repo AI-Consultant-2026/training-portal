@@ -512,6 +512,13 @@ export function createApp() {
     }
     res.sendFile(path.join(__dirname, "marketing", "videos", "ambassador", file));
   });
+  // Homepage hero video (2026-10-07): "Your Degree May Not Be Enough" (720p, ~6MB) and its
+  // poster. Same Range-capable sendFile as the ambassador pack above.
+  app.get("/videos/home/:file([a-z0-9-]+\\.(?:mp4|jpg))", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+    res.sendFile(path.join(__dirname, "marketing", "videos", "home", req.params.file));
+  });
   // Ambassador share links (2026-10-06): a public page per share card / promo video whose
   // og:image is the card, so the picture shows up in a WhatsApp, Facebook, LinkedIn or X
   // post on its own. See services/shareLink.service.ts.

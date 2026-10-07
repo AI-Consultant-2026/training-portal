@@ -388,6 +388,45 @@
   }
 
 
+  /* Hero video (2026-10-07): beside the headline on desktop, under the CTAs on phones. */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(260px, 26vw, 320px);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  .hero-video { margin: 0; }
+  .hero-video video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 0 4px rgba(232,134,60,0.18);
+  }
+  .hero-video figcaption {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--paper);
+    text-align: center;
+  }
+  .hero-video-tag {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal-2);
+    margin-bottom: 3px;
+  }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); }
+    .hero-video { width: min(100%, 300px); justify-self: center; }
+  }
+
   .hero-stats {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -922,6 +961,8 @@
   <section class="hero" id="top">
     <canvas id="heroCanvas" aria-hidden="true"></canvas>
     <div class="wrap hero-inner">
+      <div class="hero-grid">
+        <div class="hero-copy">
       <span class="eyebrow">Four courses &middot; 84 lessons &middot; industry-focused</span>
       <h1 class="hero-title">Digital Skills Built for Careers in <em>Oil &amp; Gas, Banking and Telecoms</em></h1>
       <p class="hero-sub">Build the digital skills employers need to compete for opportunities in Oil &amp; Gas, Banking, Telecommunications and Nigeria’s fastest-growing industries.<br>
@@ -932,6 +973,15 @@
         <a class="btn btn-whatsapp btn-lg" href="https://wa.me/2347077149989?text=Hello%20Paleon%20Training%2C%20I%20would%20like%20to%20find%20out%20more%20about%20your%20training%20programmes." target="_blank" rel="noopener" aria-label="Chat with Paleon Training on WhatsApp (opens WhatsApp)"><span aria-hidden="true">&#128172;</span> Chat with Paleon on WhatsApp</a>
       </div>
       <p class="hero-whatsapp-note">Need help choosing a course, making a payment or getting support? Chat with Paleon Training on WhatsApp.</p>
+        </div>
+
+        <figure class="hero-video">
+          <video controls playsinline preload="none" poster="/videos/home/your-degree-may-not-be-enough.jpg" aria-label="Video: Your Degree May Not Be Enough">
+            <source src="/videos/home/your-degree-may-not-be-enough.mp4" type="video/mp4">
+          </video>
+          <figcaption><span class="hero-video-tag">&#9654; Watch &middot; 1 min</span> Your Degree May Not Be Enough</figcaption>
+        </figure>
+      </div>
 
       <div class="hero-stats">
         <div class="stat-cell"><div class="stat-num">04</div><div class="stat-label">Full courses</div></div>
