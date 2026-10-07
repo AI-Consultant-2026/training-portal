@@ -79,12 +79,14 @@ export interface AdminPayout {
   status: "processing" | "delivered" | "failed";
   message: string | null;
   providerTransactionId: string | null;
+  provider: string;
   live: boolean;
   sentAt: string;
 }
 
 export interface PayoutConfig {
   enabled: boolean;
+  provider: string;
   live: boolean;
   balanceNgn: number | null;
   balanceProblem: string | null;
@@ -96,6 +98,7 @@ export interface PayoutPreview {
   name: string;
   phone: string;
   suggestedNetwork: VtpassNetwork | null;
+  provider: string;
   live: boolean;
 }
 

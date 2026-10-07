@@ -1,13 +1,5 @@
 import { UniqueConstraintError } from "sequelize";
-import { config } from "../config";
-import {
-  NETWORK_LABEL,
-  VtpassNetwork,
-  airtimeServiceId,
-  dataServiceId,
-  guessNetwork,
-  toLocalNigerianMobile,
-} from "../constants/vtpass";
+import { NETWORK_LABEL, VtpassNetwork, guessNetwork, toLocalNigerianMobile } from "../constants/vtpass";
 import { Referral, ReferralPayout, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
@@ -19,34 +11,39 @@ import {
   payoutPhoneOf,
   serializeAdminRow,
 } from "./referral.service";
+import { PayoutProvider, activeProvider, providerById } from "./payoutProvider";
 import * as vtpass from "./vtpass.service";
 
-// Sends referral airtime/data rewards through VTpass from /admin/referrals (2026-10-02).
-// Each send is a referral_payouts row written BEFORE calling VTpass, so the request id is
+// Sends referral airtime/data rewards from /admin/referrals (2026-10-02), through VTU.ng
+// since 2026-10-07 or VTpass before that (see payoutProvider.ts).
+// Each send is a referral_payouts row written BEFORE calling the provider, so the request id is
 // never lost and a crash mid-send can still be requeried. A partial unique index allows only
 // one processing-or-delivered payout per reward, which is the double-pay guard. Course
 // credit is still paid by hand: Paystack payment links are fixed-price.
 
 export interface PayoutConfig {
   enabled: boolean;
+  provider: string;
   live: boolean;
   balanceNgn: number | null;
   balanceProblem: string | null;
 }
 
 export async function getPayoutConfig(): Promise<PayoutConfig> {
-  if (!vtpass.isVtpassConfigured()) return { enabled: false, live: false, balanceNgn: null, balanceProblem: null };
-  if (!config.vtpass.publicKey) {
-    return { enabled: true, live: config.vtpass.live, balanceNgn: null, balanceProblem: "VTPASS_PUBLIC_KEY isn't set" };
-  }
-  const { balanceNgn, problem } = await vtpass.getBalance();
-  return { enabled: true, live: config.vtpass.live, balanceNgn, balanceProblem: problem };
+  const p = activeProvider();
+  if (!p.isConfigured()) return { enabled: false, provider: p.label, live: false, balanceNgn: null, balanceProblem: null };
+  const setupProblem = p.setupProblem();
+  if (setupProblem) return { enabled: true, provider: p.label, live: p.live(), balanceNgn: null, balanceProblem: setupProblem };
+  const { balanceNgn, problem } = await p.getBalance();
+  return { enabled: true, provider: p.label, live: p.live(), balanceNgn, balanceProblem: problem };
 }
 
-function requireConfigured() {
-  if (!vtpass.isVtpassConfigured()) {
-    throw ApiError.badRequest("VTpass isn't set up yet; pay this reward by hand");
+function requireConfigured(): PayoutProvider {
+  const p = activeProvider();
+  if (!p.isConfigured()) {
+    throw ApiError.badRequest("Airtime/data sending isn't set up yet; pay this reward by hand");
   }
+  return p;
 }
 
 function rewardOf(referral: Referral, party: RewardParty) {
@@ -67,6 +64,7 @@ export interface PayoutPreview {
   name: string;
   phone: string;
   suggestedNetwork: VtpassNetwork | null;
+  provider: string;
   live: boolean;
 }
 
@@ -75,7 +73,7 @@ function assertPayable(referral: Referral, party: RewardParty) {
   const reward = rewardOf(referral, party);
   if (reward.status !== "pending") throw ApiError.badRequest("This reward has already been paid");
   if (reward.type !== "airtime" && reward.type !== "data") {
-    throw ApiError.badRequest("Course credit can't be sent through VTpass; pay it by hand");
+    throw ApiError.badRequest("Course credit can't be sent as airtime or data; pay it by hand");
   }
   const person = personFor(referral, party);
   const saved = person ? payoutPhoneOf(person) : null;
@@ -86,7 +84,7 @@ function assertPayable(referral: Referral, party: RewardParty) {
 }
 
 export async function previewPayout(referralId: string, party: RewardParty): Promise<PayoutPreview> {
-  requireConfigured();
+  const provider = requireConfigured();
   const referral = await loadAdminReferral(referralId);
   const { reward, person, phone } = assertPayable(referral, party);
   return {
@@ -95,14 +93,14 @@ export async function previewPayout(referralId: string, party: RewardParty): Pro
     name: `${person.firstName} ${person.lastName}`.trim(),
     phone,
     suggestedNetwork: mobileNetworkOf(person) ?? guessNetwork(phone),
-    live: config.vtpass.live,
+    provider: provider.label,
+    live: provider.live(),
   };
 }
 
 // Plans that fit within the reward, biggest first, so the dialog can preselect the best one.
 export async function listDataPlansWithin(network: VtpassNetwork, maxNgn: number): Promise<vtpass.DataPlan[]> {
-  requireConfigured();
-  const plans = await vtpass.listDataPlans(dataServiceId(network));
+  const plans = await requireConfigured().listDataPlans(network);
   return plans.filter((p) => p.amountNgn <= maxNgn).sort((a, b) => b.amountNgn - a.amountNgn);
 }
 
@@ -128,7 +126,7 @@ async function applyResult(payout: ReferralPayout, result: vtpass.VtpassResult) 
       await referral.save();
     }
   }
-  logger.info(`Referral payout ${payout.id} (${payout.requestId}) is ${payout.status}: ${result.message}`);
+  logger.info(`Referral payout ${payout.id} (${payout.provider} ${payout.requestId}) is ${payout.status}: ${result.message}`);
 }
 
 export interface PayoutOutcome {
@@ -144,7 +142,7 @@ export async function sendReward(args: {
   variationCode?: string;
   adminId: string;
 }): Promise<PayoutOutcome> {
-  requireConfigured();
+  const provider = requireConfigured();
   const referral = await loadAdminReferral(args.referralId);
   const { reward, phone } = assertPayable(referral, args.party);
 
@@ -152,7 +150,7 @@ export async function sendReward(args: {
   let plan: vtpass.DataPlan | null = null;
   if (reward.type === "data") {
     if (!args.variationCode) throw ApiError.badRequest("Choose a data plan");
-    const plans = await vtpass.listDataPlans(dataServiceId(args.network));
+    const plans = await provider.listDataPlans(args.network);
     plan = plans.find((p) => p.code === args.variationCode) ?? null;
     if (!plan) throw ApiError.badRequest(`That plan isn't available on ${NETWORK_LABEL[args.network]}`);
     if (plan.amountNgn > reward.amountNgn) throw ApiError.badRequest("That plan costs more than the reward");
@@ -172,7 +170,8 @@ export async function sendReward(args: {
       variationName: plan?.name ?? null,
       requestId: vtpass.generateRequestId(),
       status: "processing",
-      live: config.vtpass.live,
+      provider: provider.id,
+      live: provider.live(),
       sentById: args.adminId,
     });
   } catch (err) {
@@ -184,19 +183,8 @@ export async function sendReward(args: {
 
   const result =
     reward.type === "airtime"
-      ? await vtpass.buyAirtime({
-          requestId: payout.requestId,
-          serviceId: airtimeServiceId(args.network),
-          amountNgn,
-          phone,
-        })
-      : await vtpass.buyData({
-          requestId: payout.requestId,
-          serviceId: dataServiceId(args.network),
-          variationCode: plan!.code,
-          amountNgn,
-          phone,
-        });
+      ? await provider.buyAirtime({ requestId: payout.requestId, network: args.network, amountNgn, phone })
+      : await provider.buyData({ requestId: payout.requestId, network: args.network, plan: plan!, phone });
   await applyResult(payout, result);
 
   return {
@@ -206,9 +194,8 @@ export async function sendReward(args: {
   };
 }
 
-// For a send still marked processing: ask VTpass where it got to.
+// For a send still marked processing: ask the provider that sent it where it got to.
 export async function refreshPayout(payoutId: string): Promise<PayoutOutcome> {
-  requireConfigured();
   const payout = await ReferralPayout.findByPk(payoutId);
   if (!payout) throw ApiError.notFound("Payout not found");
   if (payout.status !== "processing") {
@@ -218,7 +205,11 @@ export async function refreshPayout(payoutId: string): Promise<PayoutOutcome> {
       message: payout.providerMessage ?? "",
     };
   }
-  const result = await vtpass.requery(payout.requestId);
+  const provider = providerById(payout.provider);
+  if (!provider.isConfigured()) {
+    throw ApiError.badRequest(`${provider.label} isn't set up any more, so check this send on ${provider.label} directly`);
+  }
+  const result = await provider.requery(payout.requestId);
   await applyResult(payout, result);
   return {
     referral: serializeAdminRow(await loadAdminReferral(payout.referralId)),

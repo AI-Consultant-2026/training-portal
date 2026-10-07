@@ -3,6 +3,7 @@ import request from "supertest";
 import { createApp } from "../../src/app";
 import { config } from "../../src/config";
 import { Course, ReferralPayout, User } from "../../src/models";
+import { resetVtungToken } from "../../src/services/vtung.service";
 
 const app = createApp();
 
@@ -105,7 +106,7 @@ describe("Referral payouts via VTpass", () => {
     const { adminToken, referralId } = await qualifiedReferral({ phone: "08031234567" });
 
     const cfg = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
-    expect(cfg.body).toEqual({ enabled: false, live: false, balanceNgn: null, balanceProblem: null });
+    expect(cfg.body).toEqual({ enabled: false, provider: "VTpass", live: false, balanceNgn: null, balanceProblem: null });
 
     const send = await request(app)
       .post(`/api/admin/referrals/${referralId}/send-reward`)
@@ -121,7 +122,7 @@ describe("Referral payouts via VTpass", () => {
 
     fetchSpy.mockImplementationOnce(() => vtpassReply({ code: "1", contents: { balance: "5000.50" } }));
     const ok = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
-    expect(ok.body).toEqual({ enabled: true, live: false, balanceNgn: 5000.5, balanceProblem: null });
+    expect(ok.body).toEqual({ enabled: true, provider: "VTpass", live: false, balanceNgn: 5000.5, balanceProblem: null });
 
     fetchSpy.mockImplementationOnce(() => vtpassReply({ code: "087", message: "INVALID CREDENTIALS" }));
     const refused = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
@@ -285,5 +286,164 @@ describe("Referral payouts via VTpass", () => {
     expect(friend.status).toBe(400);
     expect(friend.body.error.message).toMatch(/no phone/i);
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+});
+
+function vtungReply(body: unknown, status = 200) {
+  return Promise.resolve(new Response(JSON.stringify(body), { status }));
+}
+
+const vtungOrder = (status: string, orderId = 555001) => ({
+  code: "success",
+  message: status === "completed-api" ? "ORDER COMPLETED" : "ORDER PROCESSING",
+  data: { order_id: orderId, status, request_id: "x" },
+});
+
+// Answers VTU.ng calls by path: login, then whatever `handler` returns for the rest.
+function vtungRouter(handler: (path: string, body: Record<string, unknown>) => Promise<Response>) {
+  return (url: string, init?: RequestInit) => {
+    const path = String(url).replace("https://vtu.ng/wp-json", "");
+    if (path === "/jwt-auth/v1/token") return vtungReply({ token: "jwt-test" });
+    return handler(path, init?.body ? JSON.parse(String(init.body)) : {});
+  };
+}
+
+describe("Referral payouts via VTU.ng", () => {
+  let fetchSpy: jest.SpyInstance;
+  const originalVtung = { ...config.vtung };
+  const originalVtpass = { ...config.vtpass };
+
+  beforeEach(() => {
+    resetVtungToken();
+    Object.assign(config.vtung, { username: "paleon", password: "secret" });
+    fetchSpy = jest.spyOn(global, "fetch");
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
+    Object.assign(config.vtung, originalVtung);
+    Object.assign(config.vtpass, originalVtpass);
+  });
+
+  it("takes over from VTpass once its login is set, and shows the wallet balance", async () => {
+    Object.assign(config.vtpass, { apiKey: "test-api", secretKey: "SK_test", publicKey: "PK_test" });
+    const admin = await createUser("payout-admin@example.com", "admin");
+    const adminToken = await loginAs(admin.email);
+    fetchSpy.mockImplementation(vtungRouter(() => vtungReply({ code: "success", data: { balance: 12500.5, currency: "NGN" } })));
+
+    const cfg = await request(app).get("/api/admin/referral-payouts/config").set("Authorization", `Bearer ${adminToken}`);
+    expect(cfg.body).toEqual({ enabled: true, provider: "VTU.ng", live: true, balanceNgn: 12500.5, balanceProblem: null });
+    expect(fetchSpy.mock.calls[1][0]).toBe("https://vtu.ng/wp-json/api/v2/balance");
+    expect(fetchSpy.mock.calls[1][1].headers).toMatchObject({ authorization: "Bearer jwt-test" });
+  });
+
+  it("sends 9mobile airtime as service_id 9mobile and records the provider", async () => {
+    const { adminToken, referralId } = await qualifiedReferral({ phone: "08091234567" });
+    fetchSpy.mockImplementation(vtungRouter(() => vtungReply(vtungOrder("completed-api"))));
+
+    const res = await request(app)
+      .post(`/api/admin/referrals/${referralId}/send-reward`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ party: "referrer", network: "etisalat" });
+    expect(res.body.status).toBe("delivered");
+    expect(res.body.referral.referrerReward.status).toBe("issued");
+    expect(res.body.referral.payouts.referrer).toMatchObject({ provider: "VTU.ng", live: true, providerTransactionId: "555001" });
+
+    const buy = fetchSpy.mock.calls.find(([url]) => String(url).endsWith("/api/v2/airtime"));
+    expect(JSON.parse(buy[1].body)).toMatchObject({ service_id: "9mobile", amount: 5000, phone: "08091234567" });
+    expect((await ReferralPayout.findOne())!.provider).toBe("vtung");
+  });
+
+  it("logs in again once if the token was replaced, then sends", async () => {
+    const { adminToken, referralId } = await qualifiedReferral({ phone: "08031234567" });
+    let airtimeCalls = 0;
+    fetchSpy.mockImplementation(
+      vtungRouter((path) => {
+        if (path !== "/api/v2/airtime") return vtungReply({});
+        airtimeCalls += 1;
+        return airtimeCalls === 1
+          ? vtungReply({ code: "jwt_auth_invalid_token", data: { status: 403 } }, 403)
+          : vtungReply(vtungOrder("completed-api"));
+      }),
+    );
+
+    const res = await request(app)
+      .post(`/api/admin/referrals/${referralId}/send-reward`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ party: "referrer", network: "mtn" });
+    expect(res.body.status).toBe("delivered");
+    expect(airtimeCalls).toBe(2);
+  });
+
+  it("keeps a processing order pending and settles it with a VTU.ng requery", async () => {
+    const { adminToken, referralId } = await qualifiedReferral({ phone: "08031234567" });
+    fetchSpy.mockImplementation(
+      vtungRouter((path) => vtungReply(vtungOrder(path === "/api/v2/requery" ? "completed-api" : "processing-api"))),
+    );
+
+    const res = await request(app)
+      .post(`/api/admin/referrals/${referralId}/send-reward`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ party: "referrer", network: "mtn" });
+    expect(res.body.status).toBe("processing");
+
+    const refreshed = await request(app)
+      .post(`/api/admin/referral-payouts/${res.body.referral.payouts.referrer.id}/refresh`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(refreshed.body.status).toBe("delivered");
+    expect(fetchSpy.mock.calls.some(([url]) => String(url).endsWith("/api/v2/requery"))).toBe(true);
+  });
+
+  it("still requeries an older VTpass send with VTpass after the switch", async () => {
+    Object.assign(config.vtpass, { apiKey: "test-api", secretKey: "SK_test", publicKey: "PK_test", live: false });
+    Object.assign(config.vtung, { username: "", password: "" });
+    const { adminToken, referralId } = await qualifiedReferral({ phone: "08031234567" });
+    fetchSpy.mockImplementationOnce(() => Promise.reject(new Error("socket hang up")));
+    const res = await request(app)
+      .post(`/api/admin/referrals/${referralId}/send-reward`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ party: "referrer", network: "mtn" });
+    expect(res.body.status).toBe("processing");
+
+    Object.assign(config.vtung, { username: "paleon", password: "secret" });
+    fetchSpy.mockImplementationOnce(() =>
+      vtpassReply({ code: "000", content: { transactions: { status: "delivered", transactionId: "1" } } }),
+    );
+    const refreshed = await request(app)
+      .post(`/api/admin/referral-payouts/${res.body.referral.payouts.referrer.id}/refresh`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(refreshed.body.status).toBe("delivered");
+    expect(fetchSpy.mock.calls[1][0]).toBe("https://sandbox.vtpass.com/api/requery");
+  });
+
+  it("sends data by VTU.ng variation id, leaving out unavailable plans", async () => {
+    const { adminToken, referralId } = await qualifiedReferral({ rewardType: "data", phone: "08031234567" });
+    fetchSpy.mockImplementation(
+      vtungRouter((path) =>
+        path.startsWith("/api/v2/variations/data")
+          ? vtungReply({
+              code: "success",
+              data: [
+                { variation_id: 2676, service_id: "mtn", data_plan: "1GB - 7 Days", price: "819", availability: "Available" },
+                { variation_id: 244542, service_id: "mtn", data_plan: "2GB - 30 Days", price: "1599", availability: "Available" },
+                { variation_id: 229129, service_id: "mtn", data_plan: "10GB - 30 Days", price: "4499", availability: "Unavailable" },
+              ],
+            })
+          : vtungReply(vtungOrder("completed-api")),
+      ),
+    );
+
+    const plans = await request(app)
+      .get("/api/admin/referral-payouts/data-plans?network=mtn&maxNgn=5000")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(plans.body.plans.map((p: { code: string }) => p.code)).toEqual(["244542", "2676"]);
+
+    const res = await request(app)
+      .post(`/api/admin/referrals/${referralId}/send-reward`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ party: "referrer", network: "mtn", variationCode: "244542" });
+    expect(res.body.status).toBe("delivered");
+    const buy = fetchSpy.mock.calls.find(([url]) => String(url).endsWith("/api/v2/data"));
+    expect(JSON.parse(buy[1].body)).toMatchObject({ service_id: "mtn", variation_id: "244542", phone: "08031234567" });
   });
 });

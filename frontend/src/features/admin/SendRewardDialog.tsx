@@ -25,7 +25,7 @@ function apiMessage(err: unknown, fallback: string): string {
   );
 }
 
-// Confirm-then-send for one referral reward through VTpass. Airtime sent to a wrong number
+// Confirm-then-send for one referral reward through VTU.ng or VTpass. Airtime sent to a wrong number
 // can't be recovered, so the number and network are shown large and must be ticked off
 // before Send is enabled.
 export function SendRewardDialog({
@@ -90,7 +90,7 @@ export function SendRewardDialog({
         outcome.referral,
         outcome.status === "delivered"
           ? `Sent to ${preview?.name}. Reward marked paid.`
-          : `Sent to ${preview?.name}, but VTpass hasn't confirmed it yet. Use "Check status" on the row in a minute.`,
+          : `Sent to ${preview?.name}, but ${preview?.provider ?? "the provider"} hasn't confirmed it yet. Use "Check status" on the row in a minute.`,
       );
       onClose();
     } catch (err) {
@@ -116,12 +116,12 @@ export function SendRewardDialog({
         <div className="space-y-4">
           {preview.live ? (
             <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-800">
-              <strong>Live:</strong> this spends real money from the VTpass wallet.{" "}
+              <strong>Live:</strong> this spends real money from the {preview.provider} wallet.{" "}
               {preview.kind === "data" ? "Data" : "Airtime"} sent to a wrong number can&apos;t be got back.
             </p>
           ) : (
             <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              <strong>Test mode (VTpass sandbox):</strong> no real airtime is sent. Only 08011111111
+              <strong>Test mode ({preview.provider} sandbox):</strong> no real airtime is sent. Only 08011111111
               succeeds in the sandbox; other numbers come back as failed.
             </p>
           )}

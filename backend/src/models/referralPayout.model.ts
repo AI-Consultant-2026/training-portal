@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
-// One VTpass airtime/data send for a referral reward (see referralPayout.service.ts).
+// One airtime/data send for a referral reward, through VTpass or VTU.ng (see referralPayout.service.ts).
 // processing -> sent, VTpass hasn't confirmed delivery yet (or we couldn't tell); requery it
 // delivered  -> VTpass confirmed delivery; the referral's reward is marked issued
 // failed     -> VTpass rejected or reversed it; nothing was delivered, safe to retry
@@ -22,6 +22,8 @@ export interface ReferralPayoutAttributes {
   providerMessage: string | null;
   providerTransactionId: string | null;
   providerResponse: unknown;
+  // "vtpass" or "vtung": which API sent it, so a requery goes to the same one.
+  provider: string;
   live: boolean;
   sentById: string | null;
   createdAt?: Date;
@@ -37,6 +39,7 @@ export type ReferralPayoutCreationAttributes = Optional<
   | "providerMessage"
   | "providerTransactionId"
   | "providerResponse"
+  | "provider"
   | "sentById"
   | "createdAt"
   | "updatedAt"
@@ -61,6 +64,7 @@ export class ReferralPayout
   declare providerMessage: string | null;
   declare providerTransactionId: string | null;
   declare providerResponse: unknown;
+  declare provider: string;
   declare live: boolean;
   declare sentById: string | null;
   declare readonly createdAt: Date;
@@ -85,6 +89,7 @@ export function initReferralPayoutModel(sequelize: Sequelize) {
       providerMessage: { type: DataTypes.TEXT, allowNull: true },
       providerTransactionId: { type: DataTypes.STRING, allowNull: true },
       providerResponse: { type: DataTypes.JSONB, allowNull: true },
+      provider: { type: DataTypes.STRING, allowNull: false, defaultValue: "vtpass" },
       live: { type: DataTypes.BOOLEAN, allowNull: false },
       sentById: { type: DataTypes.UUID, allowNull: true },
     },

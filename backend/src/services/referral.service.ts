@@ -15,6 +15,7 @@ import { Enrollment, Referral, ReferralPayout, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { VTPASS_NETWORKS, type VtpassNetwork } from "../constants/vtpass";
+import { providerLabel } from "./payoutProvider";
 
 export type RewardParty = "referrer" | "referee";
 
@@ -303,7 +304,7 @@ export async function getLeaderboard(): Promise<{ allTime: LeaderboardEntry[]; t
 
 /* ---------------------------------- admin ---------------------------------- */
 
-// The latest VTpass send for one side's reward, if any (see referralPayout.service.ts).
+// The latest airtime/data send for one side's reward, if any (see referralPayout.service.ts).
 export interface AdminPayoutView {
   id: string;
   kind: string;
@@ -314,6 +315,8 @@ export interface AdminPayoutView {
   status: "processing" | "delivered" | "failed";
   message: string | null;
   providerTransactionId: string | null;
+  // Display name of the API that sent it ("VTpass" or "VTU.ng").
+  provider: string;
   live: boolean;
   sentAt: string;
 }
@@ -348,6 +351,7 @@ function latestPayout(row: Referral, party: RewardParty): AdminPayoutView | null
     status: p.status,
     message: p.providerMessage,
     providerTransactionId: p.providerTransactionId,
+    provider: providerLabel(p.provider),
     live: p.live,
     sentAt: p.createdAt.toISOString(),
   };
@@ -440,10 +444,10 @@ export async function markRewardIssued(referralId: string, party: RewardParty): 
   if (referral.status !== "qualified") {
     throw ApiError.badRequest("Only a qualified referral has a reward to issue");
   }
-  // A VTpass send that hasn't settled may still deliver; marking it paid by hand now could
+  // A top-up that hasn't settled may still deliver; marking it paid by hand now could
   // lead to it being paid a second way too. Check the send's status first.
   if (latestPayout(referral, party)?.status === "processing") {
-    throw ApiError.badRequest("A VTpass top-up for this reward is still processing; check its status first");
+    throw ApiError.badRequest("An airtime/data top-up for this reward is still processing; check its status first");
   }
 
   if (party === "referrer") {
@@ -466,7 +470,7 @@ export async function voidReferral(referralId: string, reason?: string): Promise
     throw ApiError.badRequest("This referral has an already-issued reward and cannot be voided");
   }
   if (latestPayout(referral, "referrer")?.status === "processing" || latestPayout(referral, "referee")?.status === "processing") {
-    throw ApiError.badRequest("A VTpass top-up for this referral is still processing; check its status first");
+    throw ApiError.badRequest("An airtime/data top-up for this referral is still processing; check its status first");
   }
 
   referral.status = "void";

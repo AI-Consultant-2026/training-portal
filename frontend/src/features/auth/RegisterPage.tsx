@@ -75,7 +75,8 @@ export const REGISTRATION_COURSE_INTERESTS = COURSE_INTERESTS.filter(
 export const REGISTRATION_STATUSES = ["Graduate", "Current Student", "Non-Graduate"];
 
 // Values are VTpass's network names (backend/src/constants/vtpass.ts), so the admin payout
-// dialog can use the student's choice directly. 9mobile is still "etisalat" there.
+// dialog can use the student's choice directly. 9mobile is still "etisalat" there (the VTU.ng
+// client maps it to "9mobile").
 export const MOBILE_NETWORKS = [
   { value: "mtn", label: "MTN" },
   { value: "airtel", label: "Airtel" },

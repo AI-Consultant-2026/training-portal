@@ -83,10 +83,10 @@ export function AdminReferralsPage() {
       afterPayout(
         outcome.referral,
         outcome.status === "delivered"
-          ? "VTpass confirmed delivery. Reward marked paid."
+          ? `${payout.provider} confirmed delivery. Reward marked paid.`
           : outcome.status === "failed"
-            ? `VTpass says it failed: ${outcome.message}. You can send it again.`
-            : "Still processing at VTpass. Try again in a few minutes.",
+            ? `${payout.provider} says it failed: ${outcome.message}. You can send it again.`
+            : `Still processing at ${payout.provider}. Try again in a few minutes.`,
       );
     } catch (err) {
       setError(
@@ -98,7 +98,7 @@ export function AdminReferralsPage() {
     }
   }
 
-  // VTpass can only send airtime/data, only once nothing is already in flight for that reward.
+  // Only airtime/data can be sent, only once nothing is already in flight for that reward.
   function canSend(r: AdminReferral, party: Party): boolean {
     const reward = party === "referrer" ? r.referrerReward : r.refereeReward;
     return (
@@ -162,7 +162,7 @@ export function AdminReferralsPage() {
       <p className="mt-1 text-sm text-gray-600">
         A referral qualifies when the referred student&apos;s first course payment is confirmed.{" "}
         {payoutConfig?.enabled
-          ? "Send airtime and data through VTpass from here; pay course credit by hand, then mark it paid."
+          ? `Send airtime and data through ${payoutConfig.provider} from here; pay course credit by hand, then mark it paid.`
           : "Pay rewards out manually (airtime, data, or course credit) then mark them issued here."}
       </p>
       {payoutConfig?.enabled && (
@@ -171,7 +171,7 @@ export function AdminReferralsPage() {
             payoutConfig.live ? "bg-green-50 text-green-800" : "bg-amber-50 text-amber-800"
           }`}
         >
-          VTpass: <strong>{payoutConfig.live ? "Live" : "Test mode (sandbox)"}</strong>
+          {payoutConfig.provider}: <strong>{payoutConfig.live ? "Live" : "Test mode (sandbox)"}</strong>
           {payoutConfig.balanceNgn !== null && <> · wallet balance {formatNgn(payoutConfig.balanceNgn)}</>}
           {payoutConfig.balanceProblem && <> · balance unavailable: {payoutConfig.balanceProblem}</>}
         </p>
@@ -405,7 +405,7 @@ function PayoutLine({ payout, busy, onCheck }: { payout: AdminPayout; busy: bool
   if (payout.status === "delivered") {
     return (
       <div className="text-green-700">
-        VTpass delivered {what}
+        {payout.provider} delivered {what}
         {payout.providerTransactionId && <span className="text-gray-400"> · ref {payout.providerTransactionId}</span>}
       </div>
     );
@@ -413,13 +413,13 @@ function PayoutLine({ payout, busy, onCheck }: { payout: AdminPayout; busy: bool
   if (payout.status === "failed") {
     return (
       <div className="text-red-700">
-        VTpass failed: {payout.message ?? "unknown error"} ({what})
+        {payout.provider} failed: {payout.message ?? "unknown error"} ({what})
       </div>
     );
   }
   return (
     <div className="text-amber-700">
-      VTpass processing {what} ·{" "}
+      {payout.provider} processing {what} ·{" "}
       <button type="button" onClick={onCheck} disabled={busy} className="font-medium underline disabled:opacity-50">
         Check status
       </button>

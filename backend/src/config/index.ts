@@ -57,6 +57,14 @@ export const config = {
     // Only if VTpass ever moves its API host; otherwise leave unset.
     baseUrlOverride: process.env.VTPASS_BASE_URL ?? "",
   },
+  // VTU.ng (2026-10-07): replaces VTpass for referral rewards when both are set, because it
+  // needs no business KYC. It logs in with the VTU.ng account's own username/email and
+  // password (the account needs the Reseller role and "Enable API Access" turned on).
+  // There is no sandbox: once these are set, every send spends real money.
+  vtung: {
+    username: process.env.VTUNG_USERNAME ?? "",
+    password: process.env.VTUNG_PASSWORD ?? "",
+  },
   analytics: {
     // Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Unset or malformed = analytics
     // off: /analytics.js serves a no-op stub, so no Google script loads and no consent

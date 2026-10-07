@@ -77,7 +77,7 @@ export const voidReferral = asyncHandler(async (req: Request, res: Response) => 
   res.json({ referral });
 });
 
-/* --------------------------- admin: VTpass payouts -------------------------- */
+/* ---------------------- admin: airtime/data reward payouts ------------------- */
 
 export const getPayoutConfig = asyncHandler(async (_req: Request, res: Response) => {
   res.json(await referralPayoutService.getPayoutConfig());
