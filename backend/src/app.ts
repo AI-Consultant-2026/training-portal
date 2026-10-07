@@ -201,6 +201,11 @@ export function createApp() {
   app.get("/CUgha-proposal", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "CUgha-proposal.html"));
   });
+  // Delta State Government proposal (Graduate Digital Skills Employability Programme)
+  // -- same unlisted pattern: robots noindex, no nav link, not in sitemap.xml.
+  app.get("/DSG-Proposal", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "DSG-Proposal.html"));
+  });
   // Internal outreach playbook (directory blurbs, social posts, press release, pitch
   // email templates) for promoting the SEO guide pages below -- same "public but
   // unlisted" pattern as /financing above: robots noindex, no nav link, not in
