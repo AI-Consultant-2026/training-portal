@@ -206,6 +206,10 @@ export function createApp() {
   app.get("/DSG-Proposal", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "DSG-Proposal.html"));
   });
+  // Lagos State Government proposal -- same unlisted pattern.
+  app.get("/LSG-Proposal", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "LSG-Proposal.html"));
+  });
   // Internal outreach playbook (directory blurbs, social posts, press release, pitch
   // email templates) for promoting the SEO guide pages below -- same "public but
   // unlisted" pattern as /financing above: robots noindex, no nav link, not in
