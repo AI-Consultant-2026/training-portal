@@ -6,6 +6,7 @@ import {
   CourseProgressSummary,
   Lead,
   Partner,
+  ZoomAttendee,
 } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
@@ -80,6 +81,15 @@ export async function fetchLeads(): Promise<Lead[]> {
 
 export async function deleteLead(id: string): Promise<void> {
   await axiosClient.delete(`/admin/leads/${id}`);
+}
+
+export async function fetchZoomAttendees(): Promise<ZoomAttendee[]> {
+  const res = await axiosClient.get<{ attendees: ZoomAttendee[] }>("/admin/zoom-attendees");
+  return res.data.attendees;
+}
+
+export async function deleteZoomAttendee(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/zoom-attendees/${id}`);
 }
 
 export async function fetchPartners(): Promise<Partner[]> {

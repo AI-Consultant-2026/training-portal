@@ -26,6 +26,7 @@ import { RefreshToken, initRefreshTokenModel } from "./refreshToken.model";
 import { User, initUserModel } from "./user.model";
 import { VideoCheckpoint, initVideoCheckpointModel } from "./videoCheckpoint.model";
 import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCheckpointAnswer.model";
+import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
 
 const databaseUrl =
   process.env.NODE_ENV === "test"
@@ -72,6 +73,7 @@ initCourseFeedbackModel(sequelize);
 initEmailCampaignModel(sequelize);
 initEmailCampaignRecipientModel(sequelize);
 initEmailUnsubscribeModel(sequelize);
+initZoomAttendeeModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -198,4 +200,5 @@ export {
   User,
   VideoCheckpoint,
   VideoCheckpointAnswer,
+  ZoomAttendee,
 };

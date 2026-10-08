@@ -210,6 +210,21 @@ export function createApp() {
   app.get("/LSG-Proposal", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "LSG-Proposal.html"));
   });
+  // Zoom attendance register (2026-10-08) -- unlisted (robots noindex, not in the
+  // sitemap); attendees are sent the link at the end of a Saturday Zoom session. The
+  // form posts to /api/zoom-attendees and admins see sign-ins at /admin/zoom-attendees.
+  // Express routing is case-insensitive, so /zooom-attendees works too; /Zoom-Attendees
+  // catches the obvious spelling.
+  app.get(["/Zooom-Attendees", "/Zoom-Attendees"], (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "zoom-attendees.html"));
+  });
+  app.get("/zoom-attendees.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "zoom-attendees.js"));
+  });
+  app.get("/images/zoom-attendees/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=604800");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "zoom-attendees", req.params.file));
+  });
   // Internal outreach playbook (directory blurbs, social posts, press release, pitch
   // email templates) for promoting the SEO guide pages below -- same "public but
   // unlisted" pattern as /financing above: robots noindex, no nav link, not in

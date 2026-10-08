@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as adminController from "../controllers/admin.controller";
 import * as emailCampaignsController from "../controllers/emailCampaigns.controller";
 import * as referralsController from "../controllers/referrals.controller";
+import * as zoomAttendeesController from "../controllers/zoomAttendees.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import * as feedbackController from "../controllers/feedback.controller";
@@ -51,6 +52,8 @@ adminRouter.get(
 );
 adminRouter.get("/candidates", adminController.listCandidates);
 adminRouter.get("/course-progress", adminController.getCourseProgress);
+adminRouter.get("/zoom-attendees", zoomAttendeesController.list);
+adminRouter.delete("/zoom-attendees/:id", zoomAttendeesController.remove);
 adminRouter.get("/payments/:id/receipt", adminController.downloadPaymentReceipt);
 adminRouter.get("/feedback", feedbackController.listForAdmin);
 adminRouter.patch("/feedback/:id", validate(approveFeedbackSchema), feedbackController.setApproved);

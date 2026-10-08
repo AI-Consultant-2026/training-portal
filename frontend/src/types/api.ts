@@ -709,3 +709,15 @@ export interface CourseProgressSummary {
   };
   candidates: CandidateCourseProgress[];
 }
+
+// A sign-in from the public /Zooom-Attendees page (GET /api/admin/zoom-attendees).
+export interface ZoomAttendee {
+  id: string;
+  name: string;
+  email: string;
+  dateAttended: string;
+  status: string | null;
+  phone: string | null;
+  wantsUpdates: boolean;
+  createdAt: string;
+}

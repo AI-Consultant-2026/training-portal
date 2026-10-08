@@ -20,6 +20,7 @@ import { referralsRouter } from "./referrals.routes";
 import { supportRouter } from "./support.routes";
 import * as feedbackController from "../controllers/feedback.controller";
 import { usersRouter } from "./users.routes";
+import { zoomAttendeesRouter } from "./zoomAttendees.routes";
 
 export const apiRouter = Router();
 
@@ -43,5 +44,6 @@ apiRouter.use("/leads", leadsRouter);
 apiRouter.use("/email", emailPreferencesRouter);
 apiRouter.use("/referrals", referralsRouter);
 apiRouter.use("/support", supportRouter);
+apiRouter.use("/zoom-attendees", zoomAttendeesRouter);
 // Public: approved learner testimonials for the marketing pages (2026-09-25).
 apiRouter.get("/testimonials", feedbackController.listPublic);
