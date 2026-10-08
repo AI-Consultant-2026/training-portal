@@ -7,7 +7,7 @@ import { createZoomAttendeeSchema } from "../validators/zoomAttendees.validators
 
 export const zoomAttendeesRouter = Router();
 
-// Public sign-in form at /Zooom-Attendees. Generous enough for a room of attendees
+// Public sign-in form at /zoom-attendees. Generous enough for a room of attendees
 // sharing one campus Wi-Fi address, tight enough to stop the form being spammed.
 const zoomAttendeesRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

@@ -15,8 +15,16 @@ async function adminToken() {
 }
 
 describe("Zoom attendance register", () => {
-  it("serves the page at /Zooom-Attendees (any case) with its script and images", async () => {
-    for (const path of ["/Zooom-Attendees", "/zooom-attendees", "/Zoom-Attendees"]) {
+  it("redirects the old /Zooom-Attendees address to /zoom-attendees", async () => {
+    for (const path of ["/Zooom-Attendees", "/zooom-attendees"]) {
+      const res = await request(app).get(path);
+      expect(res.status).toBe(301);
+      expect(res.headers.location).toBe("/zoom-attendees");
+    }
+  });
+
+  it("serves the page at /zoom-attendees (any case) with its script and images", async () => {
+    for (const path of ["/zoom-attendees", "/Zoom-Attendees"]) {
       const res = await request(app).get(path);
       expect(res.status).toBe(200);
       expect(res.text).toContain('<option value="2026-10-10" selected>10/10/2026</option>');

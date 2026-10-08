@@ -213,10 +213,14 @@ export function createApp() {
   // Zoom attendance register (2026-10-08) -- unlisted (robots noindex, not in the
   // sitemap); attendees are sent the link at the end of a Saturday Zoom session. The
   // form posts to /api/zoom-attendees and admins see sign-ins at /admin/zoom-attendees.
-  // Express routing is case-insensitive, so /zooom-attendees works too; /Zoom-Attendees
-  // catches the obvious spelling.
-  app.get(["/Zooom-Attendees", "/Zoom-Attendees"], (req, res) => {
+  // Express routing is case-insensitive, so /Zoom-Attendees works too. The page was
+  // first published as /Zooom-Attendees; that address permanently redirects here so
+  // links already shared keep working.
+  app.get("/zoom-attendees", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "zoom-attendees.html"));
+  });
+  app.get("/zooom-attendees", (req, res) => {
+    res.redirect(301, "/zoom-attendees");
   });
   app.get("/zoom-attendees.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "zoom-attendees.js"));

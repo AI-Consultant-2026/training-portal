@@ -102,8 +102,8 @@ export function AdminZoomAttendeesPage() {
           <h1 className="text-2xl font-semibold text-gray-900">Zoom attendees</h1>
           <p className="mt-1 text-sm text-gray-600">
             Sign-ins from the public{" "}
-            <a href="/Zooom-Attendees" target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
-              /Zooom-Attendees
+            <a href="/zoom-attendees" target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+              /zoom-attendees
             </a>{" "}
             page. A second sign-in with the same email for the same date updates the first.
           </p>

@@ -1,4 +1,4 @@
-// /Zooom-Attendees attendance form. External file because the site CSP blocks inline JS.
+// /zoom-attendees attendance form. External file because the site CSP blocks inline JS.
 (function () {
   var form = document.getElementById("attendee-form");
   if (!form) return;

@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
-// Someone who signed in on the public /Zooom-Attendees page after a Zoom session.
+// Someone who signed in on the public /zoom-attendees page after a Zoom session.
 // `email` is stored lowercased; (email, dateAttended) is unique.
 export interface ZoomAttendeeAttributes {
   id: string;

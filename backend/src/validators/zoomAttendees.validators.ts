@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Optional "which best describes you" choice on /Zooom-Attendees. Keep in sync with the
+// Optional "which best describes you" choice on /zoom-attendees. Keep in sync with the
 // radio buttons in marketing/zoom-attendees.html.
 export const ZOOM_ATTENDEE_STATUSES = ["Graduate", "Non-graduate", "Final year student", "NYSC member"] as const;
 

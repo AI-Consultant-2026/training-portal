@@ -2,7 +2,7 @@ import { QueryInterface, DataTypes } from "sequelize";
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    // Sign-ins from the public /Zooom-Attendees page (2026-10-08): who attended which
+    // Sign-ins from the public /zoom-attendees page (2026-10-08): who attended which
     // Saturday Zoom session. One row per (lowercased email, date attended); a repeat
     // submission for the same session updates the row instead of duplicating it.
     await queryInterface.createTable("zoom_attendees", {

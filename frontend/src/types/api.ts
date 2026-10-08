@@ -710,7 +710,7 @@ export interface CourseProgressSummary {
   candidates: CandidateCourseProgress[];
 }
 
-// A sign-in from the public /Zooom-Attendees page (GET /api/admin/zoom-attendees).
+// A sign-in from the public /zoom-attendees page (GET /api/admin/zoom-attendees).
 export interface ZoomAttendee {
   id: string;
   name: string;

@@ -84,7 +84,7 @@ export const MOBILE_NETWORKS = [
   { value: "etisalat", label: "9Mobile" },
 ];
 
-// Same photos as the /Zooom-Attendees page (served by the backend from marketing/images).
+// Same photos as the /zoom-attendees page (served by the backend from marketing/images).
 const SECTORS = [
   {
     label: "Oil & Gas",
