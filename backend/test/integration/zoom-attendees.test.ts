@@ -19,7 +19,8 @@ describe("Zoom attendance register", () => {
     for (const path of ["/Zooom-Attendees", "/zooom-attendees", "/Zoom-Attendees"]) {
       const res = await request(app).get(path);
       expect(res.status).toBe(200);
-      expect(res.text).toContain('value="2026-10-10"');
+      expect(res.text).toContain('<option value="2026-10-10" selected>10/10/2026</option>');
+      expect(res.text).toContain('<option value="2026-10-17">17/10/2026</option>');
       expect(res.text).toContain('content="noindex, nofollow"');
       expect(res.text).not.toMatch(/<script>(?!\s*<\/script>)/);
     }
