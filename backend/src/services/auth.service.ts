@@ -6,6 +6,7 @@ import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { attachReferralOnRegister } from "./referral.service";
+import { recordAttendance } from "./zoomAttendee.service";
 import {
   findValidRefreshToken,
   generateAccessToken,
@@ -38,6 +39,19 @@ export interface AuthResult {
   accessToken: string;
   refreshToken: string;
 }
+
+// The Ambassador Hour Zoom (Sat 10 Oct 2026, 2pm WAT) promoted by the homepage countdown.
+// Anyone who signs up before the session ends (3pm WAT = 14:00 UTC) is also added to that
+// session's list on /admin/zoom-attendees. After that, signups are no longer recorded.
+const ZOOM_SESSION_DATE = "2026-10-10";
+const ZOOM_SESSION_ENDS_AT = Date.parse("2026-10-10T14:00:00Z");
+
+// Maps the register form's status onto the /zoom-attendees choices; "Current Student"
+// has no exact match there, so it is left blank.
+const ZOOM_STATUS_BY_REGISTRATION_STATUS: Record<string, string> = {
+  Graduate: "Graduate",
+  "Non-Graduate": "Non-graduate",
+};
 
 const PASSWORD_RESET_PURPOSE = "password-reset";
 const EMAIL_VERIFICATION_PURPOSE = "email-verification";
@@ -83,6 +97,21 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     await attachReferralOnRegister(user.id, input.referralCode);
   } catch (err) {
     logger.error("Failed to attach referral on registration", err);
+  }
+
+  // Best-effort, same as the referral above: never fail a real signup over this.
+  if (Date.now() < ZOOM_SESSION_ENDS_AT) {
+    try {
+      await recordAttendance({
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        dateAttended: ZOOM_SESSION_DATE,
+        status: (input.university && ZOOM_STATUS_BY_REGISTRATION_STATUS[input.university]) || undefined,
+        phone: input.phone || undefined,
+      });
+    } catch (err) {
+      logger.error("Failed to add registration to the Zoom attendees list", err);
+    }
   }
 
   const accessToken = generateAccessToken(user);
