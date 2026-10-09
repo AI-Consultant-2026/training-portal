@@ -79,6 +79,21 @@ export function ReferralPage() {
 
       <ShareCardMaker summary={summary} firstName={firstName} />
 
+      {/* The free-lesson posts live on the public /refer page; the code fills itself in. */}
+      <div className="mt-8 rounded-lg border border-orange-200 bg-orange-50 p-4">
+        <h2 className="text-lg font-semibold text-gray-900">Free lesson posts</h2>
+        <p className="mt-1 text-sm text-gray-700">
+          Four ready-made posts, one per course, each linking to that course&apos;s free first lesson with
+          your code on the picture. Share them on WhatsApp, Facebook, Instagram, LinkedIn, X and TikTok.
+        </p>
+        <a
+          href={`/refer?code=${encodeURIComponent(summary.code)}#free-lesson-posts`}
+          className="mt-3 inline-block rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600"
+        >
+          Open my free lesson posts
+        </a>
+      </div>
+
       <VideoPack summary={summary} />
 
       <PrintKit code={summary.code} />

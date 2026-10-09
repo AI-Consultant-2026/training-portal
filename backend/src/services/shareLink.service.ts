@@ -27,14 +27,29 @@ const VIDEO_DIR = path.join(__dirname, "..", "marketing", "videos", "ambassador"
 // that cache link previews (Facebook, WhatsApp, LinkedIn) fetch the new picture.
 export const SHARE_CARD_VERSION = 1;
 
-export const SHARE_CARD_DESIGNS = [
-  "friend",
+const COURSE_SLUGS = [
   "cyber-security-fundamentals",
   "gis-and-drone-mapping",
   "digital-marketing",
   "hse-fundamentals",
 ] as const;
+type CourseSlug = (typeof COURSE_SLUGS)[number];
+
+// "lesson-<slug>" cards (2026-10-09, for the free-lesson posts on /refer) lead with the
+// course's free first lesson, and their share page opens that lesson with the code attached.
+export const SHARE_CARD_DESIGNS = [
+  "friend",
+  ...COURSE_SLUGS,
+  ...COURSE_SLUGS.map((slug) => `lesson-${slug}` as const),
+] as const;
 export type ShareCardDesign = (typeof SHARE_CARD_DESIGNS)[number];
+
+function courseOf(design: ShareCardDesign): CourseSlug | null {
+  if (design === "friend") return null;
+  return (design.startsWith("lesson-") ? design.slice("lesson-".length) : design) as CourseSlug;
+}
+
+const isLessonDesign = (design: ShareCardDesign) => design.startsWith("lesson-");
 
 // square/status are the downloads; link is the 1.91:1 preview platforms show for a link.
 export const SHARE_CARD_FORMATS = ["square", "status", "link"] as const;
@@ -64,7 +79,7 @@ interface CourseCopy {
 
 // Bullets mirror the printed flyers' DESIGNS table (referralPrint.service.ts) minus the
 // day/lesson counts, so a curriculum change can't make a shared card wrong.
-const COURSES: Record<Exclude<ShareCardDesign, "friend">, CourseCopy> = {
+const COURSES: Record<CourseSlug, CourseCopy> = {
   "cyber-security-fundamentals": {
     headline: "Cyber Security Fundamentals",
     sub: "Start a career in cyber security, with pathways for Oil & Gas, Banking and Telecoms.",
@@ -290,6 +305,23 @@ function codePanel(ctx: Ctx, code: string, x: number, top: number, width: number
   return stripTop + stripH;
 }
 
+// The orange "FREE LESSON" pill on the lesson-<slug> cards. Returns the y below it.
+function freeBadge(ctx: Ctx, x: number, top: number, size: number): number {
+  const text = "FREE LESSON";
+  ctx.font = sansBold(size);
+  const padX = size * 0.7;
+  const h = size * 1.9;
+  const w = spacedWidth(ctx, text, size * 0.12) + padX * 2;
+  roundedRect(ctx, x, top, w, h, h / 2);
+  ctx.fillStyle = SIGNAL;
+  ctx.fill();
+  ctx.fillStyle = INK;
+  ctx.textBaseline = "middle";
+  spaced(ctx, text, x + padX, top + h / 2 + 1, size * 0.12);
+  ctx.textBaseline = "top";
+  return top + h;
+}
+
 const SMALL_PRINT = "Airtime is sent after your first course payment is confirmed. We teach skills; we don't promise jobs.";
 
 export interface CardInput {
@@ -318,7 +350,17 @@ function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
   const stripH = tall ? 84 : 66;
   const panelH = tall ? 220 : 164;
   const panelTop = smallTop - (tall ? 28 : 18) - stripH - 14 - panelH;
-  codePanel(ctx, input.code, M, panelTop, inner, panelH, "First lesson free · paleontraining.com", stripH);
+  const lesson = isLessonDesign(input.design);
+  codePanel(
+    ctx,
+    input.code,
+    M,
+    panelTop,
+    inner,
+    panelH,
+    lesson ? "Start the free lesson · paleontraining.com" : "First lesson free · paleontraining.com",
+    stripH,
+  );
 
   ctx.fillStyle = ON_INK_MUTED;
   ctx.font = sans(smallSize);
@@ -368,21 +410,30 @@ function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
     return;
   }
 
-  const copy = COURSES[input.design];
-  ctx.fillStyle = SIGNAL;
-  ctx.font = sansBold(30);
-  spaced(ctx, "ONLINE COURSE · FIRST LESSON FREE", M, y, 3);
-  y += tall ? 70 : 54;
+  const copy = COURSES[courseOf(input.design)!];
+  if (lesson) {
+    y = freeBadge(ctx, M, y, tall ? 40 : 34);
+    y += tall ? 36 : 24;
+  } else {
+    ctx.fillStyle = SIGNAL;
+    ctx.font = sansBold(30);
+    spaced(ctx, "ONLINE COURSE · FIRST LESSON FREE", M, y, 3);
+    y += tall ? 70 : 54;
+  }
   const headSize = tall ? 116 : 88;
   y = paragraph(ctx, copy.headline, M, y, inner, serif(headSize), headSize, "#FFFFFF", 1.08);
   y += tall ? 36 : 20;
-  if (tall) {
+  if (lesson) {
+    const pitch = "Watch Lesson 1 on your phone today. No payment, no card.";
+    y = paragraph(ctx, pitch, M, y, inner, sans(tall ? 42 : 34), tall ? 42 : 34, ON_INK_SOFT, 1.35);
+    y += tall ? 60 : 26;
+  } else if (tall) {
     y = paragraph(ctx, copy.sub, M, y, inner, sans(42), 42, ON_INK_SOFT, 1.35);
     y += 60;
   }
   const bulletSize = tall ? 44 : 36;
   const bulletStep = tall ? 80 : 54;
-  const bullets = tall ? copy.bullets : copy.bullets.slice(0, 3);
+  const bullets = tall ? copy.bullets : copy.bullets.slice(0, lesson ? 2 : 3);
   for (const bullet of bullets) {
     if (y + bulletSize > contentBottom) break;
     ctx.fillStyle = SIGNAL;
@@ -415,7 +466,8 @@ function drawLinkCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
   const panelW = 410;
   const panelX = W - M - panelW;
   const leftW = panelX - M - 48;
-  codePanel(ctx, input.code, panelX, 150, panelW, 170, "First lesson free", 64);
+  const lesson = isLessonDesign(input.design);
+  codePanel(ctx, input.code, panelX, 150, panelW, 170, lesson ? "Start the free lesson" : "First lesson free", 64);
   ctx.fillStyle = ON_INK_SOFT;
   ctx.font = sansBold(24);
   const site = "paleontraining.com";
@@ -448,14 +500,22 @@ function drawLinkCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
     return;
   }
 
-  const copy = COURSES[input.design];
-  ctx.fillStyle = SIGNAL;
-  ctx.font = sansBold(22);
-  spaced(ctx, "ONLINE COURSE · FIRST LESSON FREE", M, y, 2.5);
-  y += 44;
+  const copy = COURSES[courseOf(input.design)!];
+  if (lesson) {
+    y = freeBadge(ctx, M, y - 10, 26) + 18;
+  } else {
+    ctx.fillStyle = SIGNAL;
+    ctx.font = sansBold(22);
+    spaced(ctx, "ONLINE COURSE · FIRST LESSON FREE", M, y, 2.5);
+    y += 44;
+  }
   y = paragraph(ctx, copy.headline, M, y, leftW, serif(64), 64, "#FFFFFF", 1.05);
   y += 24;
-  for (const bullet of copy.bullets.slice(0, 3)) {
+  if (lesson) {
+    y = paragraph(ctx, "Watch Lesson 1 free on your phone. No payment, no card.", M, y, leftW, sans(27), 27, ON_INK_SOFT, 1.3);
+    y += 14;
+  }
+  for (const bullet of copy.bullets.slice(0, lesson ? 2 : 3)) {
     ctx.fillStyle = SIGNAL;
     ctx.fillRect(M, y + 11, 12, 12);
     ctx.fillStyle = "#FFFFFF";
@@ -578,8 +638,7 @@ export interface SharePage {
 }
 
 function courseSlugFor(page: SharePage): string | null {
-  if (page.design && page.design !== "friend") return page.design;
-  return null;
+  return page.design ? courseOf(page.design) : null;
 }
 
 // The page a shared link opens. Crawlers read the og: tags (that's what puts the card in
@@ -608,19 +667,40 @@ export function renderSharePage(page: SharePage): string {
     const design = page.design ?? "friend";
     path_ = `/s/${ambassador.code}/${design}`;
     imageUrl = `${origin}${path_}/link.jpg${imageQuery}`;
-    if (design === "friend") {
+    const course = courseOf(design);
+    if (!course) {
       title = name ? `${name} sent you ${reward} airtime | Paleon Training` : `${reward} airtime for you | Paleon Training`;
+    } else if (isLessonDesign(design)) {
+      title = `Free lesson: ${COURSES[course].headline} | Paleon Training`;
     } else {
-      title = `${COURSES[design].headline}: first lesson free | Paleon Training`;
+      title = `${COURSES[course].headline}: first lesson free | Paleon Training`;
     }
-    description = `${name ? `${name} invited you to learn job-ready digital skills online. ` : "Learn job-ready digital skills online. "}Join with code ${ambassador.code} and get ${reward} airtime once your first course payment is confirmed.`;
+    description = isLessonDesign(design)
+      ? `Watch Lesson 1 of ${COURSES[course!].headline} free on your phone. No payment, no card. Like it? Join with code ${ambassador.code} and get ${reward} airtime once your first course payment is confirmed.`
+      : `${name ? `${name} invited you to learn job-ready digital skills online. ` : "Learn job-ready digital skills online. "}Join with code ${ambassador.code} and get ${reward} airtime once your first course payment is confirmed.`;
     media = `<img src="${path_}/square.png${imageQuery}" alt="${escapeHtml(title)}" width="1080" height="1080">`;
   }
   const pageUrl = `${origin}${path_}${nameQuery}`;
   const slug = courseSlugFor(page);
-  const secondary = slug
-    ? `<a class="secondary" href="/preview/${slug}">Try the first lesson free</a>`
-    : `<a class="secondary" href="/welcome#courses">See the four courses</a>`;
+  // The free lesson keeps the code, so "Sign up" there fills it in.
+  const lessonUrl = slug ? `/preview/${slug}?ref=${encodeURIComponent(ambassador.code)}` : null;
+  const lessonFirst = Boolean(page.design && isLessonDesign(page.design) && lessonUrl);
+  const signUpButton = `<a class="${lessonFirst ? "secondary" : "primary"}" href="${escapeHtml(registerUrl)}">Sign up with code ${escapeHtml(ambassador.code)}</a>`;
+  const actions = lessonFirst
+    ? `<a class="primary" href="${escapeHtml(lessonUrl!)}">Start the free lesson</a>\n  ${signUpButton}`
+    : `${signUpButton}\n  ${
+        lessonUrl
+          ? `<a class="secondary" href="${escapeHtml(lessonUrl)}">Try the first lesson free</a>`
+          : `<a class="secondary" href="/welcome#courses">See the four courses</a>`
+      }`;
+  const heading = lessonFirst
+    ? `Try ${COURSES[slug as CourseSlug].headline} free`
+    : name
+      ? `${name} invited you to Paleon Training`
+      : "You're invited to Paleon Training";
+  const intro = lessonFirst
+    ? `Watch the first lesson free on your phone, no payment and no card. Like it? Sign up with ${name ? `${name}'s` : "this"} code and get ${reward} airtime once your first course payment is confirmed.`
+    : `Learn job-ready digital skills online, at your own pace. Sign up with this code and get ${reward} airtime once your first course payment is confirmed.`;
 
   return `<!doctype html>
 <html lang="en">
@@ -667,11 +747,10 @@ export function renderSharePage(page: SharePage): string {
 <main>
   <a class="brand" href="/"><span></span>Paleon Training</a>
   ${media}
-  <h1>${escapeHtml(name ? `${name} invited you to Paleon Training` : "You're invited to Paleon Training")}</h1>
-  <p>Learn job-ready digital skills online, at your own pace. Sign up with this code and get ${reward} airtime once your first course payment is confirmed.</p>
+  <h1>${escapeHtml(heading)}</h1>
+  <p>${escapeHtml(intro)}</p>
   <div class="code">${escapeHtml(ambassador.code)}</div>
-  <a class="primary" href="${escapeHtml(registerUrl)}">Sign up with code ${escapeHtml(ambassador.code)}</a>
-  ${secondary}
+  ${actions}
   <small>Airtime is sent after your first course payment is confirmed. We teach skills; we don't promise jobs.</small>
 </main>
 <script src="/analytics.js" defer></script>

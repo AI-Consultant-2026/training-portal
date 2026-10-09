@@ -282,6 +282,44 @@
     font-weight: 700;
   }
 
+  /* ---------- Free lesson posts (2026-10-09; behaviour in refer-posts.js) ---------- */
+  .fl-intro { max-width: 700px; margin: 0 0 22px; color: var(--charcoal-soft); }
+  .fl-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 8px; }
+  .fl-form label { display: block; width: 100%; font-weight: 600; font-size: 15px; }
+  .fl-form input {
+    flex: 1 1 220px; max-width: 320px; font: 600 18px var(--font-mono); letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 11px 14px; border: 1.5px solid var(--line-light);
+    border-radius: 3px; background: var(--white); color: var(--charcoal);
+  }
+  .fl-form input:focus { outline: 2px solid var(--signal-deep); outline-offset: 1px; }
+  .fl-form .btn-signal { border: none; }
+  .fl-msg { min-height: 24px; font-size: 15px; margin: 6px 0 0; }
+  .fl-msg.err { color: #B3261E; }
+  .fl-msg.ok { color: #1E6B3A; }
+  .fl-tip { font-size: 14px; color: var(--charcoal-soft); margin: 0; }
+  .fl-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 26px; }
+  .fl-grid[hidden] { display: none; }
+  .fl-card { background: var(--white); border: 1px solid var(--line-light); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+  .fl-card img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; background: var(--ink); }
+  .fl-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .fl-body h3 { font-size: 20px; color: var(--charcoal); }
+  .fl-caption {
+    width: 100%; min-height: 190px; resize: vertical; font: 15px/1.5 var(--font-body);
+    color: var(--charcoal); background: var(--paper); border: 1px solid var(--line-light);
+    border-radius: 4px; padding: 10px 12px;
+  }
+  .fl-share { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fl-share a, .fl-share button {
+    font: 600 14px var(--font-body); padding: 9px 12px; border-radius: 3px; border: 1px solid var(--line-light);
+    background: var(--paper); color: var(--charcoal); text-decoration: none; cursor: pointer; line-height: 1.1;
+  }
+  .fl-share a:hover, .fl-share button:hover { border-color: var(--charcoal-soft); }
+  .fl-share .wa { background: #25D366; border-color: #25D366; color: var(--ink); }
+  .fl-share .copy { background: var(--signal); border-color: var(--signal); color: var(--ink); }
+  .fl-note { font-size: 13px; color: var(--charcoal-soft); margin: 0; }
+  .fl-done { font-size: 13px; color: #1E6B3A; min-height: 18px; margin: 0; }
+  @media (max-width: 560px) { .fl-grid { grid-template-columns: 1fr; } }
+
   /* ---------- Body sections ---------- */
 
   section { padding: 56px 0; }
@@ -656,6 +694,20 @@
     </div>
   </section>
 
+  <section id="free-lesson-posts" data-reward="{{REFEREE_REWARD}}">
+    <p class="section-label">Ready-made posts</p>
+    <h2 class="section-title">Free lesson posts to share</h2>
+    <p class="fl-intro">One post for each course, with a picture carrying your code and a link to that course&rsquo;s free first lesson. Your friend watches the lesson free, and when they sign up from it your code is filled in for them. Share them on WhatsApp, Facebook, Instagram, LinkedIn, X and TikTok.</p>
+    <form class="fl-form" id="flForm" novalidate>
+      <label for="flCode">Your referral code</label>
+      <input id="flCode" name="code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="PLN······" required>
+      <button class="btn btn-signal" type="submit">Make my posts</button>
+    </form>
+    <p class="fl-msg" id="flMsg" role="status" aria-live="polite"></p>
+    <p class="fl-tip">Don&rsquo;t know your code? <a href="/refer/me">Log in to see it</a>. No account yet? <a href="/register">Create one free</a> and you get a code straight away.</p>
+    <div class="fl-grid" id="flPosts" hidden></div>
+  </section>
+
   <section>
     <div class="measure prose">
       <p class="section-label">The rewards</p>
@@ -850,5 +902,6 @@
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
 <script src="/analytics.js" defer></script>
+<script src="/refer-posts.js" defer></script>
 </body>
 </html>

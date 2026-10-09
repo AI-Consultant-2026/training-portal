@@ -57,7 +57,31 @@ describe("Ambassador share links (2026-10-06)", () => {
     const res = await request(app).get(`/s/${code}/cyber-security-fundamentals`);
     expect(res.status).toBe(200);
     expect(res.text).not.toContain("Ada");
-    expect(res.text).toContain('href="/preview/cyber-security-fundamentals"');
+    expect(res.text).toContain(`href="/preview/cyber-security-fundamentals?ref=${code}"`);
+  });
+
+  it("serves free-lesson posts that open the free lesson with the code attached", async () => {
+    const res = await request(app).get(`/s/${code}/lesson-gis-and-drone-mapping`);
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("<title>Free lesson: GIS and Drone Mapping | Paleon Training</title>");
+    expect(res.text).toContain(`/s/${code}/lesson-gis-and-drone-mapping/link.jpg?v=1`);
+    expect(res.text).toContain(`<a class="primary" href="/preview/gis-and-drone-mapping?ref=${code}">Start the free lesson</a>`);
+    expect(res.text).toContain(`href="http://localhost:5173/register?ref=${code}"`);
+
+    const square = await binary(request(app).get(`/s/${code}/lesson-hse-fundamentals/square.png`));
+    expect(imageSize(square.body)).toEqual({ width: 1080, height: 1080 });
+    const link = await binary(request(app).get(`/s/${code}/lesson-digital-marketing/link.jpg`));
+    expect(imageSize(link.body)).toEqual({ width: 1200, height: 630 });
+    expect((await request(app).get(`/s/${code}/lesson-nope`)).status).toBe(404);
+  });
+
+  it("serves /refer with the free-lesson posts section and its script", async () => {
+    const page = await request(app).get("/refer");
+    expect(page.text).toContain('id="free-lesson-posts" data-reward="₦3,000"');
+    expect(page.text).toContain('<script src="/refer-posts.js" defer></script>');
+    const script = await request(app).get("/refer-posts.js");
+    expect(script.status).toBe(200);
+    expect(script.text).toContain("/lesson-");
   });
 
   it("accepts a lower-case code", async () => {

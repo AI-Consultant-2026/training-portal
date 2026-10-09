@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { fetchCoursePreview } from "../../api/courses.api";
 import { useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -16,6 +16,9 @@ const WHATSAPP_URL = "https://wa.me/2347077149989";
 // and video -- before paying. Linked from the course pages and homepage.
 export function PreviewLessonPage() {
   const { slug } = useParams<{ slug: string }>();
+  // An ambassador's free-lesson post links here with ?ref=<code>; sign-up keeps it.
+  const [searchParams] = useSearchParams();
+  const ref = searchParams.get("ref")?.trim() ?? "";
   const { user } = useAppSelector((state) => state.auth);
   const [preview, setPreview] = useState<CoursePreview | null>(null);
   const [failed, setFailed] = useState(false);
@@ -58,7 +61,9 @@ export function PreviewLessonPage() {
   const price = course.priceNgn !== null ? `\u20a6${course.priceNgn.toLocaleString()}` : null;
   // Logged-in students go straight to the course page to pay; everyone else creates a
   // free account first, with this course pre-selected.
-  const enrolHref = user ? `/courses/${course.slug}` : `/register?course=${encodeURIComponent(course.slug)}`;
+  const enrolHref = user
+    ? `/courses/${course.slug}`
+    : `/register?course=${encodeURIComponent(course.slug)}${ref ? `&ref=${encodeURIComponent(ref)}` : ""}`;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
