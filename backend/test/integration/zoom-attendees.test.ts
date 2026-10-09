@@ -5,7 +5,12 @@ import { User, ZoomAttendee } from "../../src/models";
 
 const app = createApp();
 
-const valid = { name: "Chiamaka Okafor", email: "Chiamaka.Okafor@example.com", dateAttended: "2026-10-10" };
+const valid = {
+  name: "Chiamaka Okafor",
+  email: "Chiamaka.Okafor@example.com",
+  dateAttended: "2026-10-10",
+  phone: "0803 123 4567",
+};
 
 async function adminToken() {
   const passwordHash = await bcrypt.hash("Password123!", 4);
@@ -40,19 +45,24 @@ describe("Zoom attendance register", () => {
     const res = await request(app).post("/api/zoom-attendees").send(valid);
     expect(res.status).toBe(201);
     const row = await ZoomAttendee.findByPk(res.body.id);
-    expect(row).toMatchObject({ email: "chiamaka.okafor@example.com", dateAttended: "2026-10-10", status: null });
+    expect(row).toMatchObject({
+      email: "chiamaka.okafor@example.com",
+      dateAttended: "2026-10-10",
+      phone: "0803 123 4567",
+      status: null,
+    });
   });
 
-  it("accepts the optional status, WhatsApp number and updates opt-in", async () => {
+  it("accepts the optional status and updates opt-in", async () => {
     const res = await request(app)
       .post("/api/zoom-attendees")
-      .send({ ...valid, status: "NYSC member", phone: "0803 123 4567", wantsUpdates: true });
+      .send({ ...valid, status: "NYSC member", wantsUpdates: true });
     expect(res.status).toBe(201);
     expect(await ZoomAttendee.findByPk(res.body.id)).toMatchObject({ status: "NYSC member", wantsUpdates: true });
   });
 
   it("treats blank optional fields as not given", async () => {
-    const res = await request(app).post("/api/zoom-attendees").send({ ...valid, phone: "", status: "", website: "" });
+    const res = await request(app).post("/api/zoom-attendees").send({ ...valid, status: "", website: "" });
     expect(res.status).toBe(201);
   });
 
@@ -74,6 +84,8 @@ describe("Zoom attendance register", () => {
 
   it.each([
     ["a missing name", { ...valid, name: "" }],
+    ["a missing WhatsApp number", { ...valid, phone: "" }],
+    ["a bad WhatsApp number", { ...valid, phone: "call me" }],
     ["a bad email", { ...valid, email: "nope" }],
     ["a bad date", { ...valid, dateAttended: "10/10/2026" }],
     ["an unknown status", { ...valid, status: "Lecturer" }],

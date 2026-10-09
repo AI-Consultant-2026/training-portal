@@ -19,7 +19,7 @@ export const createZoomAttendeeSchema = z.object({
       .regex(/^\d{4}-\d{2}-\d{2}$/)
       .refine((v) => !Number.isNaN(Date.parse(v)), "Invalid date"),
     status: optionalText(z.enum(ZOOM_ATTENDEE_STATUSES)),
-    phone: optionalText(z.string().trim().regex(PHONE_REGEX)),
+    phone: z.string().trim().regex(PHONE_REGEX, "Enter your WhatsApp number"),
     wantsUpdates: z.boolean().optional(),
     // Honeypot: a hidden field real visitors never fill in.
     website: z.string().max(0).optional(),

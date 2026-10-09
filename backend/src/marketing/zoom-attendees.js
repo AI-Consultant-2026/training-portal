@@ -31,17 +31,17 @@
     if (name.length < 2) return showError("Please enter your full name.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError("Please enter a valid email address.");
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateAttended)) return showError("Please choose the date you attended.");
-    if (phone && !/^[0-9+()\s-]{7,20}$/.test(phone)) return showError("Please check your WhatsApp number, or leave it blank.");
+    if (!/^[0-9+()\s-]{7,20}$/.test(phone)) return showError("Please enter your WhatsApp number, e.g. 0803 123 4567.");
 
     var payload = {
       name: name,
       email: email,
       dateAttended: dateAttended,
       wantsUpdates: form.wantsUpdates.checked,
+      phone: phone,
       website: form.website.value,
     };
     if (statusInput) payload.status = statusInput.value;
-    if (phone) payload.phone = phone;
 
     button.disabled = true;
     button.textContent = "Saving…";
