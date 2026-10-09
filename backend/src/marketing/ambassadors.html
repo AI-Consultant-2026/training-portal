@@ -656,6 +656,33 @@
   .present-btn { font: 600 14px/1 var(--font-body); color: var(--dark-text); background: transparent; border: 1px solid var(--line-dark); border-radius: 999px; padding: 10px 14px; cursor: pointer; min-height: 40px; }
   .present-btn:hover { border-color: var(--signal-2); }
   .present-count { font-family: var(--font-mono); font-size: 13px; min-width: 64px; text-align: center; color: var(--dark-text-muted); }
+  /* ============ Ambassador Hour countdown (temporary: zoom-countdown.js hides it after 3pm WAT 10 Oct 2026) ============ */
+  .zoom-countdown {
+    background: var(--ink-2);
+    color: var(--dark-text);
+    border-bottom: 3px solid var(--signal);
+    padding: 18px 0 20px;
+    text-align: center;
+  }
+  .zoom-countdown[hidden], .zc-clock[hidden] { display: none; }
+  .zc-title { font-family: var(--font-display); font-size: clamp(18px, 2.4vw, 24px); margin: 0 0 4px; }
+  .zc-when { color: var(--dark-text-muted); font-size: 14.5px; margin: 0 0 12px; }
+  .zc-clock { display: inline-flex; gap: clamp(6px, 1.6vw, 14px); align-items: flex-start; font-variant-numeric: tabular-nums; }
+  .zc-unit {
+    min-width: clamp(58px, 15vw, 84px);
+    padding: 8px 6px 6px;
+    background: var(--ink);
+    border: 1px solid var(--line-dark);
+    border-radius: 6px;
+  }
+  .zc-num { display: block; font-family: var(--font-mono); font-size: clamp(26px, 6vw, 40px); font-weight: 700; line-height: 1.1; color: var(--signal-2); }
+  .zc-label { display: block; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dark-text-muted); }
+  .zc-sep { font-size: clamp(22px, 5vw, 34px); color: var(--dark-text-muted); opacity: 0.6; padding-top: 8px; }
+  .zc-live { font-size: clamp(20px, 4vw, 28px); font-weight: 700; color: var(--signal-2); margin: 4px 0; }
+  .zc-cta { margin-top: 14px; }
+  .zc-note { margin: 8px 0 0; font-size: 13px; color: var(--dark-text-muted); }
+  @media (max-width: 420px) { .zc-sep { display: none; } }
+
   body.presenting { font-size: 20px; }
   body.presenting [data-slide] { display: none; }
   body.presenting [data-slide].is-current { display: block; min-height: 100vh; padding-top: 7vh; padding-bottom: 110px; border-top: none; }
@@ -688,6 +715,30 @@
     <div class="pt-search-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
   </div>
 </div>
+
+  <!-- ============ AMBASSADOR HOUR COUNTDOWN (temporary) ============
+       Shown by zoom-countdown.js only until 3pm WAT on Sat 10 Oct 2026; hidden without JS.
+       Remove this block and its CSS/JS after the session. -->
+  <section class="zoom-countdown no-present" id="zoomCountdown" aria-labelledby="zcTitle" hidden>
+    <div class="wrap">
+      <h2 class="zc-title" id="zcTitle">Paleon Ambassador Hour &middot; Live on Zoom</h2>
+      <p class="zc-when">Saturday 10 October 2026 &middot; 2:00pm Nigeria time (WAT)</p>
+      <div class="zc-clock" id="zcClock" role="timer" aria-live="off">
+        <div class="zc-unit"><span class="zc-num" id="zcDays">00</span><span class="zc-label">Days</span></div>
+        <span class="zc-sep" aria-hidden="true">:</span>
+        <div class="zc-unit"><span class="zc-num" id="zcHours">00</span><span class="zc-label">Hours</span></div>
+        <span class="zc-sep" aria-hidden="true">:</span>
+        <div class="zc-unit"><span class="zc-num" id="zcMins">00</span><span class="zc-label">Mins</span></div>
+        <span class="zc-sep" aria-hidden="true">:</span>
+        <div class="zc-unit"><span class="zc-num" id="zcSecs">00</span><span class="zc-label">Secs</span></div>
+      </div>
+      <p class="zc-live" id="zcLive" hidden>We&rsquo;re live now!</p>
+      <div class="zc-cta">
+        <a class="btn btn-signal" href="/register">Register free to join the Zoom</a>
+      </div>
+      <p class="zc-note">Create your free account and we&rsquo;ll email you the Zoom link.</p>
+    </div>
+  </section>
 
 <div class="band" id="top">
   <section class="wrap masthead slide" data-slide aria-label="Welcome">
@@ -1088,6 +1139,7 @@ Tell me what you think.</pre>
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
 <script src="/ambassadors.js" defer></script>
+<script src="/zoom-countdown.js" defer></script>
 <script src="/analytics.js" defer></script>
 </body>
 </html>

@@ -135,6 +135,9 @@ export function createApp() {
   app.get("/whatsapp-float.css", (req, res) => {
     res.type("text/css").sendFile(path.join(__dirname, "marketing", "whatsapp-float.css"));
   });
+  app.get("/zoom-countdown.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "zoom-countdown.js"));
+  });
   app.get("/whatsapp-float.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "whatsapp-float.js"));
   });

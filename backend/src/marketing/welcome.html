@@ -457,7 +457,7 @@
     .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  /* ============ Ambassador Hour countdown (temporary: welcome.js hides it after 3pm WAT 10 Oct 2026) ============ */
+  /* ============ Ambassador Hour countdown (temporary: zoom-countdown.js hides it after 3pm WAT 10 Oct 2026) ============ */
   .zoom-countdown {
     background: var(--ink);
     color: var(--paper);
@@ -1001,7 +1001,7 @@
 <main id="main">
 
   <!-- ============ AMBASSADOR HOUR COUNTDOWN (temporary) ============
-       Shown by welcome.js only until 3pm WAT on Sat 10 Oct 2026; hidden without JS.
+       Shown by zoom-countdown.js only until 3pm WAT on Sat 10 Oct 2026; hidden without JS.
        Remove this block and its CSS/JS after the session. -->
   <section class="zoom-countdown" id="zoomCountdown" aria-labelledby="zcTitle" hidden>
     <div class="wrap">
@@ -1485,6 +1485,7 @@
 </footer>
 
 <script src="/welcome.js"></script>
+<script src="/zoom-countdown.js"></script>
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
 <script src="/analytics.js" defer></script>
