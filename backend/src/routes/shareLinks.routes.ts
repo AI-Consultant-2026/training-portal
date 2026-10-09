@@ -2,7 +2,7 @@
 // services/shareLink.service.ts for why they exist.
 //
 //   /s/<code>/<design>                    share page for a card (?n=1 shows the first name)
-//   /s/<code>/<design>/<square|status|link>.<png|jpg>   the card image
+//   /s/<code>/<design>/<square|status|portrait|link>.<png|jpg>   the card image
 //   /s/<code>/v/<video>                   share page for a promo video
 //   /s/<code>/v/<video>/link.jpg          that video's link preview
 //
@@ -98,9 +98,9 @@ shareLinksRouter.get(
   imageLimiter,
   asyncRoute(async (req, res) => {
     const { design, file } = req.params;
-    const match = /^(square|status|link)\.(png|jpg)$/.exec(file);
+    const match = /^(square|status|portrait|link)\.(png|jpg)$/.exec(file);
     const format = match?.[1] ?? "";
-    // square/status are PNGs, the link preview a JPEG.
+    // square/status/portrait are PNGs, the link preview a JPEG.
     const extOk = match && (format === "link" ? match[2] === "jpg" : match[2] === "png");
     if (!isShareCardDesign(design) || !isShareCardFormat(format) || !extOk) return void res.sendStatus(404);
     const ambassador = await findAmbassador(req.params.code);

@@ -16,11 +16,13 @@ export type ShareCardDesign =
   | "digital-marketing"
   | "hse-fundamentals";
 
-export type ShareCardFormat = "square" | "status";
+// portrait (4:5) is the tallest picture an Instagram feed post shows without cropping.
+export type ShareCardFormat = "square" | "status" | "portrait";
 
 export const SHARE_CARD_SIZE: Record<ShareCardFormat, { width: number; height: number }> = {
   square: { width: 1080, height: 1080 },
   status: { width: 1080, height: 1920 },
+  portrait: { width: 1080, height: 1350 },
 };
 
 // Must match SHARE_CARD_VERSION in shareLink.service.ts, so a changed card isn't served

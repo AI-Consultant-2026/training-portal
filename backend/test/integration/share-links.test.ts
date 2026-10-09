@@ -70,6 +70,10 @@ describe("Ambassador share links (2026-10-06)", () => {
 
     const square = await binary(request(app).get(`/s/${code}/lesson-hse-fundamentals/square.png`));
     expect(imageSize(square.body)).toEqual({ width: 1080, height: 1080 });
+    // Instagram feed posts crop anything taller than 4:5.
+    const portrait = await binary(request(app).get(`/s/${code}/lesson-cyber-security-fundamentals/portrait.png`));
+    expect(imageSize(portrait.body)).toEqual({ width: 1080, height: 1350 });
+    expect((await request(app).get(`/s/${code}/friend/portrait.jpg`)).status).toBe(404);
     const link = await binary(request(app).get(`/s/${code}/lesson-digital-marketing/link.jpg`));
     expect(imageSize(link.body)).toEqual({ width: 1200, height: 630 });
     expect((await request(app).get(`/s/${code}/lesson-nope`)).status).toBe(404);

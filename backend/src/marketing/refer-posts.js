@@ -6,7 +6,8 @@
 
    Websites can't attach a picture to a Facebook, LinkedIn or X post, so those buttons
    share the link (the platform shows the picture from it). Instagram and TikTok don't
-   take links in posts, so for them the picture is downloaded and the caption copied.
+   take links in posts, so for them the picture is downloaded and the caption copied:
+   4:5 for an Instagram post (the feed crops anything taller), 9:16 for TikTok/Stories.
 
    Wording rules: the friend's airtime comes after their first confirmed course payment,
    never "off" a price; no job promises. External file because the CSP blocks inline JS. */
@@ -166,10 +167,17 @@
       said("Post text copied too, in case LinkedIn opens empty.");
     });
     linkButton("X", "https://x.com/intent/post?text=" + encodeURIComponent(short));
-    actionButton("Instagram / TikTok", "", function () {
+    // Instagram feed posts crop anything taller than 4:5, so it gets the 1080x1350 picture;
+    // the tall 9:16 one is for TikTok, Stories and WhatsApp Status.
+    actionButton("Instagram", "", function () {
+      copyText(igCaption);
+      downloadImage(base + "/portrait.png?download=1");
+      said("Instagram picture saved and caption copied. Post the picture and paste the caption.");
+    });
+    actionButton("TikTok / Stories", "", function () {
       copyText(igCaption);
       downloadImage(base + "/status.png?download=1");
-      said("Story picture saved and caption copied. Post the picture and paste the caption.");
+      said("Tall picture saved and caption copied. Post it and paste the caption.");
     });
     actionButton("Copy post", "copy", function () {
       copyText(caption);
@@ -179,9 +187,12 @@
 
     var downloads = el("p", { class: "fl-note" });
     downloads.appendChild(document.createTextNode("Save the picture: "));
-    var sq = el("a", { href: base + "/square.png?download=1" }, "square (feeds)");
+    var sq = el("a", { href: base + "/square.png?download=1" }, "square (Facebook, LinkedIn, X)");
+    var pt = el("a", { href: base + "/portrait.png?download=1" }, "Instagram post");
     var st = el("a", { href: base + "/status.png?download=1" }, "tall (Status, Stories, TikTok)");
     downloads.appendChild(sq);
+    downloads.appendChild(document.createTextNode(" · "));
+    downloads.appendChild(pt);
     downloads.appendChild(document.createTextNode(" · "));
     downloads.appendChild(st);
     body.appendChild(downloads);

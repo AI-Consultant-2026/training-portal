@@ -297,6 +297,7 @@ const CARD_DESIGNS: { value: ShareCardDesign; label: string }[] = [
 const CARD_FORMATS: { value: ShareCardFormat; label: string }[] = [
   { value: "status", label: "WhatsApp Status / Story (tall)" },
   { value: "square", label: "Chats and feed posts (square)" },
+  { value: "portrait", label: "Instagram post (4:5)" },
 ];
 
 export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSummary; firstName: string | null }) {
@@ -427,7 +428,7 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
             onLoad={() => setLoaded(true)}
             alt="Preview of your share card"
             className={`h-auto rounded-lg border border-gray-200 bg-gray-900 shadow-sm transition-opacity ${loaded ? "" : "opacity-60"}`}
-            style={{ width: format === "status" ? 225 : 300 }}
+            style={{ width: format === "status" ? 225 : format === "portrait" ? 270 : 300 }}
           />
         </div>
       </div>

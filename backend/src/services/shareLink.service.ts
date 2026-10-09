@@ -51,14 +51,17 @@ function courseOf(design: ShareCardDesign): CourseSlug | null {
 
 const isLessonDesign = (design: ShareCardDesign) => design.startsWith("lesson-");
 
-// square/status are the downloads; link is the 1.91:1 preview platforms show for a link.
-export const SHARE_CARD_FORMATS = ["square", "status", "link"] as const;
+// square/status/portrait are the downloads; link is the 1.91:1 preview platforms show for
+// a link. portrait (4:5) is the tallest picture an Instagram feed post shows uncropped;
+// status (9:16) is for WhatsApp Status, Stories and TikTok.
+export const SHARE_CARD_FORMATS = ["square", "status", "link", "portrait"] as const;
 export type ShareCardFormat = (typeof SHARE_CARD_FORMATS)[number];
 
 export const SHARE_CARD_SIZE: Record<ShareCardFormat, { width: number; height: number }> = {
   square: { width: 1080, height: 1080 },
   status: { width: 1080, height: 1920 },
   link: { width: 1200, height: 630 },
+  portrait: { width: 1080, height: 1350 },
 };
 
 const INK = "#10151F";
@@ -331,15 +334,17 @@ export interface CardInput {
   firstName: string | null;
 }
 
-// The square and tall cards, as on /refer/me since 2026-10-05.
+// The square, portrait and tall cards. Portrait uses the square card's type sizes with the
+// extra height spent on the course summary and bullets, like the tall card.
 function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
   const { width: W, height: H } = SHARE_CARD_SIZE[input.format];
   const tall = input.format === "status";
+  const roomy = tall || input.format === "portrait";
   const M = 84;
   const inner = W - M * 2;
   background(ctx, W, H);
 
-  const markTop = tall ? 120 : 60;
+  const markTop = tall ? 120 : roomy ? 76 : 60;
   wordmark(ctx, M - 2, markTop, 44);
 
   // Bottom block (anchored): code panel, free-lesson strip, small print.
@@ -391,20 +396,21 @@ function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
       ON_INK_SOFT,
       1.35,
     );
-    if (tall) {
-      y += 60;
+    if (roomy) {
+      y += tall ? 60 : 40;
       ctx.fillStyle = ON_INK_MUTED;
       ctx.font = sansBold(28);
       spaced(ctx, "CHOOSE YOUR COURSE", M, y, 3);
-      y += 56;
+      y += tall ? 56 : 46;
+      const courseSize = tall ? 44 : 34;
       for (const course of FRIEND_COURSES) {
-        if (y + 56 > contentBottom) break;
+        if (y + courseSize > contentBottom) break;
         ctx.fillStyle = SIGNAL;
-        ctx.fillRect(M, y + 16, 16, 16);
+        ctx.fillRect(M, y + courseSize * 0.36, 16, 16);
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = sansBold(44);
+        ctx.font = sansBold(courseSize);
         ctx.fillText(course, M + 40, y);
-        y += 70;
+        y += tall ? 70 : 48;
       }
     }
     return;
@@ -427,13 +433,14 @@ function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
     const pitch = "Watch Lesson 1 on your phone today. No payment, no card.";
     y = paragraph(ctx, pitch, M, y, inner, sans(tall ? 42 : 34), tall ? 42 : 34, ON_INK_SOFT, 1.35);
     y += tall ? 60 : 26;
-  } else if (tall) {
-    y = paragraph(ctx, copy.sub, M, y, inner, sans(42), 42, ON_INK_SOFT, 1.35);
-    y += 60;
+  } else if (roomy) {
+    const subSize = tall ? 42 : 34;
+    y = paragraph(ctx, copy.sub, M, y, inner, sans(subSize), subSize, ON_INK_SOFT, 1.35);
+    y += tall ? 60 : 34;
   }
-  const bulletSize = tall ? 44 : 36;
-  const bulletStep = tall ? 80 : 54;
-  const bullets = tall ? copy.bullets : copy.bullets.slice(0, lesson ? 2 : 3);
+  const bulletSize = tall ? 44 : roomy ? 38 : 36;
+  const bulletStep = tall ? 80 : roomy ? 62 : 54;
+  const bullets = roomy ? copy.bullets : copy.bullets.slice(0, lesson ? 2 : 3);
   for (const bullet of bullets) {
     if (y + bulletSize > contentBottom) break;
     ctx.fillStyle = SIGNAL;
