@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -11,7 +11,6 @@ import { MyReferralSummary, ReferralLeaderboard, ReferralRewardType } from "../.
 import {
   fetchMyReferralSummary,
   fetchReferralLeaderboard,
-  updatePayoutPhone,
   updateRewardPreference,
 } from "./referralsSlice";
 
@@ -20,7 +19,7 @@ function formatNgn(amount: number): string {
 }
 
 const REWARD_OPTIONS: { value: ReferralRewardType; label: string; hint: string }[] = [
-  { value: "airtime", label: "Airtime", hint: "Topped up to the phone number below" },
+  { value: "airtime", label: "Airtime", hint: "Topped up to the phone number you registered with" },
   { value: "data", label: "Data", hint: "A data bundle on your network" },
   { value: "discount", label: "Course credit", hint: "Money off your next Paleon course" },
 ];
@@ -101,7 +100,7 @@ export function ReferralPage() {
 
       <HowItWorks summary={summary} />
 
-      <RewardPreference current={summary.rewardType} payoutPhone={summary.payoutPhone} />
+      <RewardPreference current={summary.rewardType} />
 
       <MyReferralsTable summary={summary} />
 
@@ -392,30 +391,10 @@ function HowItWorks({ summary }: { summary: MyReferralSummary }) {
   );
 }
 
-function RewardPreference({
-  current,
-  payoutPhone,
-}: {
-  current: ReferralRewardType;
-  payoutPhone: string | null;
-}) {
+// Airtime and data go to the phone number captured at registration, so there's no number
+// to enter here.
+function RewardPreference({ current }: { current: ReferralRewardType }) {
   const dispatch = useAppDispatch();
-  const [phone, setPhone] = useState(payoutPhone ?? "");
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const dirty = phone.trim() !== (payoutPhone ?? "");
-
-  async function savePhone(e: FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setSaved(false);
-    const result = await dispatch(updatePayoutPhone(phone));
-    setSaving(false);
-    if (updatePayoutPhone.fulfilled.match(result)) {
-      setPhone(result.payload ?? "");
-      setSaved(true);
-    }
-  }
 
   return (
     <div className="mt-8">
@@ -444,44 +423,6 @@ function RewardPreference({
           );
         })}
       </div>
-      <form onSubmit={savePhone} className="mt-4 max-w-md">
-        <label htmlFor="payout-phone" className="block text-sm font-medium text-gray-900">
-          Phone number for airtime or data
-        </label>
-        <p className="mt-1 text-xs text-gray-600">
-          We send airtime and data rewards to this Nigerian mobile number. If you&apos;ve moved it to
-          a different network, tell us on WhatsApp so we send it on the right one.
-        </p>
-        <div className="mt-2 flex gap-2">
-          <input
-            id="payout-phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="e.g. 0803 123 4567"
-            value={phone}
-            maxLength={25}
-            onChange={(e) => {
-              setPhone(e.target.value);
-              setSaved(false);
-            }}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            disabled={!dirty || saving}
-            className="shrink-0 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {saving ? "Saving…" : "Save"}
-          </button>
-        </div>
-        {saved && <p className="mt-1 text-xs text-green-700">Saved.</p>}
-        {current !== "discount" && !payoutPhone && !dirty && (
-          <p className="mt-1 text-xs text-amber-600">
-            Add a number so we can send your {current} reward.
-          </p>
-        )}
-      </form>
     </div>
   );
 }

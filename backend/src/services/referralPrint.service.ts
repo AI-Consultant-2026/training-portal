@@ -177,6 +177,22 @@ function drawQr(doc: PDFKit.PDFDocument, text: string, x: number, y: number, siz
   doc.fill(INK);
 }
 
+// The largest font size (down to `min`) at which the code fits in `width`, so a long code
+// shrinks instead of running into the QR code beside it.
+function fitCodeSize(
+  doc: PDFKit.PDFDocument,
+  code: string,
+  width: number,
+  max: number,
+  min: number,
+  characterSpacing: number,
+): number {
+  doc.font(SERIF_BOLD);
+  let size = max;
+  while (size > min && doc.fontSize(size).widthOfString(code, { characterSpacing }) > width) size -= 0.5;
+  return size;
+}
+
 function wordmark(doc: PDFKit.PDFDocument, x: number, y: number, size: number, color: string): void {
   doc.rect(x, y + size * 0.18, size * 0.62, size * 0.62).fill(SIGNAL);
   doc
@@ -285,11 +301,12 @@ function drawFlyer(doc: PDFKit.PDFDocument, data: PrintData): void {
     .font(SANS_BOLD)
     .fontSize(10.5)
     .text("SIGN UP WITH MY CODE", textX, panelTop + 22, { characterSpacing: 1.8 });
+  const codeSize = fitCodeSize(doc, data.code, textW, 40, 24, 2);
   doc
     .fillColor(SIGNAL_DEEP)
     .font(SERIF_BOLD)
-    .fontSize(44)
-    .text(data.code, textX, panelTop + 38, { characterSpacing: 3, lineBreak: false });
+    .fontSize(codeSize)
+    .text(data.code, textX, panelTop + 38 + (40 - codeSize) * 0.6, { characterSpacing: 2, lineBreak: false });
   doc
     .fillColor(INK)
     .font(SANS_BOLD)
@@ -408,11 +425,12 @@ function drawCard(doc: PDFKit.PDFDocument, data: PrintData, x: number, y: number
     .font(SANS_BOLD)
     .fontSize(6.5)
     .text("SIGN UP WITH MY CODE", tx, y + 66, { characterSpacing: 1 });
+  const codeSize = fitCodeSize(doc, data.code, tw - 8, 17, 11, 1);
   doc
     .fillColor(SIGNAL_DEEP)
     .font(SERIF_BOLD)
-    .fontSize(19)
-    .text(data.code, tx, y + 75, { characterSpacing: 1.5, lineBreak: false });
+    .fontSize(codeSize)
+    .text(data.code, tx, y + 75 + (17 - codeSize) * 0.6, { characterSpacing: 1, lineBreak: false });
   doc
     .fillColor(INK)
     .font(SANS)
