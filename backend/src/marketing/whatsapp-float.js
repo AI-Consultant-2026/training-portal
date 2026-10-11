@@ -6,9 +6,9 @@
 (function () {
   "use strict";
 
-  // +234 707 714 9989 -- the number the site footers label "WhatsApp/Call".
+  // +234 707 714 9215 -- the number the site footers label "WhatsApp/Call".
   var HREF =
-    "https://wa.me/2347077149989?text=" +
+    "https://wa.me/2347077149215?text=" +
     encodeURIComponent(
       "Hello Paleon Training, I would like to find out more about your training programmes.",
     );

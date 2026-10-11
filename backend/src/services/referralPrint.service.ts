@@ -143,7 +143,7 @@ const SANS = "PaleonSans";
 const SANS_BOLD = "PaleonSansBold";
 const SERIF_BOLD = "PaleonSerifBold";
 
-const WHATSAPP = "+234 707 714 9989";
+const WHATSAPP = "+234 707 714 9215";
 
 function newDoc(options: PDFKit.PDFDocumentOptions): PDFKit.PDFDocument {
   const doc = new PDFDocument({ margin: 0, ...options, info: { Title: "Paleon Training referral", Author: "Paleon Training" } });
