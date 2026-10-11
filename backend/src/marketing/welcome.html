@@ -670,6 +670,30 @@
   .voice-card blockquote { margin: 0 0 12px; line-height: 1.6; }
   .voice-card figcaption { font-size: 14px; font-weight: 600; opacity: .8; }
   .voice-note { font-size: 13px; opacity: .7; margin-top: 14px; }
+  /* Ambassador Hour recording, directly under the hero (2026-10-11) */
+  .session-video-section { background: var(--ink-2); color: var(--paper); padding: clamp(48px, 7vw, 84px) 0; border-bottom: 1px solid var(--line); }
+  .session-video-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: center; }
+  @media (max-width: 960px) { .session-video-grid { grid-template-columns: minmax(0, 1fr); } }
+  .session-video-player { margin: 0; }
+  .session-video-player video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1280 / 804;
+    background: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 0 4px rgba(232,134,60,0.18);
+  }
+  .session-video-player figcaption { margin-top: 10px; font-size: 13px; color: var(--ink-soft); }
+  .session-video-section .section-title { color: var(--paper); max-width: 24ch; font-size: clamp(26px, 2.8vw, 36px); line-height: 1.18; }
+  .session-video-section .section-title em { font-style: normal; color: var(--signal-2); }
+  .session-video-lede { font-size: 16.5px; line-height: 1.6; color: #C9CED8; margin: 16px 0 0; }
+  .session-video-points { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; }
+  .session-video-points li { font-size: 15px; line-height: 1.5; color: var(--paper); padding-left: 22px; position: relative; }
+  .session-video-points li::before { content: ""; position: absolute; left: 0; top: 9px; width: 10px; height: 2px; background: var(--signal); }
+  .session-video-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  @media (max-width: 560px) { .session-video-ctas .btn { width: 100%; justify-content: center; } }
+
   /* Start here strip + course card free-lesson link (2026-09-25) */
   .start-section { background: var(--paper-2); padding: clamp(48px, 7vw, 80px) 0; }
   .start-steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -1066,6 +1090,32 @@
       <span class="ticker-item">FREE Career Match &mdash; find the digital skill that fits Oil &amp; Gas, Banking or Telecoms in 2 minutes. &#127891;&#127475;&#127468;</span>
     </div>
   </div>
+
+  <!-- ============ AMBASSADOR HOUR RECORDING (2026-10-11) ============ -->
+  <section class="section session-video-section" id="watch" aria-labelledby="watchTitle">
+    <div class="wrap session-video-grid">
+      <figure class="session-video-player">
+        <video controls playsinline preload="none" poster="/videos/home/paleon-ambassador-hour-10-oct-2026.jpg" aria-label="Video: Paleon Ambassador Hour, full session recorded 10 October 2026">
+          <source src="/videos/home/paleon-ambassador-hour-10-oct-2026.mp4" type="video/mp4">
+        </video>
+        <figcaption>Paleon Ambassador Hour &middot; recorded live on Zoom, Saturday 10 October 2026 &middot; 57 min</figcaption>
+      </figure>
+      <div class="session-video-copy">
+        <span class="section-eyebrow">Watch the full session &middot; free</span>
+        <h2 class="section-title" id="watchTitle">Graduate, corper or professional? <em>Watch this before you pick your next skill.</em></h2>
+        <p class="session-video-lede">A degree alone won&rsquo;t get you hired. In one hour we show you the digital skills Nigerian employers actually check for, and how to prove them with real work.</p>
+        <ul class="session-video-points">
+          <li>Why &ldquo;show what you can do&rdquo; beats a CV full of claims</li>
+          <li>Cyber Security, GIS &amp; Drones, Digital Marketing and HSE, compared</li>
+          <li>How ambassadors earn airtime or data for every friend who joins</li>
+        </ul>
+        <div class="session-video-ctas">
+          <a class="btn btn-signal btn-lg" href="/register">Register as an Ambassador</a>
+          <a class="btn btn-whatsapp btn-lg" href="https://chat.whatsapp.com/HzHcFf9iq4h81XKxWZ8wYL" target="_blank" rel="noopener" aria-label="Join the Paleon Ambassadors WhatsApp group (opens WhatsApp)">Join our WhatsApp group</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ START HERE (one path, 2026-09-25) ============ -->
   <section class="section start-section" id="start">
