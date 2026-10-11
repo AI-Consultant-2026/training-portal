@@ -32,9 +32,9 @@
         "🔐 One careless click can cost a bank millions. The people who stop it are needed in banking, telecoms and oil & gas.\n\n" +
         "Want to see if cyber security is for you? Watch Lesson 1 of Cyber Security Fundamentals FREE on your phone. No payment, no card.\n\n" +
         "👉 {LINK}\n\n" +
-        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your first course payment is confirmed.\n\n" +
+        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your course is fully paid.\n\n" +
         "#CyberSecurity #DigitalSkills #NYSC #Nigeria #PaleonTraining",
-      short: "🔐 One careless click can cost a bank millions. Watch Lesson 1 of Cyber Security Fundamentals FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your first payment. #CyberSecurity {LINK}",
+      short: "🔐 One careless click can cost a bank millions. Watch Lesson 1 of Cyber Security Fundamentals FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your course is fully paid. #CyberSecurity {LINK}",
     },
     {
       slug: "gis-and-drone-mapping",
@@ -43,9 +43,9 @@
         "🛰️ Who maps the Niger Delta? Oil & gas, construction, agriculture and government all need people who can read the land from above.\n\n" +
         "Start GIS and Drone Mapping with a FREE first lesson: QGIS, drones and real maps, on your phone. No payment, no card.\n\n" +
         "👉 {LINK}\n\n" +
-        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your first course payment is confirmed.\n\n" +
+        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your course is fully paid.\n\n" +
         "#GIS #DroneMapping #OilAndGas #Nigeria #PaleonTraining",
-      short: "🛰️ Who maps the Niger Delta? Try Lesson 1 of GIS and Drone Mapping FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your first payment. #GIS {LINK}",
+      short: "🛰️ Who maps the Niger Delta? Try Lesson 1 of GIS and Drone Mapping FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your course is fully paid. #GIS {LINK}",
     },
     {
       slug: "digital-marketing",
@@ -54,9 +54,9 @@
         "📈 Every business wants customers online. Very few know how to find them. That's the skill banks, telecoms and growing brands look for.\n\n" +
         "Watch Lesson 1 of Digital Marketing FREE on your phone and see how it works. No payment, no card.\n\n" +
         "👉 {LINK}\n\n" +
-        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your first course payment is confirmed.\n\n" +
+        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your course is fully paid.\n\n" +
         "#DigitalMarketing #SocialMedia #NYSC #Nigeria #PaleonTraining",
-      short: "📈 Every business wants customers online; few know how to find them. Watch Lesson 1 of Digital Marketing FREE. Join with my code {CODE} for {REWARD} airtime after your first payment. {LINK}",
+      short: "📈 Every business wants customers online; few know how to find them. Watch Lesson 1 of Digital Marketing FREE. Join with my code {CODE} for {REWARD} airtime after your course is fully paid. {LINK}",
     },
     {
       slug: "hse-fundamentals",
@@ -65,9 +65,9 @@
         "⛑️ On every oil & gas site, someone's job is to spot the hazard before anyone gets hurt. Could that be you?\n\n" +
         "Start HSE Fundamentals (Health, Safety and Environment) with a FREE first lesson on your phone. No payment, no card.\n\n" +
         "👉 {LINK}\n\n" +
-        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your first course payment is confirmed.\n\n" +
+        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your course is fully paid.\n\n" +
         "#HSE #Safety #OilAndGas #Nigeria #PaleonTraining",
-      short: "⛑️ Someone has to spot the hazard first. Try Lesson 1 of HSE Fundamentals FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your first payment. #HSE {LINK}",
+      short: "⛑️ Someone has to spot the hazard first. Try Lesson 1 of HSE Fundamentals FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your course is fully paid. #HSE {LINK}",
     },
   ];
 

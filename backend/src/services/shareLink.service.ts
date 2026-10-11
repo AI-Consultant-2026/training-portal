@@ -325,7 +325,7 @@ function freeBadge(ctx: Ctx, x: number, top: number, size: number): number {
   return top + h;
 }
 
-const SMALL_PRINT = "Airtime is sent after your first course payment is confirmed. We teach skills; we don't promise jobs.";
+const SMALL_PRINT = "Airtime is sent after your course is fully paid. We teach skills; we don't promise jobs.";
 
 export interface CardInput {
   design: ShareCardDesign;
@@ -387,7 +387,7 @@ function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
     const bodySize = tall ? 42 : 34;
     y = paragraph(
       ctx,
-      `${who} invited you to learn job-ready digital skills online. Join with the code below and get ${welcomeBonus} airtime once your first course payment is confirmed.`,
+      `${who} invited you to learn job-ready digital skills online. Join with the code below and get ${welcomeBonus} airtime once your course is fully paid.`,
       M,
       y,
       inner,
@@ -451,8 +451,8 @@ function drawPostCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
     y += bulletStep;
   }
   const giftLine = input.firstName
-    ? `From ${input.firstName}: join with my code and get ${welcomeBonus} airtime once your first course payment is confirmed.`
-    : `Join with my code and get ${welcomeBonus} airtime once your first course payment is confirmed.`;
+    ? `From ${input.firstName}: join with my code and get ${welcomeBonus} airtime once your course is fully paid.`
+    : `Join with my code and get ${welcomeBonus} airtime once your course is fully paid.`;
   const giftSize = tall ? 38 : 30;
   ctx.font = sansBold(giftSize);
   const giftH = wrap(ctx, giftLine, inner).length * giftSize * 1.3;
@@ -495,7 +495,7 @@ function drawLinkCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
     y += 22;
     paragraph(
       ctx,
-      `Learn job-ready digital skills online with Paleon Training. Join with my code and get ${welcomeBonus} airtime once your first course payment is confirmed.`,
+      `Learn job-ready digital skills online with Paleon Training. Join with my code and get ${welcomeBonus} airtime once your course is fully paid.`,
       M,
       y,
       leftW,
@@ -668,7 +668,7 @@ export function renderSharePage(page: SharePage): string {
     path_ = `/s/${ambassador.code}/v/${page.video}`;
     imageUrl = `${origin}${path_}/link.jpg${imageQuery}`;
     title = `${meta.title} | Paleon Training`;
-    description = `${name ? `${name} invited you to Paleon Training. ` : ""}Watch, then join with code ${ambassador.code} and get ${reward} airtime once your first course payment is confirmed. First lesson free.`;
+    description = `${name ? `${name} invited you to Paleon Training. ` : ""}Watch, then join with code ${ambassador.code} and get ${reward} airtime once your course is fully paid. First lesson free.`;
     media = `<video src="/videos/ambassador/${page.video}.mp4" poster="/videos/ambassador/${page.video}.jpg" controls playsinline preload="metadata"></video>`;
   } else {
     const design = page.design ?? "friend";
@@ -683,8 +683,8 @@ export function renderSharePage(page: SharePage): string {
       title = `${COURSES[course].headline}: first lesson free | Paleon Training`;
     }
     description = isLessonDesign(design)
-      ? `Watch Lesson 1 of ${COURSES[course!].headline} free on your phone. No payment, no card. Like it? Join with code ${ambassador.code} and get ${reward} airtime once your first course payment is confirmed.`
-      : `${name ? `${name} invited you to learn job-ready digital skills online. ` : "Learn job-ready digital skills online. "}Join with code ${ambassador.code} and get ${reward} airtime once your first course payment is confirmed.`;
+      ? `Watch Lesson 1 of ${COURSES[course!].headline} free on your phone. No payment, no card. Like it? Join with code ${ambassador.code} and get ${reward} airtime once your course is fully paid.`
+      : `${name ? `${name} invited you to learn job-ready digital skills online. ` : "Learn job-ready digital skills online. "}Join with code ${ambassador.code} and get ${reward} airtime once your course is fully paid.`;
     media = `<img src="${path_}/square.png${imageQuery}" alt="${escapeHtml(title)}" width="1080" height="1080">`;
   }
   const pageUrl = `${origin}${path_}${nameQuery}`;
@@ -706,8 +706,8 @@ export function renderSharePage(page: SharePage): string {
       ? `${name} invited you to Paleon Training`
       : "You're invited to Paleon Training";
   const intro = lessonFirst
-    ? `Watch the first lesson free on your phone, no payment and no card. Like it? Sign up with ${name ? `${name}'s` : "this"} code and get ${reward} airtime once your first course payment is confirmed.`
-    : `Learn job-ready digital skills online, at your own pace. Sign up with this code and get ${reward} airtime once your first course payment is confirmed.`;
+    ? `Watch the first lesson free on your phone, no payment and no card. Like it? Sign up with ${name ? `${name}'s` : "this"} code and get ${reward} airtime once your course is fully paid.`
+    : `Learn job-ready digital skills online, at your own pace. Sign up with this code and get ${reward} airtime once your course is fully paid.`;
 
   return `<!doctype html>
 <html lang="en">
@@ -758,7 +758,7 @@ export function renderSharePage(page: SharePage): string {
   <p>${escapeHtml(intro)}</p>
   <div class="code">${escapeHtml(ambassador.code)}</div>
   ${actions}
-  <small>Airtime is sent after your first course payment is confirmed. We teach skills; we don't promise jobs.</small>
+  <small>Airtime is sent after your course is fully paid. We teach skills; we don't promise jobs.</small>
 </main>
 <script src="/analytics.js" defer></script>
 </body>

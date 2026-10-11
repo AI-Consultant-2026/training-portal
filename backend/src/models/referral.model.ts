@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { DEFAULT_REWARD_TYPE, REFERRER_REWARD_NGN, REFEREE_REWARD_NGN } from "../constants/referral";
 
 // pending  -> code was used at registration, referred student hasn't paid yet
-// qualified -> referred student's first course payment is confirmed; both rewards accrue
+// qualified -> referred student's course is fully paid; both rewards accrue
 // void     -> disqualified by an admin (fraud, self-referral discovered, refund, etc.)
 export type ReferralStatus = "pending" | "qualified" | "void";
 export type ReferralRewardStatus = "pending" | "issued";

@@ -316,8 +316,8 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
   const link = cardShareLink(summary.code, design, withName);
   const welcomeBonus = formatNgn(summary.welcomeBonusNgn);
   const texts: PlatformTexts = {
-    message: `Use my code ${summary.code} when you sign up and you'll get ${welcomeBonus} airtime once your first course payment is confirmed. First lesson free 👇\n${link}`,
-    instagram: `Use my code ${summary.code} when you sign up at paleontraining.com/register and you'll get ${welcomeBonus} airtime once your first course payment is confirmed. First lesson free.`,
+    message: `Use my code ${summary.code} when you sign up and you'll get ${welcomeBonus} airtime once your course is fully paid. First lesson free 👇\n${link}`,
+    instagram: `Use my code ${summary.code} when you sign up at paleontraining.com/register and you'll get ${welcomeBonus} airtime once your course is fully paid. First lesson free.`,
     short: `${welcomeBonus} airtime for you when you join with my code ${summary.code} and pay for your first course. First lesson free 👉 ${link}`,
   };
   const phone = canUseShareSheet();

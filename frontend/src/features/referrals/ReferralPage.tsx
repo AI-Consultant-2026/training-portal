@@ -145,7 +145,7 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
   // The friend card's share link (2026-10-06): its preview image is the "₦3,000 airtime for
   // you" card, so WhatsApp, Facebook, LinkedIn and X show the picture with the message.
   const shareLink = cardShareLink(summary.code, "friend", false);
-  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatNgn(summary.welcomeBonusNgn)} in airtime once your first course payment is confirmed: ${shareLink}`;
+  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatNgn(summary.welcomeBonusNgn)} in airtime once your course is fully paid: ${shareLink}`;
   const encodedUrl = encodeURIComponent(shareLink);
   const encodedMessage = encodeURIComponent(shareMessage);
   const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
@@ -170,7 +170,7 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
         Earn {formatNgn(summary.rewardPerReferralNgn)} for every friend who joins and pays.
       </p>
       <p className="text-sm text-blue-800">
-        They get {formatNgn(summary.welcomeBonusNgn)} in airtime once their first course payment is confirmed.
+        They get {formatNgn(summary.welcomeBonusNgn)} in airtime once their course is fully paid.
       </p>
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">

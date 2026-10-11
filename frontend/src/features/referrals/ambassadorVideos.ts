@@ -126,8 +126,8 @@ export interface CaptionContext {
 
 function rewardLine(video: AmbassadorVideo, ctx: CaptionContext): string {
   return video.recruitsAmbassadors
-    ? `Sign up with my code ${ctx.code}. You'll get ${ctx.welcomeBonus} airtime once your first course payment is confirmed, plus your own code to earn ${ctx.referrerReward} per friend.`
-    : `Sign up with my code ${ctx.code} and you'll get ${ctx.welcomeBonus} airtime once your first course payment is confirmed.`;
+    ? `Sign up with my code ${ctx.code}. You'll get ${ctx.welcomeBonus} airtime once your course is fully paid, plus your own code to earn ${ctx.referrerReward} per friend.`
+    : `Sign up with my code ${ctx.code} and you'll get ${ctx.welcomeBonus} airtime once your course is fully paid.`;
 }
 
 export function buildCaption(video: AmbassadorVideo, platform: CaptionPlatform, ctx: CaptionContext): string {

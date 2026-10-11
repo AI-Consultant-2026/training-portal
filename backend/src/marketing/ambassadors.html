@@ -89,7 +89,7 @@
       "name": "When are ambassador rewards paid?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "After your friend's first course payment is confirmed. The Paleon team issues rewards by hand, so allow a few working days for airtime or data."
+        "text": "After your friend's course is fully paid. The Paleon team issues rewards by hand, so allow a few working days for airtime or data."
       }
     },
     {
@@ -97,7 +97,7 @@
       "name": "What does the referred friend get?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A {{REFEREE_REWARD}} welcome reward in airtime after their first course payment is confirmed. It isn't a discount on the fee."
+        "text": "A {{REFEREE_REWARD}} welcome reward in airtime after their course is fully paid. It isn't a discount on the fee."
       }
     },
     {
@@ -792,7 +792,7 @@
       <div class="stages">
         <div class="stage"><div class="stage-tag">Share</div><div class="stage-body"><h3>Share the free tools</h3><p>The free 2-minute <strong>Career Match</strong> recommends a course, and the <strong>first lesson of every course is free</strong> to read with no account needed. Both are easy to share because they cost nothing.</p></div></div>
         <div class="stage"><div class="stage-tag">Help</div><div class="stage-body"><h3>Help friends choose</h3><p>Answer simple questions: which course fits Oil &amp; Gas, Banking or Telecoms, how long it takes, that it's self-paced. For anything you're not sure about, send them to us on WhatsApp.</p></div></div>
-        <div class="stage"><div class="stage-tag">Refer</div><div class="stage-body"><h3>Refer the ones who are ready</h3><p>When a friend decides to join, they sign up with <strong>your code</strong>. When their first course payment is confirmed, you earn {{REFERRER_REWARD}} and they earn {{REFEREE_REWARD}} in airtime.</p></div></div>
+        <div class="stage"><div class="stage-tag">Refer</div><div class="stage-body"><h3>Refer the ones who are ready</h3><p>When a friend decides to join, they sign up with <strong>your code</strong>. When their course is fully paid, you earn {{REFERRER_REWARD}} and they earn {{REFEREE_REWARD}} in airtime.</p></div></div>
       </div>
     </div>
   </section>
@@ -847,8 +847,8 @@
       <table class="catalog">
         <thead><tr><th>Who</th><th>Reward</th><th>Paid as</th><th>When</th></tr></thead>
         <tbody>
-          <tr><td class="course-name">You, the ambassador</td><td>{{REFERRER_REWARD}} per friend</td><td>Airtime, a data bundle or Paleon course credit (your choice)</td><td>After your friend's first course payment is confirmed</td></tr>
-          <tr><td class="course-name">Your friend</td><td>{{REFEREE_REWARD}} welcome reward</td><td>Airtime</td><td>After their first course payment is confirmed</td></tr>
+          <tr><td class="course-name">You, the ambassador</td><td>{{REFERRER_REWARD}} per friend</td><td>Airtime, a data bundle or Paleon course credit (your choice)</td><td>After your friend's course is fully paid</td></tr>
+          <tr><td class="course-name">Your friend</td><td>{{REFEREE_REWARD}} welcome reward</td><td>Airtime</td><td>After their course is fully paid</td></tr>
         </tbody>
       </table>
     </div>
@@ -949,12 +949,12 @@ This free 2-minute Career Match picks one for you, and you can try the first les
         <p class="scenario-tag">Group message</p>
         <pre class="template-text" id="tpl-group">For anyone thinking about Oil &amp; Gas, Banking or Telecoms: Paleon Training has a free Career Match (2 questions) and free first lessons in Cyber Security, Digital Marketing, GIS and HSE. No account needed to try.
 [your free-lesson or Career Match link]
-If you decide to join, use my code [PLN......] and you'll get {{REFEREE_REWARD}} in airtime after your first payment.</pre>
+If you decide to join, use my code [PLN......] and you'll get {{REFEREE_REWARD}} in airtime after your course is fully paid.</pre>
         <button type="button" class="btn btn-copy" data-copy="tpl-group">Copy</button>
       </div>
       <div class="template">
         <p class="scenario-tag">To a friend who's ready to join</p>
-        <pre class="template-text" id="tpl-ready">Sign up with my link so my code is applied. You'll get {{REFEREE_REWARD}} in airtime after your first payment:
+        <pre class="template-text" id="tpl-ready">Sign up with my link so my code is applied. You'll get {{REFEREE_REWARD}} in airtime after your course is fully paid:
 [your invite link]</pre>
         <button type="button" class="btn btn-copy" data-copy="tpl-ready">Copy</button>
       </div>
@@ -976,7 +976,7 @@ Tell me what you think.</pre>
         <h3>Do</h3>
         <ul class="do-list">
           <li>Say "<strong>free first lesson</strong>" and "<strong>free Career Match</strong>".</li>
-          <li>Describe the friend's reward as <strong>{{REFEREE_REWARD}} in airtime after their first payment</strong>.</li>
+          <li>Describe the friend's reward as <strong>{{REFEREE_REWARD}} in airtime after their course is fully paid</strong>.</li>
           <li>Share only where promotion is allowed, and respect group rules.</li>
           <li>Send people to us on WhatsApp for questions you can't answer.</li>
           <li>Be honest about what the courses are: practical, self-paced skills training.</li>
@@ -1009,7 +1009,7 @@ Tell me what you think.</pre>
         <li><strong>How you want to be paid</strong>: airtime, data or course credit.</li>
         <li><strong>Top ambassadors</strong>: the leaderboard of paid referrals.</li>
       </ul>
-      <p>A friend shows as <strong>"Joined — not paid yet"</strong> when they sign up with your code, and <strong>"Paid — reward earned"</strong> once their first course payment is confirmed. Your reward then shows as awaiting payout until the Paleon team issues it.</p>
+      <p>A friend shows as <strong>"Joined — not paid yet"</strong> when they sign up with your code, and <strong>"Paid — reward earned"</strong> once their course is fully paid. Your reward then shows as awaiting payout until the Paleon team issues it.</p>
     </div>
   </section>
 
@@ -1051,10 +1051,10 @@ Tell me what you think.</pre>
     <div class="stages">
       <div class="stage"><div class="stage-tag">Q1</div><div class="stage-body"><h3>Do I have to pay to become an ambassador?</h3><p>No. You only need a free Paleon Training account. You don't have to buy a course.</p></div></div>
       <div class="stage"><div class="stage-tag">Q2</div><div class="stage-body"><h3>How much do I earn?</h3><p>{{REFERRER_REWARD}} for every friend who signs up with your code and pays for a course, with no limit. You choose airtime, data or course credit.</p></div></div>
-      <div class="stage"><div class="stage-tag">Q3</div><div class="stage-body"><h3>When do I get paid?</h3><p>After your friend's first course payment is confirmed. The Paleon team issues rewards by hand, so allow a few working days for airtime or data.</p></div></div>
-      <div class="stage"><div class="stage-tag">Q4</div><div class="stage-body"><h3>What does my friend get?</h3><p>A {{REFEREE_REWARD}} welcome reward in airtime after their first course payment is confirmed. It isn't a discount on the fee.</p></div></div>
+      <div class="stage"><div class="stage-tag">Q3</div><div class="stage-body"><h3>When do I get paid?</h3><p>After your friend's course is fully paid. The Paleon team issues rewards by hand, so allow a few working days for airtime or data.</p></div></div>
+      <div class="stage"><div class="stage-tag">Q4</div><div class="stage-body"><h3>What does my friend get?</h3><p>A {{REFEREE_REWARD}} welcome reward in airtime after their course is fully paid. It isn't a discount on the fee.</p></div></div>
       <div class="stage"><div class="stage-tag">Q5</div><div class="stage-body"><h3>My friend signed up without my code. Can it be added?</h3><p>No. Codes are entered at registration, so make sure friends use your invite link or type your code when they sign up.</p></div></div>
-      <div class="stage"><div class="stage-tag">Q6</div><div class="stage-body"><h3>Does a friend who only tries the free lesson count?</h3><p>Not for a reward. A referral qualifies only when the friend signs up with your code and their first course payment is confirmed. Free-lesson visits still help: many people try before they buy.</p></div></div>
+      <div class="stage"><div class="stage-tag">Q6</div><div class="stage-body"><h3>Does a friend who only tries the free lesson count?</h3><p>Not for a reward. A referral qualifies only when the friend signs up with your code and their course is fully paid. Free-lesson visits still help: many people try before they buy.</p></div></div>
       <div class="stage"><div class="stage-tag">Q7</div><div class="stage-body"><h3>Can I refer myself or use a second account?</h3><p>No. Self-referrals and duplicate accounts don't qualify.</p></div></div>
       <div class="stage"><div class="stage-tag">Q8</div><div class="stage-body"><h3>Can I promise my friends a job?</h3><p>No. Paleon Training builds practical skills and employability, but it doesn't guarantee a job, placement or salary. Please don't promise one.</p></div></div>
       <div class="stage"><div class="stage-tag">Q9</div><div class="stage-body"><h3>Who do I contact with questions?</h3><p>Message us on WhatsApp at <a href="https://wa.me/2347077149989" target="_blank" rel="noopener">+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)</a> or email <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>. Account problems: <a href="/support">Support</a>.</p></div></div>

@@ -30,7 +30,7 @@ describe("ambassador video captions", () => {
   it("states the payment condition wherever the friend's reward is mentioned", () => {
     for (const video of AMBASSADOR_VIDEOS) {
       const caption = buildCaption(video, "whatsapp", ctx);
-      expect(caption).toContain("once your first course payment is confirmed");
+      expect(caption).toContain("once your course is fully paid");
     }
   });
 });

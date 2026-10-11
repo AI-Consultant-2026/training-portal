@@ -316,7 +316,7 @@ function drawFlyer(doc: PDFKit.PDFDocument, data: PrintData): void {
     .fillColor(CHARCOAL_SOFT)
     .font(SANS)
     .fontSize(11)
-    .text("after your first course payment is confirmed.", textX, panelTop + 116, { width: textW });
+    .text("after your course is fully paid.", textX, panelTop + 116, { width: textW });
   doc
     .fillColor(INK)
     .font(SANS)
@@ -443,7 +443,7 @@ function drawCard(doc: PDFKit.PDFDocument, data: PrintData, x: number, y: number
     .fillColor(INK)
     .font(SANS)
     .fontSize(7)
-    .text(`${naira(data.welcomeBonusNgn)} airtime after your first course payment`, tx, y + 100, { width: tw });
+    .text(`${naira(data.welcomeBonusNgn)} airtime after your course is fully paid`, tx, y + 100, { width: tw });
   doc
     .fillColor(INK)
     .font(SANS_BOLD)

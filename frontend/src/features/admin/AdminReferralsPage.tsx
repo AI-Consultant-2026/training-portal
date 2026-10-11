@@ -160,7 +160,7 @@ export function AdminReferralsPage() {
         </Link>
       </div>
       <p className="mt-1 text-sm text-gray-600">
-        A referral qualifies when the referred student&apos;s first course payment is confirmed.{" "}
+        A referral qualifies when the referred student&apos;s course is fully paid.{" "}
         {payoutConfig?.enabled
           ? `Send airtime and data through ${payoutConfig.provider} from here; pay course credit by hand, then mark it paid.`
           : "Pay rewards out manually (airtime, data, or course credit) then mark them issued here."}
