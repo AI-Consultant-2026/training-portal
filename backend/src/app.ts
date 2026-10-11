@@ -222,6 +222,11 @@ export function createApp() {
   // Express routing is case-insensitive, so /Zoom-Attendees works too. The page was
   // first published as /Zooom-Attendees; that address permanently redirects here so
   // links already shared keep working.
+  // One-minute clip page (2026-10-11) linked from the ambassador intro email's "Watch first"
+  // button; the clip itself is served by the /videos/home route below.
+  app.get("/your-cv-says", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "your-cv-says.html"));
+  });
   app.get("/zoom-attendees", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "zoom-attendees.html"));
   });
