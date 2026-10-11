@@ -143,7 +143,7 @@ const SANS = "PaleonSans";
 const SANS_BOLD = "PaleonSansBold";
 const SERIF_BOLD = "PaleonSerifBold";
 
-const WHATSAPP = "+234 707 714 9215";
+const WHATSAPP = "+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)";
 
 function newDoc(options: PDFKit.PDFDocumentOptions): PDFKit.PDFDocument {
   const doc = new PDFDocument({ margin: 0, ...options, info: { Title: "Paleon Training referral", Author: "Paleon Training" } });
@@ -338,11 +338,19 @@ function drawFlyer(doc: PDFKit.PDFDocument, data: PrintData): void {
     .font(SANS_BOLD)
     .fontSize(10.5)
     .text(recommended, M, footerTop + 14, { width: inner * 0.58, lineBreak: false, ellipsis: true });
+  // Two phone numbers make this line long, so shrink it until it clears the
+  // "Recommended by" text on the left instead of overlapping it.
+  const recommendedWidth = Math.min(doc.widthOfString(recommended), inner * 0.58);
+  const questions = `Questions? ${WHATSAPP}`;
+  doc.font(SANS);
+  let questionsSize = 10.5;
+  while (questionsSize > 7 && doc.fontSize(questionsSize).widthOfString(questions) > inner - recommendedWidth - 12) {
+    questionsSize -= 0.5;
+  }
   doc
     .fillColor(CHARCOAL_SOFT)
-    .font(SANS)
-    .fontSize(10.5)
-    .text(`Questions? WhatsApp ${WHATSAPP}`, M, footerTop + 14, { width: inner, align: "right" });
+    .fontSize(questionsSize)
+    .text(questions, M, footerTop + 14 + (10.5 - questionsSize) / 2, { width: inner, align: "right" });
   doc
     .fillColor(CHARCOAL_SOFT)
     .font(SANS)
