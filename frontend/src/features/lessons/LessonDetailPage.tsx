@@ -71,9 +71,19 @@ export function LessonDetailPage() {
   }
 
   if (status === "failed") {
+    // Instalments: a deposit-only student opening a day beyond Days 1-2 (BALANCE_REQUIRED).
+    const balanceRequired = (error ?? "").startsWith("Pay the balance");
     return (
       <div className="mx-auto max-w-3xl px-6 py-10">
         <Alert message={error ?? "Could not load lesson"} />
+        {balanceRequired && navigation && (
+          <Link
+            to={`/courses/${navigation.course.slug}/pay/card`}
+            className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            Pay the balance
+          </Link>
+        )}
       </div>
     );
   }
@@ -94,10 +104,14 @@ export function LessonDetailPage() {
   // confirmed; otherwise clicking through would just hit the same 403 the backend
   // already enforces, so intercept it with the same upsell dialog as a locked lesson.
   const myEnrollment = navigation ? enrollments.find((e) => e.courseId === navigation.course.id) : undefined;
-  const isNextLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
+  const hasDepositOnly = !myEnrollment?.paymentConfirmed && !!myEnrollment?.depositPaidAt;
+  // The server says whether the next lesson's day is covered (instalments: a deposit only
+  // opens the first days); fall back to "paid in full" until navigation has loaded.
+  const isNextLocked =
+    user?.role === "student" && (navigation?.nextPaymentLocked ?? (!myEnrollment?.paymentConfirmed && !hasDepositOnly));
   // An unpaid student here is on the free preview lesson: mark-complete needs a paid
   // enrollment, so show the way to unlock the rest of the course instead.
-  const isFreePreview = isNextLocked;
+  const isFreePreview = user?.role === "student" && !myEnrollment?.paymentConfirmed && !hasDepositOnly;
   const payHref = navigation ? `/courses/${navigation.course.slug}/pay/card` : "/courses";
   // Day gate: the next lesson waits for this day's quiz and assignment. Only relevant
   // once payment is confirmed -- before that, the payment lock above wins.
@@ -223,8 +237,9 @@ export function LessonDetailPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
             <p className="text-sm text-gray-700">
-              The next lesson unlocks once your course payment is confirmed. Pay for the course to
-              continue with every lesson, assignment and your certificate.
+              {hasDepositOnly
+                ? "You've finished the days your deposit covers. Pay the balance to carry on with every remaining day, the capstone and your certificate."
+                : "The next lesson unlocks once your course payment is confirmed. Pay for the course to continue with every lesson, assignment and your certificate."}
             </p>
             <div className="mt-4 flex flex-wrap justify-end gap-2">
               <Button variant="secondary" onClick={() => setShowPaymentDialog(false)}>
@@ -234,7 +249,7 @@ export function LessonDetailPage() {
                 to={payHref}
                 className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
               >
-                Unlock the full course
+                {hasDepositOnly ? "Pay the balance" : "Unlock the full course"}
               </Link>
             </div>
           </div>

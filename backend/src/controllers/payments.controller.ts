@@ -13,6 +13,20 @@ export const startCardPayment = asyncHandler(async (req: Request, res: Response)
   res.status(201).json(result);
 });
 
+export const startInstalmentPayment = asyncHandler(async (req: Request, res: Response) => {
+  const result = await paymentService.startInstalmentPayment({
+    courseId: req.body.courseId,
+    studentId: req.user!.id,
+    kind: req.body.kind,
+  });
+  res.status(201).json(result);
+});
+
+export const verifyInstalmentPayment = asyncHandler(async (req: Request, res: Response) => {
+  const result = await paymentService.verifyInstalmentPayment(req.body.reference, req.user!.id);
+  res.json(result);
+});
+
 // POST /api/payments/paystack/webhook -- mounted in app.ts ahead of express.json(), because
 // the signature is computed over the exact raw bytes Paystack sent.
 export const paystackWebhook = asyncHandler(async (req: Request, res: Response) => {

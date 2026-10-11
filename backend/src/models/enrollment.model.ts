@@ -13,6 +13,7 @@ export interface EnrollmentAttributes {
   grade: string | null;
   paymentConfirmed: boolean;
   paymentConfirmedAt: Date | null;
+  depositPaidAt: Date | null;
 }
 
 export type EnrollmentCreationAttributes = Optional<
@@ -25,6 +26,7 @@ export type EnrollmentCreationAttributes = Optional<
   | "grade"
   | "paymentConfirmed"
   | "paymentConfirmedAt"
+  | "depositPaidAt"
 >;
 
 export class Enrollment
@@ -41,6 +43,7 @@ export class Enrollment
   declare grade: string | null;
   declare paymentConfirmed: boolean;
   declare paymentConfirmedAt: Date | null;
+  declare depositPaidAt: Date | null;
 }
 
 export function initEnrollmentModel(sequelize: Sequelize) {
@@ -92,6 +95,12 @@ export function initEnrollmentModel(sequelize: Sequelize) {
         type: DataTypes.DATE,
         allowNull: true,
         field: "payment_confirmed_at",
+      },
+      // Instalment deposit paid: unlocks the first DEPOSIT_UNLOCKED_DAYS days only.
+      depositPaidAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: "deposit_paid_at",
       },
     },
     {

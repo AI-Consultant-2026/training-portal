@@ -70,6 +70,10 @@ export async function submit(capstoneId: string, studentId: string, input: Submi
   if (!enrollment) {
     throw ApiError.forbidden("You must be enrolled in this course to submit this capstone");
   }
+  // The capstone needs the course paid in full -- a deposit (instalments) doesn't cover it.
+  if (!enrollment.paymentConfirmed) {
+    throw ApiError.forbidden("Pay the balance for this course to submit your capstone");
+  }
 
   if (!capstone.isEnabled) {
     throw ApiError.forbidden("This capstone is not available right now.");

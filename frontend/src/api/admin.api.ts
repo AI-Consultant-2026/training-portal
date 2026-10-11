@@ -54,6 +54,11 @@ export async function deleteInactiveCandidates(): Promise<DeleteInactiveCandidat
   return res.data;
 }
 
+// Instalments: tick the ₦20,000 deposit by hand (unlocks Days 1-2).
+export async function setDepositPaid(enrollmentId: string, depositPaid: boolean): Promise<void> {
+  await axiosClient.patch(`/admin/enrollments/${enrollmentId}/deposit`, { depositPaid });
+}
+
 export async function confirmPayment(enrollmentId: string, paymentConfirmed: boolean): Promise<void> {
   await axiosClient.patch(`/admin/enrollments/${enrollmentId}/payment`, { paymentConfirmed });
 }

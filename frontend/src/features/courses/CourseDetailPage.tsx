@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { fetchModuleAssignments } from "../../api/assignments.api";
 import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
 import { downloadAttendanceRecord, downloadCertificate } from "../../api/enrollments.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
-import { fetchPaymentQuote } from "../../api/payments.api";
+import { fetchPaymentQuote, verifyInstalmentPayment } from "../../api/payments.api";
 import { fetchModuleQuizzes } from "../../api/quizzes.api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -171,6 +171,19 @@ export function CourseDetailPage() {
 
   const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
   const isEnrolled = myEnrollment !== undefined;
+  const isPaidInFull = !!myEnrollment?.paymentConfirmed;
+  // Instalments (2026-10-11): a deposit opens the first days (course order: week, then
+  // module order -- the same rule as enrollment.service.ts's getDepositUnlockedModuleIds).
+  const hasDepositOnly = !isPaidInFull && !!myEnrollment?.depositPaidAt;
+  const depositUnlockedIds = new Set(
+    [...modules]
+      .sort((a, b) => a.weekNumber - b.weekNumber || a.order - b.order)
+      .slice(0, paymentQuote?.instalment?.unlockedDays ?? 2)
+      .map((m) => m.id),
+  );
+  const hasModuleAccess = (moduleId: string) => isPaidInFull || (hasDepositOnly && depositUnlockedIds.has(moduleId));
+  const [searchParams] = useSearchParams();
+  const returnedFromPayment = searchParams.get("payment");
 
   // Free preview: the very first lesson of the course's first module (lowest
   // weekNumber) is open to every student before payment -- mirrors the backend
@@ -179,6 +192,20 @@ export function CourseDetailPage() {
     modules.length > 0
       ? modules.reduce((min, m) => (m.weekNumber < min.weekNumber ? m : min), modules[0]).id
       : undefined;
+
+  const paystackReference = searchParams.get("reference");
+  useEffect(() => {
+    if (!paystackReference || !returnedFromPayment || user?.role !== "student") return;
+    verifyInstalmentPayment(paystackReference)
+      .catch(() => undefined)
+      .finally(() => dispatch(fetchMyEnrollments()));
+  }, [paystackReference, returnedFromPayment, user, dispatch]);
+
+  useEffect(() => {
+    if (!returnedFromPayment || !user) return;
+    const timers = [5, 15, 30, 60].map((sec) => window.setTimeout(() => dispatch(fetchMyEnrollments()), sec * 1000));
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [returnedFromPayment, user, dispatch]);
 
   useEffect(() => {
     if (course && user?.role === "student") {
@@ -285,20 +312,32 @@ export function CourseDetailPage() {
             </div>
           )}
           {enrollError && <Alert message={enrollError} />}
+          {returnedFromPayment && !isPaidInFull && !(returnedFromPayment === "deposit" && hasDepositOnly) && (
+            <div className="mb-3">
+              <Alert
+                variant="success"
+                message="Thanks! Your payment is being confirmed with Paystack. This usually takes a minute, and this page will update by itself."
+              />
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={goToPayment} disabled={isEnrolled}>
               {!isEnrolled
                 ? "Enroll"
-                : myEnrollment?.paymentConfirmed
+                : isPaidInFull
                   ? "Already Enrolled"
-                  : "Payment pending"}
+                  : hasDepositOnly
+                    ? "Deposit paid"
+                    : "Payment pending"}
             </Button>
-            {isEnrolled && !myEnrollment?.paymentConfirmed && paymentQuote && (
+            {isEnrolled && !isPaidInFull && paymentQuote && (
               <Button variant="secondary" onClick={goToPayment}>
-                Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}
+                {hasDepositOnly && paymentQuote.instalment
+                  ? <>Pay balance &ndash; &#8358;{paymentQuote.instalment.balanceNgn.toLocaleString()}</>
+                  : <>Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}</>}
               </Button>
             )}
-            {isEnrolled && myEnrollment?.paymentConfirmed && myEnrollment.nextLessonId && (
+            {(isPaidInFull || hasDepositOnly) && myEnrollment?.nextLessonId && (
               <Link
                 to={`/lessons/${myEnrollment.nextLessonId}`}
                 className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
@@ -327,6 +366,13 @@ export function CourseDetailPage() {
               </button>
             )}
           </div>
+          {!isPaidInFull && paymentQuote?.instalment?.enabled && (
+            <p className="mt-2 text-sm text-gray-600">
+              {hasDepositOnly
+                ? <>Days 1&ndash;{paymentQuote.instalment.unlockedDays} are open. Pay the balance to unlock the rest of the course, the capstone and your certificate.</>
+                : <>Can&rsquo;t pay it all at once? Start with &#8358;{paymentQuote.instalment.depositNgn.toLocaleString()} to unlock Days 1&ndash;{paymentQuote.instalment.unlockedDays}, and pay the balance later.</>}
+            </p>
+          )}
           {certificateError && (
             <p className="mt-2 text-sm text-red-600">Could not download the certificate.</p>
           )}
@@ -382,16 +428,16 @@ export function CourseDetailPage() {
               // first lesson is a free preview, open before payment.
               const isCourseFirstLesson = mod.id === firstModuleId && content.lessons[0]?.id === lesson.id;
               const isFreePreview =
-                isCourseFirstLesson && user?.role === "student" && !myEnrollment?.paymentConfirmed;
+                isCourseFirstLesson && user?.role === "student" && !hasModuleAccess(mod.id);
               const isLocked =
-                user?.role === "student" && !myEnrollment?.paymentConfirmed && !isCourseFirstLesson;
+                user?.role === "student" && !hasModuleAccess(mod.id) && !isCourseFirstLesson;
               const isCompleted = courseProgress?.completedLessonIds.includes(lesson.id);
               // Day gate: after the day's first lesson, the rest wait for that day's
               // quiz and assignment (lesson.service.ts's getLessonTaskGate). A lesson
               // already completed stays open.
               const isTaskLocked =
                 user?.role === "student" &&
-                !!myEnrollment?.paymentConfirmed &&
+                hasModuleAccess(mod.id) &&
                 index > 0 &&
                 !isCompleted &&
                 dayTasks !== null &&
@@ -404,7 +450,11 @@ export function CourseDetailPage() {
                     type="button"
                     onClick={goToPayment}
                     className="text-sm font-medium text-gray-400 hover:text-gray-600"
-                    title="This lesson unlocks once your payment has been confirmed"
+                    title={
+                      hasDepositOnly
+                        ? "Pay the balance to unlock this day"
+                        : "This lesson unlocks once your payment has been confirmed"
+                    }
                   >
                     Lesson: {lesson.title} (locked)
                   </button>
@@ -501,7 +551,7 @@ export function CourseDetailPage() {
                     );
                   })}
                   {content.assignments.map((a) => {
-                    const isLocked = user?.role === "student" && !myEnrollment?.paymentConfirmed;
+                    const isLocked = user?.role === "student" && !hasModuleAccess(mod.id);
                     if (isLocked) {
                       return (
                         <span
@@ -560,6 +610,9 @@ export function CourseDetailPage() {
           >
             View capstone
           </Link>
+          {user?.role === "student" && hasDepositOnly && (
+            <p className="mt-1 text-sm text-gray-500">You can submit your capstone once the balance is paid.</p>
+          )}
         </div>
       )}
 

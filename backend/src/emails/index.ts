@@ -8,6 +8,7 @@ import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
 import { buildLeadNotificationEmail } from "./templates/leadNotification";
 import {
+  buildDepositConfirmedEmail,
   buildPaymentConfirmedEmail,
   buildPaystackUnmatchedEmail,
 } from "./templates/payments";
@@ -119,6 +120,10 @@ export async function sendCourseCompletedEmail(
   await emailAdapter.send(buildCourseCompletedEmail(user, course, dashboardUrl));
 }
 
+
+export async function sendDepositConfirmedEmail(input: Parameters<typeof buildDepositConfirmedEmail>[0]): Promise<void> {
+  await sendEmail(buildDepositConfirmedEmail(input));
+}
 
 export async function sendPaymentConfirmedEmail(input: Parameters<typeof buildPaymentConfirmedEmail>[0]): Promise<void> {
   await sendEmail(buildPaymentConfirmedEmail(input));

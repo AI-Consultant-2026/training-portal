@@ -292,7 +292,7 @@ describe("Lessons and progress tracking", () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id, 4);
     const student = await registerStudent("lessonstudent-happy@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-happy@example.com");
 
     const res = await request(app)
@@ -313,7 +313,7 @@ describe("Lessons and progress tracking", () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id, 4);
     const student = await registerStudent("lessonstudent-idempotent@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-idempotent@example.com");
 
     const first = await request(app)
@@ -338,7 +338,7 @@ describe("Lessons and progress tracking", () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id, 2);
     const student = await registerStudent("lessonstudent-complete@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-complete@example.com");
 
     for (const lesson of lessons) {
@@ -357,7 +357,7 @@ describe("Lessons and progress tracking", () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id, 3);
     const student = await registerStudent("lessonstudent-race@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-race@example.com");
 
     const [first, second] = await Promise.all([
@@ -383,7 +383,7 @@ describe("Lessons and progress tracking", () => {
     const courseX = await createCourseWithLessons(instructor.id, 2);
     const courseY = await createCourseWithLessons(instructor.id, 2);
     const student = await registerStudent("lessonstudent-isolated@example.com");
-    await Enrollment.create({ courseId: courseX.course.id, studentId: student.id });
+    await Enrollment.create({ courseId: courseX.course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-isolated@example.com");
 
     const res = await request(app)
@@ -401,7 +401,7 @@ describe("Lessons and progress tracking", () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id, 2);
     const student = await registerStudent("lessonstudent-progress@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-progress@example.com");
 
     const unauth = await request(app).get(`/api/courses/${course.id}/progress`);
@@ -439,7 +439,7 @@ describe("Lessons and progress tracking", () => {
     const instructor = await createInstructor();
     const { course, lessons } = await createCourseWithLessons(instructor.id, 1);
     const student = await registerStudent("lessonstudent-mycompletion@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("lessonstudent-mycompletion@example.com");
 
     const before = await request(app)

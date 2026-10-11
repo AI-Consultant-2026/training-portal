@@ -1,6 +1,7 @@
 import { Transaction } from "sequelize";
 import * as emails from "../emails";
-import { Course, Enrollment, Payment, User } from "../models";
+import { DEPOSIT_UNLOCKED_DAYS } from "../constants/coursePricing";
+import { Course, CourseModule, Enrollment, Payment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 
@@ -51,6 +52,34 @@ export async function getEnrollmentById(
     throw ApiError.forbidden("You do not have permission to view this enrollment");
   }
   return enrollment;
+}
+
+// Instalments (2026-10-11): the days (modules) a deposit unlocks -- the first
+// DEPOSIT_UNLOCKED_DAYS in course order (week, then module order, the same order the
+// course page and lesson navigation use).
+export async function getDepositUnlockedModuleIds(courseId: string): Promise<Set<string>> {
+  const modules = await CourseModule.findAll({
+    where: { courseId },
+    order: [
+      ["weekNumber", "ASC"],
+      ["order", "ASC"],
+    ],
+    attributes: ["id"],
+  });
+  return new Set(modules.slice(0, DEPOSIT_UNLOCKED_DAYS).map((m) => m.id));
+}
+
+// Whether a student's payment covers a given day: paid in full covers every day; a deposit
+// covers only the first DEPOSIT_UNLOCKED_DAYS.
+export async function hasPaidAccessToModule(
+  enrollment: Enrollment | null,
+  courseId: string,
+  moduleId: string,
+): Promise<boolean> {
+  if (!enrollment) return false;
+  if (enrollment.paymentConfirmed) return true;
+  if (!enrollment.depositPaidAt) return false;
+  return (await getDepositUnlockedModuleIds(courseId)).has(moduleId);
 }
 
 export async function getEnrollmentForCourseAndStudent(

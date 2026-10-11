@@ -108,4 +108,23 @@ describe("CardPaymentPage", () => {
 
     expect(await screen.findByText(/verify your email/i)).toBeInTheDocument();
   });
+
+  it("offers a deposit option and opens Paystack checkout for it", async () => {
+    const assign = vi.fn();
+    Object.defineProperty(window, "location", { value: { ...window.location, assign }, writable: true });
+    vi.mocked(paymentsApi.startInstalmentPayment).mockResolvedValue({
+      paymentLink: "https://checkout.paystack.com/xyz",
+    } as Awaited<ReturnType<typeof paymentsApi.startInstalmentPayment>>);
+    renderPage({
+      ...quote(true),
+      instalment: { depositNgn: 20000, balanceNgn: 80000, unlockedDays: 2, enabled: true },
+    });
+
+    const depositButton = await screen.findByRole("button", { name: /pay \u20A620,000 deposit with paystack/i });
+    expect(screen.getByText(/balance of \u20A680,000/i)).toBeInTheDocument();
+    await userEvent.click(depositButton);
+
+    await waitFor(() => expect(paymentsApi.startInstalmentPayment).toHaveBeenCalledWith("course-1", "deposit"));
+    await waitFor(() => expect(assign).toHaveBeenCalledWith("https://checkout.paystack.com/xyz"));
+  });
 });

@@ -84,6 +84,8 @@ describe("Payments", () => {
     expect(res.body.quote).toEqual({
       baseAmountNgn: 200_000,
       card: { currency: "NGN", amount: 200_000, enabled: true },
+      // Instalments are only offered when Paystack's API key is set (it isn't in this test).
+      instalment: { depositNgn: 20_000, balanceNgn: 180_000, unlockedDays: 2, enabled: false },
     });
   });
 

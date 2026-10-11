@@ -11,3 +11,17 @@ export const COURSE_PRICES_NGN: Record<string, number> = {
   "renewable-energy-digital-systems": 250_000,
   "social-media-management-content": 150_000,
 };
+
+// Instalment option (2026-10-11): a student can start with a small deposit instead of the
+// full price. The deposit unlocks the first DEPOSIT_UNLOCKED_DAYS days (modules, in course
+// order); paying the balance (price minus deposit) unlocks every other day, the capstone,
+// the certificate and the attendance record, and is what qualifies a referral -- exactly
+// like a full payment. One flat deposit for every course keeps the offer easy to say.
+export const INSTALMENT_DEPOSIT_NGN = 20_000;
+export const DEPOSIT_UNLOCKED_DAYS = 2;
+
+export function getBalanceNgn(courseSlug: string): number | null {
+  const price = COURSE_PRICES_NGN[courseSlug];
+  if (price === undefined || price <= INSTALMENT_DEPOSIT_NGN) return null;
+  return price - INSTALMENT_DEPOSIT_NGN;
+}

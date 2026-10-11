@@ -50,12 +50,21 @@ async function createCourseWithCapstone(instructorId: string, fileRequired = fal
   return { course, capstone };
 }
 
+async function depositOnlySetup() {
+  const instructor = await createInstructor("deposit-instructor@example.com");
+  const { course, capstone } = await createCourseWithCapstone(instructor.id);
+  const student = await registerStudent("deposit-student@example.com");
+  await Enrollment.create({ courseId: course.id, studentId: student.id, depositPaidAt: new Date() });
+  const token = await loginAs("deposit-student@example.com");
+  return { course, capstone, student, token };
+}
+
 describe("Capstones", () => {
   it("allows an enrolled student to view and submit a capstone (text only)", async () => {
     const instructor = await createInstructor();
     const { course, capstone } = await createCourseWithCapstone(instructor.id);
     const student = await registerStudent("cstudent1@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("cstudent1@example.com");
 
     const getRes = await request(app)
@@ -77,7 +86,7 @@ describe("Capstones", () => {
     const instructor = await createInstructor();
     const { course, capstone } = await createCourseWithCapstone(instructor.id, true);
     const student = await registerStudent("cstudent2@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("cstudent2@example.com");
 
     const res = await request(app)
@@ -92,7 +101,7 @@ describe("Capstones", () => {
     const instructor = await createInstructor();
     const { course, capstone } = await createCourseWithCapstone(instructor.id, true);
     const student = await registerStudent("cstudent3@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("cstudent3@example.com");
 
     const res = await request(app)
@@ -123,7 +132,7 @@ describe("Capstones", () => {
     const instructor = await createInstructor();
     const { course, capstone } = await createCourseWithCapstone(instructor.id);
     const student = await registerStudent("cstudent5@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const studentToken = await loginAs("cstudent5@example.com");
 
     await request(app)
@@ -164,7 +173,7 @@ describe("Capstones", () => {
     const otherInstructor = await createInstructor("c-other-instructor@example.com");
     const { course, capstone } = await createCourseWithCapstone(instructor.id);
     const student = await registerStudent("cstudent6@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const studentToken = await loginAs("cstudent6@example.com");
 
     await request(app)
@@ -197,7 +206,7 @@ describe("Capstones", () => {
     const instructor = await createInstructor();
     const { course, capstone } = await createCourseWithCapstone(instructor.id);
     const student = await registerStudent("cstudent7@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("cstudent7@example.com");
 
     const res = await request(app)
@@ -211,8 +220,8 @@ describe("Capstones", () => {
     const { course, capstone } = await createCourseWithCapstone(instructor.id);
     const studentA = await registerStudent("cstudentA@example.com");
     const studentB = await registerStudent("cstudentB@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: studentA.id });
-    await Enrollment.create({ courseId: course.id, studentId: studentB.id });
+    await Enrollment.create({ courseId: course.id, studentId: studentA.id, paymentConfirmed: true });
+    await Enrollment.create({ courseId: course.id, studentId: studentB.id, paymentConfirmed: true });
     const tokenA = await loginAs("cstudentA@example.com");
     const tokenB = await loginAs("cstudentB@example.com");
 
@@ -232,7 +241,7 @@ describe("Capstones", () => {
     const instructor = await createInstructor();
     const { course, capstone } = await createCourseWithCapstone(instructor.id);
     const student = await registerStudent("cstudent8@example.com");
-    await Enrollment.create({ courseId: course.id, studentId: student.id });
+    await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
     const token = await loginAs("cstudent8@example.com");
 
     const before = await request(app)
@@ -269,7 +278,7 @@ describe("Capstones", () => {
       const instructor = await createInstructor();
       const { course, capstone } = await createCourseWithCapstone(instructor.id, true);
       const student = await registerStudent("cfilestudent1@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const token = await loginAs("cfilestudent1@example.com");
 
       const submitRes = await request(app)
@@ -289,8 +298,8 @@ describe("Capstones", () => {
       const { course, capstone } = await createCourseWithCapstone(instructor.id, true);
       const studentA = await registerStudent("cfilestudentA@example.com");
       const studentB = await registerStudent("cfilestudentB@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: studentA.id });
-      await Enrollment.create({ courseId: course.id, studentId: studentB.id });
+      await Enrollment.create({ courseId: course.id, studentId: studentA.id, paymentConfirmed: true });
+      await Enrollment.create({ courseId: course.id, studentId: studentB.id, paymentConfirmed: true });
       const tokenA = await loginAs("cfilestudentA@example.com");
       const tokenB = await loginAs("cfilestudentB@example.com");
 
@@ -310,7 +319,7 @@ describe("Capstones", () => {
       const otherInstructor = await createInstructor("cfile-other-instructor@example.com");
       const { course, capstone } = await createCourseWithCapstone(instructor.id, true);
       const student = await registerStudent("cfilestudent2@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const studentToken = await loginAs("cfilestudent2@example.com");
 
       const submitRes = await request(app)
@@ -335,7 +344,7 @@ describe("Capstones", () => {
       const instructor = await createInstructor();
       const { course, capstone } = await createCourseWithCapstone(instructor.id);
       const student = await registerStudent("cfilestudent3@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const token = await loginAs("cfilestudent3@example.com");
 
       const submitRes = await request(app)
@@ -355,7 +364,7 @@ describe("Capstones", () => {
       const instructor = await createInstructor();
       const { course, capstone } = await createCourseWithCapstone(instructor.id);
       const student = await registerStudent("cgradestudent1@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const studentToken = await loginAs("cgradestudent1@example.com");
 
       const submitRes = await request(app)
@@ -386,7 +395,7 @@ describe("Capstones", () => {
       const instructor = await createInstructor();
       const { course, capstone } = await createCourseWithCapstone(instructor.id);
       const student = await registerStudent("cgradestudent2@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const studentToken = await loginAs("cgradestudent2@example.com");
 
       const submitRes = await request(app)
@@ -410,7 +419,7 @@ describe("Capstones", () => {
       const instructor = await createInstructor();
       const { course, capstone } = await createCourseWithCapstone(instructor.id);
       const student = await registerStudent("cgradestudent3@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const studentToken = await loginAs("cgradestudent3@example.com");
 
       const submitRes = await request(app)
@@ -470,7 +479,7 @@ describe("Capstones", () => {
       expect(moduleCount).toBe(0);
 
       const student = await registerStudent("cqueuestudent@example.com");
-      await Enrollment.create({ courseId: course.id, studentId: student.id });
+      await Enrollment.create({ courseId: course.id, studentId: student.id, paymentConfirmed: true });
       const studentToken = await loginAs("cqueuestudent@example.com");
       await request(app)
         .post(`/api/capstones/${capstone.id}/submit`)
@@ -492,5 +501,16 @@ describe("Capstones", () => {
       expect(otherRes.status).toBe(200);
       expect(otherRes.body.submissions).toHaveLength(0);
     });
+  });
+
+  it("refuses a capstone from a student who has only paid the instalment deposit", async () => {
+    const { course, capstone, student, token } = await depositOnlySetup();
+    expect(course).toBeTruthy();
+    const res = await request(app)
+      .post(`/api/capstones/${capstone.id}/submit`)
+      .set("Authorization", `Bearer ${token}`)
+      .field("submissionText", "My capstone");
+    expect(res.status).toBe(403);
+    expect(student).toBeTruthy();
   });
 });

@@ -86,7 +86,18 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
             </span>
           )}
         </div>
-        {!enrollment.paymentConfirmed && (
+        {!enrollment.paymentConfirmed && enrollment.depositPaidAt && (
+          <p className="rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-900">
+            <strong>Deposit paid.</strong> Days 1&ndash;2 are open. Pay the balance to unlock the rest of the course,
+            the capstone and your certificate.{" "}
+            {course && (
+              <Link to={`/courses/${course.slug}/pay/card`} className="font-medium text-blue-700 underline">
+                Pay balance
+              </Link>
+            )}
+          </p>
+        )}
+        {!enrollment.paymentConfirmed && !enrollment.depositPaidAt && (
           <p
             className={`rounded-md px-3 py-2 text-sm ${enrollment.paymentSubmittedAt ? "bg-amber-50 text-amber-800" : "bg-gray-50 text-gray-700"}`}
           >
@@ -103,7 +114,8 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
               </>
             ) : (
               <>
-                <strong>Awaiting payment.</strong> The first lesson is free &mdash; pay for the course to unlock the rest.{" "}
+                <strong>Awaiting payment.</strong> The first lesson is free &mdash; pay for the course, or start with a
+                &#8358;20,000 deposit, to unlock more.{" "}
                 {course && (
                   <Link to={`/courses/${course.slug}/pay/card`} className="font-medium text-blue-600 hover:underline">
                     Pay now

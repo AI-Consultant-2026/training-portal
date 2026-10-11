@@ -17,6 +17,12 @@ export const setPaymentConfirmedSchema = z.object({
   }),
 });
 
+export const setDepositPaidSchema = z.object({
+  body: z.object({
+    depositPaid: z.boolean(),
+  }),
+});
+
 export const addEnrollmentSchema = z.object({
   body: z.object({
     courseId: z.string().uuid(),

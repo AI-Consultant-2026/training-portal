@@ -1,7 +1,7 @@
 import { assertSubmissionIsOriginal } from "./submissionOriginality.service";
 import * as emails from "../emails";
 import { Assignment, AssignmentSubmission, Course, CourseModule, Enrollment, User } from "../models";
-import { getEnrollmentForCourseAndStudent } from "./enrollment.service";
+import { getEnrollmentForCourseAndStudent, hasPaidAccessToModule } from "./enrollment.service";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { storageAdapter } from "../utils/storage";
@@ -45,13 +45,13 @@ export async function getById(
   assignmentId: string,
   requester: { id: string; role: string },
 ): Promise<Assignment> {
-  const { assignment, course } = await getAssignmentWithCourse(assignmentId);
+  const { assignment, courseModule, course } = await getAssignmentWithCourse(assignmentId);
   if (requester.role !== "student") {
     return assignment;
   }
 
   const enrollment = await getEnrollmentForCourseAndStudent(course.id, requester.id);
-  if (!enrollment || !enrollment.paymentConfirmed) {
+  if (!(await hasPaidAccessToModule(enrollment, course.id, courseModule.id))) {
     throw ApiError.forbidden("This assignment unlocks once your payment has been confirmed");
   }
   return assignment;
@@ -80,7 +80,7 @@ export async function getMySubmission(assignmentId: string, studentId: string) {
 }
 
 export async function submit(assignmentId: string, studentId: string, input: SubmitInput) {
-  const { assignment, course } = await getAssignmentWithCourse(assignmentId);
+  const { assignment, courseModule, course } = await getAssignmentWithCourse(assignmentId);
 
   const enrollment = await Enrollment.findOne({
     where: { courseId: course.id, studentId, status: "active" },
@@ -88,7 +88,7 @@ export async function submit(assignmentId: string, studentId: string, input: Sub
   if (!enrollment) {
     throw ApiError.forbidden("You must be enrolled in this course to submit this assignment");
   }
-  if (!enrollment.paymentConfirmed) {
+  if (!(await hasPaidAccessToModule(enrollment, course.id, courseModule.id))) {
     throw ApiError.forbidden("This assignment unlocks once your payment has been confirmed");
   }
 

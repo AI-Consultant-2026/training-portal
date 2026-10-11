@@ -22,7 +22,7 @@ export function buildPaystackUnmatchedEmail(input: {
     `Payer email: ${input.email}`,
     `Amount: ₦${input.amountNgn.toLocaleString("en-NG")}`,
     `Paystack reference: ${input.reference}`,
-    `Please find the student on ${config.corsOrigin}/admin/candidates and tick "Paid" on the right course.`,
+    `Please find the student on ${config.corsOrigin}/admin/candidates and tick "Paid" on the right course (or "Deposit" for a ₦20,000 instalment deposit).`,
   ];
   return {
     to: config.leadsNotifyEmail,
@@ -43,6 +43,31 @@ export function buildPaymentConfirmedEmail(input: { student: Student; courseTitl
   return {
     to: input.student.email,
     subject: `You're in — ${input.courseTitle} is unlocked`,
+    text: lines.join("\n\n"),
+    html: wrapHtml(lines),
+  };
+}
+
+// Instalments (2026-10-11): the deposit is in and the first days are open.
+export function buildDepositConfirmedEmail(input: {
+  student: Student;
+  courseTitle: string;
+  courseSlug: string;
+  depositNgn: number;
+  balanceNgn: number;
+  unlockedDays: number;
+}): EmailMessage {
+  const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
+  const lines = [
+    `Hi ${input.student.firstName},`,
+    `Your ${naira(input.depositNgn)} deposit for ${input.courseTitle} is confirmed. Days 1–${input.unlockedDays} are now unlocked, so you can start learning today.`,
+    `Start learning: ${config.corsOrigin}/courses/${input.courseSlug}`,
+    `When you're ready to carry on, pay the balance of ${naira(input.balanceNgn)} from the course page. It unlocks every remaining day, the capstone project and your certificate.`,
+    "Welcome to Paleon Training!",
+  ];
+  return {
+    to: input.student.email,
+    subject: `Deposit received: ${input.courseTitle} Days 1–${input.unlockedDays} are unlocked`,
     text: lines.join("\n\n"),
     html: wrapHtml(lines),
   };

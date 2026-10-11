@@ -31,7 +31,8 @@ export const listMyEnrollments = asyncHandler(async (req: Request, res: Response
   const enriched = await Promise.all(
     enrollments.map(async (enrollment) => ({
       ...enrollment.toJSON(),
-      nextLessonId: enrollment.paymentConfirmed
+      // A deposit (instalments) opens the first days, so it gets a Continue link too.
+      nextLessonId: enrollment.paymentConfirmed || enrollment.depositPaidAt
         ? await lessonService.getNextLessonId(enrollment.courseId, req.user!.id)
         : null,
       // When the student last started a payment that's still awaiting confirmation --

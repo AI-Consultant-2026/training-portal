@@ -85,6 +85,14 @@ export const confirmPayment = createAsyncThunk(
   },
 );
 
+export const setDepositPaid = createAsyncThunk(
+  "admin/setDepositPaid",
+  async ({ enrollmentId, depositPaid }: { enrollmentId: string; depositPaid: boolean }) => {
+    await adminApi.setDepositPaid(enrollmentId, depositPaid);
+    return { enrollmentId, depositPaidAt: depositPaid ? new Date().toISOString() : null };
+  },
+);
+
 export const fetchLeads = createAsyncThunk("admin/fetchLeads", async () => {
   return adminApi.fetchLeads();
 });
@@ -232,6 +240,14 @@ const adminSlice = createSlice({
           const enrollment = candidate.enrollments.find((e) => e.id === action.payload.enrollmentId);
           if (enrollment) {
             enrollment.paymentConfirmed = action.payload.paymentConfirmed;
+          }
+        }
+      })
+      .addCase(setDepositPaid.fulfilled, (state, action) => {
+        for (const candidate of state.candidates) {
+          const enrollment = candidate.enrollments.find((e) => e.id === action.payload.enrollmentId);
+          if (enrollment) {
+            enrollment.depositPaidAt = action.payload.depositPaidAt;
           }
         }
       })

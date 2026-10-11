@@ -17,3 +17,23 @@ export async function startCardPayment(
   );
   return res.data;
 }
+
+// Instalments: opens Paystack checkout for the deposit (unlocks the first days) or the
+// balance (unlocks the rest of the course). The server confirms it from Paystack's webhook.
+export async function startInstalmentPayment(
+  courseId: string,
+  kind: "deposit" | "balance",
+): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
+  const res = await axiosClient.post<{ paymentLink: string; payment: Payment; enrollment: Enrollment }>(
+    "/payments/instalment",
+    { courseId, kind },
+  );
+  return res.data;
+}
+
+// Backup for Paystack's webhook: on returning from checkout, ask the server to check the
+// charge with Paystack and apply it straight away.
+export async function verifyInstalmentPayment(reference: string): Promise<{ outcome: string }> {
+  const res = await axiosClient.post<{ outcome: string }>("/payments/instalment/verify", { reference });
+  return res.data;
+}

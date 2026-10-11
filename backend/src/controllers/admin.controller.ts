@@ -61,6 +61,11 @@ export const setPaymentConfirmed = asyncHandler(async (req: Request, res: Respon
   res.json({ enrollment });
 });
 
+export const setDepositPaid = asyncHandler(async (req: Request, res: Response) => {
+  const enrollment = await adminService.setDepositPaid(req.params.id, req.body.depositPaid);
+  res.json({ enrollment });
+});
+
 export const sendCompletionEmail = asyncHandler(async (req: Request, res: Response) => {
   if (!req.params.id) {
     throw ApiError.badRequest("Enrollment id is required");

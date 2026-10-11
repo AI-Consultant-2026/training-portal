@@ -206,6 +206,8 @@ export interface LessonNavigation {
   // Students only: set when `next` is held back until this day's quiz and assignment
   // are submitted (see lesson.service.ts's getLessonTaskGate).
   nextTaskGate?: ModuleTaskStatus | null;
+  /** Students only: the next lesson's day isn't covered by their payment. */
+  nextPaymentLocked?: boolean;
 }
 
 export interface ModuleTaskItem {
@@ -273,6 +275,8 @@ export interface Enrollment {
   grade: string | null;
   paymentConfirmed: boolean;
   paymentConfirmedAt: string | null;
+  /** Instalments: set once the deposit is paid (unlocks the first days only). */
+  depositPaidAt?: string | null;
   course?: Course;
   nextLessonId: string | null;
   // Set while a started payment awaits confirmation (my-enrollments only).
@@ -300,6 +304,13 @@ export interface PaymentQuote {
     /** False until the course has a Paystack payment link on the server. */
     enabled: boolean;
   };
+  /** Pay in two parts: a deposit unlocks the first days, the balance unlocks the rest. */
+  instalment?: {
+    depositNgn: number;
+    balanceNgn: number;
+    unlockedDays: number;
+    enabled: boolean;
+  } | null;
 }
 
 export interface Assignment {
@@ -495,6 +506,7 @@ export interface CandidateEnrollment {
   progressPercent: number;
   paymentConfirmed: boolean;
   paymentConfirmedAt: string | null;
+  depositPaidAt?: string | null;
   latestPayment: {
     method: PaymentMethod;
     status: PaymentStatus;
@@ -534,6 +546,7 @@ export interface CoursePayment {
   email: string;
   paymentConfirmed: boolean;
   paymentConfirmedAt: string | null;
+  depositPaidAt?: string | null;
   enrolledAt: string;
   latestPayment: CandidateEnrollment["latestPayment"];
 }

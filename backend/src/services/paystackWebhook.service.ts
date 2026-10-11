@@ -1,11 +1,12 @@
 import crypto from "crypto";
 import { fn, col, where as sqlWhere } from "sequelize";
 import { config } from "../config";
-import { COURSE_PRICES_NGN } from "../constants/coursePricing";
+import { COURSE_PRICES_NGN, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
 import * as emails from "../emails";
 import { Course, Enrollment, Payment, User } from "../models";
 import { logger } from "../utils/logger";
-import { setPaymentConfirmed } from "./admin.service";
+import { setDepositPaid, setPaymentConfirmed } from "./admin.service";
+import { INSTALMENT_NOTES, InstalmentKind, PAYSTACK_INIT_REFERENCE_PREFIX } from "./payment.service";
 
 // Automatic payment confirmation from Paystack (2026-09-28). Students pay on a Paystack
 // Payment Page (see paystackPaymentLinks.ts), which can't carry our enrolment id, so a
@@ -37,6 +38,28 @@ interface PaystackChargeData {
   amount?: number;
   requested_amount?: number;
   customer?: { email?: string };
+  // Set by startInstalmentPayment; Paystack echoes it back (sometimes as a JSON string).
+  metadata?: unknown;
+}
+
+interface InstalmentMetadata {
+  enrollmentId: string;
+  instalment: InstalmentKind;
+}
+
+export function readInstalmentMetadata(raw: unknown): InstalmentMetadata | null {
+  let meta = raw;
+  if (typeof meta === "string") {
+    try {
+      meta = JSON.parse(meta);
+    } catch {
+      return null;
+    }
+  }
+  if (!meta || typeof meta !== "object") return null;
+  const { enrollmentId, instalment } = meta as Record<string, unknown>;
+  if (typeof enrollmentId !== "string" || (instalment !== "deposit" && instalment !== "balance")) return null;
+  return { enrollmentId, instalment };
 }
 
 export type WebhookOutcome = "ignored" | "duplicate" | "confirmed" | "already_paid" | "unmatched";
@@ -60,6 +83,12 @@ export async function handlePaystackEvent(event: { event?: string; data?: Paysta
     await emails.sendPaystackUnmatchedEmail({ reference, email, amountNgn, reason });
     return "unmatched";
   };
+
+  // Instalment charges (deposit or balance) name their enrolment, so no guessing is needed.
+  const instalment = readInstalmentMetadata(data.metadata);
+  if (instalment) {
+    return handleInstalmentCharge(instalment, { reference, email, amountNgn, gatewayReference }, unmatched);
+  }
 
   const student = await User.findOne({
     where: [sqlWhere(fn("lower", col("email")), email.toLowerCase()), { role: "student" }],
@@ -119,4 +148,57 @@ async function recordSucceededPayment(enrollment: Enrollment, amountNgn: number,
     billingCountry: "",
     gatewayReference,
   });
+}
+
+async function handleInstalmentCharge(
+  meta: InstalmentMetadata,
+  charge: { reference: string; email: string; amountNgn: number; gatewayReference: string },
+  unmatched: (reason: string) => Promise<WebhookOutcome>,
+): Promise<WebhookOutcome> {
+  const enrollment = await Enrollment.findByPk(meta.enrollmentId, { include: [{ model: Course, as: "course" }] });
+  const course = enrollment ? (enrollment as Enrollment & { course?: Course }).course : undefined;
+  if (!enrollment || !course) return unmatched(`instalment ${meta.instalment} for an enrolment that no longer exists`);
+
+  const student = await User.findByPk(enrollment.studentId);
+  if (!student || student.email.toLowerCase() !== charge.email.toLowerCase()) {
+    return unmatched(`instalment ${meta.instalment} paid with an email that isn't the enrolled student's`);
+  }
+
+  const expectedNgn = meta.instalment === "deposit" ? INSTALMENT_DEPOSIT_NGN : getBalanceNgn(course.slug);
+  if (expectedNgn === null || charge.amountNgn !== expectedNgn) {
+    return unmatched(
+      `instalment ${meta.instalment} of ₦${charge.amountNgn.toLocaleString("en-NG")} doesn't match the expected amount`,
+    );
+  }
+
+  const pending = await Payment.findOne({
+    where: { gatewayReference: PAYSTACK_INIT_REFERENCE_PREFIX + charge.reference },
+  });
+  if (pending) {
+    await pending.update({ status: "succeeded", amount: charge.amountNgn, gatewayReference: charge.gatewayReference });
+  } else {
+    await Payment.create({
+      enrollmentId: enrollment.id,
+      studentId: enrollment.studentId,
+      method: "card",
+      status: "succeeded",
+      currency: "NGN",
+      amount: charge.amountNgn,
+      baseAmountNgn: charge.amountNgn,
+      billingCountry: "",
+      gatewayReference: charge.gatewayReference,
+      notes: INSTALMENT_NOTES[meta.instalment],
+    });
+  }
+
+  if (enrollment.paymentConfirmed) return "already_paid";
+  if (meta.instalment === "deposit") {
+    if (enrollment.depositPaidAt) return "already_paid";
+    await setDepositPaid(enrollment.id, true);
+    return "confirmed";
+  }
+  // The balance completes the price: same path as a full payment (unlocks everything,
+  // credits any referral, emails the student).
+  await setPaymentConfirmed(enrollment.id, true);
+  return "confirmed";
 }

@@ -15,7 +15,7 @@ import {
 } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { assertCourseAccessible } from "./course.service";
-import { getEnrollmentForCourseAndStudent, recalculateProgress } from "./enrollment.service";
+import { getEnrollmentForCourseAndStudent, hasPaidAccessToModule, recalculateProgress } from "./enrollment.service";
 
 // Free preview (2026-09-25): every course's very first lesson -- the first lesson of the
 // module with the lowest weekNumber -- is open to anyone, so prospects can try the real
@@ -98,9 +98,12 @@ export async function getLessonForStudent(id: string, requester: { id: string; r
   }
 
   const enrollment = await getEnrollmentForCourseAndStudent(courseModule.courseId, requester.id);
-  if (!enrollment || !enrollment.paymentConfirmed) {
+  if (!(await hasPaidAccessToModule(enrollment, courseModule.courseId, courseModule.id))) {
     if (await isFreePreviewLesson(lesson, courseModule)) {
       return lesson;
+    }
+    if (enrollment?.depositPaidAt) {
+      throw new ApiError(403, BALANCE_REQUIRED_MESSAGE, { code: BALANCE_REQUIRED_CODE });
     }
     throw ApiError.forbidden("This lesson unlocks once your payment has been confirmed");
   }
@@ -115,6 +118,11 @@ export async function getLessonForStudent(id: string, requester: { id: string; r
 
   return lesson;
 }
+
+// A deposit-only student opening a day beyond the ones their deposit covers.
+export const BALANCE_REQUIRED_CODE = "BALANCE_REQUIRED";
+export const BALANCE_REQUIRED_MESSAGE =
+  "Pay the balance for this course to unlock this day and the rest of the course.";
 
 // Day gate (2026-10-05): within a day (module), every lesson after the first stays
 // locked until the student has submitted that day's quiz and assignment. The quiz and
@@ -206,6 +214,9 @@ export interface LessonNavigation {
   // Students only: set when `next` is held back by the day gate (quiz/assignment
   // outstanding), so the lesson page can explain why instead of linking to a 403.
   nextTaskGate?: ModuleTaskStatus | null;
+  // Students only: the next lesson's day isn't covered by their payment (unpaid, or an
+  // instalment deposit that stops before it).
+  nextPaymentLocked?: boolean;
 }
 
 // Powers the Previous/Next lesson buttons on the lesson page. Navigation stays within
@@ -254,23 +265,31 @@ export async function getLessonNavigation(
   }
 
   let next: LessonNavItem | null = null;
+  let nextModuleId: string | null = null;
   if (indexInModule >= 0 && indexInModule < siblingLessons.length - 1) {
     const nextLesson = siblingLessons[indexInModule + 1];
     next = { id: nextLesson.id, title: nextLesson.title, weekNumber: courseModule.weekNumber };
+    nextModuleId = courseModule.id;
   } else if (moduleIndex >= 0 && moduleIndex < allModules.length - 1) {
     for (let i = moduleIndex + 1; i < allModules.length && !next; i++) {
       const nextModuleLessons = await listLessonsForModule(allModules[i].id);
       const firstLesson = nextModuleLessons[0];
       if (firstLesson) {
         next = { id: firstLesson.id, title: firstLesson.title, weekNumber: allModules[i].weekNumber };
+        nextModuleId = allModules[i].id;
       }
     }
   }
 
   let nextTaskGate: ModuleTaskStatus | null = null;
+  // Whether the student's payment covers the next lesson's day (not paid at all, or a
+  // deposit that stops before it) -- the lesson page offers payment instead of "Next".
+  let nextPaymentLocked = false;
   if (requester?.role === "student" && next) {
     const nextLesson = await getLessonById(next.id);
     nextTaskGate = await getLessonTaskGate(nextLesson, requester.id);
+    const enrollment = await getEnrollmentForCourseAndStudent(course.id, requester.id);
+    nextPaymentLocked = !(await hasPaidAccessToModule(enrollment, course.id, nextModuleId ?? ""));
   }
 
   return {
@@ -278,7 +297,7 @@ export async function getLessonNavigation(
     module: { id: courseModule.id, title: courseModule.title, weekNumber: courseModule.weekNumber },
     previous,
     next,
-    ...(requester?.role === "student" ? { nextTaskGate } : {}),
+    ...(requester?.role === "student" ? { nextTaskGate, nextPaymentLocked } : {}),
   };
 }
 
@@ -380,6 +399,12 @@ export async function markLessonComplete(
   }
 
   const enrollment = await getActiveEnrollmentOrThrow(courseModule.courseId, studentId);
+  if (
+    !(await hasPaidAccessToModule(enrollment, courseModule.courseId, courseModule.id)) &&
+    !(await isFreePreviewLesson(lesson, courseModule))
+  ) {
+    throw ApiError.forbidden("This lesson unlocks once your payment has been confirmed");
+  }
 
   // Same day gate as getLessonForStudent: without this a gated lesson could be marked
   // complete straight through the API, which would then exempt it from the gate.

@@ -15,6 +15,7 @@ import {
   listCoursePaymentsSchema,
   setCapstoneEnabledSchema,
   setPaymentConfirmedSchema,
+  setDepositPaidSchema,
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
 import {
@@ -71,6 +72,12 @@ adminRouter.patch(
   "/enrollments/:id/payment",
   validate(setPaymentConfirmedSchema),
   adminController.setPaymentConfirmed,
+);
+// Instalments: tick the ₦20,000 deposit by hand when the webhook couldn't match it.
+adminRouter.patch(
+  "/enrollments/:id/deposit",
+  validate(setDepositPaidSchema),
+  adminController.setDepositPaid,
 );
 adminRouter.post("/enrollments/:id/send-completion-email", adminController.sendCompletionEmail);
 adminRouter.get("/referrals", validate(listReferralsSchema), referralsController.listReferrals);

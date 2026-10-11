@@ -23,6 +23,7 @@ import * as enrollmentService from "./enrollment.service";
 import * as referralService from "./referral.service";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
+import { DEPOSIT_UNLOCKED_DAYS, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
 
 // A candidate counts as "online" if their last heartbeat was within this window. The
 // frontend pings every ~60s while a session is active, so a few missed beats still read
@@ -216,6 +217,7 @@ export async function listCoursePayments(courseId: string, status: "confirmed" |
       email: student.email,
       paymentConfirmed: e.paymentConfirmed,
       paymentConfirmedAt: e.paymentConfirmedAt,
+      depositPaidAt: e.depositPaidAt,
       enrolledAt: e.enrolledDate,
       latestPayment: serializeLatestPayment(
         (e as unknown as { payments?: Payment[] }).payments ?? [],
@@ -260,6 +262,7 @@ function serializeCandidate(user: User) {
       progressPercent: e.progressPercent,
       paymentConfirmed: e.paymentConfirmed,
       paymentConfirmedAt: e.paymentConfirmedAt,
+      depositPaidAt: e.depositPaidAt,
       latestPayment: serializeLatestPayment(
         (e as unknown as { payments?: Payment[] }).payments ?? [],
       ),
@@ -436,6 +439,47 @@ export async function setPaymentConfirmed(enrollmentId: string, paymentConfirmed
     await sendPaymentConfirmedEmailIfPossible(enrollment);
   }
   return enrollment;
+}
+
+// Instalments (2026-10-11): records the deposit that unlocks a course's first days, from
+// the Paystack webhook or an admin's "Deposit" tick (for a charge the webhook couldn't
+// match). A deposit doesn't credit a referral -- only the full price (paymentConfirmed)
+// does -- so an ambassador is never paid for a friend who stops after the deposit.
+export async function setDepositPaid(enrollmentId: string, depositPaid: boolean) {
+  const enrollment = await Enrollment.findByPk(enrollmentId);
+  if (!enrollment) {
+    throw ApiError.notFound("Enrollment not found");
+  }
+  const wasPaid = enrollment.depositPaidAt !== null;
+  enrollment.depositPaidAt = depositPaid ? enrollment.depositPaidAt ?? new Date() : null;
+  await enrollment.save();
+
+  if (depositPaid && !wasPaid && !enrollment.paymentConfirmed) {
+    await sendDepositConfirmedEmailIfPossible(enrollment);
+  }
+  return enrollment;
+}
+
+async function sendDepositConfirmedEmailIfPossible(enrollment: Enrollment): Promise<void> {
+  try {
+    const [student, course] = await Promise.all([
+      User.findByPk(enrollment.studentId),
+      Course.findByPk(enrollment.courseId),
+    ]);
+    const balanceNgn = course ? getBalanceNgn(course.slug) : null;
+    if (student && course && balanceNgn !== null) {
+      await emails.sendDepositConfirmedEmail({
+        student,
+        courseTitle: course.title,
+        courseSlug: course.slug,
+        depositNgn: INSTALMENT_DEPOSIT_NGN,
+        balanceNgn,
+        unlockedDays: DEPOSIT_UNLOCKED_DAYS,
+      });
+    }
+  } catch (err) {
+    logger.error("Failed to send deposit confirmed email", err);
+  }
 }
 
 // Best-effort: tells the student their lessons are unlocked (2026-09-25).

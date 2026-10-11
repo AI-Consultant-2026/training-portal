@@ -15,6 +15,7 @@ import {
   addCandidate,
   addEnrollment,
   confirmPayment,
+  setDepositPaid,
   deleteCandidate,
   deleteInactiveCandidates,
   fetchAdminStats,
@@ -132,6 +133,10 @@ export function AdminCandidatesPage() {
     } else {
       setDeleteInactiveMessage({ text: "Could not delete inactive candidates.", variant: "error" });
     }
+  }
+
+  function handleToggleDeposit(enrollmentId: string, depositPaid: boolean) {
+    dispatch(setDepositPaid({ enrollmentId, depositPaid }));
   }
 
   function handleTogglePayment(enrollmentId: string, paymentConfirmed: boolean) {
@@ -320,10 +325,20 @@ export function AdminCandidatesPage() {
                                 <span className="text-gray-700">{e.courseTitle ?? "Unknown course"}</span>
                               </label>
                               <span
-                                className={`text-xs ${e.paymentConfirmed ? "text-green-700" : "text-amber-600"}`}
+                                className={`text-xs ${e.paymentConfirmed ? "text-green-700" : e.depositPaidAt ? "text-blue-700" : "text-amber-600"}`}
                               >
-                                {e.paymentConfirmed ? "Paid" : "Payment pending"}
+                                {e.paymentConfirmed ? "Paid" : e.depositPaidAt ? "Deposit paid (Days 1–2)" : "Payment pending"}
                               </span>
+                              {!e.paymentConfirmed && (
+                                <label className="flex items-center gap-1 text-xs text-gray-500" title="₦20,000 instalment deposit: unlocks Days 1–2">
+                                  <input
+                                    type="checkbox"
+                                    checked={!!e.depositPaidAt}
+                                    onChange={(ev) => handleToggleDeposit(e.id, ev.target.checked)}
+                                  />
+                                  Deposit
+                                </label>
+                              )}
                             </div>
                             {e.paymentConfirmed && (
                               <div className="ml-5 mt-1 flex items-center gap-2">
