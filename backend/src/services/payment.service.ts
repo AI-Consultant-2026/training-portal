@@ -1,4 +1,4 @@
-import { Enrollment, Payment } from "../models";
+import { Course, Enrollment, Payment } from "../models";
 import { ApiError } from "../utils/ApiError";
 import crypto from "crypto";
 import { config } from "../config";
@@ -248,15 +248,25 @@ export async function initializePaystackCharge(input: {
 // Paystack directly and apply it -- so a deposit unlocks even if the webhook is late or
 // isn't set up. Only the student who owns the charge's enrolment can trigger it, and it
 // goes through the same idempotent handler as the webhook.
-export async function verifyInstalmentPayment(reference: string, studentId: string): Promise<{ outcome: string }> {
+export async function verifyInstalmentPayment(reference: string, studentId: string): Promise<VerifiedCharge> {
   return verifyPaystackCharge(reference, (enrollment) => enrollment.studentId === studentId);
 }
+
+// What the return-from-Paystack pages get back. `purchase` is set only when Paystack says
+// the charge succeeded and it's been applied (now, or earlier by the webhook): the page uses
+// it to report a "Purchase" to analytics (GA4 + the Meta Pixel) once per reference.
+export interface VerifiedCharge {
+  outcome: string;
+  purchase?: { valueNgn: number; currency: "NGN"; plan: ApiChargeKind; courseSlug: string | null };
+}
+
+const APPLIED_OUTCOMES = new Set(["confirmed", "already_paid", "duplicate"]);
 
 // Looks a charge up with Paystack and applies it, if `owns` accepts the charge's enrolment.
 export async function verifyPaystackCharge(
   reference: string,
   owns: (enrollment: Enrollment) => boolean,
-): Promise<{ outcome: string }> {
+): Promise<VerifiedCharge> {
   if (config.paystackSecretKey === "") {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
@@ -276,5 +286,15 @@ export async function verifyPaystackCharge(
   }
   if (data.status !== "success") return { outcome: String(data.status ?? "pending") };
   const outcome = await handlePaystackEvent({ event: "charge.success", data: data as never });
-  return { outcome };
+  if (!APPLIED_OUTCOMES.has(outcome)) return { outcome };
+  const course = await Course.findByPk(enrollment.courseId);
+  return {
+    outcome,
+    purchase: {
+      valueNgn: Math.round(Number(data.amount) / 100),
+      currency: "NGN",
+      plan: meta.instalment,
+      courseSlug: course?.slug ?? null,
+    },
+  };
 }

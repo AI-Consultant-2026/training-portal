@@ -33,8 +33,14 @@ export async function startInstalmentPayment(
 
 // Backup for Paystack's webhook: on returning from checkout, ask the server to check the
 // charge with Paystack and apply it straight away.
-export async function verifyInstalmentPayment(reference: string): Promise<{ outcome: string }> {
-  const res = await axiosClient.post<{ outcome: string }>("/payments/instalment/verify", { reference });
+export interface VerifiedCharge {
+  outcome: string;
+  // Set when Paystack says the charge succeeded and it's been applied.
+  purchase?: { valueNgn: number; currency: "NGN"; plan: "deposit" | "balance" | "full"; courseSlug: string | null };
+}
+
+export async function verifyInstalmentPayment(reference: string): Promise<VerifiedCharge> {
+  const res = await axiosClient.post<VerifiedCharge>("/payments/instalment/verify", { reference });
   return res.data;
 }
 

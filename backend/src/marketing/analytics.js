@@ -74,7 +74,22 @@
     sign_up: "CompleteRegistration",
     card_payment_started: "InitiateCheckout",
     whatsapp_chat_click: "Contact",
+    purchase: "Purchase",
   };
+
+  // Only these coarse fields go to Meta (never names, emails or phone numbers). A
+  // transaction_id becomes Meta's eventID, so the same payment isn't counted twice.
+  function metaParams(params) {
+    var out = {};
+    if (!params) return out;
+    if (typeof params.value === "number") out.value = params.value;
+    if (typeof params.currency === "string") out.currency = params.currency;
+    if (typeof params.course_slug === "string") {
+      out.content_ids = [params.course_slug];
+      out.content_type = "product";
+    }
+    return out;
+  }
   var pixelLoaded = false;
   var lastPixelPath = null;
 
@@ -118,7 +133,11 @@
 
   window.ptTrack = function (name, params) {
     if (ID) gtag("event", name, params || {});
-    if (pixelLoaded && META_EVENTS[name]) window.fbq("track", META_EVENTS[name]);
+    if (pixelLoaded && META_EVENTS[name]) {
+      var id = params && params.transaction_id;
+      if (id) window.fbq("track", META_EVENTS[name], metaParams(params), { eventID: String(id) });
+      else window.fbq("track", META_EVENTS[name], metaParams(params));
+    }
   };
 
   document.addEventListener(

@@ -9,6 +9,7 @@ import {
   CARD_PAYMENTS_UNAVAILABLE_MESSAGE,
   ensureUnpaidEnrollment,
   initializePaystackCharge,
+  VerifiedCharge,
   verifyPaystackCharge,
 } from "./payment.service";
 
@@ -137,7 +138,7 @@ export async function startSponsorPayment(
 }
 
 // Backup for the webhook when the sponsor lands back on the page from Paystack.
-export async function verifySponsorPayment(token: string, reference: string): Promise<{ outcome: string }> {
+export async function verifySponsorPayment(token: string, reference: string): Promise<VerifiedCharge> {
   const { enrollment } = await loadSponsoredEnrollment(token);
   return verifyPaystackCharge(reference, (charged) => charged.id === enrollment.id);
 }

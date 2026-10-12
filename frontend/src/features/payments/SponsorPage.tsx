@@ -4,7 +4,7 @@ import { fetchSponsorPage, startSponsorPayment, verifySponsorPayment } from "../
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
-import { track } from "../../lib/analytics";
+import { track, trackPurchase } from "../../lib/analytics";
 import { SponsorPageInfo } from "../../types/api";
 import { PaymentTrustStrip } from "./PaymentTrustStrip";
 
@@ -28,7 +28,9 @@ export function SponsorPage() {
     // Back from Paystack: ask the server to check the charge first (backup for the
     // webhook), then load the page so it shows the new status.
     const check = returnedReference
-      ? verifySponsorPayment(token, returnedReference).catch(() => null)
+      ? verifySponsorPayment(token, returnedReference)
+          .then((result) => result.purchase && trackPurchase(returnedReference, result.purchase, "sponsor"))
+          .catch(() => null)
       : Promise.resolve(null);
     check
       .then(() => fetchSponsorPage(token))

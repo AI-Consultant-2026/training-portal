@@ -190,7 +190,7 @@ describe("Instalment payments", () => {
   it("unlocks the deposit when the returning student's charge is verified with Paystack (webhook backup)", async () => {
     const { course, student, token } = await setup();
     const enrollment = await Enrollment.create({ courseId: course.id, studentId: student.id });
-    jest.spyOn(global, "fetch").mockResolvedValue(
+    jest.spyOn(global, "fetch").mockImplementation(async () =>
       new Response(
         JSON.stringify({
           status: true,
@@ -212,12 +212,22 @@ describe("Instalment payments", () => {
       .send({ reference: "VER1" });
     expect(res.status).toBe(200);
     expect(res.body.outcome).toBe("confirmed");
+    // What the page reports to analytics as a Purchase.
+    expect(res.body.purchase).toEqual({ valueNgn: 20_000, currency: "NGN", plan: "deposit", courseSlug: course.slug });
     await enrollment.reload();
     expect(enrollment.depositPaidAt).not.toBeNull();
 
     // A later webhook for the same charge is a no-op.
     const hook = await instalmentCharge(enrollment.id, "deposit", 20_000, "VER1");
     expect(hook.body.outcome).toBe("duplicate");
+
+    // Verifying again (e.g. a refresh of the return page) still reports the purchase; the
+    // page itself only sends it once per reference.
+    const again = await request(app)
+      .post("/api/payments/instalment/verify")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ reference: "VER1" });
+    expect(again.body.purchase?.valueNgn).toBe(20_000);
   });
 
   it("won't verify someone else's charge", async () => {

@@ -43,6 +43,10 @@ describe("GA4 analytics (/analytics.js)", () => {
     // The only unconditional loadPixel() call is gated on a stored "granted" choice.
     expect(res.text).toContain('if (PIXEL && adsChoice === "granted") loadPixel();');
     expect(res.text).toContain('generate_lead: "Lead"');
+    // Confirmed payments go to Meta as Purchase, with value/currency and the Paystack
+    // reference as eventID so one payment is never counted twice.
+    expect(res.text).toContain('purchase: "Purchase"');
+    expect(res.text).toContain("{ eventID: String(id) }");
   });
 
   it("allows Google Analytics in the CSP without loosening anything else", async () => {

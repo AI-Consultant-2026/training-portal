@@ -1,4 +1,5 @@
 import { SponsorPageInfo } from "../types/api";
+import type { VerifiedCharge } from "./payments.api";
 import { axiosClient } from "./axiosClient";
 
 // Public "pay for a student" page -- no login needed (see backend sponsor.service.ts).
@@ -15,8 +16,8 @@ export async function startSponsorPayment(
   return res.data;
 }
 
-export async function verifySponsorPayment(token: string, reference: string): Promise<{ outcome: string }> {
-  const res = await axiosClient.post<{ outcome: string }>(`/sponsor/${encodeURIComponent(token)}/verify`, {
+export async function verifySponsorPayment(token: string, reference: string): Promise<VerifiedCharge> {
+  const res = await axiosClient.post<VerifiedCharge>(`/sponsor/${encodeURIComponent(token)}/verify`, {
     reference,
   });
   return res.data;

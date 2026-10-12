@@ -26,6 +26,7 @@ import {
   Quiz,
 } from "../../types/api";
 import { DayTasksDialog } from "../lessons/DayTasksDialog";
+import { trackPurchase } from "../../lib/analytics";
 import { PaymentTrustStrip } from "../payments/PaymentTrustStrip";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
@@ -200,6 +201,7 @@ export function CourseDetailPage() {
   useEffect(() => {
     if (!paystackReference || !returnedFromPayment || user?.role !== "student") return;
     verifyInstalmentPayment(paystackReference)
+      .then((result) => result.purchase && trackPurchase(paystackReference, result.purchase, "student"))
       .catch(() => undefined)
       .finally(() => dispatch(fetchMyEnrollments()));
   }, [paystackReference, returnedFromPayment, user, dispatch]);
