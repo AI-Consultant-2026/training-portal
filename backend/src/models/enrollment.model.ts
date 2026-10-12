@@ -14,6 +14,8 @@ export interface EnrollmentAttributes {
   paymentConfirmed: boolean;
   paymentConfirmedAt: Date | null;
   depositPaidAt: Date | null;
+  refundedAt: Date | null;
+  refundNote: string | null;
 }
 
 export type EnrollmentCreationAttributes = Optional<
@@ -27,6 +29,8 @@ export type EnrollmentCreationAttributes = Optional<
   | "paymentConfirmed"
   | "paymentConfirmedAt"
   | "depositPaidAt"
+  | "refundedAt"
+  | "refundNote"
 >;
 
 export class Enrollment
@@ -44,6 +48,8 @@ export class Enrollment
   declare paymentConfirmed: boolean;
   declare paymentConfirmedAt: Date | null;
   declare depositPaidAt: Date | null;
+  declare refundedAt: Date | null;
+  declare refundNote: string | null;
 }
 
 export function initEnrollmentModel(sequelize: Sequelize) {
@@ -102,6 +108,9 @@ export function initEnrollmentModel(sequelize: Sequelize) {
         allowNull: true,
         field: "deposit_paid_at",
       },
+      // Cooling-off refund recorded by an admin (see refund.service.ts).
+      refundedAt: { type: DataTypes.DATE, allowNull: true, field: "refunded_at" },
+      refundNote: { type: DataTypes.TEXT, allowNull: true, field: "refund_note" },
     },
     {
       sequelize,

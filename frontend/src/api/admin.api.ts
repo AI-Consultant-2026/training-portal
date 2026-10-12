@@ -6,6 +6,7 @@ import {
   CourseProgressSummary,
   Lead,
   Partner,
+  RefundStatus,
   ZoomAttendee,
 } from "../types/api";
 import { axiosClient } from "./axiosClient";
@@ -57,6 +58,18 @@ export async function deleteInactiveCandidates(): Promise<DeleteInactiveCandidat
 // Instalments: tick the ₦20,000 deposit by hand (unlocks Days 1-2).
 export async function setDepositPaid(enrollmentId: string, depositPaid: boolean): Promise<void> {
   await axiosClient.patch(`/admin/enrollments/${enrollmentId}/deposit`, { depositPaid });
+}
+
+// Records a cooling-off refund (the money is refunded in Paystack) and locks the course.
+export async function recordRefund(
+  enrollmentId: string,
+  input: { note?: string; override?: boolean },
+): Promise<{ refund: RefundStatus; referralVoided: boolean; referralWarning: string | null }> {
+  const res = await axiosClient.post<{ refund: RefundStatus; referralVoided: boolean; referralWarning: string | null }>(
+    `/admin/enrollments/${enrollmentId}/refund`,
+    input,
+  );
+  return res.data;
 }
 
 export async function confirmPayment(enrollmentId: string, paymentConfirmed: boolean): Promise<void> {

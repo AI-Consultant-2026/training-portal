@@ -519,6 +519,17 @@ export interface AdminStats {
   referrals: AdminReferralOverview;
 }
 
+// Cooling-off refund status for an enrolment (admin only, 2026-10-12).
+export interface RefundStatus {
+  state: "unpaid" | "eligible" | "not_eligible" | "refunded";
+  eligibleUntil: string | null;
+  reason: string | null;
+  refundedAt: string | null;
+  refundNote: string | null;
+  /** Email of another account with the same name that has had a refund. */
+  possiblePriorRefund: string | null;
+}
+
 export interface CandidateEnrollment {
   id: string;
   courseId: string;
@@ -528,6 +539,7 @@ export interface CandidateEnrollment {
   paymentConfirmed: boolean;
   paymentConfirmedAt: string | null;
   depositPaidAt?: string | null;
+  refund?: RefundStatus;
   latestPayment: {
     method: PaymentMethod;
     status: PaymentStatus;

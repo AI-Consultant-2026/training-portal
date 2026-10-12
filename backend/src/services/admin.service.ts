@@ -24,6 +24,7 @@ import * as referralService from "./referral.service";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { DEPOSIT_UNLOCKED_DAYS, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
+import { getRefundStatus } from "./refund.service";
 
 // A candidate counts as "online" if their last heartbeat was within this window. The
 // frontend pings every ~60s while a session is active, so a few missed beats still read
@@ -252,9 +253,19 @@ function serializeLatestPayment(payments: Payment[]) {
     : null;
 }
 
-function serializeCandidate(user: User) {
-  const enrollments = ((user as unknown as { enrollments?: Enrollment[] }).enrollments ?? []).map(
-    (e) => ({
+async function serializeCandidate(user: User) {
+  const rows = (user as unknown as { enrollments?: Enrollment[] }).enrollments ?? [];
+  // A refund-status failure must never break the whole candidates page.
+  const refunds = await Promise.all(
+    rows.map((e) =>
+      getRefundStatus(e).catch((err) => {
+        logger.error("Failed to work out refund status", err);
+        return undefined;
+      }),
+    ),
+  );
+  const enrollments = rows.map(
+    (e, i) => ({
       id: e.id,
       courseId: e.courseId,
       courseTitle: (e as unknown as { course?: Course }).course?.title ?? null,
@@ -266,6 +277,7 @@ function serializeCandidate(user: User) {
       latestPayment: serializeLatestPayment(
         (e as unknown as { payments?: Payment[] }).payments ?? [],
       ),
+      refund: refunds[i],
     }),
   );
 
@@ -301,7 +313,7 @@ export async function listCandidates() {
     include: CANDIDATE_ENROLLMENTS_INCLUDE,
     order: [["createdAt", "DESC"]],
   });
-  return candidates.map(serializeCandidate);
+  return Promise.all(candidates.map(serializeCandidate));
 }
 
 async function getCandidateById(id: string) {

@@ -21,6 +21,7 @@ import {
   fetchAdminStats,
   fetchCandidates,
 } from "./adminSlice";
+import { RefundPanel } from "./RefundPanel";
 
 function formatLastActive(lastActiveAt: string | null): string {
   if (!lastActiveAt) return "Never";
@@ -325,9 +326,15 @@ export function AdminCandidatesPage() {
                                 <span className="text-gray-700">{e.courseTitle ?? "Unknown course"}</span>
                               </label>
                               <span
-                                className={`text-xs ${e.paymentConfirmed ? "text-green-700" : e.depositPaidAt ? "text-blue-700" : "text-amber-600"}`}
+                                className={`text-xs ${e.paymentConfirmed ? "text-green-700" : e.depositPaidAt ? "text-blue-700" : e.refund?.state === "refunded" ? "text-red-700" : "text-amber-600"}`}
                               >
-                                {e.paymentConfirmed ? "Paid" : e.depositPaidAt ? "Deposit paid (Days 1–2)" : "Payment pending"}
+                                {e.paymentConfirmed
+                                  ? "Paid"
+                                  : e.depositPaidAt
+                                    ? "Deposit paid (Days 1–2)"
+                                    : e.refund?.state === "refunded"
+                                      ? "Refunded"
+                                      : "Payment pending"}
                               </span>
                               {!e.paymentConfirmed && (
                                 <label className="flex items-center gap-1 text-xs text-gray-500" title="₦20,000 instalment deposit: unlocks Days 1–2">
@@ -340,6 +347,13 @@ export function AdminCandidatesPage() {
                                 </label>
                               )}
                             </div>
+                            <RefundPanel
+                              enrollmentId={e.id}
+                              studentName={`${c.firstName} ${c.lastName}`}
+                              courseTitle={e.courseTitle}
+                              refund={e.refund}
+                              onRefunded={() => dispatch(fetchCandidates())}
+                            />
                             {e.paymentConfirmed && (
                               <div className="ml-5 mt-1 flex items-center gap-2">
                                 <button

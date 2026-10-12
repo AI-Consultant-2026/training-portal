@@ -23,6 +23,14 @@ export const setDepositPaidSchema = z.object({
   }),
 });
 
+export const recordRefundSchema = z.object({
+  params: z.object({ id: z.string().uuid() }),
+  body: z.object({
+    note: z.string().max(1000).optional(),
+    override: z.boolean().optional(),
+  }),
+});
+
 export const addEnrollmentSchema = z.object({
   body: z.object({
     courseId: z.string().uuid(),

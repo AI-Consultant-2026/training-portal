@@ -4,6 +4,7 @@ import * as adminService from "../services/admin.service";
 import * as courseProgressService from "../services/courseProgress.service";
 import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
+import * as refundService from "../services/refund.service";
 
 export const getDashboardStats = asyncHandler(async (_req: Request, res: Response) => {
   const stats = await adminService.getDashboardStats();
@@ -64,6 +65,15 @@ export const setPaymentConfirmed = asyncHandler(async (req: Request, res: Respon
 export const setDepositPaid = asyncHandler(async (req: Request, res: Response) => {
   const enrollment = await adminService.setDepositPaid(req.params.id, req.body.depositPaid);
   res.json({ enrollment });
+});
+
+// Records a cooling-off refund (paid back in Paystack) and locks the course.
+export const recordRefund = asyncHandler(async (req: Request, res: Response) => {
+  const { enrollment, referralVoided, referralWarning } = await refundService.recordRefund(req.params.id, {
+    note: req.body.note,
+    override: req.body.override,
+  });
+  res.json({ enrollment, refund: await refundService.getRefundStatus(enrollment), referralVoided, referralWarning });
 });
 
 export const sendCompletionEmail = asyncHandler(async (req: Request, res: Response) => {

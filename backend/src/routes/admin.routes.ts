@@ -16,6 +16,7 @@ import {
   setCapstoneEnabledSchema,
   setPaymentConfirmedSchema,
   setDepositPaidSchema,
+  recordRefundSchema,
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
 import {
@@ -79,6 +80,8 @@ adminRouter.patch(
   validate(setDepositPaidSchema),
   adminController.setDepositPaid,
 );
+// Cooling-off refunds: records a refund paid back in Paystack and locks the course.
+adminRouter.post("/enrollments/:id/refund", validate(recordRefundSchema), adminController.recordRefund);
 adminRouter.post("/enrollments/:id/send-completion-email", adminController.sendCompletionEmail);
 adminRouter.get("/referrals", validate(listReferralsSchema), referralsController.listReferrals);
 adminRouter.post(
