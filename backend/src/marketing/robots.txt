@@ -140,6 +140,7 @@ Disallow: /api/
 Disallow: /courses
 Disallow: /lessons
 Disallow: /dashboard
+Disallow: /sponsor/
 Disallow: /admin
 Disallow: /instructor
 Disallow: /assignments

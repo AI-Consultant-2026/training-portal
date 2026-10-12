@@ -96,6 +96,7 @@ describe("Free preview lesson", () => {
       dayCount: 2,
       lessonCount: 3,
       priceNgn: 200000,
+      depositNgn: 20000,
     });
     expect(res.body.module).toEqual({ title: "Day 1 module", weekNumber: 1 });
     expect(res.body.lesson.title).toBe("First lesson");

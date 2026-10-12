@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchPaymentQuote, startCardPayment, startInstalmentPayment } from "../../api/payments.api";
+import { createSponsorLink, fetchPaymentQuote, startCardPayment, startInstalmentPayment } from "../../api/payments.api";
 import { PAYMENT_CONFIRMATION_PROMISE } from "./paymentCopy";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -10,6 +10,7 @@ import { PaymentQuote } from "../../types/api";
 import { fetchCourseBySlug } from "../courses/coursesSlice";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { track } from "../../lib/analytics";
+import { PaymentTrustStrip } from "./PaymentTrustStrip";
 
 // Card payments are taken in Naira on Paystack, so card details are never entered on
 // Paleon's own site. Paying in full goes to the course's Paystack Payment Page; paying in
@@ -124,18 +125,6 @@ export function CardPaymentPage() {
         </div>
       ) : (
         <div className="mt-4 space-y-3">
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-            <p className="text-base font-semibold text-gray-900">Pay in full: {naira(quote.card.amount)}</p>
-            <p className="mt-1 text-gray-600">Unlocks the whole course straight away.</p>
-            <Button
-              className="mt-3 w-full"
-              onClick={() => handlePay("full")}
-              isLoading={starting === "full"}
-              disabled={starting !== null}
-            >
-              Pay {naira(quote.card.amount)} with Paystack
-            </Button>
-          </div>
           {instalment && (
             <div className="rounded-lg border-2 border-blue-600 bg-white p-4 text-sm">
               <p className="text-base font-semibold text-gray-900">
@@ -156,6 +145,19 @@ export function CardPaymentPage() {
               </Button>
             </div>
           )}
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
+            <p className="text-base font-semibold text-gray-900">Pay in full: {naira(quote.card.amount)}</p>
+            <p className="mt-1 text-gray-600">Unlocks the whole course straight away.</p>
+            <Button
+              variant={instalment ? "secondary" : "primary"}
+              className="mt-3 w-full"
+              onClick={() => handlePay("full")}
+              isLoading={starting === "full"}
+              disabled={starting !== null}
+            >
+              Pay {naira(quote.card.amount)} with Paystack
+            </Button>
+          </div>
         </div>
       )}
 
@@ -184,6 +186,88 @@ export function CardPaymentPage() {
 
       {error && (
         <div className="mt-4">
+          <Alert message={error} />
+        </div>
+      )}
+
+      {quote && instalment && <SponsorShare courseId={course.id} courseTitle={course.title} />}
+
+      <PaymentTrustStrip courseSlug={course.slug} className="mt-6" />
+    </div>
+  );
+}
+
+// "Ask a sponsor to pay" (2026-10-12): a link to a public page where a parent, relative or
+// employer can pay by card for this student's course (see SponsorPage).
+function SponsorShare({ courseId, courseTitle }: { courseId: string; courseTitle: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function getLink() {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await createSponsorLink(courseId);
+      setUrl(result.url);
+      track("sponsor_link_created", { course_id: courseId });
+    } catch (err) {
+      setError(
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message ??
+          "Could not create the link. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function copy() {
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  const message = url
+    ? `Hello, I'd like to take the ${courseTitle} course with Paleon Training to build job-ready skills. ` +
+      `Could you help me pay for it? You can pay securely by card here, and it goes straight to my account: ${url}`
+    : "";
+
+  return (
+    <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
+      <p className="text-base font-semibold text-gray-900">Is someone else paying?</p>
+      <p className="mt-1 text-gray-600">
+        Send a parent, relative or sponsor a secure link. They can pay the deposit or the full fee by card, and the
+        course unlocks on your account.
+      </p>
+      {!url ? (
+        <Button variant="secondary" className="mt-3 w-full" onClick={getLink} isLoading={loading}>
+          Get a payment link for my sponsor
+        </Button>
+      ) : (
+        <div className="mt-3 space-y-2">
+          <p className="break-all rounded border border-gray-200 bg-white px-3 py-2 text-xs text-gray-800">{url}</p>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(message)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+            >
+              Send on WhatsApp
+            </a>
+            <Button variant="secondary" onClick={copy}>
+              {copied ? "Copied" : "Copy link"}
+            </Button>
+          </div>
+        </div>
+      )}
+      {error && (
+        <div className="mt-2">
           <Alert message={error} />
         </div>
       )}

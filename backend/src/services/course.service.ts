@@ -1,4 +1,4 @@
-import { COURSE_PRICES_NGN } from "../constants/coursePricing";
+import { COURSE_PRICES_NGN, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
 import { Course, CourseModule, Lesson } from "../models";
 import { CourseLevel } from "../models/course.model";
 import { ApiError } from "../utils/ApiError";
@@ -103,7 +103,15 @@ export async function deleteCourse(idOrSlug: string): Promise<void> {
 }
 
 export interface PublicCoursePreview {
-  course: { slug: string; title: string; dayCount: number; lessonCount: number; priceNgn: number | null };
+  course: {
+    slug: string;
+    title: string;
+    dayCount: number;
+    lessonCount: number;
+    priceNgn: number | null;
+    /** The instalment deposit, or null when the course can't be paid in instalments. */
+    depositNgn: number | null;
+  };
   module: { title: string; weekNumber: number };
   lesson: Pick<Lesson, "title" | "content" | "videoUrl" | "images" | "resources" | "durationMinutes">;
 }
@@ -135,6 +143,7 @@ export async function getPublicCoursePreview(slug: string): Promise<PublicCourse
       dayCount: modules.length,
       lessonCount,
       priceNgn: COURSE_PRICES_NGN[course.slug] ?? null,
+      depositNgn: getBalanceNgn(course.slug) === null ? null : INSTALMENT_DEPOSIT_NGN,
     },
     module: { title: module.title, weekNumber: module.weekNumber },
     lesson: {

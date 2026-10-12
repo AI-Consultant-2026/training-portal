@@ -187,7 +187,15 @@ export interface Lesson {
 }
 
 export interface CoursePreview {
-  course: { slug: string; title: string; dayCount: number; lessonCount: number; priceNgn: number | null };
+  course: {
+    slug: string;
+    title: string;
+    dayCount: number;
+    lessonCount: number;
+    priceNgn: number | null;
+    /** The instalment deposit, or null when the course can't be paid in instalments. */
+    depositNgn: number | null;
+  };
   module: { title: string; weekNumber: number };
   lesson: Pick<Lesson, "title" | "content" | "videoUrl" | "images" | "resources" | "durationMinutes">;
 }
@@ -311,6 +319,19 @@ export interface PaymentQuote {
     unlockedDays: number;
     enabled: boolean;
   } | null;
+}
+
+// Public "pay for a student" page (2026-10-12).
+export interface SponsorPageInfo {
+  studentFirstName: string;
+  courseTitle: string;
+  courseSlug: string;
+  status: "unpaid" | "deposit_paid" | "paid";
+  priceNgn: number;
+  depositNgn: number | null;
+  balanceNgn: number | null;
+  unlockedDays: number;
+  paymentsEnabled: boolean;
 }
 
 export interface Assignment {

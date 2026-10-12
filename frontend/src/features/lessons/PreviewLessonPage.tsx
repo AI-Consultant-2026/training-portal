@@ -7,6 +7,7 @@ import { Spinner } from "../../components/ui/Spinner";
 import { extractYouTubeId, YouTubePlayer } from "../../components/ui/YouTubePlayer";
 import { track } from "../../lib/analytics";
 import { CoursePreview } from "../../types/api";
+import { PaymentTrustStrip } from "../payments/PaymentTrustStrip";
 import { LessonContent } from "./LessonContent";
 
 const WHATSAPP_URL = "https://wa.me/2347077149989";
@@ -59,6 +60,7 @@ export function PreviewLessonPage() {
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
   const remaining = Math.max(course.lessonCount - 1, 0);
   const price = course.priceNgn !== null ? `\u20a6${course.priceNgn.toLocaleString()}` : null;
+  const deposit = course.depositNgn !== null ? `\u20a6${course.depositNgn.toLocaleString()}` : null;
   // Logged-in students go straight to the course page to pay; everyone else creates a
   // free account first, with this course pre-selected.
   const enrolHref = user
@@ -86,20 +88,33 @@ export function PreviewLessonPage() {
         </div>
       )}
 
-      <div className="mt-10 rounded-lg border border-blue-200 bg-blue-50 p-5">
-        <h2 className="text-lg font-semibold text-gray-900">Want the rest of the course?</h2>
+      <div className="mt-10 rounded-lg border-2 border-blue-600 bg-blue-50 p-5">
+        <h2 className="text-lg font-semibold text-gray-900">Enjoyed this? Lesson 2 is waiting.</h2>
         <p className="mt-2 text-sm text-gray-700">
           {remaining > 0 ? `${remaining} more lessons` : "The full course"} across {course.dayCount} days, each with an
           illustration and a video, plus assignments, quizzes, a capstone project and a certificate of completion.
-          Self-paced &mdash; start as soon as your payment is confirmed, with lifetime access.
+          Self-paced, with lifetime access.
         </p>
+        <ol className="mt-4 grid gap-2 text-sm text-gray-800 sm:grid-cols-3">
+          <li className="rounded-md bg-white px-3 py-2">
+            <span className="font-semibold text-blue-700">1.</span>{" "}
+            {user ? "Open the course" : "Create your free account (1 minute)"}
+          </li>
+          <li className="rounded-md bg-white px-3 py-2">
+            <span className="font-semibold text-blue-700">2.</span>{" "}
+            {deposit ? `Pay ${deposit} by card to unlock Days 1\u20132` : "Pay by card on Paystack"}
+          </li>
+          <li className="rounded-md bg-white px-3 py-2">
+            <span className="font-semibold text-blue-700">3.</span> Carry on with lesson 2 straight away
+          </li>
+        </ol>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link
             to={enrolHref}
             onClick={() => track("preview_enrol_click", { course: course.slug })}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-md bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
           >
-            {price ? `Enrol for ${price}` : "Enrol now"}
+            {deposit ? `Start for ${deposit}` : price ? `Enrol for ${price}` : "Enrol now"}
           </Link>
           <a
             href={WHATSAPP_URL}
@@ -110,8 +125,13 @@ export function PreviewLessonPage() {
             Questions? Chat on WhatsApp
           </a>
         </div>
-        {!user && (
+        {deposit && price && (
           <p className="mt-3 text-xs text-gray-600">
+            Pay the balance whenever you&rsquo;re ready, or pay {price} in full. Same total price, no extra fees.
+          </p>
+        )}
+        {!user && (
+          <p className="mt-2 text-xs text-gray-600">
             Already have an account?{" "}
             <Link to="/login" className="font-medium text-blue-600 hover:underline">
               Log in
@@ -120,6 +140,8 @@ export function PreviewLessonPage() {
           </p>
         )}
       </div>
+
+      <PaymentTrustStrip courseSlug={course.slug} className="mt-4" />
 
       <p className="mt-6 text-sm">
         <a href={`/${course.slug}-course`} className="text-blue-600 hover:underline">

@@ -37,3 +37,9 @@ export async function verifyInstalmentPayment(reference: string): Promise<{ outc
   const res = await axiosClient.post<{ outcome: string }>("/payments/instalment/verify", { reference });
   return res.data;
 }
+
+// "Ask a sponsor to pay": a link to a public page where someone else can pay by card.
+export async function createSponsorLink(courseId: string): Promise<{ url: string }> {
+  const res = await axiosClient.post<{ url: string }>("/payments/sponsor-link", { courseId });
+  return res.data;
+}

@@ -6,7 +6,7 @@ import * as emails from "../emails";
 import { Course, Enrollment, Payment, User } from "../models";
 import { logger } from "../utils/logger";
 import { setDepositPaid, setPaymentConfirmed } from "./admin.service";
-import { INSTALMENT_NOTES, InstalmentKind, PAYSTACK_INIT_REFERENCE_PREFIX } from "./payment.service";
+import { ApiChargeKind, INSTALMENT_NOTES, PAYSTACK_INIT_REFERENCE_PREFIX } from "./payment.service";
 
 // Automatic payment confirmation from Paystack (2026-09-28). Students pay on a Paystack
 // Payment Page (see paystackPaymentLinks.ts), which can't carry our enrolment id, so a
@@ -44,7 +44,7 @@ interface PaystackChargeData {
 
 interface InstalmentMetadata {
   enrollmentId: string;
-  instalment: InstalmentKind;
+  instalment: ApiChargeKind;
 }
 
 export function readInstalmentMetadata(raw: unknown): InstalmentMetadata | null {
@@ -58,7 +58,9 @@ export function readInstalmentMetadata(raw: unknown): InstalmentMetadata | null 
   }
   if (!meta || typeof meta !== "object") return null;
   const { enrollmentId, instalment } = meta as Record<string, unknown>;
-  if (typeof enrollmentId !== "string" || (instalment !== "deposit" && instalment !== "balance")) return null;
+  if (typeof enrollmentId !== "string" || (instalment !== "deposit" && instalment !== "balance" && instalment !== "full")) {
+    return null;
+  }
   return { enrollmentId, instalment };
 }
 
@@ -164,7 +166,12 @@ async function handleInstalmentCharge(
     return unmatched(`instalment ${meta.instalment} paid with an email that isn't the enrolled student's`);
   }
 
-  const expectedNgn = meta.instalment === "deposit" ? INSTALMENT_DEPOSIT_NGN : getBalanceNgn(course.slug);
+  const expectedNgn =
+    meta.instalment === "deposit"
+      ? INSTALMENT_DEPOSIT_NGN
+      : meta.instalment === "full"
+        ? (COURSE_PRICES_NGN[course.slug] ?? null)
+        : getBalanceNgn(course.slug);
   if (expectedNgn === null || charge.amountNgn !== expectedNgn) {
     return unmatched(
       `instalment ${meta.instalment} of ₦${charge.amountNgn.toLocaleString("en-NG")} doesn't match the expected amount`,
@@ -197,8 +204,8 @@ async function handleInstalmentCharge(
     await setDepositPaid(enrollment.id, true);
     return "confirmed";
   }
-  // The balance completes the price: same path as a full payment (unlocks everything,
-  // credits any referral, emails the student).
+  // The balance (or a sponsor's full payment) completes the price: same path as a full
+  // payment (unlocks everything, credits any referral, emails the student).
   await setPaymentConfirmed(enrollment.id, true);
   return "confirmed";
 }

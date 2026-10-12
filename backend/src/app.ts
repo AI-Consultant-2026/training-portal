@@ -909,6 +909,7 @@ export function createApp() {
       "lessons",
       "dashboard",
       "refer",
+      "sponsor",
       "assignments",
       "capstones",
       "quizzes",

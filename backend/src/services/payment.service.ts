@@ -21,7 +21,7 @@ function requirePriceNgn(courseSlug: string): number {
 // student with no enrolment yet gets one created through the same enrollStudent() path
 // (so the duplicate/published checks still apply), subject to the same verified-email
 // rule as POST /courses/:id/enroll.
-async function ensureUnpaidEnrollment(courseId: string, studentId: string): Promise<Enrollment> {
+export async function ensureUnpaidEnrollment(courseId: string, studentId: string): Promise<Enrollment> {
   const existing = await getEnrollmentForCourseAndStudent(courseId, studentId);
   if (existing?.paymentConfirmed) {
     throw ApiError.conflict("Payment has already been confirmed for this enrollment");
@@ -131,13 +131,17 @@ export async function startCardPayment(input: {
 // still only ever go to Paystack's own checkout page.
 
 export type InstalmentKind = "deposit" | "balance";
+// A sponsor (2026-10-12) can also pay the whole price in one API charge, since they can't
+// use the student's fixed-price Payment Page link with the student's email.
+export type ApiChargeKind = InstalmentKind | "full";
 
 // A pending instalment charge is stored under this prefix until Paystack confirms it; the
 // webhook then swaps it for "paystack:<reference>" (its idempotency key).
 export const PAYSTACK_INIT_REFERENCE_PREFIX = "paystack-init:";
-export const INSTALMENT_NOTES: Record<InstalmentKind, string> = {
+export const INSTALMENT_NOTES: Record<ApiChargeKind, string> = {
   deposit: "Instalment deposit",
   balance: "Instalment balance",
+  full: "Full payment",
 };
 
 export async function startInstalmentPayment(input: {
@@ -169,9 +173,31 @@ export async function startInstalmentPayment(input: {
   }
 
   const amountNgn = input.kind === "deposit" ? INSTALMENT_DEPOSIT_NGN : balanceNgn;
-  const student = await userService.getUserById(input.studentId);
-  const reference = `PLN-${input.kind}-${crypto.randomBytes(8).toString("hex")}`;
   const origin = config.corsOrigin.replace(/\/$/, "");
+  return initializePaystackCharge({
+    enrollment,
+    courseSlug: course.slug,
+    kind: input.kind,
+    amountNgn,
+    callbackUrl: `${origin}/courses/${course.slug}?payment=${input.kind}`,
+    cancelUrl: `${origin}/courses/${course.slug}/pay/card`,
+  });
+}
+
+// Opens a Paystack checkout for one enrolment, always charged to the enrolled student's
+// email (so the webhook's email check passes even when someone else pays), and records the
+// pending payment. The charge's metadata carries the enrolment id back to the webhook.
+export async function initializePaystackCharge(input: {
+  enrollment: Enrollment;
+  courseSlug: string;
+  kind: ApiChargeKind;
+  amountNgn: number;
+  callbackUrl: string;
+  cancelUrl: string;
+}): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
+  const { enrollment, amountNgn } = input;
+  const student = await userService.getUserById(enrollment.studentId);
+  const reference = `PLN-${input.kind}-${crypto.randomBytes(8).toString("hex")}`;
 
   const res = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",
@@ -181,12 +207,12 @@ export async function startInstalmentPayment(input: {
       amount: amountNgn * 100,
       currency: "NGN",
       reference,
-      callback_url: `${origin}/courses/${course.slug}?payment=${input.kind}`,
+      callback_url: input.callbackUrl,
       metadata: {
         enrollmentId: enrollment.id,
         instalment: input.kind,
-        courseSlug: course.slug,
-        cancel_action: `${origin}/courses/${course.slug}/pay/card`,
+        courseSlug: input.courseSlug,
+        cancel_action: input.cancelUrl,
       },
     }),
   });
@@ -203,7 +229,7 @@ export async function startInstalmentPayment(input: {
 
   const payment = await Payment.create({
     enrollmentId: enrollment.id,
-    studentId: input.studentId,
+    studentId: enrollment.studentId,
     method: "card",
     status: "pending",
     currency: "NGN",
@@ -223,6 +249,14 @@ export async function startInstalmentPayment(input: {
 // isn't set up. Only the student who owns the charge's enrolment can trigger it, and it
 // goes through the same idempotent handler as the webhook.
 export async function verifyInstalmentPayment(reference: string, studentId: string): Promise<{ outcome: string }> {
+  return verifyPaystackCharge(reference, (enrollment) => enrollment.studentId === studentId);
+}
+
+// Looks a charge up with Paystack and applies it, if `owns` accepts the charge's enrolment.
+export async function verifyPaystackCharge(
+  reference: string,
+  owns: (enrollment: Enrollment) => boolean,
+): Promise<{ outcome: string }> {
   if (config.paystackSecretKey === "") {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
@@ -237,7 +271,7 @@ export async function verifyInstalmentPayment(reference: string, studentId: stri
   const { handlePaystackEvent, readInstalmentMetadata } = await import("./paystackWebhook.service");
   const meta = readInstalmentMetadata(data.metadata);
   const enrollment = meta ? await Enrollment.findByPk(meta.enrollmentId) : null;
-  if (!meta || !enrollment || enrollment.studentId !== studentId) {
+  if (!meta || !enrollment || !owns(enrollment)) {
     throw ApiError.forbidden("This payment doesn't belong to your account");
   }
   if (data.status !== "success") return { outcome: String(data.status ?? "pending") };

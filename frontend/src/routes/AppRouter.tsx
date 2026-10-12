@@ -56,6 +56,7 @@ const StudentDashboardPage = lazyImport(
 const LessonDetailPage = lazyImport(() => import("../features/lessons/LessonDetailPage"), "LessonDetailPage");
 const PreviewLessonPage = lazyImport(() => import("../features/lessons/PreviewLessonPage"), "PreviewLessonPage");
 const CardPaymentPage = lazyImport(() => import("../features/payments/CardPaymentPage"), "CardPaymentPage");
+const SponsorPage = lazyImport(() => import("../features/payments/SponsorPage"), "SponsorPage");
 const GradeQuizAttemptPage = lazyImport(
   () => import("../features/quizzes/GradeQuizAttemptPage"),
   "GradeQuizAttemptPage",
@@ -107,6 +108,7 @@ export function AppRouter() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         {/* Public free first lesson ("Try Day 1 free"), no login needed. */}
         <Route path="/preview/:slug" element={<PreviewLessonPage />} />
+        <Route path="/sponsor/:token" element={<SponsorPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/courses" element={<CourseListPage />} />
           <Route path="/courses/:slug" element={<CourseDetailPage />} />

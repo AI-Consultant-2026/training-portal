@@ -26,6 +26,7 @@ import {
   Quiz,
 } from "../../types/api";
 import { DayTasksDialog } from "../lessons/DayTasksDialog";
+import { PaymentTrustStrip } from "../payments/PaymentTrustStrip";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { fetchCourseBySlug } from "./coursesSlice";
 import { COURSE_COVER_IMAGES } from "./courseCoverImages";
@@ -175,6 +176,8 @@ export function CourseDetailPage() {
   // Instalments (2026-10-11): a deposit opens the first days (course order: week, then
   // module order -- the same rule as enrollment.service.ts's getDepositUnlockedModuleIds).
   const hasDepositOnly = !isPaidInFull && !!myEnrollment?.depositPaidAt;
+  // Lead with the deposit (2026-10-12): "Start for ₦20,000" reads easier than the full fee.
+  const depositOffer = !isPaidInFull && !hasDepositOnly && paymentQuote?.instalment?.enabled ? paymentQuote.instalment : null;
   const depositUnlockedIds = new Set(
     [...modules]
       .sort((a, b) => a.weekNumber - b.weekNumber || a.order - b.order)
@@ -321,20 +324,26 @@ export function CourseDetailPage() {
             </div>
           )}
           <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={goToPayment} disabled={isEnrolled}>
-              {!isEnrolled
-                ? "Enroll"
-                : isPaidInFull
-                  ? "Already Enrolled"
-                  : hasDepositOnly
-                    ? "Deposit paid"
-                    : "Payment pending"}
-            </Button>
+            {!(isEnrolled && depositOffer) && (
+              <Button onClick={goToPayment} disabled={isEnrolled}>
+                {!isEnrolled
+                  ? depositOffer
+                    ? <>Start for &#8358;{depositOffer.depositNgn.toLocaleString()}</>
+                    : "Enroll"
+                  : isPaidInFull
+                    ? "Already Enrolled"
+                    : hasDepositOnly
+                      ? "Deposit paid"
+                      : "Payment pending"}
+              </Button>
+            )}
             {isEnrolled && !isPaidInFull && paymentQuote && (
-              <Button variant="secondary" onClick={goToPayment}>
+              <Button variant={hasDepositOnly ? "secondary" : "primary"} onClick={goToPayment}>
                 {hasDepositOnly && paymentQuote.instalment
                   ? <>Pay balance &ndash; &#8358;{paymentQuote.instalment.balanceNgn.toLocaleString()}</>
-                  : <>Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}</>}
+                  : depositOffer
+                    ? <>Start for &#8358;{depositOffer.depositNgn.toLocaleString()}</>
+                    : <>Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}</>}
               </Button>
             )}
             {(isPaidInFull || hasDepositOnly) && myEnrollment?.nextLessonId && (
@@ -370,9 +379,10 @@ export function CourseDetailPage() {
             <p className="mt-2 text-sm text-gray-600">
               {hasDepositOnly
                 ? <>Days 1&ndash;{paymentQuote.instalment.unlockedDays} are open. Pay the balance to unlock the rest of the course, the capstone and your certificate.</>
-                : <>Can&rsquo;t pay it all at once? Start with &#8358;{paymentQuote.instalment.depositNgn.toLocaleString()} to unlock Days 1&ndash;{paymentQuote.instalment.unlockedDays}, and pay the balance later.</>}
+                : <>Start with &#8358;{paymentQuote.instalment.depositNgn.toLocaleString()} to unlock Days 1&ndash;{paymentQuote.instalment.unlockedDays} straight away and pay the balance later, or pay &#8358;{paymentQuote.baseAmountNgn.toLocaleString()} in full. Same total price, no extra fees.</>}
             </p>
           )}
+          {!isPaidInFull && paymentQuote && <PaymentTrustStrip courseSlug={course.slug} className="mt-4" />}
           {certificateError && (
             <p className="mt-2 text-sm text-red-600">Could not download the certificate.</p>
           )}

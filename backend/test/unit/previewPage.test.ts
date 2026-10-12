@@ -3,7 +3,7 @@ import { renderMarkdownBlock, renderPreviewPage } from "../../src/services/previ
 const INDEX = `<!doctype html><html><head><title>Paleon Training</title></head><body><div id="root"></div><script type="module" src="/assets/index.js"></script></body></html>`;
 
 const preview = {
-  course: { slug: "gis-and-drone-mapping", title: "GIS and Drone Mapping", dayCount: 9, lessonCount: 18, priceNgn: 200000 },
+  course: { slug: "gis-and-drone-mapping", title: "GIS and Drone Mapping", dayCount: 9, lessonCount: 18, priceNgn: 200000, depositNgn: 20000 },
   module: { title: "GIS Fundamentals & Spatial Concepts", weekNumber: 1 },
   lesson: {
     title: "Raster vs. Vector Data",

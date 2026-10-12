@@ -8,6 +8,7 @@ import { LessonNavItem } from "../../types/api";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
 import { DayTasksDialog } from "./DayTasksDialog";
+import { DEPOSIT_LABEL } from "../payments/paymentCopy";
 import { LessonContent } from "./LessonContent";
 import {
   fetchCheckpoints,
@@ -170,16 +171,17 @@ export function LessonDetailPage() {
 
       {isFreePreview && (
         <div className="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-5">
-          <p className="text-sm font-semibold text-gray-900">You&rsquo;re viewing the free preview lesson.</p>
+          <p className="text-sm font-semibold text-gray-900">Enjoyed this? Lesson 2 is waiting.</p>
           <p className="mt-1 text-sm text-gray-700">
-            Pay for the course to unlock every lesson, the assignments, quizzes, capstone project and your certificate.
+            Start for {DEPOSIT_LABEL} to unlock Days 1&ndash;2 straight away, and pay the balance whenever you&rsquo;re
+            ready. That unlocks every lesson, the assignments, quizzes, capstone project and your certificate.
             Self-paced, with lifetime access.
           </p>
           <Link
             to={payHref}
             className="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
-            Unlock the full course
+            Start for {DEPOSIT_LABEL}
           </Link>
         </div>
       )}
@@ -239,7 +241,7 @@ export function LessonDetailPage() {
             <p className="text-sm text-gray-700">
               {hasDepositOnly
                 ? "You've finished the days your deposit covers. Pay the balance to carry on with every remaining day, the capstone and your certificate."
-                : "The next lesson unlocks once your course payment is confirmed. Pay for the course to continue with every lesson, assignment and your certificate."}
+                : `The next lesson unlocks once you pay. Start for ${DEPOSIT_LABEL} to unlock Days 1\u20132 straight away, and pay the balance later for the rest of the course and your certificate.`}
             </p>
             <div className="mt-4 flex flex-wrap justify-end gap-2">
               <Button variant="secondary" onClick={() => setShowPaymentDialog(false)}>
@@ -249,7 +251,7 @@ export function LessonDetailPage() {
                 to={payHref}
                 className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
               >
-                {hasDepositOnly ? "Pay the balance" : "Unlock the full course"}
+                {hasDepositOnly ? "Pay the balance" : `Start for ${DEPOSIT_LABEL}`}
               </Link>
             </div>
           </div>

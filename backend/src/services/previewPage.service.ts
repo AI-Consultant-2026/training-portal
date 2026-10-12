@@ -78,7 +78,7 @@ export function renderPreviewPage(indexHtml: string, slug: string, preview: Publ
 <h1>${escapeHtml(lesson.title)}</h1>
 ${parts.join("\n")}
 <h2>Want the rest of the course?</h2>
-<p>${course.lessonCount - 1} more lessons across ${course.dayCount} days, each with an illustration and a video, plus assignments, quizzes, a capstone project and a certificate of completion. Self-paced, with lifetime access.${price ? ` Course fee: ${price}.` : ""}</p>
+<p>${course.lessonCount - 1} more lessons across ${course.dayCount} days, each with an illustration and a video, plus assignments, quizzes, a capstone project and a certificate of completion. Self-paced, with lifetime access.${price ? ` Course fee: ${price}.` : ""}${course.depositNgn !== null ? ` Or start with \u20a6${course.depositNgn.toLocaleString("en-NG")} and pay the balance later.` : ""}</p>
 <p><a href="/register?course=${encodeURIComponent(slug)}">Enrol in ${escapeHtml(course.title)}</a> &middot; <a href="/${encodeURIComponent(slug)}-course">Course details</a></p>
 </main>`;
 

@@ -1,9 +1,16 @@
 import { Router } from "express";
 import * as paymentsController from "../controllers/payments.controller";
+import * as sponsorController from "../controllers/sponsor.controller";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import { validate } from "../middleware/validate";
-import { cardPaymentStartSchema, getQuoteSchema, instalmentPaymentStartSchema, instalmentVerifySchema } from "../validators/payments.validators";
+import {
+  cardPaymentStartSchema,
+  getQuoteSchema,
+  instalmentPaymentStartSchema,
+  instalmentVerifySchema,
+  sponsorLinkSchema,
+} from "../validators/payments.validators";
 
 export const paymentsRouter = Router();
 
@@ -39,4 +46,12 @@ paymentsRouter.post(
   authorize("student"),
   validate(instalmentVerifySchema),
   paymentsController.verifyInstalmentPayment,
+);
+// "Ask a sponsor to pay": returns a link to the public /sponsor/<token> page for this course.
+paymentsRouter.post(
+  "/sponsor-link",
+  authenticate,
+  authorize("student"),
+  validate(sponsorLinkSchema),
+  sponsorController.createSponsorLink,
 );
