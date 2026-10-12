@@ -17,7 +17,7 @@ export function PaymentTrustStrip({ courseSlug, className }: { courseSlug?: stri
         <li className="flex gap-2">
           <span aria-hidden="true">&#8617;&#65039;</span>
           <span>
-            <strong className="text-gray-900">14-day refund.</strong> Cancel within 14 days of your payment being
+            <strong className="text-gray-900">7-day refund.</strong> Cancel within 7 days of your payment being
             confirmed for a full refund, if you&rsquo;ve completed no more than 20% of the lessons.{" "}
             <a href="/terms#refunds" className="text-blue-600 hover:underline">
               See terms
