@@ -18,7 +18,7 @@ export function PaymentTrustStrip({ courseSlug, className }: { courseSlug?: stri
           <span aria-hidden="true">&#8617;&#65039;</span>
           <span>
             <strong className="text-gray-900">7-day refund.</strong> Cancel within 7 days of your payment being
-            confirmed for a full refund.{" "}
+            confirmed for a full refund, as long as you haven&rsquo;t started Day 2.{" "}
             <a href="/terms#refunds" className="text-blue-600 hover:underline">
               See terms
             </a>
