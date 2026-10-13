@@ -767,3 +767,23 @@ export interface ZoomAttendee {
   wantsUpdates: boolean;
   createdAt: string;
 }
+
+// A message on the /refer/me notice board (GET /api/referrals/notices, /api/admin/notices).
+export interface AmbassadorNotice {
+  id: string;
+  title: string;
+  body: string;
+  linkUrl: string | null;
+  linkLabel: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AmbassadorNoticeInput {
+  title: string;
+  body: string;
+  linkUrl: string;
+  linkLabel: string;
+  expiresAt: string | null;
+}

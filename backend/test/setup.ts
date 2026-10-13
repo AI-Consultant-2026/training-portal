@@ -9,6 +9,7 @@ afterEach(async () => {
     "email_campaigns",
     "email_unsubscribes",
     "zoom_attendees",
+    "ambassador_notices",
     "leads",
     "course_feedback",
     "partners",

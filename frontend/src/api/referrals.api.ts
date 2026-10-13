@@ -1,5 +1,6 @@
 import {
   AdminReferral,
+  AmbassadorNotice,
   DataPlan,
   PayoutConfig,
   PayoutOutcome,
@@ -15,6 +16,11 @@ import { axiosClient } from "./axiosClient";
 export async function fetchMyReferralSummary(): Promise<MyReferralSummary> {
   const res = await axiosClient.get<{ referral: MyReferralSummary }>("/referrals/me");
   return res.data.referral;
+}
+
+export async function fetchNotices(): Promise<AmbassadorNotice[]> {
+  const res = await axiosClient.get<{ notices: AmbassadorNotice[] }>("/referrals/notices");
+  return res.data.notices;
 }
 
 export async function setRewardPreference(rewardType: ReferralRewardType): Promise<ReferralRewardType> {

@@ -2,6 +2,7 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { config } from "../config";
 import * as referralsController from "../controllers/referrals.controller";
+import * as ambassadorNoticesController from "../controllers/ambassadorNotices.controller";
 import { authenticate } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
 import {
@@ -34,6 +35,8 @@ referralsRouter.post(
 );
 
 referralsRouter.get("/me", authenticate, referralsController.getMySummary);
+// Notice board messages from the Paleon team (logged-in only: they can carry Zoom passcodes).
+referralsRouter.get("/notices", authenticate, ambassadorNoticesController.listActive);
 referralsRouter.patch(
   "/me/reward-preference",
   authenticate,

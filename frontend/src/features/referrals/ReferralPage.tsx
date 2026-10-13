@@ -6,6 +6,7 @@ import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { downloadPrintKit, PrintDesign, PrintKind } from "../../api/referrals.api";
 import { cardShareLink } from "./shareCard";
+import { NoticeBoard } from "./NoticeBoard";
 import { ShareCardMaker, VideoPack } from "./ShareKit";
 import { MyReferralSummary, ReferralLeaderboard, ReferralRewardType } from "../../types/api";
 import {
@@ -74,6 +75,8 @@ export function ReferralPage() {
           <Alert message={error} />
         </div>
       )}
+
+      <NoticeBoard />
 
       <ShareCard summary={summary} />
 

@@ -126,6 +126,9 @@ export function AdminDashboardPage() {
           <Link to="/admin/zoom-attendees" className="text-sm font-medium text-blue-600 hover:underline">
             Zoom attendees →
           </Link>
+          <Link to="/admin/notices" className="text-sm font-medium text-blue-600 hover:underline">
+            Notice board →
+          </Link>
           <Link
             to="/admin/partner-pipeline"
             className="text-sm font-medium text-blue-600 hover:underline"

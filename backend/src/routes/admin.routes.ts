@@ -3,6 +3,12 @@ import * as adminController from "../controllers/admin.controller";
 import * as emailCampaignsController from "../controllers/emailCampaigns.controller";
 import * as referralsController from "../controllers/referrals.controller";
 import * as zoomAttendeesController from "../controllers/zoomAttendees.controller";
+import * as ambassadorNoticesController from "../controllers/ambassadorNotices.controller";
+import {
+  createNoticeSchema,
+  noticeIdSchema,
+  updateNoticeSchema,
+} from "../validators/ambassadorNotices.validators";
 import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import * as feedbackController from "../controllers/feedback.controller";
@@ -56,6 +62,11 @@ adminRouter.get("/candidates", adminController.listCandidates);
 adminRouter.get("/course-progress", adminController.getCourseProgress);
 adminRouter.get("/zoom-attendees", zoomAttendeesController.list);
 adminRouter.delete("/zoom-attendees/:id", zoomAttendeesController.remove);
+// Notice board shown to ambassadors at the top of /refer/me.
+adminRouter.get("/notices", ambassadorNoticesController.listAll);
+adminRouter.post("/notices", validate(createNoticeSchema), ambassadorNoticesController.create);
+adminRouter.patch("/notices/:id", validate(updateNoticeSchema), ambassadorNoticesController.update);
+adminRouter.delete("/notices/:id", validate(noticeIdSchema), ambassadorNoticesController.remove);
 adminRouter.get("/payments/:id/receipt", adminController.downloadPaymentReceipt);
 adminRouter.get("/feedback", feedbackController.listForAdmin);
 adminRouter.patch("/feedback/:id", validate(approveFeedbackSchema), feedbackController.setApproved);

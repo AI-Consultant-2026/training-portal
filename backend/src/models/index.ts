@@ -27,6 +27,7 @@ import { User, initUserModel } from "./user.model";
 import { VideoCheckpoint, initVideoCheckpointModel } from "./videoCheckpoint.model";
 import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCheckpointAnswer.model";
 import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
+import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
 
 const databaseUrl =
   process.env.NODE_ENV === "test"
@@ -74,6 +75,7 @@ initEmailCampaignModel(sequelize);
 initEmailCampaignRecipientModel(sequelize);
 initEmailUnsubscribeModel(sequelize);
 initZoomAttendeeModel(sequelize);
+initAmbassadorNoticeModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -173,6 +175,7 @@ EmailCampaign.hasMany(EmailCampaignRecipient, { foreignKey: "campaignId", as: "r
 EmailCampaignRecipient.belongsTo(EmailCampaign, { foreignKey: "campaignId", as: "campaign" });
 
 export {
+  AmbassadorNotice,
   Assignment,
   AssignmentSubmission,
   Capstone,

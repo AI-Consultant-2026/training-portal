@@ -8,6 +8,8 @@ import {
   Partner,
   RefundStatus,
   ZoomAttendee,
+  AmbassadorNotice,
+  AmbassadorNoticeInput,
 } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
@@ -104,6 +106,25 @@ export async function deleteLead(id: string): Promise<void> {
 export async function fetchZoomAttendees(): Promise<ZoomAttendee[]> {
   const res = await axiosClient.get<{ attendees: ZoomAttendee[] }>("/admin/zoom-attendees");
   return res.data.attendees;
+}
+
+export async function fetchAdminNotices(): Promise<AmbassadorNotice[]> {
+  const res = await axiosClient.get<{ notices: AmbassadorNotice[] }>("/admin/notices");
+  return res.data.notices;
+}
+
+export async function createNotice(input: AmbassadorNoticeInput): Promise<AmbassadorNotice> {
+  const res = await axiosClient.post<{ notice: AmbassadorNotice }>("/admin/notices", input);
+  return res.data.notice;
+}
+
+export async function updateNotice(id: string, input: AmbassadorNoticeInput): Promise<AmbassadorNotice> {
+  const res = await axiosClient.patch<{ notice: AmbassadorNotice }>(`/admin/notices/${id}`, input);
+  return res.data.notice;
+}
+
+export async function deleteNotice(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/notices/${id}`);
 }
 
 export async function deleteZoomAttendee(id: string): Promise<void> {
