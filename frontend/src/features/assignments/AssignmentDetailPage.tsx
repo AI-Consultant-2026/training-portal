@@ -105,7 +105,7 @@ export function AssignmentDetailPage() {
               Score: {mySubmission!.score} / {assignment.pointsTotal}
             </p>
             {mySubmission!.feedback && (
-              <p className="mt-2 text-sm text-gray-700">Feedback: {mySubmission!.feedback}</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">Feedback: {mySubmission!.feedback}</p>
             )}
           </div>
         </div>
