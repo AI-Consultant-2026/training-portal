@@ -14,7 +14,9 @@ export function buildCapstoneGradedEmail(
     `Your capstone submission for "${capstone.title}" in ${course.title} has been graded. Score: ${score}.`,
   ];
   if (feedback) {
-    lines.push(`Feedback: ${feedback}`);
+    // Keep the marker's paragraphs: each blank-line-separated block becomes its own <p>.
+    const paragraphs = feedback.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+    lines.push(`Feedback: ${paragraphs[0] ?? ""}`, ...paragraphs.slice(1));
   }
 
   return {

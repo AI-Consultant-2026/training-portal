@@ -13,7 +13,9 @@ export function buildAssignmentGradedEmail(
     `Your submission for "${assignment.title}" in ${course.title} has been graded. Score: ${submission.score ?? "N/A"}.`,
   ];
   if (submission.feedback) {
-    lines.push(`Feedback: ${submission.feedback}`);
+    // Keep the marker's paragraphs: each blank-line-separated block becomes its own <p>.
+    const paragraphs = submission.feedback.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+    lines.push(`Feedback: ${paragraphs[0] ?? ""}`, ...paragraphs.slice(1));
   }
 
   return {
