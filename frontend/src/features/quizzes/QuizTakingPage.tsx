@@ -134,6 +134,11 @@ export function QuizTakingPage() {
                   {r.isCorrect ? "Correct" : "Incorrect"}
                 </p>
                 {r.explanation && <p className="mt-1 text-sm text-gray-600">{r.explanation}</p>}
+                {r.feedback && (
+                  <p className="mt-2 whitespace-pre-wrap rounded-md bg-amber-50 p-3 text-sm text-gray-800">
+                    <span className="font-semibold">Tutor feedback:</span> {r.feedback}
+                  </p>
+                )}
               </li>
             ))}
           </ul>

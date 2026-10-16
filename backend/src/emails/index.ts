@@ -14,7 +14,7 @@ import {
 } from "./templates/payments";
 import { buildLeadFollowUpEmail, buildLeadWelcomeEmail, FollowUpStep } from "./templates/leadNurture";
 import { buildPasswordResetEmail } from "./templates/passwordReset";
-import { buildQuizGradedEmail } from "./templates/quizGraded";
+import { buildQuizGradedEmail, QuizAnswerFeedback } from "./templates/quizGraded";
 import { buildWelcomeEmail } from "./templates/welcome";
 
 async function sendEmail(message: EmailMessage): Promise<void> {
@@ -58,8 +58,9 @@ export async function sendQuizGradedEmail(
   quiz: { title: string },
   course: { title: string },
   score: number | null,
+  feedback: QuizAnswerFeedback[] = [],
 ): Promise<void> {
-  await sendEmail(buildQuizGradedEmail(user, quiz, course, score));
+  await sendEmail(buildQuizGradedEmail(user, quiz, course, score, feedback));
 }
 
 export async function sendLeadNotificationEmail(lead: {

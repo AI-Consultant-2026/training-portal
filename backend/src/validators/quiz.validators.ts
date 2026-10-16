@@ -23,6 +23,7 @@ export const gradeQuizAttemptSchema = z.object({
         z.object({
           responseId: z.string().uuid(),
           pointsEarned: z.number().int().min(0),
+          feedback: z.string().trim().max(2000).optional(),
         }),
       )
       .min(1),

@@ -588,6 +588,42 @@ describe("Quiz short-answer manual grading", () => {
     expect(graded!.pointsEarned).toBe(1);
   });
 
+  it("stores marker feedback on a short answer, shows it to the student and puts it in the email", async () => {
+    const instructor = await createInstructor();
+    const setup = await createCourseWithGradableQuiz(instructor.id);
+    const student = await registerStudent("gradequizstudent8@example.com");
+    await Enrollment.create({ courseId: setup.course.id, studentId: student.id });
+    const studentToken = await loginAs("gradequizstudent8@example.com");
+    const { attemptId } = await startAndSubmitGradable(setup.quiz.id, studentToken, setup);
+
+    const pending = (await QuizResponse.findAll({ where: { attemptId } })).find(
+      (r) => r.isCorrect === null,
+    )!;
+
+    const instructorToken = await loginAs("jest-instructor@example.com");
+    const res = await request(app)
+      .patch(`/api/quiz-attempts/${attemptId}/grade`)
+      .set("Authorization", `Bearer ${instructorToken}`)
+      .send({ responses: [{ responseId: pending.id, pointsEarned: 1, feedback: "Good start: also mention chlorophyll." }] });
+
+    expect(res.status).toBe(200);
+    const graded = await QuizResponse.findByPk(pending.id);
+    expect(graded!.feedback).toBe("Good start: also mention chlorophyll.");
+
+    const studentView = await request(app)
+      .get(`/api/quizzes/${setup.quiz.id}/attempts/${attemptId}`)
+      .set("Authorization", `Bearer ${studentToken}`);
+    expect(studentView.status).toBe(200);
+    const shortAnswer = studentView.body.attempt.responses.find((r: { id: string }) => r.id === pending.id);
+    expect(shortAnswer.feedback).toBe("Good start: also mention chlorophyll.");
+
+    const gradedEmail = memAdapter.sentMessages.find(
+      (m) => m.to === student.email && m.subject.includes("graded"),
+    );
+    expect(gradedEmail!.text).toContain("Explain photosynthesis briefly.");
+    expect(gradedEmail!.text).toContain("Good start: also mention chlorophyll.");
+  });
+
   it("rejects a grade payload that doesn't exactly match the attempt's pending responses", async () => {
     const instructor = await createInstructor();
     const setup = await createCourseWithGradableQuiz(instructor.id);

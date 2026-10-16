@@ -60,7 +60,7 @@ export async function fetchPendingQuizReviews(): Promise<QuizPendingReview[]> {
 
 export interface GradeQuizAttemptInput {
   attemptId: string;
-  responses: { responseId: string; pointsEarned: number }[];
+  responses: { responseId: string; pointsEarned: number; feedback?: string }[];
 }
 
 export async function gradeQuizAttempt(input: GradeQuizAttemptInput): Promise<QuizAttemptDetail> {

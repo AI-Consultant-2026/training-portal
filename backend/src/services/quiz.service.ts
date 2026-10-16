@@ -101,6 +101,7 @@ function serializeGradedResponse(
     isCorrect: response.isCorrect,
     pointsEarned: response.pointsEarned,
     points: question?.points ?? null,
+    feedback: response.feedback ?? null,
     explanation: question?.explanation ?? null,
     answers: answers.map((a) => ({ id: a.id, answerText: a.answerText, isCorrect: a.isCorrect })),
   };
@@ -398,6 +399,7 @@ export async function listPendingReviewsForInstructor(user: { id: string; role: 
 interface GradeResponseInput {
   responseId: string;
   pointsEarned: number;
+  feedback?: string;
 }
 
 export async function gradeAttempt(
@@ -459,6 +461,7 @@ export async function gradeAttempt(
       response.pointsEarned = grade.pointsEarned;
       response.isCorrect = grade.pointsEarned >= question.points;
       response.markedAt = new Date();
+      response.feedback = grade.feedback ? grade.feedback : null;
       await response.save({ transaction });
     }
 
@@ -477,7 +480,15 @@ export async function gradeAttempt(
     // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang
     // quiz submission; the grade itself is already saved at this point.
     emails
-      .sendQuizGradedEmail(student, quiz, course, result.score)
+      .sendQuizGradedEmail(
+        student,
+        quiz,
+        course,
+        result.score,
+        result.responses
+          .filter((r) => r.feedback)
+          .map((r) => ({ questionText: r.questionText, feedback: r.feedback as string })),
+      )
       .catch((err) => logger.error("Failed to send quiz graded email", err));
   }
 

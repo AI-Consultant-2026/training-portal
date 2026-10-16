@@ -14,6 +14,7 @@ export function GradeQuizAttemptPage() {
   const navigate = useNavigate();
   const { attemptToGrade: attempt, status, gradeStatus, error } = useAppSelector((state) => state.quizzes);
   const [pointsByResponse, setPointsByResponse] = useState<Record<string, string>>({});
+  const [feedbackByResponse, setFeedbackByResponse] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (quizId && attemptId) {
@@ -36,7 +37,10 @@ export function GradeQuizAttemptPage() {
     if (!attemptId || !attempt) return;
     const responses = attempt.responses
       .filter((r) => r.isCorrect === null)
-      .map((r) => ({ responseId: r.id, pointsEarned: Number(pointsByResponse[r.id] ?? 0) }));
+      .map((r) => {
+        const feedback = feedbackByResponse[r.id]?.trim();
+        return { responseId: r.id, pointsEarned: Number(pointsByResponse[r.id] ?? 0), ...(feedback ? { feedback } : {}) };
+      });
     const result = await dispatch(gradeQuizAttempt({ attemptId, responses }));
     if (gradeQuizAttempt.fulfilled.match(result)) {
       navigate("/instructor/quiz-grading");
@@ -94,6 +98,19 @@ export function GradeQuizAttemptPage() {
                   {r.explanation && (
                     <p className="mt-2 text-sm text-gray-500">Model answer: {r.explanation}</p>
                   )}
+                  <label htmlFor={`feedback-${r.id}`} className="mt-3 block text-sm font-medium text-gray-700">
+                    Feedback to the student (optional)
+                  </label>
+                  <textarea
+                    id={`feedback-${r.id}`}
+                    rows={3}
+                    maxLength={2000}
+                    className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm"
+                    value={feedbackByResponse[r.id] ?? ""}
+                    onChange={(e) =>
+                      setFeedbackByResponse((prev) => ({ ...prev, [r.id]: e.target.value }))
+                    }
+                  />
                 </div>
               ) : (
                 <p className={`mt-2 text-sm ${r.isCorrect ? "text-green-700" : "text-red-700"}`}>

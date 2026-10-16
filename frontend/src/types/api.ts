@@ -456,6 +456,7 @@ export interface QuizGradedResponse {
   isCorrect: boolean | null;
   pointsEarned: number | null;
   points: number | null;
+  feedback?: string | null;
   explanation: string | null;
   answers: QuizAnswerOptionGraded[];
 }

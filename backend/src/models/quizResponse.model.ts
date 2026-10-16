@@ -8,11 +8,12 @@ export interface QuizResponseAttributes {
   isCorrect: boolean | null;
   pointsEarned: number | null;
   markedAt: Date | null;
+  feedback: string | null;
 }
 
 export type QuizResponseCreationAttributes = Optional<
   QuizResponseAttributes,
-  "id" | "isCorrect" | "pointsEarned" | "markedAt"
+  "id" | "isCorrect" | "pointsEarned" | "markedAt" | "feedback"
 >;
 
 export class QuizResponse
@@ -26,6 +27,7 @@ export class QuizResponse
   declare isCorrect: boolean | null;
   declare pointsEarned: number | null;
   declare markedAt: Date | null;
+  declare feedback: string | null;
 }
 
 export function initQuizResponseModel(sequelize: Sequelize) {
@@ -52,6 +54,7 @@ export function initQuizResponseModel(sequelize: Sequelize) {
       isCorrect: { type: DataTypes.BOOLEAN, allowNull: true, field: "is_correct" },
       pointsEarned: { type: DataTypes.INTEGER, allowNull: true, field: "points_earned" },
       markedAt: { type: DataTypes.DATE, allowNull: true, field: "marked_at" },
+      feedback: { type: DataTypes.TEXT, allowNull: true },
     },
     {
       sequelize,
