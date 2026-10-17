@@ -14,8 +14,8 @@ import {
 } from "../models";
 import { ApiError } from "../utils/ApiError";
 
-// Cooling-off refunds (2026-10-12), matching terms.html section 5: a full refund within
-// REFUND_WINDOW_DAYS of the first payment (the deposit, for instalments), as long as the
+// Cooling-off refunds (2026-10-12), matching terms.html section 5: a full refund (less a
+// ₦2,500 administrative charge) within REFUND_WINDOW_DAYS of the first payment (the deposit, for instalments), as long as the
 // student hasn't started Day 2 -- completed a Day 2 lesson or submitted a Day 2 quiz or
 // assignment -- and has never had a refund before. The money itself is refunded in the
 // Paystack dashboard; recording it here locks the course and keeps the one-refund rule.
