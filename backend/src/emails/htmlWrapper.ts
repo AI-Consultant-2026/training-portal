@@ -35,7 +35,7 @@ export function wrapHtml(bodyLines: BodyLine[]): string {
 
   return `<div style="font-family: -apple-system, Helvetica, Arial, sans-serif; background: #f9fafb; padding: 24px;">
   <div style="max-width: 480px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px;">
-    <p style="margin: 0 0 16px; font-weight: 600; color: #111827;">Training Portal</p>
+    <p style="margin: 0 0 16px; font-weight: 600; color: #111827;">Paleon Training</p>
     ${paragraphs}
   </div>
 </div>`;
