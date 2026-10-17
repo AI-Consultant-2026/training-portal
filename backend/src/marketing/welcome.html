@@ -693,6 +693,24 @@
   .session-video-points li::before { content: ""; position: absolute; left: 0; top: 9px; width: 10px; height: 2px; background: var(--signal); }
   .session-video-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
   @media (max-width: 560px) { .session-video-ctas .btn { width: 100%; justify-content: center; } }
+  .session-video-player figure { margin: 0; }
+  #watch .session-video-grid { align-items: start; }
+  @media (min-width: 961px) { #watch .session-video-player { position: sticky; top: 104px; } }
+  .guide-chapters { margin-top: 18px; }
+  .guide-chapters-title { margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--signal-2); }
+  .guide-chapters ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .guide-chapter { font: inherit; font-size: 13px; color: var(--paper); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+  @media (max-width: 960px) {
+    .guide-chapters ol { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+    .guide-chapter { white-space: nowrap; }
+  }
+  .guide-chapter span { color: var(--signal-2); font-variant-numeric: tabular-nums; margin-right: 4px; }
+  .guide-chapter:hover, .guide-chapter:focus-visible { border-color: var(--signal); background: rgba(232,134,60,.14); }
+  .guide-steps { margin: 20px 0 0; padding-left: 22px; display: grid; gap: 8px; }
+  .guide-steps li { font-size: 15px; line-height: 1.5; color: var(--paper); }
+  .guide-steps li::marker { color: var(--signal-2); font-weight: 700; }
+  .guide-small { margin: 16px 0 0; font-size: 13px; line-height: 1.55; color: #A9B0BD; }
+  .guide-small a { color: var(--signal-2); }
 
   /* 500,000 graduates section, straight under the hero (2026-10-17) */
   .grads-section { background: var(--paper); color: var(--charcoal); padding: clamp(48px, 7vw, 88px) 0; border-bottom: 1px solid var(--line-light); }
@@ -1135,30 +1153,67 @@
     </div>
   </section>
 
-  <!-- ============ AMBASSADOR HOUR RECORDING (2026-10-11) ============ -->
+  <!-- ============ AMBASSADOR GUIDE VIDEO (2026-10-17; replaced the 10 Oct Ambassador Hour recording) ============ -->
   <section class="section session-video-section" id="watch" aria-labelledby="watchTitle">
     <div class="wrap session-video-grid">
-      <figure class="session-video-player">
-        <video controls playsinline preload="none" poster="/videos/home/paleon-ambassador-hour-10-oct-2026.jpg" aria-label="Video: Paleon Ambassador Hour, full session recorded 10 October 2026">
-          <source src="/videos/home/paleon-ambassador-hour-10-oct-2026.mp4" type="video/mp4">
-        </video>
-        <figcaption>Paleon Ambassador Hour &middot; recorded live on Zoom, Saturday 10 October 2026 &middot; 57 min</figcaption>
-      </figure>
+      <div class="session-video-player">
+        <figure>
+          <video id="ambassadorGuide" controls playsinline preload="metadata" poster="/videos/home/paleon-ambassador-guide-earn-and-rewards.jpg" aria-label="Video: Earn and Rewards, the Paleon Ambassador guide (5 minutes 53 seconds)">
+            <source src="/videos/home/paleon-ambassador-guide-earn-and-rewards.mp4" type="video/mp4">
+          </video>
+          <figcaption>Earn and Rewards: the Paleon Ambassador guide &middot; 5 min 53 s &middot; captions on screen, so it works with the sound off</figcaption>
+        </figure>
+        <nav class="guide-chapters" aria-label="Jump to a part of the video">
+          <p class="guide-chapters-title">Jump to a chapter</p>
+          <ol>
+            <li><button type="button" class="guide-chapter" data-t="0"><span>0:00</span> What you earn</button></li>
+            <li><button type="button" class="guide-chapter" data-t="45"><span>0:45</span> Your Refer &amp; Earn page</button></li>
+            <li><button type="button" class="guide-chapter" data-t="72"><span>1:12</span> Notice board</button></li>
+            <li><button type="button" class="guide-chapter" data-t="87"><span>1:27</span> Your PLN code</button></li>
+            <li><button type="button" class="guide-chapter" data-t="105"><span>1:45</span> Share cards</button></li>
+            <li><button type="button" class="guide-chapter" data-t="130"><span>2:10</span> Free lesson posts</button></li>
+            <li><button type="button" class="guide-chapter" data-t="148"><span>2:28</span> Video pack</button></li>
+            <li><button type="button" class="guide-chapter" data-t="181"><span>3:01</span> Print flyers and cards</button></li>
+            <li><button type="button" class="guide-chapter" data-t="209"><span>3:29</span> Strangers can sign up under you</button></li>
+            <li><button type="button" class="guide-chapter" data-t="251"><span>4:11</span> How you get paid</button></li>
+            <li><button type="button" class="guide-chapter" data-t="301"><span>5:01</span> Our recommendation</button></li>
+          </ol>
+        </nav>
+      </div>
       <div class="session-video-copy">
-        <span class="section-eyebrow">Watch the full session &middot; free</span>
-        <h2 class="section-title" id="watchTitle">Graduate, corper or professional? <em>Watch this before you pick your next skill.</em></h2>
-        <p class="session-video-lede">A degree alone won&rsquo;t get you hired. In one hour we show you the digital skills Nigerian employers actually check for, and how to prove them with real work.</p>
+        <span class="section-eyebrow">Paleon Ambassadors &middot; free to join</span>
+        <h2 class="section-title" id="watchTitle">Help a friend learn a job-ready skill. <em>Earn &#8358;5,000 when they do.</em></h2>
+        <p class="session-video-lede">This 6-minute guide shows exactly how Paleon Ambassadors earn. Share your personal code, and every person who joins with it and pays for a course in full earns you &#8358;5,000 in airtime, data or course credit. They get &#8358;3,000 airtime too.</p>
+        <ol class="guide-steps">
+          <li><strong>Register free</strong> and open <em>Refer &amp; earn</em>. Your code is waiting.</li>
+          <li><strong>Share ready-made posts:</strong> free lessons, share cards, videos and flyers, all carrying your code.</li>
+          <li><strong>Get rewarded</strong> when their course is paid in full. They can start for just &#8358;20,000.</li>
+        </ol>
         <ul class="session-video-points">
-          <li>Why &ldquo;show what you can do&rdquo; beats a CV full of claims</li>
-          <li>Cyber Security, GIS &amp; Drones, Digital Marketing and HSE, compared</li>
-          <li>How ambassadors earn airtime or data for every friend who joins</li>
+          <li>No cost to join and no sales targets</li>
+          <li>People you&rsquo;ve never met count too, when they sign up from your group posts</li>
+          <li>Track who has joined, who has paid and what you&rsquo;ve earned</li>
         </ul>
         <div class="session-video-ctas">
-          <a class="btn btn-signal btn-lg" href="/register">Register as an Ambassador</a>
+          <a class="btn btn-signal btn-lg" href="/register">Become an Ambassador, free</a>
           <a class="btn btn-whatsapp btn-lg" href="https://chat.whatsapp.com/HzHcFf9iq4h81XKxWZ8wYL" target="_blank" rel="noopener" aria-label="Join the Paleon Ambassadors WhatsApp group (opens WhatsApp)">Join our WhatsApp group</a>
         </div>
+        <p class="guide-small">Already registered? <a href="/refer/me">Open Refer &amp; earn</a>. Rewards are sent by the Paleon team within a few working days of a course being paid in full. Self-referrals and duplicate accounts don&rsquo;t qualify. <a href="/refer">Full programme details</a>.</p>
       </div>
     </div>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Earn and Rewards: the Paleon Ambassador guide",
+      "description": "How Paleon Ambassadors earn N5,000 in airtime, data or course credit for every person who joins with their code and pays for a course in full, using free lesson posts, share cards, videos and flyers.",
+      "thumbnailUrl": "https://paleontraining.com/videos/home/paleon-ambassador-guide-earn-and-rewards.jpg",
+      "contentUrl": "https://paleontraining.com/videos/home/paleon-ambassador-guide-earn-and-rewards.mp4",
+      "uploadDate": "2026-10-17",
+      "duration": "PT5M53S",
+      "publisher": { "@type": "Organization", "name": "Paleon Training Limited" }
+    }
+    </script>
   </section>
 
   <!-- ============ START HERE (one path, 2026-09-25) ============ -->
