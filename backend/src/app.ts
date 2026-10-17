@@ -566,6 +566,11 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "articles", req.params.file));
   });
+  // Homepage section photos (e.g. the #graduates "500,000 graduates" section).
+  app.get("/images/home/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "home", req.params.file));
+  });
   app.get("/gis-mapping-oil-and-gas-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "gis-mapping-oil-and-gas-nigeria.html"));
   });

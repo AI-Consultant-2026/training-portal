@@ -694,6 +694,19 @@
   .session-video-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
   @media (max-width: 560px) { .session-video-ctas .btn { width: 100%; justify-content: center; } }
 
+  /* 500,000 graduates section, straight under the hero (2026-10-17) */
+  .grads-section { background: var(--paper); color: var(--charcoal); padding: clamp(48px, 7vw, 88px) 0; border-bottom: 1px solid var(--line-light); }
+  .grads-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(28px, 4vw, 64px); align-items: center; }
+  @media (max-width: 960px) { .grads-grid { grid-template-columns: minmax(0, 1fr); } }
+  .grads-photo { margin: 0; }
+  .grads-photo img { display: block; width: 100%; height: auto; aspect-ratio: 1168 / 880; object-fit: cover; border-radius: var(--radius-lg); box-shadow: 0 20px 50px rgba(16,21,31,0.22), 0 0 0 4px rgba(232,134,60,0.22); }
+  .grads-num { font-family: var(--font-display); font-weight: 700; font-size: clamp(64px, 9vw, 120px); line-height: 1; color: var(--signal-deep); margin: 10px 0 14px; letter-spacing: -1px; }
+  .grads-section .section-title { color: var(--charcoal); font-size: clamp(24px, 2.6vw, 34px); line-height: 1.22; max-width: 30ch; }
+  .grads-section .section-title em { font-style: normal; color: var(--signal-deep); }
+  .grads-lede { font-size: 17px; line-height: 1.6; color: var(--charcoal-soft); margin: 16px 0 0; max-width: 52ch; }
+  .grads-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  @media (max-width: 560px) { .grads-ctas .btn { width: 100%; justify-content: center; } }
+
   /* Start here strip + course card free-lesson link (2026-09-25) */
   .start-section { background: var(--paper-2); padding: clamp(48px, 7vw, 80px) 0; }
   .start-steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -1015,6 +1028,7 @@
     <nav class="main-nav">
       <ul class="nav-links">
         <li><a href="#top">Home</a></li>
+        <li><a href="#graduates">Why skills</a></li>
         <li><a href="#courses">Courses</a></li>
         <li><a href="/executive-training">Corporate Nigeria</a></li>
         <li><a href="#why">Why Paleon</a></li>
@@ -1099,6 +1113,25 @@
       <span class="ticker-item">Start any course for &#8358;20,000 &mdash; pay the balance later. Try a free lesson first. &#127891;&#127475;&#127468;</span>
     </div>
   </div>
+
+  <!-- ============ 500,000 GRADUATES (2026-10-17) ============ -->
+  <section class="section grads-section" id="graduates" aria-labelledby="gradsTitle">
+    <div class="wrap grads-grid">
+      <figure class="grads-photo">
+        <img src="/images/home/frustrated-graduate.jpg" width="1168" height="880" loading="lazy" alt="A frustrated young graduate at his table holding his degree, with a laptop full of job rejections and a pile of applications">
+      </figure>
+      <div class="grads-copy">
+        <span class="section-eyebrow">The graduate reality</span>
+        <p class="grads-num" aria-hidden="true">500,000</p>
+        <h2 class="section-title" id="gradsTitle">Nigeria produces approximately 500,000 university graduates every year, <em>creating a large and growing demand for practical, job-ready digital skills.</em></h2>
+        <p class="grads-lede">Your degree puts you in the queue with everyone else. Practical skills and a real project you can show an employer help you stand out.</p>
+        <div class="grads-ctas">
+          <a class="btn btn-signal btn-lg" href="#courses">Start a course for &#8358;20,000</a>
+          <a class="btn btn-outline-dark btn-lg" href="#career-match">Find your skill in 2 minutes</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ AMBASSADOR HOUR RECORDING (2026-10-11) ============ -->
   <section class="section session-video-section" id="watch" aria-labelledby="watchTitle">
