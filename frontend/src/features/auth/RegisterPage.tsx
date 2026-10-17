@@ -127,7 +127,9 @@ export function RegisterPage() {
   });
   const [referralCode, setReferralCode] = useState(searchParams.get("ref")?.trim().toUpperCase() ?? "");
   const [referralCheck, setReferralCheck] = useState<
-    { state: "idle" | "checking" } | { state: "valid"; name: string | null } | { state: "invalid" }
+    | { state: "idle" | "checking" }
+    | { state: "valid"; name: string | null; rep: boolean }
+    | { state: "invalid" }
   >({ state: "idle" });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -146,7 +148,7 @@ export function RegisterPage() {
         const result = await validateReferralCode(code);
         if (cancelled) return;
         setReferralCheck(
-          result.valid ? { state: "valid", name: result.referrerName } : { state: "invalid" },
+          result.valid ? { state: "valid", name: result.referrerName, rep: result.kind === "rep" } : { state: "invalid" },
         );
       } catch {
         if (!cancelled) setReferralCheck({ state: "idle" });
@@ -417,7 +419,12 @@ export function RegisterPage() {
               {referralCheck.state === "checking" && (
                 <p className="-mt-2 text-xs text-gray-500">Checking code&hellip;</p>
               )}
-              {referralCheck.state === "valid" && (
+              {referralCheck.state === "valid" && referralCheck.rep && (
+                <p className="-mt-2 text-xs text-green-600">
+                  Code applied{referralCheck.name ? `: your Paleon adviser is ${referralCheck.name}` : ""}.
+                </p>
+              )}
+              {referralCheck.state === "valid" && !referralCheck.rep && (
                 <p className="-mt-2 text-xs text-green-600">
                   {referralCheck.name ? `Invited by ${referralCheck.name}. ` : "Code applied. "}
                   You&apos;ll get a welcome bonus when you pay for your first course.

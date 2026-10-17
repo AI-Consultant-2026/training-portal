@@ -6,6 +6,7 @@ import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { attachReferralOnRegister } from "./referral.service";
+import { attachSalesRepOnRegister } from "./salesRep.service";
 import { recordAttendance } from "./zoomAttendee.service";
 import {
   findValidRefreshToken,
@@ -93,8 +94,11 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
   // Best-effort: a malformed or unknown referral code must never fail a real signup.
   // attachReferralOnRegister already swallows the "no such code" case; this guards
   // against anything unexpected (e.g. a transient DB error on the lookup).
+  // A sales rep's REP code ties the student to the rep instead (salesRep.service.ts).
   try {
-    await attachReferralOnRegister(user.id, input.referralCode);
+    if (!(await attachSalesRepOnRegister(user.id, input.referralCode))) {
+      await attachReferralOnRegister(user.id, input.referralCode);
+    }
   } catch (err) {
     logger.error("Failed to attach referral on registration", err);
   }

@@ -93,6 +93,8 @@ export async function fetchLeaderboard(): Promise<ReferralLeaderboard> {
 export interface CodeValidation {
   valid: boolean;
   referrerName: string | null;
+  // "rep" = a commission sales rep's code: the student gets no welcome bonus.
+  kind?: "ambassador" | "rep";
 }
 
 export async function validateReferralCode(code: string): Promise<CodeValidation> {

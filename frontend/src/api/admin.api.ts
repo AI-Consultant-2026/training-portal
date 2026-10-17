@@ -10,6 +10,10 @@ import {
   ZoomAttendee,
   AmbassadorNotice,
   AmbassadorNoticeInput,
+  SalesRep,
+  SalesRepDetail,
+  SalesRepInput,
+  SalesRepPaymentInput,
 } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
@@ -184,4 +188,35 @@ export async function openPaymentReceipt(paymentId: string): Promise<void> {
   const url = window.URL.createObjectURL(res.data as Blob);
   if (tab) tab.location.href = url;
   else window.location.href = url;
+}
+
+// Commission sales reps (/admin/sales-reps).
+export async function fetchSalesReps(): Promise<SalesRep[]> {
+  const res = await axiosClient.get<{ reps: SalesRep[] }>("/admin/sales-reps");
+  return res.data.reps;
+}
+
+export async function fetchSalesRep(id: string): Promise<SalesRepDetail> {
+  const res = await axiosClient.get<{ rep: SalesRepDetail }>(`/admin/sales-reps/${id}`);
+  return res.data.rep;
+}
+
+export async function createSalesRep(input: SalesRepInput): Promise<SalesRepDetail> {
+  const res = await axiosClient.post<{ rep: SalesRepDetail }>("/admin/sales-reps", input);
+  return res.data.rep;
+}
+
+export async function updateSalesRep(id: string, input: SalesRepInput): Promise<SalesRepDetail> {
+  const res = await axiosClient.patch<{ rep: SalesRepDetail }>(`/admin/sales-reps/${id}`, input);
+  return res.data.rep;
+}
+
+export async function recordSalesRepPayment(id: string, input: SalesRepPaymentInput): Promise<SalesRepDetail> {
+  const res = await axiosClient.post<{ rep: SalesRepDetail }>(`/admin/sales-reps/${id}/payments`, input);
+  return res.data.rep;
+}
+
+export async function deleteSalesRepPayment(id: string, paymentId: string): Promise<SalesRepDetail> {
+  const res = await axiosClient.delete<{ rep: SalesRepDetail }>(`/admin/sales-reps/${id}/payments/${paymentId}`);
+  return res.data.rep;
 }

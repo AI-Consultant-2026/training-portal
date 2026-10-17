@@ -4,6 +4,14 @@ import * as emailCampaignsController from "../controllers/emailCampaigns.control
 import * as referralsController from "../controllers/referrals.controller";
 import * as zoomAttendeesController from "../controllers/zoomAttendees.controller";
 import * as ambassadorNoticesController from "../controllers/ambassadorNotices.controller";
+import * as salesRepsController from "../controllers/salesReps.controller";
+import {
+  createSalesRepSchema,
+  deleteSalesRepPaymentSchema,
+  recordSalesRepPaymentSchema,
+  salesRepIdSchema,
+  updateSalesRepSchema,
+} from "../validators/salesReps.validators";
 import {
   createNoticeSchema,
   noticeIdSchema,
@@ -67,6 +75,18 @@ adminRouter.get("/notices", ambassadorNoticesController.listAll);
 adminRouter.post("/notices", validate(createNoticeSchema), ambassadorNoticesController.create);
 adminRouter.patch("/notices/:id", validate(updateNoticeSchema), ambassadorNoticesController.update);
 adminRouter.delete("/notices/:id", validate(noticeIdSchema), ambassadorNoticesController.remove);
+
+// Commission sales reps: REP codes, their students' sales, commission owed and payments made.
+adminRouter.get("/sales-reps", salesRepsController.list);
+adminRouter.post("/sales-reps", validate(createSalesRepSchema), salesRepsController.create);
+adminRouter.get("/sales-reps/:id", validate(salesRepIdSchema), salesRepsController.get);
+adminRouter.patch("/sales-reps/:id", validate(updateSalesRepSchema), salesRepsController.update);
+adminRouter.post("/sales-reps/:id/payments", validate(recordSalesRepPaymentSchema), salesRepsController.recordPayment);
+adminRouter.delete(
+  "/sales-reps/:id/payments/:paymentId",
+  validate(deleteSalesRepPaymentSchema),
+  salesRepsController.deletePayment,
+);
 adminRouter.get("/payments/:id/receipt", adminController.downloadPaymentReceipt);
 adminRouter.get("/feedback", feedbackController.listForAdmin);
 adminRouter.patch("/feedback/:id", validate(approveFeedbackSchema), feedbackController.setApproved);

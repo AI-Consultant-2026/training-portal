@@ -16,6 +16,7 @@ import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { VTPASS_NETWORKS, type VtpassNetwork } from "../constants/vtpass";
 import { providerLabel } from "./payoutProvider";
+import { findActiveRepByCode } from "./salesRep.service";
 
 export type RewardParty = "referrer" | "referee";
 
@@ -242,6 +243,8 @@ export async function setPayoutPhone(userId: string, rawPhone: string): Promise<
 export interface CodeValidation {
   valid: boolean;
   referrerName: string | null;
+  // "rep" = a commission sales rep's code: no welcome bonus for the student.
+  kind?: "ambassador" | "rep";
 }
 
 export async function validateCode(rawCode: string): Promise<CodeValidation> {
@@ -252,9 +255,12 @@ export async function validateCode(rawCode: string): Promise<CodeValidation> {
     where: { referralCode: code },
     attributes: ["firstName", "lastName"],
   });
-  if (!referrer) return { valid: false, referrerName: null };
+  if (!referrer) {
+    const rep = await findActiveRepByCode(code);
+    return rep ? { valid: true, referrerName: rep.name, kind: "rep" } : { valid: false, referrerName: null };
+  }
 
-  return { valid: true, referrerName: fullName(referrer) || null };
+  return { valid: true, referrerName: fullName(referrer) || null, kind: "ambassador" };
 }
 
 export interface LeaderboardEntry {

@@ -28,6 +28,14 @@ import { VideoCheckpoint, initVideoCheckpointModel } from "./videoCheckpoint.mod
 import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCheckpointAnswer.model";
 import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
 import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
+import {
+  SalesRep,
+  SalesRepPayment,
+  SalesRepStudent,
+  initSalesRepModel,
+  initSalesRepPaymentModel,
+  initSalesRepStudentModel,
+} from "./salesRep.model";
 
 const databaseUrl =
   process.env.NODE_ENV === "test"
@@ -76,6 +84,9 @@ initEmailCampaignRecipientModel(sequelize);
 initEmailUnsubscribeModel(sequelize);
 initZoomAttendeeModel(sequelize);
 initAmbassadorNoticeModel(sequelize);
+initSalesRepModel(sequelize);
+initSalesRepStudentModel(sequelize);
+initSalesRepPaymentModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -110,6 +121,13 @@ Referral.belongsTo(User, { foreignKey: "refereeId", as: "referee" });
 Referral.belongsTo(Enrollment, { foreignKey: "qualifyingEnrollmentId", as: "qualifyingEnrollment" });
 Referral.hasMany(ReferralPayout, { foreignKey: "referralId", as: "payouts" });
 ReferralPayout.belongsTo(Referral, { foreignKey: "referralId", as: "referral" });
+
+// Commission sales reps: a student is brought in by at most one rep (unique student_id).
+SalesRep.hasMany(SalesRepStudent, { foreignKey: "salesRepId", as: "students" });
+SalesRepStudent.belongsTo(SalesRep, { foreignKey: "salesRepId", as: "salesRep" });
+SalesRepStudent.belongsTo(User, { foreignKey: "studentId", as: "student" });
+SalesRep.hasMany(SalesRepPayment, { foreignKey: "salesRepId", as: "payments" });
+SalesRepPayment.belongsTo(SalesRep, { foreignKey: "salesRepId", as: "salesRep" });
 
 CourseModule.hasMany(Assignment, { foreignKey: "moduleId", as: "assignments" });
 Assignment.belongsTo(CourseModule, { foreignKey: "moduleId", as: "module" });
@@ -194,6 +212,9 @@ export {
   ProgressTracking,
   Referral,
   ReferralPayout,
+  SalesRep,
+  SalesRepPayment,
+  SalesRepStudent,
   Quiz,
   QuizAnswer,
   QuizAttempt,

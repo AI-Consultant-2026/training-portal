@@ -15,6 +15,7 @@ const AdminCourseProgressPage = lazyImport(
   "AdminCourseProgressPage",
 );
 const AdminNoticesPage = lazyImport(() => import("../features/admin/AdminNoticesPage"), "AdminNoticesPage");
+const AdminSalesRepsPage = lazyImport(() => import("../features/admin/AdminSalesRepsPage"), "AdminSalesRepsPage");
 const AdminZoomAttendeesPage = lazyImport(
   () => import("../features/admin/AdminZoomAttendeesPage"),
   "AdminZoomAttendeesPage",
@@ -146,6 +147,7 @@ export function AppRouter() {
             <Route path="/admin/course-progress" element={<AdminCourseProgressPage />} />
             <Route path="/admin/zoom-attendees" element={<AdminZoomAttendeesPage />} />
             <Route path="/admin/notices" element={<AdminNoticesPage />} />
+            <Route path="/admin/sales-reps" element={<AdminSalesRepsPage />} />
             <Route path="/admin/capstones" element={<AdminCapstonesPage />} />
             <Route path="/admin/partner-pipeline" element={<PartnerPipelinePage />} />
             <Route path="/admin/email-client" element={<EmailClientPage />} />

@@ -156,7 +156,7 @@ describe("Referrals", () => {
     const code = await myCode("known@example.com");
 
     const ok = await request(app).post("/api/referrals/validate-code").send({ code: code.toLowerCase() });
-    expect(ok.body).toEqual({ valid: true, referrerName: "Jest Student" });
+    expect(ok.body).toEqual({ valid: true, referrerName: "Jest Student", kind: "ambassador" });
 
     const bad = await request(app).post("/api/referrals/validate-code").send({ code: "PLNNOPE99" });
     expect(bad.body).toEqual({ valid: false, referrerName: null });

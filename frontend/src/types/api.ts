@@ -788,3 +788,87 @@ export interface AmbassadorNoticeInput {
   linkLabel: string;
   expiresAt: string | null;
 }
+
+// Commission sales reps (2026-10-17), see backend salesRep.service.ts.
+export type SalesRepSaleState =
+  | "not_paid"
+  | "deposit_only"
+  | "refund_window"
+  | "qualified"
+  | "refunded"
+  | "own_account"
+  | "after_agreement";
+
+export interface SalesRepSale {
+  enrollmentId: string;
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  courseTitle: string;
+  courseFeeNgn: number;
+  state: SalesRepSaleState;
+  registeredAt: string;
+  qualifiesAt: string | null;
+  month: string | null;
+  ratePercent: number | null;
+  commissionNgn: number;
+}
+
+export interface SalesRepMonth {
+  month: string;
+  qualifiedSales: number;
+  commissionNgn: number;
+  bonusNgn: number;
+}
+
+export type SalesRepPaymentKind = "commission" | "allowance" | "other";
+
+export interface SalesRepPayment {
+  id: string;
+  kind: SalesRepPaymentKind;
+  amountNgn: number;
+  paidOn: string;
+  note: string | null;
+}
+
+export interface SalesRep {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  code: string;
+  startedAt: string;
+  endedAt: string | null;
+  notes: string | null;
+  active: boolean;
+  ambassadorReferrals: number;
+  counts: { students: number; depositOnly: number; inRefundWindow: number; qualified: number };
+  earnedNgn: number;
+  paidNgn: number;
+  balanceNgn: number;
+  upcomingNgn: number;
+  allowancePaidNgn: number;
+  otherPaidNgn: number;
+}
+
+export interface SalesRepDetail extends SalesRep {
+  sales: SalesRepSale[];
+  months: SalesRepMonth[];
+  payments: SalesRepPayment[];
+}
+
+export interface SalesRepInput {
+  name: string;
+  email: string;
+  phone: string;
+  startedAt: string;
+  endedAt: string;
+  notes: string;
+}
+
+export interface SalesRepPaymentInput {
+  kind: SalesRepPaymentKind;
+  amountNgn: number;
+  paidOn: string;
+  note: string;
+}
