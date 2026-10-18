@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import { escapeHtml } from "../emails/htmlWrapper";
 import { CampaignFromAddress } from "../models/emailCampaign.model";
 import { RecipientStatus } from "../models/emailCampaignRecipient.model";
-import { EmailCampaign, EmailCampaignRecipient, User } from "../models";
+import { EmailCampaign, EmailCampaignAttachment, EmailCampaignRecipient, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { emailAdapter, EmailMessage } from "../utils/email";
 import { logger } from "../utils/logger";
@@ -24,6 +24,22 @@ const MAX_ROWS = 2000;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const SEND_CONCURRENCY = 4;
+
+// Attachments (2026-10-18). Kept well under the ~25MB message limit of most mail servers once
+// base64-encoded (which adds a third), so a campaign with several files still gets delivered.
+export const ATTACHMENT_TYPES = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
+export const MAX_ATTACHMENT_BYTES = 7 * 1024 * 1024;
+const MAX_TOTAL_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+const MAX_ATTACHMENTS = 5;
+const MAX_CC = 10;
+// Every attribute except the file itself, for API responses.
+const ATTACHMENT_META = ["id", "campaignId", "filename", "contentType", "sizeBytes", "createdAt"];
 
 interface ParsedRow {
   rowNumber: number;
@@ -230,17 +246,38 @@ export async function getCampaign(id: string) {
   const campaign = await EmailCampaign.findByPk(id, {
     include: [
       { model: EmailCampaignRecipient, as: "recipients" },
+      { model: EmailCampaignAttachment, as: "attachments", attributes: ATTACHMENT_META },
       { model: User, as: "creator", attributes: ["firstName", "lastName", "email"] },
     ],
   });
   if (!campaign) throw ApiError.notFound("Campaign not found");
   campaign.recipients?.sort((a, b) => a.rowNumber - b.rowNumber);
+  campaign.attachments?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   return campaign;
 }
 
 export interface UpdateCampaignInput {
   fromEmail?: CampaignFromAddress;
   bodyTemplate?: string;
+  // Comma/semicolon/space-separated; "" clears it.
+  ccEmails?: string;
+}
+
+// Returns the cleaned, comma-joined list, or null when empty.
+export function normalizeCcEmails(raw: string): string | null {
+  const emails = raw
+    .split(/[\s,;]+/)
+    .map((e) => e.trim())
+    .filter(Boolean);
+  const bad = emails.filter((e) => !EMAIL_REGEX.test(e));
+  if (bad.length > 0) {
+    throw ApiError.badRequest(`These CC addresses don't look valid: ${bad.join(", ")}`);
+  }
+  const unique = [...new Map(emails.map((e) => [e.toLowerCase(), e])).values()];
+  if (unique.length > MAX_CC) {
+    throw ApiError.badRequest(`A campaign can CC at most ${MAX_CC} addresses.`);
+  }
+  return unique.length > 0 ? unique.join(", ") : null;
 }
 
 export async function updateCampaign(id: string, input: UpdateCampaignInput) {
@@ -249,9 +286,68 @@ export async function updateCampaign(id: string, input: UpdateCampaignInput) {
   if (campaign.status !== "draft") {
     throw ApiError.conflict("This campaign has already been sent or is sending, and can no longer be edited.");
   }
-  Object.assign(campaign, input);
+  const { ccEmails, ...rest } = input;
+  Object.assign(campaign, rest);
+  if (ccEmails !== undefined) campaign.ccEmails = normalizeCcEmails(ccEmails);
   await campaign.save();
   return campaign;
+}
+
+async function requireDraftCampaign(campaignId: string): Promise<EmailCampaign> {
+  const campaign = await EmailCampaign.findByPk(campaignId);
+  if (!campaign) throw ApiError.notFound("Campaign not found");
+  if (campaign.status !== "draft") {
+    throw ApiError.conflict("This campaign has already been sent or is sending.");
+  }
+  return campaign;
+}
+
+export async function addAttachment(
+  campaignId: string,
+  file: { buffer: Buffer; originalname: string; mimetype: string },
+) {
+  await requireDraftCampaign(campaignId);
+  if (!ATTACHMENT_TYPES.has(file.mimetype)) {
+    throw ApiError.badRequest("Attach a PDF, Word document, PNG or JPEG file.");
+  }
+  if (file.buffer.length === 0) throw ApiError.badRequest("This file is empty.");
+  if (file.buffer.length > MAX_ATTACHMENT_BYTES) {
+    throw ApiError.badRequest("Each attachment must be 7MB or smaller.");
+  }
+  const existing = await EmailCampaignAttachment.findAll({ where: { campaignId }, attributes: ["sizeBytes"] });
+  if (existing.length >= MAX_ATTACHMENTS) {
+    throw ApiError.badRequest(`A campaign can have at most ${MAX_ATTACHMENTS} attachments.`);
+  }
+  const total = existing.reduce((sum, a) => sum + a.sizeBytes, 0) + file.buffer.length;
+  if (total > MAX_TOTAL_ATTACHMENT_BYTES) {
+    throw ApiError.badRequest("Attachments in one campaign can add up to 10MB at most.");
+  }
+  // Keep only the base name, without characters that confuse mail apps.
+  const filename =
+    (file.originalname.split(/[\\/]/).pop() ?? "")
+      .replace(/[\u0000-\u001f"<>|]/g, "")
+      .trim()
+      .slice(-150) || "attachment";
+  const attachment = await EmailCampaignAttachment.create({
+    campaignId,
+    filename,
+    contentType: file.mimetype,
+    sizeBytes: file.buffer.length,
+    data: file.buffer,
+  });
+  const { data: _data, ...meta } = attachment.get({ plain: true });
+  return meta;
+}
+
+export async function removeAttachment(campaignId: string, attachmentId: string): Promise<void> {
+  await requireDraftCampaign(campaignId);
+  const deleted = await EmailCampaignAttachment.destroy({ where: { id: attachmentId, campaignId } });
+  if (deleted === 0) throw ApiError.notFound("Attachment not found");
+}
+
+async function loadAttachments(campaignId: string): Promise<NonNullable<EmailMessage["attachments"]>> {
+  const rows = await EmailCampaignAttachment.findAll({ where: { campaignId }, order: [["createdAt", "ASC"]] });
+  return rows.map((a) => ({ filename: a.filename, content: a.data, contentType: a.contentType }));
 }
 
 export async function setRecipientSelected(campaignId: string, recipientId: string, isSelected: boolean) {
@@ -363,10 +459,11 @@ function withUnsubscribe(message: EmailMessage): EmailMessage {
 }
 
 export function buildEmailForRecipient(
-  campaign: { fromEmail: string; bodyTemplate: string },
+  campaign: { fromEmail: string; bodyTemplate: string; ccEmails?: string | null },
   recipient: RecipientLike,
 ): EmailMessage {
-  return withUnsubscribe(buildCampaignBody(campaign, recipient));
+  const message = withUnsubscribe(buildCampaignBody(campaign, recipient));
+  return campaign.ccEmails ? { ...message, cc: campaign.ccEmails } : message;
 }
 
 function buildCampaignBody(
@@ -460,11 +557,17 @@ export async function sendTestEmail(
         };
   }
 
-  const message = buildEmailForRecipient(campaign, { ...sample, email: testEmail });
+  // A test goes only to the admin's test address: never copy the campaign's real CC list.
+  const { cc: _cc, ...message } = buildEmailForRecipient(campaign, { ...sample, email: testEmail });
+  const attachments = await loadAttachments(campaignId);
   // Section 9: this must fail loudly, unlike most transactional sends elsewhere in this
   // app (emails/index.ts's sendEmail() wrapper swallows and logs) -- the admin clicked
   // "Send test" specifically to find out whether sending actually works.
-  await emailAdapter.send({ ...message, subject: `[TEST] ${message.subject}` });
+  await emailAdapter.send({
+    ...message,
+    subject: `[TEST] ${message.subject}`,
+    ...(attachments.length > 0 ? { attachments } : {}),
+  });
 }
 
 export async function confirmSend(campaignId: string): Promise<void> {
@@ -518,6 +621,9 @@ export async function processCampaignSend(campaignId: string): Promise<void> {
   if (!campaign || !campaign.fromEmail || !campaign.bodyTemplate) return;
   const fromEmail = campaign.fromEmail;
   const bodyTemplate = campaign.bodyTemplate;
+  const ccEmails = campaign.ccEmails;
+  // Loaded once and reused for every recipient.
+  const attachments = await loadAttachments(campaignId);
 
   const recipients = await EmailCampaignRecipient.findAll({
     where: { campaignId, status: { [Op.in]: ["queued", "sending"] } },
@@ -541,8 +647,8 @@ export async function processCampaignSend(campaignId: string): Promise<void> {
       recipient.status = "sending";
       await recipient.save();
       try {
-        const message = buildEmailForRecipient({ fromEmail, bodyTemplate }, recipient);
-        await emailAdapter.send(message);
+        const message = buildEmailForRecipient({ fromEmail, bodyTemplate, ccEmails }, recipient);
+        await emailAdapter.send(attachments.length > 0 ? { ...message, attachments } : message);
         recipient.status = "sent";
         recipient.sentAt = new Date();
         recipient.errorMessage = null;

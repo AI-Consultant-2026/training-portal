@@ -684,6 +684,7 @@ export interface EmailCampaign {
   createdBy: string;
   fromEmail: CampaignFromAddress | null;
   bodyTemplate: string | null;
+  ccEmails: string | null;
   status: CampaignStatus;
   originalFilename: string;
   totalRecipients: number;
@@ -695,7 +696,17 @@ export interface EmailCampaign {
   createdAt: string;
   updatedAt: string;
   recipients?: EmailCampaignRecipient[];
+  attachments?: EmailCampaignAttachment[];
   creator?: { firstName: string; lastName: string; email: string };
+}
+
+export interface EmailCampaignAttachment {
+  id: string;
+  campaignId: string;
+  filename: string;
+  contentType: string;
+  sizeBytes: number;
+  createdAt: string;
 }
 
 export interface EmailPreview {

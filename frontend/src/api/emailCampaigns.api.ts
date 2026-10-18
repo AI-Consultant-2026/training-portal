@@ -1,6 +1,7 @@
 import {
   CampaignFromAddress,
   EmailCampaign,
+  EmailCampaignAttachment,
   EmailCampaignRecipient,
   EmailPreview,
   UploadCampaignSummary,
@@ -33,11 +34,27 @@ export async function deleteCampaign(id: string): Promise<void> {
 export interface UpdateCampaignInput {
   fromEmail?: CampaignFromAddress;
   bodyTemplate?: string;
+  ccEmails?: string;
 }
 
 export async function updateCampaign(id: string, input: UpdateCampaignInput): Promise<EmailCampaign> {
   const res = await axiosClient.patch<{ campaign: EmailCampaign }>(`/admin/email-campaigns/${id}`, input);
   return res.data.campaign;
+}
+
+export async function addAttachment(campaignId: string, file: File): Promise<EmailCampaignAttachment> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await axiosClient.post<{ attachment: EmailCampaignAttachment }>(
+    `/admin/email-campaigns/${campaignId}/attachments`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+  return res.data.attachment;
+}
+
+export async function removeAttachment(campaignId: string, attachmentId: string): Promise<void> {
+  await axiosClient.delete(`/admin/email-campaigns/${campaignId}/attachments/${attachmentId}`);
 }
 
 export async function setRecipientSelected(

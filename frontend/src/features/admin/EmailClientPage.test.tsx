@@ -14,6 +14,7 @@ function campaign(overrides: Partial<EmailCampaign>): EmailCampaign {
     createdBy: "admin-1",
     fromEmail: "hello@paleontraining.com",
     bodyTemplate: "<p>Hi</p>",
+    ccEmails: null,
     status: "draft",
     originalFilename: "contacts.xlsx",
     totalRecipients: 3,
@@ -86,5 +87,65 @@ describe("EmailClientPage — deleting campaigns", () => {
     // still listed, and the dialog stays open so the admin sees why
     expect(screen.getByRole("button", { name: "Delete campaign oil-and-gas-leads.xlsx" })).toBeInTheDocument();
     expect(screen.getByText("Delete campaign?")).toBeInTheDocument();
+  });
+});
+
+describe("EmailClientPage — CC and attachments", () => {
+  const recipient = {
+    id: "r1",
+    campaignId: "draft-1",
+    rowNumber: 2,
+    company: "NCDMB",
+    email: "info@ncdmb.example.com",
+    contactName: "Executive Secretary",
+    subject: "Partnership proposal",
+    status: "pending" as const,
+    isSelected: true,
+    validationErrors: [],
+    errorMessage: null,
+    sentAt: null,
+    createdAt: "2026-10-18T10:00:00.000Z",
+    updatedAt: "2026-10-18T10:00:00.000Z",
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(emailCampaignsApi.fetchCampaigns).mockResolvedValue([DRAFT]);
+    vi.mocked(emailCampaignsApi.fetchCampaign).mockResolvedValue({ ...DRAFT, recipients: [recipient], attachments: [] });
+  });
+
+  it("attaches and removes a file, and saves the CC list with the body", async () => {
+    vi.mocked(emailCampaignsApi.addAttachment).mockResolvedValue({
+      id: "a1",
+      campaignId: "draft-1",
+      filename: "02-ncdmb.pdf",
+      contentType: "application/pdf",
+      sizeBytes: 200_000,
+      createdAt: "2026-10-18T10:00:00.000Z",
+    });
+    vi.mocked(emailCampaignsApi.removeAttachment).mockResolvedValue();
+    vi.mocked(emailCampaignsApi.updateCampaign).mockResolvedValue({ ...DRAFT, ccEmails: "cc@example.com" });
+    const user = userEvent.setup();
+    renderWithProviders(<EmailClientPage />);
+
+    await user.click(await screen.findByText("oil-and-gas-leads.xlsx"));
+    await user.click(await screen.findByRole("button", { name: "Compose" }));
+
+    const pdf = new File(["%PDF-1.4"], "02-ncdmb.pdf", { type: "application/pdf" });
+    await user.upload(screen.getByLabelText("Attach a file"), pdf);
+    expect(emailCampaignsApi.addAttachment).toHaveBeenCalledWith("draft-1", pdf);
+    expect(await screen.findByText(/02-ncdmb\.pdf/)).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("CC (optional)"), "cc@example.com");
+    await user.click(screen.getByRole("button", { name: /Save & continue/ }));
+    expect(emailCampaignsApi.updateCampaign).toHaveBeenCalledWith(
+      "draft-1",
+      expect.objectContaining({ ccEmails: "cc@example.com" }),
+    );
+
+    await user.click(screen.getByRole("button", { name: "Compose" }));
+    await user.click(screen.getByRole("button", { name: "Remove" }));
+    expect(emailCampaignsApi.removeAttachment).toHaveBeenCalledWith("draft-1", "a1");
+    await waitFor(() => expect(screen.queryByText(/02-ncdmb\.pdf/)).not.toBeInTheDocument());
   });
 });

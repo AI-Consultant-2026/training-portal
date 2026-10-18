@@ -7,6 +7,7 @@ import { Course, initCourseModel } from "./course.model";
 import { CourseFeedback, initCourseFeedbackModel } from "./courseFeedback.model";
 import { CourseModule, initCourseModuleModel } from "./module.model";
 import { EmailCampaign, initEmailCampaignModel } from "./emailCampaign.model";
+import { EmailCampaignAttachment, initEmailCampaignAttachmentModel } from "./emailCampaignAttachment.model";
 import { EmailCampaignRecipient, initEmailCampaignRecipientModel } from "./emailCampaignRecipient.model";
 import { EmailUnsubscribe, initEmailUnsubscribeModel } from "./emailUnsubscribe.model";
 import { Enrollment, initEnrollmentModel } from "./enrollment.model";
@@ -81,6 +82,7 @@ initReferralPayoutModel(sequelize);
 initCourseFeedbackModel(sequelize);
 initEmailCampaignModel(sequelize);
 initEmailCampaignRecipientModel(sequelize);
+initEmailCampaignAttachmentModel(sequelize);
 initEmailUnsubscribeModel(sequelize);
 initZoomAttendeeModel(sequelize);
 initAmbassadorNoticeModel(sequelize);
@@ -191,6 +193,7 @@ Enrollment.hasOne(CourseFeedback, { foreignKey: "enrollmentId", as: "feedback" }
 
 EmailCampaign.hasMany(EmailCampaignRecipient, { foreignKey: "campaignId", as: "recipients" });
 EmailCampaignRecipient.belongsTo(EmailCampaign, { foreignKey: "campaignId", as: "campaign" });
+EmailCampaign.hasMany(EmailCampaignAttachment, { foreignKey: "campaignId", as: "attachments" });
 
 export {
   AmbassadorNotice,
@@ -202,6 +205,7 @@ export {
   CourseFeedback,
   CourseModule,
   EmailCampaign,
+  EmailCampaignAttachment,
   EmailCampaignRecipient,
   EmailUnsubscribe,
   Enrollment,

@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { EmailCampaignAttachment } from "./emailCampaignAttachment.model";
 import { EmailCampaignRecipient } from "./emailCampaignRecipient.model";
 import { User } from "./user.model";
 
@@ -17,6 +18,8 @@ export interface EmailCampaignAttributes {
   createdBy: string;
   fromEmail: CampaignFromAddress | null;
   bodyTemplate: string | null;
+  // Comma-separated, copied on every email in the campaign. Null = no CC.
+  ccEmails: string | null;
   status: CampaignStatus;
   originalFilename: string;
   totalRecipients: number;
@@ -34,6 +37,7 @@ export type EmailCampaignCreationAttributes = Optional<
   | "id"
   | "fromEmail"
   | "bodyTemplate"
+  | "ccEmails"
   | "status"
   | "sentCount"
   | "failedCount"
@@ -49,6 +53,7 @@ export class EmailCampaign
   declare createdBy: string;
   declare fromEmail: CampaignFromAddress | null;
   declare bodyTemplate: string | null;
+  declare ccEmails: string | null;
   declare status: CampaignStatus;
   declare originalFilename: string;
   declare totalRecipients: number;
@@ -63,6 +68,7 @@ export class EmailCampaign
   // Populated only when the query explicitly `include`s them (see
   // emailCampaign.service.ts) -- not real columns on this model.
   declare recipients?: EmailCampaignRecipient[];
+  declare attachments?: EmailCampaignAttachment[];
   declare creator?: User;
 }
 
@@ -73,6 +79,7 @@ export function initEmailCampaignModel(sequelize: Sequelize) {
       createdBy: { type: DataTypes.UUID, allowNull: false, field: "created_by" },
       fromEmail: { type: DataTypes.STRING, allowNull: true, field: "from_email" },
       bodyTemplate: { type: DataTypes.TEXT, allowNull: true, field: "body_template" },
+      ccEmails: { type: DataTypes.TEXT, allowNull: true, field: "cc_emails" },
       status: { type: DataTypes.STRING, allowNull: false, defaultValue: "draft" },
       originalFilename: { type: DataTypes.STRING, allowNull: false, field: "original_filename" },
       totalRecipients: { type: DataTypes.INTEGER, allowNull: false, field: "total_recipients" },

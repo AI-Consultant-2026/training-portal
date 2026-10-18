@@ -21,6 +21,7 @@ import { authenticate } from "../middleware/authenticate";
 import { authorize } from "../middleware/authorize";
 import * as feedbackController from "../controllers/feedback.controller";
 import { approveFeedbackSchema } from "../validators/feedback.validators";
+import { uploadAttachment } from "../middleware/uploadAttachment";
 import { uploadExcel } from "../middleware/uploadExcel";
 import { validate } from "../middleware/validate";
 import {
@@ -34,6 +35,7 @@ import {
   setQuizEnabledSchema,
 } from "../validators/admin.validators";
 import {
+  attachmentIdSchema,
   campaignIdSchema,
   removeRecipientSchema,
   sendTestEmailSchema,
@@ -164,6 +166,17 @@ adminRouter.delete(
   "/email-campaigns/:id",
   validate(campaignIdSchema),
   emailCampaignsController.deleteCampaign,
+);
+adminRouter.post(
+  "/email-campaigns/:id/attachments",
+  validate(campaignIdSchema),
+  uploadAttachment,
+  emailCampaignsController.addAttachment,
+);
+adminRouter.delete(
+  "/email-campaigns/:id/attachments/:attachmentId",
+  validate(attachmentIdSchema),
+  emailCampaignsController.removeAttachment,
 );
 adminRouter.patch(
   "/email-campaigns/:id/recipients/:recipientId",

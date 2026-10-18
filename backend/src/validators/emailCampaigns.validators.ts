@@ -8,6 +8,14 @@ export const updateCampaignSchema = z.object({
   body: z.object({
     fromEmail: z.enum(CAMPAIGN_FROM_ADDRESSES).optional(),
     bodyTemplate: z.string().min(1).max(50_000).optional(),
+    ccEmails: z.string().max(2_000).optional(),
+  }),
+});
+
+export const attachmentIdSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+    attachmentId: z.string().uuid(),
   }),
 });
 

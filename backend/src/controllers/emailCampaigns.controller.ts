@@ -29,6 +29,23 @@ export const updateCampaign = asyncHandler(async (req: Request, res: Response) =
   res.json({ campaign });
 });
 
+export const addAttachment = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.file) {
+    throw ApiError.badRequest("No file was uploaded.");
+  }
+  const attachment = await emailCampaignService.addAttachment(req.params.id as string, {
+    buffer: req.file.buffer,
+    originalname: req.file.originalname,
+    mimetype: req.file.mimetype,
+  });
+  res.status(201).json({ attachment });
+});
+
+export const removeAttachment = asyncHandler(async (req: Request, res: Response) => {
+  await emailCampaignService.removeAttachment(req.params.id as string, req.params.attachmentId as string);
+  res.status(204).end();
+});
+
 export const deleteCampaign = asyncHandler(async (req: Request, res: Response) => {
   await emailCampaignService.deleteCampaign(req.params.id as string);
   res.status(204).end();

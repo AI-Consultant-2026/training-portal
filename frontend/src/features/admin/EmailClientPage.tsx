@@ -9,14 +9,22 @@ import { ProgressBar } from "../../components/ui/ProgressBar";
 import { RichTextEditor } from "../../components/ui/RichTextEditor";
 import { Select } from "../../components/ui/Select";
 import { Spinner } from "../../components/ui/Spinner";
-import { CAMPAIGN_FROM_ADDRESSES, CampaignFromAddress, EmailCampaignRecipient, RecipientStatus } from "../../types/api";
 import {
+  CAMPAIGN_FROM_ADDRESSES,
+  CampaignFromAddress,
+  EmailCampaignAttachment,
+  EmailCampaignRecipient,
+  RecipientStatus,
+} from "../../types/api";
+import {
+  addAttachment,
   clearCurrentCampaign,
   confirmSend,
   deleteCampaign,
   fetchCampaign,
   fetchCampaignHistory,
   previewRecipient,
+  removeAttachment,
   removeRecipient,
   sendTestEmail,
   toggleRecipientSelected,
@@ -112,11 +120,14 @@ export function EmailClientPage() {
     previewStatus,
     history,
     historyStatus,
+    attachmentStatus,
+    attachmentError,
   } = useAppSelector((state) => state.emailCampaigns);
 
   const [step, setStep] = useState<Step>("Upload");
   const [bodyDraft, setBodyDraft] = useState("");
   const [fromEmailDraft, setFromEmailDraft] = useState<CampaignFromAddress | "">("");
+  const [ccDraft, setCcDraft] = useState("");
   const [previewRecipientId, setPreviewRecipientId] = useState<string | null>(null);
   const [testEmailAddress, setTestEmailAddress] = useState("");
   const [testSampleId, setTestSampleId] = useState<string>("");
@@ -141,6 +152,7 @@ export function EmailClientPage() {
     if (!current) return;
     setBodyDraft(current.bodyTemplate ?? "");
     setFromEmailDraft(current.fromEmail ?? "");
+    setCcDraft(current.ccEmails ?? "");
     if (current.status === "completed") setStep("Results");
     else if (current.status === "sending") setStep("Send");
     // Only re-run when a *different* campaign loads (by id) -- current is otherwise
@@ -181,6 +193,7 @@ export function EmailClientPage() {
     setStep("Upload");
     setBodyDraft("");
     setFromEmailDraft("");
+    setCcDraft("");
   }
 
   function handleOpenCampaign(id: string) {
@@ -225,7 +238,7 @@ export function EmailClientPage() {
     dispatch(
       updateCampaign({
         id: current.id,
-        input: { fromEmail: fromEmailDraft, bodyTemplate: bodyDraft },
+        input: { fromEmail: fromEmailDraft, bodyTemplate: bodyDraft, ccEmails: ccDraft },
       }),
     ).then((action) => {
       if (updateCampaign.fulfilled.match(action)) {
@@ -233,6 +246,16 @@ export function EmailClientPage() {
         setStep("Preview");
       }
     });
+  }
+
+  function handleAddAttachment(file: File) {
+    if (!current) return;
+    dispatch(addAttachment({ campaignId: current.id, file }));
+  }
+
+  function handleRemoveAttachment(attachmentId: string) {
+    if (!current) return;
+    dispatch(removeAttachment({ campaignId: current.id, attachmentId }));
   }
 
   function handlePreview(recipientId: string) {
@@ -402,6 +425,13 @@ export function EmailClientPage() {
                     setFromEmail={setFromEmailDraft}
                     bodyDraft={bodyDraft}
                     setBodyDraft={setBodyDraft}
+                    ccEmails={ccDraft}
+                    setCcEmails={setCcDraft}
+                    attachments={current.attachments ?? []}
+                    onAddAttachment={handleAddAttachment}
+                    onRemoveAttachment={handleRemoveAttachment}
+                    attachmentStatus={attachmentStatus}
+                    attachmentError={attachmentError}
                     message={saveComposeMessage}
                     onSave={handleSaveCompose}
                   />
@@ -409,6 +439,7 @@ export function EmailClientPage() {
 
                 {step === "Preview" && (
                   <PreviewStep
+                    campaign={current}
                     recipients={validRecipients.filter((r) => r.isSelected)}
                     selectedId={previewRecipientId}
                     onSelect={handlePreview}
@@ -776,11 +807,44 @@ function ReviewStep({
 
 // --- Step 3/4: Select sender + Compose -------------------------------------
 
+function formatBytes(n: number): string {
+  return n >= 1024 * 1024 ? `${(n / (1024 * 1024)).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`;
+}
+
+// Lists the CC and attachments that go with every email, wherever the admin reviews the
+// campaign before sending.
+function CcAndAttachments({ campaign }: { campaign: import("../../types/api").EmailCampaign }) {
+  const attachments = campaign.attachments ?? [];
+  if (!campaign.ccEmails && attachments.length === 0) return null;
+  return (
+    <>
+      {campaign.ccEmails && (
+        <p className="text-sm text-gray-600">
+          <span className="font-medium text-gray-900">CC:</span> {campaign.ccEmails}
+        </p>
+      )}
+      {attachments.length > 0 && (
+        <p className="text-sm text-gray-600">
+          <span className="font-medium text-gray-900">Attachments:</span>{" "}
+          {attachments.map((a) => `${a.filename} (${formatBytes(a.sizeBytes)})`).join(", ")}
+        </p>
+      )}
+    </>
+  );
+}
+
 function ComposeStep({
   fromEmail,
   setFromEmail,
   bodyDraft,
   setBodyDraft,
+  ccEmails,
+  setCcEmails,
+  attachments,
+  onAddAttachment,
+  onRemoveAttachment,
+  attachmentStatus,
+  attachmentError,
   message,
   onSave,
 }: {
@@ -788,9 +852,17 @@ function ComposeStep({
   setFromEmail: (v: CampaignFromAddress | "") => void;
   bodyDraft: string;
   setBodyDraft: (v: string) => void;
+  ccEmails: string;
+  setCcEmails: (v: string) => void;
+  attachments: EmailCampaignAttachment[];
+  onAddAttachment: (file: File) => void;
+  onRemoveAttachment: (id: string) => void;
+  attachmentStatus: string;
+  attachmentError: string | null;
   message: string | null;
   onSave: () => void;
 }) {
+  const attachInputRef = useRef<HTMLInputElement>(null);
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6">
       <h2 className="text-lg font-semibold text-gray-900">Step 3 — Select sender &amp; compose</h2>
@@ -809,6 +881,71 @@ function ComposeStep({
             </option>
           ))}
         </Select>
+      </div>
+
+      <div className="mt-4 max-w-xl">
+        <Input
+          label="CC (optional)"
+          id="cc-emails"
+          value={ccEmails}
+          onChange={(e) => setCcEmails(e.target.value)}
+          placeholder="name@example.com, other@example.com"
+        />
+        <p className="mt-1 text-xs text-gray-500">
+          Copied on <strong>every</strong> email in this campaign, so use it for one-recipient campaigns. Test emails are
+          never CC&rsquo;d.
+        </p>
+      </div>
+
+      <div className="mt-4">
+        <span className="text-sm font-medium text-gray-700">Attachments</span>
+        <p className="mt-0.5 text-xs text-gray-500">
+          Sent with every email in this campaign. PDF, Word, PNG or JPEG; up to 7MB each, 5 files and 10MB in total.
+        </p>
+        {attachments.length > 0 && (
+          <ul className="mt-2 divide-y divide-gray-100 rounded-md border border-gray-200">
+            {attachments.map((a) => (
+              <li key={a.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                <span className="min-w-0 truncate text-gray-900">
+                  📎 {a.filename} <span className="text-gray-500">({formatBytes(a.sizeBytes)})</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onRemoveAttachment(a.id)}
+                  className="shrink-0 text-xs font-medium text-red-600 hover:underline"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <input
+          ref={attachInputRef}
+          type="file"
+          accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+          className="hidden"
+          aria-label="Attach a file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) onAddAttachment(file);
+            e.target.value = "";
+          }}
+        />
+        <div className="mt-2">
+          <Button
+            variant="secondary"
+            onClick={() => attachInputRef.current?.click()}
+            isLoading={attachmentStatus === "loading"}
+          >
+            Attach a file
+          </Button>
+        </div>
+        {attachmentError && (
+          <div className="mt-2">
+            <Alert message={attachmentError} />
+          </div>
+        )}
       </div>
 
       <div className="mt-4">
@@ -872,6 +1009,7 @@ function EmailHtmlPreview({ html }: { html: string }) {
 }
 
 function PreviewStep({
+  campaign,
   recipients,
   selectedId,
   onSelect,
@@ -879,6 +1017,7 @@ function PreviewStep({
   previewStatus,
   onNext,
 }: {
+  campaign: import("../../types/api").EmailCampaign | null;
   recipients: EmailCampaignRecipient[];
   selectedId: string | null;
   onSelect: (id: string) => void;
@@ -932,6 +1071,7 @@ function PreviewStep({
             <p className="text-sm text-gray-600">
               <span className="font-medium text-gray-900">Subject:</span> {preview.subject}
             </p>
+            {campaign && <CcAndAttachments campaign={campaign} />}
             <EmailHtmlPreview html={preview.html} />
           </div>
         )}
@@ -1058,6 +1198,9 @@ function SendStep({
             {selectedCount} recipient{selectedCount === 1 ? "" : "s"} selected to send from{" "}
             <strong>{campaign.fromEmail}</strong>.
           </p>
+          <div className="mt-2">
+            <CcAndAttachments campaign={campaign} />
+          </div>
           {sendError && (
             <div className="mt-3">
               <Alert message={sendError} />
@@ -1126,6 +1269,9 @@ function ConfirmSendModal({
         You are about to send <strong>{selectedCount}</strong> email{selectedCount === 1 ? "" : "s"} from{" "}
         <strong>{campaign.fromEmail}</strong>.
       </p>
+      <div className="mt-2">
+        <CcAndAttachments campaign={campaign} />
+      </div>
       <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <div>
           <dt className="text-gray-500">Valid recipients</dt>

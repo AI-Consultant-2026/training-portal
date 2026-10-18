@@ -1,5 +1,7 @@
 export interface EmailMessage {
   to: string;
+  // Comma-separated; used by email-client campaigns that copy someone on every email.
+  cc?: string;
   subject: string;
   text: string;
   html: string;

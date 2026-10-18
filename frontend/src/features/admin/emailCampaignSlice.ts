@@ -24,6 +24,8 @@ export interface EmailCampaignState {
   previewStatus: RequestStatus;
   history: EmailCampaign[];
   historyStatus: RequestStatus;
+  attachmentStatus: RequestStatus;
+  attachmentError: string | null;
 }
 
 const initialState: EmailCampaignState = {
@@ -40,6 +42,8 @@ const initialState: EmailCampaignState = {
   previewStatus: "idle",
   history: [],
   historyStatus: "idle",
+  attachmentStatus: "idle",
+  attachmentError: null,
 };
 
 export const uploadCampaignFile = createAsyncThunk(
@@ -76,6 +80,29 @@ export const updateCampaign = createAsyncThunk(
       return await emailCampaignsApi.updateCampaign(id, input);
     } catch (err: unknown) {
       return rejectWithValue(errorMessageFrom(err, "Could not save your changes"));
+    }
+  },
+);
+
+export const addAttachment = createAsyncThunk(
+  "emailCampaigns/addAttachment",
+  async ({ campaignId, file }: { campaignId: string; file: File }, { rejectWithValue }) => {
+    try {
+      return await emailCampaignsApi.addAttachment(campaignId, file);
+    } catch (err: unknown) {
+      return rejectWithValue(errorMessageFrom(err, "Could not attach this file"));
+    }
+  },
+);
+
+export const removeAttachment = createAsyncThunk(
+  "emailCampaigns/removeAttachment",
+  async ({ campaignId, attachmentId }: { campaignId: string; attachmentId: string }, { rejectWithValue }) => {
+    try {
+      await emailCampaignsApi.removeAttachment(campaignId, attachmentId);
+      return attachmentId;
+    } catch (err: unknown) {
+      return rejectWithValue(errorMessageFrom(err, "Could not remove this attachment"));
     }
   },
 );
@@ -221,6 +248,29 @@ const emailCampaignSlice = createSlice({
       })
       .addCase(updateCampaign.rejected, (state, action) => {
         state.currentError = (action.payload as string) ?? "Could not save your changes";
+      })
+      .addCase(addAttachment.pending, (state) => {
+        state.attachmentStatus = "loading";
+        state.attachmentError = null;
+      })
+      .addCase(addAttachment.fulfilled, (state, action) => {
+        state.attachmentStatus = "succeeded";
+        if (state.current?.id === action.payload.campaignId) {
+          state.current.attachments = [...(state.current.attachments ?? []), action.payload];
+        }
+      })
+      .addCase(addAttachment.rejected, (state, action) => {
+        state.attachmentStatus = "failed";
+        state.attachmentError = (action.payload as string) ?? "Could not attach this file";
+      })
+      .addCase(removeAttachment.fulfilled, (state, action) => {
+        state.attachmentError = null;
+        if (state.current) {
+          state.current.attachments = (state.current.attachments ?? []).filter((a) => a.id !== action.payload);
+        }
+      })
+      .addCase(removeAttachment.rejected, (state, action) => {
+        state.attachmentError = (action.payload as string) ?? "Could not remove this attachment";
       })
       .addCase(toggleRecipientSelected.fulfilled, (state, action) => {
         if (!state.current?.recipients) return;
