@@ -216,6 +216,11 @@ export function createApp() {
   app.get("/LSG-Proposal", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "LSG-Proposal.html"));
   });
+  // One-page graduate skills pilot for Ministers (2026-10-19), linked from Ken Uwotu's
+  // LinkedIn Featured section -- same unlisted pattern: robots noindex, not in sitemap.xml.
+  app.get("/graduate-skills-pilot", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "graduate-skills-pilot.html"));
+  });
   // Zoom attendance register (2026-10-08) -- unlisted (robots noindex, not in the
   // sitemap); attendees are sent the link at the end of a Saturday Zoom session. The
   // form posts to /api/zoom-attendees and admins see sign-ins at /admin/zoom-attendees.
