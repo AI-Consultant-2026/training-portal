@@ -221,6 +221,11 @@ export function createApp() {
   app.get("/graduate-skills-pilot", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "graduate-skills-pilot.html"));
   });
+  // Official proposal to the Nigerian Youth Academy (2026-10-22), sent after NiYA asked
+  // for one on LinkedIn -- same unlisted pattern: robots noindex, not in sitemap.xml.
+  app.get("/NiYA-Proposal", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "NiYA-Proposal.html"));
+  });
   // Zoom attendance register (2026-10-08) -- unlisted (robots noindex, not in the
   // sitemap); attendees are sent the link at the end of a Saturday Zoom session. The
   // form posts to /api/zoom-attendees and admins see sign-ins at /admin/zoom-attendees.
