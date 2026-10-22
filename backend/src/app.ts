@@ -397,7 +397,7 @@ export function createApp() {
   // The founder bio page was removed at the site owner's request; send old links and
   // search-engine results for it to the home page instead of a dead end.
   app.get("/about/ken-uwotu", (req, res) => {
-    res.redirect(301, "/welcome");
+    res.redirect(301, "/");
   });
   // The GEO/AI-search pillar page (2026-09-13): the primary page targeting "digital
   // skills training Nigeria" and its variants, hub-linked from and to every guide page

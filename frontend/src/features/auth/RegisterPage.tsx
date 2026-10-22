@@ -403,7 +403,7 @@ export function RegisterPage() {
               </Select>
               <p className="-mt-2 text-xs text-gray-500">
                 Not sure?{" "}
-                <a href="/welcome#career-match" className="font-medium text-[#006B40] hover:underline">
+                <a href="/#career-match" className="font-medium text-[#006B40] hover:underline">
                   Take the free 2-minute Career Match
                 </a>
                 .

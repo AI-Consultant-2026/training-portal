@@ -67,7 +67,7 @@ export function Navbar() {
     </>
   ) : (
     <>
-      <a href="/welcome" className={linkClassName} onClick={closeMenu}>
+      <a href="/" className={linkClassName} onClick={closeMenu}>
         Home
       </a>
       {supportLink}
