@@ -226,6 +226,18 @@ export function createApp() {
   app.get("/NiYA-Proposal", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "NiYA-Proposal.html"));
   });
+  // Public latest-jobs board (2026-10-22): newest oil & gas and banking/finance vacancies,
+  // filtered client-side. latest-jobs.json is rebuilt from the Desktop vacancies sheet by
+  // backend/scripts/build-latest-jobs.py. Listed in sitemap.xml, allowed in robots.txt.
+  app.get("/latest-jobs-board", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "latest-jobs-board.html"));
+  });
+  app.get("/latest-jobs-board.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "latest-jobs-board.js"));
+  });
+  app.get("/latest-jobs.json", (req, res) => {
+    res.type("application/json").sendFile(path.join(__dirname, "marketing", "latest-jobs.json"));
+  });
   // Zoom attendance register (2026-10-08) -- unlisted (robots noindex, not in the
   // sitemap); attendees are sent the link at the end of a Saturday Zoom session. The
   // form posts to /api/zoom-attendees and admins see sign-ins at /admin/zoom-attendees.
