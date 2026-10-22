@@ -31,6 +31,18 @@ export function StudentDashboardPage() {
         <span className="shrink-0 font-medium text-blue-700">Get your code →</span>
       </Link>
 
+      {/* Static marketing page served by the backend, not a SPA route -- plain <a>. */}
+      <a
+        href="/latest-jobs-board"
+        className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm hover:bg-emerald-100"
+      >
+        <span className="text-emerald-900">
+          <span className="font-medium">Latest jobs board.</span> New oil &amp; gas, banking and
+          finance vacancies in Nigeria, updated daily.
+        </span>
+        <span className="shrink-0 font-medium text-emerald-700">See the jobs →</span>
+      </a>
+
       {status === "loading" && (
         <div className="flex justify-center py-16">
           <Spinner />
