@@ -21,13 +21,13 @@ OUT = os.path.join(os.path.dirname(__file__), "..", "src", "marketing", "latest-
 SECTORS = {"Oil & Gas": "Oil & Gas", "Banking": "Banking & Finance"}
 # Towns/LGAs that listings use instead of the state name, for the page's state filter.
 TOWN_STATE = {"yaba": "Lagos", "amuwo odofin": "Lagos", "ikeja": "Lagos", "lekki": "Lagos",
-              "victoria island": "Lagos", "port harcourt": "Rivers", "warri": "Delta",
+              "victoria island": "Lagos", "festac town": "Lagos", "port harcourt": "Rivers", "warri": "Delta",
               "benin": "Edo", "ibadan": "Oyo", "uyo": "Akwa Ibom", "calabar": "Cross River"}
 
 
 def state_of(location):
     first = re.split(r"\s*\+\s*\d|,", location)[0].strip()
-    if first.lower() in ("various", "nigeria", ""):
+    if first.lower() in ("various", "nigeria", "all", ""):
         return "Various"
     return TOWN_STATE.get(first.lower(), first)
 
