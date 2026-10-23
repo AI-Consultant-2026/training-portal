@@ -226,6 +226,26 @@ export function createApp() {
   app.get("/NiYA-Proposal", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "NiYA-Proposal.html"));
   });
+  // Preview of the HSE taster course offered to NiYA in Part A of that proposal -- same
+  // unlisted pattern. The folder is also the SCORM 1.2 package for learn.niya.gov.ng
+  // (scripts/build-niya-hse-taster-scorm.sh), so the page links its files relatively
+  // and must be served with a trailing slash.
+  const niyaTasterDir = path.join(__dirname, "marketing", "niya-hse-taster");
+  app.get("/niya-hse-taster", (req, res) => {
+    if (!req.path.endsWith("/")) {
+      const query = req.originalUrl.slice(req.path.length);
+      return res.redirect(301, `/niya-hse-taster/${query}`);
+    }
+    res.sendFile(path.join(niyaTasterDir, "index.html"));
+  });
+  app.get("/niya-hse-taster/:file(taster\\.(?:css|js))", (req, res) => {
+    res.sendFile(path.join(niyaTasterDir, req.params.file));
+  });
+  app.get("/niya-hse-taster/images/:file([a-z-]+\\.svg)", (req, res) => {
+    res.sendFile(path.join(niyaTasterDir, "images", req.params.file), (err) => {
+      if (err) res.sendStatus(404);
+    });
+  });
   // Public latest-jobs board (2026-10-22): newest oil & gas and banking/finance vacancies,
   // filtered client-side. latest-jobs.json is rebuilt from the Desktop vacancies sheet by
   // backend/scripts/build-latest-jobs.py. Listed in sitemap.xml, allowed in robots.txt.

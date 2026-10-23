@@ -1,0 +1,49 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rmTitle">
+  <title id="rmTitle">A simple three by three risk matrix: likelihood across, severity up; low risks are monitored, medium risks need more controls, high risks mean stop and act now</title>
+  <rect width="780" height="300" fill="#F9FAFB"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+    <!-- axis labels -->
+    <text x="30" y="150" font-size="11" font-weight="700" fill="#374151" transform="rotate(-90 30 150)" text-anchor="middle">SEVERITY</text>
+    <text x="72" y="70" font-size="10.5" fill="#6B7280" text-anchor="end">Major</text>
+    <text x="72" y="140" font-size="10.5" fill="#6B7280" text-anchor="end">Serious</text>
+    <text x="72" y="210" font-size="10.5" fill="#6B7280" text-anchor="end">Minor</text>
+    <!-- row Major -->
+    <rect x="82" y="34" width="118" height="66" rx="6" fill="#FEF3C7" stroke="#FFFFFF" stroke-width="3"/>
+    <rect x="200" y="34" width="118" height="66" rx="6" fill="#FEE2E2" stroke="#FFFFFF" stroke-width="3"/>
+    <rect x="318" y="34" width="118" height="66" rx="6" fill="#FEE2E2" stroke="#DC2626" stroke-width="2.5"/>
+    <!-- row Serious -->
+    <rect x="82" y="104" width="118" height="66" rx="6" fill="#DCFCE7" stroke="#FFFFFF" stroke-width="3"/>
+    <rect x="200" y="104" width="118" height="66" rx="6" fill="#FEF3C7" stroke="#FFFFFF" stroke-width="3"/>
+    <rect x="318" y="104" width="118" height="66" rx="6" fill="#FEE2E2" stroke="#FFFFFF" stroke-width="3"/>
+    <!-- row Minor -->
+    <rect x="82" y="174" width="118" height="66" rx="6" fill="#DCFCE7" stroke="#FFFFFF" stroke-width="3"/>
+    <rect x="200" y="174" width="118" height="66" rx="6" fill="#DCFCE7" stroke="#FFFFFF" stroke-width="3"/>
+    <rect x="318" y="174" width="118" height="66" rx="6" fill="#FEF3C7" stroke="#FFFFFF" stroke-width="3"/>
+    <!-- cell words -->
+    <g font-size="11" font-weight="700" text-anchor="middle">
+      <text x="141" y="71" fill="#92400E">MEDIUM</text><text x="259" y="71" fill="#991B1B">HIGH</text><text x="377" y="64" fill="#991B1B">HIGH</text>
+      <text x="141" y="141" fill="#166534">LOW</text><text x="259" y="141" fill="#92400E">MEDIUM</text><text x="377" y="141" fill="#991B1B">HIGH</text>
+      <text x="141" y="211" fill="#166534">LOW</text><text x="259" y="211" fill="#166534">LOW</text><text x="377" y="211" fill="#92400E">MEDIUM</text>
+    </g>
+    <text x="377" y="82" font-size="9" fill="#991B1B" text-anchor="middle">e.g. corroded high-</text>
+    <text x="377" y="93" font-size="9" fill="#991B1B" text-anchor="middle">pressure line</text>
+    <!-- x axis -->
+    <text x="141" y="258" font-size="10.5" fill="#6B7280" text-anchor="middle">Unlikely</text>
+    <text x="259" y="258" font-size="10.5" fill="#6B7280" text-anchor="middle">Possible</text>
+    <text x="377" y="258" font-size="10.5" fill="#6B7280" text-anchor="middle">Likely</text>
+    <text x="259" y="282" font-size="11" font-weight="700" fill="#374151" text-anchor="middle">LIKELIHOOD</text>
+    <!-- legend -->
+    <rect x="478" y="40" width="280" height="62" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <rect x="494" y="56" width="14" height="14" rx="3" fill="#FEE2E2" stroke="#DC2626"/>
+    <text x="518" y="67" font-size="11.5" font-weight="700" fill="#111827">High: stop and act now</text>
+    <text x="518" y="86" font-size="10" fill="#6B7280">Senior sign-off before work continues</text>
+    <rect x="478" y="112" width="280" height="62" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <rect x="494" y="128" width="14" height="14" rx="3" fill="#FEF3C7" stroke="#D97706"/>
+    <text x="518" y="139" font-size="11.5" font-weight="700" fill="#111827">Medium: add controls</text>
+    <text x="518" y="158" font-size="10" fill="#6B7280">Reduce the risk before the task starts</text>
+    <rect x="478" y="184" width="280" height="62" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <rect x="494" y="200" width="14" height="14" rx="3" fill="#DCFCE7" stroke="#16A34A"/>
+    <text x="518" y="211" font-size="11.5" font-weight="700" fill="#111827">Low: record and monitor</text>
+    <text x="518" y="230" font-size="10" fill="#6B7280">Review if the task or site changes</text>
+  </g>
+</svg>

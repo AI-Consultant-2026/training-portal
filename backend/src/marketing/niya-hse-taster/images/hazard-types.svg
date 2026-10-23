@@ -1,0 +1,46 @@
+<svg viewBox="0 0 780 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hazTitle">
+  <title id="hazTitle">Five types of hazard on oil and gas sites: physical, process safety, chemical, occupational health and psychosocial</title>
+  <rect width="780" height="214" fill="#F9FAFB"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+    <!-- Physical -->
+    <rect x="22" y="24" width="138" height="170" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <circle cx="91" cy="60" r="11" fill="none" stroke="#2563EB" stroke-width="1.8"/>
+    <path d="M91,43 V47 M91,73 V77 M74,60 H78 M104,60 H108 M79,48 L82,51 M100,69 L103,72 M79,72 L82,69 M100,51 L103,48" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="91" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111827">PHYSICAL</text>
+    <text x="91" y="122" text-anchor="middle" font-size="10" fill="#6B7280">Moving machinery</text>
+    <text x="91" y="138" text-anchor="middle" font-size="10" fill="#6B7280">Working at height</text>
+    <text x="91" y="154" text-anchor="middle" font-size="10" fill="#6B7280">Vibration, hot surfaces</text>
+    <!-- Process safety -->
+    <rect x="173" y="24" width="138" height="170" rx="9" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <path d="M242,44 C252,56 256,62 256,70 A14,14 0 0 1 228,70 C228,64 232,60 236,56 C237,62 240,64 242,64 C240,56 240,50 242,44 Z" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linejoin="round"/>
+    <text x="242" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111827">PROCESS SAFETY</text>
+    <text x="242" y="122" text-anchor="middle" font-size="10" fill="#6B7280">Loss of containment</text>
+    <text x="242" y="138" text-anchor="middle" font-size="10" fill="#6B7280">Fires, explosions,</text>
+    <text x="242" y="154" text-anchor="middle" font-size="10" fill="#6B7280">toxic releases</text>
+    <text x="242" y="180" text-anchor="middle" font-size="9.5" font-weight="700" fill="#2563EB">MOST SEVERE</text>
+    <!-- Chemical -->
+    <rect x="324" y="24" width="138" height="170" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <path d="M386,44 H400 M389,44 V58 L378,76 H408 L397,58 V44" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="393" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111827">CHEMICAL</text>
+    <text x="393" y="122" text-anchor="middle" font-size="10" fill="#6B7280">Hydrocarbons</text>
+    <text x="393" y="138" text-anchor="middle" font-size="10" fill="#6B7280">H₂S gas</text>
+    <text x="393" y="154" text-anchor="middle" font-size="10" fill="#6B7280">Drilling fluids</text>
+    <!-- Occupational health -->
+    <rect x="475" y="24" width="138" height="170" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <circle cx="544" cy="50" r="7" fill="none" stroke="#2563EB" stroke-width="1.8"/>
+    <path d="M530,78 C530,66 537,61 544,61 C551,61 558,66 558,78" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="544" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111827">OCCUPATIONAL</text>
+    <text x="544" y="114" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111827">HEALTH</text>
+    <text x="544" y="134" text-anchor="middle" font-size="10" fill="#6B7280">Noise, heat stress</text>
+    <text x="544" y="150" text-anchor="middle" font-size="10" fill="#6B7280">Fatigue</text>
+    <text x="544" y="166" text-anchor="middle" font-size="10" fill="#6B7280">Manual handling</text>
+    <!-- Psychosocial -->
+    <rect x="626" y="24" width="132" height="170" rx="9" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.4"/>
+    <circle cx="692" cy="60" r="15" fill="none" stroke="#2563EB" stroke-width="1.8"/>
+    <path d="M692,51 V60 L699,65" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="692" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111827">PSYCHOSOCIAL</text>
+    <text x="692" y="122" text-anchor="middle" font-size="10" fill="#6B7280">Remote postings</text>
+    <text x="692" y="138" text-anchor="middle" font-size="10" fill="#6B7280">Long rotations</text>
+    <text x="692" y="154" text-anchor="middle" font-size="10" fill="#6B7280">Production pressure</text>
+  </g>
+</svg>
