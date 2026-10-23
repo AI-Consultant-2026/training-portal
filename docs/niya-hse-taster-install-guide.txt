@@ -1,0 +1,170 @@
+INTRODUCTION TO HSE FOR OIL & GAS: INSTALL GUIDE FOR THE NiYA PLATFORM ADMIN
+Taster course by Paleon Training Limited
+File: Paleon-HSE-Taster-SCORM12.zip (SCORM 1.2, about 30 KB)
+Time needed: about 15 minutes, plus 10 minutes to test
+
+-------------------------------------------------------------------------------
+BEFORE YOU START
+-------------------------------------------------------------------------------
+- You need an account that can create courses (site administrator, or a manager
+  or editing teacher on the course).
+- Keep the zip as it is. Do NOT unzip it: the platform reads it as one package.
+- The course works on phones and laptops, and everything it needs (text,
+  diagrams, quiz) is inside the zip. It loads nothing from outside sites.
+
+What the course reports to your platform:
+- Status: "incomplete" until the learner passes the final quiz, then "passed".
+- Score: the learner's best quiz score, 0 to 100. Pass mark 70 (11 of 15).
+- Bookmark: learners resume where they stopped.
+
+-------------------------------------------------------------------------------
+LEARN.NIYA.GOV.NG (ROCKET LMS): WHICH ROUTE TO USE
+-------------------------------------------------------------------------------
+learn.niya.gov.ng appears to run on Rocket LMS (a Laravel course platform).
+Rocket LMS only accepts SCORM packages when its SCORM plugin is installed
+(sold in the Rocket LMS plugins bundle). Check: Admin panel > Settings or
+Plugins, or start a new course in the instructor panel and see whether
+"SCORM" appears as a course or content type. Menu names vary by version.
+
+Route A: the SCORM plugin is installed
+  1. Instructor panel > Courses > New.
+  2. Choose the SCORM type, fill in the title (Introduction to HSE for Oil &
+     Gas), category, thumbnail and description, and set the price to Free.
+  3. Upload Paleon-HSE-Taster-SCORM12.zip unchanged and save.
+  4. Submit the course for review, then approve it in the admin panel
+     (Courses > Pending review).
+  5. Run the test in Step 6 below with a test student account, then check
+     the student's result in the course's reports.
+
+Route B: no SCORM plugin (use NiYA's own course builder)
+  Paleon Training supplies a content pack: 8 text lessons with diagrams, the
+  15-question final quiz (correct answers marked) and the pass mark.
+  1. Instructor panel > Courses > New > type "Course", Free.
+  2. Add one chapter and 8 text lessons, pasting each lesson and its images.
+  3. Add a quiz with the 15 questions, pass mark 70%, unlimited attempts,
+     and certificate turned on for the quiz.
+  4. Certificates: Admin panel > Certificates > Templates. Use NiYA's
+     existing template; issue on passing the quiz or on course completion.
+  5. Submit and approve as in Route A. Rocket LMS then records the quiz
+     score, marks pass/fail and issues the certificate itself.
+
+-------------------------------------------------------------------------------
+PART 1: MOODLE (versions 4.x and 5.x)
+-------------------------------------------------------------------------------
+Step 1. Create the course
+  1. Go to Site administration > Courses > Add a new course.
+  2. Course full name: Introduction to HSE for Oil & Gas
+     Course short name: e.g. HSE-TASTER
+  3. Course format: "Single activity", then Activity type: "SCORM package".
+     (This makes the course open straight into the taster. If you prefer the
+     normal course page, choose "Custom sections" instead.)
+  4. Under Completion tracking, set Enable completion tracking to "Yes".
+  5. Click "Save and display".
+
+Step 2. Add the SCORM package
+  If you chose "Single activity", Moodle now shows the SCORM settings page.
+  Otherwise: turn on Edit mode, click "Add an activity or resource" in the
+  first section and choose "SCORM package".
+  1. Name: Introduction to HSE for Oil & Gas
+  2. Package file: drag in Paleon-HSE-Taster-SCORM12.zip.
+
+Step 3. Recommended settings (expand each section on the same page)
+  Appearance
+    - Display package: "Current window"
+    - Student skip content structure page: "Always"
+    - Display content structure on entry page: "No"
+    - Display content structure in player: "Disabled"  (the course has its
+      own menu)
+    - Everything else: leave as default
+  Grade
+    - Grading method: "Highest grade"
+    - Maximum grade: 100
+  Attempts management
+    - Number of attempts: "Unlimited attempts"
+    - Attempts grading: "Highest attempt"
+    - Force new attempt: "No"  (so learners resume where they stopped)
+  Compatibility settings
+    - Mastery score overrides status: "Yes"
+  Completion conditions
+    - Choose "Add requirements".
+    - Tick "Receive a grade", then choose "Passing grade" under it.
+    - Tick "Require status" and select "Passed".
+    (On Moodle 4.0 to 4.2 the same options are called "Require grade",
+    "Require passing grade" and "Require status".)
+  Then click "Save and display".
+
+  Moodle should open the activity without errors. If it shows an error about
+  the package, check that the zip was not unzipped and re-zipped.
+
+Step 4. Set the pass mark in the gradebook (for "Passing grade")
+  1. Go to the course > Grades > Gradebook setup.
+  2. Next to "Introduction to HSE for Oil & Gas", choose Edit > Edit grade item.
+  3. Grade to pass: 70. Save.
+
+Step 5. Add the certificate
+  Use the certificate tool NiYA already uses. Common options are the free
+  "Course certificate" (mod_coursecertificate) or "Custom certificate"
+  (mod_customcert) plugins.
+  1. In the course, Add an activity or resource > your certificate activity.
+  2. Choose or design the template. We suggest the line
+     "Content provided by Paleon Training Limited" if both logos are agreed.
+  3. Under Restrict access, Add restriction > Activity completion:
+     "Introduction to HSE for Oil & Gas" must be "marked complete" (or
+     "complete with pass grade" if offered).
+  4. Save. The certificate now unlocks automatically for learners who pass.
+  (Alternatively, under Course completion, set the SCORM activity as the
+  condition and issue the certificate on course completion.)
+
+Step 6. Test before going live (please don't skip)
+  Use a test student account, not "Switch role", so that results are saved.
+  1. Log in as the test student and open the course.
+  2. Check: the course opens, the diagrams show, and the top bar reads
+     "Unit 1 of 8". There should be no "preview mode" banner (that banner
+     means the platform's SCORM connection was not found).
+  3. Go to Unit 7 (Final quiz). Answer badly and submit. The course says
+     you need 11 to pass.
+  4. Click "Exit activity", then reopen it: it should return you to Unit 7.
+  5. Retake the quiz and pass (11 or more). Exit the activity.
+  6. As admin, check:
+     - Course > Grades: the test student shows the passing score.
+     - The SCORM activity > Reports: status "passed".
+     - The certificate is unlocked for the test student.
+  Paleon Training ran this same test on Moodle 5.3 on 23 October 2026:
+  a failed attempt saved as 53 / incomplete, the pass saved as 80 / passed,
+  and the gradebook showed 80 out of 100.
+
+Step 7. Open it to corps members
+  Enrol learners as you do for other NiYA courses (self-enrolment, cohort
+  sync, or your NYSC camp enrolment), and add the course to the NYSC course
+  list.
+
+Reports you can export later
+  - SCORM activity > Reports: status and score per learner.
+  - Grades > Export: scores for all learners (Excel/CSV).
+  - Reports > Course completion / certificate reports: who has completed.
+
+-------------------------------------------------------------------------------
+PART 2: OTHER PLATFORMS
+-------------------------------------------------------------------------------
+The steps are the same in principle: create a course, add a SCORM item,
+upload the zip unchanged, set completion to "passed", and attach the
+certificate to completion.
+  - TalentLMS: Course > Add > SCORM | xAPI | cmi5 > upload the zip.
+  - Canvas: install a SCORM tool from your Canvas admin, then add the package
+    as an assignment.
+  - LearnDash, Tutor LMS and other WordPress plugins: these need a SCORM
+    add-on (e.g. "Tin Canny Reporting" for LearnDash, the Tutor LMS SCORM
+    add-on). Install the add-on, then add the zip as a lesson.
+  - Platforms with no SCORM support: Paleon Training will supply the course
+    as text, images and a quiz file so you can rebuild it in your own course
+    builder. The quiz is then marked by your platform's quiz tool.
+
+-------------------------------------------------------------------------------
+UPDATES AND SUPPORT
+-------------------------------------------------------------------------------
+- When we improve the course we send a new zip. In Moodle: open the SCORM
+  activity > Settings > replace the Package file > Save. Learner results are
+  kept.
+- Questions or problems: Paleon Training Limited, corporate@paleontraining.com,
+  +234 707 714 9215. Our support team can join a call with your technical
+  team for the first upload.
