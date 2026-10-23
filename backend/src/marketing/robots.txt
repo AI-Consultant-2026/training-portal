@@ -40,6 +40,7 @@ Allow: /nysc-digital-skills-oil-and-gas-career
 Allow: /refer$
 Allow: /ambassadors
 Allow: /ambassador-walkthrough
+Allow: /your-cv-says
 Allow: /images/ambassador-walkthrough/
 Allow: /practical-digital-skills-nigerian-graduates
 Allow: /images/articles/
