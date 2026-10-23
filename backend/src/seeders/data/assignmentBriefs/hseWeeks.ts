@@ -8,7 +8,7 @@ export const HSE_WEEKS: Record<number, BriefSpec> = {
       "New starters on an oil and gas site are often surprised by how many organisations have a say in how they work. You are writing a short **HSE landscape brief** for a new colleague: what HSE means on a Nigerian oil and gas operation, who regulates it and how that regulation affects everyday decisions.",
     tasks: [
       "In your own words, explain **what HSE means** (health, safety and environment) and why it is treated as a core business function in oil and gas, not an optional extra. Give **one example each** for health, safety and environment.",
-      "Name **at least three of the regulatory bodies** covered this day (NUPRC, NMDPRA, NESREA, NOSDRA). For each, state what it oversees, and **which side of the wellhead** it primarily covers (or that it applies across both).",
+      "Name **at least three of the regulatory bodies** covered this day (NUPRC, NMDPRA, NESREA, NOSDRA). For each, state what it oversees, and **which side of the wellhead** it primarily covers (or that it applies across both, or, for NESREA, why it sits outside the oil and gas sector).",
       "Choose **one regulator** and describe **one real way its oversight would change a day-to-day decision on a production site**. Be concrete: say who makes the decision, what they must check, and what would happen if they ignored the rule.",
       "Write a **short closing paragraph (80-120 words)** explaining why a site worker who knows *which* regulator to expect matters for safety, not just paperwork.",
     ],
