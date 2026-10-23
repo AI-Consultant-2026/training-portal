@@ -12,3 +12,4 @@ coverage/
 backend/uploads/*
 !backend/uploads/.gitkeep
 .claude/settings.local.json
+/niya-hse-taster-content-pack/

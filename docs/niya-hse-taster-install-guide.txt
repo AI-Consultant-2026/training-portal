@@ -37,8 +37,10 @@ Route A: the SCORM plugin is installed
      the student's result in the course's reports.
 
 Route B: no SCORM plugin (use NiYA's own course builder)
-  Paleon Training supplies a content pack: 8 text lessons with diagrams, the
-  15-question final quiz (correct answers marked) and the pass mark.
+  Paleon Training supplies a content pack (Paleon-HSE-Taster-Content-Pack.zip):
+  a PDF with the 8 lessons, practice answers and the 15-question final quiz
+  (correct answers marked), plus the diagrams as PNG files. Part 1 of the PDF
+  has the full build steps.
   1. Instructor panel > Courses > New > type "Course", Free.
   2. Add one chapter and 8 text lessons, pasting each lesson and its images.
   3. Add a quiz with the 15 questions, pass mark 70%, unlimited attempts,

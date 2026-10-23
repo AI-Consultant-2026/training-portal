@@ -1,0 +1,85 @@
+/* Print stylesheet for the NiYA HSE taster content pack (Route B: building the
+   course in NiYA's own course builder). Applied to a copy of the taster's
+   index.html by pack.js; printed to PDF with headless Chrome. */
+@page { size: A4; margin: 16mm 16mm 18mm; }
+:root {
+  --ink: #10151F;
+  --muted: #5E5647;
+  --line: #DED7C4;
+  --signal: #E8863C;
+  --signal-deep: #B85E1F;
+  --tint: #FBF1E6;
+  --ok: #166534;
+  --ok-tint: #E8F7EE;
+}
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; color: var(--ink); font: 10.5pt/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #fff; }
+main { max-width: none; padding: 0; }
+
+h1 { font: 700 19pt/1.2 Georgia, "Times New Roman", serif; margin: 0 0 10px; }
+h2 { font: 700 13pt/1.3 Georgia, "Times New Roman", serif; margin: 18px 0 6px; break-after: avoid; }
+h3 { font-size: 11pt; margin: 0 0 6px; break-after: avoid; }
+p { margin: 0 0 8px; }
+.lead { font-size: 11.5pt; }
+a { color: var(--signal-deep); }
+ul, ol { padding-left: 20px; margin: 0 0 8px; }
+li { margin: 3px 0; }
+.eyebrow { text-transform: uppercase; letter-spacing: .06em; font-size: 8.5pt; font-weight: 700; color: var(--signal-deep); margin: 0 0 4px; }
+.note, .small { font-size: 9.5pt; color: var(--muted); }
+
+.unit { display: block !important; break-before: page; }
+figure { margin: 12px 0; break-inside: avoid; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 6px; }
+figcaption { font-size: 9pt; color: var(--muted); margin-top: 4px; }
+.file-tag { display: inline-block; font: 600 8.5pt ui-monospace, Menlo, monospace; background: var(--tint); color: var(--signal-deep); border-radius: 4px; padding: 1px 6px; margin-left: 4px; }
+
+.checklist { list-style: none; padding: 0; }
+.checklist li { position: relative; padding-left: 20px; }
+.checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--signal-deep); font-weight: 700; }
+.terms dt { font-weight: 700; margin-top: 8px; }
+.terms dd { margin: 1px 0 0; }
+.cards { display: grid; gap: 8px; margin: 10px 0; grid-template-columns: repeat(2, 1fr); }
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+.card { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; break-inside: avoid; }
+.card strong { display: block; }
+.card span { color: var(--muted); font-size: 9.5pt; }
+.callout { background: var(--tint); border-left: 3px solid var(--signal); padding: 8px 12px; margin: 12px 0; break-inside: avoid; }
+.think { border: 1px dashed var(--signal); border-radius: 6px; padding: 8px 12px; margin: 14px 0; break-inside: avoid; }
+.scenario { background: var(--ink); color: #F7F4EC; border-radius: 6px; padding: 10px 14px; margin: 8px 0 12px; }
+
+/* Build instructions box at the top of each lesson */
+.build { border: 1.5px solid var(--ink); border-radius: 6px; padding: 8px 12px; margin: 0 0 14px; font-size: 9.5pt; break-inside: avoid; }
+.build b { text-transform: uppercase; letter-spacing: .05em; font-size: 8.5pt; }
+.build p { margin: 2px 0; }
+
+/* Practice questions with answers shown */
+.check, .scn-step { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; margin: 10px 0; break-inside: avoid; }
+.check > h3 { margin-bottom: 2px; }
+.q + .q { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; }
+.q > p:first-child { font-weight: 600; margin-bottom: 4px; }
+.opts { list-style: none; padding: 0; margin: 0 0 6px; }
+.opts li { padding: 2px 6px 2px 26px; position: relative; border-radius: 4px; }
+.opts li .letter { position: absolute; left: 6px; font-weight: 700; color: var(--muted); }
+.opts li.correct { background: var(--ok-tint); color: var(--ok); font-weight: 600; }
+.opts li.correct::after { content: "  ✓ correct"; font-size: 8.5pt; font-weight: 700; }
+.why { font-size: 9.5pt; color: var(--muted); margin: 0; }
+.why b { color: var(--ink); }
+
+/* Cover and how-to */
+.cover { break-after: page; }
+.cover .brand { display: flex; gap: 10px; align-items: center; margin-bottom: 28mm; }
+.cover .brand-mark { width: 34px; height: 34px; border-radius: 7px; background: var(--signal); color: #fff; font: 700 18px/34px Georgia, serif; text-align: center; }
+.cover h1 { font-size: 28pt; margin-bottom: 6px; }
+.cover .sub { font-size: 13pt; color: var(--muted); margin-bottom: 18mm; }
+.contents { border-top: 2px solid var(--ink); padding-top: 8px; }
+.contents li { margin: 5px 0; }
+table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 9.5pt; }
+th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: 5px 6px; }
+th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom: 1.5px solid var(--ink); }
+.part { break-before: page; }
+.key td:first-child, .key th:first-child { width: 36px; }
+.qs .q { border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; margin: 8px 0; break-inside: avoid; }
+.qs .q + .q { margin-top: 8px; }
+.footer-line { margin-top: 18px; font-size: 9pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 6px; }
+.contents { list-style: none; padding-left: 0; }
