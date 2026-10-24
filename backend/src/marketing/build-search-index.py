@@ -19,7 +19,7 @@ URLS = [
     "cyber-security-fundamentals-course", "gis-and-drone-mapping-course", "digital-marketing-course", "hse-fundamentals-course", "refer", "ambassadors", "ambassador-walkthrough",
     "oil-and-gas-careers-nigeria", "corporate-training-nigeria",
     "banking-telecom-training-nigeria", "digital-skills-jobs-nigeria",
-    "hse-training-nigeria", "university-partners",
+    "hse-training-nigeria", "university-partners", "consultancy",
     "digital-skills-training-nigeria", "degree-but-no-job-nigeria",
     "nysc-digital-skills", "best-courses-after-nysc",
     "courses-for-nysc-corps-members", "nysc-portfolio-building",

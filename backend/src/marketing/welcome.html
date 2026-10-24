@@ -265,6 +265,17 @@
     border-bottom: 1.5px solid transparent;
   }
   .nav-links a:hover { border-bottom-color: var(--signal); }
+  .logo { flex-shrink: 0; }
+  @media (min-width: 1101px) { .nav-links a { white-space: nowrap; } }
+  @media (max-width: 1440px) {
+    .main-nav { gap: 20px; }
+    .nav-links { gap: 16px; }
+  }
+  @media (max-width: 1240px) {
+    .main-nav { gap: 16px; }
+    .nav-links { gap: 12px; }
+    .nav-links a { font-size: 13.5px; }
+  }
 
   .btn {
     display: inline-flex;
@@ -1050,6 +1061,7 @@
         <li><a href="#graduates">Why skills</a></li>
         <li><a href="#courses">Courses</a></li>
         <li><a href="/executive-training">Corporate Nigeria</a></li>
+        <li><a href="/consultancy">Consultancy</a></li>
         <li><a href="#why">Why Paleon</a></li>
         <li><a href="#refer-earn">Refer &amp; Earn</a></li>
         <li><a href="/support">Support</a></li>
@@ -1597,6 +1609,7 @@
         <li><a href="#refer-earn">Refer &amp; Earn</a></li>
         <li><a href="#career-match">Free Career Match</a></li>
         <li><a href="/support">Support</a></li>
+        <li><a href="/consultancy">Consultancy</a></li>
         <li><a href="#top">Home</a></li>
         <li><a href="/digital-skills-training-nigeria">Digital Skills Training Guide</a></li>
         <li><a href="/digital-skills-jobs-nigeria">Digital Skills &amp; Jobs Guide</a></li>

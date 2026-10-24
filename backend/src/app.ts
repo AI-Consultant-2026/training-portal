@@ -424,6 +424,14 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "ambassador-walkthrough", req.params.file));
   });
+  app.get("/consultancy", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "consultancy.html"));
+  });
+  // Consultancy page photos. The pattern keeps this from serving anything outside that folder.
+  app.get("/images/consultancy/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "consultancy", req.params.file));
+  });
   app.get("/university-partners", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "university-partners.html"));
   });
