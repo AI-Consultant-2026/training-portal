@@ -258,6 +258,19 @@ export function createApp() {
   app.get("/latest-jobs.json", (req, res) => {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "latest-jobs.json"));
   });
+  // Job board for the NiYA proposal (2026-10-24): every open Nigerian vacancy in a Paleon
+  // course field (oil & gas, banking, telecoms), Apply links straight to the employer.
+  // niya-proposal-jobs.json is rebuilt by backend/scripts/build-niya-proposal-jobs.py.
+  // Same unlisted pattern as /NiYA-Proposal: robots noindex, not in sitemap.xml.
+  app.get("/Niya-proposal-Job-board", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "Niya-proposal-Job-board.html"));
+  });
+  app.get("/Niya-proposal-Job-board.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "Niya-proposal-Job-board.js"));
+  });
+  app.get("/niya-proposal-jobs.json", (req, res) => {
+    res.type("application/json").sendFile(path.join(__dirname, "marketing", "niya-proposal-jobs.json"));
+  });
   // Zoom attendance register (2026-10-08) -- unlisted (robots noindex, not in the
   // sitemap); attendees are sent the link at the end of a Saturday Zoom session. The
   // form posts to /api/zoom-attendees and admins see sign-ins at /admin/zoom-attendees.
