@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds the Route B content pack for the NiYA HSE taster: a PDF of the 8 lessons
+# Builds the Route B content pack for the NiYA HSE taster: a PDF and a Word doc of the 8 lessons
 # (practice answers marked) + the final quiz sheet, and PNG copies of the diagrams,
 # for NiYA to build the course in its own course builder (learn.niya.gov.ng runs
 # Rocket LMS) when the SCORM package can't be uploaded.
@@ -44,7 +44,15 @@ for f in "$SRC"/images/*.svg; do
   rsvg-convert -w 1560 -b white "$f" -o "$OUT/images/$(basename "${f%.svg}").png"
 done
 
+# Word version: same rendered content, converted with pandoc.
+"$CHROME" --headless=new --disable-gpu --allow-file-access-from-files --virtual-time-budget=5000 \
+  --dump-dom "file://$WORK/index.html" 2>/dev/null > "$WORK/rendered.html"
+grep -q 'data-pack-ready="1"' "$WORK/rendered.html" || { echo "pack.js did not run" >&2; exit 1; }
+python3 "$PACK/docx.py" "$WORK/rendered.html" "$WORK/word.html" "$OUT/images"
+pandoc "$WORK/word.html" -f html -t docx --lua-filter "$PACK/pagebreak.lua" \
+  --metadata pagetitle="Introduction to HSE for Oil & Gas - content pack for NiYA" -o "$OUT/$NAME.docx"
+
 rm -f "$OUT/$NAME.zip"
-(cd "$OUT" && zip -X -q -r "$NAME.zip" "$NAME.pdf" images)
+(cd "$OUT" && zip -X -q -r "$NAME.zip" "$NAME.pdf" "$NAME.docx" images)
 echo "Built $OUT"
 ls -la "$OUT" "$OUT/images"
