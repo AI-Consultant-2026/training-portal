@@ -949,6 +949,12 @@ export function createApp() {
   app.get("/delta-state-government.js", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "delta-state-government.js"));
   });
+  // ECOBA proposal demo (2026-10-25), built by Paleon Consultancy: a whole folder served at
+  // /ecoba-directory/ -- index.html is the admin console (sign-in first), directory.html the
+  // member directory, all sample data. Unlisted like the sector briefs: robots noindex, not
+  // in sitemap.xml. Scripts are external files for the same CSP reason. express.static
+  // redirects /ecoba-directory to /ecoba-directory/ so the pages' relative links resolve.
+  app.use("/ecoba-directory", express.static(path.join(__dirname, "marketing", "ecoba-directory")));
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this
