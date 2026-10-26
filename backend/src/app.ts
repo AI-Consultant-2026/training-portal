@@ -144,6 +144,11 @@ export function createApp() {
   app.get("/whatsapp-float.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "whatsapp-float.js"));
   });
+  // "Send this email with..." chooser (Gmail / Outlook / Yahoo / email app / copy) for
+  // mailto: links, which do nothing on computers with no mail app set up.
+  app.get("/email-links.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "email-links.js"));
+  });
   app.get("/search-index.json", (req, res) => {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "search-index.json"));
   });
