@@ -131,8 +131,8 @@ const COUNTRY_HERO: Record<string, { badge: string; intro: string }> = {
 };
 
 // Hero photo per country (AI-generated campus scenes under each national flag). Full
-// class strings, not built from parts, so Tailwind can see them. Countries without
-// a photo get the plain green hero.
+// class strings, not built from parts, so Tailwind can see them. A country without
+// a photo gets the plain green hero.
 const COUNTRY_HERO_IMAGE: Record<string, { desktop: string; mobile: string; alt: string }> = {
   NG: {
     desktop: "lg:bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
@@ -143,6 +143,16 @@ const COUNTRY_HERO_IMAGE: Record<string, { desktop: string; mobile: string; alt:
     desktop: "lg:bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
     mobile: "bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')]",
     alt: "Ghanaian students and graduates on campus under the Ghana flag",
+  },
+  KE: {
+    desktop: "lg:bg-[url('/images/zoom-attendees/kenyan-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    mobile: "bg-[url('/images/zoom-attendees/kenyan-students-flag.jpg')]",
+    alt: "Kenyan students and graduates on campus under the Kenya flag",
+  },
+  ZA: {
+    desktop: "lg:bg-[url('/images/zoom-attendees/south-african-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    mobile: "bg-[url('/images/zoom-attendees/south-african-students-flag.jpg')]",
+    alt: "South African students and graduates on campus under the South African flag",
   },
 };
 
