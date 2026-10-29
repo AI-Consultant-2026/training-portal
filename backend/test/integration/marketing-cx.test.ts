@@ -53,7 +53,20 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
     expect(res.text).not.toContain("Okemore");
     expect(res.text).not.toContain("will be registered");
     expect(res.text).toContain("Technology and management support:");
-    expect(res.text).toContain("Market served:");
+    expect(res.text).toMatch(/Markets? served:/);
+  });
+
+  it("privacy policy names the data protection authority for each country we sell to", async () => {
+    const res = await request(app).get("/privacy");
+    for (const phrase of [
+      "Nigeria Data Protection Commission",
+      "Data Protection Act, 2012 (Act 843)",
+      "Office of the Data Protection Commissioner",
+      "Information Regulator",
+      "POPIA",
+    ]) {
+      expect(res.text).toContain(phrase);
+    }
   });
 
   it("privacy policy covers the Career Match, follow-up emails, unsubscribing and problem reports", async () => {

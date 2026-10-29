@@ -158,6 +158,14 @@ const COUNTRY_HERO_IMAGE: Record<string, { desktop: string; mobile: string; alt:
   },
 };
 
+// The data protection law named beside the Privacy Policy link (see /privacy section 8).
+const PRIVACY_LAW: Record<string, string> = {
+  NG: "NDPA 2023",
+  GH: "Data Protection Act 2012",
+  KE: "Data Protection Act 2019",
+  ZA: "POPIA",
+};
+
 // Before /api/countries answers, the form offers Nigeria only, as it always did.
 const NIGERIA_FALLBACK: CountryInfo = {
   code: "NG",
@@ -590,7 +598,7 @@ export function RegisterPage() {
                 <a href="/privacy" className="text-[#006B40] underline">
                   Privacy Policy
                 </a>{" "}
-                (NDPA 2023).
+                ({PRIVACY_LAW[country] ?? PRIVACY_LAW.NG}).
               </p>
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
