@@ -130,6 +130,22 @@ const COUNTRY_HERO: Record<string, { badge: string; intro: string }> = {
   },
 };
 
+// Hero photo per country (AI-generated campus scenes under each national flag). Full
+// class strings, not built from parts, so Tailwind can see them. Countries without
+// a photo get the plain green hero.
+const COUNTRY_HERO_IMAGE: Record<string, { desktop: string; mobile: string; alt: string }> = {
+  NG: {
+    desktop: "lg:bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    mobile: "bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')]",
+    alt: "Nigerian students and graduates on campus under the Nigerian flag",
+  },
+  GH: {
+    desktop: "lg:bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    mobile: "bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')]",
+    alt: "Ghanaian students and graduates on campus under the Ghana flag",
+  },
+};
+
 // Before /api/countries answers, the form offers Nigeria only, as it always did.
 const NIGERIA_FALLBACK: CountryInfo = {
   code: "NG",
@@ -202,6 +218,7 @@ export function RegisterPage() {
   const countryInfo = countries.find((c) => c.code === country) ?? NIGERIA_FALLBACK;
   const isNigeria = country === "NG";
   const hero = COUNTRY_HERO[country];
+  const heroImage = COUNTRY_HERO_IMAGE[country];
 
   function changeCountry(code: string) {
     setCountry(code);
@@ -277,23 +294,17 @@ export function RegisterPage() {
         </div>
       )}
 
-      <section
-        className={`relative bg-[#006B40] text-white ${
-          isNigeria
-            ? "lg:bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]"
-            : ""
-        }`}
-      >
+      <section className={`relative bg-[#006B40] text-white ${heroImage?.desktop ?? ""}`}>
         {/* Phones and tablets: the students-and-flag photo as a clear band above the text */}
-        {isNigeria && (
+        {heroImage && (
           <div
-            className="h-56 border-b-[6px] border-white bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] bg-cover bg-[center_20%] sm:h-72 lg:hidden"
+            className={`h-56 border-b-[6px] border-white ${heroImage.mobile} bg-cover bg-[center_20%] sm:h-72 lg:hidden`}
             role="img"
-            aria-label="Nigerian students and graduates on campus under the Nigerian flag"
+            aria-label={heroImage.alt}
           />
         )}
         <div
-          className={`pointer-events-none absolute inset-0 hidden ${isNigeria ? "lg:block" : ""}`}
+          className={`pointer-events-none absolute inset-0 hidden ${heroImage ? "lg:block" : ""}`}
           style={{
             background:
               "linear-gradient(90deg, rgba(0,55,32,.88) 0%, rgba(0,70,42,.62) 34%, rgba(0,70,42,.08) 58%, rgba(16,21,31,.1) 100%), linear-gradient(0deg, rgba(16,21,31,.45) 0%, rgba(16,21,31,0) 40%)",
