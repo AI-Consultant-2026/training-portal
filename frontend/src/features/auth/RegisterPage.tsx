@@ -133,6 +133,8 @@ const COUNTRY_HERO: Record<string, { badge: string; intro: string }> = {
 // Hero photo per country (AI-generated campus scenes under each national flag). Full
 // class strings, not built from parts, so Tailwind can see them. A country without
 // a photo gets the plain green hero.
+// Ghana, Kenya and South Africa are enlarged and pinned top-right on desktop so the
+// flag (centre-right in those photos) shows between the intro text and the form.
 const COUNTRY_HERO_IMAGE: Record<string, { desktop: string; mobile: string; alt: string }> = {
   NG: {
     desktop: "lg:bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
@@ -140,17 +142,17 @@ const COUNTRY_HERO_IMAGE: Record<string, { desktop: string; mobile: string; alt:
     alt: "Nigerian students and graduates on campus under the Nigerian flag",
   },
   GH: {
-    desktop: "lg:bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    desktop: "lg:bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')] lg:bg-[length:auto_135%] lg:bg-[position:100%_0%]",
     mobile: "bg-[url('/images/zoom-attendees/ghanaian-students-flag.jpg')]",
     alt: "Ghanaian students and graduates on campus under the Ghana flag",
   },
   KE: {
-    desktop: "lg:bg-[url('/images/zoom-attendees/kenyan-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    desktop: "lg:bg-[url('/images/zoom-attendees/kenyan-students-flag.jpg')] lg:bg-[length:auto_135%] lg:bg-[position:100%_0%]",
     mobile: "bg-[url('/images/zoom-attendees/kenyan-students-flag.jpg')]",
     alt: "Kenyan students and graduates on campus under the Kenya flag",
   },
   ZA: {
-    desktop: "lg:bg-[url('/images/zoom-attendees/south-african-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]",
+    desktop: "lg:bg-[url('/images/zoom-attendees/south-african-students-flag.jpg')] lg:bg-[length:auto_135%] lg:bg-[position:100%_0%]",
     mobile: "bg-[url('/images/zoom-attendees/south-african-students-flag.jpg')]",
     alt: "South African students and graduates on campus under the South African flag",
   },
