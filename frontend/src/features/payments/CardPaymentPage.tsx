@@ -11,6 +11,7 @@ import { fetchCourseBySlug } from "../courses/coursesSlice";
 import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { track } from "../../lib/analytics";
 import { PaymentTrustStrip } from "./PaymentTrustStrip";
+import { countryName } from "../../api/countries.api";
 
 // Card payments are taken in Naira on Paystack, so card details are never entered on
 // Paleon's own site. Paying in full goes to the course's Paystack Payment Page; paying in
@@ -96,6 +97,8 @@ export function CardPaymentPage() {
   }
 
   const naira = (n: number) => `\u20A6${n.toLocaleString()}`;
+  // Ghana, Kenya and South Africa (2026-10-29) still pay the Naira price on Paystack.
+  const payingFromAbroad = !!user?.country && user.country !== "NG";
   const instalment = quote?.instalment?.enabled ? quote.instalment : null;
 
   return (
@@ -158,6 +161,21 @@ export function CardPaymentPage() {
               Pay {naira(quote.card.amount)} with Paystack
             </Button>
           </div>
+        </div>
+      )}
+
+      {payingFromAbroad && (
+        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900" role="note">
+          <p className="font-semibold">Paying from {countryName(user?.country)}?</p>
+          <p className="mt-1">
+            Prices are in Naira (&#8358;). Your bank converts the amount to your own currency at its rate when you pay
+            by Visa or Mastercard, so check that your card is enabled for international online payments. Mobile money
+            isn&rsquo;t available yet. If your card is declined, message us on{" "}
+            <a href="https://wa.me/2347077149989" className="font-medium underline" target="_blank" rel="noopener noreferrer">
+              WhatsApp
+            </a>{" "}
+            and we&rsquo;ll help.
+          </p>
         </div>
       )}
 

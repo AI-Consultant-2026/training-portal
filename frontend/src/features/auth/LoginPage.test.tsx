@@ -17,6 +17,7 @@ const STUDENT: User = {
   status: "active",
   profileData: {},
   location: "Nigeria",
+  country: "NG",
   courseInterest: null,
   university: null,
   referralCode: null,

@@ -11,6 +11,7 @@ export function serializeUser(user: User) {
     status: user.status,
     profileData: user.profileData,
     location: user.location,
+    country: user.country,
     courseInterest: user.courseInterest,
     university: user.university,
     referralCode: user.referralCode,

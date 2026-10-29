@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -8,6 +8,7 @@ import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { Lead } from "../../types/api";
+import { countryName } from "../../api/countries.api";
 import {
   closeCoursePayments,
   deleteLead,
@@ -26,7 +27,7 @@ function toCsvField(value: string): string {
 }
 
 function leadsToCsv(leads: Lead[]): string {
-  const header = ["Name", "Email", "Phone", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted", "Unsubscribed"]
+  const header = ["Name", "Email", "Phone", "Country", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted", "Unsubscribed"]
     .map(toCsvField)
     .join(",");
   const rows = leads.map((lead) =>
@@ -34,6 +35,7 @@ function leadsToCsv(leads: Lead[]): string {
       lead.name,
       lead.email,
       lead.phone ?? "",
+      countryName(lead.country),
       lead.course,
       lead.university ?? "",
       lead.sector ?? "",
@@ -51,9 +53,12 @@ function leadsToCsv(leads: Lead[]): string {
 // Nigerian numbers are usually written in local form (0801...); WhatsApp's click-to-chat
 // links need the full international digits with no leading 0. Falls back to stripping
 // symbols only for anything that doesn't look like that shape, rather than guessing.
-function toWhatsAppLink(phone: string): string {
+// A number written locally (leading 0) gets the lead's own country's dialling code.
+const DIAL_CODES: Record<string, string> = { NG: "234", GH: "233", KE: "254", ZA: "27" };
+
+function toWhatsAppLink(phone: string, country: string): string {
   const digits = phone.replace(/\D/g, "");
-  const withCountryCode = digits.startsWith("0") ? `234${digits.slice(1)}` : digits;
+  const withCountryCode = digits.startsWith("0") ? `${DIAL_CODES[country] ?? "234"}${digits.slice(1)}` : digits;
   return `https://wa.me/${withCountryCode}`;
 }
 
@@ -81,6 +86,11 @@ export function AdminDashboardPage() {
   const { stats, status, error, leads, leadsStatus, coursePayments } = useAppSelector(
     (state) => state.admin,
   );
+
+  // "all" or a country code; the CSV download follows the filter.
+  const [leadCountry, setLeadCountry] = useState("all");
+  const shownLeads = leadCountry === "all" ? leads : leads.filter((lead) => lead.country === leadCountry);
+  const leadCountries = Array.from(new Set(leads.map((lead) => lead.country)));
 
   useEffect(() => {
     dispatch(fetchAdminStats());
@@ -267,9 +277,26 @@ export function AdminDashboardPage() {
       <div className="mt-8 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Leads</h2>
         {leads.length > 0 && (
-          <Button variant="secondary" className="px-3 py-1.5 text-xs" onClick={() => downloadLeadsCsv(leads)}>
-            Download CSV
-          </Button>
+          <div className="flex items-center gap-2">
+            {leadCountries.length > 1 && (
+              <select
+                aria-label="Filter leads by country"
+                value={leadCountry}
+                onChange={(e) => setLeadCountry(e.target.value)}
+                className="rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs"
+              >
+                <option value="all">All countries ({leads.length})</option>
+                {leadCountries.map((code) => (
+                  <option key={code} value={code}>
+                    {countryName(code)} ({leads.filter((lead) => lead.country === code).length})
+                  </option>
+                ))}
+              </select>
+            )}
+            <Button variant="secondary" className="px-3 py-1.5 text-xs" onClick={() => downloadLeadsCsv(shownLeads)}>
+              Download CSV
+            </Button>
+          </div>
         )}
       </div>
       {leadsStatus === "loading" && leads.length === 0 ? (
@@ -284,6 +311,7 @@ export function AdminDashboardPage() {
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Phone</th>
+                <th className="px-4 py-2">Country</th>
                 <th className="px-4 py-2">Course</th>
                 <th className="px-4 py-2">Status</th>
                 <th className="px-4 py-2">Aiming for</th>
@@ -295,14 +323,14 @@ export function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {leads.map((lead) => (
+              {shownLeads.map((lead) => (
                 <tr key={lead.id} className="border-b border-gray-100 last:border-0">
                   <td className="px-4 py-2 text-gray-900">{lead.name}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.email}</td>
                   <td className="px-4 py-2 text-gray-600">
                     {lead.phone ? (
                       <a
-                        href={toWhatsAppLink(lead.phone)}
+                        href={toWhatsAppLink(lead.phone, lead.country)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-green-700 hover:underline"
@@ -314,6 +342,7 @@ export function AdminDashboardPage() {
                       "—"
                     )}
                   </td>
+                  <td className="px-4 py-2 text-gray-600">{countryName(lead.country)}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.course}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.university ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.sector ?? "—"}</td>

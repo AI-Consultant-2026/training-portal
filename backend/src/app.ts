@@ -572,6 +572,15 @@ export function createApp() {
   app.get("/hse-fundamentals-course", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-fundamentals-course.html"));
   });
+  // Ghana landing page (2026-10-29), the first market outside Nigeria. Listed in
+  // sitemap.xml, allowed in robots.txt. ghana.js marks the visitor as Ghanaian for the
+  // register page and posts the page's lead form with country "GH".
+  app.get("/ghana", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "ghana.html"));
+  });
+  app.get("/ghana.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "ghana.js"));
+  });
   // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
   // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.
   app.get("/nysc-digital-skills-oil-and-gas-career", (req, res) => {

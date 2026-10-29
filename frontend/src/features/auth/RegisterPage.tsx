@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { validateReferralCode } from "../../api/referrals.api";
+import { CountryInfo, fetchCountries } from "../../api/countries.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -109,6 +110,48 @@ const SECTORS = [
   },
 ];
 
+// Hero copy for countries other than Nigeria (2026-10-29). Nigeria keeps the original
+// copy and the students-under-the-flag photo.
+const COUNTRY_HERO: Record<string, { badge: string; intro: string }> = {
+  GH: {
+    badge: "Now open in Ghana",
+    intro:
+      "Practical, job-ready digital skills for Ghanaian graduates, final year students and national service personnel preparing for careers in Oil & Gas, Banking and Telecoms. Learn online from anywhere in Ghana.",
+  },
+  KE: {
+    badge: "Now open in Kenya",
+    intro:
+      "Practical, job-ready digital skills for Kenyan graduates and final year students preparing for careers in Banking, Telecoms and industry. Learn online from anywhere in Kenya.",
+  },
+  ZA: {
+    badge: "Now open in South Africa",
+    intro:
+      "Practical, job-ready digital skills for South African graduates and final year students preparing for careers in Banking, Telecoms, Mining and Energy. Learn online from anywhere in South Africa.",
+  },
+};
+
+// Before /api/countries answers, the form offers Nigeria only, as it always did.
+const NIGERIA_FALLBACK: CountryInfo = {
+  code: "NG",
+  name: "Nigeria",
+  regionLabel: "State",
+  regions: LOCATIONS,
+  phonePlaceholder: "e.g. 0803 123 4567",
+  currencyName: "Naira",
+};
+
+// Set by the country landing pages (e.g. /ghana) so the register page opens on that
+// country even when the visitor's IP says otherwise. Storage can be blocked; that's fine.
+const COUNTRY_STORAGE_KEY = "paleon_country";
+
+function storedCountry(): string | null {
+  try {
+    return window.localStorage.getItem(COUNTRY_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -120,6 +163,10 @@ export function RegisterPage() {
   const [location, setLocation] = useState("");
   const [university, setUniversity] = useState(REGISTRATION_STATUSES[0]);
   const [searchParams] = useSearchParams();
+  const [countries, setCountries] = useState<CountryInfo[]>([NIGERIA_FALLBACK]);
+  // An explicit choice (?country=GH or a country landing page) wins over the IP guess.
+  const [chosenCountry] = useState(() => (searchParams.get("country") ?? storedCountry() ?? "").toUpperCase());
+  const [country, setCountry] = useState("NG");
   // Pre-selected when arriving from a course's free preview (/register?course=<slug>).
   const [courseInterest, setCourseInterest] = useState(() => {
     const fromLink = searchParams.get("course") ?? "";
@@ -134,6 +181,33 @@ export function RegisterPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { status, error } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCountries()
+      .then(({ detected, countries: list }) => {
+        if (cancelled || list.length === 0) return;
+        setCountries(list);
+        const pick = [chosenCountry, detected].find((c) => c && list.some((x) => x.code === c));
+        if (pick) setCountry(pick);
+      })
+      .catch(() => {
+        // Keep the Nigeria-only form.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [chosenCountry]);
+
+  const countryInfo = countries.find((c) => c.code === country) ?? NIGERIA_FALLBACK;
+  const isNigeria = country === "NG";
+  const hero = COUNTRY_HERO[country];
+
+  function changeCountry(code: string) {
+    setCountry(code);
+    setLocation("");
+    setMobileNetwork("");
+  }
 
   useEffect(() => {
     const code = referralCode.trim();
@@ -168,16 +242,22 @@ export function RegisterPage() {
         password,
         firstName,
         lastName,
+        country,
         location,
         university,
         courseInterest,
         referralCode: referralCode.trim() || undefined,
         phone: phone.trim(),
-        mobileNetwork,
+        mobileNetwork: isNigeria ? mobileNetwork : undefined,
       }),
     );
     if (registerUser.fulfilled.match(result)) {
-      track("sign_up", { method: "email", referred: Boolean(referralCode.trim()), course_interest: courseInterest });
+      track("sign_up", {
+        method: "email",
+        referred: Boolean(referralCode.trim()),
+        course_interest: courseInterest,
+        country,
+      });
       // Send the student straight to the course they said they're interested in,
       // instead of the generic dashboard.
       navigate(`/courses/${courseInterest}`);
@@ -189,21 +269,31 @@ export function RegisterPage() {
   return (
     <div className="bg-[#F7F4EC]">
       {/* Nigerian flag ribbon */}
-      <div className="flex h-2" aria-hidden="true">
-        <span className="flex-1 bg-[#008751]" />
-        <span className="flex-1 bg-white" />
-        <span className="flex-1 bg-[#008751]" />
-      </div>
+      {isNigeria && (
+        <div className="flex h-2" aria-hidden="true">
+          <span className="flex-1 bg-[#008751]" />
+          <span className="flex-1 bg-white" />
+          <span className="flex-1 bg-[#008751]" />
+        </div>
+      )}
 
-      <section className="relative bg-[#006B40] text-white lg:bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]">
+      <section
+        className={`relative bg-[#006B40] text-white ${
+          isNigeria
+            ? "lg:bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] lg:bg-cover lg:bg-[center_18%]"
+            : ""
+        }`}
+      >
         {/* Phones and tablets: the students-and-flag photo as a clear band above the text */}
+        {isNigeria && (
+          <div
+            className="h-56 border-b-[6px] border-white bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] bg-cover bg-[center_20%] sm:h-72 lg:hidden"
+            role="img"
+            aria-label="Nigerian students and graduates on campus under the Nigerian flag"
+          />
+        )}
         <div
-          className="h-56 border-b-[6px] border-white bg-[url('/images/zoom-attendees/nigerian-students-flag.jpg')] bg-cover bg-[center_20%] sm:h-72 lg:hidden"
-          role="img"
-          aria-label="Nigerian students and graduates on campus under the Nigerian flag"
-        />
-        <div
-          className="pointer-events-none absolute inset-0 hidden lg:block"
+          className={`pointer-events-none absolute inset-0 hidden ${isNigeria ? "lg:block" : ""}`}
           style={{
             background:
               "linear-gradient(90deg, rgba(0,55,32,.88) 0%, rgba(0,70,42,.62) 34%, rgba(0,70,42,.08) 58%, rgba(16,21,31,.1) 100%), linear-gradient(0deg, rgba(16,21,31,.45) 0%, rgba(16,21,31,0) 40%)",
@@ -213,26 +303,34 @@ export function RegisterPage() {
         <div className="relative mx-auto grid max-w-6xl items-start gap-8 px-4 pb-12 pt-8 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:gap-12 lg:py-16">
           <div className="lg:[text-shadow:0_1px_12px_rgba(0,30,18,.55)]">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[.16em]">
-              <span className="flex h-3.5 w-6 overflow-hidden rounded-sm ring-1 ring-white/60" aria-hidden="true">
-                <span className="flex-1 bg-[#008751]" />
-                <span className="flex-1 bg-white" />
-                <span className="flex-1 bg-[#008751]" />
-              </span>
-              Built for Nigerians
+              {isNigeria && (
+                <span className="flex h-3.5 w-6 overflow-hidden rounded-sm ring-1 ring-white/60" aria-hidden="true">
+                  <span className="flex-1 bg-[#008751]" />
+                  <span className="flex-1 bg-white" />
+                  <span className="flex-1 bg-[#008751]" />
+                </span>
+              )}
+              {hero ? hero.badge : "Built for Nigerians"}
             </span>
             <h1 className="mt-4 font-serif text-4xl font-bold leading-tight sm:text-5xl">
               Create your account. <span className="text-[#FFD9B8]">Build skills employers can verify.</span>
             </h1>
             <p className="mt-4 max-w-xl text-lg text-[#E9F2EC]">
-              Practical, job-ready digital skills for Nigerian graduates, final year students and corps members preparing
-              for careers in Oil &amp; Gas, Banking and Telecoms. Learn online from anywhere in Nigeria.
+              {hero ? (
+                hero.intro
+              ) : (
+                <>
+                  Practical, job-ready digital skills for Nigerian graduates, final year students and corps members
+                  preparing for careers in Oil &amp; Gas, Banking and Telecoms. Learn online from anywhere in Nigeria.
+                </>
+              )}
             </p>
             <ul className="mt-5 grid gap-2.5">
               {[
                 "Free first lesson in every course, no payment needed to sign up",
                 "Self-paced courses of 8 to 18 days, with lifetime access",
                 "A real capstone project and a certificate you can show employers",
-                "Earn airtime or data for every friend who joins and pays",
+                ...(isNigeria ? ["Earn airtime or data for every friend who joins and pays"] : []),
               ].map((point) => (
                 <li key={point} className="flex items-start gap-2.5 text-[15.5px] text-[#F2F7F3]">
                   <span
@@ -253,11 +351,13 @@ export function RegisterPage() {
                 <h2 className="font-serif text-2xl font-bold leading-tight">Create your account</h2>
                 <p className="text-sm text-white/90">Takes about 2 minutes</p>
               </div>
-              <span className="flex h-5 w-8 overflow-hidden rounded-sm ring-1 ring-white/60" aria-hidden="true">
-                <span className="flex-1 bg-[#008751]" />
-                <span className="flex-1 bg-white" />
-                <span className="flex-1 bg-[#008751]" />
-              </span>
+              {isNigeria && (
+                <span className="flex h-5 w-8 overflow-hidden rounded-sm ring-1 ring-white/60" aria-hidden="true">
+                  <span className="flex-1 bg-[#008751]" />
+                  <span className="flex-1 bg-white" />
+                  <span className="flex-1 bg-[#008751]" />
+                </span>
+              )}
             </div>
 
             {referralCheck.state === "valid" && (
@@ -296,7 +396,7 @@ export function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className={isNigeria ? "grid gap-4 sm:grid-cols-2" : "grid gap-4"}>
                 <Input
                   id="phone"
                   label="Phone number"
@@ -305,27 +405,33 @@ export function RegisterPage() {
                   autoComplete="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="e.g. 0803 123 4567"
+                  placeholder={countryInfo.phonePlaceholder}
                   required
                 />
-                <Select
-                  id="mobileNetwork"
-                  label="Mobile network"
-                  value={mobileNetwork}
-                  onChange={(e) => setMobileNetwork(e.target.value)}
-                  required
-                >
-                  <option value="" disabled>
-                    Choose network&hellip;
-                  </option>
-                  {MOBILE_NETWORKS.map((network) => (
-                    <option key={network.value} value={network.value}>
-                      {network.label}
+                {isNigeria && (
+                  <Select
+                    id="mobileNetwork"
+                    label="Mobile network"
+                    value={mobileNetwork}
+                    onChange={(e) => setMobileNetwork(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Choose network&hellip;
                     </option>
-                  ))}
-                </Select>
+                    {MOBILE_NETWORKS.map((network) => (
+                      <option key={network.value} value={network.value}>
+                        {network.label}
+                      </option>
+                    ))}
+                  </Select>
+                )}
               </div>
-              <p className="-mt-2 text-xs text-gray-500">We use this to send any airtime or data rewards you earn.</p>
+              <p className="-mt-2 text-xs text-gray-500">
+                {isNigeria
+                  ? "We use this to send any airtime or data rewards you earn."
+                  : "We use this to contact you about your course, for example on WhatsApp."}
+              </p>
               <div className="flex flex-col gap-1">
                 <label htmlFor="password" className="text-sm font-medium text-gray-700">
                   Password
@@ -355,22 +461,31 @@ export function RegisterPage() {
               </div>
               <p className="-mt-2 text-xs text-gray-500">At least 10 characters, including letters and numbers.</p>
               <div className="grid gap-4 sm:grid-cols-2">
+                <Select id="country" label="Country" value={country} onChange={(e) => changeCountry(e.target.value)} required>
+                  {countries.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Select>
                 <Select
                   id="location"
-                  label="Select your location"
+                  label={isNigeria ? "Select your location" : countryInfo.regionLabel}
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   required
                 >
                   <option value="" disabled>
-                    Select State
+                    Select {countryInfo.regionLabel}
                   </option>
-                  {LOCATIONS.map((option) => (
+                  {countryInfo.regions.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
                   ))}
                 </Select>
+              </div>
+              <div className="grid gap-4">
                 <Select
                   id="university"
                   label="Status"
@@ -466,7 +581,9 @@ export function RegisterPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <p className="text-xs font-bold uppercase tracking-[.16em] text-[#006B40]">Where Nigerian graduates are being hired</p>
+        <p className="text-xs font-bold uppercase tracking-[.16em] text-[#006B40]">
+          Where {isNigeria ? "Nigerian " : ""}graduates are being hired
+        </p>
         <h2 className="mt-2 font-serif text-3xl font-bold text-gray-900">Skills for oil &amp; gas, telecoms and banking</h2>
         <div className="mt-6 grid gap-5 md:grid-cols-3">
           {SECTORS.map((sector) => (

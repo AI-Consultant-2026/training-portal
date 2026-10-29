@@ -23,6 +23,7 @@ export interface RegisterInput {
   firstName: string;
   lastName: string;
   location?: string;
+  country?: string;
   courseInterest?: string;
   university?: string;
   referralCode?: string;
@@ -82,13 +83,19 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     firstName: input.firstName,
     lastName: input.lastName,
     location: input.location ?? "Nigeria",
+    country: input.country ?? "NG",
     courseInterest: input.courseInterest ?? null,
     university: input.university ?? null,
-    // Stored where /refer and the admin payout flow already look for the payout number.
-    profileData: {
-      ...(input.phone ? { referralPayoutPhone: toLocalNigerianMobile(input.phone) ?? input.phone } : {}),
-      ...(input.mobileNetwork ? { mobileNetwork: input.mobileNetwork } : {}),
-    },
+    // Nigerian numbers are stored where /refer and the admin payout flow already look for
+    // the payout number. Airtime/data rewards are Nigerian only, so other countries' numbers
+    // are kept as a plain contact number instead.
+    profileData:
+      (input.country ?? "NG") === "NG"
+        ? {
+            ...(input.phone ? { referralPayoutPhone: toLocalNigerianMobile(input.phone) ?? input.phone } : {}),
+            ...(input.mobileNetwork ? { mobileNetwork: input.mobileNetwork } : {}),
+          }
+        : { ...(input.phone ? { phone: input.phone } : {}) },
   });
 
   // Best-effort: a malformed or unknown referral code must never fail a real signup.

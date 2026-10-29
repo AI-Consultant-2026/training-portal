@@ -6,12 +6,14 @@ export interface RegisterInput {
   password: string;
   firstName: string;
   lastName: string;
+  country: string;
   location: string;
   courseInterest: string;
   university: string;
   referralCode?: string;
   phone: string;
-  mobileNetwork: string;
+  // Nigeria only: airtime/data rewards go through Nigerian networks.
+  mobileNetwork?: string;
 }
 
 export interface LoginInput {

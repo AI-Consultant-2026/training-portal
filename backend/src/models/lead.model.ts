@@ -10,6 +10,7 @@ export interface LeadAttributes {
   source: string | null;
   sector: string | null;
   interest: string | null;
+  country: string;
   welcomeEmailSentAt: Date | null;
   reminder21dSentAt: Date | null;
   reminder14dSentAt: Date | null;
@@ -32,6 +33,7 @@ export type LeadCreationAttributes = Optional<
   | "source"
   | "sector"
   | "interest"
+  | "country"
   | "welcomeEmailSentAt"
   | "reminder21dSentAt"
   | "reminder14dSentAt"
@@ -56,6 +58,7 @@ export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implemen
   declare source: string | null;
   declare sector: string | null;
   declare interest: string | null;
+  declare country: string;
   declare welcomeEmailSentAt: Date | null;
   declare reminder21dSentAt: Date | null;
   declare reminder14dSentAt: Date | null;
@@ -82,6 +85,7 @@ export function initLeadModel(sequelize: Sequelize) {
       source: { type: DataTypes.STRING, allowNull: true },
       sector: { type: DataTypes.STRING, allowNull: true },
       interest: { type: DataTypes.STRING, allowNull: true },
+      country: { type: DataTypes.STRING(2), allowNull: false, defaultValue: "NG" },
       welcomeEmailSentAt: { type: DataTypes.DATE, allowNull: true, field: "welcome_email_sent_at" },
       reminder21dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_21d_sent_at" },
       reminder14dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_14d_sent_at" },

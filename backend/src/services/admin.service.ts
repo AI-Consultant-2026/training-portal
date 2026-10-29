@@ -288,6 +288,7 @@ async function serializeCandidate(user: User) {
     email: user.email,
     status: user.status,
     location: user.location,
+    country: user.country,
     courseInterest: user.courseInterest,
     createdAt: user.createdAt,
     online: isOnline(user.lastActiveAt),

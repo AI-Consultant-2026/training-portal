@@ -13,6 +13,7 @@ export interface UserAttributes {
   status: UserStatus;
   profileData: Record<string, unknown>;
   location: string;
+  country: string;
   courseInterest: string | null;
   university: string | null;
   referralCode: string | null;
@@ -29,6 +30,7 @@ export type UserCreationAttributes = Optional<
   | "status"
   | "profileData"
   | "location"
+  | "country"
   | "courseInterest"
   | "university"
   | "referralCode"
@@ -48,6 +50,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   declare status: UserStatus;
   declare profileData: Record<string, unknown>;
   declare location: string;
+  declare country: string;
   declare courseInterest: string | null;
   declare university: string | null;
   declare referralCode: string | null;
@@ -106,6 +109,11 @@ export function initUserModel(sequelize: Sequelize) {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: "Nigeria",
+      },
+      country: {
+        type: DataTypes.STRING(2),
+        allowNull: false,
+        defaultValue: "NG",
       },
       courseInterest: {
         type: DataTypes.STRING,

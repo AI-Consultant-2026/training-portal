@@ -1,6 +1,7 @@
 import { config } from "../../config";
 import { EmailMessage } from "../../utils/email";
 import { wrapHtml } from "../htmlWrapper";
+import { COUNTRIES, CountryCode } from "../../constants/countries";
 
 export function buildLeadNotificationEmail(lead: {
   name: string;
@@ -11,6 +12,7 @@ export function buildLeadNotificationEmail(lead: {
   source?: string | null;
   sector?: string | null;
   interest?: string | null;
+  country?: string | null;
 }): EmailMessage {
   const lines = [
     "New course interest submitted via the website.",
@@ -25,6 +27,7 @@ export function buildLeadNotificationEmail(lead: {
   if (lead.sector) lines.push(`Aiming for: ${lead.sector}`);
   if (lead.interest) lines.push(`Interested in: ${lead.interest}`);
   if (lead.source) lines.push(`Heard about us via: ${lead.source}`);
+  if (lead.country && lead.country !== "NG") lines.push(`Country: ${COUNTRIES[lead.country as CountryCode]?.name ?? lead.country}`);
 
   return {
     to: config.leadsNotifyEmail,

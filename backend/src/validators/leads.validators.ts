@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { REGISTRATION_STATUSES } from "./auth.validators";
+import { COUNTRY_CODES } from "../constants/countries";
 
 // Reuses the same allow-list as registration (auth.validators.ts) rather than a third
 // copy -- see that file's REGISTRATION_STATUSES for the drift risk this avoids.
@@ -45,5 +46,7 @@ export const createLeadSchema = z.object({
     source: z.enum(LEAD_SOURCES).optional(),
     sector: z.enum(LEAD_SECTORS).optional(),
     interest: z.enum(LEAD_INTERESTS).optional(),
+    // Sent by the country landing pages (e.g. /ghana); the Nigerian /welcome form leaves it out.
+    country: z.enum(COUNTRY_CODES).default("NG"),
   }),
 });

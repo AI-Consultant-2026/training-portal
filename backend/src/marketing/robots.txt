@@ -50,6 +50,7 @@ Allow: /cyber-security-fundamentals-course
 Allow: /gis-and-drone-mapping-course
 Allow: /digital-marketing-course
 Allow: /hse-fundamentals-course
+Allow: /ghana
 Allow: /oil-and-gas-jobs-in-warri-delta-state
 Allow: /how-to-get-a-bank-job-in-nigeria
 Allow: /fintech-jobs-nigeria

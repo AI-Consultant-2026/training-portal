@@ -21,6 +21,7 @@ import {
   fetchAdminStats,
   fetchCandidates,
 } from "./adminSlice";
+import { countryName } from "../../api/countries.api";
 import { RefundPanel } from "./RefundPanel";
 
 function formatLastActive(lastActiveAt: string | null): string {
@@ -300,7 +301,10 @@ export function AdminCandidatesPage() {
                       {c.firstName} {c.lastName}
                     </p>
                     <p className="text-gray-500">{c.email}</p>
-                    <p className="text-xs text-gray-400">{c.location}</p>
+                    <p className="text-xs text-gray-400">
+                      {c.location}
+                      {c.country && c.country !== "NG" ? `, ${countryName(c.country)}` : ""}
+                    </p>
                   </td>
                   <td className="px-4 py-3">
                     <span

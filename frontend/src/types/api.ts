@@ -10,6 +10,8 @@ export interface User {
   status: UserStatus;
   profileData: Record<string, unknown>;
   location: string;
+  /** ISO code: NG, GH, KE or ZA. */
+  country: string;
   courseInterest: string | null;
   university: string | null;
   referralCode: string | null;
@@ -592,6 +594,7 @@ export interface Candidate {
   email: string;
   status: UserStatus;
   location: string;
+  country: string;
   courseInterest: string | null;
   createdAt: string;
   online: boolean;
@@ -609,6 +612,7 @@ export interface Lead {
   source: string | null;
   sector: string | null;
   interest: string | null;
+  country: string;
   // Set when the lead opted out of Paleon emails (lead follow-ups or an email-client campaign).
   unsubscribedAt: string | null;
   createdAt: string;

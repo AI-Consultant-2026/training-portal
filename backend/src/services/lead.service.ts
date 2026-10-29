@@ -11,6 +11,7 @@ export interface CreateLeadInput {
   source?: string;
   sector?: string;
   interest?: string;
+  country?: string;
 }
 
 export async function createLead(input: CreateLeadInput): Promise<Lead> {
