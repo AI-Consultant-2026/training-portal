@@ -77,15 +77,22 @@ describe("Countries (Ghana, Kenya, South Africa)", () => {
     expect((await Lead.findByPk(nigerian.body.id))?.country).toBe("NG");
   });
 
-  it("serves the /ghana page and its script", async () => {
-    const page = await request(app).get("/ghana");
+  it.each([
+    ["/ghana", "GH", "Ghanaian"],
+    ["/kenya", "KE", "Kenyan"],
+    ["/south-africa", "ZA", "South African"],
+  ])("serves the %s landing page", async (path, code, people) => {
+    const page = await request(app).get(path);
     expect(page.status).toBe(200);
-    expect(page.text).toContain("Digital skills for Ghanaian graduates");
-    expect(page.text).toContain('href="/register?country=GH"');
+    expect(page.text).toContain(`Digital skills for ${people} graduates`);
+    expect(page.text).toContain(`href="/register?country=${code}"`);
+    expect(page.text).toContain(`data-country="${code}"`);
     expect(page.text).not.toMatch(/<script>(?!\s*$)/); // CSP: no inline scripts
+  });
 
-    const script = await request(app).get("/ghana.js");
+  it("serves the shared country-page script", async () => {
+    const script = await request(app).get("/country-page.js");
     expect(script.status).toBe(200);
-    expect(script.text).toContain('country: "GH"');
+    expect(script.text).toContain('getAttribute("data-country")');
   });
 });

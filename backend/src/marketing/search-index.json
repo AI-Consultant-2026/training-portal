@@ -48,6 +48,18 @@
     "category": "Courses"
   },
   {
+    "title": "Online Digital Skills Courses in Kenya",
+    "description": "Online courses for Kenyan graduates in Cyber Security, GIS & Drone Mapping, Digital Marketing and HSE. Self-paced, lifetime access, capstone project. Try a free lesson.",
+    "url": "/kenya",
+    "category": "Courses"
+  },
+  {
+    "title": "Online Digital Skills Courses in South Africa",
+    "description": "Online courses for South African graduates in Cyber Security, GIS & Drone Mapping, Digital Marketing and HSE. Self-paced, lifetime access, capstone project. Try a free lesson.",
+    "url": "/south-africa",
+    "category": "Courses"
+  },
+  {
     "title": "Refer & Earn: Paleon Training Referral Programme",
     "description": "Refer a friend to Paleon Training and earn airtime, data or course credit when they join and pay for a digital skills course. Your friend gets an airtime welcome reward too.",
     "url": "/refer",

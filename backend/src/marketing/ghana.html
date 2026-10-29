@@ -594,10 +594,8 @@
     dl.skill-facts { grid-template-columns: 1fr; gap: 2px; }
     dl.skill-facts dd { margin-bottom: 12px; }
   }
-  /* /ghana only */
-  .gh-flag { display: inline-flex; width: 30px; height: 20px; border-radius: 3px; overflow: hidden; vertical-align: -4px; margin-right: 8px; box-shadow: 0 0 0 1px rgba(255,255,255,.35); flex-direction: column; position: relative; }
-  .gh-flag span { flex: 1; }
-  .gh-flag i { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; font-size: 10px; line-height: 1; color: #000; }
+  /* country landing pages only */
+  .eyebrow .flag { width: 30px; height: 20px; border-radius: 3px; vertical-align: -5px; margin-right: 8px; box-shadow: 0 0 0 1px rgba(255,255,255,.35); }
   .course-cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 20px; }
   .course-card { background: var(--white); border: 1px solid var(--line-light); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
   .course-card h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 21px; }
@@ -645,7 +643,7 @@
 <div class="band">
   <div class="wrap masthead">
     <a class="wordmark" href="/"><span class="dot"></span>Paleon Training</a>
-    <p class="eyebrow"><span class="gh-flag" aria-hidden="true"><span style="background:#CE1126"></span><span style="background:#FCD116"></span><span style="background:#006B3F"></span><i>&#9733;</i></span>Now open in Ghana</p>
+    <p class="eyebrow"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#006B3F"/><rect width="30" height="13.33" fill="#FCD116"/><rect width="30" height="6.67" fill="#CE1126"/><path d="M15 7.2l.95 2.9h3.05l-2.47 1.8.95 2.9L15 13l-2.48 1.8.95-2.9-2.47-1.8h3.05z" fill="#000"/></svg>Now open in Ghana</p>
     <h1 class="title" style="max-width: 20ch;">Digital skills for Ghanaian graduates</h1>
     <p class="subhead">Practical online courses in Cyber Security, GIS &amp; Drone Mapping, Digital Marketing and HSE, for graduates, final year students and national service personnel aiming for careers in oil &amp; gas, banking, telecoms and mining. Learn from anywhere in Ghana, at your own pace.</p>
     <div class="stat-strip">
@@ -739,7 +737,7 @@
     <p class="section-label">Not ready yet?</p>
     <h2 class="section-title">Get course details by email</h2>
     <p>Leave your details and we&rsquo;ll send you the course outline and how to start.</p>
-    <form class="lead-form" id="ghana-lead-form" novalidate>
+    <form class="lead-form" id="country-lead-form" data-country="GH" novalidate>
       <label>Full name<input name="name" autocomplete="name" required></label>
       <label>Email<input name="email" type="email" autocomplete="email" required></label>
       <label>WhatsApp number (optional)<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. +233 24 123 4567"></label>
@@ -760,7 +758,7 @@
         </select>
       </label>
       <button type="submit">Send me the details</button>
-      <p class="form-msg" id="ghana-lead-msg" role="status" aria-live="polite"></p>
+      <p class="form-msg" id="country-lead-msg" role="status" aria-live="polite"></p>
     </form>
   </section>
 
@@ -860,7 +858,7 @@
   </div>
 </footer>
 
-<script src="/ghana.js" defer></script>
+<script src="/country-page.js" defer></script>
 <script src="/search.js" defer></script>
 <script src="/whatsapp-float.js" defer></script>
 <script src="/email-links.js" defer></script>

@@ -1,15 +1,18 @@
-// /ghana (2026-10-29). External file because the site CSP blocks inline scripts.
+// Country landing pages (/ghana, /kenya, /south-africa; 2026-10-29). External file
+// because the site CSP blocks inline scripts. The page's lead form carries its country
+// code in data-country.
 (function () {
-  // Tells the register page to open on Ghana even if the visitor's IP says otherwise.
-  try {
-    window.localStorage.setItem("paleon_country", "GH");
-  } catch (e) {
-    // Storage blocked: the register links carry ?country=GH anyway.
-  }
+  var form = document.getElementById("country-lead-form");
+  var msg = document.getElementById("country-lead-msg");
+  var country = form && form.getAttribute("data-country");
+  if (!country) return;
 
-  var form = document.getElementById("ghana-lead-form");
-  var msg = document.getElementById("ghana-lead-msg");
-  if (!form || !msg) return;
+  // Tells the register page to open on this country even if the visitor's IP says otherwise.
+  try {
+    window.localStorage.setItem("paleon_country", country);
+  } catch (e) {
+    // Storage blocked: the register links carry ?country= anyway.
+  }
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -23,7 +26,7 @@
       msg.textContent = "Please enter your name, a valid email and a course.";
       return;
     }
-    var payload = { name: name, email: email, course: course, university: form.university.value, country: "GH" };
+    var payload = { name: name, email: email, course: course, university: form.university.value, country: country };
     if (phone) payload.phone = phone;
     var button = form.querySelector("button");
     button.disabled = true;
@@ -34,7 +37,7 @@
     })
       .then(function (res) {
         if (!res.ok) throw new Error("request failed");
-        if (window.ptTrack) window.ptTrack("generate_lead", { course: course, country: "GH", form: "ghana" });
+        if (window.ptTrack) window.ptTrack("generate_lead", { course: course, country: country, form: "country_page" });
         form.reset();
         msg.className = "form-msg ok";
         msg.textContent = "Thank you. We'll email you the course details shortly.";

@@ -572,14 +572,16 @@ export function createApp() {
   app.get("/hse-fundamentals-course", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-fundamentals-course.html"));
   });
-  // Ghana landing page (2026-10-29), the first market outside Nigeria. Listed in
-  // sitemap.xml, allowed in robots.txt. ghana.js marks the visitor as Ghanaian for the
-  // register page and posts the page's lead form with country "GH".
-  app.get("/ghana", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "ghana.html"));
-  });
-  app.get("/ghana.js", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "ghana.js"));
+  // Country landing pages (2026-10-29), the markets outside Nigeria. Listed in
+  // sitemap.xml, allowed in robots.txt. country-page.js marks the visitor's country for
+  // the register page and posts the page's lead form with that country's code.
+  for (const page of ["ghana", "kenya", "south-africa"]) {
+    app.get(`/${page}`, (req, res) => {
+      res.sendFile(path.join(__dirname, "marketing", `${page}.html`));
+    });
+  }
+  app.get("/country-page.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "country-page.js"));
   });
   // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
   // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.
