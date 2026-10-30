@@ -313,4 +313,16 @@ describe("Paystack per country", () => {
     const payment = await Payment.findOne({ where: { enrollmentId: enrollment!.id } });
     expect(payment).toMatchObject({ currency: "NGN", billingCountry: "NG" });
   });
+
+  it("serves the Kenyan jobs board and its data", async () => {
+    const page = await request(app).get("/ke/latest-jobs-board");
+    expect(page.status).toBe(200);
+    expect(page.text).toContain('<link rel="canonical" href="https://paleontraining.com/ke/latest-jobs-board">');
+    expect(page.text).toContain('<script src="/ke-latest-jobs-board.js" defer></script>');
+    expect((await request(app).get("/ke-latest-jobs-board.js")).status).toBe(200);
+    const data = await request(app).get("/ke-latest-jobs.json");
+    expect(data.status).toBe(200);
+    expect(Array.isArray(data.body.jobs)).toBe(true);
+    expect(data.body.jobs[0]).toHaveProperty("county");
+  });
 });
