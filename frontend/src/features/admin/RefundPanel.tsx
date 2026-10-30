@@ -147,7 +147,7 @@ function RefundDialog({
         <ol className="list-decimal space-y-1 pl-5">
           <li>
             Refund the money first in your <strong>Paystack dashboard</strong>: Transactions, open the student&rsquo;s
-            payment, then Refund. Refund the amount paid <strong>less the &#8358;2,500 administrative charge</strong>
+            payment, then Refund. Refund the amount paid <strong>less the 5% administrative charge</strong>
             (terms section 5). Paystack sends it back to the card that paid.
           </li>
           <li>
