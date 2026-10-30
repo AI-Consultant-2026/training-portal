@@ -55,6 +55,22 @@ export const config = {
     KE: process.env.PAYSTACK_SECRET_KEY_KE ?? "",
     ZA: process.env.PAYSTACK_SECRET_KEY_ZA ?? "",
   } as Record<string, string>,
+  // Flutterwave (2026-10-30): one account takes payments for Ghana, Kenya and South Africa
+  // in cedis, shillings and rand (Nigeria stays on Paystack). Optional: unset = those
+  // countries can't take payments. A test key (FLWSECK_TEST-...) uses Flutterwave's test
+  // mode on the same API. The secret hash is the one typed into Flutterwave's dashboard
+  // (Settings > Webhooks); Flutterwave sends it back in the verif-hash header.
+  flutterwave: {
+    secretKey: process.env.FLUTTERWAVE_SECRET_KEY ?? "",
+    secretHash: process.env.FLUTTERWAVE_SECRET_HASH ?? "",
+  },
+  // Countries to treat as live on top of the ones marked live in constants/countries.ts,
+  // e.g. "KE" or "KE,GH" (2026-10-30). Lets a country open for payments from Render's
+  // Environment page, and lets the checkout be tested locally, without a code change.
+  liveCountries: (process.env.LIVE_COUNTRIES ?? "")
+    .split(",")
+    .map((code) => code.trim().toUpperCase())
+    .filter(Boolean),
   // VTpass (2026-10-02): sends referral airtime/data rewards from /admin/referrals. Optional:
   // with no keys the "Send airtime/data" button is hidden and rewards are paid by hand as
   // before. VTPASS_ENV defaults to sandbox, so real money only moves once it is set to

@@ -4,12 +4,13 @@ import { COURSE_PRICES_NGN, DEPOSIT_UNLOCKED_DAYS, INSTALMENT_DEPOSIT_NGN, getBa
 import { Course, Enrollment, Payment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import * as courseService from "./course.service";
-import { balanceIn, checkoutCountryFor, coursePriceIn, depositIn, paystackSecretKey } from "./paystackAccounts";
+import { balanceIn, CheckoutInfo, checkoutCountryFor, checkoutInfo, coursePriceIn, depositIn, paymentsEnabledIn } from "./paystackAccounts";
+import { verifyFlutterwaveCharge } from "./flutterwave.service";
 import {
   ApiChargeKind,
   CARD_PAYMENTS_UNAVAILABLE_MESSAGE,
   ensureUnpaidEnrollment,
-  initializePaystackCharge,
+  openCheckout,
   VerifiedCharge,
   verifyPaystackCharge,
 } from "./payment.service";
@@ -70,7 +71,9 @@ export async function createSponsorLink(courseId: string, studentId: string): Pr
   return { url: sponsorUrl(enrollment.id) };
 }
 
+// Amounts are in `checkout`'s currency (see Quote in payment.service.ts).
 export interface SponsorPageInfo {
+  checkout: CheckoutInfo;
   studentFirstName: string;
   courseTitle: string;
   courseSlug: string;
@@ -84,19 +87,22 @@ export interface SponsorPageInfo {
 
 export async function getSponsorPage(token: string): Promise<SponsorPageInfo> {
   const { enrollment, course, student } = await loadSponsoredEnrollment(token);
-  const priceNgn = COURSE_PRICES_NGN[course.slug];
+  const country = checkoutCountryFor(student.country);
+  const priceNgn = country === "NG" ? COURSE_PRICES_NGN[course.slug] : coursePriceIn(country, course.slug);
   if (priceNgn === undefined) throw ApiError.notFound("This payment link isn't valid");
-  const balanceNgn = getBalanceNgn(course.slug);
+  const balanceNgn = country === "NG" ? getBalanceNgn(course.slug) : balanceIn(country, course.slug);
+  const deposit = country === "NG" ? INSTALMENT_DEPOSIT_NGN : depositIn(country);
   return {
+    checkout: checkoutInfo(country),
     studentFirstName: student.firstName,
     courseTitle: course.title,
     courseSlug: course.slug,
     status: enrollment.paymentConfirmed ? "paid" : enrollment.depositPaidAt ? "deposit_paid" : "unpaid",
     priceNgn,
-    depositNgn: balanceNgn === null ? null : INSTALMENT_DEPOSIT_NGN,
+    depositNgn: balanceNgn === null ? null : deposit,
     balanceNgn,
     unlockedDays: DEPOSIT_UNLOCKED_DAYS,
-    paymentsEnabled: paystackSecretKey(checkoutCountryFor(student.country)) !== "",
+    paymentsEnabled: paymentsEnabledIn(country),
   };
 }
 
@@ -107,7 +113,7 @@ export async function startSponsorPayment(
   const { enrollment, course, student } = await loadSponsoredEnrollment(token);
   // The sponsor pays through the student's checkout account (see paystackAccounts.ts).
   const country = checkoutCountryFor(student.country);
-  if (paystackSecretKey(country) === "") {
+  if (!paymentsEnabledIn(country)) {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
   if (enrollment.paymentConfirmed) throw ApiError.conflict("This course has already been paid for");
@@ -131,7 +137,7 @@ export async function startSponsorPayment(
   }
 
   const pageUrl = sponsorUrl(enrollment.id);
-  return initializePaystackCharge({
+  return openCheckout({
     enrollment,
     courseSlug: course.slug,
     kind,
@@ -139,6 +145,12 @@ export async function startSponsorPayment(
     callbackUrl: `${pageUrl}?paid=${kind}`,
     cancelUrl: pageUrl,
   });
+}
+
+// Flutterwave's version (?transaction_id=... on the return URL).
+export async function verifySponsorFlutterwavePayment(token: string, transactionId: string): Promise<VerifiedCharge> {
+  const { enrollment } = await loadSponsoredEnrollment(token);
+  return verifyFlutterwaveCharge(transactionId, (charged) => charged.id === enrollment.id);
 }
 
 // Backup for the webhook when the sponsor lands back on the page from Paystack.

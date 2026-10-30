@@ -60,7 +60,7 @@ interface PaystackChargeData {
   metadata?: unknown;
 }
 
-interface InstalmentMetadata {
+export interface InstalmentMetadata {
   enrollmentId: string;
   instalment: ApiChargeKind;
 }
@@ -113,7 +113,11 @@ export async function handlePaystackEvent(
   // Instalment charges (deposit or balance) name their enrolment, so no guessing is needed.
   const instalment = readInstalmentMetadata(data.metadata);
   if (instalment) {
-    return handleInstalmentCharge(instalment, { reference, email, amount, gatewayReference, country }, unmatched);
+    return applyApiCharge(
+      instalment,
+      { email, amount, gatewayReference, pendingReference: PAYSTACK_INIT_REFERENCE_PREFIX + reference, country },
+      unmatched,
+    );
   }
 
   // Fixed-price Payment Pages (paystackPaymentLinks.ts) only exist on Nigeria's account.
@@ -180,10 +184,15 @@ async function recordSucceededPayment(enrollment: Enrollment, amountNgn: number,
   });
 }
 
-async function handleInstalmentCharge(
+// Applies a charge that names its enrolment (a deposit, balance or sponsor's full payment)
+// from either gateway. `amount` is in the charge's own currency (the `country`'s).
+// `pendingReference` is the pending payment recorded when the checkout opened, and
+// `gatewayReference` the succeeded payment's idempotency key. `email` is checked against
+// the enrolled student's, or null to skip that check (Flutterwave: the charge was looked
+// up by our own tx_ref, which already ties it to the pending payment).
+export async function applyApiCharge(
   meta: InstalmentMetadata,
-  // `amount` is in the charge's own currency (the `country` account's).
-  charge: { reference: string; email: string; amount: number; gatewayReference: string; country: CountryCode },
+  charge: { email: string | null; amount: number; gatewayReference: string; pendingReference: string; country: CountryCode },
   unmatched: (reason: string) => Promise<WebhookOutcome>,
 ): Promise<WebhookOutcome> {
   const enrollment = await Enrollment.findByPk(meta.enrollmentId, { include: [{ model: Course, as: "course" }] });
@@ -191,7 +200,7 @@ async function handleInstalmentCharge(
   if (!enrollment || !course) return unmatched(`instalment ${meta.instalment} for an enrolment that no longer exists`);
 
   const student = await User.findByPk(enrollment.studentId);
-  if (!student || student.email.toLowerCase() !== charge.email.toLowerCase()) {
+  if (!student || (charge.email !== null && student.email.toLowerCase() !== charge.email.toLowerCase())) {
     return unmatched(`instalment ${meta.instalment} paid with an email that isn't the enrolled student's`);
   }
 
@@ -207,9 +216,7 @@ async function handleInstalmentCharge(
     );
   }
 
-  const pending = await Payment.findOne({
-    where: { gatewayReference: PAYSTACK_INIT_REFERENCE_PREFIX + charge.reference },
-  });
+  const pending = await Payment.findOne({ where: { gatewayReference: charge.pendingReference } });
   if (pending) {
     await pending.update({ status: "succeeded", amount: charge.amount, gatewayReference: charge.gatewayReference });
   } else {

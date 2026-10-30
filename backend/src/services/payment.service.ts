@@ -7,7 +7,19 @@ import { getPaystackPaymentLink } from "../constants/paystackPaymentLinks";
 import * as courseService from "./course.service";
 import { enrollStudent, getEnrollmentForCourseAndStudent } from "./enrollment.service";
 import * as userService from "./user.service";
-import { balanceIn, checkoutCountryFor, depositIn, paystackCurrency, paystackSecretKey } from "./paystackAccounts";
+import {
+  balanceIn,
+  CheckoutInfo,
+  checkoutCountryFor,
+  checkoutGateway,
+  checkoutInfo,
+  coursePriceIn,
+  depositIn,
+  paymentsEnabledIn,
+  paystackCurrency,
+  paystackSecretKey,
+} from "./paystackAccounts";
+import { initializeFlutterwaveCharge, verifyFlutterwaveCharge } from "./flutterwave.service";
 import { CountryCode, isCountryCode } from "../constants/countries";
 
 function requirePriceNgn(courseSlug: string): number {
@@ -37,10 +49,15 @@ export async function ensureUnpaidEnrollment(courseId: string, studentId: string
   return enrollStudent(courseId, studentId);
 }
 
+// The amounts are in the student's checkout currency (`checkout`, 2026-10-30): Naira for
+// Nigeria, and for anyone from a country that isn't live yet; cedis, shillings or rand for
+// a live Ghana, Kenya or South Africa. The "Ngn" names date from when Naira was the only
+// currency.
 export interface Quote {
+  checkout: CheckoutInfo;
   baseAmountNgn: number;
   card: {
-    currency: "NGN";
+    currency: string;
     amount: number;
     /** False until this course has a Paystack payment link (see paystackPaymentLinks.ts). */
     enabled: boolean;
@@ -55,13 +72,18 @@ export interface Quote {
   } | null;
 }
 
-export async function getQuote(courseIdOrSlug: string): Promise<Quote> {
+export async function getQuote(courseIdOrSlug: string, studentId: string): Promise<Quote> {
   const course = await courseService.getCourseByIdOrSlug(courseIdOrSlug);
+  const student = await userService.getUserById(studentId);
+  const country = checkoutCountryFor(student.country);
+  if (country !== "NG") return getLocalQuote(course.slug, country);
+
   const baseAmountNgn = requirePriceNgn(course.slug);
 
   const balanceNgn = getBalanceNgn(course.slug);
 
   return {
+    checkout: checkoutInfo("NG"),
     baseAmountNgn,
     card: {
       currency: "NGN",
@@ -77,6 +99,25 @@ export async function getQuote(courseIdOrSlug: string): Promise<Quote> {
             unlockedDays: DEPOSIT_UNLOCKED_DAYS,
             enabled: config.paystackSecretKey !== "",
           },
+  };
+}
+
+// A live Ghana, Kenya or South Africa: the country's own prices, paid through Flutterwave.
+function getLocalQuote(courseSlug: string, country: CountryCode): Quote {
+  const price = coursePriceIn(country, courseSlug);
+  if (price === undefined) throw ApiError.badRequest("This course does not have a price set yet");
+  const deposit = depositIn(country);
+  const balance = balanceIn(country, courseSlug);
+  const checkout = checkoutInfo(country);
+  const enabled = paymentsEnabledIn(country);
+  return {
+    checkout,
+    baseAmountNgn: price,
+    card: { currency: checkout.currency.code, amount: price, enabled },
+    instalment:
+      deposit === null || balance === null
+        ? null
+        : { depositNgn: deposit, balanceNgn: balance, unlockedDays: DEPOSIT_UNLOCKED_DAYS, enabled },
   };
 }
 
@@ -98,6 +139,9 @@ export async function startCardPayment(input: {
   studentId: string;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
+  const student = await userService.getUserById(input.studentId);
+  const country = checkoutCountryFor(student.country);
+  if (country !== "NG") return startLocalFullPayment(course, input.studentId, country);
   const paymentLink = getPaystackPaymentLink(course.slug);
   if (!paymentLink) {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
@@ -124,6 +168,33 @@ export async function startCardPayment(input: {
     }));
 
   return { paymentLink, payment, enrollment };
+}
+
+// A live Ghana, Kenya or South Africa has no fixed-price payment pages: paying in full is
+// an API checkout for the whole price, like a sponsor's full payment.
+async function startLocalFullPayment(
+  course: Course,
+  studentId: string,
+  country: CountryCode,
+): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
+  if (!paymentsEnabledIn(country)) {
+    throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
+  }
+  const price = coursePriceIn(country, course.slug);
+  if (price === undefined) throw ApiError.badRequest("This course does not have a price set yet");
+  const enrollment = await ensureUnpaidEnrollment(course.id, studentId);
+  if (enrollment.depositPaidAt) {
+    throw ApiError.conflict("Your deposit has already been paid -- pay the balance to unlock the rest of the course");
+  }
+  const origin = config.corsOrigin.replace(/\/$/, "");
+  return openCheckout({
+    enrollment,
+    courseSlug: course.slug,
+    kind: "full",
+    amount: price,
+    callbackUrl: `${origin}/courses/${course.slug}?payment=full`,
+    cancelUrl: `${origin}/courses/${course.slug}/pay/card`,
+  });
 }
 
 // --- Instalments (2026-10-11) ----------------------------------------------------------
@@ -153,7 +224,7 @@ export async function startInstalmentPayment(input: {
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const student = await userService.getUserById(input.studentId);
   const country = checkoutCountryFor(student.country);
-  if (paystackSecretKey(country) === "") {
+  if (!paymentsEnabledIn(country)) {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
@@ -179,7 +250,7 @@ export async function startInstalmentPayment(input: {
 
   const amount = input.kind === "deposit" ? deposit : balance;
   const origin = config.corsOrigin.replace(/\/$/, "");
-  return initializePaystackCharge({
+  return openCheckout({
     enrollment,
     courseSlug: course.slug,
     kind: input.kind,
@@ -187,6 +258,25 @@ export async function startInstalmentPayment(input: {
     callbackUrl: `${origin}/courses/${course.slug}?payment=${input.kind}`,
     cancelUrl: `${origin}/courses/${course.slug}/pay/card`,
   });
+}
+
+// Opens the checkout for one enrolment on the student's gateway: Paystack for Nigeria (and
+// any country not live yet), Flutterwave for a live Ghana, Kenya or South Africa.
+export async function openCheckout(input: {
+  enrollment: Enrollment;
+  courseSlug: string;
+  kind: ApiChargeKind;
+  amount: number;
+  callbackUrl: string;
+  cancelUrl: string;
+}): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
+  const student = await userService.getUserById(input.enrollment.studentId);
+  const country = checkoutCountryFor(student.country);
+  if (checkoutGateway(country) === "flutterwave") {
+    // Flutterwave returns to the callback URL whether the payer paid or cancelled.
+    return initializeFlutterwaveCharge({ ...input, country });
+  }
+  return initializePaystackCharge(input);
 }
 
 // Opens a Paystack checkout for one enrolment, always charged to the enrolled student's
@@ -263,9 +353,15 @@ export async function verifyInstalmentPayment(reference: string, studentId: stri
   return verifyPaystackCharge(reference, (enrollment) => enrollment.studentId === studentId);
 }
 
+// Flutterwave's version (?transaction_id=... on the return URL).
+export async function verifyFlutterwavePayment(transactionId: string, studentId: string): Promise<VerifiedCharge> {
+  return verifyFlutterwaveCharge(transactionId, (enrollment) => enrollment.studentId === studentId);
+}
+
 // What the return-from-Paystack pages get back. `purchase` is set only when Paystack says
 // the charge succeeded and it's been applied (now, or earlier by the webhook): the page uses
 // it to report a "Purchase" to analytics (GA4 + the Meta Pixel) once per reference.
+// valueNgn is in `currency` (cedis, shillings or rand for a Flutterwave charge).
 export interface VerifiedCharge {
   outcome: string;
   purchase?: { valueNgn: number; currency: string; plan: ApiChargeKind; courseSlug: string | null };

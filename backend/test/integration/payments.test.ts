@@ -82,6 +82,14 @@ describe("Payments", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.quote).toEqual({
+      // Nigeria pays in Naira on Paystack, as before (2026-10-30).
+      checkout: {
+        country: "NG",
+        gateway: "paystack",
+        currency: { code: "NGN", symbol: "\u20A6", spaced: false },
+        currencyName: "Naira",
+        whatsappLink: "https://wa.me/2347077149989",
+      },
       baseAmountNgn: 200_000,
       card: { currency: "NGN", amount: 200_000, enabled: true },
       // Instalments are only offered when Paystack's API key is set (it isn't in this test).

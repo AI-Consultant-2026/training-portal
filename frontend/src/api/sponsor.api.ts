@@ -16,9 +16,11 @@ export async function startSponsorPayment(
   return res.data;
 }
 
-export async function verifySponsorPayment(token: string, reference: string): Promise<VerifiedCharge> {
-  const res = await axiosClient.post<VerifiedCharge>(`/sponsor/${encodeURIComponent(token)}/verify`, {
-    reference,
-  });
+// Paystack's reference, or Flutterwave's transaction id (Ghana, Kenya, South Africa).
+export async function verifySponsorPayment(
+  token: string,
+  charge: { reference: string } | { transactionId: string },
+): Promise<VerifiedCharge> {
+  const res = await axiosClient.post<VerifiedCharge>(`/sponsor/${encodeURIComponent(token)}/verify`, charge);
   return res.data;
 }

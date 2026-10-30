@@ -6,6 +6,7 @@ import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
 import { track, trackPurchase } from "../../lib/analytics";
 import { SponsorPageInfo } from "../../types/api";
+import { formatPrice, gatewayName } from "./checkout";
 import { PaymentTrustStrip } from "./PaymentTrustStrip";
 
 type Kind = "deposit" | "balance" | "full";
@@ -17,6 +18,9 @@ export function SponsorPage() {
   const { token = "" } = useParams<{ token: string }>();
   const [searchParams] = useSearchParams();
   const returnedReference = searchParams.get("reference");
+  // Flutterwave (Ghana, Kenya, South Africa) returns with transaction_id, or status=cancelled.
+  const flutterwaveTransaction = searchParams.get("transaction_id");
+  const returnedFrom = returnedReference ?? flutterwaveTransaction;
   const [info, setInfo] = useState<SponsorPageInfo | null>(null);
   const [failed, setFailed] = useState(false);
   const [starting, setStarting] = useState<Kind | null>(null);
@@ -28,10 +32,14 @@ export function SponsorPage() {
     // Back from Paystack: ask the server to check the charge first (backup for the
     // webhook), then load the page so it shows the new status.
     const check = returnedReference
-      ? verifySponsorPayment(token, returnedReference)
+      ? verifySponsorPayment(token, { reference: returnedReference })
           .then((result) => result.purchase && trackPurchase(returnedReference, result.purchase, "sponsor"))
           .catch(() => null)
-      : Promise.resolve(null);
+      : flutterwaveTransaction
+        ? verifySponsorPayment(token, { transactionId: flutterwaveTransaction })
+            .then((result) => result.purchase && trackPurchase(`flw-${flutterwaveTransaction}`, result.purchase, "sponsor"))
+            .catch(() => null)
+        : Promise.resolve(null);
     check
       .then(() => fetchSponsorPage(token))
       .then((data) => !cancelled && setInfo(data))
@@ -39,7 +47,7 @@ export function SponsorPage() {
     return () => {
       cancelled = true;
     };
-  }, [token, returnedReference]);
+  }, [token, returnedReference, flutterwaveTransaction]);
 
   async function pay(kind: Kind) {
     setStarting(kind);
@@ -72,7 +80,8 @@ export function SponsorPage() {
     );
   }
 
-  const naira = (n: number) => `₦${n.toLocaleString()}`;
+  const money = (n: number) => formatPrice(info.checkout, n);
+  const gateway = gatewayName(info.checkout);
   const name = info.studentFirstName;
   const canPay = info.paymentsEnabled;
 
@@ -91,16 +100,16 @@ export function SponsorPage() {
         .
       </p>
 
-      {returnedReference && info.status !== "unpaid" && (
+      {returnedFrom && info.status !== "unpaid" && (
         <div className="mt-4">
           <Alert variant="success" message={`Thank you! Your payment is confirmed and ${name}'s course is unlocked.`} />
         </div>
       )}
-      {returnedReference && info.status === "unpaid" && (
+      {returnedFrom && info.status === "unpaid" && (
         <div className="mt-4">
           <Alert
             variant="success"
-            message="Thank you! Your payment is being confirmed with Paystack. This usually takes a minute."
+            message={`Thank you! Your payment is being confirmed with ${gateway}. This usually takes a minute.`}
           />
         </div>
       )}
@@ -115,19 +124,19 @@ export function SponsorPage() {
         </div>
       ) : info.status === "deposit_paid" && info.balanceNgn !== null ? (
         <div className="mt-6 rounded-lg border-2 border-blue-600 bg-white p-4 text-sm">
-          <p className="text-base font-semibold text-gray-900">Pay the balance: {naira(info.balanceNgn)}</p>
+          <p className="text-base font-semibold text-gray-900">Pay the balance: {money(info.balanceNgn)}</p>
           <p className="mt-1 text-gray-600">
             The deposit is paid and Days 1&ndash;{info.unlockedDays} are open. The balance unlocks the rest of the
             course, the capstone project and the certificate.
           </p>
           <Button className="mt-3 w-full" onClick={() => pay("balance")} isLoading={starting === "balance"}>
-            Pay {naira(info.balanceNgn)} with Paystack
+            Pay {money(info.balanceNgn)} with {gateway}
           </Button>
         </div>
       ) : (
         <div className="mt-6 space-y-3">
           <div className="rounded-lg border-2 border-blue-600 bg-white p-4 text-sm">
-            <p className="text-base font-semibold text-gray-900">Pay in full: {naira(info.priceNgn)}</p>
+            <p className="text-base font-semibold text-gray-900">Pay in full: {money(info.priceNgn)}</p>
             <p className="mt-1 text-gray-600">Unlocks the whole course for {name} straight away.</p>
             <Button
               className="mt-3 w-full"
@@ -135,14 +144,14 @@ export function SponsorPage() {
               isLoading={starting === "full"}
               disabled={starting !== null}
             >
-              Pay {naira(info.priceNgn)} with Paystack
+              Pay {money(info.priceNgn)} with {gateway}
             </Button>
           </div>
           {info.depositNgn !== null && info.balanceNgn !== null && (
             <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-              <p className="text-base font-semibold text-gray-900">Or start with {naira(info.depositNgn)}</p>
+              <p className="text-base font-semibold text-gray-900">Or start with {money(info.depositNgn)}</p>
               <p className="mt-1 text-gray-600">
-                Unlocks Days 1&ndash;{info.unlockedDays} now. The balance of {naira(info.balanceNgn)} can be paid later,
+                Unlocks Days 1&ndash;{info.unlockedDays} now. The balance of {money(info.balanceNgn)} can be paid later,
                 by you or by {name}. Same total price, no extra fees.
               </p>
               <Button
@@ -152,7 +161,7 @@ export function SponsorPage() {
                 isLoading={starting === "deposit"}
                 disabled={starting !== null}
               >
-                Pay {naira(info.depositNgn)} deposit with Paystack
+                Pay {money(info.depositNgn)} deposit with {gateway}
               </Button>
             </div>
           )}
@@ -167,12 +176,12 @@ export function SponsorPage() {
 
       {info.status !== "paid" && (
         <p className="mt-4 text-xs text-gray-500">
-          Paystack will show {name}&rsquo;s account email on the checkout page. That&rsquo;s expected: it&rsquo;s how
+          {gateway} will show {name}&rsquo;s account email on the checkout page. That&rsquo;s expected: it&rsquo;s how
           the payment is matched to {name}&rsquo;s course. You can pay with your own card.
         </p>
       )}
 
-      <PaymentTrustStrip courseSlug={info.courseSlug} className="mt-6" />
+      <PaymentTrustStrip courseSlug={info.courseSlug} checkout={info.checkout} className="mt-6" />
     </div>
   );
 }

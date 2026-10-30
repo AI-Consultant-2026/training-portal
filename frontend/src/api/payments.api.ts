@@ -36,11 +36,18 @@ export async function startInstalmentPayment(
 export interface VerifiedCharge {
   outcome: string;
   // Set when Paystack says the charge succeeded and it's been applied.
-  purchase?: { valueNgn: number; currency: "NGN"; plan: "deposit" | "balance" | "full"; courseSlug: string | null };
+  // valueNgn is in `currency` (cedis, shillings or rand for a Flutterwave charge).
+  purchase?: { valueNgn: number; currency: string; plan: "deposit" | "balance" | "full"; courseSlug: string | null };
 }
 
 export async function verifyInstalmentPayment(reference: string): Promise<VerifiedCharge> {
   const res = await axiosClient.post<VerifiedCharge>("/payments/instalment/verify", { reference });
+  return res.data;
+}
+
+// Flutterwave's version (Ghana, Kenya, South Africa): it returns with ?transaction_id=...
+export async function verifyFlutterwavePayment(transactionId: string): Promise<VerifiedCharge> {
+  const res = await axiosClient.post<VerifiedCharge>("/payments/instalment/verify", { transactionId });
   return res.data;
 }
 

@@ -18,6 +18,8 @@ export const startSponsorPayment = asyncHandler(async (req: Request, res: Respon
 });
 
 export const verifySponsorPayment = asyncHandler(async (req: Request, res: Response) => {
-  const result = await sponsorService.verifySponsorPayment(req.params.token, req.body.reference);
+  const result = req.body.transactionId
+    ? await sponsorService.verifySponsorFlutterwavePayment(req.params.token, req.body.transactionId)
+    : await sponsorService.verifySponsorPayment(req.params.token, req.body.reference);
   res.json(result);
 });

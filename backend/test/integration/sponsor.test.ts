@@ -109,6 +109,13 @@ describe("Sponsor payment links", () => {
     const page = await request(app).get(`/api/sponsor/${sponsorToken(enrollment!.id)}`);
     expect(page.status).toBe(200);
     expect(page.body.sponsor).toEqual({
+      checkout: {
+          country: "NG",
+          gateway: "paystack",
+          currency: { code: "NGN", symbol: "\u20A6", spaced: false },
+          currencyName: "Naira",
+          whatsappLink: "https://wa.me/2347077149989",
+        },
       studentFirstName: "Ada",
       courseTitle: "Digital Marketing",
       courseSlug: "digital-marketing",

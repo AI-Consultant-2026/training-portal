@@ -55,3 +55,6 @@ paymentsRouter.post(
   validate(sponsorLinkSchema),
   sponsorController.createSponsorLink,
 );
+// Flutterwave's webhook (Ghana, Kenya and South Africa, 2026-10-30). Server-to-server: no
+// login; checked by the verif-hash header in the controller.
+paymentsRouter.post("/flutterwave/webhook", paymentsController.flutterwaveWebhook);

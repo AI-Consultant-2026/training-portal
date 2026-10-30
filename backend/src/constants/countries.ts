@@ -1,3 +1,4 @@
+import { config } from "../config";
 import { COURSE_PRICES_NGN, INSTALMENT_DEPOSIT_NGN } from "./coursePricing";
 
 // Countries Paleon sells into (2026-10-29: Ghana, Kenya and South Africa added beside
@@ -106,6 +107,10 @@ export interface CountrySite {
   ogImage: string;
   /** Env var holding this country's Paystack secret key (each country is its own Paystack account). */
   paystackSecretKeyEnv: string;
+  /** Who takes the payment once the country is live (2026-10-30). */
+  gateway: "paystack" | "flutterwave";
+  /** Flutterwave's payment_options for this country's checkout (only when gateway is flutterwave). */
+  flutterwavePaymentOptions?: string;
 }
 
 export interface CountryInfo {
@@ -169,6 +174,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       corporateTraining: { label: "Corporate training for Nigerian employers", href: "/executive-training" },
       ogImage: "/images/og/welcome.jpg",
       paystackSecretKeyEnv: "PAYSTACK_SECRET_KEY_NG",
+      gateway: "paystack",
     },
   },
   GH: {
@@ -234,6 +240,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       corporateTraining: { label: "Corporate training for Ghanaian employers", href: "mailto:corporate@paleontraining.com" },
       ogImage: "/images/og/ghana.jpg",
       paystackSecretKeyEnv: "PAYSTACK_SECRET_KEY_GH",
+      gateway: "flutterwave",
+      flutterwavePaymentOptions: "card,mobilemoneyghana",
     },
   },
   KE: {
@@ -330,6 +338,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       corporateTraining: { label: "Corporate training for Kenyan employers", href: "mailto:corporate@paleontraining.com" },
       ogImage: "/images/og/kenya.jpg",
       paystackSecretKeyEnv: "PAYSTACK_SECRET_KEY_KE",
+      gateway: "flutterwave",
+      flutterwavePaymentOptions: "card,mpesa",
     },
   },
   ZA: {
@@ -387,6 +397,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       corporateTraining: { label: "Corporate training for South African employers", href: "mailto:corporate@paleontraining.com" },
       ogImage: "/images/og/south-africa.jpg",
       paystackSecretKeyEnv: "PAYSTACK_SECRET_KEY_ZA",
+      gateway: "flutterwave",
+      flutterwavePaymentOptions: "card",
     },
   },
 };
@@ -404,7 +416,7 @@ export function isRegionOf(country: CountryCode, location: string): boolean {
 }
 
 export function isLive(country: CountryCode): boolean {
-  return COUNTRIES[country].site.status === "live";
+  return COUNTRIES[country].site.status === "live" || config.liveCountries.includes(country);
 }
 
 /** The country whose folder is `path` ("/ke" -> "KE"), or null. */

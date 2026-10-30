@@ -12,12 +12,15 @@ import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { track } from "../../lib/analytics";
 import { PaymentTrustStrip } from "./PaymentTrustStrip";
 import { countryName } from "../../api/countries.api";
+import { formatPrice, gatewayName, isFlutterwave } from "./checkout";
 
 // Card payments are taken in Naira on Paystack, so card details are never entered on
 // Paleon's own site. Paying in full goes to the course's Paystack Payment Page; paying in
 // instalments (2026-10-11) opens Paystack checkout for a deposit that unlocks the first
 // days, then later for the balance. The webhook confirms payments, matched by the email
 // the student pays with (or, for instalments, the enrolment id the charge carries).
+// A live Ghana, Kenya or South Africa (2026-10-30) pays in its own currency on Flutterwave
+// instead, deposit, balance or full price, each confirmed automatically.
 export function CardPaymentPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
@@ -59,7 +62,7 @@ export function CardPaymentPage() {
           : kind === "deposit"
             ? quote?.instalment?.depositNgn
             : quote?.instalment?.balanceNgn;
-      track("card_payment_started", { currency: "NGN", value, course_slug: course.slug, plan: kind });
+      track("card_payment_started", { currency: quote?.card.currency ?? "NGN", value, course_slug: course.slug, plan: kind });
       window.location.assign(paymentLink);
     } catch (err) {
       const message =
@@ -96,14 +99,18 @@ export function CardPaymentPage() {
     );
   }
 
-  const naira = (n: number) => `\u20A6${n.toLocaleString()}`;
-  // Ghana, Kenya and South Africa (2026-10-29) still pay the Naira price on Paystack.
-  const payingFromAbroad = !!user?.country && user.country !== "NG";
+  const money = (n: number) => formatPrice(quote?.checkout, n);
+  const gateway = gatewayName(quote?.checkout);
+  const flutterwave = isFlutterwave(quote?.checkout);
+  // A student from a country that isn't live yet still pays the Naira price on Paystack.
+  const payingFromAbroad = !!user?.country && user.country !== "NG" && (quote?.checkout?.country ?? "NG") === "NG";
   const instalment = quote?.instalment?.enabled ? quote.instalment : null;
 
   return (
     <div className="mx-auto mt-10 max-w-md px-6 pb-16">
-      <h1 className="text-2xl font-semibold text-gray-900">{depositPaid ? "Pay your balance" : "Pay by card"}</h1>
+      <h1 className="text-2xl font-semibold text-gray-900">
+        {depositPaid ? "Pay your balance" : flutterwave ? "Pay for your course" : "Pay by card"}
+      </h1>
       <p className="mt-1 text-sm text-gray-500">{course.title}</p>
 
       {!quote ? (
@@ -112,9 +119,9 @@ export function CardPaymentPage() {
         </div>
       ) : depositPaid && instalment ? (
         <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-          <p className="text-base font-semibold text-gray-900">Balance: {naira(instalment.balanceNgn)}</p>
+          <p className="text-base font-semibold text-gray-900">Balance: {money(instalment.balanceNgn)}</p>
           <p className="mt-1 text-gray-600">
-            Your {naira(instalment.depositNgn)} deposit is paid and Days 1&ndash;{instalment.unlockedDays} are open.
+            Your {money(instalment.depositNgn)} deposit is paid and Days 1&ndash;{instalment.unlockedDays} are open.
             Paying the balance unlocks every remaining day, the capstone project and your certificate.
           </p>
           <Button
@@ -123,7 +130,7 @@ export function CardPaymentPage() {
             isLoading={starting === "balance"}
             disabled={starting !== null}
           >
-            Pay {naira(instalment.balanceNgn)} with Paystack
+            Pay {money(instalment.balanceNgn)} with {gateway}
           </Button>
         </div>
       ) : (
@@ -131,11 +138,11 @@ export function CardPaymentPage() {
           {instalment && (
             <div className="rounded-lg border-2 border-blue-600 bg-white p-4 text-sm">
               <p className="text-base font-semibold text-gray-900">
-                Start with {naira(instalment.depositNgn)}
+                Start with {money(instalment.depositNgn)}
               </p>
               <p className="mt-1 text-gray-600">
-                Pay {naira(instalment.depositNgn)} today to unlock Days 1&ndash;{instalment.unlockedDays}. Pay the
-                balance of {naira(instalment.balanceNgn)} whenever you&rsquo;re ready to carry on. It unlocks the rest
+                Pay {money(instalment.depositNgn)} today to unlock Days 1&ndash;{instalment.unlockedDays}. Pay the
+                balance of {money(instalment.balanceNgn)} whenever you&rsquo;re ready to carry on. It unlocks the rest
                 of the course, the capstone project and your certificate. Same total price, no extra fees.
               </p>
               <Button
@@ -144,12 +151,12 @@ export function CardPaymentPage() {
                 isLoading={starting === "deposit"}
                 disabled={starting !== null}
               >
-                Pay {naira(instalment.depositNgn)} deposit with Paystack
+                Pay {money(instalment.depositNgn)} deposit with {gateway}
               </Button>
             </div>
           )}
           <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-            <p className="text-base font-semibold text-gray-900">Pay in full: {naira(quote.card.amount)}</p>
+            <p className="text-base font-semibold text-gray-900">Pay in full: {money(quote.card.amount)}</p>
             <p className="mt-1 text-gray-600">Unlocks the whole course straight away.</p>
             <Button
               variant={instalment ? "secondary" : "primary"}
@@ -158,7 +165,7 @@ export function CardPaymentPage() {
               isLoading={starting === "full"}
               disabled={starting !== null}
             >
-              Pay {naira(quote.card.amount)} with Paystack
+              Pay {money(quote.card.amount)} with {gateway}
             </Button>
           </div>
         </div>
@@ -179,6 +186,18 @@ export function CardPaymentPage() {
         </div>
       )}
 
+      {flutterwave ? (
+        <ol className="mt-6 list-decimal space-y-2 pl-5 text-sm text-gray-700">
+          <li>
+            You&rsquo;ll pay on <strong>Flutterwave</strong>&rsquo;s secure page, in {quote?.checkout?.currencyName}.
+            Your card or mobile money details go to Flutterwave only, never to Paleon Training.
+          </li>
+          <li>
+            Your payment unlocks the course automatically, usually within a few minutes. Meanwhile, the
+            course&rsquo;s first lesson is already open.
+          </li>
+        </ol>
+      ) : (
       <ol className="mt-6 list-decimal space-y-2 pl-5 text-sm text-gray-700">
         <li>
           You&rsquo;ll pay on <strong>Paystack</strong>&rsquo;s secure page, in Naira. Your card details go to
@@ -201,6 +220,7 @@ export function CardPaymentPage() {
           Meanwhile, the course&rsquo;s first lesson is already open.
         </li>
       </ol>
+      )}
 
       {error && (
         <div className="mt-4">
@@ -210,7 +230,7 @@ export function CardPaymentPage() {
 
       {quote && instalment && <SponsorShare courseId={course.id} courseTitle={course.title} />}
 
-      <PaymentTrustStrip courseSlug={course.slug} className="mt-6" />
+      <PaymentTrustStrip courseSlug={course.slug} checkout={quote?.checkout} className="mt-6" />
     </div>
   );
 }

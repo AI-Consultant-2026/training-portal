@@ -64,3 +64,42 @@ export function balanceIn(country: CountryCode, courseSlug: string): number | nu
 export function moneyIn(country: CountryCode, amount: number): string {
   return formatMoney(country, amount);
 }
+
+// --- Which gateway (2026-10-30) ---------------------------------------------------------
+// Nigeria pays through Paystack; Ghana, Kenya and South Africa pay through one Flutterwave
+// account, in their own currency (constants/countries.ts: site.gateway).
+
+export type CheckoutGateway = "paystack" | "flutterwave";
+
+export function checkoutGateway(country: CountryCode): CheckoutGateway {
+  return COUNTRIES[country].site.gateway;
+}
+
+/** True when the gateway that `country` pays through has its key set. */
+export function paymentsEnabledIn(country: CountryCode): boolean {
+  return checkoutGateway(country) === "flutterwave"
+    ? config.flutterwave.secretKey !== ""
+    : paystackSecretKey(country) !== "";
+}
+
+/** What the payment pages need to show prices in the checkout's own currency. */
+export interface CheckoutInfo {
+  country: CountryCode;
+  gateway: CheckoutGateway;
+  currency: { code: string; symbol: string; spaced: boolean };
+  /** "Naira", "cedis", "shillings", "rand". */
+  currencyName: string;
+  /** The country's WhatsApp line for payment questions. */
+  whatsappLink: string;
+}
+
+export function checkoutInfo(country: CountryCode): CheckoutInfo {
+  const { site, currencyName } = COUNTRIES[country];
+  return {
+    country,
+    gateway: checkoutGateway(country),
+    currency: site.currency,
+    currencyName,
+    whatsappLink: site.whatsapp.link,
+  };
+}

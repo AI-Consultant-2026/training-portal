@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { COUNTRIES, COUNTRY_CODES, isCountryCode } from "../constants/countries";
+import { COUNTRIES, COUNTRY_CODES, isCountryCode, isLive } from "../constants/countries";
 
 export const countriesRouter = Router();
 
@@ -13,8 +13,8 @@ countriesRouter.get("/", (req, res) => {
     detected: isCountryCode(header) ? header : null,
     // The register page only needs the form fields, not each country's homepage config.
     countries: COUNTRY_CODES.map((code) => {
-      const { site, ...country } = COUNTRIES[code];
-      return { ...country, live: site.status === "live" };
+      const { site: _site, ...country } = COUNTRIES[code];
+      return { ...country, live: isLive(code) };
     }),
   });
 });

@@ -7,7 +7,8 @@ import { fetchCapstoneForCourse } from "../../api/capstones.api";
 import { fetchCourseProgress, fetchModulesForCourse } from "../../api/courses.api";
 import { downloadAttendanceRecord, downloadCertificate } from "../../api/enrollments.api";
 import { fetchModuleLessons } from "../../api/lessons.api";
-import { fetchPaymentQuote, verifyInstalmentPayment } from "../../api/payments.api";
+import { fetchPaymentQuote, verifyFlutterwavePayment, verifyInstalmentPayment } from "../../api/payments.api";
+import { formatPrice, gatewayName } from "../payments/checkout";
 import { fetchModuleQuizzes } from "../../api/quizzes.api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
@@ -206,6 +207,19 @@ export function CourseDetailPage() {
       .finally(() => dispatch(fetchMyEnrollments()));
   }, [paystackReference, returnedFromPayment, user, dispatch]);
 
+  // Flutterwave (Ghana, Kenya, South Africa) returns with ?transaction_id=..., or with
+  // ?status=cancelled and no transaction when the payer backs out.
+  const flutterwaveTransaction = searchParams.get("transaction_id");
+  const paymentCancelled = searchParams.get("status") === "cancelled";
+  useEffect(() => {
+    if (!flutterwaveTransaction || !returnedFromPayment || user?.role !== "student") return;
+    verifyFlutterwavePayment(flutterwaveTransaction)
+      .then((result) => result.purchase && trackPurchase(`flw-${flutterwaveTransaction}`, result.purchase, "student"))
+      .catch(() => undefined)
+      .finally(() => dispatch(fetchMyEnrollments()));
+  }, [flutterwaveTransaction, returnedFromPayment, user, dispatch]);
+  const money = (n: number) => formatPrice(paymentQuote?.checkout, n);
+
   useEffect(() => {
     if (!returnedFromPayment || !user) return;
     const timers = [5, 15, 30, 60].map((sec) => window.setTimeout(() => dispatch(fetchMyEnrollments()), sec * 1000));
@@ -317,11 +331,16 @@ export function CourseDetailPage() {
             </div>
           )}
           {enrollError && <Alert message={enrollError} />}
-          {returnedFromPayment && !isPaidInFull && !(returnedFromPayment === "deposit" && hasDepositOnly) && (
+          {returnedFromPayment && paymentCancelled && !isPaidInFull && (
+            <div className="mb-3">
+              <Alert variant="info" message="Your payment was cancelled and you haven't been charged. You can try again whenever you're ready." />
+            </div>
+          )}
+          {returnedFromPayment && !paymentCancelled && !isPaidInFull && !(returnedFromPayment === "deposit" && hasDepositOnly) && (
             <div className="mb-3">
               <Alert
                 variant="success"
-                message="Thanks! Your payment is being confirmed with Paystack. This usually takes a minute, and this page will update by itself."
+                message={`Thanks! Your payment is being confirmed with ${gatewayName(paymentQuote?.checkout)}. This usually takes a minute, and this page will update by itself.`}
               />
             </div>
           )}
@@ -330,7 +349,7 @@ export function CourseDetailPage() {
               <Button onClick={goToPayment} disabled={isEnrolled}>
                 {!isEnrolled
                   ? depositOffer
-                    ? <>Start for &#8358;{depositOffer.depositNgn.toLocaleString()}</>
+                    ? <>Start for {money(depositOffer.depositNgn)}</>
                     : "Enroll"
                   : isPaidInFull
                     ? "Already Enrolled"
@@ -342,10 +361,10 @@ export function CourseDetailPage() {
             {isEnrolled && !isPaidInFull && paymentQuote && (
               <Button variant={hasDepositOnly ? "secondary" : "primary"} onClick={goToPayment}>
                 {hasDepositOnly && paymentQuote.instalment
-                  ? <>Pay balance &ndash; &#8358;{paymentQuote.instalment.balanceNgn.toLocaleString()}</>
+                  ? <>Pay balance &ndash; {money(paymentQuote.instalment.balanceNgn)}</>
                   : depositOffer
-                    ? <>Start for &#8358;{depositOffer.depositNgn.toLocaleString()}</>
-                    : <>Pay for course &ndash; &#8358;{paymentQuote.baseAmountNgn.toLocaleString()}</>}
+                    ? <>Start for {money(depositOffer.depositNgn)}</>
+                    : <>Pay for course &ndash; {money(paymentQuote.baseAmountNgn)}</>}
               </Button>
             )}
             {(isPaidInFull || hasDepositOnly) && myEnrollment?.nextLessonId && (
@@ -381,10 +400,10 @@ export function CourseDetailPage() {
             <p className="mt-2 text-sm text-gray-600">
               {hasDepositOnly
                 ? <>Days 1&ndash;{paymentQuote.instalment.unlockedDays} are open. Pay the balance to unlock the rest of the course, the capstone and your certificate.</>
-                : <>Start with &#8358;{paymentQuote.instalment.depositNgn.toLocaleString()} to unlock Days 1&ndash;{paymentQuote.instalment.unlockedDays} straight away and pay the balance later, or pay &#8358;{paymentQuote.baseAmountNgn.toLocaleString()} in full. Same total price, no extra fees.</>}
+                : <>Start with {money(paymentQuote.instalment.depositNgn)} to unlock Days 1&ndash;{paymentQuote.instalment.unlockedDays} straight away and pay the balance later, or pay {money(paymentQuote.baseAmountNgn)} in full. Same total price, no extra fees.</>}
             </p>
           )}
-          {!isPaidInFull && paymentQuote && <PaymentTrustStrip courseSlug={course.slug} className="mt-4" />}
+          {!isPaidInFull && paymentQuote && <PaymentTrustStrip courseSlug={course.slug} checkout={paymentQuote.checkout} className="mt-4" />}
           {certificateError && (
             <p className="mt-2 text-sm text-red-600">Could not download the certificate.</p>
           )}

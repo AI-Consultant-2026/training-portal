@@ -306,10 +306,23 @@ export interface Payment {
   amount: number;
 }
 
+// Who takes the payment and in what currency (2026-10-30): Naira on Paystack for Nigeria
+// (and countries not live yet); cedis, shillings or rand on Flutterwave for a live Ghana,
+// Kenya or South Africa. Absent means Naira on Paystack.
+export interface CheckoutInfo {
+  country: string;
+  gateway: "paystack" | "flutterwave";
+  currency: { code: string; symbol: string; spaced: boolean };
+  currencyName: string;
+  whatsappLink: string;
+}
+
+// Amounts are in checkout.currency; the "Ngn" names date from when Naira was the only one.
 export interface PaymentQuote {
+  checkout?: CheckoutInfo;
   baseAmountNgn: number;
   card: {
-    currency: "NGN";
+    currency: string;
     amount: number;
     /** False until the course has a Paystack payment link on the server. */
     enabled: boolean;
@@ -323,8 +336,9 @@ export interface PaymentQuote {
   } | null;
 }
 
-// Public "pay for a student" page (2026-10-12).
+// Public "pay for a student" page (2026-10-12). Amounts are in checkout.currency.
 export interface SponsorPageInfo {
+  checkout?: CheckoutInfo;
   studentFirstName: string;
   courseTitle: string;
   courseSlug: string;

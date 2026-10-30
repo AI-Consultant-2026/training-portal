@@ -8,26 +8,30 @@ interface Student {
   email: string;
 }
 
-// Sent to the team when a Paystack payment arrives that the webhook can't tie to exactly one
-// unpaid enrolment, so it still gets confirmed by hand instead of being silently lost.
+// Sent to the team when a Paystack (or, from 2026-10-30, Flutterwave) payment arrives that
+// the webhook can't tie to exactly one unpaid enrolment, so it still gets confirmed by hand
+// instead of being silently lost.
 export function buildPaystackUnmatchedEmail(input: {
+  /** Defaults to Paystack. */
+  gateway?: "Paystack" | "Flutterwave";
   reference: string;
   email: string;
   /** Formatted with its currency, e.g. "₦200,000". */
   amount: string;
   reason: string;
 }): EmailMessage {
+  const gateway = input.gateway ?? "Paystack";
   const lines = [
-    "A Paystack payment came in that couldn't be confirmed automatically.",
+    `A ${gateway} payment came in that couldn't be confirmed automatically.`,
     `Reason: ${input.reason}`,
     `Payer email: ${input.email}`,
     `Amount: ${input.amount}`,
-    `Paystack reference: ${input.reference}`,
-    `Please find the student on ${config.corsOrigin}/admin/candidates and tick "Paid" on the right course (or "Deposit" for a ₦20,000 instalment deposit).`,
+    `${gateway} reference: ${input.reference}`,
+    `Please find the student on ${config.corsOrigin}/admin/candidates and tick "Paid" on the right course (or "Deposit" for ${gateway === "Paystack" ? "a ₦20,000" : "an"} instalment deposit).`,
   ];
   return {
     to: config.leadsNotifyEmail,
-    subject: `Paystack payment needs manual confirmation (${input.amount})`,
+    subject: `${gateway} payment needs manual confirmation (${input.amount})`,
     text: lines.join("\n"),
     html: wrapHtml(lines),
   };
