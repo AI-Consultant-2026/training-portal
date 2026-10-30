@@ -56,6 +56,7 @@ Allow: /hse-fundamentals-course
 Allow: /za/ambassadors
 Allow: /ke/ambassadors
 Allow: /ke/latest-jobs-board
+Allow: /gh/latest-jobs-board
 Allow: /gh/ambassadors
 Allow: /oil-and-gas-jobs-in-warri-delta-state
 Allow: /how-to-get-a-bank-job-in-nigeria

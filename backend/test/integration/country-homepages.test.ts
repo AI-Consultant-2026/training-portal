@@ -325,4 +325,16 @@ describe("Paystack per country", () => {
     expect(Array.isArray(data.body.jobs)).toBe(true);
     expect(data.body.jobs[0]).toHaveProperty("county");
   });
+
+  it("serves the Ghanaian jobs board and its data", async () => {
+    const page = await request(app).get("/gh/latest-jobs-board");
+    expect(page.status).toBe(200);
+    expect(page.text).toContain('<link rel="canonical" href="https://paleontraining.com/gh/latest-jobs-board">');
+    expect(page.text).toContain('<script src="/gh-latest-jobs-board.js" defer></script>');
+    expect((await request(app).get("/gh-latest-jobs-board.js")).status).toBe(200);
+    const data = await request(app).get("/gh-latest-jobs.json");
+    expect(data.status).toBe(200);
+    expect(Array.isArray(data.body.jobs)).toBe(true);
+    expect(data.body.jobs[0]).toHaveProperty("region");
+  });
 });

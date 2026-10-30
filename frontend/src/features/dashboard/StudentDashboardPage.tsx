@@ -32,15 +32,23 @@ export function StudentDashboardPage() {
       </Link>
 
       {/* Static marketing page served by the backend, not a SPA route -- plain <a>.
-          Kenyan students get the Kenyan board (2026-10-30). */}
+          Kenyan and Ghanaian students get their own country's board (2026-10-30). */}
       <a
-        href={user?.country === "KE" ? "/ke/latest-jobs-board" : "/latest-jobs-board"}
+        href={
+          user?.country === "KE"
+            ? "/ke/latest-jobs-board"
+            : user?.country === "GH"
+              ? "/gh/latest-jobs-board"
+              : "/latest-jobs-board"
+        }
         className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm hover:bg-emerald-100"
       >
         <span className="text-emerald-900">
           <span className="font-medium">Latest jobs board.</span>{" "}
           {user?.country === "KE" ? (
             <>New energy, banking and ICT vacancies in Kenya.</>
+          ) : user?.country === "GH" ? (
+            <>New mining, oil, banking and ICT vacancies in Ghana.</>
           ) : (
             <>New oil &amp; gas, banking and finance vacancies in Nigeria, updated daily.</>
           )}

@@ -322,6 +322,18 @@ export function createApp() {
   app.get("/ke-latest-jobs.json", (req, res) => {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "ke-latest-jobs.json"));
   });
+  // Ghanaian latest-jobs board (2026-10-30): mining, oil, banking and ICT vacancies in
+  // Ghana, regions in place of counties. gh-latest-jobs.json is rebuilt from Jobberman
+  // Ghana and JobWeb Ghana by backend/scripts/build-ghana-jobs.py. Listed in sitemap.xml.
+  app.get("/gh/latest-jobs-board", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gh-latest-jobs-board.html"));
+  });
+  app.get("/gh-latest-jobs-board.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "gh-latest-jobs-board.js"));
+  });
+  app.get("/gh-latest-jobs.json", (req, res) => {
+    res.type("application/json").sendFile(path.join(__dirname, "marketing", "gh-latest-jobs.json"));
+  });
   // Job board for the NiYA proposal (2026-10-24): every open Nigerian vacancy in a Paleon
   // course field (oil & gas, banking, telecoms), Apply links straight to the employer.
   // niya-proposal-jobs.json is rebuilt by backend/scripts/build-niya-proposal-jobs.py.
