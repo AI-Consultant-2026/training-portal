@@ -440,18 +440,18 @@
   .filter-grid input, .filter-grid select {
     font: 16px var(--font-body); color: var(--charcoal);
     background: var(--white); border: 1px solid var(--line-light); border-radius: 6px;
-    padding: 9px 10px; min-height: 42px; width: 100%;
+    padding: 9px 10px; min-height: 44px; width: 100%;
   }
   .filter-grid input:focus, .filter-grid select:focus { outline: 2px solid var(--signal-deep); outline-offset: 1px; }
   .sector-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
   .chip {
-    font: 600 14px var(--font-body); border-radius: 999px; padding: 7px 14px; cursor: pointer;
+    font: 600 14px var(--font-body); border-radius: 999px; padding: 7px 14px; min-height: 44px; cursor: pointer;
     border: 1px solid var(--line-light); background: var(--white); color: var(--charcoal);
   }
   .chip[aria-pressed="true"] { background: var(--ink); color: var(--dark-text); border-color: var(--ink); }
   .chip-count { font-weight: 400; opacity: 0.7; margin-left: 4px; }
   .result-bar { margin-left: auto; display: flex; gap: 14px; align-items: center; font-size: 14px; color: var(--charcoal-soft); }
-  .reset { background: none; border: none; color: var(--signal-deep); font: 600 14px var(--font-body); cursor: pointer; text-decoration: underline; padding: 0; }
+  .reset { background: none; border: none; color: var(--signal-deep); font: 600 14px var(--font-body); cursor: pointer; text-decoration: underline; padding: 0 4px; min-height: 44px; }
 
   .jobs-section { padding: 18px 0 56px; }
   table.jobs { width: 100%; border-collapse: collapse; font-size: 14.5px; background: var(--white); border: 1px solid var(--line-light); }
@@ -472,7 +472,7 @@
   .muted { color: var(--charcoal-soft); }
   .apply {
     display: inline-block; white-space: nowrap; text-decoration: none; font-weight: 600; font-size: 14px;
-    background: var(--ink); color: var(--dark-text); padding: 8px 12px; border-radius: 6px;
+    background: var(--ink); color: var(--dark-text); padding: 12px 14px; border-radius: 6px; min-height: 44px;
   }
   .apply:hover { background: var(--ink-2); }
   .course-link { font-weight: 600; text-decoration: none; }
