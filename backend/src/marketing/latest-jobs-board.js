@@ -1,6 +1,15 @@
-// /latest-jobs-board: loads /latest-jobs.json (built by backend/scripts/build-latest-jobs.py)
-// and renders a filterable table. External file because the CSP blocks inline scripts.
+// /latest-jobs-board: loads /latest-jobs.json (built by backend/scripts/build-nigeria-jobs.py,
+// refreshed daily by GitHub) and renders a filterable table. Same script as the Kenyan,
+// Ghanaian and South African boards (2026-10-30), with Nigeria's states.
+// External file because the CSP blocks inline scripts.
 (function () {
+  // Sector name -> [URL value, tag class, stat/chip id suffix]
+  var SECTORS = {
+    // "oil-gas" and "banking" are the URL values the board used before ICT was added.
+    "Oil, Gas & Energy": ["oil-gas", "oil", "oil"],
+    "Banking & Finance": ["banking", "bank", "bank"],
+    "ICT & Telecoms": ["ict", "ict", "ict"]
+  };
   var COURSE_PAGES = {
     "Cyber Security Fundamentals": "/cyber-security-fundamentals-course",
     "Digital Marketing": "/digital-marketing-course",
@@ -75,7 +84,7 @@
     }
     list.forEach(function (j) {
       var tr = el("tr");
-      cell(tr, null, "cell-sector").appendChild(el("span", "tag " + (j.sector === "Oil & Gas" ? "oil" : "bank"), j.sector));
+      cell(tr, null, "cell-sector").appendChild(el("span", "tag " + (SECTORS[j.sector] ? SECTORS[j.sector][1] : ""), j.sector));
 
       var role = cell(tr, null, "cell-role");
       role.appendChild(el("span", "job-role", j.role));
@@ -126,7 +135,7 @@
   function syncUrl() {
     var p = new URLSearchParams();
     if (state.q) p.set("q", state.q);
-    if (state.sector) p.set("sector", state.sector === "Oil & Gas" ? "oil-gas" : "banking");
+    if (state.sector && SECTORS[state.sector]) p.set("sector", SECTORS[state.sector][0]);
     if (state.st) p.set("state", state.st);
     if (state.posted) p.set("days", state.posted);
     if (state.course) p.set("course", state.course);
@@ -139,7 +148,8 @@
     var p = new URLSearchParams(location.search);
     state.q = p.get("q") || "";
     var s = p.get("sector");
-    state.sector = s === "oil-gas" ? "Oil & Gas" : s === "banking" ? "Banking & Finance" : "";
+    state.sector = "";
+    Object.keys(SECTORS).forEach(function (name) { if (SECTORS[name][0] === s) state.sector = name; });
     state.st = p.get("state") || "";
     state.posted = p.get("days") || "";
     state.course = p.get("course") || "";
@@ -187,14 +197,14 @@
         return j;
       }).filter(function (j) { return !j._deadline || j._deadline >= t; });
 
-      var oil = jobs.filter(function (j) { return j.sector === "Oil & Gas"; }).length;
       $("stat-total").textContent = jobs.length;
-      $("stat-oil").textContent = oil;
-      $("stat-bank").textContent = jobs.length - oil;
       $("stat-updated").textContent = data.updated ? fmt(parse(data.updated)) : "–";
       $("c-all").textContent = jobs.length;
-      $("c-oil").textContent = oil;
-      $("c-bank").textContent = jobs.length - oil;
+      Object.keys(SECTORS).forEach(function (name) {
+        var n = jobs.filter(function (j) { return j.sector === name; }).length;
+        $("stat-" + SECTORS[name][2]).textContent = n;
+        $("c-" + SECTORS[name][2]).textContent = n;
+      });
 
       var counts = {};
       jobs.forEach(function (j) { counts[j.state] = (counts[j.state] || 0) + 1; });

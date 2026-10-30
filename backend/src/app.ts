@@ -298,9 +298,10 @@ export function createApp() {
       if (err) res.sendStatus(404);
     });
   });
-  // Public latest-jobs board (2026-10-22): newest oil & gas and banking/finance vacancies,
-  // filtered client-side. latest-jobs.json is rebuilt from the Desktop vacancies sheet by
-  // backend/scripts/build-latest-jobs.py. Listed in sitemap.xml, allowed in robots.txt.
+  // Public latest-jobs board (2026-10-22): newest Nigerian oil & gas, banking and ICT
+  // vacancies, filtered client-side. latest-jobs.json is rebuilt from MyJobMag every morning
+  // by backend/scripts/build-nigeria-jobs.py (GitHub refresh-jobs-boards workflow, since
+  // 2026-10-30). Listed in sitemap.xml, allowed in robots.txt.
   app.get("/latest-jobs-board", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "latest-jobs-board.html"));
   });

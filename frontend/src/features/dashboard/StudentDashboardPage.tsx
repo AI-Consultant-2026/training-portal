@@ -54,7 +54,7 @@ export function StudentDashboardPage() {
           ) : user?.country === "ZA" ? (
             <>New mining, energy, banking and ICT vacancies in South Africa.</>
           ) : (
-            <>New oil &amp; gas, banking and finance vacancies in Nigeria, updated daily.</>
+            <>New oil &amp; gas, banking and ICT vacancies in Nigeria, updated daily.</>
           )}
         </span>
         <span className="shrink-0 font-medium text-emerald-700">See the jobs →</span>

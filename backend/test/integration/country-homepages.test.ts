@@ -314,6 +314,18 @@ describe("Paystack per country", () => {
     expect(payment).toMatchObject({ currency: "NGN", billingCountry: "NG" });
   });
 
+  it("serves the Nigerian jobs board and its data", async () => {
+    const page = await request(app).get("/latest-jobs-board");
+    expect(page.status).toBe(200);
+    expect(page.text).toContain('<link rel="canonical" href="https://paleontraining.com/latest-jobs-board">');
+    expect(page.text).toContain('<script src="/latest-jobs-board.js" defer></script>');
+    expect((await request(app).get("/latest-jobs-board.js")).status).toBe(200);
+    const data = await request(app).get("/latest-jobs.json");
+    expect(data.status).toBe(200);
+    expect(Array.isArray(data.body.jobs)).toBe(true);
+    expect(data.body.jobs[0]).toHaveProperty("state");
+  });
+
   it("serves the Kenyan jobs board and its data", async () => {
     const page = await request(app).get("/ke/latest-jobs-board");
     expect(page.status).toBe(200);
