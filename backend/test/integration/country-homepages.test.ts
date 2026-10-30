@@ -43,19 +43,21 @@ describe("Country homepages", () => {
     ["/za", "ZA", "en-ZA", "POPIA", "University / TVET college", "R"],
     ["/ke", "KE", "en-KE", "Occupational Safety and Health Act 2007", "National Youth Service (NYS)", "KSh"],
     ["/gh", "GH", "en-GH", "Data Protection Act 2012 (Act 843)", "National Service (NSS)", "GH₵"],
-  ])("serves %s as a coming-soon page: waitlist, visible TBCs, no checkout", async (path, code, locale, law, service, symbol) => {
+  ])("serves %s as a coming-soon page: waitlist, local prices, no checkout", async (path, code, locale, law, service, symbol) => {
     const res = await request(app).get(path);
     expect(res.status).toBe(200);
     expect(res.text).toContain(`<html lang="${locale}">`);
     expect(res.text).toContain(`data-waitlist-form data-country="${code}"`);
     expect(res.text).toContain("are launching soon");
-    expect(res.text).toContain('<mark class="tbc">');
+    expect(res.text).not.toContain('<mark class="tbc">');
     expect(res.text).toContain(law);
     expect(res.text).toContain(`<option>${service}</option>`);
     expect(res.text).toContain(`NG &middot; ₦`.replace("NG", code).replace("₦", symbol.replace("₵", "₵")));
     expect(res.text).not.toContain("/register?course=");
     expect(res.text).not.toContain("priceCurrency");
-    expect(res.text).not.toContain("whatsapp-float.js");
+    // Their own WhatsApp line on the floating button, not Nigeria's.
+    expect(res.text).toContain('data-whatsapp="https://wa.me/447508823495"');
+    expect(res.text).toContain("whatsapp-float.js");
   });
 
   it("lists every country version with hreflang plus x-default, and has no inline scripts", async () => {
@@ -228,12 +230,8 @@ describe("Country waitlist", () => {
 });
 
 describe("Country config", () => {
-  it("lists the unconfirmed values, and Nigeria's fees aren't among them", () => {
-    const tbc = listTbcValues();
-    expect(tbc).toContain("Kenya: coursePrices = not set");
-    expect(tbc).toContain("Ghana: deposit = not set");
-    expect(tbc.some((line) => line.startsWith("Nigeria: laws.hse"))).toBe(true);
-    expect(tbc.some((line) => line.startsWith("Nigeria: coursePrices") || line.startsWith("Nigeria: deposit"))).toBe(false);
+  it("has no unconfirmed values left (filled in from the country settings form, 2026-10-30)", () => {
+    expect(listTbcValues()).toEqual([]);
   });
 });
 

@@ -638,15 +638,25 @@ ${alternates(opts.alternatesFor)}
 <script type="application/ld+json">${JSON.stringify(opts.jsonLd).replace(/</g, "\\u003c")}</script>
 <link rel="stylesheet" href="/country-home.css">
 <link rel="stylesheet" href="/search-widget.css">
-${isLive(ctx.country) ? '<link rel="stylesheet" href="/whatsapp-float.css">' : ""}
+${hasWhatsappButton(ctx.country) ? '<link rel="stylesheet" href="/whatsapp-float.css">' : ""}
 </head>`;
 }
 
+// The floating WhatsApp button: Nigeria's line by default; other countries pass their own
+// line on <body data-whatsapp> and only get the button once that number is set.
+function hasWhatsappButton(country: CountryCode): boolean {
+  return country === "NG" || Boolean(COUNTRIES[country].site.whatsapp.link);
+}
+
+function whatsappAttr(country: CountryCode): string {
+  const { link } = COUNTRIES[country].site.whatsapp;
+  return country !== "NG" && link ? ` data-whatsapp="${escapeHtml(link)}"` : "";
+}
+
 function scripts(ctx: PageContext): string {
-  // The floating WhatsApp button dials the Nigerian line, so only live countries get it.
   return `<script src="/country-home.js" defer></script>
 <script src="/search.js" defer></script>
-${isLive(ctx.country) ? '<script src="/whatsapp-float.js" defer></script>' : ""}
+${hasWhatsappButton(ctx.country) ? '<script src="/whatsapp-float.js" defer></script>' : ""}
 <script src="/email-links.js" defer></script>
 <script src="/analytics.js" defer></script>
 <script src="/learner-voices.js" defer></script>`;
@@ -696,7 +706,7 @@ export function renderCountryHome(ctx: PageContext): string {
     alternatesFor: (code) => COUNTRIES[code].site.path,
     jsonLd: homeJsonLd(ctx, `${ORIGIN}${canonicalPath}`),
   })}
-<body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
+<body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}${whatsappAttr(ctx.country)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
 ${geoBanner(ctx)}
@@ -750,7 +760,7 @@ export function renderComingSoonAmbassadors(ctx: PageContext): string {
     alternatesFor: (code) => ambassadorsPath(code),
     jsonLd: { "@context": "https://schema.org", "@type": "WebPage", name: title, url: `${ORIGIN}${path}` },
   })}
-<body data-country="${ctx.country}">
+<body data-country="${ctx.country}"${whatsappAttr(ctx.country)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
 ${geoBanner(ctx)}
