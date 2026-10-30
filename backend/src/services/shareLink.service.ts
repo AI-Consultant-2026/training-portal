@@ -26,7 +26,9 @@ const VIDEO_DIR = path.join(__dirname, "..", "marketing", "videos", "ambassador"
 
 // Bump when a card's layout or wording changes. It's in every image URL, so platforms
 // that cache link previews (Facebook, WhatsApp, LinkedIn) fetch the new picture.
-export const SHARE_CARD_VERSION = 1;
+// 2 = rewards in each country's own money (2026-10-30). Image URLs also carry the
+// currency (c=GHS), so a card can't be served from a cache made in another currency.
+export const SHARE_CARD_VERSION = 2;
 
 const COURSE_SLUGS = [
   "cyber-security-fundamentals",
@@ -148,6 +150,7 @@ export interface Ambassador {
   // The friend's reward in the ambassador's country's money ("₦3,000", "GH₵27"), and that
   // country's homepage folder ("/ng", "/gh"), from the ambassador's own record (2026-10-30).
   welcomeBonus: string;
+  currency: string;
   home: string;
 }
 
@@ -162,7 +165,13 @@ export async function findAmbassador(rawCode: string): Promise<Ambassador | null
   const user = await User.findOne({ where: { referralCode: code }, attributes: ["firstName", "country"] });
   if (!user) return null;
   const home = COUNTRIES[isCountryCode(user.country) ? user.country : "NG"].site.path;
-  return { code, firstName: cleanName(user.firstName), welcomeBonus: welcomeBonusFor(user.country), home };
+  return {
+    code,
+    firstName: cleanName(user.firstName),
+    welcomeBonus: welcomeBonusFor(user.country),
+    currency: rewardsForCountry(user.country).currency,
+    home,
+  };
 }
 
 // A first name only, trimmed and capped so a long one can't run off the card.
@@ -673,7 +682,7 @@ export function renderSharePage(page: SharePage): string {
   const { origin, ambassador } = page;
   const name = page.showName ? ambassador.firstName : null;
   const nameQuery = page.showName ? "?n=1" : "";
-  const imageQuery = `${nameQuery ? `${nameQuery}&` : "?"}v=${SHARE_CARD_VERSION}`;
+  const imageQuery = `${nameQuery ? `${nameQuery}&` : "?"}v=${SHARE_CARD_VERSION}&c=${ambassador.currency}`;
   const reward = ambassador.welcomeBonus;
   const registerUrl = `${origin}/register?ref=${encodeURIComponent(ambassador.code)}`;
 

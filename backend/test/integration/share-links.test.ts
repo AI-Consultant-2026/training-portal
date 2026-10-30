@@ -47,7 +47,7 @@ describe("Ambassador share links (2026-10-06)", () => {
   it("serves a share page whose preview image is the card", async () => {
     const res = await request(app).get(`/s/${code}/friend?n=1`);
     expect(res.status).toBe(200);
-    expect(res.text).toContain(`<meta property="og:image" content="http://localhost:5173/s/${code}/friend/link.jpg?n=1&amp;v=1">`);
+    expect(res.text).toContain(`<meta property="og:image" content="http://localhost:5173/s/${code}/friend/link.jpg?n=1&amp;v=2&amp;c=NGN">`);
     expect(res.text).toContain('<meta name="twitter:card" content="summary_large_image">');
     expect(res.text).toContain("Ada sent you ₦3,000 airtime");
     expect(res.text).toContain(`href="http://localhost:5173/register?ref=${code}"`);
@@ -59,8 +59,9 @@ describe("Ambassador share links (2026-10-06)", () => {
     const res = await request(app).get(`/s/${code}/friend?n=1`);
     expect(res.text).toContain("Ada sent you KSh 288 airtime");
     expect(res.text).toContain('href="/ke#courses"');
+    expect(res.text).toContain(`/s/${code}/friend/link.jpg?n=1&amp;v=2&amp;c=KES`);
     expect(res.text).not.toContain("₦");
-    const card = await binary(request(app).get(`/s/${code}/friend/square.png`));
+    const card = await binary(request(app).get(`/s/${code}/friend/status.png?v=2&c=KES`));
     expect(card.status).toBe(200);
   });
 
@@ -75,7 +76,7 @@ describe("Ambassador share links (2026-10-06)", () => {
     const res = await request(app).get(`/s/${code}/lesson-gis-and-drone-mapping`);
     expect(res.status).toBe(200);
     expect(res.text).toContain("<title>Free lesson: GIS and Drone Mapping | Paleon Training</title>");
-    expect(res.text).toContain(`/s/${code}/lesson-gis-and-drone-mapping/link.jpg?v=1`);
+    expect(res.text).toContain(`/s/${code}/lesson-gis-and-drone-mapping/link.jpg?v=2&amp;c=NGN`);
     expect(res.text).toContain(`<a class="primary" href="/preview/gis-and-drone-mapping?ref=${code}">Start the free lesson</a>`);
     expect(res.text).toContain(`href="http://localhost:5173/register?ref=${code}"`);
 
@@ -125,7 +126,7 @@ describe("Ambassador share links (2026-10-06)", () => {
     const page = await request(app).get(`/s/${code}/v/03-cyber-one-click-bank`);
     expect(page.status).toBe(200);
     expect(page.text).toContain('src="/videos/ambassador/03-cyber-one-click-bank.mp4"');
-    expect(page.text).toContain(`/s/${code}/v/03-cyber-one-click-bank/link.jpg?v=1`);
+    expect(page.text).toContain(`/s/${code}/v/03-cyber-one-click-bank/link.jpg?v=2&amp;c=NGN`);
 
     const image = await binary(request(app).get(`/s/${code}/v/03-cyber-one-click-bank/link.jpg`));
     expect(image.status).toBe(200);

@@ -309,7 +309,7 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
   const filesRef = useRef(new Map<string, Promise<File>>());
 
   const withName = showName && !!firstName?.trim();
-  const imageUrl = shareCardImageUrl(summary.code, design, format, withName);
+  const imageUrl = shareCardImageUrl(summary.code, design, format, withName, summary.currency);
   const link = cardShareLink(summary.code, design, withName);
   const welcomeBonus = formatMoney(summary.welcomeBonusNgn, summary.currency);
   const texts: PlatformTexts = {

@@ -27,7 +27,7 @@ export const SHARE_CARD_SIZE: Record<ShareCardFormat, { width: number; height: n
 
 // Must match SHARE_CARD_VERSION in shareLink.service.ts, so a changed card isn't served
 // from a stale cache.
-const SHARE_CARD_VERSION = 1;
+const SHARE_CARD_VERSION = 2;
 
 // The address friends will open. In production the API is same-origin (SITE_ORIGIN is
 // empty), so it's this page's origin; in local dev it's the backend on :4000.
@@ -39,8 +39,17 @@ function nameQuery(showName: boolean): string {
   return showName ? "?n=1" : "";
 }
 
-export function shareCardImageUrl(code: string, design: ShareCardDesign, format: ShareCardFormat, showName: boolean): string {
-  const query = new URLSearchParams({ v: String(SHARE_CARD_VERSION) });
+// `currency` is the ambassador's (NGN, GHS, KES or ZAR). The server picks the amount from
+// the ambassador's record either way; having it in the URL means a browser or Cloudflare
+// copy drawn in another currency is never reused.
+export function shareCardImageUrl(
+  code: string,
+  design: ShareCardDesign,
+  format: ShareCardFormat,
+  showName: boolean,
+  currency: string,
+): string {
+  const query = new URLSearchParams({ v: String(SHARE_CARD_VERSION), c: currency });
   if (showName) query.set("n", "1");
   return `${SITE_ORIGIN}/s/${encodeURIComponent(code)}/${design}/${format}.png?${query}`;
 }
