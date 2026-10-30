@@ -16,7 +16,8 @@ import { notFound } from "./middleware/notFound";
 import { apiRouter } from "./routes";
 import { shareLinksRouter } from "./routes/shareLinks.routes";
 import { COUNTRIES, MARKET_ORDER, isCountryCode } from "./constants/countries";
-import { COUNTRY_COOKIE, renderComingSoonAmbassadors, renderCountryHome } from "./views/countryHome";
+import { renderCountryAmbassadors } from "./views/countryAmbassadors";
+import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
 import * as paymentsController from "./controllers/payments.controller";
 
 export function createApp() {
@@ -189,11 +190,9 @@ export function createApp() {
       );
     });
     if (code === "NG") continue;
+    // The full ambassador programme page, in the country's currency (2026-10-30).
     app.get(`${folder}/ambassadors`, (req, res) => {
-      sendCountryPage(
-        res,
-        renderComingSoonAmbassadors({ country: code, hub: false, detected: visitorCountry(req), chosen: chosenCountry(req) }),
-      );
+      res.type("html").send(renderCountryAmbassadors(code));
     });
   }
   // Nigeria's ambassador programme page keeps its existing address.

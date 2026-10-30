@@ -615,7 +615,7 @@
   .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    border: 1.5px solid transparent; border-radius: 3px; padding: 13px 24px;
+    border: 1.5px solid transparent; border-radius: 3px; padding: 13px 24px; min-height: 44px;
     font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1;
     text-decoration: none; white-space: nowrap; cursor: pointer;
   }
@@ -637,7 +637,8 @@
   /* ---------- Ambassador page additions (2026-09-26) ---------- */
   .toc { padding: 40px 0 8px; }
   .toc ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 40px; font-size: 15.5px; }
-  .toc li { margin-bottom: 6px; break-inside: avoid; }
+  .toc li { margin-bottom: 0; break-inside: avoid; }
+  .toc li a { display: inline-flex; align-items: center; min-height: 44px; } /* 44px tap targets (2026-10-30) */
   @media (max-width: 640px) { .toc ol { columns: 1; } }
   .templates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 8px; }
   @media (max-width: 760px) { .templates { grid-template-columns: 1fr; } }

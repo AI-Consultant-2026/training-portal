@@ -94,15 +94,34 @@ describe("Country homepages", () => {
     expect(amb.text).toContain('<link rel="alternate" hreflang="en-KE" href="https://paleontraining.com/ke/ambassadors">');
   });
 
-  it("serves coming-soon ambassador pages and keeps Nigeria's at /ambassadors", async () => {
-    const ke = await request(app).get("/ke/ambassadors");
-    expect(ke.status).toBe(200);
-    expect(ke.text).toContain("Paleon Ambassadors &middot; Kenya");
-    expect(ke.text).toContain('data-waitlist-form data-country="KE"');
-    expect(ke.text).toContain('<link rel="canonical" href="https://paleontraining.com/ke/ambassadors">');
-    const ng = await request(app).get("/ng/ambassadors");
-    expect(ng.status).toBe(301);
-    expect(ng.headers.location).toBe("/ambassadors");
+  it("serves each country's ambassador programme page in its own currency", async () => {
+    const pages = {
+      gh: { reward: "GH\u20B545", friend: "GH\u20B527", x10: "GH\u20B5450", deposit: "GH\u20B5175", zero: "GH\u20B50" },
+      ke: { reward: "KSh 480", friend: "KSh 288", x10: "KSh 4,800", deposit: "KSh 1,930", zero: "KSh 0" },
+      za: { reward: "R60", friend: "R36", x10: "R600", deposit: "R247", zero: "R0" },
+    };
+    for (const [path, want] of Object.entries(pages)) {
+      const res = await request(app).get(`/${path}/ambassadors`);
+      expect(res.status).toBe(200);
+      const html = res.text;
+      expect(html).toContain(`<link rel="canonical" href="https://paleontraining.com/${path}/ambassadors">`);
+      for (const amount of Object.values(want)) expect(html).toContain(amount);
+      expect(html).toContain(`/videos/home/paleon-ambassador-guide-${path}.mp4`);
+      expect(html).toContain('href="https://wa.me/447508823495');
+      // Same sections as the Nigerian page.
+      for (const id of ["guide-video", "refer-earn", "what", "who", "share", "rewards", "messages", "rules", "faq"]) {
+        expect(html).toContain(`id="${id}"`);
+      }
+      expect(html).not.toMatch(/\u20A6|&#8358;|naira|NYSC|corps member|\{\{/i);
+    }
+    // Nigeria's page is unchanged.
+    const ng = (await request(app).get("/ambassadors")).text;
+    expect(ng).toContain("\u20A65,000");
+    expect(ng).toContain("NYSC corps members");
+    expect(ng).toContain("/videos/home/paleon-ambassador-guide-earn-and-rewards.mp4");
+    const redirect = await request(app).get("/ng/ambassadors");
+    expect(redirect.status).toBe(301);
+    expect(redirect.headers.location).toBe("/ambassadors");
   });
 });
 
@@ -223,7 +242,6 @@ describe("Country waitlist", () => {
       expect(html).toContain('id="regConsent" name="consent" required');
       expect(html).toContain('id="waitlistConsent" name="consent" required');
     }
-    expect((await request(app).get("/ke/ambassadors")).text).toContain('name="consent" required');
     const ng = (await request(app).get("/ng")).text;
     expect(ng).not.toContain('name="consent"');
   });

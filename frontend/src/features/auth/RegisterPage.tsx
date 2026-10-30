@@ -589,8 +589,8 @@ export function RegisterPage() {
                 Create my free account
               </Button>
               <p className="text-xs text-gray-500">
-                Creating an account is free. You only pay (securely, through Paystack) when you choose to unlock a
-                full course. By signing up you agree to our{" "}
+                Creating an account is free. You only pay (securely, through {isNigeria ? "Paystack" : "Flutterwave"})
+                when you choose to unlock a full course. By signing up you agree to our{" "}
                 <a href="/terms" className="text-[#006B40] underline">
                   Terms
                 </a>{" "}

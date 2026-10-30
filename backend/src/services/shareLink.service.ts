@@ -332,6 +332,9 @@ export interface CardInput {
   format: ShareCardFormat;
   code: string;
   firstName: string | null;
+  /** The friend's welcome reward as shown, e.g. "GH\u20B527"; Naira by default. Lets the
+   * Ghana, Kenya and South Africa guide videos show their own amount (2026-10-30). */
+  welcomeBonus?: string;
 }
 
 // The square, portrait and tall cards. Portrait uses the square card's type sizes with the
@@ -601,14 +604,14 @@ function remember(key: string, buffer: Buffer): Buffer {
 export async function renderCard(input: CardInput): Promise<{ buffer: Buffer; contentType: string }> {
   const link = input.format === "link";
   const contentType = link ? "image/jpeg" : "image/png";
-  const key = `card|${SHARE_CARD_VERSION}|${input.design}|${input.format}|${input.code}|${input.firstName ?? ""}`;
+  const key = `card|${SHARE_CARD_VERSION}|${input.design}|${input.format}|${input.code}|${input.firstName ?? ""}|${input.welcomeBonus ?? ""}`;
   const hit = cache.get(key);
   if (hit) return { buffer: hit, contentType };
   registerFonts();
   const { width, height } = SHARE_CARD_SIZE[input.format];
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
-  const welcomeBonus = naira(REFEREE_REWARD_NGN);
+  const welcomeBonus = input.welcomeBonus ?? naira(REFEREE_REWARD_NGN);
   if (link) drawLinkCard(ctx, input, welcomeBonus);
   else drawPostCard(ctx, input, welcomeBonus);
   const buffer = link ? canvas.toBuffer("image/jpeg", 86) : canvas.toBuffer("image/png");

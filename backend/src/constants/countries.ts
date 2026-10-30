@@ -99,6 +99,10 @@ export interface CountrySite {
   /** First option in the Career Match "How did you hear about us?" list. */
   nationalServiceOption: string;
   referralReward: string;
+  /** Ambassador page amounts outside Nigeria (Nigeria's are in constants/referral.ts): what
+   * the ambassador earns per paid referral and the friend's airtime welcome reward. The
+   * friend's reward is 3/5 of the ambassador's, as in Nigeria (\u20A63,000 to \u20A65,000). */
+  ambassadorRewards?: { referrer: number; referee: number };
   graduateStat: { figure: string; text: string; source: string };
   whatsapp: { display: string; link: string };
   whatsappPlaceholder: string;
@@ -230,6 +234,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       ],
       nationalServiceOption: "National Service (NSS)",
       referralReward: "GH\u20B545 in airtime, data or course credit",
+      ambassadorRewards: { referrer: 45, referee: 27 },
       graduateStat: {
         figure: "109,874",
         text: "Ghana produces 109,874 university graduates a year. Practical skills and a real project you can show an employer help you stand out.",
@@ -328,6 +333,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       ],
       nationalServiceOption: "National Youth Service (NYS)",
       referralReward: "KSh 480 in airtime, data or course credit",
+      ambassadorRewards: { referrer: 480, referee: 288 },
       graduateStat: {
         figure: "124,912",
         text: "Kenya produces 124,912 university graduates a year. Practical skills and a real project you can show an employer help you stand out.",
@@ -387,6 +393,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       ],
       nationalServiceOption: "University / TVET college",
       referralReward: "R60 in airtime, data or course credit",
+      ambassadorRewards: { referrer: 60, referee: 36 },
       graduateStat: {
         figure: "220,758",
         text: "South Africa produces 220,758 university graduates a year. Practical skills and a real project you can show an employer help you stand out.",

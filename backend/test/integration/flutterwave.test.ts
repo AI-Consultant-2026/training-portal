@@ -333,13 +333,12 @@ describe("A live Kenya outside the checkout", () => {
     expect(email?.text).not.toContain("₦");
   });
 
-  it("opens the Kenyan ambassador programme instead of the waitlist", async () => {
+  it("drops the 'payments open soon' note from a live country's ambassador page", async () => {
     const live = await request(app).get("/ke/ambassadors");
-    expect(live.text).toContain("The Student Ambassador programme is open in Kenya");
     expect(live.text).toContain('href="/register?country=KE"');
-    expect(live.text).not.toContain("data-waitlist-form");
+    expect(live.text).not.toContain("Course payments in Kenya open soon");
     const gh = await request(app).get("/gh/ambassadors");
-    expect(gh.text).toContain("data-waitlist-form");
+    expect(gh.text).toContain("Course payments in Ghana open soon");
   });
 
   it("quotes a Kenyan lead the fee in shillings and Kenya's WhatsApp line", () => {
