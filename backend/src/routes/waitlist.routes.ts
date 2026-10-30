@@ -20,6 +20,8 @@ const waitlistSchema = z.object({
       .string()
       .trim()
       .regex(/^\+?[0-9()\s-]{7,20}$/, "Enter a WhatsApp number, e.g. +254 712 345 678"),
+    // The "message me on WhatsApp" tick-box; a signup's createdAt is when they agreed.
+    consent: z.literal(true, { errorMap: () => ({ message: "Please tick the box to agree to WhatsApp messages" }) }),
   }),
 });
 

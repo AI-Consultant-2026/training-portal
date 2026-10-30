@@ -12,10 +12,12 @@ export interface CreateLeadInput {
   sector?: string;
   interest?: string;
   country?: string;
+  consent?: boolean;
 }
 
 export async function createLead(input: CreateLeadInput): Promise<Lead> {
-  const lead = await Lead.create(input);
+  const { consent, ...fields } = input;
+  const lead = await Lead.create({ ...fields, marketingConsentAt: consent ? new Date() : null });
   // Best-effort, not awaited -- an unreachable/slow SMTP provider must never hang the
   // marketing site's lead-capture form; the lead itself is already saved at this point.
   emails.sendLeadNotificationEmail(lead).catch((err) => logger.error("Failed to send lead notification email", err));

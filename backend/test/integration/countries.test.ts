@@ -65,7 +65,7 @@ describe("Countries (Ghana, Kenya, South Africa)", () => {
   it("saves a lead's country and names it in the notification email", async () => {
     const res = await request(app)
       .post("/api/leads")
-      .send({ name: "Ama Owusu", email: "ama@example.com", course: "Digital Marketing", country: "GH" });
+      .send({ name: "Ama Owusu", email: "ama@example.com", course: "Digital Marketing", country: "GH", consent: true });
     expect(res.status).toBe(201);
     const lead = await Lead.findByPk(res.body.id);
     expect(lead?.country).toBe("GH");

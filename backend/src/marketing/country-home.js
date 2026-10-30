@@ -66,6 +66,7 @@
   document.querySelectorAll("[data-waitlist-form]").forEach(function (form) {
     var input = form.querySelector("input[name=whatsapp]");
     var msg = form.querySelector(".waitlist-msg");
+    var consent = form.querySelector("input[name=consent]");
     var button = form.querySelector("button");
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -77,11 +78,17 @@
         input.focus();
         return;
       }
+      if (consent && !consent.checked) {
+        msg.classList.add("is-error");
+        msg.textContent = "Please tick the box to agree to WhatsApp messages.";
+        consent.focus();
+        return;
+      }
       button.disabled = true;
       fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ country: form.getAttribute("data-country"), whatsapp: whatsapp }),
+        body: JSON.stringify({ country: form.getAttribute("data-country"), whatsapp: whatsapp, consent: true }),
       })
         .then(function (res) {
           if (!res.ok) throw new Error("request failed");
@@ -153,6 +160,8 @@
       country: data.country,
     };
     if (phone) payload.phone = phone;
+    // Ghana, Kenya and South Africa only; checkValidity above makes sure it's ticked.
+    if (form.regConsent) payload.consent = form.regConsent.checked;
 
     fetch("/api/leads", {
       method: "POST",

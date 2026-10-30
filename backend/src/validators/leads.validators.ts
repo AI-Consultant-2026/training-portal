@@ -66,5 +66,11 @@ export const createLeadSchema = z.object({
     interest: z.enum(LEAD_INTERESTS).optional(),
     // The country homepages (/ng, /za, /ke, /gh) send their own code; older forms leave it out.
     country: z.enum(COUNTRY_CODES).default("NG"),
+    // The "email me" tick-box on the Ghana, Kenya and South Africa forms (2026-10-30).
+    // Required there; Nigeria's forms don't have one.
+    consent: z.literal(true).optional(),
+  }).refine((body) => body.country === "NG" || body.consent === true, {
+    message: "Please tick the box to agree to receive emails",
+    path: ["consent"],
   }),
 });

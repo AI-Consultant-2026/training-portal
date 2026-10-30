@@ -5,7 +5,7 @@ import { createApp } from "../../src/app";
 import { config } from "../../src/config";
 import { COURSE_PRICES_NGN } from "../../src/constants/coursePricing";
 import { listTbcValues } from "../../src/constants/countries";
-import { Course, Enrollment, Payment, User, WaitlistSignup } from "../../src/models";
+import { Course, Enrollment, Lead, Payment, User, WaitlistSignup } from "../../src/models";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 // Country homepages, waitlists and per-country Paystack (2026-10-30).
@@ -150,9 +150,9 @@ describe("Country waitlist", () => {
   beforeEach(() => memAdapter.clear());
 
   it("stores a sign-up with its country and tells the team once", async () => {
-    const first = await request(app).post("/api/waitlist").send({ country: "KE", whatsapp: "+254 712 345 678" });
+    const first = await request(app).post("/api/waitlist").send({ country: "KE", whatsapp: "+254 712 345 678", consent: true });
     expect(first.status).toBe(201);
-    const again = await request(app).post("/api/waitlist").send({ country: "KE", whatsapp: "+254 712 345 678" });
+    const again = await request(app).post("/api/waitlist").send({ country: "KE", whatsapp: "+254 712 345 678", consent: true });
     expect(again.status).toBe(201);
     const rows = await WaitlistSignup.findAll({ where: { country: "KE" } });
     expect(rows).toHaveLength(1);
@@ -165,6 +165,13 @@ describe("Country waitlist", () => {
     expect((await request(app).post("/api/waitlist").send({ country: "NG", whatsapp: "+234 803 123 4567" })).status).toBe(400);
     expect((await request(app).post("/api/waitlist").send({ country: "GH", whatsapp: "call me" })).status).toBe(400);
     expect((await request(app).post("/api/waitlist").send({ country: "US", whatsapp: "+1 202 555 0100" })).status).toBe(400);
+  });
+
+  it("needs the WhatsApp consent box ticked", async () => {
+    const res = await request(app).post("/api/waitlist").send({ country: "ZA", whatsapp: "+27 82 123 4567" });
+    expect(res.status).toBe(400);
+    expect(JSON.stringify(res.body)).toContain("Please tick the box");
+    expect(await WaitlistSignup.count()).toBe(0);
   });
 
   it("lists sign-ups for admins only", async () => {
@@ -192,8 +199,31 @@ describe("Country waitlist", () => {
       sector: "Fintech & mobile money",
       source: "National Youth Service (NYS)",
       country: "KE",
+      consent: true,
     });
     expect(res.status).toBe(201);
+    expect((await Lead.findByPk(res.body.id))?.marketingConsentAt).toBeInstanceOf(Date);
+  });
+
+  it("needs the email consent box ticked outside Nigeria, and not in Nigeria", async () => {
+    const lead = { name: "Thabo Nkosi", email: "thabo@example.com", course: "Cyber Security Fundamentals" };
+    const za = await request(app).post("/api/leads").send({ ...lead, country: "ZA" });
+    expect(za.status).toBe(400);
+    expect(JSON.stringify(za.body)).toContain("Please tick the box");
+    const ng = await request(app).post("/api/leads").send({ ...lead, email: "chidi@example.com", country: "NG" });
+    expect(ng.status).toBe(201);
+    expect((await Lead.findByPk(ng.body.id))?.marketingConsentAt).toBeNull();
+  });
+
+  it("shows the tick-boxes on Ghana, Kenya and South Africa only", async () => {
+    for (const path of ["/za", "/ke", "/gh"]) {
+      const html = (await request(app).get(path)).text;
+      expect(html).toContain('id="regConsent" name="consent" required');
+      expect(html).toContain('id="waitlistConsent" name="consent" required');
+    }
+    expect((await request(app).get("/ke/ambassadors")).text).toContain('name="consent" required');
+    const ng = (await request(app).get("/ng")).text;
+    expect(ng).not.toContain('name="consent"');
   });
 });
 

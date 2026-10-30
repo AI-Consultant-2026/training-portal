@@ -255,6 +255,10 @@ function waitlistBox(country: CountryCode, id = "waitlist"): string {
         <label for="${id}Phone">WhatsApp number</label>
         <input type="tel" id="${id}Phone" name="whatsapp" required autocomplete="tel" inputmode="tel" placeholder="${escapeHtml(c.site.whatsappPlaceholder)}">
       </div>
+      <label class="consent-check" for="${id}Consent">
+        <input type="checkbox" id="${id}Consent" name="consent" required>
+        <span>I agree to Paleon Training messaging me on WhatsApp about courses in ${escapeHtml(c.name)}. I can opt out at any time. See our <a href="/privacy">privacy policy</a>.</span>
+      </label>
       <button type="submit" class="btn btn-signal">Join the waitlist</button>
       <p class="waitlist-msg" role="status" aria-live="polite"></p>
     </form>
@@ -401,6 +405,14 @@ function careerMatch(ctx: PageContext, home: string): string {
             ${leadSourcesFor(c.site.nationalServiceOption).map(option).join("")}
           </select>
         </div>
+        ${
+          ctx.country === "NG"
+            ? ""
+            : `<label class="consent-check" for="regConsent">
+          <input type="checkbox" id="regConsent" name="consent" required>
+          <span>I agree to Paleon Training emailing me my Career Match, course information and occasional updates, and contacting me on WhatsApp if I give my number. I can unsubscribe at any time.</span>
+        </label>`
+        }
         <button class="btn btn-ink btn-block btn-lg" type="submit" id="registerSubmit">Get my free Career Match</button>
         <p class="form-note">Free and instant. We&rsquo;ll email you your match and a few tips about the course, and our team may follow up by email or WhatsApp. You can unsubscribe at any time. See our <a href="/privacy">privacy policy</a>.</p>
         <p class="form-error" id="formError" role="alert" hidden>Something went wrong sending that. Please try again, or email <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>.</p>

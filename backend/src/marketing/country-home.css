@@ -263,10 +263,11 @@ mark.tbc {
 .waitlist-field input { min-height: 44px; padding: 10px 12px; font-size: 16px; background: var(--ink); color: var(--paper); border: 1px solid #4A5873; border-radius: var(--radius); }
 .waitlist-field input::placeholder { color: var(--ink-soft); }
 .waitlist-form .btn { flex: 0 0 auto; }
+.waitlist-form .consent-check { flex: 1 1 100%; margin: 0; color: #C7CCDA; }
 .waitlist-msg { flex: 1 1 100%; font-size: 15px; font-weight: 600; color: var(--signal-2); }
 .waitlist-msg:empty { display: none; }
 .waitlist-msg.is-error { color: #FFB4A6; }
-.waitlist.is-done .waitlist-field, .waitlist.is-done .waitlist-form .btn { display: none; }
+.waitlist.is-done .waitlist-field, .waitlist.is-done .consent-check, .waitlist.is-done .waitlist-form .btn { display: none; }
 
 /* ============ Deposit strip ============ */
 .deposit-strip { background: var(--signal); color: var(--ink); }
@@ -327,6 +328,10 @@ mark.tbc {
 .match-result { border-top: 4px solid var(--signal); }
 .match-result[hidden], .register-form[hidden] { display: none; }
 .form-row { margin-bottom: 16px; }
+/* Consent tick-box (GH/KE/ZA forms): the whole label is the 44px touch target. */
+.consent-check { display: flex; gap: 12px; align-items: flex-start; min-height: 44px; padding: 10px 0; margin-bottom: 8px; font-size: 14.5px; line-height: 1.5; color: var(--charcoal); cursor: pointer; }
+.consent-check input { flex: 0 0 auto; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--signal-text); cursor: pointer; }
+.consent-check a { color: inherit; }
 .form-label { display: block; font-size: 14.5px; font-weight: 600; color: var(--charcoal); margin-bottom: 6px; }
 .optional { font-weight: 400; color: var(--charcoal-soft); }
 .form-input, .form-select { width: 100%; min-height: 44px; border: 1px solid #A79E89; border-radius: var(--radius); padding: 10px 12px; font-size: 16px; background: var(--paper); color: var(--charcoal); }

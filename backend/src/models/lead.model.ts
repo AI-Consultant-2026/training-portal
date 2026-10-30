@@ -11,6 +11,7 @@ export interface LeadAttributes {
   sector: string | null;
   interest: string | null;
   country: string;
+  marketingConsentAt: Date | null;
   welcomeEmailSentAt: Date | null;
   reminder21dSentAt: Date | null;
   reminder14dSentAt: Date | null;
@@ -34,6 +35,7 @@ export type LeadCreationAttributes = Optional<
   | "sector"
   | "interest"
   | "country"
+  | "marketingConsentAt"
   | "welcomeEmailSentAt"
   | "reminder21dSentAt"
   | "reminder14dSentAt"
@@ -59,6 +61,7 @@ export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implemen
   declare sector: string | null;
   declare interest: string | null;
   declare country: string;
+  declare marketingConsentAt: Date | null;
   declare welcomeEmailSentAt: Date | null;
   declare reminder21dSentAt: Date | null;
   declare reminder14dSentAt: Date | null;
@@ -86,6 +89,9 @@ export function initLeadModel(sequelize: Sequelize) {
       sector: { type: DataTypes.STRING, allowNull: true },
       interest: { type: DataTypes.STRING, allowNull: true },
       country: { type: DataTypes.STRING(2), allowNull: false, defaultValue: "NG" },
+      // When they ticked "email me" on a Ghana/Kenya/South Africa form (POPIA wants explicit
+      // consent). Null for Nigerian leads, whose forms have no tick-box.
+      marketingConsentAt: { type: DataTypes.DATE, allowNull: true },
       welcomeEmailSentAt: { type: DataTypes.DATE, allowNull: true, field: "welcome_email_sent_at" },
       reminder21dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_21d_sent_at" },
       reminder14dSentAt: { type: DataTypes.DATE, allowNull: true, field: "reminder_14d_sent_at" },
