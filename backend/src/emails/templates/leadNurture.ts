@@ -1,5 +1,7 @@
 import { config } from "../../config";
+import { COUNTRIES, isCountryCode } from "../../constants/countries";
 import { coursePriceNgn, findPublicCourseByTitle, PublicCourse } from "../../constants/publicCourses";
+import { checkoutCountryFor, coursePriceIn, moneyIn } from "../../services/paystackAccounts";
 import { leadUnsubscribeUrl } from "../../services/leadUnsubscribe.service";
 import { EmailMessage } from "../../utils/email";
 import { wrapHtml } from "../htmlWrapper";
@@ -16,9 +18,15 @@ interface LeadFields {
   email: string;
   course: string;
   sector?: string | null;
+  country?: string | null;
 }
 
 const WHATSAPP = "+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)";
+
+// Ghana, Kenya and South Africa leads get their country's WhatsApp line (2026-10-30).
+function whatsapp(lead: LeadFields): string {
+  return isCountryCode(lead.country) && lead.country !== "NG" ? COUNTRIES[lead.country].site.whatsapp.display : WHATSAPP;
+}
 
 function site(path: string): string {
   return `${config.corsOrigin.replace(/\/$/, "")}${path}`;
@@ -36,9 +44,12 @@ function links(course: PublicCourse) {
   };
 }
 
-function facts(course: PublicCourse): string {
-  const price = coursePriceNgn(course);
-  const fee = price !== null ? `, ₦${price.toLocaleString("en-NG")}` : "";
+// The fee in the currency the lead would pay in (2026-10-30): their own for a live Ghana,
+// Kenya or South Africa, Naira otherwise.
+function facts(course: PublicCourse, lead: LeadFields): string {
+  const country = checkoutCountryFor(lead.country);
+  const price = country === "NG" ? coursePriceNgn(course) : (coursePriceIn(country, course.slug) ?? null);
+  const fee = price === null ? "" : country === "NG" ? `, ₦${price.toLocaleString("en-NG")}` : `, ${moneyIn(country, price)}`;
   return `${course.days} days, ${course.lessons} illustrated video lessons${fee} — self-paced, with lifetime access and a certificate of completion.`;
 }
 
@@ -73,7 +84,7 @@ function genericWelcome(lead: LeadFields): EmailMessage {
     "Not sure which one fits? Our free Career Match recommends one in 2 minutes:",
     site("/ng#career-match"),
     "Every course has a free first lesson you can open without an account, so you can see exactly how it's taught before you decide.",
-    `Questions? Just reply to this email, or WhatsApp us on ${WHATSAPP}.`,
+    `Questions? Just reply to this email, or WhatsApp us on ${whatsapp(lead)}.`,
   ]);
 }
 
@@ -89,10 +100,10 @@ export function buildLeadWelcomeEmail(lead: LeadFields): EmailMessage {
       : `Thanks for your interest in ${course.title} at Paleon Training.`,
     "The best way to see if it's right for you is to try it. The first lesson is free — the full text, illustration and video, exactly as enrolled students see it, with no account needed:",
     l.preview,
-    `The course: ${facts(course)}`,
+    `The course: ${facts(course, lead)}`,
     `Full course details: ${l.page}`,
     `When you're ready, create your account and enrol here: ${l.enrol}`,
-    `Questions? Just reply to this email, or WhatsApp us on ${WHATSAPP}.`,
+    `Questions? Just reply to this email, or WhatsApp us on ${whatsapp(lead)}.`,
   ]);
 }
 
@@ -123,7 +134,7 @@ export function buildLeadFollowUpEmail(lead: LeadFields, step: FollowUpStep): Em
       "• Study at your own pace, on your phone or laptop — start any time, and keep access for life.",
       "• Finish every lesson to download your certificate of completion.",
       "• Stuck? Use \"Report a problem\" inside the portal and we reply within 1 working day.",
-      `The course: ${facts(course)}`,
+      `The course: ${facts(course, lead)}`,
       `Enrol here: ${l.enrol}`,
       `Or try the free first lesson first: ${l.preview}`,
     ]);
@@ -135,6 +146,6 @@ export function buildLeadFollowUpEmail(lead: LeadFields, step: FollowUpStep): Em
     `The free first lesson is always there: ${l.preview}`,
     `And when you're ready to enrol: ${l.enrol}`,
     `If ${course.title} isn't quite the right fit, the free Career Match can suggest another course: ${site("/ng#career-match")}`,
-    `Any questions at all, just reply to this email or WhatsApp us on ${WHATSAPP}. We read every message.`,
+    `Any questions at all, just reply to this email or WhatsApp us on ${whatsapp(lead)}. We read every message.`,
   ]);
 }

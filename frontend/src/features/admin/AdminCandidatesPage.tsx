@@ -382,7 +382,7 @@ export function AdminCandidatesPage() {
                                       : "Payment pending"}
                               </span>
                               {!e.paymentConfirmed && (
-                                <label className="flex items-center gap-1 text-xs text-gray-500" title="₦20,000 instalment deposit: unlocks Days 1–2">
+                                <label className="flex items-center gap-1 text-xs text-gray-500" title="Instalment deposit: unlocks Days 1–2">
                                   <input
                                     type="checkbox"
                                     checked={!!e.depositPaidAt}

@@ -198,6 +198,8 @@ export interface CoursePreview {
     /** The instalment deposit, or null when the course can't be paid in instalments. */
     depositNgn: number | null;
   };
+  /** Prices for each live country outside Nigeria, keyed by country code (2026-10-30). */
+  localPrices?: Record<string, { checkout: CheckoutInfo; price: number; deposit: number | null }>;
   module: { title: string; weekNumber: number };
   lesson: Pick<Lesson, "title" | "content" | "videoUrl" | "images" | "resources" | "durationMinutes">;
 }

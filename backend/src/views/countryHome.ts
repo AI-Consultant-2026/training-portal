@@ -744,15 +744,19 @@ ${scripts(ctx)}
 `;
 }
 
-// /za/ambassadors, /ke/ambassadors, /gh/ambassadors (2026-10-30): the programme isn't
-// running there yet, so this says so and takes waitlist sign-ups. Nigeria's programme
-// page stays at /ambassadors.
+// /za/ambassadors, /ke/ambassadors, /gh/ambassadors (2026-10-30): until the country is
+// live the programme isn't running there, so this says so and takes waitlist sign-ups;
+// once it's live the page invites visitors to register and get their code. Nigeria's
+// programme page stays at /ambassadors.
 export function renderComingSoonAmbassadors(ctx: PageContext): string {
   const c = COUNTRIES[ctx.country];
+  const live = isLive(ctx.country);
   const home = c.site.path;
   const path = ambassadorsPath(ctx.country);
   const title = `Paleon Ambassadors in ${c.name} | Paleon Training`;
-  const description = `The Paleon Student Ambassador programme is coming to ${c.name}. Share free digital-skills lessons and earn a reward for every friend who enrols.`;
+  const description = live
+    ? `Join the Paleon Student Ambassador programme in ${c.name}. Share free digital-skills lessons and earn a reward for every friend who enrols.`
+    : `The Paleon Student Ambassador programme is coming to ${c.name}. Share free digital-skills lessons and earn a reward for every friend who enrols.`;
   return `${head(ctx, {
     title,
     description,
@@ -770,13 +774,21 @@ ${header(ctx, home)}
     <div class="wrap hero-inner">
       <span class="eyebrow">Paleon Ambassadors &middot; ${escapeHtml(c.name)}</span>
       <h1 class="hero-title">Help a friend learn a job-ready skill. <em>Earn ${text(c.site.referralReward)} when they enrol.</em></h1>
-      <p class="hero-sub">The Student Ambassador programme opens in ${escapeHtml(c.name)} when courses launch here. It&rsquo;s free to join, with no sales targets.</p>
-      ${waitlistBox(ctx.country)}
+      ${
+        live
+          ? `<p class="hero-sub">The Student Ambassador programme is open in ${escapeHtml(c.name)}. It&rsquo;s free to join, with no sales targets.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-signal btn-lg" href="/register?country=${ctx.country}">Register free and get your code</a>
+        <a class="btn btn-outline-light btn-lg" href="/refer/me">I have an account: open Refer &amp; earn</a>
+      </div>`
+          : `<p class="hero-sub">The Student Ambassador programme opens in ${escapeHtml(c.name)} when courses launch here. It&rsquo;s free to join, with no sales targets.</p>
+      ${waitlistBox(ctx.country)}`
+      }
     </div>
   </section>
   <section class="section section-paper" id="how" aria-labelledby="ambHowTitle">
     <div class="wrap">
-      <span class="section-eyebrow">How it will work</span>
+      <span class="section-eyebrow">${live ? "How it works" : "How it will work"}</span>
       <h2 class="section-title" id="ambHowTitle">Three steps</h2>
       <ol class="start-steps">
         <li class="start-step"><span class="start-num" aria-hidden="true">1</span><h3>Register free</h3><p>Open <em>Refer &amp; earn</em> in your account. Your personal code is waiting.</p></li>

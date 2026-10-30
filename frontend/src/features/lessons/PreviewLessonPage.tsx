@@ -7,10 +7,22 @@ import { Spinner } from "../../components/ui/Spinner";
 import { extractYouTubeId, YouTubePlayer } from "../../components/ui/YouTubePlayer";
 import { track } from "../../lib/analytics";
 import { CoursePreview } from "../../types/api";
+import { formatPrice, isFlutterwave } from "../payments/checkout";
 import { PaymentTrustStrip } from "../payments/PaymentTrustStrip";
 import { LessonContent } from "./LessonContent";
 
 const WHATSAPP_URL = "https://wa.me/2347077149989";
+
+// The visitor's country: their account's, or the one they picked on a country homepage
+// (country-home.js stores it under this key).
+function visitorCountry(accountCountry: string | null | undefined): string | null {
+  if (accountCountry) return accountCountry;
+  try {
+    return window.localStorage.getItem("paleon_country");
+  } catch {
+    return null;
+  }
+}
 
 // Public "Try Day 1 free" page (2026-09-25): the first lesson of a course, readable
 // without an account, so people can see the real lesson format -- text, illustration
@@ -59,8 +71,15 @@ export function PreviewLessonPage() {
   const { course, module, lesson } = preview;
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
   const remaining = Math.max(course.lessonCount - 1, 0);
-  const price = course.priceNgn !== null ? `\u20a6${course.priceNgn.toLocaleString()}` : null;
-  const deposit = course.depositNgn !== null ? `\u20a6${course.depositNgn.toLocaleString()}` : null;
+  // A visitor from a live Ghana, Kenya or South Africa sees their own currency (2026-10-30).
+  const country = visitorCountry(user?.country);
+  const local = country ? preview.localPrices?.[country] : undefined;
+  const checkout = local?.checkout;
+  const priceAmount = local ? local.price : course.priceNgn;
+  const depositAmount = local ? local.deposit : course.depositNgn;
+  const price = priceAmount !== null ? formatPrice(checkout, priceAmount) : null;
+  const deposit = depositAmount !== null ? formatPrice(checkout, depositAmount) : null;
+  const flutterwave = isFlutterwave(checkout);
   // Logged-in students go straight to the course page to pay; everyone else creates a
   // free account first, with this course pre-selected.
   const enrolHref = user
@@ -102,7 +121,11 @@ export function PreviewLessonPage() {
           </li>
           <li className="rounded-md bg-white px-3 py-2">
             <span className="font-semibold text-blue-700">2.</span>{" "}
-            {deposit ? `Pay ${deposit} by card to unlock Days 1\u20132` : "Pay by card on Paystack"}
+            {deposit
+              ? `Pay ${deposit}${flutterwave ? "" : " by card"} to unlock Days 1\u20132`
+              : flutterwave
+                ? "Pay on Flutterwave"
+                : "Pay by card on Paystack"}
           </li>
           <li className="rounded-md bg-white px-3 py-2">
             <span className="font-semibold text-blue-700">3.</span> Carry on with lesson 2 straight away
@@ -117,7 +140,7 @@ export function PreviewLessonPage() {
             {deposit ? `Start for ${deposit}` : price ? `Enrol for ${price}` : "Enrol now"}
           </Link>
           <a
-            href={WHATSAPP_URL}
+            href={checkout?.whatsappLink ?? WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
@@ -141,7 +164,7 @@ export function PreviewLessonPage() {
         )}
       </div>
 
-      <PaymentTrustStrip courseSlug={course.slug} className="mt-4" />
+      <PaymentTrustStrip courseSlug={course.slug} checkout={checkout} className="mt-4" />
 
       <p className="mt-6 text-sm">
         <a href={`/${course.slug}-course`} className="text-blue-600 hover:underline">

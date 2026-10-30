@@ -23,7 +23,9 @@ import * as enrollmentService from "./enrollment.service";
 import * as referralService from "./referral.service";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
-import { DEPOSIT_UNLOCKED_DAYS, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
+import { DEPOSIT_UNLOCKED_DAYS } from "../constants/coursePricing";
+import { isCountryCode } from "../constants/countries";
+import { balanceIn, checkoutCountryFor, depositIn, moneyIn } from "./paystackAccounts";
 import { getRefundStatus } from "./refund.service";
 
 // A candidate counts as "online" if their last heartbeat was within this window. The
@@ -479,14 +481,25 @@ async function sendDepositConfirmedEmailIfPossible(enrollment: Enrollment): Prom
       User.findByPk(enrollment.studentId),
       Course.findByPk(enrollment.courseId),
     ]);
-    const balanceNgn = course ? getBalanceNgn(course.slug) : null;
-    if (student && course && balanceNgn !== null) {
+    if (!student || !course) return;
+    // In the currency the deposit was paid in (2026-10-30: cedis, shillings or rand for a
+    // live Ghana, Kenya or South Africa); a deposit ticked by hand with no payment on
+    // record uses the student's checkout country.
+    const paid = await Payment.findOne({
+      where: { enrollmentId: enrollment.id, status: "succeeded", notes: { [Op.like]: "Instalment deposit%" } },
+      order: [["createdAt", "DESC"]],
+    });
+    const country =
+      paid && isCountryCode(paid.billingCountry) ? paid.billingCountry : checkoutCountryFor(student.country);
+    const deposit = depositIn(country);
+    const balance = balanceIn(country, course.slug);
+    if (deposit !== null && balance !== null) {
       await emails.sendDepositConfirmedEmail({
         student,
         courseTitle: course.title,
         courseSlug: course.slug,
-        depositNgn: INSTALMENT_DEPOSIT_NGN,
-        balanceNgn,
+        deposit: moneyIn(country, deposit),
+        balance: moneyIn(country, balance),
         unlockedDays: DEPOSIT_UNLOCKED_DAYS,
       });
     }

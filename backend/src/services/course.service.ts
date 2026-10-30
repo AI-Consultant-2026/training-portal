@@ -1,3 +1,5 @@
+import { COUNTRY_CODES, isLive } from "../constants/countries";
+import { balanceIn, CheckoutInfo, checkoutInfo, coursePriceIn, depositIn } from "./paystackAccounts";
 import { COURSE_PRICES_NGN, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
 import { Course, CourseModule, Lesson } from "../models";
 import { CourseLevel } from "../models/course.model";
@@ -112,8 +114,29 @@ export interface PublicCoursePreview {
     /** The instalment deposit, or null when the course can't be paid in instalments. */
     depositNgn: number | null;
   };
+  /**
+   * Prices for each live country outside Nigeria (2026-10-30), so a visitor from a live
+   * Ghana, Kenya or South Africa sees their own currency. The page picks one by the
+   * visitor's country; anyone else sees the Naira prices above.
+   */
+  localPrices: Record<string, { checkout: CheckoutInfo; price: number; deposit: number | null }>;
   module: { title: string; weekNumber: number };
   lesson: Pick<Lesson, "title" | "content" | "videoUrl" | "images" | "resources" | "durationMinutes">;
+}
+
+function localPricesFor(slug: string): PublicCoursePreview["localPrices"] {
+  const prices: PublicCoursePreview["localPrices"] = {};
+  for (const code of COUNTRY_CODES) {
+    if (code === "NG" || !isLive(code)) continue;
+    const price = coursePriceIn(code, slug);
+    if (price === undefined) continue;
+    prices[code] = {
+      checkout: checkoutInfo(code),
+      price,
+      deposit: balanceIn(code, slug) === null ? null : depositIn(code),
+    };
+  }
+  return prices;
 }
 
 // Public, no-login preview of a published course's free first lesson (see
@@ -145,6 +168,7 @@ export async function getPublicCoursePreview(slug: string): Promise<PublicCourse
       priceNgn: COURSE_PRICES_NGN[course.slug] ?? null,
       depositNgn: getBalanceNgn(course.slug) === null ? null : INSTALMENT_DEPOSIT_NGN,
     },
+    localPrices: localPricesFor(course.slug),
     module: { title: module.title, weekNumber: module.weekNumber },
     lesson: {
       title: lesson.title,

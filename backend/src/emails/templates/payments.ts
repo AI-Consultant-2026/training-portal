@@ -58,16 +58,16 @@ export function buildDepositConfirmedEmail(input: {
   student: Student;
   courseTitle: string;
   courseSlug: string;
-  depositNgn: number;
-  balanceNgn: number;
+  /** Formatted with the currency it was paid in, e.g. "₦20,000" or "KSh 1,930" (2026-10-30). */
+  deposit: string;
+  balance: string;
   unlockedDays: number;
 }): EmailMessage {
-  const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
   const lines = [
     `Hi ${input.student.firstName},`,
-    `Your ${naira(input.depositNgn)} deposit for ${input.courseTitle} is confirmed. Days 1–${input.unlockedDays} are now unlocked, so you can start learning today.`,
+    `Your ${input.deposit} deposit for ${input.courseTitle} is confirmed. Days 1–${input.unlockedDays} are now unlocked, so you can start learning today.`,
     `Start learning: ${config.corsOrigin}/courses/${input.courseSlug}`,
-    `When you're ready to carry on, pay the balance of ${naira(input.balanceNgn)} from the course page. It unlocks every remaining day, the capstone project and your certificate.`,
+    `When you're ready to carry on, pay the balance of ${input.balance} from the course page. It unlocks every remaining day, the capstone project and your certificate.`,
     "Welcome to Paleon Training!",
   ];
   return {

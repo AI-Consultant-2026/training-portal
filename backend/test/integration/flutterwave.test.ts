@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { config } from "../../src/config";
+import { buildLeadWelcomeEmail } from "../../src/emails/templates/leadNurture";
 import { Course, CourseModule, Enrollment, Lesson, Payment, User } from "../../src/models";
 import { sponsorToken } from "../../src/services/sponsor.service";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
@@ -301,5 +302,65 @@ describe("Flutterwave checkout (Ghana, Kenya, South Africa)", () => {
     expect(verify.body.outcome).toBe("confirmed");
     await enrollment!.reload();
     expect(enrollment!.paymentConfirmed).toBe(true);
+  });
+});
+
+// Pages and emails that show a live country's own currency (2026-10-30).
+describe("A live Kenya outside the checkout", () => {
+  const original = { ...config.flutterwave, live: config.liveCountries };
+  beforeEach(() => {
+    config.flutterwave.secretKey = "FLWSECK_TEST-jest";
+    config.flutterwave.secretHash = HASH;
+    config.liveCountries = ["KE"];
+  });
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+  afterAll(() => {
+    config.flutterwave.secretKey = original.secretKey;
+    config.flutterwave.secretHash = original.secretHash;
+    config.liveCountries = original.live;
+  });
+
+  it("emails the deposit confirmation in shillings", async () => {
+    const { course, token } = await setup();
+    mockFlutterwave();
+    await startDeposit(course, token);
+    await webhook(4242);
+    const email = memAdapter.sentMessages.find((m) => m.subject.startsWith("Deposit received"));
+    expect(email?.text).toContain("Your KSh 1,930 deposit");
+    expect(email?.text).toContain("balance of KSh 12,545");
+    expect(email?.text).not.toContain("₦");
+  });
+
+  it("opens the Kenyan ambassador programme instead of the waitlist", async () => {
+    const live = await request(app).get("/ke/ambassadors");
+    expect(live.text).toContain("The Student Ambassador programme is open in Kenya");
+    expect(live.text).toContain('href="/register?country=KE"');
+    expect(live.text).not.toContain("data-waitlist-form");
+    const gh = await request(app).get("/gh/ambassadors");
+    expect(gh.text).toContain("data-waitlist-form");
+  });
+
+  it("quotes a Kenyan lead the fee in shillings and Kenya's WhatsApp line", () => {
+    const lead = { id: "lead-1", name: "Wanjiru Kamau", email: "w@example.com", course: "Digital Marketing" };
+    const ke = buildLeadWelcomeEmail({ ...lead, country: "KE" }).text;
+    expect(ke).toContain("KSh 14,475");
+    expect(ke).toContain("+44 7508 823495");
+    const ng = buildLeadWelcomeEmail({ ...lead, country: "NG" }).text;
+    expect(ng).toContain("₦150,000");
+    expect(ng).toContain("+234 707 714 9215");
+  });
+
+  it("gives the free preview Kenya's prices beside Nigeria's", async () => {
+    const { course } = await setup();
+    const day1 = await CourseModule.findOne({ where: { courseId: course.id, weekNumber: 1 } });
+    await Lesson.update({ content: "Free lesson" }, { where: { moduleId: day1!.id } });
+    const res = await request(app).get(`/api/courses/${course.slug}/preview`);
+    expect(res.status).toBe(200);
+    expect(res.body.course).toMatchObject({ priceNgn: 150_000, depositNgn: 20_000 });
+    expect(res.body.localPrices).toEqual({
+      KE: { checkout: expect.objectContaining({ country: "KE" }), price: PRICE, deposit: DEPOSIT },
+    });
   });
 });

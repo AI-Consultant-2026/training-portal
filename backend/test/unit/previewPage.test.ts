@@ -4,6 +4,7 @@ const INDEX = `<!doctype html><html><head><title>Paleon Training</title></head><
 
 const preview = {
   course: { slug: "gis-and-drone-mapping", title: "GIS and Drone Mapping", dayCount: 9, lessonCount: 18, priceNgn: 200000, depositNgn: 20000 },
+  localPrices: {},
   module: { title: "GIS Fundamentals & Spatial Concepts", weekNumber: 1 },
   lesson: {
     title: "Raster vs. Vector Data",
