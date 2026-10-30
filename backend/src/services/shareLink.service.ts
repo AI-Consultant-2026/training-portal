@@ -698,7 +698,7 @@ export function renderSharePage(page: SharePage): string {
     : `${signUpButton}\n  ${
         lessonUrl
           ? `<a class="secondary" href="${escapeHtml(lessonUrl)}">Try the first lesson free</a>`
-          : `<a class="secondary" href="/welcome#courses">See the four courses</a>`
+          : `<a class="secondary" href="/ng#courses">See the four courses</a>`
       }`;
   const heading = lessonFirst
     ? `Try ${COURSES[slug as CourseSlug].headline} free`

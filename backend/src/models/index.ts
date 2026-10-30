@@ -28,6 +28,7 @@ import { User, initUserModel } from "./user.model";
 import { VideoCheckpoint, initVideoCheckpointModel } from "./videoCheckpoint.model";
 import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCheckpointAnswer.model";
 import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
+import { WaitlistSignup, initWaitlistSignupModel } from "./waitlistSignup.model";
 import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
 import {
   SalesRep,
@@ -85,6 +86,7 @@ initEmailCampaignRecipientModel(sequelize);
 initEmailCampaignAttachmentModel(sequelize);
 initEmailUnsubscribeModel(sequelize);
 initZoomAttendeeModel(sequelize);
+initWaitlistSignupModel(sequelize);
 initAmbassadorNoticeModel(sequelize);
 initSalesRepModel(sequelize);
 initSalesRepStudentModel(sequelize);
@@ -228,5 +230,6 @@ export {
   User,
   VideoCheckpoint,
   VideoCheckpointAnswer,
+  WaitlistSignup,
   ZoomAttendee,
 };

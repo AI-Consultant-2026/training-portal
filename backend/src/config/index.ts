@@ -44,7 +44,17 @@ export const config = {
   // Paystack secret key (sk_live_... / sk_test_...), used only to verify the signature on
   // Paystack's webhook calls (2026-09-28). Optional: unset = the webhook refuses every
   // call with 503 and payments are confirmed by hand on /admin/candidates, as before.
-  paystackSecretKey: process.env.PAYSTACK_SECRET_KEY ?? "",
+  // Nigeria's account. PAYSTACK_SECRET_KEY_NG wins if set; PAYSTACK_SECRET_KEY is the
+  // name Render already uses, so production keeps working unchanged.
+  paystackSecretKey: process.env.PAYSTACK_SECRET_KEY_NG || process.env.PAYSTACK_SECRET_KEY || "",
+  // Every other country is its own Paystack account in its own currency (2026-10-30); the
+  // env var names come from constants/countries.ts (PAYSTACK_SECRET_KEY_GH, _KE, _ZA).
+  // Unset = that country can't take payments yet. See services/paystackAccounts.ts.
+  paystackSecretKeys: {
+    GH: process.env.PAYSTACK_SECRET_KEY_GH ?? "",
+    KE: process.env.PAYSTACK_SECRET_KEY_KE ?? "",
+    ZA: process.env.PAYSTACK_SECRET_KEY_ZA ?? "",
+  } as Record<string, string>,
   // VTpass (2026-10-02): sends referral airtime/data rewards from /admin/referrals. Optional:
   // with no keys the "Send airtime/data" button is hidden and rewards are paid by hand as
   // before. VTPASS_ENV defaults to sandbox, so real money only moves once it is set to

@@ -24,7 +24,7 @@ describe("Support page", () => {
   });
 
   it("links to /support from the welcome page menu and footer and from other marketing pages", async () => {
-    const welcome = await request(app).get("/welcome");
+    const welcome = await request(app).get("/ng");
     expect(welcome.text.match(/href="\/support"/g)?.length).toBeGreaterThanOrEqual(2);
     for (const page of ["/university-partners", "/digital-skills-training-nigeria"]) {
       const res = await request(app).get(page);

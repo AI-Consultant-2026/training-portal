@@ -119,3 +119,27 @@
 
   if (/(?:^|[?&])present(?:=|&|$)/.test(location.search)) start(0);
 })();
+
+// Ambassador guide chapters (moved here from the homepage, 2026-10-30): each button jumps
+// the guide video to its chapter.
+(function () {
+  var video = document.getElementById("ambassadorGuide");
+  if (!video) return;
+  document.querySelectorAll(".guide-chapter").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var t = Number(button.getAttribute("data-t")) || 0;
+      var seek = function () {
+        video.currentTime = t;
+        var played = video.play();
+        if (played && played.catch) played.catch(function () {});
+      };
+      if (video.readyState >= 1) {
+        seek();
+      } else {
+        video.addEventListener("loadedmetadata", seek, { once: true });
+        video.load();
+      }
+      video.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+})();

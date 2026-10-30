@@ -3,7 +3,7 @@ import { COURSE_PRICES_NGN } from "./coursePricing";
 // The four live public courses, as the lead-nurture emails describe them (2026-09-25).
 // Leads store the course *title* (the homepage Career Match and the older lead form both
 // send the title), so emails look a lead's course up here by title. Keep in sync with the
-// course pages in marketing/*-course.html and the match rules in marketing/welcome.js.
+// course pages in marketing/*-course.html and the Career Match rules in views/countryHome.ts.
 export interface PublicCourse {
   slug: string;
   title: string;

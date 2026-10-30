@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { WaitlistSignup } from "../models";
 import { storageAdapter } from "../utils/storage";
 import * as adminService from "../services/admin.service";
 import * as courseProgressService from "../services/courseProgress.service";
@@ -87,6 +88,12 @@ export const sendCompletionEmail = asyncHandler(async (req: Request, res: Respon
 export const listLeads = asyncHandler(async (_req: Request, res: Response) => {
   const leads = await adminService.listLeads();
   res.json({ leads });
+});
+
+// Country waitlist sign-ups (2026-10-30), newest first.
+export const listWaitlist = asyncHandler(async (_req: Request, res: Response) => {
+  const signups = await WaitlistSignup.findAll({ order: [["createdAt", "DESC"]] });
+  res.json({ signups });
 });
 
 export const deleteLead = asyncHandler(async (req: Request, res: Response) => {

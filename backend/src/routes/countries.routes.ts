@@ -11,6 +11,10 @@ countriesRouter.get("/", (req, res) => {
   const header = req.get("cf-ipcountry")?.toUpperCase();
   res.json({
     detected: isCountryCode(header) ? header : null,
-    countries: COUNTRY_CODES.map((code) => COUNTRIES[code]),
+    // The register page only needs the form fields, not each country's homepage config.
+    countries: COUNTRY_CODES.map((code) => {
+      const { site, ...country } = COUNTRIES[code];
+      return { ...country, live: site.status === "live" };
+    }),
   });
 });

@@ -1,5 +1,8 @@
 User-agent: *
-Allow: /welcome
+Allow: /ng
+Allow: /za
+Allow: /ke
+Allow: /gh
 Allow: /preview/
 Allow: /executive-training
 Allow: /trainingportalprocess
@@ -50,9 +53,9 @@ Allow: /cyber-security-fundamentals-course
 Allow: /gis-and-drone-mapping-course
 Allow: /digital-marketing-course
 Allow: /hse-fundamentals-course
-Allow: /ghana
-Allow: /kenya
-Allow: /south-africa
+Allow: /za/ambassadors
+Allow: /ke/ambassadors
+Allow: /gh/ambassadors
 Allow: /oil-and-gas-jobs-in-warri-delta-state
 Allow: /how-to-get-a-bank-job-in-nigeria
 Allow: /fintech-jobs-nigeria

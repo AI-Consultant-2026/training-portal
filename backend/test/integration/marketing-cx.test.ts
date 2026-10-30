@@ -23,9 +23,9 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
   });
 
   it("gives the homepage one clear start path, with free lessons and course-preselected sign-up", async () => {
-    const res = await request(app).get("/welcome");
-    expect(res.text).toContain('id="start"');
-    expect(res.text).toContain('href="#start">Start here</a>');
+    const res = await request(app).get("/ng");
+    expect(res.text).toContain('id="how"');
+    expect(res.text).toContain('href="/ng#courses">Browse the 4 courses</a>');
     for (const slug of COURSES) {
       expect(res.text).toContain(`href="/preview/${slug}"`);
       expect(res.text).toContain(`href="/register?course=${slug}"`);

@@ -28,7 +28,8 @@ describe("Student Ambassador Programme page", () => {
     const blocks = [...res.text.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) =>
       JSON.parse(m[1]),
     );
-    expect(blocks.map((b) => b["@type"])).toEqual(["WebPage", "BreadcrumbList", "FAQPage"]);
+    // VideoObject: the ambassador guide video, moved here from the homepage (2026-10-30).
+    expect(blocks.map((b) => b["@type"]).sort()).toEqual(["BreadcrumbList", "FAQPage", "VideoObject", "WebPage"]);
     expect(JSON.stringify(blocks)).toContain(naira(REFERRER_REWARD_NGN));
   });
 
@@ -58,6 +59,6 @@ describe("Student Ambassador Programme page", () => {
     expect((await request(app).get("/robots.txt")).text).toContain("Allow: /ambassadors");
     expect((await request(app).get("/sitemap.xml")).text).toContain("https://paleontraining.com/ambassadors<");
     expect((await request(app).get("/refer")).text).toContain('href="/ambassadors"');
-    expect((await request(app).get("/welcome")).text).toContain('href="/ambassadors"');
+    expect((await request(app).get("/ng")).text).toContain('href="/ambassadors"');
   });
 });

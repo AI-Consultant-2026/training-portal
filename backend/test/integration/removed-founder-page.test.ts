@@ -7,7 +7,7 @@ describe("Removed founder page", () => {
   it("redirects the old bio URL to the home page instead of serving it", async () => {
     const res = await request(app).get("/about/ken-uwotu");
     expect(res.status).toBe(301);
-    expect(res.headers.location).toBe("/welcome");
+    expect(res.headers.location).toBe("/");
   });
 
   it("no longer serves the founder photo", async () => {
@@ -15,8 +15,8 @@ describe("Removed founder page", () => {
     expect(res.status).toBe(404);
   });
 
-  it("no longer links to the founder page from the welcome page", async () => {
-    const res = await request(app).get("/welcome");
+  it("no longer links to the founder page from the homepage", async () => {
+    const res = await request(app).get("/ng");
     expect(res.status).toBe(200);
     expect(res.text).not.toMatch(/ken-uwotu|About the Founder|Founded by/i);
   });

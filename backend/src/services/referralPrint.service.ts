@@ -41,7 +41,7 @@ const DESIGNS: Record<PrintDesign, DesignCopy> = {
       "Digital Marketing",
       "HSE Fundamentals",
     ],
-    previewPath: "/welcome#courses",
+    previewPath: "/ng#courses",
   },
   "cyber-security-fundamentals": {
     eyebrow: "BEGINNER COURSE",

@@ -8,7 +8,7 @@ import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { Lead } from "../../types/api";
-import { countryName } from "../../api/countries.api";
+import { countryName, toWhatsAppLink } from "../../api/countries.api";
 import {
   closeCoursePayments,
   deleteLead,
@@ -17,6 +17,7 @@ import {
   fetchLeads,
 } from "./adminSlice";
 import { AdminFeedbackSection } from "./AdminFeedbackSection";
+import { AdminWaitlistSection } from "./AdminWaitlistSection";
 
 function formatNumberOrDash(value: number | null): string {
   return value === null ? "—" : String(value);
@@ -50,17 +51,7 @@ function leadsToCsv(leads: Lead[]): string {
   return [header, ...rows].join("\r\n");
 }
 
-// Nigerian numbers are usually written in local form (0801...); WhatsApp's click-to-chat
-// links need the full international digits with no leading 0. Falls back to stripping
-// symbols only for anything that doesn't look like that shape, rather than guessing.
-// A number written locally (leading 0) gets the lead's own country's dialling code.
-const DIAL_CODES: Record<string, string> = { NG: "234", GH: "233", KE: "254", ZA: "27" };
 
-function toWhatsAppLink(phone: string, country: string): string {
-  const digits = phone.replace(/\D/g, "");
-  const withCountryCode = digits.startsWith("0") ? `${DIAL_CODES[country] ?? "234"}${digits.slice(1)}` : digits;
-  return `https://wa.me/${withCountryCode}`;
-}
 
 // Client-side export: the admin dashboard already fetches every lead (GET /admin/leads
 // has no pagination), so there's nothing to gain from a dedicated export endpoint --
@@ -380,6 +371,8 @@ export function AdminDashboardPage() {
       ) : (
         <p className="mt-3 text-sm text-gray-500">No leads yet.</p>
       )}
+
+      <AdminWaitlistSection />
 
       <AdminFeedbackSection />
 

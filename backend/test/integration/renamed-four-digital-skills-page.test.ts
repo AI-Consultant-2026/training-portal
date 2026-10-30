@@ -21,7 +21,7 @@ describe("Renamed four-digital-skills article", () => {
 
   it("no longer links to the old URL from any page that pointed at it", async () => {
     const pages = [
-      "/welcome",
+      "/ng",
       "/digital-skills-training-nigeria",
       "/degree-but-no-job-nigeria",
       "/graduate-to-job-ready-nigeria",

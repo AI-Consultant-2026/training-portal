@@ -58,6 +58,7 @@ adminRouter.use(authenticate, authorize("admin"));
 
 adminRouter.get("/stats", adminController.getDashboardStats);
 adminRouter.get("/leads", adminController.listLeads);
+adminRouter.get("/waitlist", adminController.listWaitlist);
 adminRouter.delete("/leads/:id", adminController.deleteLead);
 adminRouter.get("/partners", adminController.listPartners);
 adminRouter.post("/partners", validate(createPartnerSchema), adminController.createPartner);

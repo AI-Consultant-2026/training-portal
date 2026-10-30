@@ -71,7 +71,7 @@ function genericWelcome(lead: LeadFields): EmailMessage {
     `Hi ${firstName(lead.name)},`,
     "Thanks for your interest in Paleon Training. We run four practical, self-paced courses for careers in Oil & Gas, Banking and Telecoms: Cyber Security Fundamentals, GIS and Drone Mapping, Digital Marketing and HSE Fundamentals.",
     "Not sure which one fits? Our free Career Match recommends one in 2 minutes:",
-    site("/welcome#career-match"),
+    site("/ng#career-match"),
     "Every course has a free first lesson you can open without an account, so you can see exactly how it's taught before you decide.",
     `Questions? Just reply to this email, or WhatsApp us on ${WHATSAPP}.`,
   ]);
@@ -134,7 +134,7 @@ export function buildLeadFollowUpEmail(lead: LeadFields, step: FollowUpStep): Em
     `This is our last email about ${course.title}. If the timing isn't right, no problem — the course is self-paced, so you can start whenever you're ready.`,
     `The free first lesson is always there: ${l.preview}`,
     `And when you're ready to enrol: ${l.enrol}`,
-    `If ${course.title} isn't quite the right fit, the free Career Match can suggest another course: ${site("/welcome#career-match")}`,
+    `If ${course.title} isn't quite the right fit, the free Career Match can suggest another course: ${site("/ng#career-match")}`,
     `Any questions at all, just reply to this email or WhatsApp us on ${WHATSAPP}. We read every message.`,
   ]);
 }

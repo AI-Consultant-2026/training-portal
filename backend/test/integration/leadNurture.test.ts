@@ -62,7 +62,7 @@ describe("Lead nurture", () => {
     it("points leads without a known course at the Career Match", async () => {
       await createLead({ course: "Not sure yet" });
       await sendPendingWelcomeEmails();
-      expect(memAdapter.sentMessages[0].text).toContain("/welcome#career-match");
+      expect(memAdapter.sentMessages[0].text).toContain("/ng#career-match");
     });
 
     it("does not resend a welcome email once it's already been sent", async () => {

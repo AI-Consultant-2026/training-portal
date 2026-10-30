@@ -13,20 +13,21 @@ interface Student {
 export function buildPaystackUnmatchedEmail(input: {
   reference: string;
   email: string;
-  amountNgn: number;
+  /** Formatted with its currency, e.g. "₦200,000". */
+  amount: string;
   reason: string;
 }): EmailMessage {
   const lines = [
     "A Paystack payment came in that couldn't be confirmed automatically.",
     `Reason: ${input.reason}`,
     `Payer email: ${input.email}`,
-    `Amount: ₦${input.amountNgn.toLocaleString("en-NG")}`,
+    `Amount: ${input.amount}`,
     `Paystack reference: ${input.reference}`,
     `Please find the student on ${config.corsOrigin}/admin/candidates and tick "Paid" on the right course (or "Deposit" for a ₦20,000 instalment deposit).`,
   ];
   return {
     to: config.leadsNotifyEmail,
-    subject: `Paystack payment needs manual confirmation (₦${input.amountNgn.toLocaleString("en-NG")})`,
+    subject: `Paystack payment needs manual confirmation (${input.amount})`,
     text: lines.join("\n"),
     html: wrapHtml(lines),
   };

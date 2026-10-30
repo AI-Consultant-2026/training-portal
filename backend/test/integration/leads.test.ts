@@ -97,7 +97,7 @@ describe("Leads", () => {
   });
 
   it("rejects an industry or interest outside the allow-lists", async () => {
-    const badSector = await request(app).post("/api/leads").send({ ...validLead, sector: "Agriculture" });
+    const badSector = await request(app).post("/api/leads").send({ ...validLead, sector: "Fishing" });
     expect(badSector.status).toBe(400);
     const badInterest = await request(app).post("/api/leads").send({ ...validLead, interest: "Anything" });
     expect(badInterest.status).toBe(400);

@@ -1,12 +1,21 @@
 import crypto from "crypto";
 import { fn, col, where as sqlWhere } from "sequelize";
-import { config } from "../config";
-import { COURSE_PRICES_NGN, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
+import { COURSE_PRICES_NGN } from "../constants/coursePricing";
+import { CountryCode } from "../constants/countries";
 import * as emails from "../emails";
 import { Course, Enrollment, Payment, User } from "../models";
 import { logger } from "../utils/logger";
 import { setDepositPaid, setPaymentConfirmed } from "./admin.service";
 import { ApiChargeKind, INSTALMENT_NOTES, PAYSTACK_INIT_REFERENCE_PREFIX } from "./payment.service";
+import {
+  balanceIn,
+  configuredPaystackCountries,
+  coursePriceIn,
+  depositIn,
+  moneyIn,
+  paystackCurrency,
+  paystackSecretKey,
+} from "./paystackAccounts";
 
 // Automatic payment confirmation from Paystack (2026-09-28). Students pay on a Paystack
 // Payment Page (see paystackPaymentLinks.ts), which can't carry our enrolment id, so a
@@ -17,17 +26,26 @@ import { ApiChargeKind, INSTALMENT_NOTES, PAYSTACK_INIT_REFERENCE_PREFIX } from 
 export const PAYSTACK_REFERENCE_PREFIX = "paystack:";
 
 export function isPaystackConfigured(): boolean {
-  return config.paystackSecretKey !== "";
+  return configuredPaystackCountries().length > 0;
 }
 
 // Paystack signs the raw request body with HMAC-SHA512 using the account's secret key and
-// sends the hex digest in the x-paystack-signature header.
-export function isValidSignature(rawBody: Buffer, signature: string | undefined): boolean {
-  if (!signature || !isPaystackConfigured()) return false;
-  const expected = crypto.createHmac("sha512", config.paystackSecretKey).update(rawBody).digest("hex");
+// sends the hex digest in the x-paystack-signature header. Each country is its own Paystack
+// account (2026-10-30), all pointing at this one webhook URL, so the key that matches says
+// which country's account sent the event. Returns null for a bad signature.
+export function signingCountry(rawBody: Buffer, signature: string | undefined): CountryCode | null {
+  if (!signature) return null;
   const given = Buffer.from(signature, "utf8");
-  const wanted = Buffer.from(expected, "utf8");
-  return given.length === wanted.length && crypto.timingSafeEqual(given, wanted);
+  for (const country of configuredPaystackCountries()) {
+    const expected = crypto.createHmac("sha512", paystackSecretKey(country)).update(rawBody).digest("hex");
+    const wanted = Buffer.from(expected, "utf8");
+    if (given.length === wanted.length && crypto.timingSafeEqual(given, wanted)) return country;
+  }
+  return null;
+}
+
+export function isValidSignature(rawBody: Buffer, signature: string | undefined): boolean {
+  return signingCountry(rawBody, signature) !== null;
 }
 
 interface PaystackChargeData {
@@ -66,15 +84,21 @@ export function readInstalmentMetadata(raw: unknown): InstalmentMetadata | null 
 
 export type WebhookOutcome = "ignored" | "duplicate" | "confirmed" | "already_paid" | "unmatched";
 
-export async function handlePaystackEvent(event: { event?: string; data?: PaystackChargeData }): Promise<WebhookOutcome> {
+// `country` is the Paystack account the event came from; its charges are in its currency.
+export async function handlePaystackEvent(
+  event: { event?: string; data?: PaystackChargeData },
+  country: CountryCode = "NG",
+): Promise<WebhookOutcome> {
   const data = event.data ?? {};
-  if (event.event !== "charge.success" || data.status !== "success" || data.currency !== "NGN") {
+  const currency = paystackCurrency(country);
+  if (event.event !== "charge.success" || data.status !== "success" || data.currency !== currency) {
     return "ignored";
   }
   const reference = data.reference ?? "";
   const email = (data.customer?.email ?? "").trim();
-  const amountNgn = Math.round((data.requested_amount ?? data.amount ?? 0) / 100);
-  if (!reference || !email || amountNgn <= 0) return "ignored";
+  // In the account currency's main unit (Paystack sends kobo, pesewas or cents).
+  const amount = Math.round((data.requested_amount ?? data.amount ?? 0) / 100);
+  if (!reference || !email || amount <= 0) return "ignored";
 
   // Paystack retries a webhook until it gets a 200, so the same charge can arrive twice.
   const gatewayReference = PAYSTACK_REFERENCE_PREFIX + reference;
@@ -82,15 +106,19 @@ export async function handlePaystackEvent(event: { event?: string; data?: Paysta
 
   const unmatched = async (reason: string): Promise<WebhookOutcome> => {
     logger.warn(`Paystack payment ${reference} not confirmed automatically: ${reason}`);
-    await emails.sendPaystackUnmatchedEmail({ reference, email, amountNgn, reason });
+    await emails.sendPaystackUnmatchedEmail({ reference, email, amount: moneyIn(country, amount), reason });
     return "unmatched";
   };
 
   // Instalment charges (deposit or balance) name their enrolment, so no guessing is needed.
   const instalment = readInstalmentMetadata(data.metadata);
   if (instalment) {
-    return handleInstalmentCharge(instalment, { reference, email, amountNgn, gatewayReference }, unmatched);
+    return handleInstalmentCharge(instalment, { reference, email, amount, gatewayReference, country }, unmatched);
   }
+
+  // Fixed-price Payment Pages (paystackPaymentLinks.ts) only exist on Nigeria's account.
+  if (country !== "NG") return unmatched("a charge without an enrolment from a non-Nigerian Paystack account");
+  const amountNgn = amount;
 
   const student = await User.findOne({
     where: [sqlWhere(fn("lower", col("email")), email.toLowerCase()), { role: "student" }],
@@ -154,7 +182,8 @@ async function recordSucceededPayment(enrollment: Enrollment, amountNgn: number,
 
 async function handleInstalmentCharge(
   meta: InstalmentMetadata,
-  charge: { reference: string; email: string; amountNgn: number; gatewayReference: string },
+  // `amount` is in the charge's own currency (the `country` account's).
+  charge: { reference: string; email: string; amount: number; gatewayReference: string; country: CountryCode },
   unmatched: (reason: string) => Promise<WebhookOutcome>,
 ): Promise<WebhookOutcome> {
   const enrollment = await Enrollment.findByPk(meta.enrollmentId, { include: [{ model: Course, as: "course" }] });
@@ -166,15 +195,15 @@ async function handleInstalmentCharge(
     return unmatched(`instalment ${meta.instalment} paid with an email that isn't the enrolled student's`);
   }
 
-  const expectedNgn =
+  const expected =
     meta.instalment === "deposit"
-      ? INSTALMENT_DEPOSIT_NGN
+      ? depositIn(charge.country)
       : meta.instalment === "full"
-        ? (COURSE_PRICES_NGN[course.slug] ?? null)
-        : getBalanceNgn(course.slug);
-  if (expectedNgn === null || charge.amountNgn !== expectedNgn) {
+        ? (coursePriceIn(charge.country, course.slug) ?? null)
+        : balanceIn(charge.country, course.slug);
+  if (expected === null || charge.amount !== expected) {
     return unmatched(
-      `instalment ${meta.instalment} of ₦${charge.amountNgn.toLocaleString("en-NG")} doesn't match the expected amount`,
+      `instalment ${meta.instalment} of ${moneyIn(charge.country, charge.amount)} doesn't match the expected amount`,
     );
   }
 
@@ -182,17 +211,17 @@ async function handleInstalmentCharge(
     where: { gatewayReference: PAYSTACK_INIT_REFERENCE_PREFIX + charge.reference },
   });
   if (pending) {
-    await pending.update({ status: "succeeded", amount: charge.amountNgn, gatewayReference: charge.gatewayReference });
+    await pending.update({ status: "succeeded", amount: charge.amount, gatewayReference: charge.gatewayReference });
   } else {
     await Payment.create({
       enrollmentId: enrollment.id,
       studentId: enrollment.studentId,
       method: "card",
       status: "succeeded",
-      currency: "NGN",
-      amount: charge.amountNgn,
-      baseAmountNgn: charge.amountNgn,
-      billingCountry: "",
+      currency: paystackCurrency(charge.country),
+      amount: charge.amount,
+      baseAmountNgn: charge.country === "NG" ? charge.amount : 0,
+      billingCountry: charge.country,
       gatewayReference: charge.gatewayReference,
       notes: INSTALMENT_NOTES[meta.instalment],
     });

@@ -50,7 +50,7 @@ describe("GA4 analytics (/analytics.js)", () => {
   });
 
   it("allows Google Analytics in the CSP without loosening anything else", async () => {
-    const csp = (await request(createApp()).get("/welcome")).headers["content-security-policy"] as string;
+    const csp = (await request(createApp()).get("/ng")).headers["content-security-policy"] as string;
     expect(csp).toMatch(/script-src 'self' https:\/\/www\.youtube\.com https:\/\/www\.googletagmanager\.com/);
     expect(csp).toContain("connect-src 'self' https://*.google-analytics.com");
     expect(csp).not.toContain("'unsafe-inline' https://www.googletagmanager.com");
@@ -61,7 +61,7 @@ describe("GA4 analytics (/analytics.js)", () => {
 
   it("is loaded by the public marketing pages", async () => {
     const app = createApp();
-    for (const page of ["/welcome", "/refer", "/privacy", "/gis-and-drone-mapping-course"]) {
+    for (const page of ["/", "/ng", "/za", "/refer", "/privacy", "/gis-and-drone-mapping-course"]) {
       const res = await request(app).get(page);
       expect(res.status).toBe(200);
       expect(res.text).toContain('<script src="/analytics.js" defer></script>');

@@ -37,10 +37,11 @@ describe("Public Refer & Earn page", () => {
     expect((await request(app).get("/sitemap.xml")).text).toContain("https://paleontraining.com/refer<");
   });
 
-  it("links the homepage referral section to the public page and to the student dashboard", async () => {
-    const welcome = (await request(app).get("/welcome")).text;
-    expect(welcome).toContain('href="/refer"');
-    expect(welcome).toContain('href="/refer/me"');
-    expect(welcome).not.toContain("&#8358;3,000 off");
+  it("links the homepage Refer & Earn band to the public page, and the ambassador page to the student dashboard", async () => {
+    // The full referral section moved from the homepage to /ambassadors (2026-10-30).
+    const home = (await request(app).get("/ng")).text;
+    expect(home).toContain('href="/refer"');
+    expect(home).not.toContain("&#8358;3,000 off");
+    expect((await request(app).get("/ambassadors")).text).toContain('href="/refer/me"');
   });
 });

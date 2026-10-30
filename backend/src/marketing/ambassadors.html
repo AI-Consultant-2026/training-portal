@@ -7,6 +7,11 @@
 <title>Student Ambassador Programme | Paleon Training</title>
 <meta name="description" content="Become a Paleon Training Student Ambassador. Share the free Career Match and free lessons with coursemates and corps members, and earn airtime, data or course credit for every friend who joins and pays.">
 <link rel="canonical" href="https://paleontraining.com/ambassadors">
+<link rel="alternate" hreflang="en-NG" href="https://paleontraining.com/ambassadors">
+<link rel="alternate" hreflang="en-ZA" href="https://paleontraining.com/za/ambassadors">
+<link rel="alternate" hreflang="en-KE" href="https://paleontraining.com/ke/ambassadors">
+<link rel="alternate" hreflang="en-GH" href="https://paleontraining.com/gh/ambassadors">
+<link rel="alternate" hreflang="x-default" href="https://paleontraining.com/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Paleon Training">
 <meta property="og:title" content="Become a Paleon Training Student Ambassador">
@@ -696,6 +701,38 @@
   body.presenting .stage-body p, body.presenting table.catalog { font-size: 18px; }
   body.presenting .measure { max-width: 860px; }
   @media print { .present-bar, .no-present button { display: none; } }
+
+  /* ---------- Moved from the homepage (2026-10-30): the ambassador guide video, its
+     chapters and the three-step referral summary. ---------- */
+  .guide-panel { background: var(--ink); color: var(--dark-text); border-radius: 8px; padding: clamp(20px, 4vw, 36px); display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 40px); align-items: start; }
+  @media (max-width: 860px) { .guide-panel { grid-template-columns: minmax(0, 1fr); } }
+  .guide-panel figure { margin: 0; }
+  .guide-panel video { display: block; width: 100%; aspect-ratio: 1280 / 804; background: #000; border-radius: 6px; }
+  .guide-panel figcaption { margin-top: 10px; font-size: 14px; color: var(--dark-text-muted); }
+  .guide-panel h2.section-title { color: var(--dark-text); }
+  .guide-panel h2.section-title em { font-style: normal; color: var(--signal-2); }
+  .guide-lede { font-size: 16.5px; line-height: 1.6; color: #C9CED8; margin: 0 0 14px; }
+  .guide-chapters { margin-top: 16px; }
+  .guide-chapters-title { margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--signal-2); }
+  .guide-chapters ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .guide-chapter { font: inherit; font-size: 14px; min-height: 44px; color: var(--dark-text); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+  .guide-chapter span { color: var(--signal-2); font-variant-numeric: tabular-nums; margin-right: 4px; }
+  .guide-chapter:hover, .guide-chapter:focus-visible { border-color: var(--signal); background: rgba(232,134,60,.14); }
+  .guide-steps { margin: 0 0 14px; padding-left: 22px; display: grid; gap: 8px; }
+  .guide-steps li { font-size: 15.5px; line-height: 1.5; }
+  .guide-steps li::marker { color: var(--signal-2); font-weight: 700; }
+  .guide-points { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 6px; }
+  .guide-points li { font-size: 15px; padding-left: 20px; position: relative; }
+  .guide-points li::before { content: ""; position: absolute; left: 0; top: 10px; width: 10px; height: 2px; background: var(--signal); }
+  .guide-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .guide-small { margin: 14px 0 0; font-size: 14px; line-height: 1.55; color: var(--dark-text-muted); }
+  .guide-small a { color: var(--signal-2); }
+  .refer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+  .refer-step { background: var(--white); border: 1px solid var(--line-light); border-radius: 8px; padding: 20px; }
+  .refer-step-num { font-size: 13px; color: var(--charcoal-soft); margin-bottom: 8px; }
+  .refer-step-title { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
+  .refer-step-desc { font-size: 15px; color: var(--charcoal-soft); line-height: 1.6; }
+  .refer-fineprint { margin-top: 16px; font-size: 14px; color: var(--charcoal-soft); line-height: 1.6; }
 </style>
 <link rel="stylesheet" href="/search-widget.css">
 <link rel="stylesheet" href="/whatsapp-float.css">
@@ -767,6 +804,8 @@
   <nav class="toc no-present" aria-label="On this page">
     <p class="section-label">On this page</p>
     <ol>
+      <li><a href="#guide-video">Watch the 6-minute guide</a></li>
+      <li><a href="#refer-earn">Refer &amp; earn in three steps</a></li>
       <li><a href="#what">What ambassadors do</a></li>
       <li><a href="#who">Who can join</a></li>
       <li><a href="#share">What you'll be sharing</a></li>
@@ -782,6 +821,92 @@
       <li><a href="#faq">Questions</a></li>
     </ol>
   </nav>
+
+  <section id="guide-video" class="slide" data-slide aria-labelledby="watchTitle">
+    <p class="section-label">Watch &middot; 6 minutes</p>
+    <div class="guide-panel">
+      <div>
+        <figure>
+          <video id="ambassadorGuide" controls playsinline preload="metadata" poster="/videos/home/paleon-ambassador-guide-earn-and-rewards.jpg" aria-label="Video: Earn and Rewards, the Paleon Ambassador guide (5 minutes 53 seconds)">
+            <source src="/videos/home/paleon-ambassador-guide-earn-and-rewards.mp4" type="video/mp4">
+          </video>
+          <figcaption>Earn and Rewards: the Paleon Ambassador guide &middot; 5 min 53 s &middot; captions on screen, so it works with the sound off</figcaption>
+        </figure>
+        <nav class="guide-chapters" aria-label="Jump to a part of the video">
+          <p class="guide-chapters-title">Jump to a chapter</p>
+          <ol>
+            <li><button type="button" class="guide-chapter" data-t="0"><span>0:00</span> What you earn</button></li>
+            <li><button type="button" class="guide-chapter" data-t="46"><span>0:46</span> Your Refer &amp; Earn page</button></li>
+            <li><button type="button" class="guide-chapter" data-t="73"><span>1:13</span> Notice board</button></li>
+            <li><button type="button" class="guide-chapter" data-t="88"><span>1:28</span> Your PLN code</button></li>
+            <li><button type="button" class="guide-chapter" data-t="106"><span>1:46</span> Share cards</button></li>
+            <li><button type="button" class="guide-chapter" data-t="131"><span>2:11</span> Free lesson posts</button></li>
+            <li><button type="button" class="guide-chapter" data-t="149"><span>2:29</span> Video pack</button></li>
+            <li><button type="button" class="guide-chapter" data-t="182"><span>3:02</span> Print flyers and cards</button></li>
+            <li><button type="button" class="guide-chapter" data-t="210"><span>3:30</span> Strangers can sign up under you</button></li>
+            <li><button type="button" class="guide-chapter" data-t="252"><span>4:12</span> How you get paid</button></li>
+            <li><button type="button" class="guide-chapter" data-t="302"><span>5:02</span> Our recommendation</button></li>
+          </ol>
+        </nav>
+      </div>
+      <div>
+        <h2 class="section-title" id="watchTitle">Help a friend learn a job-ready skill. <em>Earn {{REFERRER_REWARD}} when they do.</em></h2>
+        <p class="guide-lede">This 6-minute guide shows exactly how Paleon Ambassadors earn. Share your personal code, and every person who joins with it and pays for a course in full earns you {{REFERRER_REWARD}} in airtime, data or course credit. They get {{REFEREE_REWARD}} airtime too.</p>
+        <ol class="guide-steps">
+          <li><strong>Register free</strong> and open <em>Refer &amp; earn</em>. Your code is waiting.</li>
+          <li><strong>Share ready-made posts:</strong> free lessons, share cards, videos and flyers, all carrying your code.</li>
+          <li><strong>Get rewarded</strong> when their course is paid in full. They can start for just &#8358;20,000.</li>
+        </ol>
+        <ul class="guide-points">
+          <li>No cost to join and no sales targets</li>
+          <li>People you&rsquo;ve never met count too, when they sign up from your group posts</li>
+          <li>Track who has joined, who has paid and what you&rsquo;ve earned</li>
+        </ul>
+        <div class="guide-ctas no-present">
+          <a class="btn btn-signal" href="/register">Become an Ambassador, free</a>
+          <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/HzHcFf9iq4h81XKxWZ8wYL" target="_blank" rel="noopener" aria-label="Join the Paleon Ambassadors WhatsApp group (opens WhatsApp)">Join our WhatsApp group</a>
+        </div>
+        <p class="guide-small">Already registered? <a href="/refer/me">Open Refer &amp; earn</a>. Rewards are sent by the Paleon team within a few working days of a course being paid in full. Self-referrals and duplicate accounts don&rsquo;t qualify. <a href="/refer">Full programme details</a>.</p>
+      </div>
+    </div>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Earn and Rewards: the Paleon Ambassador guide",
+      "description": "How Paleon Ambassadors earn N5,000 in airtime, data or course credit for every person who joins with their code and pays for a course in full, using free lesson posts, share cards, videos and flyers.",
+      "thumbnailUrl": "https://paleontraining.com/videos/home/paleon-ambassador-guide-earn-and-rewards.jpg",
+      "contentUrl": "https://paleontraining.com/videos/home/paleon-ambassador-guide-earn-and-rewards.mp4",
+      "uploadDate": "2026-10-17T12:00:00+01:00",
+      "duration": "PT5M53S",
+      "publisher": { "@type": "Organization", "name": "Paleon Training Limited" }
+    }
+    </script>
+  </section>
+
+  <section id="refer-earn" class="slide" data-slide>
+    <p class="section-label">Refer &amp; earn</p>
+    <h2 class="section-title">Bring a friend. You both get rewarded.</h2>
+    <p class="lede measure">Every Paleon student gets a personal referral code. Share it, and when someone joins and pays for a course, the reward goes both ways.</p>
+    <div class="refer-grid">
+      <div class="refer-step">
+        <div class="refer-step-num">01</div>
+        <div class="refer-step-title">Share your code</div>
+        <div class="refer-step-desc">It&rsquo;s in your account under Refer &amp; Earn. Send it to friends, coursemates or your NYSC set, by WhatsApp or your personal invite link.</div>
+      </div>
+      <div class="refer-step">
+        <div class="refer-step-num">02</div>
+        <div class="refer-step-title">They join &amp; pay</div>
+        <div class="refer-step-desc">They enter your code when they register, then pay for a course, and earn a <strong>{{REFEREE_REWARD}} welcome reward</strong> once their payment is confirmed.</div>
+      </div>
+      <div class="refer-step">
+        <div class="refer-step-num">03</div>
+        <div class="refer-step-title">You earn {{REFERRER_REWARD}}</div>
+        <div class="refer-step-desc">As airtime, a data bundle, or credit towards your next course, your choice. No limit on how many friends you refer.</div>
+      </div>
+    </div>
+    <p class="refer-fineprint">Rewards are issued by our team after your friend&rsquo;s course payment is confirmed. Allow a few working days for airtime or data. Paleon Training builds your skills and employability; it doesn&rsquo;t guarantee a job. Self-referrals and duplicate accounts don&rsquo;t qualify, and we may adjust or end the programme at any time.</p>
+  </section>
 
   <section id="what" class="slide" data-slide>
     <p class="section-label">01 &middot; The programme</p>

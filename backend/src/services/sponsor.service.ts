@@ -4,6 +4,7 @@ import { COURSE_PRICES_NGN, DEPOSIT_UNLOCKED_DAYS, INSTALMENT_DEPOSIT_NGN, getBa
 import { Course, Enrollment, Payment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import * as courseService from "./course.service";
+import { balanceIn, checkoutCountryFor, coursePriceIn, depositIn, paystackSecretKey } from "./paystackAccounts";
 import {
   ApiChargeKind,
   CARD_PAYMENTS_UNAVAILABLE_MESSAGE,
@@ -95,7 +96,7 @@ export async function getSponsorPage(token: string): Promise<SponsorPageInfo> {
     depositNgn: balanceNgn === null ? null : INSTALMENT_DEPOSIT_NGN,
     balanceNgn,
     unlockedDays: DEPOSIT_UNLOCKED_DAYS,
-    paymentsEnabled: config.paystackSecretKey !== "",
+    paymentsEnabled: paystackSecretKey(checkoutCountryFor(student.country)) !== "",
   };
 }
 
@@ -103,27 +104,30 @@ export async function startSponsorPayment(
   token: string,
   kind: ApiChargeKind,
 ): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
-  if (config.paystackSecretKey === "") {
+  const { enrollment, course, student } = await loadSponsoredEnrollment(token);
+  // The sponsor pays through the student's checkout account (see paystackAccounts.ts).
+  const country = checkoutCountryFor(student.country);
+  if (paystackSecretKey(country) === "") {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
-  const { enrollment, course } = await loadSponsoredEnrollment(token);
   if (enrollment.paymentConfirmed) throw ApiError.conflict("This course has already been paid for");
 
-  const priceNgn = COURSE_PRICES_NGN[course.slug];
-  const balanceNgn = getBalanceNgn(course.slug);
-  let amountNgn: number;
+  const price = coursePriceIn(country, course.slug);
+  const balance = balanceIn(country, course.slug);
+  const deposit = depositIn(country);
+  let amount: number;
   if (kind === "full") {
-    if (priceNgn === undefined) throw ApiError.badRequest("This course does not have a price set yet");
+    if (price === undefined) throw ApiError.badRequest("This course does not have a price set yet");
     if (enrollment.depositPaidAt) throw ApiError.conflict("The deposit is already paid -- pay the balance instead");
-    amountNgn = priceNgn;
-  } else if (balanceNgn === null) {
+    amount = price;
+  } else if (balance === null || deposit === null) {
     throw ApiError.badRequest("This course can't be paid in instalments");
   } else if (kind === "deposit") {
     if (enrollment.depositPaidAt) throw ApiError.conflict("The deposit has already been paid");
-    amountNgn = INSTALMENT_DEPOSIT_NGN;
+    amount = deposit;
   } else {
     if (!enrollment.depositPaidAt) throw ApiError.badRequest("Pay the deposit first");
-    amountNgn = balanceNgn;
+    amount = balance;
   }
 
   const pageUrl = sponsorUrl(enrollment.id);
@@ -131,7 +135,7 @@ export async function startSponsorPayment(
     enrollment,
     courseSlug: course.slug,
     kind,
-    amountNgn,
+    amount,
     callbackUrl: `${pageUrl}?paid=${kind}`,
     cancelUrl: pageUrl,
   });

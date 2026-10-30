@@ -6,7 +6,7 @@ import { createApp } from "../../src/app";
 describe("Facebook domain verification", () => {
   it("serves the verification meta tag inside <head> on the home page", async () => {
     const app = createApp();
-    for (const path of ["/", "/welcome"]) {
+    for (const path of ["/", "/ng", "/ke"]) {
       const res = await request(app).get(path);
       expect(res.status).toBe(200);
       const head = res.text.slice(0, res.text.indexOf("</head>"));

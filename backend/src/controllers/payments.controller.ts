@@ -35,7 +35,8 @@ export const paystackWebhook = asyncHandler(async (req: Request, res: Response) 
     return;
   }
   const rawBody = Buffer.isBuffer(req.body) ? req.body : Buffer.alloc(0);
-  if (!paystackWebhookService.isValidSignature(rawBody, req.header("x-paystack-signature"))) {
+  const country = paystackWebhookService.signingCountry(rawBody, req.header("x-paystack-signature"));
+  if (!country) {
     res.status(401).json({ error: "Invalid signature" });
     return;
   }
@@ -48,6 +49,6 @@ export const paystackWebhook = asyncHandler(async (req: Request, res: Response) 
   }
   // Any 200 tells Paystack to stop retrying, so it's only sent once the event is handled;
   // a thrown error (e.g. the database is down) becomes a 500 and Paystack tries again.
-  const outcome = await paystackWebhookService.handlePaystackEvent(event);
+  const outcome = await paystackWebhookService.handlePaystackEvent(event, country);
   res.json({ received: true, outcome });
 });

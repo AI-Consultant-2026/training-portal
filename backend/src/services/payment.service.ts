@@ -7,6 +7,8 @@ import { getPaystackPaymentLink } from "../constants/paystackPaymentLinks";
 import * as courseService from "./course.service";
 import { enrollStudent, getEnrollmentForCourseAndStudent } from "./enrollment.service";
 import * as userService from "./user.service";
+import { balanceIn, checkoutCountryFor, depositIn, paystackCurrency, paystackSecretKey } from "./paystackAccounts";
+import { CountryCode, isCountryCode } from "../constants/countries";
 
 function requirePriceNgn(courseSlug: string): number {
   const priceNgn = COURSE_PRICES_NGN[courseSlug];
@@ -149,12 +151,15 @@ export async function startInstalmentPayment(input: {
   studentId: string;
   kind: InstalmentKind;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
-  if (config.paystackSecretKey === "") {
+  const student = await userService.getUserById(input.studentId);
+  const country = checkoutCountryFor(student.country);
+  if (paystackSecretKey(country) === "") {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
-  const balanceNgn = getBalanceNgn(course.slug);
-  if (balanceNgn === null) {
+  const balance = balanceIn(country, course.slug);
+  const deposit = depositIn(country);
+  if (balance === null || deposit === null) {
     throw ApiError.badRequest("This course can't be paid in instalments");
   }
 
@@ -172,13 +177,13 @@ export async function startInstalmentPayment(input: {
     enrollment = existing;
   }
 
-  const amountNgn = input.kind === "deposit" ? INSTALMENT_DEPOSIT_NGN : balanceNgn;
+  const amount = input.kind === "deposit" ? deposit : balance;
   const origin = config.corsOrigin.replace(/\/$/, "");
   return initializePaystackCharge({
     enrollment,
     courseSlug: course.slug,
     kind: input.kind,
-    amountNgn,
+    amount,
     callbackUrl: `${origin}/courses/${course.slug}?payment=${input.kind}`,
     cancelUrl: `${origin}/courses/${course.slug}/pay/card`,
   });
@@ -187,25 +192,30 @@ export async function startInstalmentPayment(input: {
 // Opens a Paystack checkout for one enrolment, always charged to the enrolled student's
 // email (so the webhook's email check passes even when someone else pays), and records the
 // pending payment. The charge's metadata carries the enrolment id back to the webhook.
+// `amount` is in the currency of the student's checkout country (checkoutCountryFor), whose
+// Paystack account and currency the charge uses.
 export async function initializePaystackCharge(input: {
   enrollment: Enrollment;
   courseSlug: string;
   kind: ApiChargeKind;
-  amountNgn: number;
+  amount: number;
   callbackUrl: string;
   cancelUrl: string;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
-  const { enrollment, amountNgn } = input;
+  const { enrollment, amount } = input;
   const student = await userService.getUserById(enrollment.studentId);
+  const country = checkoutCountryFor(student.country);
+  const currency = paystackCurrency(country);
   const reference = `PLN-${input.kind}-${crypto.randomBytes(8).toString("hex")}`;
 
   const res = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",
-    headers: { Authorization: `Bearer ${config.paystackSecretKey}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${paystackSecretKey(country)}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       email: student.email,
-      amount: amountNgn * 100,
-      currency: "NGN",
+      // Paystack takes the smallest unit (kobo, pesewas, cents) for all four currencies.
+      amount: amount * 100,
+      currency,
       reference,
       callback_url: input.callbackUrl,
       metadata: {
@@ -232,10 +242,11 @@ export async function initializePaystackCharge(input: {
     studentId: enrollment.studentId,
     method: "card",
     status: "pending",
-    currency: "NGN",
-    amount: amountNgn,
-    baseAmountNgn: amountNgn,
-    billingCountry: "",
+    currency,
+    amount,
+    // Only a Naira charge has a Naira amount; there's no exchange rate to convert others.
+    baseAmountNgn: currency === "NGN" ? amount : 0,
+    billingCountry: country,
     gatewayReference: PAYSTACK_INIT_REFERENCE_PREFIX + reference,
     notes: INSTALMENT_NOTES[input.kind],
   });
@@ -257,7 +268,7 @@ export async function verifyInstalmentPayment(reference: string, studentId: stri
 // it to report a "Purchase" to analytics (GA4 + the Meta Pixel) once per reference.
 export interface VerifiedCharge {
   outcome: string;
-  purchase?: { valueNgn: number; currency: "NGN"; plan: ApiChargeKind; courseSlug: string | null };
+  purchase?: { valueNgn: number; currency: string; plan: ApiChargeKind; courseSlug: string | null };
 }
 
 const APPLIED_OUTCOMES = new Set(["confirmed", "already_paid", "duplicate"]);
@@ -267,11 +278,16 @@ export async function verifyPaystackCharge(
   reference: string,
   owns: (enrollment: Enrollment) => boolean,
 ): Promise<VerifiedCharge> {
-  if (config.paystackSecretKey === "") {
+  // The charge lives in the Paystack account it was opened with, recorded on its pending
+  // payment; Nigeria's for anything older.
+  const pending = await Payment.findOne({ where: { gatewayReference: PAYSTACK_INIT_REFERENCE_PREFIX + reference } });
+  const country: CountryCode = pending && isCountryCode(pending.billingCountry) ? pending.billingCountry : "NG";
+  const secretKey = paystackSecretKey(country);
+  if (secretKey === "") {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
   }
   const res = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
-    headers: { Authorization: `Bearer ${config.paystackSecretKey}` },
+    headers: { Authorization: `Bearer ${secretKey}` },
   });
   const body = (await res.json().catch(() => null)) as { status?: boolean; data?: Record<string, unknown> } | null;
   const data = body?.data;
@@ -285,14 +301,14 @@ export async function verifyPaystackCharge(
     throw ApiError.forbidden("This payment doesn't belong to your account");
   }
   if (data.status !== "success") return { outcome: String(data.status ?? "pending") };
-  const outcome = await handlePaystackEvent({ event: "charge.success", data: data as never });
+  const outcome = await handlePaystackEvent({ event: "charge.success", data: data as never }, country);
   if (!APPLIED_OUTCOMES.has(outcome)) return { outcome };
   const course = await Course.findByPk(enrollment.courseId);
   return {
     outcome,
     purchase: {
       valueNgn: Math.round(Number(data.amount) / 100),
-      currency: "NGN",
+      currency: paystackCurrency(country),
       plan: meta.instalment,
       courseSlug: course?.slug ?? null,
     },

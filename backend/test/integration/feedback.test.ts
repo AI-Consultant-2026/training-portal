@@ -106,7 +106,7 @@ describe("Course feedback and learner testimonials", () => {
   });
 
   it("the course pages and homepage load the widget, with the section hidden by default", async () => {
-    for (const page of ["/welcome", "/gis-and-drone-mapping-course"]) {
+    for (const page of ["/ng", "/", "/gis-and-drone-mapping-course"]) {
       const res = await request(app).get(page);
       expect(res.text).toMatch(/data-learner-voices[^>]* hidden/);
       expect(res.text).toContain('<script src="/learner-voices.js" defer></script>');

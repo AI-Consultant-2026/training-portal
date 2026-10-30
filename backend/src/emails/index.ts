@@ -1,6 +1,8 @@
 import { User } from "../models";
 import { emailAdapter, EmailMessage } from "../utils/email";
 import { logger } from "../utils/logger";
+import { config } from "../config";
+import { COUNTRIES, CountryCode } from "../constants/countries";
 import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
 import { buildCourseCompletedEmail } from "./templates/courseCompleted";
@@ -61,6 +63,21 @@ export async function sendQuizGradedEmail(
   feedback: QuizAnswerFeedback[] = [],
 ): Promise<void> {
   await sendEmail(buildQuizGradedEmail(user, quiz, course, score, feedback));
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+}
+
+// A WhatsApp number left on a "launching soon" country's waitlist (2026-10-30).
+export async function sendWaitlistNotificationEmail(signup: { country: string; whatsapp: string }): Promise<void> {
+  const name = COUNTRIES[signup.country as CountryCode]?.name ?? signup.country;
+  await sendEmail({
+    to: config.leadsNotifyEmail,
+    subject: `New ${name} waitlist sign-up`,
+    text: `Someone joined the ${name} waitlist on paleontraining.com.\n\nWhatsApp: ${signup.whatsapp}\nCountry: ${name}\n\nAll sign-ups are listed on the admin dashboard.`,
+    html: `<p>Someone joined the ${escapeHtml(name)} waitlist on paleontraining.com.</p><p>WhatsApp: ${escapeHtml(signup.whatsapp)}<br>Country: ${escapeHtml(name)}</p><p>All sign-ups are listed on the admin dashboard.</p>`,
+  });
 }
 
 export async function sendLeadNotificationEmail(lead: {

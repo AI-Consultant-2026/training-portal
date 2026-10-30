@@ -51,9 +51,9 @@ export const COURSE_INTERESTS = [
 ] as const;
 
 // Registration status offered on the register and lead forms. Must match
-// frontend/src/features/auth/RegisterPage.tsx's REGISTRATION_STATUSES and
-// backend/src/marketing/welcome.html's <select> exactly -- the request is rejected if the
-// submitted value isn't in this list. Also reused by leads.validators.ts.
+// frontend/src/features/auth/RegisterPage.tsx's REGISTRATION_STATUSES exactly -- the
+// request is rejected if the submitted value isn't in this list. Also reused by
+// leads.validators.ts, and the country homepages' Career Match builds its <select> from it.
 export const REGISTRATION_STATUSES = ["Graduate", "Current Student", "Non-Graduate"] as const;
 
 // Any written phone format (+233..., 0..., spaces/dashes) for countries outside Nigeria.

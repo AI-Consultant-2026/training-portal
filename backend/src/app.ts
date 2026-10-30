@@ -15,6 +15,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import { apiRouter } from "./routes";
 import { shareLinksRouter } from "./routes/shareLinks.routes";
+import { COUNTRIES, MARKET_ORDER, isCountryCode } from "./constants/countries";
+import { COUNTRY_COOKIE, renderComingSoonAmbassadors, renderCountryHome } from "./views/countryHome";
 import * as paymentsController from "./controllers/payments.controller";
 
 export function createApp() {
@@ -153,18 +155,63 @@ export function createApp() {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "search-index.json"));
   });
 
-  // Standalone marketing page, served same-origin so its registration form can post to
-  // /api/leads directly. Lives under src/ (not public/) so it's present in both dev
-  // (ts-node runs straight from src/) and prod (the whole backend build output is
-  // copied into the image, see root Dockerfile) without depending on the frontend build.
-  // Also served at "/" so the bare domain lands here instead of falling through to the
-  // SPA catch-all below, whose "/" route redirects into the app (and on to /login for
-  // anyone signed out).
-  app.get(["/", "/welcome"], (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "welcome.html"));
+  // Country homepages (2026-10-30), rendered from constants/countries.ts by
+  // views/countryHome.ts: /ng, /za, /ke and /gh, plus the hub at "/" (the same page with
+  // the country picker, showing the visitor's remembered country or Nigeria). Never
+  // redirects by IP: the CDN's country header only drives a dismissible "Looks like you're
+  // in ..." banner. Every other existing path stays Nigerian, so old links keep working;
+  // /welcome (the previous homepage) moves permanently to /ng, query string and all.
+  const visitorCountry = (req: express.Request) => {
+    const header = req.get("cf-ipcountry")?.toUpperCase();
+    return isCountryCode(header) ? header : null;
+  };
+  const chosenCountry = (req: express.Request) => {
+    const cookie = String(req.cookies?.[COUNTRY_COOKIE] ?? "").toUpperCase();
+    return isCountryCode(cookie) ? cookie : null;
+  };
+  const sendCountryPage = (res: express.Response, html: string) => {
+    // Varies by visitor (banner, remembered country), so no shared caching.
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.vary("CF-IPCountry");
+    res.type("html").send(html);
+  };
+  app.get("/", (req, res) => {
+    const chosen = chosenCountry(req);
+    sendCountryPage(res, renderCountryHome({ country: chosen ?? "NG", hub: true, detected: visitorCountry(req), chosen }));
   });
-  app.get("/welcome.js", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "welcome.js"));
+  for (const code of MARKET_ORDER) {
+    const { path: folder } = COUNTRIES[code].site;
+    app.get(folder, (req, res) => {
+      sendCountryPage(
+        res,
+        renderCountryHome({ country: code, hub: false, detected: visitorCountry(req), chosen: chosenCountry(req) }),
+      );
+    });
+    if (code === "NG") continue;
+    app.get(`${folder}/ambassadors`, (req, res) => {
+      sendCountryPage(
+        res,
+        renderComingSoonAmbassadors({ country: code, hub: false, detected: visitorCountry(req), chosen: chosenCountry(req) }),
+      );
+    });
+  }
+  // Nigeria's ambassador programme page keeps its existing address.
+  app.get("/ng/ambassadors", (req, res) => res.redirect(301, "/ambassadors"));
+  const permanentRedirect = (to: string) => (req: express.Request, res: express.Response) => {
+    const query = req.originalUrl.indexOf("?");
+    res.redirect(301, query === -1 ? to : to + req.originalUrl.slice(query));
+  };
+  app.get("/welcome", permanentRedirect("/ng"));
+  // The one-day-old country landing pages (2026-10-29) became the country homepages.
+  app.get("/ghana", permanentRedirect("/gh"));
+  app.get("/kenya", permanentRedirect("/ke"));
+  app.get("/south-africa", permanentRedirect("/za"));
+  app.get("/country-home.css", (req, res) => {
+    res.type("text/css").sendFile(path.join(__dirname, "marketing", "country-home.css"));
+  });
+  app.get("/country-home.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "country-home.js"));
   });
   // Shared by every marketing page's inline @font-face rules (same two font files,
   // byte-for-byte) -- extracted out of the HTML so browsers cache them once across
@@ -571,17 +618,6 @@ export function createApp() {
   });
   app.get("/hse-fundamentals-course", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-fundamentals-course.html"));
-  });
-  // Country landing pages (2026-10-29), the markets outside Nigeria. Listed in
-  // sitemap.xml, allowed in robots.txt. country-page.js marks the visitor's country for
-  // the register page and posts the page's lead form with that country's code.
-  for (const page of ["ghana", "kenya", "south-africa"]) {
-    app.get(`/${page}`, (req, res) => {
-      res.sendFile(path.join(__dirname, "marketing", `${page}.html`));
-    });
-  }
-  app.get("/country-page.js", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "country-page.js"));
   });
   // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
   // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.
