@@ -1,6 +1,7 @@
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { REFEREE_REWARD_NGN, REFERRER_REWARD_NGN } from "../../src/constants/referral";
+import { User } from "../../src/models";
 
 const app = createApp();
 const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
@@ -17,6 +18,24 @@ describe("Public Refer & Earn page", () => {
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/refer">');
     // Students are sent to their own dashboard, which lives at /refer/me.
     expect(res.text).toContain('href="/refer/me"');
+  });
+
+  it("quotes a Kenyan ambassador's rewards in shillings when opened with their code (2026-10-30)", async () => {
+    await request(app)
+      .post("/api/auth/register")
+      .send({ email: "ke-refer@example.com", password: "Password123!", firstName: "John", lastName: "M" });
+    const owner = await User.findOne({ where: { email: "ke-refer@example.com" } });
+    await owner!.update({ country: "KE", referralCode: "PLNKEN7E4" });
+
+    const res = await request(app).get("/refer?code=plnken7e4");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('Earn <span data-reward-amount="referrer">KSh 480</span>.');
+    expect(res.text).toContain('data-reward="KSh 288"');
+    expect(res.text).toContain('start with <span data-reward-amount="deposit">KSh 1,930</span>');
+    expect(res.text).not.toContain("₦");
+    // An unknown code, or none, keeps Nigeria's amounts.
+    expect((await request(app).get("/refer?code=PLNNOPE99")).text).toContain(naira(REFERRER_REWARD_NGN));
+    expect((await request(app).get("/refer")).text).not.toContain("KSh");
   });
 
   it("keeps the FAQ structured data valid JSON after the amounts are substituted", async () => {

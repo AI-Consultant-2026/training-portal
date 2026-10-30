@@ -263,6 +263,15 @@
         }
         try { localStorage.setItem(STORE_KEY, code); } catch (e) { /* not essential */ }
         reward = result.welcomeBonus || NAIRA_REWARD;
+        // The rest of the page (headline, how it works, FAQ) quotes the same amounts,
+        // and the deposit friends can start with.
+        if (result.welcomeBonus && result.referrerReward) {
+          var amounts = { referrer: result.referrerReward, referee: result.welcomeBonus, deposit: result.deposit };
+          document.querySelectorAll("[data-reward-amount]").forEach(function (node) {
+            var amount = amounts[node.getAttribute("data-reward-amount")];
+            if (amount) node.textContent = amount;
+          });
+        }
         country = result.country || "NG";
         currency = result.currency || "NGN";
         setMsg(

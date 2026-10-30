@@ -10,12 +10,14 @@ import { renderPreviewPage } from "./services/previewPage.service";
 import morgan from "morgan";
 import path from "path";
 import { config } from "./config";
-import { REFEREE_REWARD_NGN, REFERRER_REWARD_NGN } from "./constants/referral";
+import { formatRewardMoney, REFEREE_REWARD_NGN, REFERRER_REWARD_NGN, rewardsForCountry } from "./constants/referral";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import { apiRouter } from "./routes";
 import { shareLinksRouter } from "./routes/shareLinks.routes";
-import { COUNTRIES, MARKET_ORDER, isCountryCode } from "./constants/countries";
+import { User } from "./models";
+import { normaliseCode } from "./services/referral.service";
+import { COUNTRIES, MARKET_ORDER, depositLabel, isCountryCode } from "./constants/countries";
 import { renderCountryAmbassadors } from "./views/countryAmbassadors";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
 import * as paymentsController from "./controllers/payments.controller";
@@ -460,16 +462,33 @@ export function createApp() {
   // SPA route /refer/me. The reward amounts are filled in here from constants/referral.ts
   // (the programme's single source of truth) so the page can never drift from what the
   // app actually pays; the file itself only holds {{REFERRER_REWARD}}/{{REFEREE_REWARD}}.
-  let referPageHtml: string | null = null;
-  app.get("/refer", (req, res) => {
-    if (!referPageHtml) {
-      const naira = (n: number) => `\u20A6${n.toLocaleString("en-NG")}`;
-      referPageHtml = fs
-        .readFileSync(path.join(__dirname, "marketing", "refer.html"), "utf8")
-        .replace(/\{\{REFERRER_REWARD\}\}/g, naira(REFERRER_REWARD_NGN))
-        .replace(/\{\{REFEREE_REWARD\}\}/g, naira(REFEREE_REWARD_NGN));
+  // Opened with ?code=PLN... (e.g. from /refer/me), the page quotes that ambassador's
+  // rewards in their own country's money (2026-10-30); one copy is kept per currency.
+  // refer-posts.js swaps the same amounts when a code is typed in instead.
+  const referPageHtml = new Map<string, string>();
+  app.get("/refer", async (req, res, next) => {
+    try {
+      let rewards = rewardsForCountry("NG");
+      if (typeof req.query.code === "string" && req.query.code) {
+        const owner = await User.findOne({
+          where: { referralCode: normaliseCode(req.query.code) },
+          attributes: ["country"],
+        });
+        if (owner) rewards = rewardsForCountry(owner.country);
+      }
+      let html = referPageHtml.get(rewards.currency);
+      if (!html) {
+        html = fs
+          .readFileSync(path.join(__dirname, "marketing", "refer.html"), "utf8")
+          .replace(/\{\{REFERRER_REWARD\}\}/g, formatRewardMoney(rewards.currency, rewards.referrer))
+          .replace(/\{\{REFEREE_REWARD\}\}/g, formatRewardMoney(rewards.currency, rewards.referee))
+          .replace(/\{\{DEPOSIT\}\}/g, depositLabel(rewards.country));
+        referPageHtml.set(rewards.currency, html);
+      }
+      res.type("html").send(html);
+    } catch (err) {
+      next(err);
     }
-    res.type("html").send(referPageHtml);
   });
   // Student Ambassador Programme page (2026-09-26): the detailed version of /refer, for
   // recruiting ambassadors and for presenting on their welcome call (ambassadors.js adds a

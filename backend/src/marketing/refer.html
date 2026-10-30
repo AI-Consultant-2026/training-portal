@@ -668,8 +668,8 @@
   <div class="wrap masthead">
     <a class="wordmark" href="/"><span class="dot"></span>Paleon Training</a>
     <p class="eyebrow">Refer &amp; earn</p>
-    <h1 class="title" style="max-width: 20ch;">Refer a friend. Earn {{REFERRER_REWARD}}.</h1>
-    <p class="subhead">Know someone who wants job-ready digital skills? Share your personal code. When they join and pay for a course, you earn {{REFERRER_REWARD}} and they get {{REFEREE_REWARD}} in airtime.</p>
+    <h1 class="title" style="max-width: 20ch;">Refer a friend. Earn <span data-reward-amount="referrer">{{REFERRER_REWARD}}</span>.</h1>
+    <p class="subhead">Know someone who wants job-ready digital skills? Share your personal code. When they join and pay for a course, you earn <span data-reward-amount="referrer">{{REFERRER_REWARD}}</span> and they get <span data-reward-amount="referee">{{REFEREE_REWARD}}</span> in airtime.</p>
     <div class="cta-row">
       <a class="btn btn-signal" href="/refer/me">Get your referral code</a>
       <a class="btn btn-outline" href="/register">New here? Create an account</a>
@@ -689,8 +689,8 @@
     <h2 class="section-title">Three steps</h2>
     <div class="stages">
       <div class="stage"><div class="stage-tag">01</div><div class="stage-body"><h3>Share your code</h3><p>Every student with a Paleon account gets a personal referral code and invite link. Log in and open <a href="/refer/me">your referral page</a>, then send them to friends, coursemates or your NYSC set, on WhatsApp or anywhere else.</p></div></div>
-      <div class="stage"><div class="stage-tag">02</div><div class="stage-body"><h3>They join and pay</h3><p>Your friend enters your code when they register (your invite link fills it in for them), then enrols and pays for any Paleon course. They can pay in full, or start with &#8358;20,000 and pay the balance later.</p></div></div>
-      <div class="stage"><div class="stage-tag">03</div><div class="stage-body"><h3>You both get rewarded</h3><p>Once their course is fully paid, you earn {{REFERRER_REWARD}} as airtime, a data bundle or credit towards a Paleon course (your choice), and your friend earns {{REFEREE_REWARD}} in airtime.</p></div></div>
+      <div class="stage"><div class="stage-tag">02</div><div class="stage-body"><h3>They join and pay</h3><p>Your friend enters your code when they register (your invite link fills it in for them), then enrols and pays for any Paleon course. They can pay in full, or start with <span data-reward-amount="deposit">{{DEPOSIT}}</span> and pay the balance later.</p></div></div>
+      <div class="stage"><div class="stage-tag">03</div><div class="stage-body"><h3>You both get rewarded</h3><p>Once their course is fully paid, you earn <span data-reward-amount="referrer">{{REFERRER_REWARD}}</span> as airtime, a data bundle or credit towards a Paleon course (your choice), and your friend earns <span data-reward-amount="referee">{{REFEREE_REWARD}}</span> in airtime.</p></div></div>
     </div>
   </section>
 
@@ -715,8 +715,8 @@
         <table class="catalog">
           <thead><tr><th>Who</th><th>Reward</th><th>When</th></tr></thead>
           <tbody>
-            <tr><td class="course-name">You (the referrer)</td><td>{{REFERRER_REWARD}} per friend: airtime, data or course credit</td><td>After your friend's course is fully paid</td></tr>
-            <tr><td class="course-name">Your friend</td><td>{{REFEREE_REWARD}} welcome reward in airtime</td><td>After their course is fully paid</td></tr>
+            <tr><td class="course-name">You (the referrer)</td><td><span data-reward-amount="referrer">{{REFERRER_REWARD}}</span> per friend: airtime, data or course credit</td><td>After your friend's course is fully paid</td></tr>
+            <tr><td class="course-name">Your friend</td><td><span data-reward-amount="referee">{{REFEREE_REWARD}}</span> welcome reward in airtime</td><td>After their course is fully paid</td></tr>
           </tbody>
         </table>
       </div>
@@ -757,14 +757,14 @@
         <div class="stage-tag">Q2</div>
         <div class="stage-body">
           <h3>How much do I earn for each referral?</h3>
-          <p>You earn {{REFERRER_REWARD}} for every friend who joins with your code and pays for a course. There's no limit on how many friends you can refer.</p>
+          <p>You earn <span data-reward-amount="referrer">{{REFERRER_REWARD}}</span> for every friend who joins with your code and pays for a course. There's no limit on how many friends you can refer.</p>
         </div>
       </div>
       <div class="stage">
         <div class="stage-tag">Q3</div>
         <div class="stage-body">
           <h3>What does my friend get?</h3>
-          <p>Your friend earns a {{REFEREE_REWARD}} welcome reward in airtime once their course is fully paid.</p>
+          <p>Your friend earns a <span data-reward-amount="referee">{{REFEREE_REWARD}}</span> welcome reward in airtime once their course is fully paid.</p>
         </div>
       </div>
       <div class="stage">

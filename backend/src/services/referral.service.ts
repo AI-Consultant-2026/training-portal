@@ -11,6 +11,7 @@ import {
   formatRewardMoney,
   rewardsForCountry,
 } from "../constants/referral";
+import { depositLabel } from "../constants/countries";
 import { Enrollment, Referral, ReferralPayout, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
@@ -270,6 +271,8 @@ export interface CodeValidation {
   country?: string;
   currency?: string;
   welcomeBonus?: string;
+  referrerReward?: string;
+  deposit?: string;
 }
 
 export async function validateCode(rawCode: string): Promise<CodeValidation> {
@@ -293,6 +296,8 @@ export async function validateCode(rawCode: string): Promise<CodeValidation> {
     country: rewards.country,
     currency: rewards.currency,
     welcomeBonus: formatRewardMoney(rewards.currency, rewards.referee),
+    referrerReward: formatRewardMoney(rewards.currency, rewards.referrer),
+    deposit: depositLabel(rewards.country),
   };
 }
 
