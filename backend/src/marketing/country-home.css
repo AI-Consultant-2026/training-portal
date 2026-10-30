@@ -419,3 +419,29 @@ mark.tbc {
 .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 18px; padding-bottom: 24px; font-size: 14px; color: var(--ink-soft); }
 .footer-legal a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); text-underline-offset: 2px; }
 .footer-legal a:hover { color: var(--signal-2); }
+
+/* ============ Country course pages (/gh/cyber-security-fundamentals-course etc., 2026-10-30) ============ */
+.cc-crumbs { font-size: 14px; color: var(--dark-muted); display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; }
+.cc-crumbs a { color: var(--paper); display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 3px; }
+.cc-fee { margin-top: 18px; font-size: 15.5px; color: #C7CCDA; line-height: 1.6; }
+.cc-fee strong { color: var(--paper); }
+.cc-body { max-width: 760px; }
+.cc-body > p, .cc-body li, .cc-body dd { font-size: 17px; line-height: 1.65; color: #3A342A; }
+.cc-body > p { margin: 0 0 16px; }
+.cc-body a { color: var(--signal-text); font-weight: 600; text-underline-offset: 3px; }
+.cc-body .section-title { font-size: clamp(24px, 3vw, 32px); max-width: none; margin: 40px 0 14px; }
+.cc-body .section-title:first-child { margin-top: 0; }
+.cc-list { list-style: disc; padding-left: 22px; margin: 0 0 16px; display: grid; gap: 8px; }
+.cc-links { list-style: none; padding-left: 0; }
+.cc-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.cc-uses { margin: 0 0 16px; display: grid; gap: 14px; }
+.cc-uses div { border-left: 3px solid var(--signal); padding: 4px 0 4px 14px; }
+.cc-uses dt { font-weight: 700; color: var(--charcoal); font-size: 17px; }
+.cc-uses dd { margin: 2px 0 0; }
+.cc-table { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 16px; }
+.cc-table th, .cc-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line-light); vertical-align: top; color: #3A342A; }
+.cc-table th { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--charcoal-soft); }
+.cc-table td:first-child { white-space: nowrap; font-weight: 700; color: var(--charcoal); width: 1%; }
+.cc-faq h3 { font-size: 19px; margin: 22px 0 6px; color: var(--charcoal); }
+.cc-faq p { margin: 0; font-size: 17px; line-height: 1.65; color: #3A342A; }
+.cc-end { margin-top: 28px; }

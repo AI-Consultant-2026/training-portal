@@ -19,10 +19,10 @@ import { flagSvg } from "./flags";
 // marketing/country-home.css and behaviour (country menu, banner, cookie, waitlist,
 // Career Match) in marketing/country-home.js, because the site CSP blocks inline scripts.
 
-const ORIGIN = "https://paleontraining.com";
+export const ORIGIN = "https://paleontraining.com";
 export const COUNTRY_COOKIE = "paleon_country";
 
-interface CourseInfo {
+export interface CourseInfo {
   tag: string;
   title: string;
   page: string;
@@ -34,7 +34,7 @@ interface CourseInfo {
   icon: string;
 }
 
-const COURSE_INFO: Record<HomepageCourse, CourseInfo> = {
+export const COURSE_INFO: Record<HomepageCourse, CourseInfo> = {
   "cyber-security-fundamentals": {
     tag: "Security",
     title: "Cyber Security Fundamentals",
@@ -96,7 +96,7 @@ export function escapeHtml(value: string): string {
 }
 
 // Escapes, and highlights any "[TBC: ...]" placeholder so it can't be missed on the page.
-function text(value: string): string {
+export function text(value: string): string {
   const escaped = escapeHtml(value);
   if (!value.includes(TBC_PREFIX)) return escaped;
   return escaped.replace(/\[TBC: [^\]]*\]/g, (m) => `<mark class="tbc">${m}</mark>`);
@@ -104,6 +104,18 @@ function text(value: string): string {
 
 function plain(value: string): string {
   return escapeHtml(value.replace(/\[TBC: [^\]]*\]/g, "").trim());
+}
+
+// The course's own page in this country: Nigeria keeps its original addresses
+// (/cyber-security-fundamentals-course); Ghana, Kenya and South Africa have theirs under
+// their folder (/gh/cyber-security-fundamentals-course), with local fees and context.
+export function coursePagePath(country: CountryCode, slug: HomepageCourse): string {
+  return country === "NG" ? COURSE_INFO[slug].page : `${COUNTRIES[country].site.path}${COURSE_INFO[slug].page}`;
+}
+
+// Each country's latest-jobs board.
+export function jobsBoardPath(country: CountryCode): string {
+  return country === "NG" ? "/latest-jobs-board" : `${COUNTRIES[country].site.path}/latest-jobs-board`;
 }
 
 export function ambassadorsPath(country: CountryCode): string {
@@ -114,13 +126,14 @@ function referHowPath(country: CountryCode): string {
   return country === "NG" ? "/refer" : `${ambassadorsPath(country)}#how`;
 }
 
-// hreflang alternates: the four country versions, plus x-default at the hub.
-function alternates(pathFor: (code: CountryCode) => string): string {
+// hreflang alternates: the four country versions, plus x-default (the hub, unless a page
+// family names its own, as the course pages do with Nigeria's).
+function alternates(pathFor: (code: CountryCode) => string, xDefault = "/"): string {
   return [
     ...MARKET_ORDER.map(
       (code) => `<link rel="alternate" hreflang="${COUNTRIES[code].site.locale}" href="${ORIGIN}${pathFor(code)}">`,
     ),
-    `<link rel="alternate" hreflang="x-default" href="${ORIGIN}/">`,
+    `<link rel="alternate" hreflang="x-default" href="${ORIGIN}${xDefault}">`,
   ].join("\n");
 }
 
@@ -129,7 +142,7 @@ const LOGO_MARK = (stroke: string) =>
 
 const CHECK = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 10l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-const SEARCH_OVERLAY = `<button class="pt-search-trigger" id="pt-search-trigger" aria-label="Search the site" title="Search (press /)">
+export const SEARCH_OVERLAY = `<button class="pt-search-trigger" id="pt-search-trigger" aria-label="Search the site" title="Search (press /)">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 </button>
 <div class="pt-search-overlay" id="pt-search-overlay" hidden>
@@ -193,7 +206,7 @@ function countryMenu(ctx: PageContext): string {
 </div>`;
 }
 
-function header(ctx: PageContext, home: string): string {
+export function header(ctx: PageContext, home: string): string {
   const c = COUNTRIES[ctx.country];
   return `<header class="site-header">
   <div class="wrap header-row">
@@ -301,8 +314,8 @@ function courseCards(ctx: PageContext, home: string): string {
   const cards = HOMEPAGE_COURSES.map((slug) => {
     const info = COURSE_INFO[slug];
     const law = info.law ? c.site.laws[info.law] : null;
-    // Course pages and checkout are Naira-priced, so only a live country links to them.
-    const title = live ? `<a href="${info.page}">${info.title}</a>` : info.title;
+    // Every country has its own course page (local fees and context), live or not.
+    const title = `<a href="${coursePagePath(country, slug)}">${info.title}</a>`;
     const start = live
       ? `<a class="btn btn-ink btn-block" href="/register?course=${slug}${country === "NG" ? "" : `&amp;country=${country}`}">Start for ${text(deposit)}</a>`
       : `<a class="btn btn-ink btn-block" href="${home}#waitlist">Join the waitlist</a>`;
@@ -313,7 +326,7 @@ function courseCards(ctx: PageContext, home: string): string {
       <p class="course-desc">${info.desc}</p>
       <dl class="course-facts">
         <div><dt>Pathways</dt><dd>${text(c.site.pathways[slug])}</dd></div>
-        ${law ? `<div><dt>Local rules covered</dt><dd>${text(law)}</dd></div>` : ""}
+        ${law ? `<div><dt>${country === "NG" ? "Local rules covered" : "Local law to know"}</dt><dd>${text(law)}</dd></div>` : ""}
       </dl>
       <ul class="course-meta" aria-label="Course length">
         <li>${info.days} days</li><li>${info.lessons} lessons</li><li>Beginner</li>
@@ -526,7 +539,7 @@ const NIGERIA_GUIDES: [string, string][] = [
   ["/graduate-to-job-ready-nigeria", "Graduate to Job-Ready Roadmap"],
 ];
 
-function footer(ctx: PageContext, home: string): string {
+export function footer(ctx: PageContext, home: string): string {
   const countries = MARKET_ORDER.map((code) => {
     const k = COUNTRIES[code];
     return `<li><a class="footer-country" href="${k.site.path}" data-pick-country="${code}">${flagSvg(code, "flag flag-sm")}<span>${escapeHtml(k.name)}</span><span class="footer-path">${k.site.path}</span></a></li>`;
@@ -546,12 +559,13 @@ function footer(ctx: PageContext, home: string): string {
     <nav aria-label="Courses">
       <h2 class="footer-heading">Courses</h2>
       <ul class="footer-links">
-        ${HOMEPAGE_COURSES.map((slug) => `<li><a href="${home}#courses">${COURSE_INFO[slug].title}</a></li>`).join("")}
+        ${HOMEPAGE_COURSES.map((slug) => `<li><a href="${coursePagePath(ctx.country, slug)}">${COURSE_INFO[slug].title}</a></li>`).join("")}
       </ul>
       <h2 class="footer-heading footer-heading-gap">Paleon</h2>
       <ul class="footer-links">
         <li><a href="${home}#why">Why Paleon</a></li>
         <li><a href="${home}#career-match">Free Career Match</a></li>
+        <li><a href="${jobsBoardPath(ctx.country)}">Latest jobs${ctx.hub ? "" : ` in ${escapeHtml(COUNTRIES[ctx.country].name)}`}</a></li>
         <li><a href="${ambassadorsPath(ctx.country)}">Ambassadors</a></li>
         <li><a href="/support">Support</a></li>
         <li><a href="/consultancy">Consultancy</a></li>
@@ -591,7 +605,7 @@ function pageData(ctx: PageContext, home: string): string {
           meta: `${info.days} days \u00b7 ${info.lessons} lessons \u00b7 ${price} \u00b7 self-paced`,
           why: info.why,
           preview: `/preview/${slug}`,
-          page: live ? info.page : `${home}#waitlist`,
+          page: coursePagePath(country, slug),
           enrol: live ? `/register?course=${slug}${country === "NG" ? "" : `&country=${country}`}` : `${home}#waitlist`,
         },
       ];
@@ -606,7 +620,17 @@ function pageData(ctx: PageContext, home: string): string {
   return `<script type="application/json" id="ptHomeData">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
 }
 
-function head(ctx: PageContext, opts: { title: string; description: string; canonicalPath: string; alternatesFor: (code: CountryCode) => string; jsonLd: object }): string {
+export function head(
+  ctx: PageContext,
+  opts: {
+    title: string;
+    description: string;
+    canonicalPath: string;
+    alternatesFor: (code: CountryCode) => string;
+    xDefault?: string;
+    jsonLd: object;
+  },
+): string {
   const c = COUNTRIES[ctx.country];
   const url = `${ORIGIN}${opts.canonicalPath}`;
   const image = `${ORIGIN}${c.site.ogImage}`;
@@ -620,7 +644,7 @@ function head(ctx: PageContext, opts: { title: string; description: string; cano
 <title>${escapeHtml(opts.title)}</title>
 <meta name="description" content="${escapeHtml(opts.description)}">
 <link rel="canonical" href="${url}">
-${alternates(opts.alternatesFor)}
+${alternates(opts.alternatesFor, opts.xDefault)}
 <link rel="preload" as="font" type="font/woff2" href="/fonts/source-serif-4-variable.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/fonts/source-sans-3-variable.woff2" crossorigin>
 <meta property="og:type" content="website">
@@ -648,12 +672,12 @@ function hasWhatsappButton(country: CountryCode): boolean {
   return country === "NG" || Boolean(COUNTRIES[country].site.whatsapp.link);
 }
 
-function whatsappAttr(country: CountryCode): string {
+export function whatsappAttr(country: CountryCode): string {
   const { link } = COUNTRIES[country].site.whatsapp;
   return country !== "NG" && link ? ` data-whatsapp="${escapeHtml(link)}"` : "";
 }
 
-function scripts(ctx: PageContext): string {
+export function scripts(ctx: PageContext): string {
   return `<script src="/country-home.js" defer></script>
 <script src="/search.js" defer></script>
 ${hasWhatsappButton(ctx.country) ? '<script src="/whatsapp-float.js" defer></script>' : ""}
@@ -695,9 +719,11 @@ export function renderCountryHome(ctx: PageContext): string {
   const c = COUNTRIES[ctx.country];
   const home = ctx.hub ? "/" : c.site.path;
   const canonicalPath = home;
+  // Under ~60 characters so search results show them whole; the industries are in the
+  // description and the H1 (2026-10-30).
   const title = ctx.hub
-    ? "Paleon Training | Digital skills for careers in Nigeria, South Africa, Kenya and Ghana"
-    : `Paleon Training ${c.name} | Digital skills for ${plain(c.site.headlineIndustries)} careers`;
+    ? "Online Digital Skills Courses for Africa | Paleon Training"
+    : `Online Digital Skills Courses in ${c.name} | Paleon Training`;
   const description = `Practical digital skills for ${plain(c.site.headlineIndustries)} careers in ${ctx.hub ? "Africa" : c.name}. Cyber Security, GIS & Drones, Digital Marketing, HSE. First lesson free.`;
   return `${head(ctx, {
     title,

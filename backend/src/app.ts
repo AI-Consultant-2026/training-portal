@@ -17,8 +17,9 @@ import { apiRouter } from "./routes";
 import { shareLinksRouter } from "./routes/shareLinks.routes";
 import { User } from "./models";
 import { normaliseCode } from "./services/referral.service";
-import { COUNTRIES, MARKET_ORDER, depositLabel, isCountryCode } from "./constants/countries";
+import { COUNTRIES, HOMEPAGE_COURSES, MARKET_ORDER, depositLabel, isCountryCode } from "./constants/countries";
 import { renderCountryAmbassadors } from "./views/countryAmbassadors";
+import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -192,6 +193,13 @@ export function createApp() {
       );
     });
     if (code === "NG") continue;
+    // The four course pages in the country's currency, with local context (2026-10-30).
+    // Nigeria's are the static /<course>-course pages.
+    for (const slug of HOMEPAGE_COURSES) {
+      app.get(`${folder}/${slug}-course`, (req, res) => {
+        res.type("html").send(renderCountryCourse(code, slug));
+      });
+    }
     // The full ambassador programme page, in the country's currency (2026-10-30).
     app.get(`${folder}/ambassadors`, (req, res) => {
       res.type("html").send(renderCountryAmbassadors(code));

@@ -844,5 +844,77 @@
     "description": "An honest comparison of renewable energy and oil & gas as career paths in Nigeria's energy sector -- not rivals, genuinely overlapping and complementary.",
     "url": "/renewable-energy-vs-oil-and-gas-career-comparison",
     "category": "Oil & Gas"
+  },
+  {
+    "title": "Cyber Security Course Online in Ghana",
+    "description": "Beginner cybersecurity course for learners in Ghana: 18 days, 36 video lessons, banking, telecoms and oil & gas pathways. Fee GH₵1,750. First lesson free.",
+    "url": "/gh/cyber-security-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "GIS and Drone Mapping Course Online in Ghana",
+    "description": "Learn GIS, QGIS, remote sensing and drone mapping online from Ghana: 9 days, 18 lessons and a sector capstone for mining, oil & gas and agriculture. GH₵1,750.",
+    "url": "/gh/gis-and-drone-mapping-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Digital Marketing Course Online in Ghana",
+    "description": "Practical digital marketing course for learners in Ghana: SEO, Google Ads, content, email and analytics. 8 days, 16 video lessons and a capstone. GH₵1,300.",
+    "url": "/gh/digital-marketing-course",
+    "category": "Courses"
+  },
+  {
+    "title": "HSE Course Online in Ghana for Mining and Oil & Gas",
+    "description": "Beginner HSE course for Ghana's mining and oil & gas sectors: hazards, risk assessment, permit to work, emergencies and incident investigation. 8 days. GH₵865.",
+    "url": "/gh/hse-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Cyber Security Course Online in Kenya",
+    "description": "Beginner cybersecurity course for learners in Kenya: threats, networks, incident response and data protection, 18 days and 36 video lessons. KSh 19,300. Free lesson.",
+    "url": "/ke/cyber-security-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "GIS and Drone Mapping Course Online in Kenya",
+    "description": "Learn GIS, QGIS, remote sensing and drone mapping online from Kenya: 9 days, 18 lessons and a capstone for agriculture, energy and infrastructure. KSh 19,300.",
+    "url": "/ke/gis-and-drone-mapping-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Digital Marketing Course Online in Kenya",
+    "description": "Practical digital marketing course for learners in Kenya: SEO, Google Ads, content, email and analytics. 8 days, 16 video lessons and a capstone. KSh 14,475.",
+    "url": "/ke/digital-marketing-course",
+    "category": "Courses"
+  },
+  {
+    "title": "HSE Course Online in Kenya",
+    "description": "Beginner HSE course for learners in Kenya: hazards, risk assessment, permit to work, emergencies and incident investigation. 8 days, 16 lessons. KSh 9,650.",
+    "url": "/ke/hse-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Cyber Security Course Online in South Africa",
+    "description": "Beginner cybersecurity course for learners in South Africa: threats, networks, incident response and POPIA-style data protection. 18 days, 36 lessons. R2,470.",
+    "url": "/za/cyber-security-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "GIS and Drone Mapping Course Online in South Africa",
+    "description": "Learn GIS, QGIS, remote sensing and drone mapping online from South Africa: 9 days, 18 lessons and a capstone for mining, infrastructure and environment. R2,470.",
+    "url": "/za/gis-and-drone-mapping-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Digital Marketing Course Online in South Africa",
+    "description": "Practical digital marketing course for learners in South Africa: SEO, Google Ads, content, email and analytics, with POPIA-aware email marketing. R1,850.",
+    "url": "/za/digital-marketing-course",
+    "category": "Courses"
+  },
+  {
+    "title": "HSE Course Online in South Africa",
+    "description": "Beginner HSE (OHS) course for learners in South Africa: hazards, risk assessment, permit to work, emergencies and incidents, for mining and construction. R1,235.",
+    "url": "/za/hse-fundamentals-course",
+    "category": "Courses"
   }
 ]
