@@ -25,6 +25,9 @@ export async function fetchCountries(): Promise<CountriesResponse> {
 // would be overkill. Unknown codes are shown as-is.
 const COUNTRY_NAMES: Record<string, string> = { NG: "Nigeria", GH: "Ghana", KE: "Kenya", ZA: "South Africa" };
 
+// The four countries in the order the site lists them (constants/countries.ts MARKET_ORDER).
+export const COUNTRY_CODES = ["NG", "ZA", "KE", "GH"] as const;
+
 export function countryName(code: string | null | undefined): string {
   if (!code) return "Nigeria";
   return COUNTRY_NAMES[code] ?? code;

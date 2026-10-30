@@ -21,8 +21,30 @@ import {
   fetchAdminStats,
   fetchCandidates,
 } from "./adminSlice";
-import { countryName } from "../../api/countries.api";
+import { COUNTRY_CODES, countryName } from "../../api/countries.api";
 import { RefundPanel } from "./RefundPanel";
+
+// Colour per country for the tag beside each candidate's name. Text/background pairs
+// clear 4.5:1 contrast.
+const COUNTRY_TAG_CLASSES: Record<string, string> = {
+  NG: "bg-green-100 text-green-800",
+  GH: "bg-amber-100 text-amber-900",
+  KE: "bg-red-100 text-red-800",
+  ZA: "bg-blue-100 text-blue-800",
+};
+
+function CountryTag({ country }: { country: string | null | undefined }) {
+  const code = country || "NG";
+  return (
+    <span
+      className={`ml-2 inline-block rounded px-1.5 py-0.5 align-middle text-xs font-semibold ${COUNTRY_TAG_CLASSES[code] ?? "bg-gray-100 text-gray-700"}`}
+      title={countryName(code)}
+    >
+      {code}
+      <span className="sr-only"> ({countryName(code)})</span>
+    </span>
+  );
+}
 
 function formatLastActive(lastActiveAt: string | null): string {
   if (!lastActiveAt) return "Never";
@@ -61,6 +83,11 @@ export function AdminCandidatesPage() {
   const [attendanceErrors, setAttendanceErrors] = useState<Record<string, string>>({});
 
   const inactiveCount = candidates.filter((c) => c.status === "inactive").length;
+  // "all" or a country code. Candidates from before the country field count as Nigerian.
+  const [countryFilter, setCountryFilter] = useState("all");
+  const countryOf = (c: { country?: string | null }) => c.country || "NG";
+  const shownCandidates =
+    countryFilter === "all" ? candidates : candidates.filter((c) => countryOf(c) === countryFilter);
 
   useEffect(() => {
     dispatch(fetchCandidates());
@@ -188,7 +215,20 @@ export function AdminCandidatesPage() {
       </Link>
       <div className="mt-2 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Candidates</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <select
+            aria-label="Filter candidates by country"
+            value={countryFilter}
+            onChange={(e) => setCountryFilter(e.target.value)}
+            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+          >
+            <option value="all">All countries ({candidates.length})</option>
+            {COUNTRY_CODES.map((code) => (
+              <option key={code} value={code}>
+                {countryName(code)} ({candidates.filter((c) => countryOf(c) === code).length})
+              </option>
+            ))}
+          </select>
           <Button variant="secondary" onClick={() => setShowAddForm((v) => !v)}>
             {showAddForm ? "Cancel" : "Add candidate"}
           </Button>
@@ -294,11 +334,12 @@ export function AdminCandidatesPage() {
               </tr>
             </thead>
             <tbody>
-              {candidates.map((c) => (
+              {shownCandidates.map((c) => (
                 <tr key={c.id} className="border-b border-gray-100 align-top last:border-0">
                   <td className="px-4 py-3">
                     <p className="font-medium text-gray-900">
                       {c.firstName} {c.lastName}
+                      <CountryTag country={c.country} />
                     </p>
                     <p className="text-gray-500">{c.email}</p>
                     <p className="text-xs text-gray-400">
@@ -492,6 +533,9 @@ export function AdminCandidatesPage() {
           </table>
           {candidates.length === 0 && candidatesStatus === "succeeded" && (
             <p className="px-4 py-6 text-center text-sm text-gray-500">No candidates yet.</p>
+          )}
+          {candidates.length > 0 && shownCandidates.length === 0 && (
+            <p className="px-4 py-6 text-center text-sm text-gray-500">No candidates from {countryName(countryFilter)} yet.</p>
           )}
         </div>
       )}
