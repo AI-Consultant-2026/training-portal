@@ -1,0 +1,72 @@
+# Daily refresh of the Kenyan, Ghanaian and South African latest-jobs boards (2026-10-30).
+# Runs the three build scripts, then pushes one commit to main if any list changed, which
+# Render auto-deploys. The Nigerian board isn't here: it's built from a spreadsheet on the
+# Desktop (build-latest-jobs.py), so it's still refreshed by hand.
+#
+# If a job site is down or blocks the runner, its script can come back with few or no
+# jobs. A list that shrinks below MIN_SHARE of the current one, or fails outright, is
+# put back as it was, so a bad day never empties a board. Can also be run by hand from
+# the Actions tab (Run workflow).
+name: Refresh jobs boards
+
+on:
+  schedule:
+    - cron: "0 4 * * *" # 04:00 UTC = 05:00 WAT / 06:00 SAST / 07:00 EAT
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-jobs-boards
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MIN_SHARE: "0.4"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild the lists
+        run: |
+          set -u
+          for pair in "build-kenya-jobs.py ke" "build-ghana-jobs.py gh" "build-south-africa-jobs.py za"; do
+            set -- $pair
+            out="backend/src/marketing/$2-latest-jobs.json"
+            cp "$out" /tmp/old.json
+            echo "::group::$1"
+            if ! python3 "backend/scripts/$1"; then
+              echo "::warning::$1 failed; keeping the current $2 list"
+              cp /tmp/old.json "$out"
+            elif ! python3 - "$out" /tmp/old.json <<'EOF'
+          import json, os, sys
+          new = len(json.load(open(sys.argv[1]))["jobs"])
+          old = len(json.load(open(sys.argv[2]))["jobs"])
+          print(f"{old} -> {new} jobs")
+          sys.exit(0 if new > 0 and new >= old * float(os.environ["MIN_SHARE"]) else 1)
+          EOF
+            then
+              echo "::warning::$1 returned too few jobs; keeping the current $2 list"
+              cp /tmp/old.json "$out"
+            fi
+            echo "::endgroup::"
+          done
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet -- backend/src/marketing/*-latest-jobs.json; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/src/marketing/ke-latest-jobs.json backend/src/marketing/gh-latest-jobs.json backend/src/marketing/za-latest-jobs.json
+          git commit -m "Refresh Kenya, Ghana and South Africa jobs boards ($(date -u +%Y-%m-%d))"
+          git pull --rebase
+          git push
