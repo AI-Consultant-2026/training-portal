@@ -18,7 +18,16 @@
   var input = document.getElementById("flCode");
   var msg = document.getElementById("flMsg");
   var grid = document.getElementById("flPosts");
-  var reward = section.getAttribute("data-reward") || "₦3,000";
+  // The friend's reward and the hashtags follow the ambassador's country once their code
+  // is checked (2026-10-30): "GH₵27" for a Ghanaian ambassador, "₦3,000" for a Nigerian.
+  var NAIRA_REWARD = section.getAttribute("data-reward") || "₦3,000";
+  var reward = NAIRA_REWARD;
+  var country = "NG";
+  var currency = "NGN";
+  var COUNTRY_TAG = { NG: "#Nigeria", GH: "#Ghana", KE: "#Kenya", ZA: "#SouthAfrica" };
+  // Must match SHARE_CARD_VERSION in shareLink.service.ts; the currency keeps a cached
+  // picture drawn in another currency from being reused.
+  var CARD_VERSION = 2;
   var origin = window.location.origin;
   var STORE_KEY = "paleon.referCode";
 
@@ -71,8 +80,17 @@
     },
   ];
 
+  // Nigerian references in the captions, swapped for an ambassador elsewhere.
+  function localise(text) {
+    if (country === "NG") return text;
+    return text
+      .split("Who maps the Niger Delta?").join("Who maps the land?")
+      .split(" #NYSC").join("")
+      .split("#Nigeria").join(COUNTRY_TAG[country] || "");
+  }
+
   function fill(template, code, link, lesson) {
-    return template
+    return localise(template)
       .split("{LINK}").join(link)
       .split("{LESSON}").join(lesson)
       .split("{CODE}").join(code)
@@ -110,6 +128,7 @@
 
   function buildCard(post, code) {
     var base = origin + "/s/" + encodeURIComponent(code) + "/lesson-" + post.slug;
+    var cardQuery = "v=" + CARD_VERSION + "&c=" + currency;
     var link = base;
     var lesson = origin.replace(/^https?:\/\//, "") + "/preview/" + post.slug;
     var caption = fill(post.caption, code, link, lesson);
@@ -119,7 +138,7 @@
 
     var card = el("article", { class: "fl-card" });
     card.appendChild(el("img", {
-      src: base + "/square.png",
+      src: base + "/square.png?" + cardQuery,
       alt: "Free lesson post for " + post.title + " with the code " + code,
       width: "1080",
       height: "1080",
@@ -171,12 +190,12 @@
     // the tall 9:16 one is for TikTok, Stories and WhatsApp Status.
     actionButton("Instagram", "", function () {
       copyText(igCaption);
-      downloadImage(base + "/portrait.png?download=1");
+      downloadImage(base + "/portrait.png?download=1&" + cardQuery);
       said("Instagram picture saved and caption copied. Post the picture and paste the caption.");
     });
     actionButton("TikTok / Stories", "", function () {
       copyText(igCaption);
-      downloadImage(base + "/status.png?download=1");
+      downloadImage(base + "/status.png?download=1&" + cardQuery);
       said("Tall picture saved and caption copied. Post it and paste the caption.");
     });
     actionButton("Copy post", "copy", function () {
@@ -187,9 +206,9 @@
 
     var downloads = el("p", { class: "fl-note" });
     downloads.appendChild(document.createTextNode("Save the picture: "));
-    var sq = el("a", { href: base + "/square.png?download=1" }, "square (Facebook, LinkedIn, X)");
-    var pt = el("a", { href: base + "/portrait.png?download=1" }, "Instagram post");
-    var st = el("a", { href: base + "/status.png?download=1" }, "tall (Status, Stories, TikTok)");
+    var sq = el("a", { href: base + "/square.png?download=1&" + cardQuery }, "square (Facebook, LinkedIn, X)");
+    var pt = el("a", { href: base + "/portrait.png?download=1&" + cardQuery }, "Instagram post");
+    var st = el("a", { href: base + "/status.png?download=1&" + cardQuery }, "tall (Status, Stories, TikTok)");
     downloads.appendChild(sq);
     downloads.appendChild(document.createTextNode(" · "));
     downloads.appendChild(pt);
@@ -243,6 +262,9 @@
           return;
         }
         try { localStorage.setItem(STORE_KEY, code); } catch (e) { /* not essential */ }
+        reward = result.welcomeBonus || NAIRA_REWARD;
+        country = result.country || "NG";
+        currency = result.currency || "NGN";
         setMsg(
           (result.referrerName ? "Hi " + result.referrerName.split(" ")[0] + "! " : "") +
             "Your 4 posts are ready below. Each picture and link carries " + code + ".",

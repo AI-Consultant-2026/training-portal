@@ -8,6 +8,7 @@ import {
   REFERRAL_LEADERBOARD_SIZE,
   REFERRAL_REWARD_TYPES,
   ReferralRewardType,
+  formatRewardMoney,
   rewardsForCountry,
 } from "../constants/referral";
 import { Enrollment, Referral, ReferralPayout, User } from "../models";
@@ -264,6 +265,11 @@ export interface CodeValidation {
   referrerName: string | null;
   // "rep" = a commission sales rep's code: no welcome bonus for the student.
   kind?: "ambassador" | "rep";
+  // An ambassador's country, and their friend's reward in its money, e.g. "GH₵27", so
+  // /refer's free-lesson posts quote the right currency (2026-10-30).
+  country?: string;
+  currency?: string;
+  welcomeBonus?: string;
 }
 
 export async function validateCode(rawCode: string): Promise<CodeValidation> {
@@ -272,14 +278,22 @@ export async function validateCode(rawCode: string): Promise<CodeValidation> {
 
   const referrer = await User.findOne({
     where: { referralCode: code },
-    attributes: ["firstName", "lastName"],
+    attributes: ["firstName", "lastName", "country"],
   });
   if (!referrer) {
     const rep = await findActiveRepByCode(code);
     return rep ? { valid: true, referrerName: rep.name, kind: "rep" } : { valid: false, referrerName: null };
   }
 
-  return { valid: true, referrerName: fullName(referrer) || null, kind: "ambassador" };
+  const rewards = rewardsForCountry(referrer.country);
+  return {
+    valid: true,
+    referrerName: fullName(referrer) || null,
+    kind: "ambassador",
+    country: rewards.country,
+    currency: rewards.currency,
+    welcomeBonus: formatRewardMoney(rewards.currency, rewards.referee),
+  };
 }
 
 export interface LeaderboardEntry {

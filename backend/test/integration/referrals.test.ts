@@ -193,7 +193,19 @@ describe("Referrals", () => {
     const code = await myCode("known@example.com");
 
     const ok = await request(app).post("/api/referrals/validate-code").send({ code: code.toLowerCase() });
-    expect(ok.body).toEqual({ valid: true, referrerName: "Jest Student", kind: "ambassador" });
+    expect(ok.body).toEqual({
+      valid: true,
+      referrerName: "Jest Student",
+      kind: "ambassador",
+      country: "NG",
+      currency: "NGN",
+      welcomeBonus: "₦3,000",
+    });
+
+    // /refer's free-lesson posts quote a South African ambassador's reward in rand.
+    await User.update({ country: "ZA" }, { where: { email: "known@example.com" } });
+    const za = await request(app).post("/api/referrals/validate-code").send({ code });
+    expect(za.body).toMatchObject({ country: "ZA", currency: "ZAR", welcomeBonus: "R36" });
 
     const bad = await request(app).post("/api/referrals/validate-code").send({ code: "PLNNOPE99" });
     expect(bad.body).toEqual({ valid: false, referrerName: null });
