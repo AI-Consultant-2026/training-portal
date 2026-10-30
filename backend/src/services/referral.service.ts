@@ -6,10 +6,9 @@ import {
   REFERRAL_CODE_BODY_LENGTH,
   REFERRAL_CODE_PREFIX,
   REFERRAL_LEADERBOARD_SIZE,
-  REFERRER_REWARD_NGN,
-  REFEREE_REWARD_NGN,
   REFERRAL_REWARD_TYPES,
   ReferralRewardType,
+  rewardsForCountry,
 } from "../constants/referral";
 import { Enrollment, Referral, ReferralPayout, User } from "../models";
 import { ApiError } from "../utils/ApiError";
@@ -99,16 +98,29 @@ export async function attachReferralOnRegister(refereeId: string, rawCode?: stri
   const existing = await Referral.findOne({ where: { refereeId } });
   if (existing) return;
 
+  const referee = await User.findByPk(refereeId, { attributes: ["country"] });
   await Referral.create({
     referrerId: referrer.id,
     refereeId,
     code,
     status: "pending",
     referrerRewardType: rewardPreferenceOf(referrer),
-    referrerRewardAmountNgn: REFERRER_REWARD_NGN,
+    ...rewardColumns(referrer.country, referee?.country),
     refereeRewardType: DEFAULT_REWARD_TYPE,
-    refereeRewardAmountNgn: REFEREE_REWARD_NGN,
   });
+}
+
+// Each side is paid in their own country's money: the referrer's reward from the
+// referrer's country, the friend's from the friend's.
+function rewardColumns(referrerCountry?: string | null, refereeCountry?: string | null) {
+  const forReferrer = rewardsForCountry(referrerCountry);
+  const forReferee = rewardsForCountry(refereeCountry);
+  return {
+    referrerRewardAmountNgn: forReferrer.referrer,
+    referrerRewardCurrency: forReferrer.currency,
+    refereeRewardAmountNgn: forReferee.referee,
+    refereeRewardCurrency: forReferee.currency,
+  };
 }
 
 // The reward trigger. Called after any code path confirms a course payment (admin payment
@@ -121,14 +133,16 @@ export async function handleQualifyingPayment(enrollment: Enrollment): Promise<v
   const referral = await Referral.findOne({ where: { refereeId: enrollment.studentId, status: "pending" } });
   if (!referral) return;
 
-  const referrer = await User.findByPk(referral.referrerId);
+  const [referrer, referee] = await Promise.all([
+    User.findByPk(referral.referrerId),
+    User.findByPk(referral.refereeId, { attributes: ["country"] }),
+  ]);
 
   referral.status = "qualified";
   referral.qualifiedAt = new Date();
   referral.qualifyingEnrollmentId = enrollment.id;
   referral.referrerRewardType = referrer ? rewardPreferenceOf(referrer) : referral.referrerRewardType;
-  referral.referrerRewardAmountNgn = REFERRER_REWARD_NGN;
-  referral.refereeRewardAmountNgn = REFEREE_REWARD_NGN;
+  Object.assign(referral, rewardColumns(referrer?.country, referee?.country));
   await referral.save();
 
   logger.info(
@@ -150,6 +164,9 @@ export interface MyReferralSummary {
   shareUrl: string;
   rewardType: ReferralRewardType;
   payoutPhone: string | null;
+  // The amounts below are in `currency` (the ambassador's country's money); the "Ngn"
+  // names date from when Naira was the only one.
+  currency: string;
   rewardPerReferralNgn: number;
   welcomeBonusNgn: number;
   counts: { invited: number; joined: number; qualified: number };
@@ -184,6 +201,7 @@ export async function getMyReferralSummary(userId: string, appOrigin: string): P
     .filter((r) => r.referrerRewardStatus === "issued")
     .reduce((sum, r) => sum + Number(r.referrerRewardAmountNgn), 0);
 
+  const rewards = rewardsForCountry(user.country);
   const leaderboard = await getLeaderboard();
   const rankIndex = leaderboard.allTime.findIndex((entry) => entry.userId === userId);
 
@@ -192,8 +210,9 @@ export async function getMyReferralSummary(userId: string, appOrigin: string): P
     shareUrl: `${appOrigin}/register?ref=${code}`,
     rewardType: rewardPreferenceOf(user),
     payoutPhone: payoutPhoneOf(user),
-    rewardPerReferralNgn: REFERRER_REWARD_NGN,
-    welcomeBonusNgn: REFEREE_REWARD_NGN,
+    currency: rewards.currency,
+    rewardPerReferralNgn: rewards.referrer,
+    welcomeBonusNgn: rewards.referee,
     counts: {
       invited: rows.length,
       joined: rows.filter((r) => r.status !== "void").length,
@@ -376,8 +395,9 @@ export interface AdminReferralRow {
   status: "pending" | "qualified" | "void";
   referrer: AdminReferralPerson | null;
   referee: AdminReferralPerson | null;
-  referrerReward: { type: string; amountNgn: number; status: "pending" | "issued"; issuedAt: string | null };
-  refereeReward: { type: string; amountNgn: number; status: "pending" | "issued"; issuedAt: string | null };
+  // amountNgn is in `currency` (NGN, GHS, KES or ZAR).
+  referrerReward: { type: string; amountNgn: number; currency: string; status: "pending" | "issued"; issuedAt: string | null };
+  refereeReward: { type: string; amountNgn: number; currency: string; status: "pending" | "issued"; issuedAt: string | null };
   payouts: { referrer: AdminPayoutView | null; referee: AdminPayoutView | null };
   joinedAt: string;
   qualifiedAt: string | null;
@@ -404,12 +424,14 @@ export function serializeAdminRow(row: Referral): AdminReferralRow {
     referrerReward: {
       type: row.referrerRewardType,
       amountNgn: Number(row.referrerRewardAmountNgn),
+      currency: row.referrerRewardCurrency,
       status: row.referrerRewardStatus as "pending" | "issued",
       issuedAt: row.referrerRewardIssuedAt ? row.referrerRewardIssuedAt.toISOString() : null,
     },
     refereeReward: {
       type: row.refereeRewardType,
       amountNgn: Number(row.refereeRewardAmountNgn),
+      currency: row.refereeRewardCurrency,
       status: row.refereeRewardStatus as "pending" | "issued",
       issuedAt: row.refereeRewardIssuedAt ? row.refereeRewardIssuedAt.toISOString() : null,
     },
@@ -489,22 +511,27 @@ export async function getReferralOverview(): Promise<{
   totalReferrers: number;
   pendingReferrals: number;
   qualifiedReferrals: number;
+  // Naira only; rewardsToPay has every currency, e.g. { NGN: 8000, GHS: 45 }.
   rewardsToPayNgn: number;
+  rewardsToPay: Record<string, number>;
 }> {
   const rows = await Referral.findAll();
   const referrers = new Set(rows.filter((r) => r.status !== "void").map((r) => r.referrerId));
   const qualified = rows.filter((r) => r.status === "qualified");
-  const rewardsToPayNgn = qualified.reduce((sum, r) => {
-    let owed = 0;
-    if (r.referrerRewardStatus === "pending") owed += Number(r.referrerRewardAmountNgn);
-    if (r.refereeRewardStatus === "pending") owed += Number(r.refereeRewardAmountNgn);
-    return sum + owed;
-  }, 0);
+  const rewardsToPay: Record<string, number> = {};
+  const owe = (currency: string, amount: number) => {
+    rewardsToPay[currency] = (rewardsToPay[currency] ?? 0) + amount;
+  };
+  for (const r of qualified) {
+    if (r.referrerRewardStatus === "pending") owe(r.referrerRewardCurrency, Number(r.referrerRewardAmountNgn));
+    if (r.refereeRewardStatus === "pending") owe(r.refereeRewardCurrency, Number(r.refereeRewardAmountNgn));
+  }
 
   return {
     totalReferrers: referrers.size,
     pendingReferrals: rows.filter((r) => r.status === "pending").length,
     qualifiedReferrals: qualified.length,
-    rewardsToPayNgn,
+    rewardsToPayNgn: rewardsToPay.NGN ?? 0,
+    rewardsToPay,
   };
 }

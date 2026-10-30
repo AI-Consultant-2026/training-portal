@@ -4,6 +4,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { AdminPayout, AdminReferral, AdminReferralOverview, PayoutConfig } from "../../types/api";
+import { formatMoney, formatMoneyTotals } from "../../api/countries.api";
 import * as referralsApi from "../../api/referrals.api";
 import { SendRewardDialog } from "./SendRewardDialog";
 
@@ -105,6 +106,8 @@ export function AdminReferralsPage() {
       !!payoutConfig?.enabled &&
       r.status === "qualified" &&
       reward.status === "pending" &&
+      // VTpass / VTU.ng only top up Nigerian numbers; other countries are paid by hand.
+      reward.currency === "NGN" &&
       (reward.type === "airtime" || reward.type === "data") &&
       !!r[party]?.phone &&
       r.payouts[party]?.status !== "processing"
@@ -162,8 +165,8 @@ export function AdminReferralsPage() {
       <p className="mt-1 text-sm text-gray-600">
         A referral qualifies when the referred student&apos;s course is fully paid.{" "}
         {payoutConfig?.enabled
-          ? `Send airtime and data through ${payoutConfig.provider} from here; pay course credit by hand, then mark it paid.`
-          : "Pay rewards out manually (airtime, data, or course credit) then mark them issued here."}
+          ? `Send airtime and data through ${payoutConfig.provider} from here; pay course credit, and Ghana, Kenya and South Africa rewards (in cedis, shillings or rand), by hand, then mark them paid.`
+          : "Pay rewards out manually (airtime, data, or course credit, in each person's own currency) then mark them issued here."}
       </p>
       {payoutConfig?.enabled && (
         <p
@@ -185,7 +188,7 @@ export function AdminReferralsPage() {
           <StatTile label="Ambassadors" value={overview.totalReferrers} />
           <StatTile label="Pending (not paid)" value={overview.pendingReferrals} />
           <StatTile label="Qualified" value={overview.qualifiedReferrals} />
-          <StatTile label="Rewards to pay out" value={formatNgn(overview.rewardsToPayNgn)} />
+          <StatTile label="Rewards to pay out" value={formatMoneyTotals(overview.rewardsToPay)} />
         </div>
       )}
 
@@ -280,7 +283,7 @@ export function AdminReferralsPage() {
                   </td>
                   <td className="px-4 py-3 text-xs text-gray-600">
                     <div>
-                      Ambassador: {formatNgn(r.referrerReward.amountNgn)} {r.referrerReward.type} —{" "}
+                      Ambassador: {formatMoney(r.referrerReward.amountNgn, r.referrerReward.currency)} {r.referrerReward.type} —{" "}
                       <span
                         className={
                           r.referrerReward.status === "issued" ? "text-green-700" : "text-amber-600"
@@ -297,7 +300,7 @@ export function AdminReferralsPage() {
                       )}
                     </div>
                     <div>
-                      Friend: {formatNgn(r.refereeReward.amountNgn)} {r.refereeReward.type} —{" "}
+                      Friend: {formatMoney(r.refereeReward.amountNgn, r.refereeReward.currency)} {r.refereeReward.type} —{" "}
                       <span
                         className={
                           r.refereeReward.status === "issued" ? "text-green-700" : "text-amber-600"

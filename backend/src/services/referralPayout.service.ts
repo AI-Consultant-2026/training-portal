@@ -48,8 +48,8 @@ function requireConfigured(): PayoutProvider {
 
 function rewardOf(referral: Referral, party: RewardParty) {
   return party === "referrer"
-    ? { type: referral.referrerRewardType, amountNgn: Number(referral.referrerRewardAmountNgn), status: referral.referrerRewardStatus }
-    : { type: referral.refereeRewardType, amountNgn: Number(referral.refereeRewardAmountNgn), status: referral.refereeRewardStatus };
+    ? { type: referral.referrerRewardType, amountNgn: Number(referral.referrerRewardAmountNgn), currency: referral.referrerRewardCurrency, status: referral.referrerRewardStatus }
+    : { type: referral.refereeRewardType, amountNgn: Number(referral.refereeRewardAmountNgn), currency: referral.refereeRewardCurrency, status: referral.refereeRewardStatus };
 }
 
 function personFor(referral: Referral, party: RewardParty): User | undefined {
@@ -72,6 +72,10 @@ function assertPayable(referral: Referral, party: RewardParty) {
   if (referral.status !== "qualified") throw ApiError.badRequest("Only a qualified referral has a reward to send");
   const reward = rewardOf(referral, party);
   if (reward.status !== "pending") throw ApiError.badRequest("This reward has already been paid");
+  // VTpass and VTU.ng only top up Nigerian numbers, in Naira.
+  if (reward.currency !== "NGN") {
+    throw ApiError.badRequest("Ghana, Kenya and South Africa rewards can't be sent from here; pay by hand, then mark it paid");
+  }
   if (reward.type !== "airtime" && reward.type !== "data") {
     throw ApiError.badRequest("Course credit can't be sent as airtime or data; pay it by hand");
   }

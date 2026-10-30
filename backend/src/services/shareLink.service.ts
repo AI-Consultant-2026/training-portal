@@ -17,7 +17,8 @@
 import fs from "fs";
 import path from "path";
 import { createCanvas, GlobalFonts, loadImage, SKRSContext2D } from "@napi-rs/canvas";
-import { REFEREE_REWARD_NGN, REFERRAL_CODE_PREFIX } from "../constants/referral";
+import { COUNTRIES, isCountryCode } from "../constants/countries";
+import { formatRewardMoney, REFERRAL_CODE_PREFIX, rewardsForCountry } from "../constants/referral";
 import { User } from "../models";
 
 const FONT_DIR = path.join(__dirname, "..", "marketing", "fonts", "pdf");
@@ -144,14 +145,24 @@ export function normaliseCode(raw: string): string | null {
 export interface Ambassador {
   code: string;
   firstName: string | null;
+  // The friend's reward in the ambassador's country's money ("₦3,000", "GH₵27"), and that
+  // country's homepage folder ("/ng", "/gh"), from the ambassador's own record (2026-10-30).
+  welcomeBonus: string;
+  home: string;
+}
+
+export function welcomeBonusFor(country: string | null | undefined): string {
+  const rewards = rewardsForCountry(country);
+  return formatRewardMoney(rewards.currency, rewards.referee);
 }
 
 export async function findAmbassador(rawCode: string): Promise<Ambassador | null> {
   const code = normaliseCode(rawCode);
   if (!code) return null;
-  const user = await User.findOne({ where: { referralCode: code }, attributes: ["firstName"] });
+  const user = await User.findOne({ where: { referralCode: code }, attributes: ["firstName", "country"] });
   if (!user) return null;
-  return { code, firstName: cleanName(user.firstName) };
+  const home = COUNTRIES[isCountryCode(user.country) ? user.country : "NG"].site.path;
+  return { code, firstName: cleanName(user.firstName), welcomeBonus: welcomeBonusFor(user.country), home };
 }
 
 // A first name only, trimmed and capped so a long one can't run off the card.
@@ -160,10 +171,6 @@ function cleanName(raw: string | null | undefined): string | null {
   if (!first) return null;
   const name = first.charAt(0).toUpperCase() + first.slice(1);
   return name.length > 18 ? `${name.slice(0, 17)}…` : name;
-}
-
-function naira(amount: number): string {
-  return `₦${amount.toLocaleString("en-NG")}`;
 }
 
 let fontsRegistered = false;
@@ -332,9 +339,8 @@ export interface CardInput {
   format: ShareCardFormat;
   code: string;
   firstName: string | null;
-  /** The friend's welcome reward as shown, e.g. "GH\u20B527"; Naira by default. Lets the
-   * Ghana, Kenya and South Africa guide videos show their own amount (2026-10-30). */
-  welcomeBonus?: string;
+  /** The friend's welcome reward as shown, e.g. "\u20A63,000" or "GH\u20B527". */
+  welcomeBonus: string;
 }
 
 // The square, portrait and tall cards. Portrait uses the square card's type sizes with the
@@ -543,7 +549,13 @@ function drawLinkCard(ctx: Ctx, input: CardInput, welcomeBonus: string): void {
 
 // A video's link preview: its poster frame with a play button on the left, the title
 // and code on the right.
-async function drawVideoLinkCard(ctx: Ctx, video: string, code: string, firstName: string | null): Promise<void> {
+async function drawVideoLinkCard(
+  ctx: Ctx,
+  video: string,
+  code: string,
+  firstName: string | null,
+  welcomeBonus: string,
+): Promise<void> {
   const { width: W, height: H } = SHARE_CARD_SIZE.link;
   background(ctx, W, H);
   const meta = SHARE_VIDEOS[video];
@@ -579,8 +591,8 @@ async function drawVideoLinkCard(ctx: Ctx, video: string, code: string, firstNam
   spaced(ctx, meta.course.toUpperCase(), x, 128, 2.5);
   const y = paragraph(ctx, meta.title, x, 166, w, serif(54), 54, "#FFFFFF", 1.08);
   const gift = firstName
-    ? `From ${firstName}: ${naira(REFEREE_REWARD_NGN)} airtime for you when you join with my code and pay.`
-    : `${naira(REFEREE_REWARD_NGN)} airtime for you when you join with my code and pay.`;
+    ? `From ${firstName}: ${welcomeBonus} airtime for you when you join with my code and pay.`
+    : `${welcomeBonus} airtime for you when you join with my code and pay.`;
   const afterGift = paragraph(ctx, gift, x, y + 18, w, sans(26), 26, ON_INK_SOFT, 1.3);
   codePanel(ctx, code, x, Math.max(afterGift + 26, H - 56 - 64 - 14 - 140), w, 140, "Watch free · First lesson free", 56);
 }
@@ -604,27 +616,31 @@ function remember(key: string, buffer: Buffer): Buffer {
 export async function renderCard(input: CardInput): Promise<{ buffer: Buffer; contentType: string }> {
   const link = input.format === "link";
   const contentType = link ? "image/jpeg" : "image/png";
-  const key = `card|${SHARE_CARD_VERSION}|${input.design}|${input.format}|${input.code}|${input.firstName ?? ""}|${input.welcomeBonus ?? ""}`;
+  const key = `card|${SHARE_CARD_VERSION}|${input.design}|${input.format}|${input.code}|${input.firstName ?? ""}|${input.welcomeBonus}`;
   const hit = cache.get(key);
   if (hit) return { buffer: hit, contentType };
   registerFonts();
   const { width, height } = SHARE_CARD_SIZE[input.format];
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
-  const welcomeBonus = input.welcomeBonus ?? naira(REFEREE_REWARD_NGN);
-  if (link) drawLinkCard(ctx, input, welcomeBonus);
-  else drawPostCard(ctx, input, welcomeBonus);
+  if (link) drawLinkCard(ctx, input, input.welcomeBonus);
+  else drawPostCard(ctx, input, input.welcomeBonus);
   const buffer = link ? canvas.toBuffer("image/jpeg", 86) : canvas.toBuffer("image/png");
   return { buffer: remember(key, buffer), contentType };
 }
 
-export async function renderVideoLinkCard(video: string, code: string, firstName: string | null): Promise<Buffer> {
-  const key = `video|${SHARE_CARD_VERSION}|${video}|${code}|${firstName ?? ""}`;
+export async function renderVideoLinkCard(
+  video: string,
+  code: string,
+  firstName: string | null,
+  welcomeBonus: string,
+): Promise<Buffer> {
+  const key = `video|${SHARE_CARD_VERSION}|${video}|${code}|${firstName ?? ""}|${welcomeBonus}`;
   const hit = cache.get(key);
   if (hit) return hit;
   registerFonts();
   const canvas = createCanvas(SHARE_CARD_SIZE.link.width, SHARE_CARD_SIZE.link.height);
-  await drawVideoLinkCard(canvas.getContext("2d"), video, code, firstName);
+  await drawVideoLinkCard(canvas.getContext("2d"), video, code, firstName, welcomeBonus);
   return remember(key, canvas.toBuffer("image/jpeg", 86));
 }
 
@@ -658,7 +674,7 @@ export function renderSharePage(page: SharePage): string {
   const name = page.showName ? ambassador.firstName : null;
   const nameQuery = page.showName ? "?n=1" : "";
   const imageQuery = `${nameQuery ? `${nameQuery}&` : "?"}v=${SHARE_CARD_VERSION}`;
-  const reward = naira(REFEREE_REWARD_NGN);
+  const reward = ambassador.welcomeBonus;
   const registerUrl = `${origin}/register?ref=${encodeURIComponent(ambassador.code)}`;
 
   let path_: string;
@@ -701,7 +717,7 @@ export function renderSharePage(page: SharePage): string {
     : `${signUpButton}\n  ${
         lessonUrl
           ? `<a class="secondary" href="${escapeHtml(lessonUrl)}">Try the first lesson free</a>`
-          : `<a class="secondary" href="/ng#courses">See the four courses</a>`
+          : `<a class="secondary" href="${ambassador.home}#courses">See the four courses</a>`
       }`;
   const heading = lessonFirst
     ? `Try ${COURSES[slug as CourseSlug].headline} free`

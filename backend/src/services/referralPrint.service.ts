@@ -1,7 +1,8 @@
 import path from "path";
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
-import { PRINT_DESIGNS, PrintDesign, PrintKind, REFEREE_REWARD_NGN } from "../constants/referral";
+import { COUNTRIES, isCountryCode } from "../constants/countries";
+import { formatRewardMoney, PRINT_DESIGNS, PrintDesign, PrintKind, rewardsForCountry } from "../constants/referral";
 import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { ensureReferralCode } from "./referral.service";
@@ -102,8 +103,16 @@ export interface PrintData {
   shareUrl: string;
   host: string;
   firstName: string | null;
-  welcomeBonusNgn: number;
+  // The friend's reward in the ambassador's country's money, e.g. "₦3,000" or "KSh 288".
+  welcomeBonus: string;
+  contact: string;
+  country: string;
   design: PrintDesign;
+}
+
+function welcomeBonusFor(country: string | null | undefined): string {
+  const rewards = rewardsForCountry(country);
+  return formatRewardMoney(rewards.currency, rewards.referee);
 }
 
 export async function getPrintData(
@@ -121,9 +130,47 @@ export async function getPrintData(
     shareUrl,
     host: new URL(appOrigin).host.replace(/^www\./, ""),
     firstName: showName ? user.firstName.trim() || null : null,
-    welcomeBonusNgn: REFEREE_REWARD_NGN,
+    welcomeBonus: welcomeBonusFor(user.country),
+    contact: contactLine(user.country),
+    country: user.country,
     design,
   };
+}
+
+// "Banking \u00b7 Telecoms \u00b7 Oil & Gas" -> "Banking, Telecoms and Oil & Gas".
+function listOf(pathway: string): string {
+  const parts = pathway.split(" \u00b7 ");
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : pathway;
+}
+
+// The table above is Nigeria's. Ghana, Kenya and South Africa ambassadors' flyers swap in
+// their own country, industries and homepage, from countries.ts (2026-10-30).
+function designCopy(design: PrintDesign, country: string | null | undefined): DesignCopy {
+  const copy = DESIGNS[design];
+  if (!isCountryCode(country) || country === "NG") return copy;
+  const { name, site } = COUNTRIES[country];
+  const pathways = site.pathways;
+  switch (design) {
+    case "general":
+      return {
+        ...copy,
+        headline: `Build the skills employers in ${name} are hiring for`,
+        sub: `Beginner-friendly online courses focused on careers in ${site.headlineIndustries}. Learn on your phone, at your own pace.`,
+        previewPath: `${site.path}#courses`,
+      };
+    case "cyber-security-fundamentals":
+      return { ...copy, sub: `Start a career in cyber security, with pathways for ${listOf(pathways[design])}.` };
+    case "gis-and-drone-mapping":
+      return { ...copy, sub: `Learn the mapping and drone skills used in ${listOf(pathways[design]).toLowerCase()} and more.` };
+    case "digital-marketing":
+      return { ...copy, sub: `Learn to grow a brand online: the skills businesses in ${name} are hiring for.` };
+    case "hse-fundamentals":
+      return {
+        ...copy,
+        sub: `Health, Safety and Environment training for careers in ${listOf(pathways[design]).toLowerCase()}.`,
+        bullets: copy.bullets.map((b) => (b.startsWith("Nigerian regulations") ? "Safety law and permit to work" : b)),
+      };
+  }
 }
 
 // Same brand palette as the certificate (the marketing site's, not the app's blue).
@@ -145,16 +192,17 @@ const SERIF_BOLD = "PaleonSerifBold";
 
 const WHATSAPP = "+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)";
 
+// Ghana, Kenya and South Africa ambassadors' flyers give that country's WhatsApp line.
+function contactLine(country: string | null | undefined): string {
+  return isCountryCode(country) && country !== "NG" ? `${COUNTRIES[country].site.whatsapp.display} (WhatsApp)` : WHATSAPP;
+}
+
 function newDoc(options: PDFKit.PDFDocumentOptions): PDFKit.PDFDocument {
   const doc = new PDFDocument({ margin: 0, ...options, info: { Title: "Paleon Training referral", Author: "Paleon Training" } });
   doc.registerFont(SANS, path.join(FONT_DIR, "SourceSans3-Regular.ttf"));
   doc.registerFont(SANS_BOLD, path.join(FONT_DIR, "SourceSans3-Bold.ttf"));
   doc.registerFont(SERIF_BOLD, path.join(FONT_DIR, "SourceSerif4-Bold.ttf"));
   return doc;
-}
-
-function naira(amount: number): string {
-  return `₦${amount.toLocaleString("en-NG")}`;
 }
 
 // Drawn as vector squares rather than an embedded PNG so it stays sharp at any print size.
@@ -209,7 +257,7 @@ function drawFlyer(doc: PDFKit.PDFDocument, data: PrintData): void {
   const H = 841.89;
   const M = 44;
   const inner = W - M * 2;
-  const copy = DESIGNS[data.design];
+  const copy = designCopy(data.design, data.country);
 
   doc.rect(0, 0, W, H).fill(PAPER);
 
@@ -311,7 +359,7 @@ function drawFlyer(doc: PDFKit.PDFDocument, data: PrintData): void {
     .fillColor(INK)
     .font(SANS_BOLD)
     .fontSize(14)
-    .text(`Get ${naira(data.welcomeBonusNgn)} airtime`, textX, panelTop + 98, { width: textW });
+    .text(`Get ${data.welcomeBonus} airtime`, textX, panelTop + 98, { width: textW });
   doc
     .fillColor(CHARCOAL_SOFT)
     .font(SANS)
@@ -341,7 +389,7 @@ function drawFlyer(doc: PDFKit.PDFDocument, data: PrintData): void {
   // Two phone numbers make this line long, so shrink it until it clears the
   // "Recommended by" text on the left instead of overlapping it.
   const recommendedWidth = Math.min(doc.widthOfString(recommended), inner * 0.58);
-  const questions = `Questions? ${WHATSAPP}`;
+  const questions = `Questions? ${data.contact}`;
   doc.font(SANS);
   let questionsSize = 10.5;
   while (questionsSize > 7 && doc.fontSize(questionsSize).widthOfString(questions) > inner - recommendedWidth - 12) {
@@ -404,7 +452,7 @@ const CARD_W = 85 * MM;
 const CARD_H = 55 * MM;
 
 function drawCard(doc: PDFKit.PDFDocument, data: PrintData, x: number, y: number): void {
-  const copy = DESIGNS[data.design];
+  const copy = designCopy(data.design, data.country);
   const pad = 11;
 
   doc.rect(x, y, CARD_W, CARD_H).fill("#FFFFFF");
@@ -443,7 +491,7 @@ function drawCard(doc: PDFKit.PDFDocument, data: PrintData, x: number, y: number
     .fillColor(INK)
     .font(SANS)
     .fontSize(7)
-    .text(`${naira(data.welcomeBonusNgn)} airtime after your course is fully paid`, tx, y + 100, { width: tw });
+    .text(`${data.welcomeBonus} airtime after your course is fully paid`, tx, y + 100, { width: tw });
   doc
     .fillColor(INK)
     .font(SANS_BOLD)

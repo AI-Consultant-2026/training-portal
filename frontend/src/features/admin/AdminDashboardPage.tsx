@@ -8,7 +8,7 @@ import { ProgressBar } from "../../components/ui/ProgressBar";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
 import { Lead } from "../../types/api";
-import { countryName, toWhatsAppLink } from "../../api/countries.api";
+import { countryName, formatMoneyTotals, toWhatsAppLink } from "../../api/countries.api";
 import {
   closeCoursePayments,
   deleteLead,
@@ -384,7 +384,7 @@ export function AdminDashboardPage() {
         <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">Rewards to pay out</p>
           <p className="mt-1 text-2xl font-semibold text-gray-900">
-            ₦{stats.referrals.rewardsToPayNgn.toLocaleString("en-NG")}
+            {formatMoneyTotals(stats.referrals.rewardsToPay)}
           </p>
           <Link to="/admin/referrals" className="mt-1 text-xs text-blue-600 hover:underline">
             Manage referrals

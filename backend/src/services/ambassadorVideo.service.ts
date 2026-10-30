@@ -14,11 +14,11 @@ import crypto from "crypto";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { REFEREE_REWARD_NGN } from "../constants/referral";
 import { User } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { ensureReferralCode } from "./referral.service";
+import { welcomeBonusFor } from "./shareLink.service";
 
 const VIDEO_DIR = path.join(__dirname, "..", "marketing", "videos", "ambassador");
 const FONT_DIR = path.join(__dirname, "..", "marketing", "fonts", "pdf");
@@ -67,11 +67,8 @@ export function isAmbassadorVideo(slug: string): boolean {
 export interface EndCardText {
   code: string;
   firstName: string | null;
-  welcomeBonusNgn: number;
-}
-
-function naira(amount: number): string {
-  return `₦${amount.toLocaleString("en-NG")}`;
+  // The friend's reward in the ambassador's country's money, e.g. "₦3,000" or "R36".
+  welcomeBonus: string;
 }
 
 // Names go through drawtext's textfile (expansion off), so no escaping is needed; this
@@ -133,7 +130,7 @@ async function render(slug: string, text: EndCardText, outPath: string): Promise
   try {
     const lines: { slot: Slot; value: string }[] = [
       { slot: m.slots.code, value: text.code },
-      { slot: m.slots.reward, value: `${naira(text.welcomeBonusNgn)} airtime for you` },
+      { slot: m.slots.reward, value: `${text.welcomeBonus} airtime for you` },
     ];
     const name = displayName(text.firstName);
     if (name) lines.push({ slot: m.slots.name, value: `Recommended by ${name}` });
@@ -181,7 +178,7 @@ export async function getPersonalisedVideo(slug: string, text: EndCardText): Pro
   if (!isAmbassadorVideo(slug)) throw ApiError.notFound("Video not found");
   const key = crypto
     .createHash("sha256")
-    .update(JSON.stringify([TEMPLATE_VERSION, getManifest().version, slug, text.code, displayName(text.firstName), text.welcomeBonusNgn]))
+    .update(JSON.stringify([TEMPLATE_VERSION, getManifest().version, slug, text.code, displayName(text.firstName), text.welcomeBonus]))
     .digest("hex")
     .slice(0, 20);
   const outPath = path.join(CACHE_DIR, `${slug}-${key}.mp4`);
@@ -220,7 +217,7 @@ export async function getPersonalisedVideoForUser(
   const filePath = await getPersonalisedVideo(slug, {
     code,
     firstName: showName ? user.firstName : null,
-    welcomeBonusNgn: REFEREE_REWARD_NGN,
+    welcomeBonus: welcomeBonusFor(user.country),
   });
   return { filePath, filename: `paleon-${slug}-${code}.mp4` };
 }

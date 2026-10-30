@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Spinner } from "../../components/ui/Spinner";
 import { StatTile } from "../../components/ui/StatTile";
+import { formatMoney } from "../../api/countries.api";
 import { downloadPrintKit, PrintDesign, PrintKind } from "../../api/referrals.api";
 import { cardShareLink } from "./shareCard";
 import { NoticeBoard } from "./NoticeBoard";
@@ -14,10 +15,6 @@ import {
   fetchReferralLeaderboard,
   updateRewardPreference,
 } from "./referralsSlice";
-
-function formatNgn(amount: number): string {
-  return `₦${amount.toLocaleString("en-NG")}`;
-}
 
 const REWARD_OPTIONS: { value: ReferralRewardType; label: string; hint: string }[] = [
   { value: "airtime", label: "Airtime", hint: "Topped up to the phone number you registered with" },
@@ -107,10 +104,10 @@ export function ReferralPage() {
         <StatTile label="Paid (rewarded)" value={summary.counts.qualified} />
         <StatTile
           label="You've earned"
-          value={formatNgn(summary.earnings.totalNgn)}
+          value={formatMoney(summary.earnings.totalNgn, summary.currency)}
           subtext={
             summary.earnings.pendingNgn > 0
-              ? `${formatNgn(summary.earnings.pendingNgn)} awaiting payout`
+              ? `${formatMoney(summary.earnings.pendingNgn, summary.currency)} awaiting payout`
               : undefined
           }
         />
@@ -148,7 +145,7 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
   // The friend card's share link (2026-10-06): its preview image is the "₦3,000 airtime for
   // you" card, so WhatsApp, Facebook, LinkedIn and X show the picture with the message.
   const shareLink = cardShareLink(summary.code, "friend", false);
-  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatNgn(summary.welcomeBonusNgn)} in airtime once your course is fully paid: ${shareLink}`;
+  const shareMessage = `I'm developing job-ready digital skills for careers in Oil & Gas, Banking and Telecommunications with Paleon Training. Use my code ${summary.code} when you sign up and you'll get ${formatMoney(summary.welcomeBonusNgn, summary.currency)} in airtime once your course is fully paid: ${shareLink}`;
   const encodedUrl = encodeURIComponent(shareLink);
   const encodedMessage = encodeURIComponent(shareMessage);
   const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
@@ -170,10 +167,10 @@ function ShareCard({ summary }: { summary: MyReferralSummary }) {
   return (
     <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-5">
       <p className="text-sm font-medium text-blue-900">
-        Earn {formatNgn(summary.rewardPerReferralNgn)} for every friend who joins and pays.
+        Earn {formatMoney(summary.rewardPerReferralNgn, summary.currency)} for every friend who joins and pays.
       </p>
       <p className="text-sm text-blue-800">
-        They get {formatNgn(summary.welcomeBonusNgn)} in airtime once their course is fully paid.
+        They get {formatMoney(summary.welcomeBonusNgn, summary.currency)} in airtime once their course is fully paid.
       </p>
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
@@ -375,19 +372,18 @@ function HowItWorks({ summary }: { summary: MyReferralSummary }) {
   const steps = [
     {
       title: "Share your code",
-      body: "Send your code or invite link to friends, classmates or your NYSC set.",
+      // NYSC is Nigerian; ambassadors elsewhere are paid in their own money (2026-10-30).
+      body: `Send your code or invite link to friends, classmates or your ${
+        summary.currency === "NGN" ? "NYSC set" : "class group"
+      }.`,
     },
     {
       title: "They sign up & pay",
-      body: `They enter ${summary.code} when registering and pay for any course — and earn a ${formatNgn(
-        summary.welcomeBonusNgn,
-      )} airtime welcome reward once their payment is confirmed.`,
+      body: `They enter ${summary.code} when registering and pay for any course — and earn a ${formatMoney(summary.welcomeBonusNgn, summary.currency)} airtime welcome reward once their payment is confirmed.`,
     },
     {
       title: "You both get rewarded",
-      body: `You earn ${formatNgn(
-        summary.rewardPerReferralNgn,
-      )} as airtime, data or course credit — your choice.`,
+      body: `You earn ${formatMoney(summary.rewardPerReferralNgn, summary.currency)} as airtime, data or course credit — your choice.`,
     },
   ];
 

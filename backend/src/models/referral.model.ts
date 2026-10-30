@@ -16,11 +16,14 @@ export interface ReferralAttributes {
   qualifiedAt: Date | null;
   qualifyingEnrollmentId: string | null;
   referrerRewardType: string;
+  // In referrerRewardCurrency (NGN/GHS/KES/ZAR) despite the name, which predates other countries.
   referrerRewardAmountNgn: number;
+  referrerRewardCurrency: string;
   referrerRewardStatus: ReferralRewardStatus;
   referrerRewardIssuedAt: Date | null;
   refereeRewardType: string;
   refereeRewardAmountNgn: number;
+  refereeRewardCurrency: string;
   refereeRewardStatus: ReferralRewardStatus;
   refereeRewardIssuedAt: Date | null;
   notes: string | null;
@@ -36,10 +39,12 @@ export type ReferralCreationAttributes = Optional<
   | "qualifyingEnrollmentId"
   | "referrerRewardType"
   | "referrerRewardAmountNgn"
+  | "referrerRewardCurrency"
   | "referrerRewardStatus"
   | "referrerRewardIssuedAt"
   | "refereeRewardType"
   | "refereeRewardAmountNgn"
+  | "refereeRewardCurrency"
   | "refereeRewardStatus"
   | "refereeRewardIssuedAt"
   | "notes"
@@ -60,10 +65,12 @@ export class Referral
   declare qualifyingEnrollmentId: string | null;
   declare referrerRewardType: string;
   declare referrerRewardAmountNgn: number;
+  declare referrerRewardCurrency: string;
   declare referrerRewardStatus: ReferralRewardStatus;
   declare referrerRewardIssuedAt: Date | null;
   declare refereeRewardType: string;
   declare refereeRewardAmountNgn: number;
+  declare refereeRewardCurrency: string;
   declare refereeRewardStatus: ReferralRewardStatus;
   declare refereeRewardIssuedAt: Date | null;
   declare notes: string | null;
@@ -112,6 +119,12 @@ export function initReferralModel(sequelize: Sequelize) {
         defaultValue: REFERRER_REWARD_NGN,
         field: "referrer_reward_amount_ngn",
       },
+      referrerRewardCurrency: {
+        type: DataTypes.STRING(3),
+        allowNull: false,
+        defaultValue: "NGN",
+        field: "referrer_reward_currency",
+      },
       referrerRewardStatus: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -134,6 +147,12 @@ export function initReferralModel(sequelize: Sequelize) {
         allowNull: false,
         defaultValue: REFEREE_REWARD_NGN,
         field: "referee_reward_amount_ngn",
+      },
+      refereeRewardCurrency: {
+        type: DataTypes.STRING(3),
+        allowNull: false,
+        defaultValue: "NGN",
+        field: "referee_reward_currency",
       },
       refereeRewardStatus: {
         type: DataTypes.STRING,

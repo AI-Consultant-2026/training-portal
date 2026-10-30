@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { formatMoney } from "../../api/countries.api";
 import { fetchPersonalisedVideo } from "../../api/referrals.api";
 import { MyReferralSummary } from "../../types/api";
 import {
@@ -20,16 +21,12 @@ import {
   videoShareLink,
 } from "./shareCard";
 
-function formatNgn(amount: number): string {
-  return `₦${amount.toLocaleString("en-NG")}`;
-}
-
 function captionContext(summary: MyReferralSummary): CaptionContext {
   return {
     code: summary.code,
     shareUrl: summary.shareUrl,
-    welcomeBonus: formatNgn(summary.welcomeBonusNgn),
-    referrerReward: formatNgn(summary.rewardPerReferralNgn),
+    welcomeBonus: formatMoney(summary.welcomeBonusNgn, summary.currency),
+    referrerReward: formatMoney(summary.rewardPerReferralNgn, summary.currency),
   };
 }
 
@@ -314,7 +311,7 @@ export function ShareCardMaker({ summary, firstName }: { summary: MyReferralSumm
   const withName = showName && !!firstName?.trim();
   const imageUrl = shareCardImageUrl(summary.code, design, format, withName);
   const link = cardShareLink(summary.code, design, withName);
-  const welcomeBonus = formatNgn(summary.welcomeBonusNgn);
+  const welcomeBonus = formatMoney(summary.welcomeBonusNgn, summary.currency);
   const texts: PlatformTexts = {
     message: `Use my code ${summary.code} when you sign up and you'll get ${welcomeBonus} airtime once your course is fully paid. First lesson free 👇\n${link}`,
     instagram: `Use my code ${summary.code} when you sign up at paleontraining.com/register and you'll get ${welcomeBonus} airtime once your course is fully paid. First lesson free.`,

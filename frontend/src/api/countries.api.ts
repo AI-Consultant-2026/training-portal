@@ -28,6 +28,31 @@ const COUNTRY_NAMES: Record<string, string> = { NG: "Nigeria", GH: "Ghana", KE: 
 // The four countries in the order the site lists them (constants/countries.ts MARKET_ORDER).
 export const COUNTRY_CODES = ["NG", "ZA", "KE", "GH"] as const;
 
+// Mirrors the currency settings in backend/src/constants/countries.ts.
+const CURRENCY_FORMAT: Record<string, { symbol: string; spaced: boolean }> = {
+  NGN: { symbol: "\u20A6", spaced: false },
+  GHS: { symbol: "GH\u20B5", spaced: false },
+  KES: { symbol: "KSh", spaced: true },
+  ZAR: { symbol: "R", spaced: false },
+};
+
+/** "₦5,000", "GH₵45", "KSh 480", "R60". Naira when no currency is given. */
+export function formatMoney(amount: number, currency = "NGN"): string {
+  const format = CURRENCY_FORMAT[currency];
+  const number = amount.toLocaleString("en-GB");
+  if (!format) return `${currency} ${number}`;
+  return `${format.symbol}${format.spaced ? " " : ""}${number}`;
+}
+
+/** Amounts owed in several currencies as one line, Naira first: "₦8,000 + GH₵45". */
+export function formatMoneyTotals(totals: Record<string, number>): string {
+  const entries = Object.entries(totals).filter(([, amount]) => amount > 0);
+  if (entries.length === 0) return formatMoney(0);
+  const order = Object.keys(CURRENCY_FORMAT);
+  entries.sort(([a], [b]) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99));
+  return entries.map(([currency, amount]) => formatMoney(amount, currency)).join(" + ");
+}
+
 export function countryName(code: string | null | undefined): string {
   if (!code) return "Nigeria";
   return COUNTRY_NAMES[code] ?? code;

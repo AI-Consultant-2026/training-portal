@@ -75,6 +75,7 @@ shareLinksRouter.get(
       req.params.video,
       ambassador.code,
       showName(req) ? ambassador.firstName : null,
+      ambassador.welcomeBonus,
     );
     res.set("Cache-Control", "public, max-age=86400");
     res.set("Cross-Origin-Resource-Policy", "cross-origin");
@@ -110,6 +111,7 @@ shareLinksRouter.get(
       format,
       code: ambassador.code,
       firstName: showName(req) ? ambassador.firstName : null,
+      welcomeBonus: ambassador.welcomeBonus,
     });
     res.set("Cache-Control", "public, max-age=86400");
     res.set("Cross-Origin-Resource-Policy", "cross-origin");

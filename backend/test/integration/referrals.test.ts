@@ -128,6 +128,43 @@ describe("Referrals", () => {
     expect(board.body.leaderboard.allTime[0].qualifiedReferrals).toBe(1);
   });
 
+  it("pays each side in their own country's money (2026-10-30)", async () => {
+    const admin = await createAdmin();
+    const adminToken = await loginAs(admin.email);
+    const instructor = await createInstructor();
+    const course = await createPricedCourse(instructor.id);
+
+    // A Ghanaian ambassador refers a Kenyan friend; a Nigerian refers a Nigerian.
+    await register("accra-amb@example.com");
+    await User.update({ country: "GH" }, { where: { email: "accra-amb@example.com" } });
+    const ghToken = await loginAs("accra-amb@example.com");
+    const before = await request(app).get("/api/referrals/me").set("Authorization", `Bearer ${ghToken}`);
+    expect(before.body.referral).toMatchObject({ currency: "GHS", rewardPerReferralNgn: 45, welcomeBonusNgn: 27 });
+
+    await register("nairobi-friend@example.com", { referralCode: before.body.referral.code });
+    await User.update({ country: "KE" }, { where: { email: "nairobi-friend@example.com" } });
+    await User.update({ emailVerifiedAt: new Date() }, { where: { email: "nairobi-friend@example.com" } });
+    const friendToken = await loginAs("nairobi-friend@example.com");
+    const enroll = await request(app).post(`/api/courses/${course.id}/enroll`).set("Authorization", `Bearer ${friendToken}`);
+    await request(app)
+      .patch(`/api/admin/enrollments/${enroll.body.enrollment.id}/payment`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ paymentConfirmed: true });
+
+    await register("lagos-amb@example.com");
+    await referAndPay("lagos-friend@example.com", await myCode("lagos-amb@example.com"), course, adminToken);
+
+    const me = await request(app).get("/api/referrals/me").set("Authorization", `Bearer ${ghToken}`);
+    expect(me.body.referral.earnings).toEqual({ pendingNgn: 45, issuedNgn: 0, totalNgn: 45 });
+
+    const list = await request(app).get("/api/admin/referrals").set("Authorization", `Bearer ${adminToken}`);
+    const gh = list.body.referrals.find((r: { referrer: { email: string } }) => r.referrer.email === "accra-amb@example.com");
+    expect(gh.referrerReward).toMatchObject({ amountNgn: 45, currency: "GHS" });
+    expect(gh.refereeReward).toMatchObject({ amountNgn: 288, currency: "KES" });
+
+    expect(list.body.overview).toMatchObject({ rewardsToPayNgn: 8000, rewardsToPay: { NGN: 8000, GHS: 45, KES: 288 } });
+  });
+
   it("does not double-credit when payment is confirmed twice", async () => {
     const admin = await createAdmin();
     const adminToken = await loginAs(admin.email);

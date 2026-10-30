@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import request from "supertest";
 import { createApp } from "../../src/app";
+import { User } from "../../src/models";
 import { SHARE_VIDEOS } from "../../src/services/shareLink.service";
 
 const app = createApp();
@@ -51,6 +52,16 @@ describe("Ambassador share links (2026-10-06)", () => {
     expect(res.text).toContain("Ada sent you ₦3,000 airtime");
     expect(res.text).toContain(`href="http://localhost:5173/register?ref=${code}"`);
     expect(res.text).toContain('content="noindex, follow"');
+  });
+
+  it("shows a Kenyan ambassador's friend the reward in shillings (2026-10-30)", async () => {
+    await User.update({ country: "KE" }, { where: { email: "share-links@example.com" } });
+    const res = await request(app).get(`/s/${code}/friend?n=1`);
+    expect(res.text).toContain("Ada sent you KSh 288 airtime");
+    expect(res.text).toContain('href="/ke#courses"');
+    expect(res.text).not.toContain("₦");
+    const card = await binary(request(app).get(`/s/${code}/friend/square.png`));
+    expect(card.status).toBe(200);
   });
 
   it("leaves the name out unless the ambassador chose to show it", async () => {

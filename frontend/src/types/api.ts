@@ -27,6 +27,9 @@ export interface MyReferralSummary {
   shareUrl: string;
   rewardType: ReferralRewardType;
   payoutPhone: string | null;
+  // The amounts below are in `currency` (NGN, GHS, KES or ZAR: the ambassador's country's
+  // money); the "Ngn" names date from when Naira was the only one.
+  currency: string;
   rewardPerReferralNgn: number;
   welcomeBonusNgn: number;
   counts: { invited: number; joined: number; qualified: number };
@@ -57,7 +60,8 @@ export interface ReferralLeaderboard {
 
 export interface AdminReferralReward {
   type: ReferralRewardType | string;
-  amountNgn: number;
+  amountNgn: number; // in `currency`
+  currency: string;
   status: ReferralRewardStatus;
   issuedAt: string | null;
 }
@@ -135,6 +139,8 @@ export interface AdminReferralOverview {
   pendingReferrals: number;
   qualifiedReferrals: number;
   rewardsToPayNgn: number;
+  // Every currency owed, e.g. { NGN: 8000, GHS: 45 }.
+  rewardsToPay: Record<string, number>;
 }
 
 export type CourseLevel = "beginner" | "intermediate" | "advanced";

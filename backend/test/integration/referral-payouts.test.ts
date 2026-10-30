@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
 import { config } from "../../src/config";
-import { Course, ReferralPayout, User } from "../../src/models";
+import { Course, Referral, ReferralPayout, User } from "../../src/models";
 import { resetVtungToken } from "../../src/services/vtung.service";
 
 const app = createApp();
@@ -285,6 +285,18 @@ describe("Referral payouts via VTpass", () => {
       .send({ party: "referee", network: "mtn" });
     expect(friend.status).toBe(400);
     expect(friend.body.error.message).toMatch(/no phone/i);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("won't send a Ghana, Kenya or South Africa reward through VTpass", async () => {
+    const { adminToken, referralId } = await qualifiedReferral({ phone: "08031234567" });
+    await Referral.update({ referrerRewardCurrency: "ZAR", referrerRewardAmountNgn: 60 }, { where: { id: referralId } });
+    const res = await request(app)
+      .post(`/api/admin/referrals/${referralId}/send-reward`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ party: "referrer", network: "mtn" });
+    expect(res.status).toBe(400);
+    expect(res.body.error.message).toMatch(/pay by hand/i);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
