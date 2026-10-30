@@ -334,6 +334,18 @@ export function createApp() {
   app.get("/gh-latest-jobs.json", (req, res) => {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "gh-latest-jobs.json"));
   });
+  // South African latest-jobs board (2026-10-30): mining, oil, energy, banking and ICT
+  // vacancies by province. za-latest-jobs.json is rebuilt from MyJobMag South Africa by
+  // backend/scripts/build-south-africa-jobs.py. Listed in sitemap.xml.
+  app.get("/za/latest-jobs-board", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "za-latest-jobs-board.html"));
+  });
+  app.get("/za-latest-jobs-board.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "za-latest-jobs-board.js"));
+  });
+  app.get("/za-latest-jobs.json", (req, res) => {
+    res.type("application/json").sendFile(path.join(__dirname, "marketing", "za-latest-jobs.json"));
+  });
   // Job board for the NiYA proposal (2026-10-24): every open Nigerian vacancy in a Paleon
   // course field (oil & gas, banking, telecoms), Apply links straight to the employer.
   // niya-proposal-jobs.json is rebuilt by backend/scripts/build-niya-proposal-jobs.py.
