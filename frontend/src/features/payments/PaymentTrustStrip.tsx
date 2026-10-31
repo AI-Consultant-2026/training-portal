@@ -1,7 +1,7 @@
 import { CheckoutInfo } from "../../types/api";
 import { isFlutterwave } from "./checkout";
 
-const WHATSAPP_URL = "https://wa.me/2347077149989";
+const WHATSAPP_URL = "https://wa.me/447508823495";
 
 // Reassurance shown next to pay buttons (2026-10-12): who takes the card, the refund rule
 // from the terms (section 5), who Paleon is, a person to ask, and what the certificate

@@ -6,12 +6,12 @@
 (function () {
   "use strict";
 
-  // +234 707 714 9989 -- the WhatsApp line (calls go to +234 707 714 9215 via tel: links).
+  // +44 7508 823495 -- the WhatsApp line (2026-10-31); calls still go to +234 707 714 9215 via tel: links.
   // The Ghana, Kenya and South Africa homepages set their own line on <body data-whatsapp>.
   var countryLine = document.body.getAttribute("data-whatsapp");
   var HREF = countryLine
     ? countryLine + "?text=" + encodeURIComponent("Hello Paleon Training, I would like to find out more about your courses.")
-    : "https://wa.me/2347077149989?text=" +
+    : "https://wa.me/447508823495?text=" +
       encodeURIComponent(
         "Hello Paleon Training, I would like to find out more about your training programmes and consultancy services for Nigerian business, charities and government",
       );

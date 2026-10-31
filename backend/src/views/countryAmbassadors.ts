@@ -68,8 +68,8 @@ const LOCAL: Record<Exclude<CountryCode, "NG">, Local> = {
 };
 
 const NG_INDUSTRIES = "Oil &amp; Gas, Banking or Telecoms";
-const NG_WHATSAPP = "https://wa.me/2347077149989";
-const NG_PHONES = "+234 707 714 9215 (WhatsApp/Call)";
+const NG_WHATSAPP = "https://wa.me/447508823495";
+const NG_PHONES = "+44 7508 823495 (WhatsApp)";
 
 function amp(s: string): string {
   return s.replace(/&(?![a-z#0-9]+;)/gi, "&amp;");

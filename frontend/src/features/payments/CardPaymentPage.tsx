@@ -178,7 +178,7 @@ export function CardPaymentPage() {
             Prices are in Naira (&#8358;). Your bank converts the amount to your own currency at its rate when you pay
             by Visa or Mastercard, so check that your card is enabled for international online payments. Mobile money
             isn&rsquo;t available yet. If your card is declined, message us on{" "}
-            <a href="https://wa.me/2347077149989" className="font-medium underline" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/447508823495" className="font-medium underline" target="_blank" rel="noopener noreferrer">
               WhatsApp
             </a>{" "}
             and we&rsquo;ll help.

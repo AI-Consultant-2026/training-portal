@@ -173,7 +173,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         text: "Nigeria produces approximately 500,000 university graduates every year. Practical skills and a real project you can show an employer help you stand out.",
         source: "Source: Nigerian University System, National Universities Commission (NUC)",
       },
-      whatsapp: { display: "+234 707 714 9989", link: "https://wa.me/2347077149989" },
+      whatsapp: { display: "+44 7508 823495", link: "https://wa.me/447508823495" },
       whatsappPlaceholder: "e.g. 0803 123 4567",
       corporateTraining: { label: "Corporate training for Nigerian employers", href: "/executive-training" },
       ogImage: "/images/og/welcome.jpg",

@@ -11,7 +11,7 @@ import { formatPrice, isFlutterwave } from "../payments/checkout";
 import { PaymentTrustStrip } from "../payments/PaymentTrustStrip";
 import { LessonContent } from "./LessonContent";
 
-const WHATSAPP_URL = "https://wa.me/2347077149989";
+const WHATSAPP_URL = "https://wa.me/447508823495";
 
 // The visitor's country: their account's, or the one they picked on a country homepage
 // (country-home.js stores it under this key).

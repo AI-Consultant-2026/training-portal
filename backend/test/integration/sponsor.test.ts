@@ -114,7 +114,7 @@ describe("Sponsor payment links", () => {
           gateway: "paystack",
           currency: { code: "NGN", symbol: "\u20A6", spaced: false },
           currencyName: "Naira",
-          whatsappLink: "https://wa.me/2347077149989",
+          whatsappLink: "https://wa.me/447508823495",
         },
       studentFirstName: "Ada",
       courseTitle: "Digital Marketing",
