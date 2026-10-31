@@ -1,7 +1,31 @@
 {
- "updated": "2026-10-30",
+ "updated": "2026-10-31",
  "source": "MyJobMag Kenya (myjobmag.co.ke)",
  "jobs": [
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Product Consultant - Payroll",
+   "company": "Solvo Global",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-10-31",
+   "deadline": "2026-11-30",
+   "requirements": "Key Responsibilities Manage and resolve client support cases. Provide assistance via phone, email, and virtual meetings. Troubleshoot issues related to payroll, payroll taxes, ACH…",
+   "link": "https://www.myjobmag.co.ke/job/product-consultant-payroll-solvo-global",
+   "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "IT Software Specialist",
+   "company": "Yellow Pages Kenya",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-10-31",
+   "deadline": "2026-11-30",
+   "requirements": "Description The IT/Software Specialist will manage, support, secure and continuously improve the organization’s information technology infrastructure and software systems. The role will…",
+   "link": "https://www.myjobmag.co.ke/job/it-software-specialist-yellow-pages-kenya",
+   "course": "Cyber Security Fundamentals"
+  },
   {
    "sector": "Energy, Oil & Gas",
    "role": "Intern – Field Engineering – 2027",
@@ -282,10 +306,10 @@
    "sector": "ICT & Telecoms",
    "role": "Territory Sales Leader - Baringo",
    "company": "Jamii Telecommunications",
-   "location": "Baringo",
-   "county": "Baringo",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-10-30",
-   "deadline": "2026-10-30",
+   "deadline": null,
    "requirements": "The Territory Sales Leader will work closely with the Regional Manager to execute marketing plans and to see subscriber base growth, ensure staffing and reseller numbers are met in order to achieve…",
    "link": "https://www.myjobmag.co.ke/job/territory-sales-leader-baringo-jamii-telecommunications",
    "course": "Digital Marketing"
@@ -354,10 +378,10 @@
    "sector": "ICT & Telecoms",
    "role": "Territory Sales Leader - Nakuru",
    "company": "Jamii Telecommunications",
-   "location": "Nakuru",
-   "county": "Nakuru",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-10-30",
-   "deadline": "2026-10-30",
+   "deadline": null,
    "requirements": "The Territory Sales Leader will work closely with the Regional Manager to execute marketing plans and to see subscriber base growth, ensure staffing and reseller numbers are met in order to achieve…",
    "link": "https://www.myjobmag.co.ke/job/territory-sales-leader-nakuru-jamii-telecommunications",
    "course": "Digital Marketing"
@@ -366,10 +390,10 @@
    "sector": "ICT & Telecoms",
    "role": "Territory Sales Leader - Kakamega",
    "company": "Jamii Telecommunications",
-   "location": "Kakamega",
-   "county": "Kakamega",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-10-30",
-   "deadline": "2026-10-30",
+   "deadline": null,
    "requirements": "The Territory Sales Leader will work closely with the Regional Manager to execute marketing plans and to see subscriber base growth, ensure staffing and reseller numbers are met in order to achieve…",
    "link": "https://www.myjobmag.co.ke/job/territory-sales-leader-kakamega-jamii-telecommunications",
    "course": "Digital Marketing"
@@ -378,10 +402,10 @@
    "sector": "ICT & Telecoms",
    "role": "Fixed Sales Supervisor",
    "company": "Jamii Telecommunications",
-   "location": "Nairobi",
-   "county": "Nairobi",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-10-30",
-   "deadline": "2026-10-30",
+   "deadline": null,
    "requirements": "To supervise the activities and performance of the Sales Team in your assigned territory, as directed by your Line Manager. Fixed Sales Supervisor Job Responsibilities Be responsible for…",
    "link": "https://www.myjobmag.co.ke/job/fixed-sales-supervisor-jamii-telecommunications-2",
    "course": "Digital Marketing"
@@ -390,10 +414,10 @@
    "sector": "ICT & Telecoms",
    "role": "Splicing Technician - Readvertised",
    "company": "Jamii Telecommunications",
-   "location": "Nairobi",
-   "county": "Nairobi",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-10-30",
-   "deadline": "2026-10-30",
+   "deadline": null,
    "requirements": "We are looking to recruit a Splicing Technician to splice fiber optic cables in both outdoor and indoor settings, read, create, and maintain splicing schematics and diagrams. The Technician will…",
    "link": "https://www.myjobmag.co.ke/job/splicing-technician-readvertised-jamii-telecommunications",
    "course": "HSE Fundamentals"
@@ -879,30 +903,6 @@
    "course": null
   },
   {
-   "sector": "ICT & Telecoms",
-   "role": "Senior Associate Engineer",
-   "company": "iColo: A Digital Realty Company",
-   "location": "Mombasa",
-   "county": "Mombasa",
-   "posted": "2026-10-28",
-   "deadline": "2026-11-27",
-   "requirements": "Purpose The Senior Associate Engineer role performs infrastructure related activities to ensure reliable and efficient operation of the technical infrastructure. This is achieved through…",
-   "link": "https://www.myjobmag.co.ke/job/senior-associate-engineer-icolo-a-digital-realty-company",
-   "course": "HSE Fundamentals"
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Assistant Privacy, Risk and Compliance Officer | TP Kenya",
-   "company": "Teleperformance Kenya",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-10-28",
-   "deadline": "2026-11-13",
-   "requirements": "Job Summary / Overview The Assistant Privacy, Risk & Compliance Officer is responsible for providing operational and administrative support to the PRCO in executing global privacy, risk…",
-   "link": "https://www.myjobmag.co.ke/job/assistant-privacy-risk-and-compliance-officer-tp-kenya-teleperformance",
-   "course": null
-  },
-  {
    "sector": "Energy, Oil & Gas",
    "role": "LPG Plant & Warehouse Manager",
    "company": "Green Wells Energies Limited ( Formerly Wells Oil Ltd)",
@@ -984,18 +984,6 @@
    "deadline": "2026-11-04",
    "requirements": "We are seeking to hire a Junior Legal Counsel & Company Secretary to provide legal, commercial, regulatory, and company secretarial support to the Group. Based in Nairobi and reporting to the…",
    "link": "https://www.myjobmag.co.ke/job/junior-legal-counsel-company-secretary-oil-gas-renewable-energy-wts-energy",
-   "course": null
-  },
-  {
-   "sector": "Energy, Oil & Gas",
-   "role": "Service Delivery Coordinator – Artificial Lift Services",
-   "company": "Baker Hughes",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-09-30",
-   "deadline": "2026-10-30",
-   "requirements": "The Service Delivery Coordinator ensures that Baker Hughes maximizes its short and long term revenue, profit and cash collection opportunity by ensuring flawless execution, on time delivery…",
-   "link": "https://www.myjobmag.co.ke/job/service-delivery-coordinator-artificial-lift-services-baker-hughes",
    "course": null
   }
  ]
