@@ -101,6 +101,11 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     title: "Understanding HSE: Health, Safety, and Environment",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
+  "ai-machine-learning-fundamentals": {
+    videoId: "JPcx9qHzzgk",
+    title: "AI for Everyone by Andrew Ng",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
 };
 
 export function CourseDetailPage() {

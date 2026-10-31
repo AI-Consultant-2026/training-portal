@@ -1,3 +1,4 @@
+import aiMachineLearningFundamentals from "../../assets/courseCovers/ai-machine-learning-fundamentals.svg";
 import cyberSecurityFundamentals from "../../assets/courseCovers/cyber-security-fundamentals.svg";
 import digitalMarketing from "../../assets/courseCovers/digital-marketing.svg";
 import gisAndDroneMapping from "../../assets/courseCovers/gis-and-drone-mapping.svg";
@@ -7,6 +8,7 @@ import socialMediaManagementContent from "../../assets/courseCovers/social-media
 import uavDroneConsultantPathway from "../../assets/courseCovers/uav-drone-consultant-pathway.svg";
 
 export const COURSE_COVER_IMAGES: Record<string, string> = {
+  "ai-machine-learning-fundamentals": aiMachineLearningFundamentals,
   "cyber-security-fundamentals": cyberSecurityFundamentals,
   "digital-marketing": digitalMarketing,
   "gis-and-drone-mapping": gisAndDroneMapping,

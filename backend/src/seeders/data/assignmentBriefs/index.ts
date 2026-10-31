@@ -1,3 +1,4 @@
+import { AI_ML_WEEKS } from "./aiMlWeeks";
 import { BriefSpec, BuiltBrief, buildBrief, buildCapstoneBrief } from "./briefBuilder";
 import { CAPSTONE_SPECS } from "./capstones";
 import { CYBER_WEEKS_1_TO_6 } from "./cyberSecurityWeeks01to06";
@@ -7,7 +8,7 @@ import { DIGITAL_MARKETING_WEEKS } from "./digitalMarketingWeeks";
 import { GIS_WEEKS } from "./gisWeeks";
 import { HSE_WEEKS } from "./hseWeeks";
 
-// Course slug -> week number -> brief spec, for the four live courses.
+// Course slug -> week number -> brief spec, for the live courses.
 const ASSIGNMENT_SPECS: Record<string, Record<number, BriefSpec>> = {
   "cyber-security-fundamentals": {
     ...CYBER_WEEKS_1_TO_6,
@@ -17,6 +18,7 @@ const ASSIGNMENT_SPECS: Record<string, Record<number, BriefSpec>> = {
   "digital-marketing": DIGITAL_MARKETING_WEEKS,
   "gis-and-drone-mapping": GIS_WEEKS,
   "hse-fundamentals": HSE_WEEKS,
+  "ai-machine-learning-fundamentals": AI_ML_WEEKS,
 };
 
 export const ASSIGNMENT_BRIEFS: Record<string, Record<number, BuiltBrief>> = Object.fromEntries(

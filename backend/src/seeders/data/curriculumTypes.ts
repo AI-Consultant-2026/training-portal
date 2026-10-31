@@ -9,6 +9,7 @@ export interface LessonSeed {
   content: string;
   order: number;
   durationMinutes: number;
+  videoUrl?: string;
   images?: LessonImageSeed[];
 }
 

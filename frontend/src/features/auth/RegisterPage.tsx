@@ -60,6 +60,7 @@ export const COURSE_INTERESTS = [
   { slug: "gis-and-drone-mapping", label: "GIS and Drone Mapping" },
   { slug: "renewable-energy-digital-systems", label: "Renewable Energy Digital Systems" },
   { slug: "hse-fundamentals", label: "HSE Fundamentals" },
+  { slug: "ai-machine-learning-fundamentals", label: "AI & Machine Learning Fundamentals" },
 ];
 
 // Archived from the public catalog (migration 20260920010000). They stay in

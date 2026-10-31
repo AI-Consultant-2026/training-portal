@@ -48,6 +48,7 @@ export const COURSE_INTERESTS = [
   "gis-and-drone-mapping",
   "renewable-energy-digital-systems",
   "hse-fundamentals",
+  "ai-machine-learning-fundamentals",
 ] as const;
 
 // Registration status offered on the register and lead forms. Must match

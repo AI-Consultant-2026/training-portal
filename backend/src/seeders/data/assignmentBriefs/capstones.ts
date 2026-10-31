@@ -1,6 +1,7 @@
+import { AI_ML_CAPSTONE } from "./aiMlWeeks";
 import { BriefSpec } from "./briefBuilder";
 
-// Capstone briefs for the four live courses, keyed by course slug. Each capstone is one
+// Capstone briefs for the live courses, keyed by course slug. Each capstone is one
 // connected project, so every brief spells out the structure, deliverables, assessment
 // criteria and a worked example of the standard expected.
 export const CAPSTONE_SPECS: Record<string, BriefSpec> = {
@@ -148,4 +149,5 @@ export const CAPSTONE_SPECS: Record<string, BriefSpec> = {
       "One well-reasoned facility beats a shallow attempt to cover everything.",
     ],
   },
+  "ai-machine-learning-fundamentals": AI_ML_CAPSTONE,
 };

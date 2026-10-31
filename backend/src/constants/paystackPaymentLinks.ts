@@ -14,6 +14,8 @@ export const PAYSTACK_PAYMENT_LINKS: Record<string, string> = {
   "digital-marketing": "https://paystack.com/buy/digital-marketing-course-muxwcn",
   "gis-and-drone-mapping": "https://paystack.com/buy/gis-and-drone-mapping-course-dwadem",
   "hse-fundamentals": "https://paystack.com/buy/hse-fundamentals-svlqvk",
+  // Added 2026-10-31 at 300k; no Paystack page created yet.
+  "ai-machine-learning-fundamentals": "",
   "renewable-energy-digital-systems": "",
   "social-media-management-content": "",
 };

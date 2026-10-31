@@ -29,6 +29,17 @@ const MARKDOWN_COMPONENTS = {
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
     <img className="w-full rounded-lg border border-gray-200" {...props} />
   ),
+  // Code samples (the AI & ML course's Python lessons). Inline code gets a light chip;
+  // the [&_code] overrides undo that chip inside a fenced block.
+  pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
+    <pre
+      className="overflow-x-auto rounded-lg bg-gray-900 p-4 text-sm leading-relaxed text-gray-100 [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-gray-100"
+      {...props}
+    />
+  ),
+  code: (props: React.ComponentPropsWithoutRef<"code">) => (
+    <code className="rounded bg-gray-100 px-1 py-0.5 text-[0.9em] text-gray-800" {...props} />
+  ),
 };
 
 type ContentSegment = { kind: "markdown"; text: string } | { kind: "image"; image: LessonImage };

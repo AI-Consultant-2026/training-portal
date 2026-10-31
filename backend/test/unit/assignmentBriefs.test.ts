@@ -5,6 +5,7 @@ const EXPECTED_WEEKS: Record<string, number> = {
   "digital-marketing": 8,
   "gis-and-drone-mapping": 9, // Day 9 (industry applications) added 2026-09-22
   "hse-fundamentals": 8,
+  "ai-machine-learning-fundamentals": 18, // added 2026-10-31
 };
 
 const REQUIRED_SECTIONS = [
@@ -18,7 +19,7 @@ const REQUIRED_SECTIONS = [
 ];
 
 describe("Assignment and capstone briefs", () => {
-  it("cover every weekly assignment of the four live courses", () => {
+  it("cover every weekly assignment of the live courses", () => {
     for (const [slug, weeks] of Object.entries(EXPECTED_WEEKS)) {
       const have = Object.keys(ASSIGNMENT_BRIEFS[slug]).map(Number).sort((a, b) => a - b);
       expect(have).toEqual(Array.from({ length: weeks }, (_, i) => i + 1));
@@ -36,7 +37,7 @@ describe("Assignment and capstone briefs", () => {
       ),
       ...Object.entries(CAPSTONE_BRIEFS).map(([slug, b]) => ({ id: `${slug} capstone`, b })),
     ];
-    expect(all).toHaveLength(43 + 4);
+    expect(all).toHaveLength(61 + 5);
     for (const { id, b } of all) {
       for (const section of REQUIRED_SECTIONS) {
         expect({ id, has: b.description.includes(section) }).toEqual({ id, has: true });
@@ -74,7 +75,7 @@ describe("Assignment and capstone briefs", () => {
       ...Object.values(ASSIGNMENT_BRIEFS).flatMap((weeks) => Object.values(weeks)),
       ...Object.values(CAPSTONE_BRIEFS),
     ];
-    expect(all).toHaveLength(47);
+    expect(all).toHaveLength(66);
     for (const b of all) {
       const submitSection = b.description.split("## What to submit")[1].split("## How you will be assessed")[0];
       expect(submitSection).toContain("AI generated answers will not be accepted.");
