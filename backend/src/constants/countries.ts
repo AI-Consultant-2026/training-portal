@@ -219,7 +219,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 1750,
         "digital-marketing": 1300,
         "hse-fundamentals": 865,
-        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; owner to confirm.
+        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
         "ai-machine-learning-fundamentals": 2625,
       },
       deposit: 175,
@@ -321,7 +321,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 19300,
         "digital-marketing": 14475,
         "hse-fundamentals": 9650,
-        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; owner to confirm.
+        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
         "ai-machine-learning-fundamentals": 28950,
       },
       deposit: 1930,
@@ -385,7 +385,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 2470,
         "digital-marketing": 1850,
         "hse-fundamentals": 1235,
-        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; owner to confirm.
+        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
         "ai-machine-learning-fundamentals": 3705,
       },
       deposit: 247,
