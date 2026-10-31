@@ -1323,6 +1323,15 @@ export function createApp() {
   // in sitemap.xml. Scripts are external files for the same CSP reason. express.static
   // redirects /ecoba-directory to /ecoba-directory/ so the pages' relative links resolve.
   app.use("/ecoba-directory", express.static(path.join(__dirname, "marketing", "ecoba-directory")));
+  // Data Analytics & Business Intelligence course files (2026-10-31): the fictional practice
+  // datasets the lessons and assignments link to, one by one or as a single zip. Public on
+  // purpose (teaching data only, nothing personal), downloaded rather than shown inline.
+  app.get("/course-files/data-analytics/:file([a-z0-9_-]+\\.(?:csv|db|sql|zip))", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.download(path.join(__dirname, "marketing", "course-files", "data-analytics", req.params.file), req.params.file, (err) => {
+      if (err && !res.headersSent) res.status(404).send("Not found");
+    });
+  });
 
   // Only present in the production Docker image (the frontend build gets copied to
   // backend/public there); local dev serves the frontend separately via Vite, so this

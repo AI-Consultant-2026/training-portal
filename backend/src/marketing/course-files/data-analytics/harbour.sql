@@ -1,0 +1,47 @@
+-- Paleon Certificate in Data Analytics & Business Intelligence
+-- Module 6 assignment: build script for harbour.db (Harbour Bank, fictional)
+-- Run in a new database called harbour.db, then Write Changes.
+-- Expected: accounts 6 rows, transactions 20 rows, total value 36750.
+
+CREATE TABLE accounts (
+  account_id       TEXT PRIMARY KEY,
+  customer_segment TEXT NOT NULL,
+  branch           TEXT NOT NULL,
+  opened_date      TEXT NOT NULL
+);
+INSERT INTO accounts VALUES
+  ('A101','Personal','Central','2023-02-14'),
+  ('A102','Personal','Eastgate','2024-06-01'),
+  ('A103','Business','Central','2022-09-20'),
+  ('A104','Business','Westfield','2025-01-10'),
+  ('A105','Personal','Westfield','2025-08-05'),
+  ('A106','Personal','Eastgate','2026-02-20');
+CREATE TABLE transactions (
+  txn_id     TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES accounts(account_id),
+  txn_date   TEXT NOT NULL,
+  channel    TEXT NOT NULL,
+  txn_type   TEXT NOT NULL,
+  amount     INTEGER NOT NULL
+);
+INSERT INTO transactions VALUES
+  ('T001','A101','2026-03-01','Mobile','Deposit',500),
+  ('T002','A101','2026-03-03','ATM','Withdrawal',200),
+  ('T003','A101','2026-03-07','Mobile','Transfer',150),
+  ('T004','A101','2026-03-12','Online','Transfer',250),
+  ('T005','A102','2026-03-02','Mobile','Transfer',100),
+  ('T006','A102','2026-03-05','ATM','Withdrawal',120),
+  ('T007','A102','2026-03-09','Mobile','Transfer',80),
+  ('T008','A102','2026-03-14','ATM','Withdrawal',2400),
+  ('T009','A103','2026-03-01','Branch','Deposit',8000),
+  ('T010','A103','2026-03-04','Online','Transfer',3500),
+  ('T011','A103','2026-03-08','Online','Transfer',4200),
+  ('T012','A103','2026-03-15','Branch','Deposit',7500),
+  ('T013','A104','2026-03-02','Online','Transfer',1800),
+  ('T014','A104','2026-03-06','Branch','Deposit',2500),
+  ('T015','A104','2026-03-10','Online','Transfer',1500),
+  ('T016','A104','2026-03-13','Online','Transfer',2200),
+  ('T017','A105','2026-03-03','Mobile','Transfer',60),
+  ('T018','A105','2026-03-06','Mobile','Transfer',90),
+  ('T019','A105','2026-03-11','ATM','Withdrawal',100),
+  ('T020','A105','2026-03-15','Mobile','Transfer',1500);

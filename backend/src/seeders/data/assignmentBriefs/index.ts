@@ -1,6 +1,7 @@
 import { AI_ML_WEEKS } from "./aiMlWeeks";
 import { BriefSpec, BuiltBrief, buildBrief, buildCapstoneBrief } from "./briefBuilder";
 import { CAPSTONE_SPECS } from "./capstones";
+import { DATA_ANALYTICS_WEEKS } from "./dataAnalyticsWeeks";
 import { CYBER_WEEKS_1_TO_6 } from "./cyberSecurityWeeks01to06";
 import { CYBER_WEEKS_7_TO_12 } from "./cyberSecurityWeeks07to12";
 import { CYBER_WEEKS_13_TO_18 } from "./cyberSecurityWeeks13to18";
@@ -19,6 +20,7 @@ const ASSIGNMENT_SPECS: Record<string, Record<number, BriefSpec>> = {
   "gis-and-drone-mapping": GIS_WEEKS,
   "hse-fundamentals": HSE_WEEKS,
   "ai-machine-learning-fundamentals": AI_ML_WEEKS,
+  "data-analytics-business-intelligence": DATA_ANALYTICS_WEEKS,
 };
 
 export const ASSIGNMENT_BRIEFS: Record<string, Record<number, BuiltBrief>> = Object.fromEntries(

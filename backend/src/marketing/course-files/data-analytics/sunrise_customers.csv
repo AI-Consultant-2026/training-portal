@@ -1,0 +1,9 @@
+customer_id,full_name,gender,date_of_birth,city,signup_date,channel
+C001,"Amara Mensah",F,1998-04-12,Riverside,2026-01-05,App
+C002,"John Kamau",M,1995-07-12,Central,2026-01-05,Branch
+C003,"Thandi Nkosi",F,2001-11-30,Hilltop,2026-01-06,Website
+C005,"Chinedu Eze",M,,Central,2026-01-07,Branch
+C006,"Wanjiru Otieno",F,1990-06-21,Hilltop,2026-01-08,App
+C007,"Kwame Boateng",M,,Central,2026-01-08,Branch
+C008,"Fatima Bello",F,1993-09-03,Riverside,2026-01-09,Website
+C009,"Lindiwe Dube",F,1999-02-17,Riverside,2026-01-10,App

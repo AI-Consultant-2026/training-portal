@@ -1,0 +1,15 @@
+customer_id,plan,region,tenure_months,data_usage_gb,complaints,churned
+K1001,Basic,North,4,3.5,2,Yes
+K1002,STANDARD,South,18,12.0,0,No
+K1003,Premium ,East,30,40 GB,1,No
+K1004, basic,West,2,1.2,3,Y
+K1005,Standard,north,9,15.5,1,No
+K1005,Standard,north,9,15.5,1,No
+K1006,Premium,South,14,35.0,0,no
+K1007,Basic,East,6,4.0,1,No
+K1008,Standard,West,3,8.0,4,yes
+K1009,Basic,North,24,2.5,0,No
+K1010,premium,West,5,22.0,2,Yes
+K1011,Standard,East,12,,1,No
+K1012,Basic,South,1,0.8,2,Yes
+K1009,Basic,North,24,2.5,0,No

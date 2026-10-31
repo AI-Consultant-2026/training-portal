@@ -16,6 +16,8 @@ export const PAYSTACK_PAYMENT_LINKS: Record<string, string> = {
   "hse-fundamentals": "https://paystack.com/buy/hse-fundamentals-svlqvk",
   // Added 2026-10-31 at 300k; no Paystack page created yet.
   "ai-machine-learning-fundamentals": "",
+  // Added 2026-10-31 at 250k; no Paystack page created yet.
+  "data-analytics-business-intelligence": "",
   "renewable-energy-digital-systems": "",
   "social-media-management-content": "",
 };

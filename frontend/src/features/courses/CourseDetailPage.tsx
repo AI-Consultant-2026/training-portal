@@ -106,6 +106,11 @@ const INTRO_VIDEOS: Record<string, IntroVideo> = {
     title: "AI for Everyone by Andrew Ng",
     ctaText: "Enrol Now — Start Your Digital Skills Training",
   },
+  "data-analytics-business-intelligence": {
+    videoId: "yZvFH7B6gKI",
+    title: "What Is Data Analytics? An Introduction",
+    ctaText: "Enrol Now — Start Your Digital Skills Training",
+  },
 };
 
 export function CourseDetailPage() {

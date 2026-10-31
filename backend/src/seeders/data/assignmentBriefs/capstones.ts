@@ -1,4 +1,5 @@
 import { AI_ML_CAPSTONE } from "./aiMlWeeks";
+import { DATA_ANALYTICS_CAPSTONE } from "./dataAnalyticsWeeks";
 import { BriefSpec } from "./briefBuilder";
 
 // Capstone briefs for the live courses, keyed by course slug. Each capstone is one
@@ -150,4 +151,5 @@ export const CAPSTONE_SPECS: Record<string, BriefSpec> = {
     ],
   },
   "ai-machine-learning-fundamentals": AI_ML_CAPSTONE,
+  "data-analytics-business-intelligence": DATA_ANALYTICS_CAPSTONE,
 };
