@@ -72,7 +72,7 @@
         button.textContent = "Record my attendance";
         showError(err && err.message === "rate"
           ? "Too many sign-ins from this network just now. Please try again in a few minutes."
-          : "Sorry, we couldn't save that. Please check your details and try again, or message us on WhatsApp on +234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call).");
+          : "Sorry, we couldn't save that. Please check your details and try again, or message us on WhatsApp on +234 707 714 9215 (WhatsApp/Call).");
       });
   });
 })();

@@ -190,7 +190,7 @@ const SANS = "PaleonSans";
 const SANS_BOLD = "PaleonSansBold";
 const SERIF_BOLD = "PaleonSerifBold";
 
-const WHATSAPP = "+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)";
+const WHATSAPP = "+234 707 714 9215 (WhatsApp/Call)";
 
 // Ghana, Kenya and South Africa ambassadors' flyers give that country's WhatsApp line.
 function contactLine(country: string | null | undefined): string {

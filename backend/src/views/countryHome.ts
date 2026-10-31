@@ -550,7 +550,7 @@ export function footer(ctx: PageContext, home: string): string {
     <div class="footer-brand">
       <a class="logo" href="${home}">${LOGO_MARK("#F7F4EC")}<span class="logo-word">Paleon Training</span></a>
       <p class="footer-tag">Digital skills for Africa&rsquo;s growth industries. Led from London, delivered in Nigeria, South Africa, Kenya and Ghana.</p>
-      <p class="footer-tag">Paleon Training Limited<br>No.5 Beji Court, Off NNPC Junior Staff Club 10<br>Warri, 320001, Delta State, Nigeria<br><a href="tel:+2347077149215">+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)</a></p>
+      <p class="footer-tag">Paleon Training Limited<br>No.5 Beji Court, Off NNPC Junior Staff Club 10<br>Warri, 320001, Delta State, Nigeria<br><a href="tel:+2347077149215">+234 707 714 9215 (WhatsApp/Call)</a></p>
     </div>
     <nav aria-label="Countries">
       <h2 class="footer-heading">Countries</h2>

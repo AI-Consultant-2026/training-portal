@@ -21,7 +21,7 @@ interface LeadFields {
   country?: string | null;
 }
 
-const WHATSAPP = "+234 707 714 9215 / +234 707 714 9989 (WhatsApp/Call)";
+const WHATSAPP = "+234 707 714 9215 (WhatsApp/Call)";
 
 // Ghana, Kenya and South Africa leads get their country's WhatsApp line (2026-10-30).
 function whatsapp(lead: LeadFields): string {
