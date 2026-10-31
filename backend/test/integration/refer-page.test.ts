@@ -61,6 +61,6 @@ describe("Public Refer & Earn page", () => {
     const home = (await request(app).get("/ng")).text;
     expect(home).toContain('href="/refer"');
     expect(home).not.toContain("&#8358;3,000 off");
-    expect((await request(app).get("/ambassadors")).text).toContain('href="/refer/me"');
+    expect((await request(app).get("/ng/ambassadors")).text).toContain('href="/refer/me"');
   });
 });

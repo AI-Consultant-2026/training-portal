@@ -21,6 +21,7 @@ import { COUNTRIES, HOMEPAGE_COURSES, MARKET_ORDER, depositLabel, isCountryCode 
 import { renderCountryAmbassadors } from "./views/countryAmbassadors";
 import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
+import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
 export function createApp() {
@@ -205,12 +206,12 @@ export function createApp() {
       res.type("html").send(renderCountryAmbassadors(code));
     });
   }
-  // Nigeria's ambassador programme page keeps its existing address.
-  app.get("/ng/ambassadors", (req, res) => res.redirect(301, "/ambassadors"));
   const permanentRedirect = (to: string) => (req: express.Request, res: express.Response) => {
     const query = req.originalUrl.indexOf("?");
     res.redirect(301, query === -1 ? to : to + req.originalUrl.slice(query));
   };
+  // Nigeria's ambassador programme page moved to /ng/ambassadors like the other countries (2026-10-31).
+  app.get("/ambassadors", permanentRedirect("/ng/ambassadors"));
   app.get("/welcome", permanentRedirect("/ng"));
   // The one-day-old country landing pages (2026-10-29) became the country homepages.
   app.get("/ghana", permanentRedirect("/gh"));
@@ -502,7 +503,7 @@ export function createApp() {
   // recruiting ambassadors and for presenting on their welcome call (ambassadors.js adds a
   // one-section-per-screen present mode). Amounts come from constants/referral.ts, like /refer.
   let ambassadorsPageHtml: string | null = null;
-  app.get("/ambassadors", (req, res) => {
+  app.get("/ng/ambassadors", (req, res) => {
     if (!ambassadorsPageHtml) {
       const naira = (n: number) => `\u20A6${n.toLocaleString("en-NG")}`;
       ambassadorsPageHtml = fs
@@ -510,7 +511,8 @@ export function createApp() {
         .replace(/\{\{REFERRER_REWARD_X5\}\}/g, naira(REFERRER_REWARD_NGN * 5))
         .replace(/\{\{REFERRER_REWARD_X10\}\}/g, naira(REFERRER_REWARD_NGN * 10))
         .replace(/\{\{REFERRER_REWARD\}\}/g, naira(REFERRER_REWARD_NGN))
-        .replace(/\{\{REFEREE_REWARD\}\}/g, naira(REFEREE_REWARD_NGN));
+        .replace(/\{\{REFEREE_REWARD\}\}/g, naira(REFEREE_REWARD_NGN))
+        .replace("{{TITLE_FLAG}}", flagSvg("NG", "title-flag"));
     }
     res.type("html").send(ambassadorsPageHtml);
   });

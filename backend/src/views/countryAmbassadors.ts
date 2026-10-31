@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { CountryCode, COUNTRIES, HOMEPAGE_COURSES, formatMoney, isLive } from "../constants/countries";
 import { ambassadorsPath } from "./countryHome";
+import { flagSvg } from "./flags";
 
 // /gh/ambassadors, /ke/ambassadors, /za/ambassadors (2026-10-30): the full Student
 // Ambassador Programme page for each country, built from the Nigerian page
@@ -117,9 +118,9 @@ export function renderCountryAmbassadors(country: Exclude<CountryCode, "NG">): s
   // <head>
   swap("<title>Student Ambassador Programme | Paleon Training</title>", `<title>Student Ambassador Programme in ${c.name} | Paleon Training</title>`);
   swap("with coursemates and corps members, and earn", `with coursemates and ${local.peers}, and earn`);
-  swap(`<link rel="canonical" href="https://paleontraining.com/ambassadors">`, `<link rel="canonical" href="https://paleontraining.com${page}">`);
-  swap(`: "https://paleontraining.com/ambassadors"`, `: "https://paleontraining.com${page}"`, 2); // JSON-LD url + breadcrumb
-  swap(`<meta property="og:url" content="https://paleontraining.com/ambassadors">`, `<meta property="og:url" content="https://paleontraining.com${page}">`);
+  swap(`<link rel="canonical" href="https://paleontraining.com/ng/ambassadors">`, `<link rel="canonical" href="https://paleontraining.com${page}">`);
+  swap(`: "https://paleontraining.com/ng/ambassadors"`, `: "https://paleontraining.com${page}"`, 2); // JSON-LD url + breadcrumb
+  swap(`<meta property="og:url" content="https://paleontraining.com/ng/ambassadors">`, `<meta property="og:url" content="https://paleontraining.com${page}">`);
   swap("with your coursemates and NYSC set.", `with your coursemates and ${local.set}.`, 2);
   swap("https://paleontraining.com/images/articles/refer.jpg", `https://paleontraining.com${c.site.ogImage}`, 3);
   swap(`"dateModified": "2026-09-26"`, `"dateModified": "2026-10-30"`);
@@ -206,7 +207,8 @@ export function renderCountryAmbassadors(country: Exclude<CountryCode, "NG">): s
     .replace(/\{\{REFERRER_REWARD_X5\}\}/g, money(rewards.referrer * 5))
     .replace(/\{\{REFERRER_REWARD_X10\}\}/g, money(rewards.referrer * 10))
     .replace(/\{\{REFERRER_REWARD\}\}/g, money(rewards.referrer))
-    .replace(/\{\{REFEREE_REWARD\}\}/g, money(rewards.referee));
+    .replace(/\{\{REFEREE_REWARD\}\}/g, money(rewards.referee))
+    .replace("{{TITLE_FLAG}}", flagSvg(country, "title-flag"));
   // The country's WhatsApp line for the floating button (whatsapp-float.js).
   swap("<body>", `<body data-country="${country}" data-whatsapp="${wa.link}">`);
   return html.replace(`<html lang="en">`, `<html lang="${c.site.locale}">`);

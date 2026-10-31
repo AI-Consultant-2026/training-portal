@@ -1,6 +1,6 @@
 /* /ambassadors page (2026-09-26): copy buttons for the message templates, and a
    "present" mode that shows one section per screen for welcome calls on Zoom. Start it
-   with the "Present this page" button or by opening /ambassadors?present. Arrow keys,
+   with the "Present this page" button or by opening /ng/ambassadors?present. Arrow keys,
    Page Up/Down, Space and the on-screen buttons move between slides; Esc exits. External
    file because the CSP blocks inline JS. */
 (function () {

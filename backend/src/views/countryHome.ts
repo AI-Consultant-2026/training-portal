@@ -119,7 +119,7 @@ export function jobsBoardPath(country: CountryCode): string {
 }
 
 export function ambassadorsPath(country: CountryCode): string {
-  return country === "NG" ? "/ambassadors" : `${COUNTRIES[country].site.path}/ambassadors`;
+  return country === "NG" ? "/ng/ambassadors" : `${COUNTRIES[country].site.path}/ambassadors`;
 }
 
 function referHowPath(country: CountryCode): string {

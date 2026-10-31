@@ -7,7 +7,7 @@ const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
 
 describe("Student Ambassador Programme page", () => {
   it("serves /ambassadors with every amount filled in from constants/referral.ts", async () => {
-    const res = await request(app).get("/ambassadors");
+    const res = await request(app).get("/ng/ambassadors");
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch(/text\/html/);
     expect(res.text).toContain(naira(REFERRER_REWARD_NGN));
@@ -15,7 +15,7 @@ describe("Student Ambassador Programme page", () => {
     expect(res.text).toContain(naira(REFERRER_REWARD_NGN * 5));
     expect(res.text).toContain(naira(REFERRER_REWARD_NGN * 10));
     expect(res.text).not.toMatch(/\{\{[A-Z0-9_]+\}\}/);
-    expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ambassadors">');
+    expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ng/ambassadors">');
     // Describes the friend's reward correctly: airtime paid after payment, never money off,
     // and never a choice (the friend's reward is always airtime).
     expect(res.text).toContain(`${naira(REFEREE_REWARD_NGN)} in airtime after their course is fully paid`);
@@ -24,7 +24,7 @@ describe("Student Ambassador Programme page", () => {
   });
 
   it("keeps its structured data valid JSON after substitution", async () => {
-    const res = await request(app).get("/ambassadors");
+    const res = await request(app).get("/ng/ambassadors");
     const blocks = [...res.text.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) =>
       JSON.parse(m[1]),
     );
@@ -34,7 +34,7 @@ describe("Student Ambassador Programme page", () => {
   });
 
   it("loads its script externally (the CSP blocks inline JS) along with the shared widgets", async () => {
-    const html = (await request(app).get("/ambassadors")).text;
+    const html = (await request(app).get("/ng/ambassadors")).text;
     expect(html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, "")).not.toMatch(/<script>/);
     for (const src of ["/ambassadors.js", "/analytics.js", "/whatsapp-float.js", "/search.js"]) {
       expect(html).toContain(`<script src="${src}" defer></script>`);
@@ -46,7 +46,7 @@ describe("Student Ambassador Programme page", () => {
   });
 
   it("puts the sign-up call to action in the hero and straight after the rewards, not only at the bottom", async () => {
-    const html = (await request(app).get("/ambassadors")).text;
+    const html = (await request(app).get("/ng/ambassadors")).text;
     const hero = html.slice(0, html.indexOf('id="what"'));
     expect(hero).toContain('<a class="btn btn-signal" href="/register">Create your free account</a>');
     const join = html.indexOf('id="join"');
@@ -56,9 +56,9 @@ describe("Student Ambassador Programme page", () => {
   });
 
   it("is crawlable, in the sitemap, and linked from /refer and the homepage", async () => {
-    expect((await request(app).get("/robots.txt")).text).toContain("Allow: /ambassadors");
-    expect((await request(app).get("/sitemap.xml")).text).toContain("https://paleontraining.com/ambassadors<");
-    expect((await request(app).get("/refer")).text).toContain('href="/ambassadors"');
-    expect((await request(app).get("/ng")).text).toContain('href="/ambassadors"');
+    expect((await request(app).get("/robots.txt")).text).toContain("Allow: /ng/ambassadors");
+    expect((await request(app).get("/sitemap.xml")).text).toContain("https://paleontraining.com/ng/ambassadors<");
+    expect((await request(app).get("/refer")).text).toContain('href="/ng/ambassadors"');
+    expect((await request(app).get("/ng")).text).toContain('href="/ng/ambassadors"');
   });
 });

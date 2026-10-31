@@ -86,8 +86,8 @@ describe("Country homepages", () => {
     const res = await request(app).get("/ng");
     expect(res.text).not.toContain("ambassadorGuide");
     expect(res.text).not.toContain("guide-chapter");
-    expect(res.text).toContain('href="/ambassadors">Become an Ambassador</a>');
-    const amb = await request(app).get("/ambassadors");
+    expect(res.text).toContain('href="/ng/ambassadors">Become an Ambassador</a>');
+    const amb = await request(app).get("/ng/ambassadors");
     expect(amb.text).toContain('id="ambassadorGuide"');
     expect(amb.text.match(/class="guide-chapter"/g)?.length).toBe(11);
     expect(amb.text).toContain("Bring a friend. You both get rewarded.");
@@ -114,14 +114,21 @@ describe("Country homepages", () => {
       }
       expect(html).not.toMatch(/\u20A6|&#8358;|naira|NYSC|corps member|\{\{/i);
     }
-    // Nigeria's page is unchanged.
-    const ng = (await request(app).get("/ambassadors")).text;
+    // Each page puts its own flag after the title.
+    for (const path of ["ng", "gh", "ke", "za"]) {
+      const html = (await request(app).get(`/${path}/ambassadors`)).text;
+      expect(html).toContain('Student <span class="title-end">Ambassador<svg class="title-flag"');
+      expect(html).not.toContain("{{TITLE_FLAG}}");
+    }
+    // Nigeria's page keeps its content at /ng/ambassadors.
+    const ng = (await request(app).get("/ng/ambassadors")).text;
     expect(ng).toContain("\u20A65,000");
     expect(ng).toContain("NYSC corps members");
     expect(ng).toContain("/videos/home/paleon-ambassador-guide-earn-and-rewards.mp4");
-    const redirect = await request(app).get("/ng/ambassadors");
+    // The old address moves to /ng/ambassadors permanently, keeping the query string.
+    const redirect = await request(app).get("/ambassadors?present");
     expect(redirect.status).toBe(301);
-    expect(redirect.headers.location).toBe("/ambassadors");
+    expect(redirect.headers.location).toBe("/ng/ambassadors?present");
   });
 });
 

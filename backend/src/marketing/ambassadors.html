@@ -6,8 +6,8 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>Student Ambassador Programme | Paleon Training</title>
 <meta name="description" content="Become a Paleon Training Student Ambassador. Share the free Career Match and free lessons with coursemates and corps members, and earn airtime, data or course credit for every friend who joins and pays.">
-<link rel="canonical" href="https://paleontraining.com/ambassadors">
-<link rel="alternate" hreflang="en-NG" href="https://paleontraining.com/ambassadors">
+<link rel="canonical" href="https://paleontraining.com/ng/ambassadors">
+<link rel="alternate" hreflang="en-NG" href="https://paleontraining.com/ng/ambassadors">
 <link rel="alternate" hreflang="en-ZA" href="https://paleontraining.com/za/ambassadors">
 <link rel="alternate" hreflang="en-KE" href="https://paleontraining.com/ke/ambassadors">
 <link rel="alternate" hreflang="en-GH" href="https://paleontraining.com/gh/ambassadors">
@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Paleon Training">
 <meta property="og:title" content="Become a Paleon Training Student Ambassador">
 <meta property="og:description" content="Share free digital-skills tools with your coursemates and NYSC set. Earn {{REFERRER_REWARD}} for every friend who joins and pays for a course.">
-<meta property="og:url" content="https://paleontraining.com/ambassadors">
+<meta property="og:url" content="https://paleontraining.com/ng/ambassadors">
 <meta property="og:image" content="https://paleontraining.com/images/articles/refer.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -31,7 +31,7 @@
   "@type": "WebPage",
   "name": "Paleon Training Student Ambassador Programme",
   "description": "Become a Paleon Training Student Ambassador: share the free Career Match and free lessons, and earn {{REFERRER_REWARD}} for every friend who joins and pays for a course.",
-  "url": "https://paleontraining.com/ambassadors",
+  "url": "https://paleontraining.com/ng/ambassadors",
   "image": "https://paleontraining.com/images/articles/refer.jpg",
   "inLanguage": "en",
   "isPartOf": {
@@ -63,7 +63,7 @@
       "@type": "ListItem",
       "position": 3,
       "name": "Student Ambassador Programme",
-      "item": "https://paleontraining.com/ambassadors"
+      "item": "https://paleontraining.com/ng/ambassadors"
     }
   ]
 }
@@ -242,6 +242,17 @@
     font-weight: 600;
     line-height: 1.12;
     max-width: 14ch;
+  }
+  /* Country flag after the title (2026-10-31); kept on the same line as the last word. */
+  h1.title .title-end { white-space: nowrap; }
+  h1.title .title-flag {
+    display: inline-block;
+    width: 1.05em;
+    height: 0.7em;
+    margin-left: 0.3em;
+    vertical-align: baseline;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.35);
   }
 
   .subhead {
@@ -782,7 +793,7 @@
   <section class="wrap masthead slide" data-slide aria-label="Welcome">
     <a class="wordmark" href="/"><span class="dot"></span>Paleon Training</a>
     <p class="eyebrow">Student Ambassador Programme</p>
-    <h1 class="title" style="max-width: 18ch;">Become a Paleon Training Student Ambassador</h1>
+    <h1 class="title" style="max-width: 18ch;">Become a Paleon Training Student <span class="title-end">Ambassador{{TITLE_FLAG}}</span></h1>
     <p class="subhead">Help coursemates, friends and corps members find practical digital skills, and earn {{REFERRER_REWARD}} for every friend who joins and pays for a course. Your friend gets {{REFEREE_REWARD}} in airtime too.</p>
     <div class="stat-strip">
       <div class="stat"><div class="stat-value">{{REFERRER_REWARD}}</div><div class="stat-label">you earn per paid referral</div></div>

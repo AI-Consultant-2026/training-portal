@@ -60,6 +60,6 @@ describe("Ambassador walkthrough page", () => {
       fs.readFileSync(path.join(__dirname, "../../src/marketing/search-index.json"), "utf8"),
     ) as { url: string }[];
     expect(index.map((p) => p.url)).toContain("/ambassador-walkthrough");
-    expect((await request(app).get("/ambassadors")).text).toContain('href="/ambassador-walkthrough"');
+    expect((await request(app).get("/ng/ambassadors")).text).toContain('href="/ambassador-walkthrough"');
   });
 });
