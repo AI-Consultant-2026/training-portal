@@ -23,7 +23,7 @@ const PASSING_SCORE = 70;
 
 const TITLE = "Artificial Intelligence & Machine Learning Fundamentals";
 const DESCRIPTION =
-  "A practical, beginner-friendly introduction to artificial intelligence and machine learning: how AI learns from data, Python and data analysis, supervised and unsupervised learning, model evaluation, generative AI and prompt engineering, AI automation, deep learning, natural language processing and computer vision, AI across industries, responsible AI and AI security -- finishing with a capstone project you build and present yourself. No coding or maths background needed.";
+  "A practical, beginner-friendly introduction to artificial intelligence and machine learning: how AI learns from data, Python and data analysis, supervised and unsupervised learning, model evaluation, generative AI and prompt engineering, AI automation, deep learning, natural language processing and computer vision, AI across industries, responsible AI and AI security, finishing with a capstone project you build and present yourself. No coding or maths background needed.";
 const CAPSTONE_TITLE = "AI & Machine Learning Capstone Project";
 const CAPSTONE_DESCRIPTION =
   "Choose one of eight project options (AI business assistant, customer-service AI assistant, predictive analytics model, AI automation workflow, or AI for mining, agriculture, energy or education) and plan, build, evaluate, document and present a complete AI project.";

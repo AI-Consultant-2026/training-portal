@@ -66,12 +66,13 @@ export function isTbc(value: string | null | undefined): boolean {
   return typeof value === "string" && value.includes(TBC_PREFIX);
 }
 
-// The four courses on the homepage, by slug (see coursePricing.ts and the courses table).
+// The courses on the homepage, by slug (see coursePricing.ts and the courses table).
 export const HOMEPAGE_COURSES = [
   "cyber-security-fundamentals",
   "gis-and-drone-mapping",
   "digital-marketing",
   "hse-fundamentals",
+  "ai-machine-learning-fundamentals",
 ] as const;
 export type HomepageCourse = (typeof HOMEPAGE_COURSES)[number];
 
@@ -150,6 +151,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": COURSE_PRICES_NGN["gis-and-drone-mapping"],
         "digital-marketing": COURSE_PRICES_NGN["digital-marketing"],
         "hse-fundamentals": COURSE_PRICES_NGN["hse-fundamentals"],
+        "ai-machine-learning-fundamentals": COURSE_PRICES_NGN["ai-machine-learning-fundamentals"],
       },
       deposit: INSTALMENT_DEPOSIT_NGN,
       paymentMethods: "Card \u00b7 Bank transfer \u00b7 USSD",
@@ -159,6 +161,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": "Oil & Gas \u00b7 Telecoms \u00b7 Construction",
         "digital-marketing": "Banking \u00b7 Telecoms \u00b7 SMEs",
         "hse-fundamentals": "Oil & Gas \u00b7 Construction",
+        "ai-machine-learning-fundamentals": "Banking \u00b7 Telecoms \u00b7 Oil & Gas",
       },
       // Same three values (and course mapping) the Nigerian Career Match has always used.
       industryOptions: [
@@ -216,6 +219,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 1750,
         "digital-marketing": 1300,
         "hse-fundamentals": 865,
+        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; owner to confirm.
+        "ai-machine-learning-fundamentals": 2625,
       },
       deposit: 175,
       paymentMethods: "MTN MoMo \u00b7 Telecel Cash \u00b7 Card",
@@ -225,6 +230,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": "Mining \u00b7 Oil & Gas \u00b7 Cocoa & agriculture",
         "digital-marketing": "Banking \u00b7 Telecoms \u00b7 SMEs",
         "hse-fundamentals": "Mining \u00b7 Oil & Gas",
+        "ai-machine-learning-fundamentals": "Banking \u00b7 Mining \u00b7 Agriculture",
       },
       industryOptions: [
         { label: "Oil & Gas", course: "hse-fundamentals" },
@@ -315,6 +321,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 19300,
         "digital-marketing": 14475,
         "hse-fundamentals": 9650,
+        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; owner to confirm.
+        "ai-machine-learning-fundamentals": 28950,
       },
       deposit: 1930,
       paymentMethods: "M-Pesa \u00b7 Card",
@@ -324,6 +332,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": "Agriculture \u00b7 Energy \u00b7 Infrastructure",
         "digital-marketing": "Fintech \u00b7 Retail \u00b7 SMEs",
         "hse-fundamentals": "Energy \u00b7 Construction",
+        "ai-machine-learning-fundamentals": "Fintech \u00b7 Agriculture \u00b7 Energy",
       },
       industryOptions: [
         { label: "Telecoms", course: "cyber-security-fundamentals" },
@@ -376,6 +385,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 2470,
         "digital-marketing": 1850,
         "hse-fundamentals": 1235,
+        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; owner to confirm.
+        "ai-machine-learning-fundamentals": 3705,
       },
       deposit: 247,
       paymentMethods: "Card \u00b7 EFT",
@@ -385,6 +396,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": "Mining \u00b7 Infrastructure \u00b7 Environment",
         "digital-marketing": "Retail \u00b7 Fintech \u00b7 SMEs",
         "hse-fundamentals": "Mining \u00b7 Construction",
+        "ai-machine-learning-fundamentals": "Banking \u00b7 Mining \u00b7 Retail",
       },
       industryOptions: [
         { label: "Mining", course: "hse-fundamentals" },

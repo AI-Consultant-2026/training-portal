@@ -40,6 +40,8 @@ import {
 // office in these countries (the course is online), and the pages say where it is based.
 
 type LocalCountry = Exclude<CountryCode, "NG">;
+// Courses whose lessons use general, international examples rather than Nigerian ones.
+const GENERAL_EXAMPLE_COURSES: HomepageCourse[] = ["ai-machine-learning-fundamentals"];
 export const COURSE_PAGE_COUNTRIES: LocalCountry[] = ["GH", "KE", "ZA"];
 
 interface Law {
@@ -116,6 +118,26 @@ const OUTLINE: Record<HomepageCourse, [string, string][]> = {
     ["Day 6", "Incident investigation, reporting and root cause analysis"],
     ["Day 7", "Environmental management, pollution and spill response"],
     ["Day 8", "Safety culture, audits, inspections and HSE careers"],
+  ],
+  "ai-machine-learning-fundamentals": [
+    ["Day 1", "What AI is and is not, its history, and AI vs traditional software"],
+    ["Day 2", "How machine learning works: supervised, unsupervised and reinforcement learning"],
+    ["Day 3", "Data types, data quality, bias and privacy"],
+    ["Day 4", "Python basics for AI in Google Colab"],
+    ["Day 5", "Data analysis and charts with pandas and Matplotlib"],
+    ["Day 6", "Supervised learning: regression and classification with scikit-learn"],
+    ["Day 7", "Unsupervised learning: clustering, segmentation and anomaly detection"],
+    ["Day 8", "Model evaluation: precision, recall, overfitting and cross-validation"],
+    ["Day 9", "Generative AI, large language models, assistants, agents and RAG"],
+    ["Day 10", "Prompt engineering and AI-assisted research"],
+    ["Day 11", "AI automation with no-code tools and a human in the loop"],
+    ["Day 12", "Neural networks, deep learning and transfer learning"],
+    ["Day 13", "Natural language processing: sentiment, entities and chatbots"],
+    ["Day 14", "Computer vision: detection, OCR and document processing"],
+    ["Day 15", "AI across industries and how to judge an AI idea"],
+    ["Day 16", "Responsible AI: bias, privacy, deepfakes, copyright and governance"],
+    ["Day 17", "AI and cyber security: prompt injection, AI phishing and deepfake fraud"],
+    ["Day 18", "Your capstone: plan, build, evaluate and present an AI project"],
   ],
 };
 
@@ -246,6 +268,34 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by MTN MoMo, Telecel Cash or card."],
         ],
       },
+      "ai-machine-learning-fundamentals": {
+        title: "AI and Machine Learning Course Online in Ghana | Paleon",
+        description:
+          "Beginner AI and machine learning course for learners in Ghana: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. {FEE}.",
+        h1: "AI & Machine Learning Fundamentals: online course for Ghana",
+        intro:
+          "A beginner course in how artificial intelligence works and how to use it at work: data, Python, machine learning, generative AI and prompt writing, automation, and using AI responsibly and securely. It suits Ghanaian graduates and professionals who want practical AI skills without a computing degree.",
+        whoFor: [
+          "Graduates and final-year students from any discipline who want to understand and use AI at work",
+          "People on National Service who want a skill and a portfolio project to show at the end of their service year",
+          "Staff in banks, telcos, mines and businesses who want to use AI tools safely and automate routine work",
+        ],
+        usedIn: [
+          { sector: "Banking and mobile money", example: "Banks and payment companies use machine learning to spot fraud and predict which customers need help, and chat assistants to answer common questions." },
+          { sector: "Mining and energy", example: "Mines and power companies use sensor data to predict equipment failures and computer vision to check safety equipment on site." },
+          { sector: "Agriculture and business", example: "Phone apps diagnose crop disease from a photo, and businesses of every size use AI to draft, summarise and automate routine office work." },
+        ],
+        laws: [
+          { name: "Data Protection Act, 2012 (Act 843)", what: "Governs how personal data is collected and used, and set up the Data Protection Commission. Relevant whenever an AI project uses data about people." },
+        ],
+        certificateNote:
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning and its capstone project. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
+        faqs: [
+          ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
+          ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
+          ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by MTN MoMo, Telecel Cash or card."],
+        ],
+      },
     },
   },
   KE: {
@@ -370,6 +420,34 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           ["Is HSE Fundamentals the same as NEBOSH?", "No. NEBOSH is an examined international qualification. This is a shorter, practical introduction."],
           ["Does it cover Kenyan law?", "The legal lesson uses Nigerian regulation and international standards as its examples. Read Kenya's Occupational Safety and Health Act 2007 and the Work Injury Benefits Act 2007 alongside it."],
           ["I don't work in oil and gas. Is it still useful?", "Yes. Hazards, risk assessment, permits, PPE and incident investigation apply in any workplace; oil &amp; gas is the setting for the examples."],
+          ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by M-Pesa or card."],
+        ],
+      },
+      "ai-machine-learning-fundamentals": {
+        title: "AI and Machine Learning Course Online in Kenya | Paleon",
+        description:
+          "Beginner AI and machine learning course for learners in Kenya: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. {FEE}.",
+        h1: "AI & Machine Learning Fundamentals: online course for Kenya",
+        intro:
+          "A beginner course in how artificial intelligence works and how to use it at work: data, Python, machine learning, generative AI and prompt writing, automation, and using AI responsibly and securely. It suits Kenyan graduates and professionals who want practical AI skills without a computing degree.",
+        whoFor: [
+          "Graduates and students on industrial attachment who want to understand and use AI at work",
+          "Young professionals in fintech, banking, telecoms and agriculture who want to automate routine work and use AI tools safely",
+          "Anyone considering a career in data or AI who wants a practical, project-based starting point",
+        ],
+        usedIn: [
+          { sector: "Fintech and mobile money", example: "Payment and lending companies use machine learning for credit scoring and fraud detection, and AI assistants for customer support." },
+          { sector: "Agriculture", example: "Farmers and agribusinesses use AI for crop-disease detection, yield prediction and weather alerts." },
+          { sector: "Energy and business", example: "Energy companies forecast demand and detect unusual meter readings, and businesses use AI to draft, summarise and automate office work." },
+        ],
+        laws: [
+          { name: "Data Protection Act, 2019", what: "Kenya's main personal-data law, overseen by the Office of the Data Protection Commissioner. Relevant whenever an AI project uses data about people." },
+        ],
+        certificateNote:
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning and its capstone project. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
+        faqs: [
+          ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
+          ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by M-Pesa or card."],
         ],
       },
@@ -500,6 +578,34 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by card or EFT."],
         ],
       },
+      "ai-machine-learning-fundamentals": {
+        title: "AI and Machine Learning Course Online in South Africa | Paleon",
+        description:
+          "Beginner AI and machine learning course for South Africa: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. {FEE}.",
+        h1: "AI & Machine Learning Fundamentals: online course for South Africa",
+        intro:
+          "A beginner course in how artificial intelligence works and how to use it at work: data, Python, machine learning, generative AI and prompt writing, automation, and using AI responsibly and securely. It suits South African graduates and professionals who want practical AI skills without a computing degree.",
+        whoFor: [
+          "Graduates and final-year students from any discipline who want to understand and use AI at work",
+          "Young professionals in banking, retail, mining and business services who want to automate routine work and use AI tools safely",
+          "Anyone considering a career in data or AI who wants a practical, project-based starting point",
+        ],
+        usedIn: [
+          { sector: "Banking and retail", example: "Banks and retailers use machine learning for fraud detection, demand forecasting and customer segmentation, and AI assistants for customer service." },
+          { sector: "Mining", example: "Mines use sensor data to predict equipment failures and computer vision to monitor safety on site." },
+          { sector: "Business services", example: "Businesses of every size use AI to draft, summarise, analyse data and automate routine work." },
+        ],
+        laws: [
+          { name: "Protection of Personal Information Act, 2013 (POPIA)", what: "South Africa's main personal-data law, enforced by the Information Regulator. Relevant whenever an AI project uses data about people." },
+        ],
+        certificateNote:
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning and its capstone project. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
+        faqs: [
+          ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
+          ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
+          ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit."],
+        ],
+      },
     },
   },
 };
@@ -523,6 +629,10 @@ const READING: Record<HomepageCourse, [string, string][]> = {
   "hse-fundamentals": [
     ["/is-nebosh-igc-worth-it", "Is NEBOSH IGC worth it?"],
     ["/safety-officer-vs-hse-officer-nigeria", "Safety officer vs HSE officer"],
+  ],
+  "ai-machine-learning-fundamentals": [
+    ["/top-skills-employers-want-in-2026", "Top skills employers want"],
+    ["/what-is-a-soc-analyst", "What does a SOC analyst do?"],
   ],
 };
 
@@ -652,7 +762,11 @@ ${header(ctx, home)}
       <p>See what ${COPY[country].adjective} employers are advertising right now on our <a href="${jobsBoardPath(country)}">latest jobs board for ${escapeHtml(c.name)}</a>, updated daily.</p>
 
       <h2 class="section-title">${COPY[country].adjective} laws and regulators to know</h2>
-      <p>The lessons are the same in every country and use Nigerian regulation as their worked examples. They teach the principles, not ${escapeHtml(c.name)}&rsquo;s law in detail, so read these alongside the course:</p>
+      <p>${
+        GENERAL_EXAMPLE_COURSES.includes(slug)
+          ? `The lessons are the same in every country and use general, international examples rather than any one country&rsquo;s rules. They teach the principles, not ${escapeHtml(c.name)}&rsquo;s law in detail, so read these alongside the course:`
+          : `The lessons are the same in every country and use Nigerian regulation as their worked examples. They teach the principles, not ${escapeHtml(c.name)}&rsquo;s law in detail, so read these alongside the course:`
+      }</p>
       <dl class="cc-uses">${local.laws.map((l) => `<div><dt>${l.name}</dt><dd>${l.what}</dd></div>`).join("")}</dl>
 
       <h2 class="section-title">What you&rsquo;ll learn</h2>

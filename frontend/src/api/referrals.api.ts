@@ -41,7 +41,8 @@ export type PrintDesign =
   | "cyber-security-fundamentals"
   | "gis-and-drone-mapping"
   | "digital-marketing"
-  | "hse-fundamentals";
+  | "hse-fundamentals"
+  | "ai-machine-learning-fundamentals";
 
 // Same blob-download pattern as downloadCertificate: a plain <a href> can't carry the
 // bearer token. The filename is built here rather than read from Content-Disposition,

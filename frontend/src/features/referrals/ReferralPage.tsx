@@ -270,6 +270,7 @@ const PRINT_DESIGNS: { value: PrintDesign; label: string }[] = [
   { value: "gis-and-drone-mapping", label: "GIS & Drone Mapping" },
   { value: "digital-marketing", label: "Digital Marketing" },
   { value: "hse-fundamentals", label: "HSE" },
+  { value: "ai-machine-learning-fundamentals", label: "AI & Machine Learning" },
 ];
 
 const PRINT_KINDS: { value: PrintKind; label: string; hint: string }[] = [

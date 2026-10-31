@@ -194,7 +194,7 @@ export function createApp() {
       );
     });
     if (code === "NG") continue;
-    // The four course pages in the country's currency, with local context (2026-10-30).
+    // The course pages in the country's currency, with local context (2026-10-30).
     // Nigeria's are the static /<course>-course pages.
     for (const slug of HOMEPAGE_COURSES) {
       app.get(`${folder}/${slug}-course`, (req, res) => {
@@ -683,6 +683,9 @@ export function createApp() {
   });
   app.get("/hse-fundamentals-course", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "hse-fundamentals-course.html"));
+  });
+  app.get("/ai-machine-learning-fundamentals-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "ai-machine-learning-fundamentals-course.html"));
   });
   // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
   // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.

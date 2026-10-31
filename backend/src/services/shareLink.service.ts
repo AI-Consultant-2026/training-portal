@@ -28,13 +28,15 @@ const VIDEO_DIR = path.join(__dirname, "..", "marketing", "videos", "ambassador"
 // that cache link previews (Facebook, WhatsApp, LinkedIn) fetch the new picture.
 // 2 = rewards in each country's own money (2026-10-30). Image URLs also carry the
 // currency (c=GHS), so a card can't be served from a cache made in another currency.
-export const SHARE_CARD_VERSION = 2;
+// 3 = the AI & Machine Learning course added to the friend card's list (2026-10-31).
+export const SHARE_CARD_VERSION = 3;
 
 const COURSE_SLUGS = [
   "cyber-security-fundamentals",
   "gis-and-drone-mapping",
   "digital-marketing",
   "hse-fundamentals",
+  "ai-machine-learning-fundamentals",
 ] as const;
 type CourseSlug = (typeof COURSE_SLUGS)[number];
 
@@ -106,9 +108,14 @@ const COURSES: Record<CourseSlug, CourseCopy> = {
     sub: "Health, Safety and Environment training for careers in oil & gas and industry.",
     bullets: ["Hazards and risk assessment", "Permit to work and regulations", "Emergencies and incidents", "Certificate of completion"],
   },
+  "ai-machine-learning-fundamentals": {
+    headline: "AI & Machine Learning Fundamentals",
+    sub: "Learn how AI works and how to use it at work, from data and Python to generative AI.",
+    bullets: ["Python and data analysis", "Machine learning models", "Generative AI and automation", "AI capstone and certificate"],
+  },
 };
 
-const FRIEND_COURSES = ["Cyber Security", "GIS & Drone Mapping", "Digital Marketing", "HSE Fundamentals"];
+const FRIEND_COURSES = ["Cyber Security", "GIS & Drone Mapping", "Digital Marketing", "HSE Fundamentals", "AI & Machine Learning"];
 
 // Titles for the video pack's share pages; the captions themselves live in the frontend
 // (features/referrals/ambassadorVideos.ts). Keep the two lists in step.
@@ -726,7 +733,7 @@ export function renderSharePage(page: SharePage): string {
     : `${signUpButton}\n  ${
         lessonUrl
           ? `<a class="secondary" href="${escapeHtml(lessonUrl)}">Try the first lesson free</a>`
-          : `<a class="secondary" href="${ambassador.home}#courses">See the four courses</a>`
+          : `<a class="secondary" href="${ambassador.home}#courses">See the five courses</a>`
       }`;
   const heading = lessonFirst
     ? `Try ${COURSES[slug as CourseSlug].headline} free`

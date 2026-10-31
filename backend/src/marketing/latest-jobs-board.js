@@ -14,7 +14,8 @@
     "Cyber Security Fundamentals": "/cyber-security-fundamentals-course",
     "Digital Marketing": "/digital-marketing-course",
     "GIS & Drone Mapping": "/gis-and-drone-mapping-course",
-    "HSE Fundamentals": "/hse-fundamentals-course"
+    "HSE Fundamentals": "/hse-fundamentals-course",
+    "AI & Machine Learning Fundamentals": "/ai-machine-learning-fundamentals-course"
   };
   var DAY = 86400000;
   var jobs = [];

@@ -42,6 +42,12 @@
     "category": "Courses"
   },
   {
+    "title": "AI and Machine Learning Course Online (Nigeria)",
+    "description": "Beginner AI and machine learning course: Python, data analysis, machine learning, generative AI, prompts, automation and responsible AI. 18 days, 36 lessons.",
+    "url": "/ai-machine-learning-fundamentals-course",
+    "category": "Courses"
+  },
+  {
     "title": "Paleon Training Ghana: Digital Skills for Oil & Gas, Mining and Banking Careers",
     "description": "Online courses in Cyber Security, GIS & Drone Mapping, Digital Marketing and HSE for careers in Oil & Gas, Mining and Banking in Ghana. Launching soon: join the waitlist and try a free lesson.",
     "url": "/gh",
@@ -870,6 +876,12 @@
     "category": "Courses"
   },
   {
+    "title": "AI and Machine Learning Course Online in Ghana",
+    "description": "Beginner AI and machine learning course for learners in Ghana: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. GH₵2,625.",
+    "url": "/gh/ai-machine-learning-fundamentals-course",
+    "category": "Courses"
+  },
+  {
     "title": "Cyber Security Course Online in Kenya",
     "description": "Beginner cybersecurity course for learners in Kenya: threats, networks, incident response and data protection, 18 days and 36 video lessons. KSh 19,300. Free lesson.",
     "url": "/ke/cyber-security-fundamentals-course",
@@ -894,6 +906,12 @@
     "category": "Courses"
   },
   {
+    "title": "AI and Machine Learning Course Online in Kenya",
+    "description": "Beginner AI and machine learning course for learners in Kenya: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. KSh 28,950.",
+    "url": "/ke/ai-machine-learning-fundamentals-course",
+    "category": "Courses"
+  },
+  {
     "title": "Cyber Security Course Online in South Africa",
     "description": "Beginner cybersecurity course for learners in South Africa: threats, networks, incident response and POPIA-style data protection. 18 days, 36 lessons. R2,470.",
     "url": "/za/cyber-security-fundamentals-course",
@@ -915,6 +933,12 @@
     "title": "HSE Course Online in South Africa",
     "description": "Beginner HSE (OHS) course for learners in South Africa: hazards, risk assessment, permit to work, emergencies and incidents, for mining and construction. R1,235.",
     "url": "/za/hse-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "AI and Machine Learning Course Online in South Africa",
+    "description": "Beginner AI and machine learning course for South Africa: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. R3,705.",
+    "url": "/za/ai-machine-learning-fundamentals-course",
     "category": "Courses"
   }
 ]

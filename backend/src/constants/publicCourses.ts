@@ -1,6 +1,6 @@
 import { COURSE_PRICES_NGN } from "./coursePricing";
 
-// The four live public courses, as the lead-nurture emails describe them (2026-09-25).
+// The live public courses, as the lead-nurture emails describe them (2026-09-25).
 // Leads store the course *title* (the homepage Career Match and the older lead form both
 // send the title), so emails look a lead's course up here by title. Keep in sync with the
 // course pages in marketing/*-course.html and the Career Match rules in views/countryHome.ts.
@@ -60,6 +60,18 @@ export const PUBLIC_COURSES: PublicCourse[] = [
       "HSE regulations and international standards",
       "PPE, permit to work and emergency response",
       "Incident investigation, environmental management and HSE careers",
+    ],
+  },
+  {
+    slug: "ai-machine-learning-fundamentals",
+    title: "AI & Machine Learning Fundamentals",
+    days: 18,
+    lessons: 36,
+    highlights: [
+      "How AI learns from data, and Python for data analysis",
+      "Supervised and unsupervised machine learning with scikit-learn",
+      "Generative AI, prompt engineering and AI automation",
+      "Responsible AI, AI security and a capstone project you present",
     ],
   },
 ];

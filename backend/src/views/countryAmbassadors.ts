@@ -183,6 +183,7 @@ export function renderCountryAmbassadors(country: Exclude<CountryCode, "NG">): s
   swap("<td>Oil &amp; Gas, infrastructure, surveying, environment</td>", `<td>${pathway("gis-and-drone-mapping")}</td>`);
   swap("<td>Banking, Telecoms, any business with customers</td>", `<td>${pathway("digital-marketing")}</td>`);
   swap("<td>Oil &amp; Gas sites, construction, manufacturing</td>", `<td>${pathway("hse-fundamentals")}</td>`);
+  swap("<td>Banking, Telecoms, startups, any data-driven team</td>", `<td>${pathway("ai-machine-learning-fundamentals")}</td>`);
   swap("Class, department and NYSC groups", local.groups);
   swap("unsure what to do after school or NYSC.", `unsure what to do ${local.afterSchool}.`);
   swap("After a lecture, at CDS, at a career event.", "After a lecture, in a study group, at a career event.");

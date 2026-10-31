@@ -62,5 +62,6 @@ export const PRINT_DESIGNS = [
   "gis-and-drone-mapping",
   "digital-marketing",
   "hse-fundamentals",
+  "ai-machine-learning-fundamentals",
 ] as const;
 export type PrintDesign = (typeof PRINT_DESIGNS)[number];

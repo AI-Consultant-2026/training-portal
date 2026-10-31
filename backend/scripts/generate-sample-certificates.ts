@@ -7,7 +7,13 @@ import path from "path";
 import { Course, sequelize } from "../src/models";
 import { streamCertificatePdf } from "../src/services/certificate.service";
 
-const SLUGS = ["cyber-security-fundamentals", "gis-and-drone-mapping", "digital-marketing", "hse-fundamentals"];
+const SLUGS = [
+  "cyber-security-fundamentals",
+  "gis-and-drone-mapping",
+  "digital-marketing",
+  "hse-fundamentals",
+  "ai-machine-learning-fundamentals",
+];
 
 async function main() {
   const outDir = path.join(__dirname, "..", "tmp-sample-certificates");

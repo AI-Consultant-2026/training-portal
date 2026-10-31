@@ -54,6 +54,7 @@ Allow: /cyber-security-fundamentals-course
 Allow: /gis-and-drone-mapping-course
 Allow: /digital-marketing-course
 Allow: /hse-fundamentals-course
+Allow: /ai-machine-learning-fundamentals-course
 Allow: /za/ambassadors
 Allow: /ke/ambassadors
 Allow: /ke/latest-jobs-board

@@ -57,6 +57,9 @@ SKIP = re.compile(r"security (guard|officer|personnel|supervisor)|driver|account
 RULES = [
     ("GIS & Drone Mapping", re.compile(r"\bgis\b|geophysic|geolog|geomatic|geospatial|survey|mapping|drone|"
                                        r"cartograph|remote sensing", re.I), None),
+    ("AI & Machine Learning Fundamentals", re.compile(r"\bai\b|artificial intelligence|machine learning|\bml\b|"
+                                                      r"data (analyst|scien|engineer)|analytics|business intelligence|"
+                                                      r"\bnlp\b|computer vision|prompt engineer", re.I), None),
     ("Cyber Security Fundamentals", re.compile(r"cyber|information security|security (analyst|engineer|operations)|"
                                                r"\bsoc\b|fraud|\baml\b|anti-money|network|\bit\b|\bict\b|infrastructure|"
                                                r"systems? (admin|engineer|analyst|support)|software|developer|devops|cloud|"

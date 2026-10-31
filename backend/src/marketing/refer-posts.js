@@ -27,7 +27,7 @@
   var COUNTRY_TAG = { NG: "#Nigeria", GH: "#Ghana", KE: "#Kenya", ZA: "#SouthAfrica" };
   // Must match SHARE_CARD_VERSION in shareLink.service.ts; the currency keeps a cached
   // picture drawn in another currency from being reused.
-  var CARD_VERSION = 2;
+  var CARD_VERSION = 3;
   var origin = window.location.origin;
   var STORE_KEY = "paleon.referCode";
 
@@ -77,6 +77,17 @@
         "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your course is fully paid.\n\n" +
         "#HSE #Safety #OilAndGas #Nigeria #PaleonTraining",
       short: "⛑️ Someone has to spot the hazard first. Try Lesson 1 of HSE Fundamentals FREE, no card needed. Join with my code {CODE} for {REWARD} airtime after your course is fully paid. #HSE {LINK}",
+    },
+    {
+      slug: "ai-machine-learning-fundamentals",
+      title: "AI & Machine Learning Fundamentals",
+      caption:
+        "🤖 AI is already changing how banks, telecoms and businesses work. The people who understand it will be the ones they hire.\n\n" +
+        "Watch Lesson 1 of AI & Machine Learning Fundamentals FREE on your phone. No coding background needed. No payment, no card.\n\n" +
+        "👉 {LINK}\n\n" +
+        "Like it? Sign up with my code {CODE} and get {REWARD} airtime once your course is fully paid.\n\n" +
+        "#AI #MachineLearning #NYSC #Nigeria #PaleonTraining",
+      short: "🤖 AI is changing every job. Learn how it works: try Lesson 1 of AI & Machine Learning Fundamentals FREE, no coding needed. Join with my code {CODE} for {REWARD} airtime after your course is fully paid. #AI {LINK}",
     },
   ];
 

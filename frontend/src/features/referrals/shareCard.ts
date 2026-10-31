@@ -14,7 +14,8 @@ export type ShareCardDesign =
   | "cyber-security-fundamentals"
   | "gis-and-drone-mapping"
   | "digital-marketing"
-  | "hse-fundamentals";
+  | "hse-fundamentals"
+  | "ai-machine-learning-fundamentals";
 
 // portrait (4:5) is the tallest picture an Instagram feed post shows without cropping.
 export type ShareCardFormat = "square" | "status" | "portrait";
@@ -27,7 +28,7 @@ export const SHARE_CARD_SIZE: Record<ShareCardFormat, { width: number; height: n
 
 // Must match SHARE_CARD_VERSION in shareLink.service.ts, so a changed card isn't served
 // from a stale cache.
-const SHARE_CARD_VERSION = 2;
+const SHARE_CARD_VERSION = 3;
 
 // The address friends will open. In production the API is same-origin (SITE_ORIGIN is
 // empty), so it's this page's origin; in local dev it's the backend on :4000.

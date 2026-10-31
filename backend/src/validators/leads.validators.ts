@@ -49,6 +49,7 @@ export const LEAD_INTERESTS = [
   "Maps, drones and location data",
   "Marketing, content and online growth",
   "Health, safety and site operations",
+  "AI, data and automation",
   "Not sure yet",
 ] as const;
 

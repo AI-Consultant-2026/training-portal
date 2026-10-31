@@ -79,6 +79,17 @@ export const COURSE_INFO: Record<HomepageCourse, CourseInfo> = {
     why: "Health, Safety and Environment is central to energy, mining, construction and industrial work. You\u2019ll learn to identify hazards, assess risk, control workplace exposure and respond effectively when things go wrong.",
     icon: '<path d="M7 27 A16 16 0 0 1 39 27" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="4" y="27" width="38" height="6" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M23 27 V12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="14" cy="21" r="1.6" fill="currentColor"/><circle cx="32" cy="21" r="1.6" fill="currentColor"/>',
   },
+  "ai-machine-learning-fundamentals": {
+    tag: "AI & Data",
+    title: "AI & Machine Learning Fundamentals",
+    page: "/ai-machine-learning-fundamentals-course",
+    desc: "Use data, Python, machine learning, generative AI and automation to solve real problems, responsibly and securely.",
+    days: 18,
+    lessons: 36,
+    law: null,
+    why: "AI is changing work in every industry, from banking and telecoms to mining, energy and agriculture. You\u2019ll learn how AI learns from data, build models in Python, write prompts that work, automate routine tasks and use AI responsibly.",
+    icon: '<circle cx="9" cy="14" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="32" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="9" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="23" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="37" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="37" cy="23" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 15 L20 10 M12 15 L20 22 M12 31 L20 24 M12 31 L20 36 M26 10 L34 21 M26 23 H33.5 M26 36 L34 25" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  },
 };
 
 // The Career Match "kind of work" options (LEAD_INTERESTS) and the course each points to.
@@ -87,6 +98,7 @@ const INTEREST_COURSE: Record<string, HomepageCourse> = {
   "Maps, drones and location data": "gis-and-drone-mapping",
   "Marketing, content and online growth": "digital-marketing",
   "Health, safety and site operations": "hse-fundamentals",
+  "AI, data and automation": "ai-machine-learning-fundamentals",
 };
 
 const TOTAL_LESSONS = HOMEPAGE_COURSES.reduce((sum, slug) => sum + COURSE_INFO[slug].lessons, 0);
@@ -282,11 +294,11 @@ function hero(ctx: PageContext, home: string): string {
   const c = COUNTRIES[ctx.country];
   return `<section class="hero" id="top">
     <div class="wrap hero-inner">
-      <span class="eyebrow">Four courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
+      <span class="eyebrow">Five courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
       <h1 class="hero-title">Digital skills built for careers in <em>${text(c.site.headlineIndustries)}</em></h1>
       <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a real capstone project to show employers. <strong>Led from London, delivered in ${escapeHtml(c.name)}.</strong></p>
       <div class="hero-ctas">
-        <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 4 courses</a>
+        <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 5 courses</a>
         <a class="btn btn-outline-light btn-lg" href="${home}#courses">Try a free lesson</a>
         <a class="hero-link" href="${home}#career-match">Not sure? Get matched in 2 minutes</a>
       </div>
@@ -347,7 +359,7 @@ function courseCards(ctx: PageContext, home: string): string {
       <div class="section-head">
         <div>
           <span class="section-eyebrow">The courses &middot; ${escapeHtml(c.name)}</span>
-          <h2 class="section-title" id="coursesTitle">Four fields. Real depth in each.</h2>
+          <h2 class="section-title" id="coursesTitle">Five fields. Real depth in each.</h2>
         </div>
         <p class="section-desc">Every course has a full curriculum, an illustrated lesson and matching video for each topic, and a capstone project that mirrors the work you&rsquo;d be hired to do.</p>
       </div>
@@ -457,7 +469,7 @@ function steps(ctx: PageContext, home: string): string {
       <span class="section-eyebrow">How it works</span>
       <h2 class="section-title" id="howTitle">Three steps to start learning</h2>
       <ol class="start-steps">
-        <li class="start-step"><span class="start-num" aria-hidden="true">1</span><h3>Choose a course</h3><p>Four practical courses. <a href="${home}#courses">Compare them</a>, or <a href="${home}#career-match">get your free Career Match</a>.</p></li>
+        <li class="start-step"><span class="start-num" aria-hidden="true">1</span><h3>Choose a course</h3><p>Five practical courses. <a href="${home}#courses">Compare them</a>, or <a href="${home}#career-match">get your free Career Match</a>.</p></li>
         <li class="start-step"><span class="start-num" aria-hidden="true">2</span><h3>Try a free lesson</h3><p>Read and watch the first lesson before you pay. No account needed.</p></li>
         <li class="start-step"><span class="start-num" aria-hidden="true">3</span><h3>Enrol for ${text(depositLabel(ctx.country))}</h3><p>Pay with ${text(c.site.paymentMethods)}. Self-paced, lifetime access.${live ? ` <a href="/register">Create your free account</a>.` : ` Opening soon in ${escapeHtml(c.name)}: <a href="${home}#waitlist">join the waitlist</a>.`}</p></li>
       </ol>
@@ -694,7 +706,7 @@ function homeJsonLd(ctx: PageContext, url: string): object {
     "@type": "EducationalOrganization",
     name: "Paleon Training",
     url,
-    description: `Digital skills training for graduates in ${ctx.hub ? "Nigeria, South Africa, Kenya and Ghana" : c.name}: Cyber Security, GIS and Drone Mapping, Digital Marketing and HSE Fundamentals.`,
+    description: `Digital skills training for graduates in ${ctx.hub ? "Nigeria, South Africa, Kenya and Ghana" : c.name}: Cyber Security, GIS and Drone Mapping, Digital Marketing, HSE Fundamentals and AI & Machine Learning.`,
     areaServed: (ctx.hub ? MARKET_ORDER : [ctx.country]).map((code) => ({ "@type": "Country", name: COUNTRIES[code].name })),
     sameAs: [
       "https://www.facebook.com/profile.php?id=61593708334223",
@@ -724,7 +736,9 @@ export function renderCountryHome(ctx: PageContext): string {
   const title = ctx.hub
     ? "Online Digital Skills Courses for Africa | Paleon Training"
     : `Online Digital Skills Courses in ${c.name} | Paleon Training`;
-  const description = `Practical digital skills for ${plain(c.site.headlineIndustries)} careers in ${ctx.hub ? "Africa" : c.name}. Cyber Security, GIS & Drones, Digital Marketing, HSE. First lesson free.`;
+  // Plain text: page() escapes it once for the meta tag.
+  const industries = c.site.headlineIndustries.replace(/\[TBC: [^\]]*\]/g, "").trim();
+  const description = `Practical digital skills for ${industries} careers in ${ctx.hub ? "Africa" : c.name}. Cyber Security, GIS & Drones, Digital Marketing, HSE, AI. First lesson free.`;
   return `${head(ctx, {
     title,
     description,

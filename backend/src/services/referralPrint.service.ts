@@ -41,6 +41,7 @@ const DESIGNS: Record<PrintDesign, DesignCopy> = {
       "GIS and Drone Mapping",
       "Digital Marketing",
       "HSE Fundamentals",
+      "AI & Machine Learning Fundamentals",
     ],
     previewPath: "/ng#courses",
   },
@@ -95,6 +96,19 @@ const DESIGNS: Record<PrintDesign, DesignCopy> = {
       "Certificate of completion",
     ],
     previewPath: "/preview/hse-fundamentals",
+  },
+  "ai-machine-learning-fundamentals": {
+    eyebrow: "BEGINNER COURSE",
+    headline: "AI & Machine Learning Fundamentals",
+    cardHeadline: "AI & Machine Learning",
+    sub: "Learn how AI works and how to use it at work, from data and Python to generative AI. No coding background needed.",
+    bullets: [
+      "18 days, 36 video lessons",
+      "Python, data analysis and machine learning",
+      "Generative AI, prompt engineering and automation",
+      "AI capstone project and certificate",
+    ],
+    previewPath: "/preview/ai-machine-learning-fundamentals",
   },
 };
 
@@ -170,6 +184,8 @@ function designCopy(design: PrintDesign, country: string | null | undefined): De
         sub: `Health, Safety and Environment training for careers in ${listOf(pathways[design]).toLowerCase()}.`,
         bullets: copy.bullets.map((b) => (b.startsWith("Nigerian regulations") ? "Safety law and permit to work" : b)),
       };
+    case "ai-machine-learning-fundamentals":
+      return copy;
   }
 }
 

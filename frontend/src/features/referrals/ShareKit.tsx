@@ -289,6 +289,7 @@ const CARD_DESIGNS: { value: ShareCardDesign; label: string }[] = [
   { value: "gis-and-drone-mapping", label: "GIS & Drone Mapping" },
   { value: "digital-marketing", label: "Digital Marketing" },
   { value: "hse-fundamentals", label: "HSE" },
+  { value: "ai-machine-learning-fundamentals", label: "AI & Machine Learning" },
 ];
 
 const CARD_FORMATS: { value: ShareCardFormat; label: string }[] = [
