@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-31",
+ "updated": "2026-11-01",
  "source": "MyJobMag (myjobmag.com)",
  "jobs": [
   {
@@ -37,6 +37,18 @@
    "requirements": "Location: Obafemi Owode, Ogun State, Nigeria Resumption: Immediate Job Summary Aldelano Corporation is seeking a highly skilled and hands-on engineer capable of independently designing…",
    "link": "https://www.myjobmag.com/job/senior-refrigeration-electrical-solar-systems-engineer-aldelano-organic-foods-ltd",
    "course": "Cyber Security Fundamentals"
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "General Manager / Head of Marketing",
+   "company": "Atuswest Microfinance Bank",
+   "location": "Abuja",
+   "state": "Abuja",
+   "posted": "2026-10-31",
+   "deadline": "2026-11-30",
+   "requirements": "Requirement Female candidates only Must reside in Abuja Minimum of 3-6 years relevant experience in similar role Bachelor's Degree in relevant field (MBA is an added advantage)…",
+   "link": "https://www.myjobmag.com/job/general-manager-head-of-marketing-atuswest-microfinance-bank",
+   "course": "Digital Marketing"
   },
   {
    "sector": "Banking & Finance",
@@ -492,7 +504,7 @@
    "deadline": "2026-11-29",
    "requirements": "About the Role We are seeking a data-driven, impact-oriented Senior Data Scientist to power Moniepoint’s consumer lending decisions at scale. You will build the models, experiments…",
    "link": "https://www.myjobmag.com/job/senior-data-scientist-credit-moniepoint-3",
-   "course": "Cyber Security Fundamentals"
+   "course": "AI & Machine Learning Fundamentals"
   },
   {
    "sector": "Banking & Finance",
@@ -1935,18 +1947,6 @@
    "course": null
   },
   {
-   "sector": "Banking & Finance",
-   "role": "Detection and Response Engineer",
-   "company": "Moniepoint Inc.",
-   "location": "Nigeria (various)",
-   "state": "Various",
-   "posted": "2026-10-28",
-   "deadline": "2026-11-27",
-   "requirements": "Role Overview Moniepoint is looking for an experienced Detection and Response Engineer to join our Incident Response team. The role suits someone who has moved beyond first-line triage and…",
-   "link": "https://www.myjobmag.com/job/detection-and-response-engineer-moniepoint",
-   "course": null
-  },
-  {
    "sector": "ICT & Telecoms",
    "role": "Android Engineer",
    "company": "Cavista",
@@ -2202,10 +2202,10 @@
    "sector": "Oil, Gas & Energy",
    "role": "Finance & Administration Associate",
    "company": "Impact Carbon",
-   "location": "Abuja",
-   "state": "Abuja",
+   "location": "Nigeria (various)",
+   "state": "Various",
    "posted": "2026-10-24",
-   "deadline": "2026-10-31",
+   "deadline": null,
    "requirements": "Job Summary: We are seeking a detail-oriented and proactive Finance and Administration Associate to join our team. The ideal candidate will have at least three years of experience in financial…",
    "link": "https://www.myjobmag.com/job/finance-administration-associate-impact-carbon",
    "course": null
@@ -2586,10 +2586,10 @@
    "sector": "Oil, Gas & Energy",
    "role": "HSE Officer (Solar Projects)",
    "company": "ACO Nigeria",
-   "location": "Lagos",
-   "state": "Lagos",
+   "location": "Nigeria (various)",
+   "state": "Various",
    "posted": "2026-10-13",
-   "deadline": "2026-10-31",
+   "deadline": null,
    "requirements": "Location: Ijanikin and Ijegun, Lagos Employment Type: 3-Month Contract Salary Budget: ₦250,000 Resumption: Immediate ACO Nigeria is seeking a qualified and safety-conscious HSE Officer to…",
    "link": "https://www.myjobmag.com/job/hse-officer-solar-projects-aco-nigeria-1",
    "course": "HSE Fundamentals"
