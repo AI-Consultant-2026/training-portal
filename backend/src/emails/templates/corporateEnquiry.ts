@@ -3,7 +3,7 @@ import { EmailMessage } from "../../utils/email";
 import { wrapHtml } from "../htmlWrapper";
 import { COUNTRIES, CountryCode } from "../../constants/countries";
 
-// Sent to corporate@ for every enquiry from the AI Workflow Productivity corporate pages
+// Sent to corporate@ for every enquiry from the AI Workflow Productivity and CyberSecure Workforce corporate pages
 // (2026-11-02). Reply-To is the enquirer, so answering the email answers them.
 export function buildCorporateEnquiryEmail(lead: {
   id: string;
@@ -15,9 +15,12 @@ export function buildCorporateEnquiryEmail(lead: {
 }): EmailMessage {
   const d = lead.details ?? {};
   const countryName = COUNTRIES[lead.country as CountryCode]?.name ?? lead.country;
+  // Older AI Workflow enquiries have no programme stored.
+  const topic = /cybersecure/i.test(d.programme ?? "") ? "cybersecurity training" : "AI training";
   const wants = d.intent === "proposal" ? "a corporate training proposal" : "a consultation";
   const lines = [
-    `New corporate AI training enquiry (${countryName}). They asked for ${wants}.`,
+    `New corporate ${topic} enquiry (${countryName}). They asked for ${wants}.`,
+    `Programme: ${d.programme ?? "AI Workflow Productivity"}`,
     `Name: ${lead.name}`,
     `Job title: ${d.jobTitle ?? ""}`,
     `Organisation: ${d.organisation ?? ""}`,
@@ -36,7 +39,7 @@ export function buildCorporateEnquiryEmail(lead: {
   return {
     to: config.corporateEnquiriesEmail,
     replyTo: lead.email,
-    subject: `Corporate AI training enquiry: ${d.organisation ?? lead.name} (${countryName})`,
+    subject: `Corporate ${topic} enquiry: ${d.organisation ?? lead.name} (${countryName})`,
     text: lines.join("\n"),
     html: wrapHtml(lines),
   };

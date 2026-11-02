@@ -1,11 +1,17 @@
 import * as emails from "../emails";
 import { Lead } from "../models";
 import { logger } from "../utils/logger";
-import { CORPORATE_CONSENT_TEXT, CorporateLeadInput } from "../validators/corporateLeads.validators";
+import { CORPORATE_CONSENT_TEXT, CorporateLeadInput, CorporateProgramme } from "../validators/corporateLeads.validators";
 
-// The programme name every corporate enquiry is filed under in the admin Leads table.
-export const CORPORATE_LEAD_COURSE = "AI Workflow Productivity (Corporate)";
-export const CORPORATE_LEAD_SOURCE = "corporate-ai-workflow";
+// The programme name and source each corporate enquiry is filed under in the admin Leads
+// table. CyberSecure Workforce added 2026-11-02. Both sources are corporate buyers, not
+// learners: keep them out of learner emails.
+export const CORPORATE_LEAD_PROGRAMMES: Record<CorporateProgramme, { course: string; source: string; label: string }> = {
+  "ai-workflow": { course: "AI Workflow Productivity (Corporate)", source: "corporate-ai-workflow", label: "AI training" },
+  "cybersecure-workforce": { course: "CyberSecure Workforce (Corporate)", source: "cybersecure-workforce", label: "cybersecurity training" },
+};
+export const CORPORATE_LEAD_COURSE = CORPORATE_LEAD_PROGRAMMES["ai-workflow"].course;
+export const CORPORATE_LEAD_SOURCE = CORPORATE_LEAD_PROGRAMMES["ai-workflow"].source;
 
 // A corporate enquiry (2026-11-02) is saved as a lead so it shows in the admin Leads
 // table, but it is not a learner: the course-lead welcome and follow-up emails are
@@ -13,11 +19,13 @@ export const CORPORATE_LEAD_SOURCE = "corporate-ai-workflow";
 // corporate@, which gets the full enquiry by email.
 export async function createCorporateLead(input: CorporateLeadInput): Promise<Lead> {
   const now = new Date();
+  const programme = CORPORATE_LEAD_PROGRAMMES[input.programme ?? "ai-workflow"];
   const details: Record<string, string> = {
     jobTitle: input.jobTitle,
     organisation: input.organisation,
     employees: input.employees,
     intent: input.intent,
+    programme: programme.course.replace(" (Corporate)", ""),
     consentAt: now.toISOString(),
     consentText: CORPORATE_CONSENT_TEXT,
   };
@@ -31,8 +39,8 @@ export async function createCorporateLead(input: CorporateLeadInput): Promise<Le
     name: input.name,
     email: input.email,
     phone: input.phone,
-    course: CORPORATE_LEAD_COURSE,
-    source: CORPORATE_LEAD_SOURCE,
+    course: programme.course,
+    source: programme.source,
     sector: input.organisation,
     interest: input.requirement ?? null,
     country: input.country,

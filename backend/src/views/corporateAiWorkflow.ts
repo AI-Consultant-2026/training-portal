@@ -4,6 +4,7 @@ import {
   CORPORATE_DEPARTMENTS,
   CORPORATE_EMPLOYEE_BANDS,
   CORPORATE_REQUIREMENTS,
+  CorporateProgramme,
 } from "../validators/corporateLeads.validators";
 import { flagSvg } from "./flags";
 import { CORPORATE_AI_CONTENT, CorporateBlock, CorporatePageContent } from "./corporateAiWorkflowContent";
@@ -35,13 +36,21 @@ export function corporateAiPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${CORPORATE_AI_SLUG}`;
 }
 
+// The CyberSecure Workforce pages (2026-11-02, views/corporateCyberSecure.ts). Defined here
+// so this file can link to them without a circular import.
+export const CYBERSECURE_SLUG = "corporate-training/cybersecure-workforce";
+
+export function cyberSecurePath(country: CountryCode): string {
+  return `${COUNTRIES[country].site.path}/${CYBERSECURE_SLUG}`;
+}
+
 const CONSULTATION = "Book a Corporate AI Training Consultation";
 const PROPOSAL = "Request a Corporate Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
 const PHONE_PREFIX: Record<CountryCode, string> = { NG: "+234", ZA: "+27", GH: "+233", KE: "+254" };
 
 // Escape, then turn the copy's **bold** marks into <strong>.
-function rich(value: string): string {
+export function rich(value: string): string {
   return escapeHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 }
 
@@ -60,7 +69,7 @@ function field(c: CorporatePageContent, section: string, label: string): string 
   return "";
 }
 
-function ctaButton(label: string, dark: boolean): string {
+export function ctaButton(label: string, dark: boolean): string {
   const intent = /proposal/i.test(label) ? "proposal" : "consultation";
   const cls = intent === "proposal" ? (dark ? "btn btn-outline-light btn-lg" : "btn btn-outline-ink btn-lg") : "btn btn-signal btn-lg";
   return `<a class="${cls}" href="#enquiry" data-intent="${intent}">${escapeHtml(label)}</a>`;
@@ -89,7 +98,7 @@ function blocks(list: CorporateBlock[], dark: boolean, listClass = "ca-list"): s
     .join("\n");
 }
 
-function heading(h: string): { eyebrow: string; title: string } {
+export function heading(h: string): { eyebrow: string; title: string } {
   const [first, rest] = h.split(" — ");
   return rest ? { eyebrow: first, title: rest.charAt(0).toUpperCase() + rest.slice(1) } : { eyebrow: "", title: first };
 }
@@ -101,13 +110,13 @@ function image(cc: string, slot: string, alt: string, extra = ""): string {
 function section(
   c: CorporatePageContent,
   key: string,
-  opts: { id: string; dark?: boolean; titleOverride?: string; eyebrowOverride?: string; aside?: string; listClass?: string },
+  opts: { id: string; dark?: boolean; titleOverride?: string; eyebrowOverride?: string; aside?: string; listClass?: string; after?: string },
 ): string {
   const s = c.sections[key];
   const h = heading(s.h);
   const eyebrow = opts.eyebrowOverride ?? h.eyebrow;
   const title = opts.titleOverride ?? h.title;
-  const body = blocks(s.blocks, Boolean(opts.dark), opts.listClass);
+  const body = blocks(s.blocks, Boolean(opts.dark), opts.listClass) + (opts.after ?? "");
   return `<section class="section ${opts.dark ? "section-dark" : "section-paper"} ca-section" id="${opts.id}" aria-labelledby="${opts.id}-title">
     <div class="wrap${opts.aside ? " ca-split" : ""}">
       <div class="ca-body">
@@ -172,7 +181,7 @@ function faq(c: CorporatePageContent): string {
   </section>`;
 }
 
-function options(values: readonly string[], placeholder?: string): string {
+export function options(values: readonly string[], placeholder?: string): string {
   return `${placeholder ? `<option value="">${escapeHtml(placeholder)}</option>` : ""}${values
     .map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`)
     .join("")}`;
@@ -184,17 +193,38 @@ function finalCopy(c: CorporatePageContent): EnquiryCopy {
   return { title: (title ?? "").replace(/\*\*/g, ""), lede: lede ?? "", note: note ?? "", contact: contact ?? "" };
 }
 
-interface EnquiryCopy {
+export interface EnquiryCopy {
   title: string;
   lede: string;
   note: string;
   contact: string;
 }
 
+// What changes in the enquiry form between corporate programmes (2026-11-02): the
+// programme sent with the lead, the two intent labels, the requirement options and the
+// submit button. corporate-ai.js reads the labels from the form's data attributes.
+export interface EnquiryForm {
+  programme: CorporateProgramme;
+  consultation: string;
+  proposal: string;
+  submit: string;
+  requirements: readonly string[];
+  messagePlaceholder: string;
+}
+
+const AI_FORM: EnquiryForm = {
+  programme: "ai-workflow",
+  consultation: CONSULTATION,
+  proposal: PROPOSAL,
+  submit: "Request Corporate Training Proposal",
+  requirements: CORPORATE_REQUIREMENTS,
+  messagePlaceholder: "The teams, processes or tasks you want to improve",
+};
+
 // The enquiry form. `code` presets the country (a country page); null is the hub, where
 // the visitor picks their country and sees the delivery question with a note that
 // in-house and hybrid are Nigeria only.
-function enquiry(code: CountryCode | null, copy: EnquiryCopy): string {
+export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: EnquiryForm = AI_FORM): string {
   const { title, lede, note, contact } = copy;
   const countryOptions =
     (code ? "" : '<option value="">Choose your country</option>') +
@@ -218,10 +248,10 @@ function enquiry(code: CountryCode | null, copy: EnquiryCopy): string {
         <p class="ca-p">${rich(note)}</p>
         <p class="ca-contact">${contactLine(contact)}</p>
       </div>
-      <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}">
+      <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}" data-programme="${form.programme}" data-consultation-label="${escapeHtml(form.consultation)}" data-proposal-label="${escapeHtml(form.submit)}">
         <p class="ca-intent" role="group" aria-label="What would you like?">
-          <label><input type="radio" name="intent" value="consultation" checked> ${CONSULTATION}</label>
-          <label><input type="radio" name="intent" value="proposal"> ${PROPOSAL}</label>
+          <label><input type="radio" name="intent" value="consultation" checked> ${escapeHtml(form.consultation)}</label>
+          <label><input type="radio" name="intent" value="proposal"> ${escapeHtml(form.proposal)}</label>
         </p>
         <div class="ca-grid">
           <div class="form-row"><label class="form-label" for="ca-name">Name</label><input class="form-input" id="ca-name" name="name" autocomplete="name" required maxlength="150"></div>
@@ -232,15 +262,15 @@ function enquiry(code: CountryCode | null, copy: EnquiryCopy): string {
           <div class="form-row"><label class="form-label" for="ca-phone">Phone / WhatsApp</label><input class="form-input" id="ca-phone" name="phone" type="tel" autocomplete="tel" required placeholder="${phonePlaceholder}" maxlength="20"></div>
           <div class="form-row"><label class="form-label" for="ca-employees">Number of employees</label><select class="form-select" id="ca-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Choose one")}</select></div>
           <div class="form-row"><label class="form-label" for="ca-department">Department / team <span class="optional">(optional)</span></label><select class="form-select" id="ca-department" name="department">${options(CORPORATE_DEPARTMENTS, "Choose one")}</select></div>
-          <div class="form-row"><label class="form-label" for="ca-requirement">Training requirement <span class="optional">(optional)</span></label><select class="form-select" id="ca-requirement" name="requirement">${options(CORPORATE_REQUIREMENTS, "Choose one")}</select></div>
+          <div class="form-row"><label class="form-label" for="ca-requirement">Training requirement <span class="optional">(optional)</span></label><select class="form-select" id="ca-requirement" name="requirement">${options(form.requirements, "Choose one")}</select></div>
           ${delivery}
         </div>
-        <div class="form-row"><label class="form-label" for="ca-message">Message <span class="optional">(optional)</span></label><textarea class="form-input" id="ca-message" name="message" rows="4" maxlength="3000" placeholder="The teams, processes or tasks you want to improve"></textarea></div>
+        <div class="form-row"><label class="form-label" for="ca-message">Message <span class="optional">(optional)</span></label><textarea class="form-input" id="ca-message" name="message" rows="4" maxlength="3000" placeholder="${escapeHtml(form.messagePlaceholder)}"></textarea></div>
         <div class="ca-hp" aria-hidden="true"><label for="ca-website">Website</label><input id="ca-website" name="website" tabindex="-1" autocomplete="off"></div>
         <label class="consent-check"><input type="checkbox" name="consent" required> <span>I agree that Paleon Training may use these details to respond to my enquiry, as described in the <a href="/privacy">Privacy Policy</a>.</span></label>
         <label class="consent-check"><input type="checkbox" name="updates"> <span>Send me occasional updates about Paleon corporate training. I can unsubscribe at any time. <span class="optional">(optional)</span></span></label>
         <p class="form-error" id="caError" role="alert" hidden></p>
-        <button type="submit" class="btn btn-signal btn-lg btn-block" id="caSubmit">Request Corporate Training Proposal</button>
+        <button type="submit" class="btn btn-signal btn-lg btn-block" id="caSubmit">${escapeHtml(form.submit)}</button>
         <p class="form-note">We reply within one working day. Your details are used only to respond to this enquiry. <a href="/privacy">Privacy Policy</a>.</p>
       </form>
       <div class="ca-thanks" id="caThanks" hidden tabindex="-1">
@@ -253,7 +283,7 @@ function enquiry(code: CountryCode | null, copy: EnquiryCopy): string {
 }
 
 // "Email: x · Call: y · WhatsApp: z" with each part linked.
-function contactLine(line: string): string {
+export function contactLine(line: string): string {
   return line
     .split(" · ")
     .map((part) => {
@@ -279,6 +309,7 @@ function related(code: CountryCode): string {
     `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
     code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
     code === "NG" ? `<li><a href="/executive-training">Executive and corporate training</a></li>` : "",
+    `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness for staff</a></li>`,
     `<li><a href="/consultancy">Web and AI consultancy</a></li>`,
     ...MARKET_ORDER.filter((k) => k !== code).map(
       (k) => `<li><a href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">Corporate AI training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,
@@ -383,7 +414,10 @@ ${header(ctx, home)}
   ${section(c, "Who should attend?", { id: "attend", dark: true, eyebrowOverride: "Who it is for" })}
   ${section(c, "Corporate delivery options", { id: "delivery", eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
   ${section(c, "Practical workplace project", { id: "project", dark: true, eyebrowOverride: "Practical workplace project", aside: image(cc, "productivity", c.images.productivity) })}
-  ${section(c, "Responsible AI", { id: "responsible-ai" })}
+  ${section(c, "Responsible AI", {
+    id: "responsible-ai",
+    after: `<p class="ca-p">Need security awareness for every employee? See <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a>, our cybersecurity awareness programme for organisations in ${escapeHtml(COUNTRIES[code].name)}.</p>`,
+  })}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${faq(c)}
@@ -403,6 +437,13 @@ ${scripts(ctx)}
 // in all four countries, pointing to the AI Workflow page for each country and to the other
 // corporate offers. Same enquiry form; the visitor picks their country.
 
+const HUB_CYBER_DELIVERY: Record<CountryCode, string> = {
+  NG: "In-house, online or hybrid awareness training. Supports ITF reimbursement claims.",
+  ZA: "Live online awareness training for teams across South Africa.",
+  KE: "Live online awareness training for teams across Kenya.",
+  GH: "Live online awareness training for teams across Ghana.",
+};
+
 const HUB_DELIVERY: Record<CountryCode, string> = {
   NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
   ZA: "Live online training for teams across South Africa.",
@@ -418,6 +459,10 @@ const HUB_FAQ: { q: string; a: string }[] = [
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
     a: "Our corporate programme that teaches employees to use AI tools such as ChatGPT, Claude and Gemini in their daily work. Staff learn to save time, improve quality and redesign repetitive processes, safely and with human review.",
+  },
+  {
+    q: "What is CyberSecure Workforce?",
+    a: "Our corporate cybersecurity awareness programme. Employees learn to recognise phishing, payment fraud and impersonation, protect business information, use AI tools safely and report suspicious activity quickly. Twelve practical modules for non-technical staff, from the boardroom to the front desk.",
   },
   {
     q: "Can the training be customised for our organisation?",
@@ -472,7 +517,7 @@ const HUB_JOURNEY = [
 ];
 
 const HUB_DEFINITION =
-  "Paleon Training provides corporate training for organisations in Nigeria, South Africa, Kenya and Ghana. Its flagship programme, AI Workflow Productivity & Process Transformation, teaches employees to use generative AI to save time and redesign repetitive work, with human oversight and data protection.";
+  "Paleon Training provides corporate training for organisations in Nigeria, South Africa, Kenya and Ghana. Its flagship programmes are AI Workflow Productivity & Process Transformation, which teaches employees to use generative AI to save time and redesign repetitive work, and CyberSecure Workforce, which trains every employee to recognise, stop and report cyber threats.";
 
 function hubJsonLd(url: string): object {
   return {
@@ -485,11 +530,18 @@ function hubJsonLd(url: string): object {
         name: "Corporate training from Paleon Training",
         description: HUB_DEFINITION,
         about: { "@id": `${ORIGIN}/#organization` },
-        hasPart: MARKET_ORDER.map((k) => ({
-          "@type": "WebPage",
-          url: `${ORIGIN}${corporateAiPath(k)}`,
-          name: `AI Workflow Productivity & Process Transformation in ${COUNTRIES[k].name}`,
-        })),
+        hasPart: [
+          ...MARKET_ORDER.map((k) => ({
+            "@type": "WebPage",
+            url: `${ORIGIN}${corporateAiPath(k)}`,
+            name: `AI Workflow Productivity & Process Transformation in ${COUNTRIES[k].name}`,
+          })),
+          ...MARKET_ORDER.map((k) => ({
+            "@type": "WebPage",
+            url: `${ORIGIN}${cyberSecurePath(k)}`,
+            name: `CyberSecure Workforce cybersecurity awareness training in ${COUNTRIES[k].name}`,
+          })),
+        ],
       },
       {
         "@type": "FAQPage",
@@ -521,7 +573,7 @@ export function renderCorporateHub(): string {
   const headHtml = head(ctx, {
     title: "Corporate & AI Training for Organisations | Paleon Training",
     description:
-      "AI productivity, staff digital skills and executive training for organisations in Nigeria, South Africa, Kenya and Ghana. Practical and customised.",
+      "AI productivity, cybersecurity awareness and executive training for organisations in Nigeria, South Africa, Kenya and Ghana. Practical and customised.",
     canonicalPath: CORPORATE_HUB_PATH,
     alternatesFor: corporateAiPath,
     xDefault: CORPORATE_HUB_PATH,
@@ -535,6 +587,14 @@ export function renderCorporateHub(): string {
         ${flagSvg(k, "flag flag-md")}
         <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
         <span class="ca-country-note">${escapeHtml(HUB_DELIVERY[k])}</span>
+        <span class="ca-country-go">View the programme &rarr;</span>
+      </a>`,
+  ).join("\n");
+  const cyberCards = MARKET_ORDER.map(
+    (k) => `<a class="ca-country" href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">
+        ${flagSvg(k, "flag flag-md")}
+        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
+        <span class="ca-country-note">${escapeHtml(HUB_CYBER_DELIVERY[k])}</span>
         <span class="ca-country-go">View the programme &rarr;</span>
       </a>`,
   ).join("\n");
@@ -564,7 +624,7 @@ ${header(ctx, "/")}
         <span class="eyebrow">Corporate training &middot; Nigeria, South Africa, Kenya and Ghana</span>
         <h1 class="hero-title ca-hero-title">Corporate training that changes how your teams work</h1>
         <p class="ca-headline">Practical AI and digital skills, built around your organisation.</p>
-        <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
+        <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, cybersecurity awareness for every employee, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
           ${ctaButton(CONSULTATION, true)}
           ${ctaButton(PROPOSAL, true)}
@@ -587,6 +647,16 @@ ${header(ctx, "/")}
       <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${countryCards}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="cybersecure" aria-labelledby="cybersecure-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Flagship programme</span>
+      <h2 class="section-title" id="cybersecure-title">CyberSecure Workforce: cybersecurity awareness training</h2>
+      <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <div class="ca-countries">${cyberCards}</div>
     </div>
   </section>
 

@@ -33,6 +33,22 @@ export const CORPORATE_REQUIREMENTS = [
   "Not sure yet",
 ] as const;
 
+// The CyberSecure Workforce pages' options (2026-11-02):
+// /ng, /za, /gh and /ke/corporate-training/cybersecure-workforce.
+export const CYBERSECURE_REQUIREMENTS = [
+  "Executive awareness workshop",
+  "Department training",
+  "Organisation-wide awareness programme",
+  "Not sure yet",
+] as const;
+
+// Either programme's options are accepted.
+const ALL_REQUIREMENTS = Array.from(new Set<string>([...CORPORATE_REQUIREMENTS, ...CYBERSECURE_REQUIREMENTS])) as [string, ...string[]];
+
+// Which corporate programme the enquiry came from; older AI pages send none.
+export const CORPORATE_PROGRAMMES = ["ai-workflow", "cybersecure-workforce"] as const;
+export type CorporateProgramme = (typeof CORPORATE_PROGRAMMES)[number];
+
 // Nigeria offers all three; Ghana, Kenya and South Africa are online only, so their
 // forms don't ask.
 export const CORPORATE_DELIVERY = ["Online", "In-house", "Hybrid", "Not sure"] as const;
@@ -63,10 +79,11 @@ export const corporateLeadSchema = z.object({
     phone: z.string().trim().regex(PHONE_REGEX),
     employees: z.enum(CORPORATE_EMPLOYEE_BANDS),
     department: z.enum(CORPORATE_DEPARTMENTS).optional(),
-    requirement: z.enum(CORPORATE_REQUIREMENTS).optional(),
+    requirement: z.enum(ALL_REQUIREMENTS).optional(),
     delivery: z.enum(CORPORATE_DELIVERY).optional(),
     message: optionalText(3000),
     intent: z.enum(CORPORATE_INTENTS).default("consultation"),
+    programme: z.enum(CORPORATE_PROGRAMMES).default("ai-workflow"),
     // Required: they must agree before we can reply.
     consent: z.literal(true, { errorMap: () => ({ message: "Please tick the box so we can reply to your enquiry" }) }),
     // Optional: occasional marketing updates.

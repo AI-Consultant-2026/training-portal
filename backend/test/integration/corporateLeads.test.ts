@@ -128,3 +128,60 @@ describe("Corporate AI training pages", () => {
     expect(res.text).toContain('href="/corporate-training"');
   });
 });
+
+describe("CyberSecure Workforce corporate pages", () => {
+  it("files a CyberSecure enquiry under its own source and subject", async () => {
+    const res = await request(app)
+      .post("/api/leads/corporate")
+      .send({ ...enquiry, programme: "cybersecure-workforce", requirement: "Organisation-wide awareness programme", page: "/ng/corporate-training/cybersecure-workforce" });
+
+    expect(res.status).toBe(201);
+    const lead = await Lead.findByPk(res.body.id);
+    expect(lead).toMatchObject({ source: "cybersecure-workforce", course: "CyberSecure Workforce (Corporate)" });
+    expect(lead?.details).toMatchObject({ programme: "CyberSecure Workforce", requirement: "Organisation-wide awareness programme" });
+    expect(memAdapter.sentMessages[0].subject).toContain("Corporate cybersecurity training enquiry");
+  });
+
+  it("keeps AI Workflow enquiries without a programme on the old source", async () => {
+    const res = await request(app).post("/api/leads/corporate").send(enquiry);
+    const lead = await Lead.findByPk(res.body.id);
+    expect(lead?.source).toBe("corporate-ai-workflow");
+  });
+
+  it("rejects an unknown programme", async () => {
+    const res = await request(app).post("/api/leads/corporate").send({ ...enquiry, programme: "something-else" });
+    expect(res.status).toBe(400);
+  });
+
+  it.each(["ng", "za", "gh", "ke"])("serves /%s/corporate-training/cybersecure-workforce", async (cc) => {
+    const res = await request(app).get(`/${cc}/corporate-training/cybersecure-workforce`);
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("CyberSecure Workforce: Cybersecurity Awareness Training for Businesses in");
+    expect(res.text).toContain(`/images/og/cybersecure-workforce-${cc}.jpg`);
+    expect(res.text).toContain('data-programme="cybersecure-workforce"');
+    expect(res.text).toContain("Request Corporate Cybersecurity Training Proposal");
+    // All 12 modules, the packages and the AI Workflow cross-link on every page.
+    expect(res.text).toContain("Incident Reporting &amp; Response");
+    expect(res.text).toContain("CyberSecure Workforce Essentials");
+    expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
+    expect(res.text).not.toContain("Workforce Score");
+    expect(res.text).not.toContain("(link:");
+    expect(res.text.includes('name="delivery"')).toBe(cc === "ng");
+    expect(res.text.includes("ITF")).toBe(cc === "ng");
+  });
+
+  it("serves the CyberSecure photos but nothing outside their folder", async () => {
+    expect((await request(app).get("/images/cybersecure/ke-hero.jpg")).status).toBe(200);
+    expect((await request(app).get("/images/cybersecure/..%2Fog%2Fcybersecure-workforce-ng.jpg")).status).toBe(404);
+  });
+
+  it("is linked from the hub, the AI pages, the homepages and the Cyber Security course pages", async () => {
+    const hub = await request(app).get("/corporate-training");
+    for (const cc of ["ng", "za", "gh", "ke"]) expect(hub.text).toContain(`href="/${cc}/corporate-training/cybersecure-workforce"`);
+    expect((await request(app).get("/gh/corporate-training/ai-workflow-productivity")).text).toContain('href="/gh/corporate-training/cybersecure-workforce"');
+    expect((await request(app).get("/ke")).text).toContain('href="/ke/corporate-training/cybersecure-workforce"');
+    expect((await request(app).get("/za/cyber-security-fundamentals-course")).text).toContain('href="/za/corporate-training/cybersecure-workforce"');
+    expect((await request(app).get("/cyber-security-fundamentals-course")).text).toContain('href="/ng/corporate-training/cybersecure-workforce"');
+  });
+});

@@ -513,7 +513,7 @@ function employers(ctx: PageContext): string {
       <ul class="stat-cards">
         <li class="stat-card"><span class="stat-card-label">Pay in ${escapeHtml(s.currency.code)}</span><strong>${text(s.paymentMethods)}</strong></li>
         <li class="stat-card"><span class="stat-card-label">WhatsApp support in ${escapeHtml(c.name)}</span><strong>${whatsapp}</strong></li>
-        <li class="stat-card"><span class="stat-card-label">Training a team?</span><strong><a href="${s.corporateTraining.href}">${escapeHtml(s.corporateTraining.label)}</a></strong> <a class="stat-card-more" href="/corporate-training">All corporate training</a></li>
+        <li class="stat-card"><span class="stat-card-label">Training a team?</span><strong><a href="${s.corporateTraining.href}">${escapeHtml(s.corporateTraining.label)}</a></strong> <a class="stat-card-more" href="${c.site.path}/corporate-training/cybersecure-workforce">Cybersecurity awareness for staff</a> <a class="stat-card-more" href="/corporate-training">All corporate training</a></li>
       </ul>
     </div>
   </section>`;

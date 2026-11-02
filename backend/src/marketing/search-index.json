@@ -967,8 +967,32 @@
   },
   {
     "title": "Corporate & AI Training for Organisations",
-    "description": "AI productivity, staff digital skills and executive training for organisations in Nigeria, South Africa, Kenya and Ghana.",
+    "description": "AI productivity, cybersecurity awareness, staff digital skills and executive training for organisations in Nigeria, South Africa, Kenya and Ghana.",
     "url": "/corporate-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity Awareness Training Nigeria: CyberSecure Workforce",
+    "description": "Practical cybersecurity awareness training for Nigerian organisations. Help staff spot phishing, stop payment fraud and protect company data.",
+    "url": "/ng/corporate-training/cybersecure-workforce",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity Awareness Training South Africa: CyberSecure Workforce",
+    "description": "Live online cybersecurity awareness training for South African teams. Build safer habits around phishing, payments, personal information and AI.",
+    "url": "/za/corporate-training/cybersecure-workforce",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity Awareness Training Kenya: CyberSecure Workforce",
+    "description": "Practical cybersecurity awareness training for Kenyan teams. Help staff recognise phishing, account takeover and AI scams, and report incidents fast.",
+    "url": "/ke/corporate-training/cybersecure-workforce",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity Awareness Training Ghana: CyberSecure Workforce",
+    "description": "Cybersecurity awareness training for organisations in Ghana. Help staff recognise phishing, mobile money scams and fraud, and protect company data.",
+    "url": "/gh/corporate-training/cybersecure-workforce",
     "category": "Corporate"
   }
 ]
