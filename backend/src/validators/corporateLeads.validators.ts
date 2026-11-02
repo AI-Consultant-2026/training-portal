@@ -42,11 +42,23 @@ export const CYBERSECURE_REQUIREMENTS = [
   "Not sure yet",
 ] as const;
 
-// Either programme's options are accepted.
-const ALL_REQUIREMENTS = Array.from(new Set<string>([...CORPORATE_REQUIREMENTS, ...CYBERSECURE_REQUIREMENTS])) as [string, ...string[]];
+// The AI + Cybersecurity Professional Accelerator pages' options (2026-11-02):
+// /ng, /za, /gh and /ke/corporate-training/ai-cybersecurity-professional-accelerator.
+export const ACCELERATOR_REQUIREMENTS = [
+  "Executive AI + Cybersecurity Workshop",
+  "Professional Accelerator for a team",
+  "Department-specific programme",
+  "Developing AI and cyber champions",
+  "Not sure yet",
+] as const;
+
+// Any programme's options are accepted.
+const ALL_REQUIREMENTS = Array.from(
+  new Set<string>([...CORPORATE_REQUIREMENTS, ...CYBERSECURE_REQUIREMENTS, ...ACCELERATOR_REQUIREMENTS]),
+) as [string, ...string[]];
 
 // Which corporate programme the enquiry came from; older AI pages send none.
-export const CORPORATE_PROGRAMMES = ["ai-workflow", "cybersecure-workforce"] as const;
+export const CORPORATE_PROGRAMMES = ["ai-workflow", "cybersecure-workforce", "ai-cyber-accelerator"] as const;
 export type CorporateProgramme = (typeof CORPORATE_PROGRAMMES)[number];
 
 // Nigeria offers all three; Ghana, Kenya and South Africa are online only, so their

@@ -23,6 +23,7 @@ import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
 import { CORPORATE_HUB_PATH, corporateAiPath, renderCorporateAiWorkflow, renderCorporateHub } from "./views/corporateAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
+import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -222,6 +223,13 @@ export function createApp() {
       res.type("html").send(renderCyberSecure(code));
     });
   }
+  // The AI + Cybersecurity Professional Accelerator corporate pages, one per country (2026-11-02):
+  // /ng, /za, /gh and /ke/corporate-training/ai-cybersecurity-professional-accelerator.
+  for (const code of MARKET_ORDER) {
+    app.get(acceleratorPath(code), (req, res) => {
+      res.type("html").send(renderAccelerator(code));
+    });
+  }
   // The corporate training hub linking them (2026-11-02).
   app.get(CORPORATE_HUB_PATH, (req, res) => {
     res.type("html").send(renderCorporateHub());
@@ -236,6 +244,11 @@ export function createApp() {
   app.get("/images/corporate-ai/:file([a-z0-9-]+\\.jpg)", (req, res) => {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "corporate-ai", req.params.file));
+  });
+  // The Accelerator photos, same rule.
+  app.get("/images/accelerator/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "accelerator", req.params.file));
   });
   // The CyberSecure Workforce photos, same rule.
   app.get("/images/cybersecure/:file([a-z0-9-]+\\.jpg)", (req, res) => {

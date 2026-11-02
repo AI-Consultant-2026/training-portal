@@ -16,7 +16,12 @@ export function buildCorporateEnquiryEmail(lead: {
   const d = lead.details ?? {};
   const countryName = COUNTRIES[lead.country as CountryCode]?.name ?? lead.country;
   // Older AI Workflow enquiries have no programme stored.
-  const topic = /cybersecure/i.test(d.programme ?? "") ? "cybersecurity training" : "AI training";
+  const programme = d.programme ?? "";
+  const topic = /accelerator/i.test(programme)
+    ? "AI + cybersecurity training"
+    : /cybersecure/i.test(programme)
+      ? "cybersecurity training"
+      : "AI training";
   const wants = d.intent === "proposal" ? "a corporate training proposal" : "a consultation";
   const lines = [
     `New corporate ${topic} enquiry (${countryName}). They asked for ${wants}.`,

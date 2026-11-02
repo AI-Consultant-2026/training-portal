@@ -114,3 +114,9 @@
 .cs-packages .cs-meta { margin-bottom: 6px; }
 .cs-tag { display: inline-block; margin-bottom: 8px; padding: 2px 10px; border-radius: 999px; background: var(--signal); color: var(--ink) !important; font-size: 13px; font-weight: 700; }
 .section-dark .cs-recommended { border-color: var(--signal); }
+
+/* AI + Cybersecurity Professional Accelerator pages (2026-11-02): programme comparison, bridge line. */
+.ac-compare .ca-card h3 a { color: inherit; }
+.section-dark .ac-compare .ca-card h3 a { color: var(--paper); }
+.section-dark .ac-here { border-color: var(--signal); }
+.ac-bridge { font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 26px); color: var(--signal-2); margin: 8px 0 0; }

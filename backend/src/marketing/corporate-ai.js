@@ -64,7 +64,7 @@
         form.hidden = true;
         thanks.hidden = false;
         thanks.focus();
-        if (window.ptTrack) window.ptTrack("generate_lead", { form: programme === "cybersecure-workforce" ? "corporate_cybersecure_workforce" : "corporate_ai_workflow", country: body.country, intent: body.intent });
+        if (window.ptTrack) window.ptTrack("generate_lead", { form: "corporate_" + programme.replace(/-/g, "_"), country: body.country, intent: body.intent });
       })
       .catch(function (err) {
         showError((err && err.userMessage) || "Something went wrong. Please email corporate@paleontraining.com.");

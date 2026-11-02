@@ -1,0 +1,336 @@
+import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
+import { ACCELERATOR_REQUIREMENTS } from "../validators/corporateLeads.validators";
+import {
+  CORPORATE_HUB_PATH,
+  EnquiryCopy,
+  EnquiryForm,
+  acceleratorPath,
+  corporateAiPath,
+  ctaButton,
+  cyberSecurePath,
+  enquiry,
+  heading,
+  rich,
+} from "./corporateAiWorkflow";
+import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+
+// The "AI + Cybersecurity Professional Accelerator" corporate pages (2026-11-02): one per
+// country at /<cc>/corporate-training/ai-cybersecurity-professional-accelerator. Copy lives in
+// corporateAcceleratorContent.ts. Same styles, enquiry form and corporate-ai.js as the AI
+// Workflow and CyberSecure Workforce pages; enquiries are saved with source "ai-cyber-accelerator".
+// Nigeria offers in-house, online and hybrid delivery and mentions ITF reimbursement;
+// Ghana, Kenya and South Africa are live online only.
+
+export { ACCELERATOR_SLUG, acceleratorPath } from "./corporateAiWorkflow";
+
+export const ACC_CONSULTATION = "Book an AI + Cybersecurity Consultation";
+export const ACC_PROPOSAL = "Request a Corporate Training Proposal";
+
+export const ACC_FORM: EnquiryForm = {
+  programme: "ai-cyber-accelerator",
+  consultation: ACC_CONSULTATION,
+  proposal: ACC_PROPOSAL,
+  submit: "Request Corporate Training Proposal",
+  requirements: ACCELERATOR_REQUIREMENTS,
+  messagePlaceholder: "Your AI plans, the teams you want to develop, or the challenges you face",
+};
+
+// rich(), plus the copy's "Name (link: /path)" and "**Name** (link: /path)" turned into links.
+function richLinks(value: string): string {
+  return rich(value)
+    .replace(/<strong>([^<]+)<\/strong> \(link: (\/[a-z0-9/-]+)\)/g, '<a href="$2"><strong>$1</strong></a>')
+    .replace(/^([^<(]+?) \(link: (\/[a-z0-9/-]+)\)$/, '<a href="$2">$1</a>');
+}
+
+function labelled(value: string): [string, string] | null {
+  const m = /^\*\*([^*]+?):\*\*\s*(.*)$/.exec(value);
+  return m ? [m[1], m[2]] : null;
+}
+
+function field(c: AccPageContent, label: string): string {
+  for (const block of c.sections.Hero.blocks) {
+    if (!("p" in block)) continue;
+    const l = labelled(block.p);
+    if (l && l[0].toLowerCase().startsWith(label.toLowerCase())) return l[1];
+  }
+  return "";
+}
+
+function table(rows: string[][]): string {
+  const [head, ...body] = rows;
+  if (head.length === 3) {
+    // The programme comparison: one card per programme, this one highlighted.
+    return `<div class="ca-cards ca-cards-3 ac-compare">${body
+      .map(([name, bestFor, focus]) => {
+        const here = /Accelerator/.test(name);
+        return `<div class="ca-card${here ? " ac-here" : ""}">
+          ${here ? '<p class="cs-tag">This programme</p>' : ""}
+          <h3>${richLinks(name)}</h3>
+          <p class="cs-meta"><strong>${escapeHtml(head[1])}:</strong> ${rich(bestFor)}</p>
+          <p class="cs-meta"><strong>${escapeHtml(head[2])}:</strong> ${rich(focus)}</p>
+        </div>`;
+      })
+      .join("")}</div>`;
+  }
+  if (/practise/i.test(head[1])) {
+    // Scenarios: the situation, then what participants practise.
+    return `<div class="ca-cards cs-scenarios">${body
+      .map(([situation, practise]) => `<div class="ca-card"><p>${rich(situation)}</p><p class="cs-question">${rich(practise)}</p></div>`)
+      .join("")}</div>`;
+  }
+  return `<div class="ca-cards">${body.map(([a, b]) => `<div class="ca-card"><h3>${rich(a)}</h3><p>${rich(b)}</p></div>`).join("")}</div>`;
+}
+
+function blocks(list: AccBlock[], dark: boolean, listClass = "ca-list"): string {
+  return list
+    .map((block) => {
+      if ("ul" in block) return `<ul class="${listClass}">${block.ul.map((item) => `<li>${richLinks(item)}</li>`).join("")}</ul>`;
+      if ("table" in block) return table(block.table);
+      const l = labelled(block.p);
+      if (l && /cta/i.test(l[0])) return `<div class="ca-ctas">${ctaButton(l[1], dark)}</div>`;
+      if (/^\*\*[^*]+↔[^*]+\*\*$/.test(block.p)) return `<p class="ac-bridge">${rich(block.p)}</p>`;
+      return `<p class="ca-p">${richLinks(block.p)}</p>`;
+    })
+    .join("\n");
+}
+
+function section(
+  c: AccPageContent,
+  key: string,
+  opts: { id: string; dark?: boolean; titleOverride?: string; eyebrowOverride?: string; aside?: string; listClass?: string; body?: string },
+): string {
+  const s = c.sections[key];
+  const h = heading(s.h);
+  const eyebrow = opts.eyebrowOverride ?? h.eyebrow;
+  const title = opts.titleOverride ?? h.title;
+  const body = opts.body ?? blocks(s.blocks, Boolean(opts.dark), opts.listClass);
+  return `<section class="section ${opts.dark ? "section-dark" : "section-paper"} ca-section" id="${opts.id}" aria-labelledby="${opts.id}-title">
+    <div class="wrap${opts.aside ? " ca-split" : ""}">
+      <div class="ca-body">
+        ${eyebrow ? `<span class="section-eyebrow">${escapeHtml(eyebrow)}</span>` : ""}
+        <h2 class="section-title" id="${opts.id}-title">${escapeHtml(title)}</h2>
+        ${body}
+      </div>
+      ${opts.aside ? `<div class="ca-aside">${opts.aside}</div>` : ""}
+    </div>
+  </section>`;
+}
+
+function image(cc: string, slot: string, alt: string): string {
+  return `<img class="ca-img" src="/images/accelerator/${cc}-${slot}.jpg" alt="${escapeHtml(alt)}" width="1200" height="675" loading="lazy" decoding="async">`;
+}
+
+// The 12 modules as four stage columns, numbered 1 to 12, then the section's other blocks.
+function modules(c: AccPageContent): string {
+  const stages: { name: string; items: string[] }[] = [];
+  const rest: AccBlock[] = [];
+  for (const block of c.sections["Programme structure"].blocks) {
+    if ("p" in block && /^\*\*Stage \d/.test(block.p)) stages.push({ name: block.p.replace(/\*\*/g, ""), items: [] });
+    else if ("ul" in block && stages.length) stages[stages.length - 1].items.push(...block.ul);
+    else rest.push(block);
+  }
+  let n = 0;
+  const grid = stages
+    .map((s) => {
+      const [num, label] = s.name.split(" — ");
+      return `<div class="cs-stage"><p class="cs-stage-name"><span>${escapeHtml(num)}</span> ${escapeHtml(label ?? "")}</p><ol class="cs-modules" start="${n + 1}">${s.items
+        .map((item) => {
+          n += 1;
+          return `<li><span class="cs-num">${n}</span><div>${rich(item)}</div></li>`;
+        })
+        .join("")}</ol></div>`;
+    })
+    .join("");
+  return `<div class="cs-stages">${grid}</div>
+  ${blocks(rest, false)}`;
+}
+
+function hero(code: CountryCode, c: AccPageContent): string {
+  const cc = code.toLowerCase();
+  const trust = field(c, "Trust line")
+    .split(" · ")
+    .map((t) => `<li>${rich(t)}</li>`)
+    .join("");
+  return `<section class="hero ca-hero" id="top">
+    <div class="wrap ca-hero-grid">
+      <div class="hero-inner ca-hero-copy">
+        <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
+        <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "H1"))}</h1>
+        <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
+        <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
+        <div class="hero-ctas">
+          ${ctaButton(field(c, "Primary CTA") || ACC_CONSULTATION, true)}
+          ${ctaButton(field(c, "Secondary CTA") || ACC_PROPOSAL, true)}
+        </div>
+        <ul class="ca-trust">${trust}</ul>
+      </div>
+      <div class="ca-hero-media">
+        <img src="/images/accelerator/${cc}-hero.jpg" alt="${escapeHtml(c.images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
+      </div>
+    </div>
+  </section>
+  <section class="ca-definition" aria-label="About the programme">
+    <div class="wrap"><p>${rich(field(c, "Definition box"))}</p></div>
+  </section>`;
+}
+
+function faqItems(c: AccPageContent): { q: string; a: string }[] {
+  const out: { q: string; a: string }[] = [];
+  for (const block of c.sections["Frequently asked questions"].blocks) {
+    if (!("p" in block)) continue;
+    const m = /^\*\*(.+?\?)\*\*\s*(.*)$/.exec(block.p);
+    if (m) out.push({ q: m[1], a: m[2] });
+  }
+  return out;
+}
+
+function faq(c: AccPageContent): string {
+  const items = faqItems(c)
+    .map((f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${rich(f.a)}</p></details>`)
+    .join("\n");
+  return `<section class="section section-paper ca-section" id="faq" aria-labelledby="faq-title">
+    <div class="wrap ca-narrow">
+      <span class="section-eyebrow">Questions</span>
+      <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
+      ${items}
+    </div>
+  </section>`;
+}
+
+function finalCopy(c: AccPageContent): EnquiryCopy {
+  const final = c.sections["Final CTA"].blocks.filter((b): b is { p: string } => "p" in b).map((b) => b.p);
+  const [title, lede, , note, contact] = final;
+  return { title: (title ?? "").replace(/\*\*/g, ""), lede: lede ?? "", note: note ?? "", contact: contact ?? "" };
+}
+
+function related(code: CountryCode): string {
+  const c = COUNTRIES[code];
+  const links = [
+    `<li><a href="${CORPORATE_HUB_PATH}">All corporate training</a></li>`,
+    `<li><a href="${corporateAiPath(code)}">AI Workflow Productivity for teams in ${escapeHtml(c.name)}</a></li>`,
+    `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: awareness for all staff</a></li>`,
+    `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
+    `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
+    code === "NG" ? `<li><a href="/corporate-training-nigeria">Corporate training in Nigeria</a></li>` : "",
+    code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
+    ...MARKET_ORDER.filter((k) => k !== code).map(
+      (k) => `<li><a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">AI and cybersecurity training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,
+    ),
+  ].filter(Boolean);
+  return `<section class="section section-paper ca-section ca-related" aria-labelledby="related-title">
+    <div class="wrap">
+      <h2 class="section-title" id="related-title">Related</h2>
+      <ul class="ca-links">${links.join("")}</ul>
+    </div>
+  </section>`;
+}
+
+function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
+  const country = COUNTRIES[code].name;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Course",
+        "@id": `${url}#course`,
+        name: "AI + Cybersecurity Professional Accelerator",
+        description: field(c, "Definition box").replace(/\*\*/g, ""),
+        url,
+        inLanguage: "en",
+        audience: { "@type": "BusinessAudience", name: `Organisations in ${country}` },
+        provider: { "@id": `${ORIGIN}/#organization` },
+        hasCourseInstance: {
+          "@type": "CourseInstance",
+          courseMode: code === "NG" ? ["online", "onsite", "blended"] : "online",
+          location: { "@type": "Country", name: country },
+        },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: faqItems(c).map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\*\*/g, "") },
+        })),
+      },
+      {
+        "@type": "Organization",
+        "@id": `${ORIGIN}/#organization`,
+        name: "Paleon Training Limited",
+        url: `${ORIGIN}/`,
+        email: "corporate@paleontraining.com",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Off NNPC Junior Staff Club 10",
+          addressLocality: "Warri",
+          addressRegion: "Delta State",
+          addressCountry: "NG",
+        },
+        sameAs: [
+          "https://www.facebook.com/profile.php?id=61593708334223",
+          "https://www.linkedin.com/company/146121029/",
+          "https://www.instagram.com/paleontraining/",
+        ],
+      },
+    ],
+  };
+}
+
+export function renderAccelerator(code: CountryCode): string {
+  const c = ACCELERATOR_CONTENT[code];
+  const cc = code.toLowerCase();
+  const ctx: PageContext = { country: code, hub: false, detected: null, chosen: null };
+  const home = COUNTRIES[code].site.path;
+  const canonicalPath = acceleratorPath(code);
+  const ogImage = `${ORIGIN}/images/og/ai-cyber-accelerator-${cc}.jpg`;
+  const headHtml = head(ctx, {
+    title: c.title,
+    description: c.description,
+    canonicalPath,
+    alternatesFor: acceleratorPath,
+    xDefault: CORPORATE_HUB_PATH,
+    jsonLd: jsonLd(code, c, `${ORIGIN}${canonicalPath}`),
+  })
+    .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ogImage}"`)
+    .replace("</head>", '<link rel="stylesheet" href="/corporate-ai.css">\n</head>');
+
+  return `${headHtml}
+<body data-country="${code}"${whatsappAttr(code)}>
+${SEARCH_OVERLAY}
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="util-bar">
+  <div class="wrap util-row">
+    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
+    <span>Paleon Training Limited</span>
+    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
+  </div>
+</div>
+${header(ctx, home)}
+<main id="main">
+  ${hero(code, c)}
+  ${section(c, "Problem", { id: "problem", eyebrowOverride: "The challenge", listClass: "ca-list ca-list-x" })}
+  ${section(c, "Solution", { id: "solution", dark: true, eyebrowOverride: "The approach", listClass: "ca-steps", aside: image(cc, "ai", c.images.ai) })}
+  ${section(c, "Business benefits", { id: "benefits", eyebrowOverride: "Business benefits", titleOverride: "What your organisation gains" })}
+  ${section(c, "Why invest", { id: "why-invest", dark: true })}
+  ${section(c, "Programme structure", { id: "modules", eyebrowOverride: "Programme structure", body: modules(c) })}
+  ${section(c, "Who should attend?", { id: "attend", dark: true, eyebrowOverride: "Who it is for" })}
+  ${section(c, "Workplace scenarios", { id: "scenarios" })}
+  ${section(c, "Capstone", { id: "capstone", dark: true, aside: image(cc, "transformation", c.images.transformation) })}
+  ${section(c, "Responsible AI", { id: "responsible-ai", aside: image(cc, "security", c.images.security) })}
+  ${section(c, "Corporate delivery options", { id: "delivery", dark: true, eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
+  ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
+  ${section(c, "Programme comparison", { id: "compare", dark: true })}
+  ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
+  ${faq(c)}
+  ${enquiry(code, finalCopy(c), ACC_FORM)}
+  ${related(code)}
+</main>
+${footer(ctx, home)}
+${scripts(ctx)}
+<script src="/corporate-ai.js" defer></script>
+</body>
+</html>
+`;
+}

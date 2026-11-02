@@ -787,6 +787,7 @@ ${header(ctx, home)}
       <div class="cc-faq">${local.faqs.map(([q, a]) => `<h3>${q}</h3><p>${a}</p>`).join("")}</div>
 
       ${slug === "cyber-security-fundamentals" ? `<p>Training a whole team? See <a href="${c.site.path}/corporate-training/cybersecure-workforce">CyberSecure Workforce</a>, our cybersecurity awareness programme for employers in ${escapeHtml(c.name)}.</p>` : ""}
+      ${slug === "cyber-security-fundamentals" || slug === "ai-machine-learning-fundamentals" ? `<p>Training a team of specialists? See the <a href="${c.site.path}/corporate-training/ai-cybersecurity-professional-accelerator">AI + Cybersecurity Professional Accelerator</a> for employers in ${escapeHtml(c.name)}.</p>` : ""}
       <h2 class="section-title">Keep exploring</h2>
       <ul class="cc-list cc-links">
         ${others.map((s) => `<li><a href="${coursePagePath(country, s)}">${COURSE_INFO[s].title} course for ${escapeHtml(c.name)}</a></li>`).join("")}

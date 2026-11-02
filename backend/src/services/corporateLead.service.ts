@@ -4,11 +4,16 @@ import { logger } from "../utils/logger";
 import { CORPORATE_CONSENT_TEXT, CorporateLeadInput, CorporateProgramme } from "../validators/corporateLeads.validators";
 
 // The programme name and source each corporate enquiry is filed under in the admin Leads
-// table. CyberSecure Workforce added 2026-11-02. Both sources are corporate buyers, not
+// table. CyberSecure Workforce and the AI + Cybersecurity Professional Accelerator added 2026-11-02. Both sources are corporate buyers, not
 // learners: keep them out of learner emails.
 export const CORPORATE_LEAD_PROGRAMMES: Record<CorporateProgramme, { course: string; source: string; label: string }> = {
   "ai-workflow": { course: "AI Workflow Productivity (Corporate)", source: "corporate-ai-workflow", label: "AI training" },
   "cybersecure-workforce": { course: "CyberSecure Workforce (Corporate)", source: "cybersecure-workforce", label: "cybersecurity training" },
+  "ai-cyber-accelerator": {
+    course: "AI + Cybersecurity Professional Accelerator (Corporate)",
+    source: "ai-cyber-accelerator",
+    label: "AI + cybersecurity training",
+  },
 };
 export const CORPORATE_LEAD_COURSE = CORPORATE_LEAD_PROGRAMMES["ai-workflow"].course;
 export const CORPORATE_LEAD_SOURCE = CORPORATE_LEAD_PROGRAMMES["ai-workflow"].source;

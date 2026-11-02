@@ -44,6 +44,13 @@ export function cyberSecurePath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${CYBERSECURE_SLUG}`;
 }
 
+// The AI + Cybersecurity Professional Accelerator pages (2026-11-02, views/corporateAccelerator.ts).
+export const ACCELERATOR_SLUG = "corporate-training/ai-cybersecurity-professional-accelerator";
+
+export function acceleratorPath(country: CountryCode): string {
+  return `${COUNTRIES[country].site.path}/${ACCELERATOR_SLUG}`;
+}
+
 const CONSULTATION = "Book a Corporate AI Training Consultation";
 const PROPOSAL = "Request a Corporate Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
@@ -310,6 +317,7 @@ function related(code: CountryCode): string {
     code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
     code === "NG" ? `<li><a href="/executive-training">Executive and corporate training</a></li>` : "",
     `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness for staff</a></li>`,
+    `<li><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator</a></li>`,
     `<li><a href="/consultancy">Web and AI consultancy</a></li>`,
     ...MARKET_ORDER.filter((k) => k !== code).map(
       (k) => `<li><a href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">Corporate AI training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,
@@ -416,7 +424,7 @@ ${header(ctx, home)}
   ${section(c, "Practical workplace project", { id: "project", dark: true, eyebrowOverride: "Practical workplace project", aside: image(cc, "productivity", c.images.productivity) })}
   ${section(c, "Responsible AI", {
     id: "responsible-ai",
-    after: `<p class="ca-p">Need security awareness for every employee? See <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a>, our cybersecurity awareness programme for organisations in ${escapeHtml(COUNTRIES[code].name)}.</p>`,
+    after: `<p class="ca-p">Need security awareness for every employee? See <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a>, our cybersecurity awareness programme for organisations in ${escapeHtml(COUNTRIES[code].name)}. Developing specialists? See the <a href="${acceleratorPath(code)}"><strong>AI + Cybersecurity Professional Accelerator</strong></a>.</p>`,
   })}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
@@ -444,6 +452,13 @@ const HUB_CYBER_DELIVERY: Record<CountryCode, string> = {
   GH: "Live online awareness training for teams across Ghana.",
 };
 
+const HUB_ACC_DELIVERY: Record<CountryCode, string> = {
+  NG: "In-house, online or hybrid for professional teams. Supports ITF reimbursement claims.",
+  ZA: "Live online for professional teams across South Africa.",
+  KE: "Live online for professional teams across Kenya.",
+  GH: "Live online for professional teams across Ghana.",
+};
+
 const HUB_DELIVERY: Record<CountryCode, string> = {
   NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
   ZA: "Live online training for teams across South Africa.",
@@ -463,6 +478,14 @@ const HUB_FAQ: { q: string; a: string }[] = [
   {
     q: "What is CyberSecure Workforce?",
     a: "Our corporate cybersecurity awareness programme. Employees learn to recognise phishing, payment fraud and impersonation, protect business information, use AI tools safely and report suspicious activity quickly. Twelve practical modules for non-technical staff, from the boardroom to the front desk.",
+  },
+  {
+    q: "What is the AI + Cybersecurity Professional Accelerator?",
+    a: "Our professional-level programme for selected staff such as IT, security, risk, data and digital teams. Participants learn to use AI in their work, understand the cyber risks AI brings, and support secure AI adoption. Twelve modules and a capstone project on a real challenge from their organisation.",
+  },
+  {
+    q: "Which programme is right for us?",
+    a: "AI Workflow Productivity helps every team work faster with AI. CyberSecure Workforce gives every employee practical cybersecurity awareness. The AI + Cybersecurity Professional Accelerator develops the professionals who will lead secure AI adoption. Many organisations combine them.",
   },
   {
     q: "Can the training be customised for our organisation?",
@@ -517,7 +540,7 @@ const HUB_JOURNEY = [
 ];
 
 const HUB_DEFINITION =
-  "Paleon Training provides corporate training for organisations in Nigeria, South Africa, Kenya and Ghana. Its flagship programmes are AI Workflow Productivity & Process Transformation, which teaches employees to use generative AI to save time and redesign repetitive work, and CyberSecure Workforce, which trains every employee to recognise, stop and report cyber threats.";
+  "Paleon Training provides corporate training for organisations in Nigeria, South Africa, Kenya and Ghana. Its flagship programmes are AI Workflow Productivity & Process Transformation, which teaches employees to use generative AI to save time and redesign repetitive work, CyberSecure Workforce, which trains every employee to recognise, stop and report cyber threats, and the AI + Cybersecurity Professional Accelerator for the professionals who lead secure AI adoption.";
 
 function hubJsonLd(url: string): object {
   return {
@@ -540,6 +563,11 @@ function hubJsonLd(url: string): object {
             "@type": "WebPage",
             url: `${ORIGIN}${cyberSecurePath(k)}`,
             name: `CyberSecure Workforce cybersecurity awareness training in ${COUNTRIES[k].name}`,
+          })),
+          ...MARKET_ORDER.map((k) => ({
+            "@type": "WebPage",
+            url: `${ORIGIN}${acceleratorPath(k)}`,
+            name: `AI + Cybersecurity Professional Accelerator in ${COUNTRIES[k].name}`,
           })),
         ],
       },
@@ -598,6 +626,14 @@ export function renderCorporateHub(): string {
         <span class="ca-country-go">View the programme &rarr;</span>
       </a>`,
   ).join("\n");
+  const accCards = MARKET_ORDER.map(
+    (k) => `<a class="ca-country" href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">
+        ${flagSvg(k, "flag flag-md")}
+        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
+        <span class="ca-country-note">${escapeHtml(HUB_ACC_DELIVERY[k])}</span>
+        <span class="ca-country-go">View the programme &rarr;</span>
+      </a>`,
+  ).join("\n");
   const offers = HUB_OFFERS.map(
     (o) => `<div class="ca-card"><h3>${escapeHtml(o.title)}</h3><p>${escapeHtml(o.text)}</p><p class="ca-card-link"><a href="${o.href}">${escapeHtml(o.link)} &rarr;</a></p></div>`,
   ).join("");
@@ -624,7 +660,7 @@ ${header(ctx, "/")}
         <span class="eyebrow">Corporate training &middot; Nigeria, South Africa, Kenya and Ghana</span>
         <h1 class="hero-title ca-hero-title">Corporate training that changes how your teams work</h1>
         <p class="ca-headline">Practical AI and digital skills, built around your organisation.</p>
-        <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, cybersecurity awareness for every employee, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
+        <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, cybersecurity awareness for every employee, professional AI + cybersecurity development for specialists, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
           ${ctaButton(CONSULTATION, true)}
           ${ctaButton(PROPOSAL, true)}
@@ -657,6 +693,16 @@ ${header(ctx, "/")}
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${cyberCards}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="accelerator" aria-labelledby="accelerator-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Professional programme</span>
+      <h2 class="section-title" id="accelerator-title">AI + Cybersecurity Professional Accelerator</h2>
+      <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <div class="ca-countries">${accCards}</div>
     </div>
   </section>
 

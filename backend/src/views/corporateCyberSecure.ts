@@ -3,6 +3,7 @@ import { CYBERSECURE_REQUIREMENTS } from "../validators/corporateLeads.validator
 import {
   CORPORATE_HUB_PATH,
   EnquiryCopy,
+  acceleratorPath,
   EnquiryForm,
   corporateAiPath,
   ctaButton,
@@ -94,13 +95,22 @@ function blocks(list: CyberBlock[], dark: boolean, listClass = "ca-list"): strin
 function section(
   c: CyberPageContent,
   key: string,
-  opts: { id: string; dark?: boolean; titleOverride?: string; eyebrowOverride?: string; aside?: string; listClass?: string; body?: string },
+  opts: {
+    id: string;
+    dark?: boolean;
+    titleOverride?: string;
+    eyebrowOverride?: string;
+    aside?: string;
+    listClass?: string;
+    body?: string;
+    after?: string;
+  },
 ): string {
   const s = c.sections[key];
   const h = heading(s.h);
   const eyebrow = opts.eyebrowOverride ?? h.eyebrow;
   const title = opts.titleOverride ?? h.title;
-  const body = opts.body ?? blocks(s.blocks, Boolean(opts.dark), opts.listClass);
+  const body = (opts.body ?? blocks(s.blocks, Boolean(opts.dark), opts.listClass)) + (opts.after ?? "");
   return `<section class="section ${opts.dark ? "section-dark" : "section-paper"} ca-section" id="${opts.id}" aria-labelledby="${opts.id}-title">
     <div class="wrap${opts.aside ? " ca-split" : ""}">
       <div class="ca-body">
@@ -205,6 +215,7 @@ function related(code: CountryCode): string {
   const links = [
     `<li><a href="${CORPORATE_HUB_PATH}">All corporate training</a></li>`,
     `<li><a href="${corporateAiPath(code)}">AI Workflow Productivity for teams in ${escapeHtml(c.name)}</a></li>`,
+    `<li><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator for specialists</a></li>`,
     `<li><a href="${coursePagePath(code, "cyber-security-fundamentals")}">Cyber Security Fundamentals (individual course)</a></li>`,
     `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
     code === "NG" ? `<li><a href="/corporate-training-nigeria">Corporate course packages in Nigeria</a></li>` : "",
@@ -312,7 +323,12 @@ ${header(ctx, home)}
   ${section(c, "Department applications", { id: "departments", eyebrowOverride: "By department", titleOverride: "How each team uses it" })}
   ${section(c, "Practical learning", { id: "practice", dark: true })}
   ${section(c, "Workplace scenarios", { id: "scenarios" })}
-  ${section(c, "AI + cybersecurity", { id: "ai-security", dark: true, aside: image(cc, "scenario", c.images.scenario) })}
+  ${section(c, "AI + cybersecurity", {
+    id: "ai-security",
+    dark: true,
+    aside: image(cc, "scenario", c.images.scenario),
+    after: `<p class="ca-p">For IT, risk and digital teams who need deeper skills, see the <a href="${acceleratorPath(code)}"><strong>AI + Cybersecurity Professional Accelerator</strong></a>.</p>`,
+  })}
   ${section(c, "Corporate delivery options", { id: "delivery", eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
   ${section(c, "Corporate packages", { id: "packages", dark: true, eyebrowOverride: "Packages", titleOverride: "Three ways to run the programme" })}
   ${section(c, "Measurement and deliverables", { id: "measurement" })}

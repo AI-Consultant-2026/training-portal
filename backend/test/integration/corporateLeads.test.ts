@@ -185,3 +185,53 @@ describe("CyberSecure Workforce corporate pages", () => {
     expect((await request(app).get("/cyber-security-fundamentals-course")).text).toContain('href="/ng/corporate-training/cybersecure-workforce"');
   });
 });
+
+describe("AI + Cybersecurity Professional Accelerator corporate pages", () => {
+  const PATH = "corporate-training/ai-cybersecurity-professional-accelerator";
+
+  it("files an Accelerator enquiry under its own source and subject", async () => {
+    const res = await request(app)
+      .post("/api/leads/corporate")
+      .send({ ...enquiry, programme: "ai-cyber-accelerator", requirement: "Professional Accelerator for a team", page: `/ng/${PATH}` });
+
+    expect(res.status).toBe(201);
+    const lead = await Lead.findByPk(res.body.id);
+    expect(lead).toMatchObject({ source: "ai-cyber-accelerator", course: "AI + Cybersecurity Professional Accelerator (Corporate)" });
+    expect(lead?.details).toMatchObject({ requirement: "Professional Accelerator for a team" });
+    expect(memAdapter.sentMessages[0].subject).toContain("Corporate AI + cybersecurity training enquiry");
+  });
+
+  it.each(["ng", "za", "gh", "ke"])(`serves /%s/${PATH}`, async (cc) => {
+    const res = await request(app).get(`/${cc}/${PATH}`);
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("AI + Cybersecurity Professional Accelerator for Businesses in");
+    expect(res.text).toContain(`/images/og/ai-cyber-accelerator-${cc}.jpg`);
+    expect(res.text).toContain(`/images/accelerator/${cc}-hero.jpg`);
+    expect(res.text).toContain('data-programme="ai-cyber-accelerator"');
+    expect(res.text).toContain("Request Corporate Training Proposal");
+    // Only the confirmed promises: facilitator capstone feedback and an unaccredited certificate.
+    expect(res.text).toContain("certificate of completion");
+    expect(res.text).toContain("not accredited");
+    expect(res.text).not.toMatch(/typically|6 to 10|half a day/i);
+    expect(res.text).not.toContain("(link:");
+    expect(res.text).not.toContain("**");
+    expect(res.text.includes('name="delivery"')).toBe(cc === "ng");
+    expect(res.text.includes("ITF")).toBe(cc === "ng");
+  });
+
+  it("serves the Accelerator photos but nothing outside their folder", async () => {
+    expect((await request(app).get("/images/accelerator/gh-security.jpg")).status).toBe(200);
+    expect((await request(app).get("/images/accelerator/..%2Fog%2Fai-cyber-accelerator-ng.jpg")).status).toBe(404);
+  });
+
+  it("is linked from the hub, the AI and CyberSecure pages, the homepages and the course pages", async () => {
+    const hub = await request(app).get("/corporate-training");
+    for (const cc of ["ng", "za", "gh", "ke"]) expect(hub.text).toContain(`href="/${cc}/${PATH}"`);
+    expect((await request(app).get("/gh/corporate-training/ai-workflow-productivity")).text).toContain(`href="/gh/${PATH}"`);
+    expect((await request(app).get("/za/corporate-training/cybersecure-workforce")).text).toContain(`href="/za/${PATH}"`);
+    expect((await request(app).get("/ke")).text).toContain(`href="/ke/${PATH}"`);
+    expect((await request(app).get("/za/cyber-security-fundamentals-course")).text).toContain(`href="/za/${PATH}"`);
+    expect((await request(app).get("/cyber-security-fundamentals-course")).text).toContain(`href="/ng/${PATH}"`);
+  });
+});

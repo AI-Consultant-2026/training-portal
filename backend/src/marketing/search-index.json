@@ -994,5 +994,29 @@
     "description": "Cybersecurity awareness training for organisations in Ghana. Help staff recognise phishing, mobile money scams and fraud, and protect company data.",
     "url": "/gh/corporate-training/cybersecure-workforce",
     "category": "Corporate"
+  },
+  {
+    "title": "AI and Cybersecurity Training Nigeria: Professional Accelerator",
+    "description": "AI and cybersecurity training for Nigerian professionals and teams. Build AI capability, manage AI risk and support secure digital transformation.",
+    "url": "/ng/corporate-training/ai-cybersecurity-professional-accelerator",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI and Cybersecurity Training South Africa: Professional Accelerator",
+    "description": "Live online AI and cybersecurity training for South African professionals. Build AI capability with governance, POPIA-aware data handling and risk control.",
+    "url": "/za/corporate-training/ai-cybersecurity-professional-accelerator",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI and Cybersecurity Training Kenya: Professional Accelerator",
+    "description": "AI and cybersecurity training for Kenyan professionals and teams. Use AI with confidence, manage AI risk and support secure, fast-moving innovation.",
+    "url": "/ke/corporate-training/ai-cybersecurity-professional-accelerator",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI and Cybersecurity Training Ghana: Professional Accelerator",
+    "description": "AI and cybersecurity training for professionals in Ghana. Help your teams use AI well, manage new cyber risks and lead secure digital transformation.",
+    "url": "/gh/corporate-training/ai-cybersecurity-professional-accelerator",
+    "category": "Corporate"
   }
 ]
