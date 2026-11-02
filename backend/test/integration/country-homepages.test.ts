@@ -387,3 +387,16 @@ describe("Paystack per country", () => {
     expect(data.body.jobs[0]).toHaveProperty("province");
   });
 });
+
+describe("Employers card on the country homepages", () => {
+  it.each(["ng", "za", "gh", "ke"])("/%s lists Corporate Training and its three programmes with the right links", async (cc) => {
+    const html = (await request(app).get(`/${cc}`)).text;
+    const card = html.slice(html.indexOf("Training a team?"), html.indexOf("</li>", html.indexOf("Training a team?")));
+
+    expect(card).toContain('<a href="/corporate-training">Corporate Training</a>');
+    expect(card).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity">AI Workflow Productivity &amp; Process Transformation</a>`);
+    expect(card).toContain(`href="/${cc}/corporate-training/cybersecure-workforce">CyberSecure Workforce</a>`);
+    expect(card).toContain(`href="/${cc}/corporate-training/ai-cybersecurity-professional-accelerator">AI + Cybersecurity Professional Accelerator</a>`);
+    expect(card).not.toMatch(/for specialists|All corporate training|awareness for staff|employers<\/a>/);
+  });
+});
