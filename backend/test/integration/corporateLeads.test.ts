@@ -108,4 +108,23 @@ describe("Corporate AI training pages", () => {
     expect((await request(app).get("/images/corporate-ai/ng-hero.jpg")).status).toBe(200);
     expect((await request(app).get("/images/corporate-ai/..%2Fog%2Fcorporate-ai-workflow-ng.jpg")).status).toBe(404);
   });
+
+  it("serves the corporate training hub, linking to each country page", async () => {
+    const res = await request(app).get("/corporate-training");
+
+    expect(res.status).toBe(200);
+    for (const cc of ["ng", "za", "gh", "ke"]) {
+      expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
+    }
+    // The visitor picks a country, so the hub form has no country preselected.
+    expect(res.text).toContain('<option value="">Choose your country</option>');
+    expect(res.text).toContain('hreflang="x-default" href="https://paleontraining.com/corporate-training"');
+  });
+
+  it("links the homepages and footers to the corporate pages", async () => {
+    const res = await request(app).get("/za");
+
+    expect(res.text).toContain('href="/za/corporate-training/ai-workflow-productivity"');
+    expect(res.text).toContain('href="/corporate-training"');
+  });
 });

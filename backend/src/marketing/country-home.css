@@ -379,6 +379,8 @@ mark.tbc {
 .stat-card-label { font-size: 14px; color: var(--dark-muted); }
 .stat-card strong { font-size: 17px; }
 .stat-card a { color: var(--signal-2); display: inline-flex; align-items: center; min-height: 44px; }
+.stat-card a.stat-card-more { min-height: 32px; font-size: 14.5px; color: var(--dark-muted); text-underline-offset: 3px; }
+.stat-card a.stat-card-more:hover { color: var(--paper); }
 
 /* ============ Learner voices (filled by learner-voices.js) ============ */
 .learner-voices[hidden] { display: none; }

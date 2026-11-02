@@ -81,3 +81,20 @@
 .ca-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1px solid var(--line-light); border-radius: var(--radius); background: var(--white); text-decoration: none; font-weight: 600; }
 .ca-links a:hover { border-color: var(--signal-text); }
 .ca-related { padding: 48px 0; }
+
+/* The corporate training hub (/corporate-training). */
+.ca-hint { margin-top: 6px; font-size: 13.5px; color: var(--charcoal-soft); line-height: 1.45; }
+.ca-countries { display: grid; gap: 12px; margin-top: 8px; }
+@media (min-width: 640px) { .ca-countries { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { .ca-countries { grid-template-columns: repeat(4, 1fr); } }
+.ca-country { display: flex; flex-direction: column; gap: 8px; padding: 20px; border: 1px solid var(--line-light); border-top: 3px solid var(--signal); border-radius: var(--radius-lg); background: var(--white); text-decoration: none; color: var(--charcoal); }
+.ca-country:hover { border-color: var(--signal-text); box-shadow: 0 4px 16px rgba(16,21,31,0.08); }
+.ca-country-name { font-family: var(--font-display); font-size: 22px; font-weight: 700; }
+.ca-country-note { line-height: 1.5; color: var(--charcoal-soft); flex: 1; }
+.ca-country-go { font-weight: 700; color: var(--signal-text); }
+@media (min-width: 900px) { .ca-cards-3 { grid-template-columns: repeat(3, 1fr); } }
+.section-dark .ca-card { background: var(--ink-2); border-color: var(--line); border-top-color: var(--signal); }
+.section-dark .ca-card h3 { color: var(--paper); }
+.section-dark .ca-card p { color: #C7CCDA; }
+.ca-card-link { margin-top: 12px; }
+.ca-card-link a { font-weight: 700; color: var(--signal-2); }

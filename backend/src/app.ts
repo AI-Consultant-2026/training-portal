@@ -21,7 +21,7 @@ import { COUNTRIES, HOMEPAGE_COURSES, MARKET_ORDER, depositLabel, isCountryCode 
 import { renderCountryAmbassadors } from "./views/countryAmbassadors";
 import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
-import { corporateAiPath, renderCorporateAiWorkflow } from "./views/corporateAiWorkflow";
+import { CORPORATE_HUB_PATH, corporateAiPath, renderCorporateAiWorkflow, renderCorporateHub } from "./views/corporateAiWorkflow";
 import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -214,6 +214,10 @@ export function createApp() {
       res.type("html").send(renderCorporateAiWorkflow(code));
     });
   }
+  // The corporate training hub linking them (2026-11-02).
+  app.get(CORPORATE_HUB_PATH, (req, res) => {
+    res.type("html").send(renderCorporateHub());
+  });
   app.get("/corporate-ai.css", (req, res) => {
     res.type("text/css").sendFile(path.join(__dirname, "marketing", "corporate-ai.css"));
   });

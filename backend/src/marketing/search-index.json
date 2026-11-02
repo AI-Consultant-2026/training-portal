@@ -964,5 +964,11 @@
     "description": "AI productivity training for Ghanaian organisations. Teach staff to use AI to reduce repetitive admin, improve processes and build digital capability.",
     "url": "/gh/corporate-training/ai-workflow-productivity",
     "category": "Corporate"
+  },
+  {
+    "title": "Corporate & AI Training for Organisations",
+    "description": "AI productivity, staff digital skills and executive training for organisations in Nigeria, South Africa, Kenya and Ghana.",
+    "url": "/corporate-training",
+    "category": "Corporate"
   }
 ]

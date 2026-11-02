@@ -5,6 +5,7 @@ import {
   CORPORATE_EMPLOYEE_BANDS,
   CORPORATE_REQUIREMENTS,
 } from "../validators/corporateLeads.validators";
+import { flagSvg } from "./flags";
 import { CORPORATE_AI_CONTENT, CorporateBlock, CorporatePageContent } from "./corporateAiWorkflowContent";
 import {
   ORIGIN,
@@ -27,6 +28,8 @@ import {
 // delivery and mentions ITF reimbursement; Ghana, Kenya and South Africa are live online only.
 
 export const CORPORATE_AI_SLUG = "corporate-training/ai-workflow-productivity";
+// The corporate training hub (2026-11-02): x-default for the four country pages.
+export const CORPORATE_HUB_PATH = "/corporate-training";
 
 export function corporateAiPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${CORPORATE_AI_SLUG}`;
@@ -175,27 +178,47 @@ function options(values: readonly string[], placeholder?: string): string {
     .join("")}`;
 }
 
-function enquiry(code: CountryCode, c: CorporatePageContent): string {
+function finalCopy(c: CorporatePageContent): EnquiryCopy {
   const final = c.sections["Final CTA"].blocks.filter((b): b is { p: string } => "p" in b).map((b) => b.p);
   const [title, lede, , note, contact] = final;
-  const countryOptions = MARKET_ORDER.map(
-    (k) => `<option value="${k}"${k === code ? " selected" : ""}>${escapeHtml(COUNTRIES[k].name)}</option>`,
-  ).join("");
+  return { title: (title ?? "").replace(/\*\*/g, ""), lede: lede ?? "", note: note ?? "", contact: contact ?? "" };
+}
+
+interface EnquiryCopy {
+  title: string;
+  lede: string;
+  note: string;
+  contact: string;
+}
+
+// The enquiry form. `code` presets the country (a country page); null is the hub, where
+// the visitor picks their country and sees the delivery question with a note that
+// in-house and hybrid are Nigeria only.
+function enquiry(code: CountryCode | null, copy: EnquiryCopy): string {
+  const { title, lede, note, contact } = copy;
+  const countryOptions =
+    (code ? "" : '<option value="">Choose your country</option>') +
+    MARKET_ORDER.map(
+      (k) => `<option value="${k}"${k === code ? " selected" : ""}>${escapeHtml(COUNTRIES[k].name)}</option>`,
+    ).join("");
   const delivery =
-    code === "NG"
+    code === "NG" || code === null
       ? `<div class="form-row"><label class="form-label" for="ca-delivery">Preferred delivery method <span class="optional">(optional)</span></label>
-          <select class="form-select" id="ca-delivery" name="delivery">${options(CORPORATE_DELIVERY, "Choose one")}</select></div>`
+          <select class="form-select" id="ca-delivery" name="delivery">${options(CORPORATE_DELIVERY, "Choose one")}</select>${
+            code === null ? '<p class="ca-hint">In-house and hybrid training are available in Nigeria. In Ghana, Kenya and South Africa, training is live online.</p>' : ""
+          }</div>`
       : "";
+  const phonePlaceholder = code ? `${PHONE_PREFIX[code]} ...` : "Include your country code";
   return `<section class="section section-dark ca-section" id="enquiry" aria-labelledby="enquiry-title">
     <div class="wrap ca-enquiry">
       <div class="ca-enquiry-copy">
         <span class="section-eyebrow">Talk to us</span>
-        <h2 class="section-title" id="enquiry-title">${escapeHtml((title ?? "").replace(/\*\*/g, ""))}</h2>
-        <p class="ca-p">${rich(lede ?? "")}</p>
-        <p class="ca-p">${rich(note ?? "")}</p>
-        <p class="ca-contact">${contactLine(contact ?? "")}</p>
+        <h2 class="section-title" id="enquiry-title">${escapeHtml(title)}</h2>
+        <p class="ca-p">${rich(lede)}</p>
+        <p class="ca-p">${rich(note)}</p>
+        <p class="ca-contact">${contactLine(contact)}</p>
       </div>
-      <form class="ca-form" id="caForm" novalidate data-country="${code}">
+      <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}">
         <p class="ca-intent" role="group" aria-label="What would you like?">
           <label><input type="radio" name="intent" value="consultation" checked> ${CONSULTATION}</label>
           <label><input type="radio" name="intent" value="proposal"> ${PROPOSAL}</label>
@@ -206,7 +229,7 @@ function enquiry(code: CountryCode, c: CorporatePageContent): string {
           <div class="form-row"><label class="form-label" for="ca-org">Organisation</label><input class="form-input" id="ca-org" name="organisation" autocomplete="organization" required maxlength="200"></div>
           <div class="form-row"><label class="form-label" for="ca-country">Country</label><select class="form-select" id="ca-country" name="country" required>${countryOptions}</select></div>
           <div class="form-row"><label class="form-label" for="ca-email">Business email</label><input class="form-input" id="ca-email" name="email" type="email" autocomplete="email" required maxlength="200"></div>
-          <div class="form-row"><label class="form-label" for="ca-phone">Phone / WhatsApp</label><input class="form-input" id="ca-phone" name="phone" type="tel" autocomplete="tel" required placeholder="${PHONE_PREFIX[code]} ..." maxlength="20"></div>
+          <div class="form-row"><label class="form-label" for="ca-phone">Phone / WhatsApp</label><input class="form-input" id="ca-phone" name="phone" type="tel" autocomplete="tel" required placeholder="${phonePlaceholder}" maxlength="20"></div>
           <div class="form-row"><label class="form-label" for="ca-employees">Number of employees</label><select class="form-select" id="ca-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Choose one")}</select></div>
           <div class="form-row"><label class="form-label" for="ca-department">Department / team <span class="optional">(optional)</span></label><select class="form-select" id="ca-department" name="department">${options(CORPORATE_DEPARTMENTS, "Choose one")}</select></div>
           <div class="form-row"><label class="form-label" for="ca-requirement">Training requirement <span class="optional">(optional)</span></label><select class="form-select" id="ca-requirement" name="requirement">${options(CORPORATE_REQUIREMENTS, "Choose one")}</select></div>
@@ -251,6 +274,7 @@ function contactLine(line: string): string {
 function related(code: CountryCode): string {
   const c = COUNTRIES[code];
   const links = [
+    `<li><a href="${CORPORATE_HUB_PATH}">All corporate training</a></li>`,
     `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
     code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
@@ -332,7 +356,7 @@ export function renderCorporateAiWorkflow(code: CountryCode): string {
     description: c.description,
     canonicalPath,
     alternatesFor: corporateAiPath,
-    xDefault: corporateAiPath("NG"),
+    xDefault: CORPORATE_HUB_PATH,
     jsonLd: jsonLd(code, c, `${ORIGIN}${canonicalPath}`),
   })
     .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ogImage}"`)
@@ -363,10 +387,242 @@ ${header(ctx, home)}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${faq(c)}
-  ${enquiry(code, c)}
+  ${enquiry(code, finalCopy(c))}
   ${related(code)}
 </main>
 ${footer(ctx, home)}
+${scripts(ctx)}
+<script src="/corporate-ai.js" defer></script>
+</body>
+</html>
+`;
+}
+
+// ---------------------------------------------------------------------------------
+// The corporate training hub at /corporate-training (2026-11-02): one page for employers
+// in all four countries, pointing to the AI Workflow page for each country and to the other
+// corporate offers. Same enquiry form; the visitor picks their country.
+
+const HUB_DELIVERY: Record<CountryCode, string> = {
+  NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
+  ZA: "Live online training for teams across South Africa.",
+  KE: "Live online training for teams across Kenya.",
+  GH: "Live online training for teams across Ghana.",
+};
+
+const HUB_FAQ: { q: string; a: string }[] = [
+  {
+    q: "Which countries do you deliver corporate training in?",
+    a: "Nigeria, South Africa, Kenya and Ghana. In Nigeria we train in-house, online or hybrid. In South Africa, Kenya and Ghana, training is delivered live online with a facilitator.",
+  },
+  {
+    q: "What is AI Workflow Productivity & Process Transformation?",
+    a: "Our corporate programme that teaches employees to use AI tools such as ChatGPT, Claude and Gemini in their daily work. Staff learn to save time, improve quality and redesign repetitive processes, safely and with human review.",
+  },
+  {
+    q: "Can the training be customised for our organisation?",
+    a: "Yes. We adapt examples, exercises and the workplace project to your sector, departments and the tools you use.",
+  },
+  {
+    q: "How much does corporate training cost?",
+    a: "Pricing depends on group size, delivery method and customisation. Request a corporate training proposal and we will send a quote.",
+  },
+  {
+    q: "Can you provide attendance records?",
+    a: "Yes. For company groups we provide attendance records and a programme outline for your internal reporting.",
+  },
+  {
+    q: "Can Nigerian employers claim ITF reimbursement?",
+    a: "Yes, if your organisation pays the ITF training levy. Employers can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs.",
+  },
+  {
+    q: "How quickly will you reply to an enquiry?",
+    a: "Within one working day. Complete the form below or email corporate@paleontraining.com.",
+  },
+];
+
+const HUB_OFFERS: { title: string; text: string; href: string; link: string }[] = [
+  {
+    title: "Staff digital skills courses",
+    text: "Our Cyber Security, GIS & Drone Mapping, HSE and Digital Marketing courses as a package for your team, with each employee's progress tracked.",
+    href: "/corporate-training-nigeria",
+    link: "Corporate course packages",
+  },
+  {
+    title: "Executive training in London",
+    text: "Five-day intensive programmes in London for leaders in oil & gas, banking and telecoms.",
+    href: "/executive-training",
+    link: "Executive training",
+  },
+  {
+    title: "Web and AI consultancy",
+    text: "Web apps and AI tools designed and built for businesses, charities and government bodies.",
+    href: "/consultancy",
+    link: "Consultancy",
+  },
+];
+
+const HUB_JOURNEY = [
+  "**Consultation:** we learn about your organisation, teams and goals.",
+  "**Assessment:** we identify where training will make the biggest difference.",
+  "**Design:** we adapt the programme to your sector, departments and tools.",
+  "**Training:** practical sessions, live online or, in Nigeria, in-house or hybrid.",
+  "**Application:** participants apply what they learn to real workplace tasks.",
+  "**Review:** we review results with you and plan the next steps.",
+];
+
+const HUB_DEFINITION =
+  "Paleon Training provides corporate training for organisations in Nigeria, South Africa, Kenya and Ghana. Its flagship programme, AI Workflow Productivity & Process Transformation, teaches employees to use generative AI to save time and redesign repetitive work, with human oversight and data protection.";
+
+function hubJsonLd(url: string): object {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${url}#page`,
+        url,
+        name: "Corporate training from Paleon Training",
+        description: HUB_DEFINITION,
+        about: { "@id": `${ORIGIN}/#organization` },
+        hasPart: MARKET_ORDER.map((k) => ({
+          "@type": "WebPage",
+          url: `${ORIGIN}${corporateAiPath(k)}`,
+          name: `AI Workflow Productivity & Process Transformation in ${COUNTRIES[k].name}`,
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: HUB_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      },
+      {
+        "@type": "Organization",
+        "@id": `${ORIGIN}/#organization`,
+        name: "Paleon Training Limited",
+        url: `${ORIGIN}/`,
+        email: "corporate@paleontraining.com",
+        areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Off NNPC Junior Staff Club 10",
+          addressLocality: "Warri",
+          addressRegion: "Delta State",
+          addressCountry: "NG",
+        },
+      },
+    ],
+  };
+}
+
+export function renderCorporateHub(): string {
+  const ctx: PageContext = { country: "NG", hub: true, detected: null, chosen: null };
+  const url = `${ORIGIN}${CORPORATE_HUB_PATH}`;
+  const headHtml = head(ctx, {
+    title: "Corporate & AI Training for Organisations | Paleon Training",
+    description:
+      "AI productivity, staff digital skills and executive training for organisations in Nigeria, South Africa, Kenya and Ghana. Practical and customised.",
+    canonicalPath: CORPORATE_HUB_PATH,
+    alternatesFor: corporateAiPath,
+    xDefault: CORPORATE_HUB_PATH,
+    jsonLd: hubJsonLd(url),
+  })
+    .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ORIGIN}/images/og/corporate-ai-workflow-ng.jpg"`)
+    .replace("</head>", '<link rel="stylesheet" href="/corporate-ai.css">\n</head>');
+
+  const countryCards = MARKET_ORDER.map(
+    (k) => `<a class="ca-country" href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">
+        ${flagSvg(k, "flag flag-md")}
+        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
+        <span class="ca-country-note">${escapeHtml(HUB_DELIVERY[k])}</span>
+        <span class="ca-country-go">View the programme &rarr;</span>
+      </a>`,
+  ).join("\n");
+  const offers = HUB_OFFERS.map(
+    (o) => `<div class="ca-card"><h3>${escapeHtml(o.title)}</h3><p>${escapeHtml(o.text)}</p><p class="ca-card-link"><a href="${o.href}">${escapeHtml(o.link)} &rarr;</a></p></div>`,
+  ).join("");
+  const faqHtml = HUB_FAQ.map(
+    (f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`,
+  ).join("\n");
+
+  return `${headHtml}
+<body data-country="NG" data-hub>
+${SEARCH_OVERLAY}
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="util-bar">
+  <div class="wrap util-row">
+    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
+    <span>Paleon Training Limited</span>
+    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
+  </div>
+</div>
+${header(ctx, "/")}
+<main id="main">
+  <section class="hero ca-hero" id="top">
+    <div class="wrap ca-hero-grid">
+      <div class="hero-inner ca-hero-copy">
+        <span class="eyebrow">Corporate training &middot; Nigeria, South Africa, Kenya and Ghana</span>
+        <h1 class="hero-title ca-hero-title">Corporate training that changes how your teams work</h1>
+        <p class="ca-headline">Practical AI and digital skills, built around your organisation.</p>
+        <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
+        <div class="hero-ctas">
+          ${ctaButton(CONSULTATION, true)}
+          ${ctaButton(PROPOSAL, true)}
+        </div>
+        <ul class="ca-trust"><li>Customised by sector and department</li><li>Responsible AI built in</li><li>Reply within one working day</li></ul>
+      </div>
+      <div class="ca-hero-media">
+        <img src="/images/corporate-ai/ke-hero.jpg" alt="${escapeHtml(CORPORATE_AI_CONTENT.KE.images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
+      </div>
+    </div>
+  </section>
+  <section class="ca-definition" aria-label="About Paleon corporate training">
+    <div class="wrap"><p>${escapeHtml(HUB_DEFINITION)}</p></div>
+  </section>
+
+  <section class="section section-paper ca-section" id="ai-workflow" aria-labelledby="ai-workflow-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Flagship programme</span>
+      <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
+      <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <div class="ca-countries">${countryCards}</div>
+    </div>
+  </section>
+
+  <section class="section section-dark ca-section" id="offers" aria-labelledby="offers-title">
+    <div class="wrap">
+      <span class="section-eyebrow">More for employers</span>
+      <h2 class="section-title" id="offers-title">Other ways we train teams</h2>
+      <div class="ca-cards ca-cards-3">${offers}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="journey" aria-labelledby="journey-title">
+    <div class="wrap">
+      <span class="section-eyebrow">How it works</span>
+      <h2 class="section-title" id="journey-title">Your corporate training journey</h2>
+      <ul class="ca-steps">${HUB_JOURNEY.map((j) => `<li>${rich(j)}</li>`).join("")}</ul>
+      <div class="ca-ctas">${ctaButton(CONSULTATION, false)}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="faq" aria-labelledby="faq-title">
+    <div class="wrap ca-narrow">
+      <span class="section-eyebrow">Questions</span>
+      <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
+      ${faqHtml}
+    </div>
+  </section>
+
+  ${enquiry(null, {
+    title: "Tell us what your organisation needs",
+    lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
+    note: "Prefer to talk first? Choose **Book a Corporate AI Training Consultation** and we will arrange a call.",
+    contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
+  })}
+</main>
+${footer(ctx, "/")}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 </body>
