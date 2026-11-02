@@ -235,7 +235,7 @@ export function header(ctx: PageContext, home: string): string {
         <li><a href="${home}#career-match">Career Match</a></li>
         <li><a href="${home}#how">How it works</a></li>
         <li><a href="${home}#why">Why Paleon</a></li>
-        <li><a href="${home}#employers">For employers</a></li>
+        <li><a href="/corporate-training">Corporate Training</a></li>
         <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>

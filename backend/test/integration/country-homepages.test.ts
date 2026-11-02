@@ -399,4 +399,11 @@ describe("Employers card on the country homepages", () => {
     expect(card).toContain(`href="/${cc}/corporate-training/ai-cybersecurity-professional-accelerator">AI + Cybersecurity Professional Accelerator</a>`);
     expect(card).not.toMatch(/for specialists|All corporate training|awareness for staff|employers<\/a>/);
   });
+
+  it.each(["/", "/ng", "/za", "/gh", "/ke"])("%s has a Corporate Training menu item linking to the hub", async (path) => {
+    const html = (await request(app).get(path)).text;
+    const nav = html.slice(html.indexOf('id="navLinks"'), html.indexOf("</ul>", html.indexOf('id="navLinks"')));
+    expect(nav).toContain('<li><a href="/corporate-training">Corporate Training</a></li>');
+    expect(nav).not.toContain("For employers");
+  });
 });
