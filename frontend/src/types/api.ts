@@ -635,6 +635,8 @@ export interface Lead {
   sector: string | null;
   interest: string | null;
   country: string;
+  // Corporate enquiries only (2026-11-02): job title, organisation, employees, message...
+  details: Record<string, string> | null;
   // Set when the lead opted out of Paleon emails (lead follow-ups or an email-client campaign).
   unsubscribedAt: string | null;
   createdAt: string;

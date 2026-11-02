@@ -21,6 +21,7 @@ import { COUNTRIES, HOMEPAGE_COURSES, MARKET_ORDER, depositLabel, isCountryCode 
 import { renderCountryAmbassadors } from "./views/countryAmbassadors";
 import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
+import { corporateAiPath, renderCorporateAiWorkflow } from "./views/corporateAiWorkflow";
 import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -206,6 +207,24 @@ export function createApp() {
       res.type("html").send(renderCountryAmbassadors(code));
     });
   }
+  // The AI Workflow Productivity corporate pages, one per country (2026-11-02):
+  // /ng, /za, /gh and /ke/corporate-training/ai-workflow-productivity.
+  for (const code of MARKET_ORDER) {
+    app.get(corporateAiPath(code), (req, res) => {
+      res.type("html").send(renderCorporateAiWorkflow(code));
+    });
+  }
+  app.get("/corporate-ai.css", (req, res) => {
+    res.type("text/css").sendFile(path.join(__dirname, "marketing", "corporate-ai.css"));
+  });
+  app.get("/corporate-ai.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "corporate-ai.js"));
+  });
+  // Their photos. The pattern keeps this from serving anything outside that folder.
+  app.get("/images/corporate-ai/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "corporate-ai", req.params.file));
+  });
   const permanentRedirect = (to: string) => (req: express.Request, res: express.Response) => {
     const query = req.originalUrl.indexOf("?");
     res.redirect(301, query === -1 ? to : to + req.originalUrl.slice(query));

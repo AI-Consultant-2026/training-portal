@@ -28,7 +28,7 @@ function toCsvField(value: string): string {
 }
 
 function leadsToCsv(leads: Lead[]): string {
-  const header = ["Name", "Email", "Phone", "Country", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted", "Unsubscribed"]
+  const header = ["Name", "Email", "Phone", "Country", "Course", "Status", "Aiming for", "Interested in", "Source", "Submitted", "Unsubscribed", "Organisation", "Job title", "Employees", "Department", "Requirement", "Delivery", "Intent", "Message"]
     .map(toCsvField)
     .join(",");
   const rows = leads.map((lead) =>
@@ -44,6 +44,14 @@ function leadsToCsv(leads: Lead[]): string {
       lead.source ?? "",
       new Date(lead.createdAt).toISOString(),
       lead.unsubscribedAt ? new Date(lead.unsubscribedAt).toISOString() : "",
+      lead.details?.organisation ?? "",
+      lead.details?.jobTitle ?? "",
+      lead.details?.employees ?? "",
+      lead.details?.department ?? "",
+      lead.details?.requirement ?? "",
+      lead.details?.delivery ?? "",
+      lead.details?.intent ?? "",
+      lead.details?.message ?? "",
     ]
       .map(toCsvField)
       .join(","),
@@ -334,7 +342,18 @@ export function AdminDashboardPage() {
                     )}
                   </td>
                   <td className="px-4 py-2 text-gray-600">{countryName(lead.country)}</td>
-                  <td className="px-4 py-2 text-gray-600">{lead.course}</td>
+                  <td className="px-4 py-2 text-gray-600">
+                    {lead.course}
+                    {lead.details && (
+                      <div className="mt-1 max-w-xs text-xs text-gray-500">
+                        {[lead.details.organisation, lead.details.jobTitle, lead.details.employees && `${lead.details.employees} staff`]
+                          .filter(Boolean)
+                          .join(" · ")}
+                        {lead.details.intent && <div>Wants: {lead.details.intent}</div>}
+                        {lead.details.message && <div className="whitespace-pre-line">“{lead.details.message}”</div>}
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-2 text-gray-600">{lead.university ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.sector ?? "—"}</td>
                   <td className="px-4 py-2 text-gray-600">{lead.interest ?? "—"}</td>

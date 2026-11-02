@@ -35,6 +35,8 @@ export const config = {
     fromAddress: process.env.EMAIL_FROM_ADDRESS ?? "no-reply@trainingportal.local",
   },
   leadsNotifyEmail: process.env.LEADS_NOTIFY_EMAIL ?? "hello@paleontraining.com",
+  // Where corporate training enquiries (the AI Workflow Productivity pages) are sent.
+  corporateEnquiriesEmail: process.env.CORPORATE_ENQUIRIES_EMAIL ?? "corporate@paleontraining.com",
   // Where the in-portal "Report a problem" form sends reports (2026-09-25).
   supportEmail: process.env.SUPPORT_EMAIL ?? "support@paleontraining.com",
   // Optional, same reasoning as `email` above: error tracking is genuinely off (not

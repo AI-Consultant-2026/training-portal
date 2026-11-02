@@ -5,6 +5,7 @@ import { config } from "../config";
 import { COUNTRIES, CountryCode } from "../constants/countries";
 import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
+import { buildCorporateEnquiryEmail } from "./templates/corporateEnquiry";
 import { buildCourseCompletedEmail } from "./templates/courseCompleted";
 import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
@@ -91,6 +92,18 @@ export async function sendLeadNotificationEmail(lead: {
   interest?: string | null;
 }): Promise<void> {
   await sendEmail(buildLeadNotificationEmail(lead));
+}
+
+// Every enquiry from the AI Workflow Productivity corporate pages goes to corporate@.
+export async function sendCorporateEnquiryEmail(lead: {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  country: string;
+  details?: Record<string, string> | null;
+}): Promise<void> {
+  await sendEmail(buildCorporateEnquiryEmail(lead));
 }
 
 export async function sendLeadWelcomeEmail(lead: {

@@ -1,0 +1,83 @@
+/* AI Workflow Productivity corporate pages (/<cc>/corporate-training/ai-workflow-productivity),
+   2026-11-02. Rendered by src/views/corporateAiWorkflow.ts on top of country-home.css,
+   whose tokens and classes (.wrap, .btn, .section, .form-input...) this reuses. */
+
+.ca-hero-grid { display: grid; gap: 24px; padding-bottom: 40px; }
+.ca-hero-copy { padding-bottom: 0; }
+.ca-hero-title { font-size: clamp(32px, 4.6vw, 54px); max-width: 24ch; }
+.ca-headline { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 26px); color: var(--signal-2); line-height: 1.3; max-width: 34ch; }
+.ca-hero-media img { width: 100%; height: auto; border-radius: var(--radius-lg); aspect-ratio: 16 / 9; object-fit: cover; }
+.ca-trust { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14.5px; color: #C7CCDA; }
+.ca-trust li { position: relative; padding-left: 18px; }
+.ca-trust li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 9px; height: 9px; border-radius: 50%; background: var(--signal); }
+@media (min-width: 980px) {
+  .ca-hero-grid { grid-template-columns: 1.1fr 1fr; align-items: center; gap: 48px; padding-bottom: 0; }
+  .ca-hero-media { padding: 64px 0; }
+}
+
+.ca-definition { background: var(--paper-2); border-bottom: 1px solid var(--line-light); }
+.ca-definition p { padding: 22px 0; font-size: 17px; line-height: 1.6; max-width: 90ch; border-left: 4px solid var(--signal); padding-left: 16px; }
+
+.ca-section .section-title { margin-bottom: 20px; }
+.ca-p { max-width: 70ch; margin: 0 0 16px; line-height: 1.65; font-size: 17px; }
+.section-dark .ca-p { color: #C7CCDA; }
+.section-dark .ca-p strong { color: var(--paper); }
+
+.ca-split { display: grid; gap: 32px; }
+@media (min-width: 980px) { .ca-split { grid-template-columns: 1.2fr 1fr; align-items: start; gap: 56px; } .ca-aside { position: sticky; top: 96px; } }
+.ca-img { width: 100%; height: auto; border-radius: var(--radius-lg); aspect-ratio: 16 / 9; object-fit: cover; }
+
+.ca-list { margin: 0 0 20px; padding: 0; list-style: none; display: grid; gap: 10px; max-width: 75ch; }
+.ca-list li { position: relative; padding-left: 26px; line-height: 1.55; font-size: 16.5px; }
+.ca-list li::before { content: ""; position: absolute; left: 4px; top: 0.5em; width: 10px; height: 10px; border-radius: 2px; background: var(--signal); }
+.ca-list-x li::before { background: transparent; border: 2px solid var(--signal-text); border-radius: 50%; }
+.section-dark .ca-list li { color: #D5D9E3; }
+
+.ca-steps { margin: 0 0 24px; padding: 0; list-style: none; counter-reset: ca; display: grid; gap: 12px; }
+@media (min-width: 760px) { #modules .ca-steps, #journey .ca-steps { grid-template-columns: 1fr 1fr; } }
+.ca-steps li { counter-increment: ca; position: relative; padding: 16px 16px 16px 58px; border: 1px solid var(--line-light); border-radius: var(--radius-lg); background: var(--white); line-height: 1.55; }
+.ca-steps li::before { content: counter(ca); position: absolute; left: 16px; top: 14px; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--paper); font-weight: 700; display: grid; place-items: center; font-size: 14px; }
+.section-dark .ca-steps li { background: var(--ink-2); border-color: var(--line); color: #D5D9E3; }
+.section-dark .ca-steps li::before { background: var(--signal); color: var(--ink); }
+.section-dark .ca-steps strong, .section-dark .ca-list strong { color: var(--paper); }
+
+.ca-cards { display: grid; gap: 12px; margin: 0 0 20px; }
+@media (min-width: 640px) { .ca-cards { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { #benefits .ca-cards { grid-template-columns: repeat(4, 1fr); } }
+.ca-card { border: 1px solid var(--line-light); border-top: 3px solid var(--signal); border-radius: var(--radius-lg); background: var(--white); padding: 18px; }
+.ca-card h3 { font-size: 19px; margin-bottom: 6px; }
+.ca-card p { line-height: 1.55; color: var(--charcoal-soft); }
+
+.ca-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 0; }
+
+.ca-narrow { max-width: 860px; }
+.ca-faq { border-bottom: 1px solid var(--line-light); }
+.ca-faq summary { cursor: pointer; padding: 16px 32px 16px 0; font-weight: 600; font-size: 17.5px; list-style: none; position: relative; min-height: 44px; }
+.ca-faq summary::-webkit-details-marker { display: none; }
+.ca-faq summary::after { content: "+"; position: absolute; right: 4px; top: 12px; font-size: 24px; color: var(--signal-text); }
+.ca-faq[open] summary::after { content: "\2212"; }
+.ca-faq p { padding: 0 0 18px; line-height: 1.65; max-width: 72ch; }
+
+.ca-enquiry { display: grid; gap: 32px; }
+@media (min-width: 980px) { .ca-enquiry { grid-template-columns: 1fr 1.3fr; gap: 56px; align-items: start; } }
+.ca-contact { color: #C7CCDA; line-height: 1.8; }
+.ca-contact a { color: var(--paper); }
+.ca-form, .ca-thanks { background: var(--paper); color: var(--charcoal); border-radius: var(--radius-lg); padding: 22px; }
+@media (min-width: 600px) { .ca-form, .ca-thanks { padding: 32px; } }
+.ca-grid { display: grid; gap: 0 16px; }
+@media (min-width: 640px) { .ca-grid { grid-template-columns: 1fr 1fr; } }
+.ca-form textarea.form-input { min-height: 110px; resize: vertical; }
+.ca-intent { display: grid; gap: 6px; margin: 0 0 18px; font-weight: 600; }
+.ca-intent label { display: flex; gap: 10px; align-items: center; min-height: 40px; cursor: pointer; }
+.ca-intent input { width: 20px; height: 20px; accent-color: var(--signal-text); }
+.ca-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.ca-form .form-note { margin-top: 12px; font-size: 14px; color: var(--charcoal-soft); }
+.ca-form .form-error { margin: 8px 0; color: #A3251A; font-weight: 600; }
+.ca-thanks h3 { font-size: 24px; margin-bottom: 12px; }
+.ca-thanks p { line-height: 1.65; margin-bottom: 12px; }
+.ca-thanks a { color: var(--signal-text); font-weight: 600; }
+
+.ca-links { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.ca-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1px solid var(--line-light); border-radius: var(--radius); background: var(--white); text-decoration: none; font-weight: 600; }
+.ca-links a:hover { border-color: var(--signal-text); }
+.ca-related { padding: 48px 0; }

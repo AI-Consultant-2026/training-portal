@@ -1,8 +1,10 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
+import * as corporateLeadsController from "../controllers/corporateLeads.controller";
 import * as leadsController from "../controllers/leads.controller";
 import { config } from "../config";
 import { validate } from "../middleware/validate";
+import { corporateLeadSchema } from "../validators/corporateLeads.validators";
 import { createLeadSchema } from "../validators/leads.validators";
 
 export const leadsRouter = Router();
@@ -31,3 +33,5 @@ leadsRouter.post("/unsubscribe", unsubscribeRateLimiter, leadsController.unsubsc
 leadsRouter.use(leadsRateLimiter);
 
 leadsRouter.post("/", validate(createLeadSchema), leadsController.create);
+// Enquiries from the AI Workflow Productivity corporate pages (2026-11-02).
+leadsRouter.post("/corporate", validate(corporateLeadSchema), corporateLeadsController.create);
