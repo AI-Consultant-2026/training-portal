@@ -554,12 +554,17 @@ const NIGERIA_GUIDES: [string, string][] = [
   ["/graduate-to-job-ready-nigeria", "Graduate to Job-Ready Roadmap"],
 ];
 
-export function footer(ctx: PageContext, home: string): string {
+// The Nigeria guides, Consultancy and University Partnerships links appear only on the /ng
+// homepage footer (2026-11-03); every other page that uses this footer leaves them out.
+export function footer(ctx: PageContext, home: string, nigeriaHome = false): string {
   const countries = MARKET_ORDER.map((code) => {
     const k = COUNTRIES[code];
     return `<li><a class="footer-country" href="${k.site.path}" data-pick-country="${code}">${flagSvg(code, "flag flag-sm")}<span>${escapeHtml(k.name)}</span><span class="footer-path">${k.site.path}</span></a></li>`;
   }).join("");
-  const guides = ctx.country === "NG" ? NIGERIA_GUIDES.map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("") : "";
+  const extras = nigeriaHome
+    ? [["/consultancy", "Consultancy"], ["/university-partners", "University Partnerships"], ...NIGERIA_GUIDES]
+        .map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("")
+    : "";
   return `<footer class="site-footer">
   <div class="wrap footer-top">
     <div class="footer-brand">
@@ -584,9 +589,7 @@ export function footer(ctx: PageContext, home: string): string {
         <li><a href="${ambassadorsPath(ctx.country)}">Ambassadors</a></li>
         <li><a href="/support">Support</a></li>
         <li><a href="/corporate-training">Corporate &amp; AI training</a></li>
-        <li><a href="/consultancy">Consultancy</a></li>
-        <li><a href="/university-partners">University Partnerships</a></li>
-        ${guides}
+        ${extras}
       </ul>
     </nav>
     <div>
@@ -780,7 +783,7 @@ ${header(ctx, home)}
   </section>
   ${referBand(ctx)}
 </main>
-${footer(ctx, home)}
+${footer(ctx, home, ctx.country === "NG" && !ctx.hub)}
 ${pageData(ctx, home)}
 ${scripts(ctx)}
 </body>

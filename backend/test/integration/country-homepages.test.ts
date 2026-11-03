@@ -407,3 +407,26 @@ describe("Employers card on the country homepages", () => {
     expect(nav).not.toContain("For employers");
   });
 });
+
+describe("Footer extras (2026-11-03)", () => {
+  const extras = ["/consultancy", "/university-partners", "/digital-skills-training-nigeria", "/graduate-to-job-ready-nigeria", "/corporate-training-nigeria"];
+  const footerOf = (html: string) => html.slice(html.indexOf('<footer class="site-footer">'));
+
+  it("/ng keeps Consultancy, University Partnerships and the 11 Nigeria guides", async () => {
+    const f = footerOf((await request(app).get("/ng")).text);
+    for (const href of extras) expect(f).toContain(`href="${href}"`);
+    expect((f.match(/<li><a href="\/[a-z0-9-]+-nigeria"|href="\/nysc-digital-skills"|href="\/oil-gas-banking-telecoms-digital-skills"|href="\/four-digital-skills-nigerian-graduates"/g) || []).length).toBeGreaterThanOrEqual(11);
+  });
+
+  it.each([
+    "/", "/za", "/gh", "/ke", "/corporate-training", "/ng/corporate-training/ai-workflow-productivity",
+    "/za/corporate-training/cybersecure-workforce", "/gh/corporate-training/ai-cybersecurity-professional-accelerator",
+    "/cyber-security-fundamentals-course", "/za/cyber-security-fundamentals-course",
+  ])("%s leaves them out of the footer", async (path) => {
+    const res = await request(app).get(path);
+    expect(res.status).toBe(200);
+    const f = footerOf(res.text);
+    expect(f).toContain(`href="/support"`);
+    for (const href of extras) expect(f).not.toContain(`href="${href}"`);
+  });
+});

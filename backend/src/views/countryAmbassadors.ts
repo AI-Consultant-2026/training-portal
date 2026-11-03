@@ -196,10 +196,7 @@ export function renderCountryAmbassadors(country: Exclude<CountryCode, "NG">): s
     "opportunities in Oil &amp; Gas, Banking, Telecommunications and Nigeria’s fastest-growing industries.<br>\n        Led from London, delivered in Nigeria.",
     `opportunities in ${amp(c.site.headlineIndustries)} and ${c.name}’s fastest-growing industries.<br>\n        Led from London, delivered in ${c.name}.`,
   );
-  swap(
-    /\n {8}<li><a href="\/digital-skills-training-nigeria">[\s\S]*?Banking &amp; Telecom Training<\/a><\/li>/,
-    "",
-  );
+  // (The Nigeria guide links were removed from the template footer itself on 2026-11-03.)
   swap(`<li><a href="/#why">Why Paleon</a></li>`, `<li><a href="${home}#why">Why Paleon</a></li>`);
   swap(`<li><a href="/#register">Register interest</a></li>`, `<li><a href="${home}#career-match">Free Career Match</a></li>`);
 
