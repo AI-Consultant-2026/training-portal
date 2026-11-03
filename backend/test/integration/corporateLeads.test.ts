@@ -125,7 +125,7 @@ describe("Corporate AI training pages", () => {
     const res = await request(app).get("/za");
 
     expect(res.text).toContain('href="/za/corporate-training/ai-workflow-productivity"');
-    expect(res.text).toContain('href="/corporate-training"');
+    expect(res.text).toContain('href="/corporate-training?country=za"');
   });
 });
 

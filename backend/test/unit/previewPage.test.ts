@@ -53,3 +53,25 @@ describe("server-rendered free-lesson page", () => {
     expect(renderMarkdownBlock('[x](javascript:alert(1))')).not.toContain("href");
   });
 });
+
+describe("server-rendered free-lesson page in a country's currency (2026-11-03)", () => {
+  const za = {
+    ...preview,
+    localPrices: {
+      ZA: { checkout: { country: "ZA", gateway: "flutterwave", currency: { code: "ZAR", symbol: "R", spaced: false }, currencyName: "Rand", whatsappLink: "" }, price: 2470, deposit: 247 },
+    },
+  };
+
+  it("shows Rand and the South African course page, with no Naira", () => {
+    const html = renderPreviewPage(INDEX, "gis-and-drone-mapping", za as never, "ZA");
+    expect(html).toContain("Course fee: R2,470.");
+    expect(html).toContain("Or start with R247");
+    expect(html).toContain('href="/za/gis-and-drone-mapping-course"');
+    expect(html).toContain('"priceCurrency":"ZAR"');
+    expect(html).not.toContain("₦");
+  });
+
+  it("keeps Naira without a country", () => {
+    expect(renderPreviewPage(INDEX, "gis-and-drone-mapping", za as never)).toContain("Course fee: ₦200,000.");
+  });
+});

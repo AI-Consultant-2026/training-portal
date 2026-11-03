@@ -213,7 +213,7 @@ function finalCopy(c: CyberPageContent): EnquiryCopy {
 function related(code: CountryCode): string {
   const c = COUNTRIES[code];
   const links = [
-    `<li><a href="${CORPORATE_HUB_PATH}">All corporate training</a></li>`,
+    `<li><a href="${CORPORATE_HUB_PATH}?country=${code.toLowerCase()}">All corporate training</a></li>`,
     `<li><a href="${corporateAiPath(code)}">AI Workflow Productivity for teams in ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator for specialists</a></li>`,
     `<li><a href="${coursePagePath(code, "cyber-security-fundamentals")}">Cyber Security Fundamentals (individual course)</a></li>`,

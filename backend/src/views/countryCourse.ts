@@ -20,6 +20,7 @@ import {
   jobsBoardPath,
   scripts,
   text,
+  previewHref,
   whatsappAttr,
 } from "./countryHome";
 
@@ -743,7 +744,7 @@ ${header(ctx, home)}
       <h1 class="hero-title">${local.h1}</h1>
       <p class="hero-sub">${local.intro}</p>
       <div class="hero-ctas">
-        <a class="btn btn-outline-light btn-lg" href="/preview/${slug}">Try the first lesson free</a>
+        <a class="btn btn-outline-light btn-lg" href="${previewHref(country, slug)}">Try the first lesson free</a>
         ${enrol}
       </div>
       <p class="cc-fee">Course fee <strong>${text(fee)}</strong> &middot; or start with ${text(deposit)} &middot; pay with ${text(c.site.paymentMethods)}${live ? "" : `<br>Payments in ${escapeHtml(c.name)} open soon. The first lesson is free to try now.`}</p>
@@ -774,7 +775,7 @@ ${header(ctx, home)}
         <thead><tr><th scope="col">Day</th><th scope="col">Topic</th></tr></thead>
         <tbody>${OUTLINE[slug].map(([d, t]) => `<tr><td>${d}</td><td>${t}</td></tr>`).join("")}</tbody>
       </table>
-      <p>Every lesson is illustrated and has a matching video. Each day ends with a short quiz and an assignment, and the course finishes with a capstone project you can show employers. It is self-paced with lifetime access, and you can try the <a href="/preview/${slug}">first lesson free</a> before paying.</p>
+      <p>Every lesson is illustrated and has a matching video. Each day ends with a short quiz and an assignment, and the course finishes with a capstone project you can show employers. It is self-paced with lifetime access, and you can try the <a href="${previewHref(country, slug)}">first lesson free</a> before paying.</p>
 
       <h2 class="section-title">Your certificate, and what it isn&rsquo;t</h2>
       <p>${local.certificateNote}</p>
@@ -796,7 +797,7 @@ ${header(ctx, home)}
         ${READING[slug].map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("")}
       </ul>
       <div class="hero-ctas cc-end">
-        <a class="btn btn-outline-dark btn-lg" href="/preview/${slug}">Try the first lesson free</a>
+        <a class="btn btn-outline-dark btn-lg" href="${previewHref(country, slug)}">Try the first lesson free</a>
         ${enrol.replace("btn-signal", "btn-ink")}
       </div>
     </div>

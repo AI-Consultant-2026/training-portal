@@ -218,6 +218,17 @@ function countryMenu(ctx: PageContext): string {
 </div>`;
 }
 
+// Links that keep the visitor's country (2026-11-03): the corporate training hub and the
+// free-lesson pages are single URLs, so a country page passes its country along and the
+// page renders in that country (header, currency) instead of defaulting to Nigeria.
+export function corporateHubHref(ctx: Pick<PageContext, "country" | "hub">): string {
+  return ctx.hub ? "/corporate-training" : `/corporate-training?country=${ctx.country.toLowerCase()}`;
+}
+
+export function previewHref(country: CountryCode, slug: string): string {
+  return country === "NG" ? `/preview/${slug}` : `/preview/${slug}?country=${country.toLowerCase()}`;
+}
+
 export function header(ctx: PageContext, home: string): string {
   const c = COUNTRIES[ctx.country];
   return `<header class="site-header">
@@ -235,7 +246,7 @@ export function header(ctx: PageContext, home: string): string {
         <li><a href="${home}#career-match">Career Match</a></li>
         <li><a href="${home}#how">How it works</a></li>
         <li><a href="${home}#why">Why Paleon</a></li>
-        <li><a href="/corporate-training">Corporate Training</a></li>
+        <li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
         <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>
@@ -349,7 +360,7 @@ function courseCards(ctx: PageContext, home: string): string {
         <span class="price-deposit">or start with ${text(deposit)}</span>
       </div>
       <div class="course-actions">
-        <a class="btn btn-outline-dark btn-block" href="/preview/${slug}">Free lesson</a>
+        <a class="btn btn-outline-dark btn-block" href="${previewHref(country, slug)}">Free lesson</a>
         ${start}
       </div>
     </article>`;
@@ -513,7 +524,7 @@ function employers(ctx: PageContext): string {
       <ul class="stat-cards">
         <li class="stat-card"><span class="stat-card-label">Pay in ${escapeHtml(s.currency.code)}</span><strong>${text(s.paymentMethods)}</strong></li>
         <li class="stat-card"><span class="stat-card-label">WhatsApp support in ${escapeHtml(c.name)}</span><strong>${whatsapp}</strong></li>
-        <li class="stat-card"><span class="stat-card-label">Training a team?</span><strong><a href="/corporate-training">Corporate Training</a></strong>
+        <li class="stat-card"><span class="stat-card-label">Training a team?</span><strong><a href="${corporateHubHref(ctx)}">Corporate Training</a></strong>
           <a class="stat-card-more" href="${s.corporateTraining.href}">AI Workflow Productivity &amp; Process Transformation</a>
           <a class="stat-card-more" href="${c.site.path}/corporate-training/cybersecure-workforce">CyberSecure Workforce</a>
           <a class="stat-card-more" href="${c.site.path}/corporate-training/ai-cybersecurity-professional-accelerator">AI + Cybersecurity Professional Accelerator</a></li>
@@ -588,7 +599,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false): str
         <li><a href="${jobsBoardPath(ctx.country)}">Latest jobs${ctx.hub ? "" : ` in ${escapeHtml(COUNTRIES[ctx.country].name)}`}</a></li>
         <li><a href="${ambassadorsPath(ctx.country)}">Ambassadors</a></li>
         <li><a href="/support">Support</a></li>
-        <li><a href="/corporate-training">Corporate &amp; AI training</a></li>
+        <li><a href="${corporateHubHref(ctx)}">Corporate &amp; AI training</a></li>
         ${extras}
       </ul>
     </nav>
@@ -623,7 +634,7 @@ function pageData(ctx: PageContext, home: string): string {
           title: info.title,
           meta: `${info.days} days \u00b7 ${info.lessons} lessons \u00b7 ${price} \u00b7 self-paced`,
           why: info.why,
-          preview: `/preview/${slug}`,
+          preview: previewHref(country, slug),
           page: coursePagePath(country, slug),
           enrol: live ? `/register?course=${slug}${country === "NG" ? "" : `&country=${country}`}` : `${home}#waitlist`,
         },

@@ -1,3 +1,4 @@
+import { COUNTRIES, CountryCode } from "../constants/countries";
 import { PublicCoursePreview } from "./course.service";
 
 // Server-rendered /preview/<slug> (2026-09-25). The free-lesson page is a React route
@@ -53,7 +54,14 @@ function description(preview: PublicCoursePreview): string {
   return text.length > 158 ? `${text.slice(0, 155).replace(/\s+\S*$/, "")}...` : text;
 }
 
-export function renderPreviewPage(indexHtml: string, slug: string, preview: PublicCoursePreview): string {
+// `country` (from ?country=za on links from a country page) shows that country's prices
+// and course page instead of Nigeria's (2026-11-03).
+export function renderPreviewPage(
+  indexHtml: string,
+  slug: string,
+  preview: PublicCoursePreview,
+  country: CountryCode | null = null,
+): string {
   const { course, module, lesson } = preview;
   const url = `${SITE}/preview/${slug}`;
   const title = `Free lesson: ${lesson.title} | ${course.title} | Paleon Training`;
@@ -71,15 +79,21 @@ export function renderPreviewPage(indexHtml: string, slug: string, preview: Publ
       );
     }
   });
-  const price = course.priceNgn !== null ? `\u20a6${course.priceNgn.toLocaleString("en-NG")}` : null;
+  const local = country && country !== "NG" ? preview.localPrices[country] : undefined;
+  const money = (n: number) =>
+    local ? `${local.checkout.currency.symbol}${local.checkout.currency.spaced ? " " : ""}${n.toLocaleString("en-GB")}` : `\u20a6${n.toLocaleString("en-NG")}`;
+  const priceAmount = local ? local.price : course.priceNgn;
+  const depositAmount = local ? local.deposit : course.depositNgn;
+  const price = priceAmount !== null ? money(priceAmount) : null;
+  const coursePage = local && country ? `${COUNTRIES[country].site.path}/${slug}-course` : `/${slug}-course`;
   const body = `<main style="max-width:48rem;margin:0 auto;padding:2.5rem 1.5rem;font-family:system-ui,sans-serif;line-height:1.6">
 <p><strong>Free preview.</strong> The first lesson of ${escapeHtml(course.title)}, exactly as enrolled students see it. No account needed.</p>
 <p>${escapeHtml(course.title)} &middot; Day ${module.weekNumber}: ${escapeHtml(module.title)}</p>
 <h1>${escapeHtml(lesson.title)}</h1>
 ${parts.join("\n")}
 <h2>Want the rest of the course?</h2>
-<p>${course.lessonCount - 1} more lessons across ${course.dayCount} days, each with an illustration and a video, plus assignments, quizzes, a capstone project and a certificate of completion. Self-paced, with lifetime access.${price ? ` Course fee: ${price}.` : ""}${course.depositNgn !== null ? ` Or start with \u20a6${course.depositNgn.toLocaleString("en-NG")} and pay the balance later.` : ""}</p>
-<p><a href="/register?course=${encodeURIComponent(slug)}">Enrol in ${escapeHtml(course.title)}</a> &middot; <a href="/${encodeURIComponent(slug)}-course">Course details</a></p>
+<p>${course.lessonCount - 1} more lessons across ${course.dayCount} days, each with an illustration and a video, plus assignments, quizzes, a capstone project and a certificate of completion. Self-paced, with lifetime access.${price ? ` Course fee: ${price}.` : ""}${depositAmount !== null ? ` Or start with ${money(depositAmount)} and pay the balance later.` : ""}</p>
+<p><a href="/register?course=${encodeURIComponent(slug)}">Enrol in ${escapeHtml(course.title)}</a> &middot; <a href="${escapeHtml(coursePage)}">Course details</a></p>
 </main>`;
 
   const jsonLd = {
@@ -99,8 +113,8 @@ ${parts.join("\n")}
       name: course.title,
       url: `${SITE}/${slug}-course`,
       provider: { "@type": "Organization", name: "Paleon Training", url: SITE },
-      ...(course.priceNgn !== null
-        ? { offers: { "@type": "Offer", price: String(course.priceNgn), priceCurrency: "NGN", category: "Paid" } }
+      ...(priceAmount !== null
+        ? { offers: { "@type": "Offer", price: String(priceAmount), priceCurrency: local ? local.checkout.currency.code : "NGN", category: "Paid" } }
         : {}),
     },
   };

@@ -311,7 +311,7 @@ export function contactLine(line: string): string {
 function related(code: CountryCode): string {
   const c = COUNTRIES[code];
   const links = [
-    `<li><a href="${CORPORATE_HUB_PATH}">All corporate training</a></li>`,
+    `<li><a href="${CORPORATE_HUB_PATH}?country=${code.toLowerCase()}">All corporate training</a></li>`,
     `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
     code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
@@ -595,8 +595,14 @@ function hubJsonLd(url: string): object {
   };
 }
 
-export function renderCorporateHub(): string {
-  const ctx: PageContext = { country: "NG", hub: true, detected: null, chosen: null };
+// The hub keeps the visitor's country (2026-11-03): a country page links here with
+// ?country=za, and the page then shows that country in the header, footer and menu links.
+// Without one it falls back to the country the visitor picked (cookie), as / does, then Nigeria.
+export function renderCorporateHub(country: CountryCode | null = null, chosen: CountryCode | null = null): string {
+  const ctx: PageContext = country
+    ? { country, hub: false, detected: null, chosen: country }
+    : { country: chosen ?? "NG", hub: true, detected: null, chosen };
+  const home = ctx.hub ? "/" : COUNTRIES[ctx.country].site.path;
   const url = `${ORIGIN}${CORPORATE_HUB_PATH}`;
   const headHtml = head(ctx, {
     title: "Corporate & AI Training for Organisations | Paleon Training",
@@ -642,7 +648,7 @@ export function renderCorporateHub(): string {
   ).join("\n");
 
   return `${headHtml}
-<body data-country="NG" data-hub>
+<body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
 <div class="util-bar">
@@ -652,7 +658,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, "/")}
+${header(ctx, home)}
 <main id="main">
   <section class="hero ca-hero" id="top">
     <div class="wrap ca-hero-grid">
@@ -738,7 +744,7 @@ ${header(ctx, "/")}
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>
-${footer(ctx, "/")}
+${footer(ctx, home)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 </body>

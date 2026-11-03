@@ -358,8 +358,11 @@ describe("A live Kenya outside the checkout", () => {
     const res = await request(app).get(`/api/courses/${course.slug}/preview`);
     expect(res.status).toBe(200);
     expect(res.body.course).toMatchObject({ priceNgn: 150_000, depositNgn: 20_000 });
-    expect(res.body.localPrices).toEqual({
+    // Every country with prices is listed, live or not (2026-11-03), so a free lesson
+    // opened from /za or /gh shows Rand or Cedis too.
+    expect(res.body.localPrices).toMatchObject({
       KE: { checkout: expect.objectContaining({ country: "KE" }), price: PRICE, deposit: DEPOSIT },
     });
+    expect(Object.keys(res.body.localPrices).sort()).toEqual(["GH", "KE", "ZA"]);
   });
 });

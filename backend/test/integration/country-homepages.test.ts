@@ -393,17 +393,23 @@ describe("Employers card on the country homepages", () => {
     const html = (await request(app).get(`/${cc}`)).text;
     const card = html.slice(html.indexOf("Training a team?"), html.indexOf("</li>", html.indexOf("Training a team?")));
 
-    expect(card).toContain('<a href="/corporate-training">Corporate Training</a>');
+    expect(card).toContain(`<a href="/corporate-training?country=${cc}">Corporate Training</a>`);
     expect(card).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity">AI Workflow Productivity &amp; Process Transformation</a>`);
     expect(card).toContain(`href="/${cc}/corporate-training/cybersecure-workforce">CyberSecure Workforce</a>`);
     expect(card).toContain(`href="/${cc}/corporate-training/ai-cybersecurity-professional-accelerator">AI + Cybersecurity Professional Accelerator</a>`);
     expect(card).not.toMatch(/for specialists|All corporate training|awareness for staff|employers<\/a>/);
   });
 
-  it.each(["/", "/ng", "/za", "/gh", "/ke"])("%s has a Corporate Training menu item linking to the hub", async (path) => {
+  it.each([
+    ["/", "/corporate-training"],
+    ["/ng", "/corporate-training?country=ng"],
+    ["/za", "/corporate-training?country=za"],
+    ["/gh", "/corporate-training?country=gh"],
+    ["/ke", "/corporate-training?country=ke"],
+  ])("%s has a Corporate Training menu item linking to the hub in its own country", async (path, href) => {
     const html = (await request(app).get(path)).text;
     const nav = html.slice(html.indexOf('id="navLinks"'), html.indexOf("</ul>", html.indexOf('id="navLinks"')));
-    expect(nav).toContain('<li><a href="/corporate-training">Corporate Training</a></li>');
+    expect(nav).toContain(`<li><a href="${href}">Corporate Training</a></li>`);
     expect(nav).not.toContain("For employers");
   });
 });
@@ -428,5 +434,39 @@ describe("Footer extras (2026-11-03)", () => {
     const f = footerOf(res.text);
     expect(f).toContain(`href="/support"`);
     for (const href of extras) expect(f).not.toContain(`href="${href}"`);
+  });
+});
+
+describe("Country kept across the corporate hub and free lessons (2026-11-03)", () => {
+  it.each([
+    ["za", "ZA", "South Africa"],
+    ["gh", "GH", "Ghana"],
+    ["ke", "KE", "Kenya"],
+    ["ng", "NG", "Nigeria"],
+  ])("/corporate-training?country=%s shows that country", async (cc, code, name) => {
+    const res = await request(app).get(`/corporate-training?country=${cc}`);
+    expect(res.status).toBe(200);
+    expect(res.text).toContain(`<body data-country="${code}">`);
+    expect(res.text).toContain(`Digital skills &middot; ${name}`);
+    expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/corporate-training">`);
+    const nav = res.text.slice(res.text.indexOf('id="navLinks"'), res.text.indexOf("</ul>", res.text.indexOf('id="navLinks"')));
+    expect(nav).toContain(`href="/${cc}#courses"`);
+    expect(nav).toContain(`href="/corporate-training?country=${cc}"`);
+  });
+
+  it("/corporate-training without a country uses the remembered one, then Nigeria", async () => {
+    expect((await request(app).get("/corporate-training")).text).toContain('<body data-country="NG" data-hub>');
+    const res = await request(app).get("/corporate-training").set("Cookie", "paleon_country=GH");
+    expect(res.text).toContain('<body data-country="GH" data-hub>');
+    expect((await request(app).get("/corporate-training?country=xx")).text).toContain('<body data-country="NG" data-hub>');
+  });
+
+  it.each(["za", "gh", "ke"])("/%s free-lesson links carry the country", async (cc) => {
+    const home = (await request(app).get(`/${cc}`)).text;
+    expect(home).toContain(`href="/preview/cyber-security-fundamentals?country=${cc}"`);
+    expect(home).not.toContain('href="/preview/cyber-security-fundamentals"');
+    const course = (await request(app).get(`/${cc}/cyber-security-fundamentals-course`)).text;
+    expect(course).toContain(`href="/preview/cyber-security-fundamentals?country=${cc}"`);
+    expect(course).not.toContain('href="/preview/cyber-security-fundamentals"');
   });
 });

@@ -13,15 +13,31 @@ import { LessonContent } from "./LessonContent";
 
 const WHATSAPP_URL = "https://wa.me/447508823495";
 
-// The visitor's country: their account's, or the one they picked on a country homepage
-// (country-home.js stores it under this key).
-function visitorCountry(accountCountry: string | null | undefined): string | null {
+const COUNTRY_KEY = "paleon_country";
+const KNOWN_COUNTRIES = ["NG", "ZA", "KE", "GH"];
+
+// The visitor's country (2026-11-03): the country page they came from (?country=za on its
+// free-lesson links), then their account's, then the one they picked on a country homepage
+// (country-home.js stores it under this key, and in a cookie).
+function visitorCountry(asked: string | null, accountCountry: string | null | undefined): string | null {
+  const fromLink = asked?.toUpperCase() ?? "";
+  if (KNOWN_COUNTRIES.includes(fromLink)) {
+    try {
+      window.localStorage.setItem(COUNTRY_KEY, fromLink);
+    } catch {
+      // Storage blocked: the link still sets the country for this page.
+    }
+    return fromLink;
+  }
   if (accountCountry) return accountCountry;
   try {
-    return window.localStorage.getItem("paleon_country");
+    const stored = window.localStorage.getItem(COUNTRY_KEY);
+    if (stored) return stored;
   } catch {
-    return null;
+    // Fall through to the cookie.
   }
+  const cookie = document.cookie.match(/(?:^|;\s*)paleon_country=([A-Z]{2})/);
+  return cookie ? cookie[1] : null;
 }
 
 // Public "Try Day 1 free" page (2026-09-25): the first lesson of a course, readable
@@ -72,7 +88,7 @@ export function PreviewLessonPage() {
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
   const remaining = Math.max(course.lessonCount - 1, 0);
   // A visitor from a live Ghana, Kenya or South Africa sees their own currency (2026-10-30).
-  const country = visitorCountry(user?.country);
+  const country = visitorCountry(searchParams.get("country"), user?.country);
   const local = country ? preview.localPrices?.[country] : undefined;
   const checkout = local?.checkout;
   const priceAmount = local ? local.price : course.priceNgn;
@@ -167,7 +183,7 @@ export function PreviewLessonPage() {
       <PaymentTrustStrip courseSlug={course.slug} checkout={checkout} className="mt-4" />
 
       <p className="mt-6 text-sm">
-        <a href={`/${course.slug}-course`} className="text-blue-600 hover:underline">
+        <a href={local ? `/${local.checkout.country.toLowerCase()}/${course.slug}-course` : `/${course.slug}-course`} className="text-blue-600 hover:underline">
           Visit the {course.title} course page
         </a>
       </p>

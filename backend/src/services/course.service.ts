@@ -1,4 +1,4 @@
-import { COUNTRY_CODES, isLive } from "../constants/countries";
+import { COUNTRY_CODES } from "../constants/countries";
 import { balanceIn, CheckoutInfo, checkoutInfo, coursePriceIn, depositIn } from "./paystackAccounts";
 import { COURSE_PRICES_NGN, INSTALMENT_DEPOSIT_NGN, getBalanceNgn } from "../constants/coursePricing";
 import { Course, CourseModule, Lesson } from "../models";
@@ -127,7 +127,9 @@ export interface PublicCoursePreview {
 function localPricesFor(slug: string): PublicCoursePreview["localPrices"] {
   const prices: PublicCoursePreview["localPrices"] = {};
   for (const code of COUNTRY_CODES) {
-    if (code === "NG" || !isLive(code)) continue;
+    // Every country with a price, live or not (2026-11-03): the free lesson shows it in
+    // the local currency, the same as the country course pages do.
+    if (code === "NG") continue;
     const price = coursePriceIn(code, slug);
     if (price === undefined) continue;
     prices[code] = {

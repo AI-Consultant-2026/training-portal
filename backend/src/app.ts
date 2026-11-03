@@ -232,7 +232,10 @@ export function createApp() {
   }
   // The corporate training hub linking them (2026-11-02).
   app.get(CORPORATE_HUB_PATH, (req, res) => {
-    res.type("html").send(renderCorporateHub());
+    const asked = String(req.query.country ?? "").toUpperCase();
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderCorporateHub(isCountryCode(asked) ? asked : null, chosenCountry(req)));
   });
   app.get("/corporate-ai.css", (req, res) => {
     res.type("text/css").sendFile(path.join(__dirname, "marketing", "corporate-ai.css"));
@@ -1165,7 +1168,8 @@ export function createApp() {
       if (!fs.existsSync(indexHtmlPath)) return next();
       try {
         const preview = await getPublicCoursePreview(req.params.slug);
-        const html = renderPreviewPage(fs.readFileSync(indexHtmlPath, "utf8"), req.params.slug, preview);
+        const asked = String(req.query.country ?? "").toUpperCase();
+        const html = renderPreviewPage(fs.readFileSync(indexHtmlPath, "utf8"), req.params.slug, preview, isCountryCode(asked) ? asked : null);
         res.set("Cache-Control", "public, max-age=300");
         return res.type("html").send(html);
       } catch {
