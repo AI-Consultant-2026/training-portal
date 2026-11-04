@@ -88,4 +88,11 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
     for (const slug of COURSES) expect(sitemap).toContain(`<loc>https://paleontraining.com/preview/${slug}</loc>`);
     expect((await request(app).get("/robots.txt")).text).toContain("Allow: /preview/");
   });
+
+  it("lets crawlers fetch the free-lesson API the preview pages render from", async () => {
+    const robots = (await request(app).get("/robots.txt")).text;
+    const allow = robots.indexOf("Allow: /api/courses/*/preview$");
+    expect(allow).toBeGreaterThan(-1);
+    expect(robots).toContain("Disallow: /api/");
+  });
 });

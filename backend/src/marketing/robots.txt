@@ -150,6 +150,11 @@ Allow: /digital-skills-nigeria-career-intelligence-guide
 Allow: /support
 Allow: /terms
 Allow: /privacy
+# The free-lesson pages (/preview/<slug>) load their lesson from this one public API
+# route. Googlebot must be able to fetch it while rendering, or the page renders as
+# "We couldn't find that course preview" and is reported as a soft 404 (GSC, 2026-11-04).
+# The longer Allow rule wins over "Disallow: /api/" for this path only.
+Allow: /api/courses/*/preview$
 Disallow: /api/
 Disallow: /courses
 Disallow: /lessons
