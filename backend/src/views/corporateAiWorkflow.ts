@@ -682,16 +682,6 @@ ${header(ctx, home)}
     <div class="wrap"><p>${escapeHtml(HUB_DEFINITION)}</p></div>
   </section>
 
-  <section class="section section-paper ca-section" id="ai-workflow" aria-labelledby="ai-workflow-title">
-    <div class="wrap">
-      <span class="section-eyebrow">Flagship programme</span>
-      <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
-      <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
-      <div class="ca-countries">${countryCards}</div>
-    </div>
-  </section>
-
   <section class="section section-paper ca-section" id="cybersecure" aria-labelledby="cybersecure-title">
     <div class="wrap">
       <span class="section-eyebrow">Flagship programme</span>
@@ -702,10 +692,22 @@ ${header(ctx, home)}
     </div>
   </section>
 
+  <section class="section section-paper ca-section" id="ai-workflow" aria-labelledby="ai-workflow-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Flagship programme</span>
+      <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
+      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+      <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <div class="ca-countries">${countryCards}</div>
+    </div>
+  </section>
+
   <section class="section section-paper ca-section" id="accelerator" aria-labelledby="accelerator-title">
     <div class="wrap">
       <span class="section-eyebrow">Professional programme</span>
       <h2 class="section-title" id="accelerator-title">AI + Cybersecurity Professional Accelerator</h2>
+      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
       <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${accCards}</div>

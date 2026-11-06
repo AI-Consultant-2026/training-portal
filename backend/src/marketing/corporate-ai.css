@@ -120,3 +120,6 @@
 .section-dark .ac-compare .ca-card h3 a { color: var(--paper); }
 .section-dark .ac-here { border-color: var(--signal); }
 .ac-bridge { font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 26px); color: var(--signal-2); margin: 8px 0 0; }
+
+/* Hub: fully booked notice (2026-11-06) */
+.ca-booked{display:inline-block;margin:0 0 1rem;padding:.6rem .9rem;border-left:4px solid #b45309;background:#fef3c7;color:#78350f;border-radius:4px;font-size:.95rem;line-height:1.45}
