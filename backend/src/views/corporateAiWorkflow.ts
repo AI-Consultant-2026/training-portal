@@ -705,12 +705,12 @@ ${header(ctx, home)}
     </div>
   </section>
 
-  <section class="section section-paper ca-section" id="journey" aria-labelledby="journey-title">
+  <section class="section section-dark ca-section" id="journey" aria-labelledby="journey-title">
     <div class="wrap">
       <span class="section-eyebrow">How it works</span>
       <h2 class="section-title" id="journey-title">Your corporate training journey</h2>
       <ul class="ca-steps">${HUB_JOURNEY.map((j) => `<li>${rich(j)}</li>`).join("")}</ul>
-      <div class="ca-ctas">${ctaButton(CONSULTATION, false)}</div>
+      <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
     </div>
   </section>
 
