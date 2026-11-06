@@ -784,6 +784,13 @@ export function createApp() {
     res.set("Cross-Origin-Resource-Policy", "cross-origin");
     res.sendFile(path.join(__dirname, "marketing", "videos", "home", req.params.file));
   });
+  // Corporate hub programme videos (2026-11-06): one ~8MB 720p intro per programme on
+  // /corporate-training, plus branded poster images. Same Range-capable sendFile.
+  app.get("/videos/corporate/:file([a-z0-9-]+\\.(?:mp4|jpg))", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+    res.sendFile(path.join(__dirname, "marketing", "videos", "corporate", req.params.file));
+  });
   // Ambassador share links (2026-10-06): a public page per share card / promo video whose
   // og:image is the card, so the picture shows up in a WhatsApp, Facebook, LinkedIn or X
   // post on its own. See services/shareLink.service.ts.
