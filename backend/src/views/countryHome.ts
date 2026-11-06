@@ -254,7 +254,6 @@ export function header(ctx: PageContext, home: string): string {
     </nav>
     <div class="header-actions">
       ${countryMenu(ctx)}
-      <a class="btn btn-signal header-cta" href="${home}#courses">Get started</a>
       <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
       </button>

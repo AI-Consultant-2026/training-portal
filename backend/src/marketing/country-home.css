@@ -145,14 +145,12 @@ mark.tbc {
 .nav-links a:hover { color: var(--signal-text); }
 .header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .main-nav + .header-actions { margin-left: 0; }
-.header-cta { display: none; }
 .nav-toggle {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; flex-shrink: 0;
   border: 1px solid var(--line-light); border-radius: var(--radius);
   background: none; color: var(--charcoal); cursor: pointer;
 }
-@media (min-width: 420px) { .header-cta { display: inline-flex; white-space: nowrap; } }
 @media (min-width: 600px) {
   .logo-mark { width: 34px; height: 34px; }
   .logo-word { font-size: 20px; }
