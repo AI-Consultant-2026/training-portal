@@ -509,27 +509,6 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
 ];
 
-const HUB_OFFERS: { title: string; text: string; href: string; link: string }[] = [
-  {
-    title: "Staff digital skills courses",
-    text: "Our Cyber Security, GIS & Drone Mapping, HSE and Digital Marketing courses as a package for your team, with each employee's progress tracked.",
-    href: "/corporate-training-nigeria",
-    link: "Corporate course packages",
-  },
-  {
-    title: "Executive training in London",
-    text: "Five-day intensive programmes in London for leaders in oil & gas, banking and telecoms.",
-    href: "/executive-training",
-    link: "Executive training",
-  },
-  {
-    title: "Web and AI consultancy",
-    text: "Web apps and AI tools designed and built for businesses, charities and government bodies.",
-    href: "/consultancy",
-    link: "Consultancy",
-  },
-];
-
 const HUB_JOURNEY = [
   "**Consultation:** we learn about your organisation, teams and goals.",
   "**Assessment:** we identify where training will make the biggest difference.",
@@ -640,9 +619,6 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
         <span class="ca-country-go">View the programme &rarr;</span>
       </a>`,
   ).join("\n");
-  const offers = HUB_OFFERS.map(
-    (o) => `<div class="ca-card"><h3>${escapeHtml(o.title)}</h3><p>${escapeHtml(o.text)}</p><p class="ca-card-link"><a href="${o.href}">${escapeHtml(o.link)} &rarr;</a></p></div>`,
-  ).join("");
   const faqHtml = HUB_FAQ.map(
     (f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`,
   ).join("\n");
@@ -726,14 +702,6 @@ ${header(ctx, home)}
       </figure>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${accCards}</div>
-    </div>
-  </section>
-
-  <section class="section section-dark ca-section" id="offers" aria-labelledby="offers-title">
-    <div class="wrap">
-      <span class="section-eyebrow">More for employers</span>
-      <h2 class="section-title" id="offers-title">Other ways we train teams</h2>
-      <div class="ca-cards ca-cards-3">${offers}</div>
     </div>
   </section>
 
