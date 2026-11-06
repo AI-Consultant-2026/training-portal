@@ -123,3 +123,8 @@
 
 /* Hub: fully booked notice (2026-11-06) */
 .ca-booked{display:inline-block;margin:0 0 1rem;padding:.6rem .9rem;border-left:4px solid #b45309;background:#fef3c7;color:#78350f;border-radius:4px;font-size:.95rem;line-height:1.45}
+
+/* Hub: landscape video placeholders (2026-11-06) */
+.ca-video-ph{position:relative;width:100%;max-width:880px;aspect-ratio:16/9;margin:1.25rem 0 1.5rem;border-radius:8px;background:linear-gradient(135deg,#10151F 0%,#1d2533 100%);color:#E8863C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;border:1px solid rgba(232,134,60,.35);overflow:hidden}
+.ca-video-ph svg{width:72px;height:72px}
+.ca-video-ph span{color:#C9C2B2;font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600}

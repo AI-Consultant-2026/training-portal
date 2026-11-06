@@ -687,6 +687,10 @@ ${header(ctx, home)}
       <span class="section-eyebrow">Flagship programme</span>
       <h2 class="section-title" id="cybersecure-title">CyberSecure Workforce: cybersecurity awareness training</h2>
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
+      <div class="ca-video-ph" role="img" aria-label="CyberSecure Workforce video placeholder">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M26 20 L46 32 L26 44 Z" fill="currentColor"/></svg>
+        <span>Programme video coming soon</span>
+      </div>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${cyberCards}</div>
     </div>
@@ -698,6 +702,10 @@ ${header(ctx, home)}
       <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
       <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
       <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
+      <div class="ca-video-ph" role="img" aria-label="AI Workflow Productivity &amp; Process Transformation video placeholder">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M26 20 L46 32 L26 44 Z" fill="currentColor"/></svg>
+        <span>Programme video coming soon</span>
+      </div>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${countryCards}</div>
     </div>
@@ -709,6 +717,10 @@ ${header(ctx, home)}
       <h2 class="section-title" id="accelerator-title">AI + Cybersecurity Professional Accelerator</h2>
       <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
       <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
+      <div class="ca-video-ph" role="img" aria-label="AI + Cybersecurity Professional Accelerator video placeholder">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M26 20 L46 32 L26 44 Z" fill="currentColor"/></svg>
+        <span>Programme video coming soon</span>
+      </div>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${accCards}</div>
     </div>
