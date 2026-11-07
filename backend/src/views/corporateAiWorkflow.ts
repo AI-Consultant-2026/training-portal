@@ -684,6 +684,7 @@ ${header(ctx, home)}
           <source src="/videos/corporate/ai-workflow-productivity.mp4" type="video/mp4">
         </video>
       </figure>
+      <p class="ca-p"><a href="/Promotion-AI-Workflow-Productivity"><strong>Explore the programme: what it is, what your workforce gains and how it builds a competitive advantage &rarr;</strong></a></p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${countryCards}</div>
     </div>

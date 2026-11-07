@@ -470,3 +470,22 @@ describe("Country kept across the corporate hub and free lessons (2026-11-03)", 
     expect(course).not.toContain('href="/preview/cyber-security-fundamentals"');
   });
 });
+
+describe("AI Workflow promotion page (2026-11-07)", () => {
+  it("/Promotion-AI-Workflow-Productivity shows the programme, the video and the enquiry form", async () => {
+    const res = await request(app).get("/Promotion-AI-Workflow-Productivity");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/Promotion-AI-Workflow-Productivity">');
+    expect(res.text).toContain('<source src="/videos/corporate/ai-workflow-productivity.mp4" type="video/mp4">');
+    expect(res.text).toContain("How the programme turns skills into a competitive edge");
+    expect(res.text).toContain('data-programme="ai-workflow"');
+    expect(res.text).toContain('href="/corporate-training"');
+    expect(res.text).not.toContain('<link rel="alternate" hreflang');
+    for (const cc of ["ng", "za", "ke", "gh"]) expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
+    expect((await request(app).get("/promotion-ai-workflow-productivity")).status).toBe(200);
+  });
+
+  it("the corporate hub links to it", async () => {
+    expect((await request(app).get("/corporate-training")).text).toContain('href="/Promotion-AI-Workflow-Productivity"');
+  });
+});

@@ -22,6 +22,7 @@ import { renderCountryAmbassadors } from "./views/countryAmbassadors";
 import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
 import { CORPORATE_HUB_PATH, corporateAiPath, renderCorporateAiWorkflow, renderCorporateHub } from "./views/corporateAiWorkflow";
+import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { flagSvg } from "./views/flags";
@@ -236,6 +237,11 @@ export function createApp() {
     res.set("Cache-Control", "private, no-cache");
     res.vary("Cookie");
     res.type("html").send(renderCorporateHub(isCountryCode(asked) ? asked : null, chosenCountry(req)));
+  });
+  // AI Workflow programme promotion page with the programme video (2026-11-07), linked
+  // from the hub. Express routing is case-insensitive, so the lowercase URL works too.
+  app.get(PROMOTION_AI_PATH, (req, res) => {
+    res.type("html").send(renderPromotionAiWorkflow());
   });
   app.get("/corporate-ai.css", (req, res) => {
     res.type("text/css").sendFile(path.join(__dirname, "marketing", "corporate-ai.css"));
