@@ -1,7 +1,43 @@
 {
- "updated": "2026-11-06",
+ "updated": "2026-11-07",
  "source": "MyJobMag Kenya (myjobmag.co.ke)",
  "jobs": [
+  {
+   "sector": "Banking & Finance",
+   "role": "Finance Business partner",
+   "company": "PricewaterhouseCoopers (PwC)",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-07",
+   "deadline": "2026-11-13",
+   "requirements": "Job Description & Summary The Finance Business partner role serves as the strategic finance partner to leadership, converting financial, commercial and operational data into…",
+   "link": "https://www.myjobmag.co.ke/job/finance-business-partner-pricewaterhousecoopers-pwc",
+   "course": null
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Operations Intern",
+   "company": "Kimisitu Investment Company Limited - KICL",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-07",
+   "deadline": "2026-11-13",
+   "requirements": "JOB PURPOSE The Operations Intern will support the coordination of Kimisitu Investment Company’s day-to-day operational activities while gaining practical exposure in real estate project…",
+   "link": "https://www.myjobmag.co.ke/job/operations-intern-kimisitu-investment-company-limited-kicl-2",
+   "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Manager, Franchise Innovation",
+   "company": "MasterCard",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-07",
+   "deadline": "2026-11-19",
+   "requirements": "Overview: The Franchise Innovation team is responsible for developing and deploying innovative Franchise solutions that support Mastercard's customers and strengthen the payments ecosystem…",
+   "link": "https://www.myjobmag.co.ke/job/manager-franchise-innovation-mastercard",
+   "course": null
+  },
   {
    "sector": "Energy, Oil & Gas",
    "role": "Senior Proposals Advisor - Integrated Well Services & Solutions",
@@ -49,6 +85,30 @@
    "requirements": "About the role The branch leader is responsible for providing leadership to the entire branch team for business growth while ensuring optimal resource allocation. The branch leader is also the…",
    "link": "https://www.myjobmag.co.ke/job/branch-leader-advertisement-tugende-4",
    "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Associate Bookkeeper",
+   "company": "Solvo Global",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-06",
+   "deadline": "2026-12-06",
+   "requirements": "Key Responsibilities: Manage bookkeeping processes for multiple clients using QuickBooks Online. Perform bank and credit card reconciliations. Accurately record and categorize financial…",
+   "link": "https://www.myjobmag.co.ke/job/associate-bookkeeper-solvo-global",
+   "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Junior Data Scientist",
+   "company": "Pezesha",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-06",
+   "deadline": "2026-12-06",
+   "requirements": "Role Overview As a Junior Data Scientist, you will support the Data Team in turning raw data into actionable insights that inform credit, product, operations, and business decisions. You will…",
+   "link": "https://www.myjobmag.co.ke/job/junior-data-scientist-pezesha-3",
+   "course": "AI & Machine Learning Fundamentals"
   },
   {
    "sector": "ICT & Telecoms",
@@ -522,10 +582,10 @@
    "sector": "Banking & Finance",
    "role": "Graduate Trainees",
    "company": "Kreston KM",
-   "location": "Nairobi",
-   "county": "Nairobi",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-11-04",
-   "deadline": "2026-11-06",
+   "deadline": null,
    "requirements": "Requirements A degree in finance, preferably recently graduated in the last 1 year. Those with CPA qualifications shall have an added advantage. Professionalism, dependability, integrity…",
    "link": "https://www.myjobmag.co.ke/job/graduate-trainees-kreston-km-1",
    "course": null
@@ -783,42 +843,6 @@
    "course": "Digital Marketing"
   },
   {
-   "sector": "ICT & Telecoms",
-   "role": "Talent Acquisition Quality Analyst",
-   "company": "Solvo Global",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-04",
-   "deadline": "2026-12-04",
-   "requirements": "We're looking for a Talent Acquisition Quality Analyst to join our growing Talent Factory team and help elevate the quality and consistency of our recruitment operations. In this role…",
-   "link": "https://www.myjobmag.co.ke/job/talent-acquisition-quality-analyst-solvo-global",
-   "course": "HSE Fundamentals"
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Full Cycle Sales Representative (English/French) - Nairobi",
-   "company": "Solvo Global",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-04",
-   "deadline": "2026-12-04",
-   "requirements": "What You'll Be Doing Generate new business opportunities through cold calling, email outreach, networking, referrals, and market research. Build and manage a healthy sales pipeline.…",
-   "link": "https://www.myjobmag.co.ke/job/full-cycle-sales-representative-english-french-nairobi-solvo-global",
-   "course": "Digital Marketing"
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Ultrasound Image Annotator (Sonographer / Ultrasound Technologist)",
-   "company": "CloudFactory",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-04",
-   "deadline": "2026-12-04",
-   "requirements": "About the role We're looking for Sonographers, Ultrasound Technologists, and other medical imaging professionals with hands-on ultrasound experience to support an AI-powered medical…",
-   "link": "https://www.myjobmag.co.ke/job/ultrasound-image-annotator-sonographer-ultrasound-technologist-cloudfactory",
-   "course": null
-  },
-  {
    "sector": "Energy, Oil & Gas",
    "role": "ICT Business Partner (Upstream Oil & Gas Waste Management)",
    "company": "WTS Energy",
@@ -891,30 +915,6 @@
    "course": "Digital Marketing"
   },
   {
-   "sector": "Banking & Finance",
-   "role": "Data Protection Officer (DPO)",
-   "company": "Bank of Africa Kenya Limited",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-03",
-   "deadline": "2026-11-06",
-   "requirements": "Job Purpose: To provide independent oversight, guidance and assurance on the Bank’s compliance with data protection and privacy requirements, while leading the development and continuous…",
-   "link": "https://www.myjobmag.co.ke/job/data-protection-officer-dpo-bank-of-africa-kenya-limited",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Agronomist Consultant, High Value Crop (HVC) Production",
-   "company": "One Acre Fund",
-   "location": "Kenya (various)",
-   "county": "Various",
-   "posted": "2026-11-03",
-   "deadline": "2026-12-31",
-   "requirements": "About the Consultancy Engagement Programme: HVC Production, Long Rains 2027 (LR27) Crop: Chilli, Groundnut, Sunflower, Soybean and Chia Engagement: Individual consultant, part-time and…",
-   "link": "https://www.myjobmag.co.ke/job/agronomist-consultant-high-value-crop-hvc-production-one-acre-fund",
-   "course": null
-  },
-  {
    "sector": "Energy, Oil & Gas",
    "role": "HSE Officer – Upstream Waste Management Project",
    "company": "WTS Energy",
@@ -984,54 +984,6 @@
    "deadline": "2026-11-15",
    "requirements": "Key Responsibilities: Conduct physical and chemical characterization of incoming, in-process, and treated oil and gas drilling waste streams. Perform laboratory analysis of drill cuttings…",
    "link": "https://www.myjobmag.co.ke/job/laboratory-technician-upstream-oil-gas-waste-management-wts-energy",
-   "course": "HSE Fundamentals"
-  },
-  {
-   "sector": "Energy, Oil & Gas",
-   "role": "Commercial Support & Pricing Analyst",
-   "company": "Vivo Energy",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-10-07",
-   "deadline": "2026-11-06",
-   "requirements": "ROLE SUMMARY: To drive pricing, profitability, and commercial performance across the business segments by managing pricing strategies, customer contracts, forecasting, and business analytics. The…",
-   "link": "https://www.myjobmag.co.ke/job/commercial-support-pricing-analyst-vivo-energy",
-   "course": null
-  },
-  {
-   "sector": "Energy, Oil & Gas",
-   "role": "Field Based Account Manager - LPG Packed Sales",
-   "company": "Vivo Energy",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-10-07",
-   "deadline": "2026-11-06",
-   "requirements": "Job Purpose: To deliver the expected Volumes, profitability, and Debt results in Packed LPG, maintain and develop strong customer relationships, whilst at same time adopting both defend and…",
-   "link": "https://www.myjobmag.co.ke/job/field-based-account-manager-lpg-packed-sales-vivo-energy-1",
-   "course": "Digital Marketing"
-  },
-  {
-   "sector": "Energy, Oil & Gas",
-   "role": "Weighbridge Clerk (Upstream Oil & Gas Waste Management) – Turkana",
-   "company": "WTS Energy",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-10-07",
-   "deadline": "2026-11-06",
-   "requirements": "Key Responsibilities: Operate the computerized weighbridge system for all incoming and outgoing vehicles, ensuring accurate and timely processing of weighbridge transactions. Record and…",
-   "link": "https://www.myjobmag.co.ke/job/weighbridge-clerk-upstream-oil-gas-waste-management-turkana-wts-energy",
-   "course": null
-  },
-  {
-   "sector": "Energy, Oil & Gas",
-   "role": "Laboratory Technician (Upstream Oil & Gas Waste Management) – Turkana",
-   "company": "WTS Energy",
-   "location": "Turkana",
-   "county": "Turkana",
-   "posted": "2026-10-07",
-   "deadline": "2026-11-06",
-   "requirements": "Key Responsibilities: Conduct physical and chemical characterization of incoming, in-process, and treated oil and gas drilling waste streams. Perform laboratory analysis of drill cuttings…",
-   "link": "https://www.myjobmag.co.ke/job/laboratory-technician-upstream-oil-gas-waste-management-turkana-wts-energy",
    "course": "HSE Fundamentals"
   }
  ]
