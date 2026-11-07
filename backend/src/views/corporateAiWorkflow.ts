@@ -51,9 +51,7 @@ export function acceleratorPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${ACCELERATOR_SLUG}`;
 }
 
-const CONSULTATION = "Book a Corporate AI Training Consultation";
-// The /corporate-training hub covers every programme, so its button drops "AI" (2026-11-07).
-const HUB_CONSULTATION = "Book a Corporate Training Consultation";
+const CONSULTATION = "Book a Corporate Training Consultation";
 const PROPOSAL = "Request a Corporate Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
 const PHONE_PREFIX: Record<CountryCode, string> = { NG: "+234", ZA: "+27", GH: "+233", KE: "+254" };
@@ -646,7 +644,7 @@ ${header(ctx, home)}
         <p class="ca-headline">Practical AI and digital skills, built around your organisation.</p>
         <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, cybersecurity awareness for every employee, professional AI + cybersecurity development for specialists, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
-          ${ctaButton(HUB_CONSULTATION, true)}
+          ${ctaButton(CONSULTATION, true)}
           ${ctaButton(PROPOSAL, true)}
         </div>
         <ul class="ca-trust"><li>Customised by sector and department</li><li>Responsible AI built in</li><li>Reply within one working day</li></ul>
@@ -712,7 +710,7 @@ ${header(ctx, home)}
       <span class="section-eyebrow">How it works</span>
       <h2 class="section-title" id="journey-title">Your corporate training journey</h2>
       <ul class="ca-steps">${HUB_JOURNEY.map((j) => `<li>${rich(j)}</li>`).join("")}</ul>
-      <div class="ca-ctas">${ctaButton(HUB_CONSULTATION, true)}</div>
+      <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
     </div>
   </section>
 
@@ -729,7 +727,7 @@ ${header(ctx, home)}
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
     note: "Prefer to talk first? Choose **Book a Corporate Training Consultation** and we will arrange a call.",
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
-  }, { ...AI_FORM, consultation: HUB_CONSULTATION })}
+  })}
 </main>
 ${footer(ctx, home)}
 ${scripts(ctx)}

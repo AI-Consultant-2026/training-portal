@@ -45,7 +45,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Supporting statement:** Paleon Training helps banks, energy companies, telecoms operators, public institutions and growing businesses across Nigeria turn AI into everyday productivity. Your employees learn to use AI tools such as ChatGPT, Claude and Gemini on their own tasks: memos, reports, meeting minutes, data and approvals. They do it safely, with human review at every step."
           },
           {
-            "p": "**Primary CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
             "p": "**Secondary CTA:** Request a Corporate Training Proposal"
@@ -97,7 +97,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**Mid-page CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Mid-page CTA:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -155,7 +155,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "The programme answers one question: how can our employees use AI to do better work, faster, while keeping quality, security and human oversight?"
           },
           {
-            "p": "**CTA after course structure:** Book a Corporate AI Training Consultation"
+            "p": "**CTA after course structure:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -335,7 +335,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate AI Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
@@ -373,7 +373,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Supporting statement:** Your people are probably already using AI. The question is whether they use it well, consistently and safely. Paleon Training helps financial services firms, mining houses, retailers, telecoms operators and public entities make AI part of how work gets done. Teams redesign everyday workflows with clear controls on data, accuracy and accountability."
           },
           {
-            "p": "**Primary CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
             "p": "**Secondary CTA:** Request a Corporate Training Proposal"
@@ -423,7 +423,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**Mid-page CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Mid-page CTA:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -478,7 +478,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Corporate AI Training Consultation"
+            "p": "**CTA after course structure:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -648,7 +648,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate AI Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
@@ -686,7 +686,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Supporting statement:** Many Ghanaian organisations are moving from paper and manual steps to digital ways of working. Paleon Training helps banks, mining and energy companies, telecoms operators and growing businesses take the next step. Employees learn to use AI on their daily work, cut repetitive admin and improve the processes their teams rely on."
           },
           {
-            "p": "**Primary CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
             "p": "**Secondary CTA:** Request a Corporate Training Proposal"
@@ -735,7 +735,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**Mid-page CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Mid-page CTA:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -790,7 +790,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Corporate AI Training Consultation"
+            "p": "**CTA after course structure:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -957,7 +957,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate AI Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
@@ -995,7 +995,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Supporting statement:** Many Kenyan teams already work digitally, and plenty of employees have tried AI tools on their own. Paleon Training turns that scattered use into structured, repeatable workflows. We work with banks, fintechs, telecoms and technology firms, logistics and agribusiness companies, and public institutions. The result: more productive teams and better processes, with clear rules on data and quality."
           },
           {
-            "p": "**Primary CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
             "p": "**Secondary CTA:** Request a Corporate Training Proposal"
@@ -1044,7 +1044,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**Mid-page CTA:** Book a Corporate AI Training Consultation"
+            "p": "**Mid-page CTA:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -1099,7 +1099,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Corporate AI Training Consultation"
+            "p": "**CTA after course structure:** Book a Corporate Training Consultation"
           }
         ]
       },
@@ -1269,7 +1269,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate AI Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
