@@ -191,3 +191,8 @@
 .pw-modules{margin:8px 0 22px}
 @media(min-width:800px){.pw-modules{grid-template-columns:1fr 1fr;column-gap:32px}}
 .pw-modules li{align-items:center}
+
+/* Link buttons inside a dark section (promotion page "AI and cybersecurity together", 2026-11-08). */
+.section-dark .ca-links { margin: 0 0 20px; }
+.section-dark .ca-links a { background: transparent; color: var(--paper); border-color: var(--line); }
+.section-dark .ca-links a:hover { border-color: var(--signal); color: var(--signal-2); }

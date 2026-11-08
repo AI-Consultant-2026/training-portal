@@ -3,8 +3,10 @@ import { flagSvg } from "./flags";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import {
   CORPORATE_HUB_PATH,
+  acceleratorPath,
   corporateAiPath,
   ctaButton,
+  cyberSecurePath,
   enquiry,
 } from "./corporateAiWorkflow";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts } from "./countryHome";
@@ -26,10 +28,18 @@ const PROPOSAL = "Request a Corporate Training Proposal";
 
 const DELIVERY: Record<string, string> = {
   NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
-  ZA: "Live online training for teams across South Africa.",
-  KE: "Live online training for teams across Kenya.",
-  GH: "Live online training for teams across Ghana.",
+  ZA: "Live online for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
+  KE: "Live online for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
+  GH: "Live online for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
 };
+
+// AI brings new cyber risks, so the page points employers to CyberSecure Workforce as well
+// (2026-11-08, SEO for "cybersecurity and AI workforce training" searches in ZA/KE/GH).
+const AI_RISKS: [string, string][] = [
+  ["Confidential data in AI tools", "Staff paste customer, financial or HR information into tools the organisation has not approved."],
+  ["AI-written phishing", "Scam emails and messages are now fluent, personal and free of the spelling mistakes people used to look for."],
+  ["Deepfake voices and video", "Criminals imitate a manager's voice or face to push through an urgent payment or a change of bank details."],
+];
 
 const WORKFORCE: [string, string][] = [
   ["Less repetitive work", "Drafting, summarising, searching and re-keying take a fraction of the time, so the tedious parts of the job shrink."],
@@ -79,6 +89,10 @@ const MODULES = [
 
 const FAQ: [string, string][] = [
   [
+    "What is AI workforce and process transformation training?",
+    "Training that does two things together: it teaches your workforce to use AI tools safely in their daily work, and it helps teams redesign real business processes around AI, with human review built in. AI Workflow Productivity & Process Transformation is Paleon Training's programme for companies in South Africa, Kenya, Ghana and Nigeria.",
+  ],
+  [
     "Who is the programme for?",
     "Staff in every department: HR, finance, operations, sales, marketing, customer service, administration, procurement, project management and leadership. No technical background is needed.",
   ],
@@ -99,8 +113,20 @@ const FAQ: [string, string][] = [
     "Pricing depends on group size, delivery method and customisation. Request a proposal and we will send a written quotation.",
   ],
   [
+    "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
+    "Yes. The programme is delivered live online with a facilitator for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema). In Nigeria we also train in-house or hybrid.",
+  ],
+  [
+    "Do you also offer cybersecurity training for staff?",
+    "Yes. CyberSecure Workforce is our cybersecurity awareness programme for every employee: phishing, payment fraud, impersonation, protecting company data, safe use of AI tools and reporting incidents. Many organisations combine it with AI Workflow Productivity, and it is available now in South Africa, Kenya, Ghana and Nigeria.",
+  ],
+  [
     "When can we start?",
     "The programme is fully booked until January 2027. Enquire now to reserve your dates from January 2027 and complete the needs assessment in advance.",
+  ],
+  [
+    "How do we contact you?",
+    "Use the enquiry form on this page, email corporate@paleontraining.com or message us on WhatsApp on +44 7508 823495. Tell us your country, team size and the work you want to improve. We reply within one working day.",
   ],
 ];
 
@@ -116,14 +142,52 @@ function jsonLd(url: string): object {
         "@type": "WebPage",
         "@id": `${url}#page`,
         url,
-        name: "AI Workflow Productivity & Process Transformation | Paleon Training",
+        name: "AI Workforce & Process Transformation Training | Paleon Training",
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+        about: { "@id": `${ORIGIN}/#organization` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
+          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 3, name: "AI workforce and process transformation training", item: url },
+        ],
+      },
+      {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name: "AI workforce and process transformation training",
+        serviceType: "AI workforce and process transformation training",
+        description:
+          "Live, facilitated AI productivity and process transformation training for employees in every department, with responsible-use rules and human review built in.",
+        url,
+        provider: { "@id": `${ORIGIN}/#organization` },
+        areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
+        audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${ORIGIN}/#organization`,
+        name: "Paleon Training Limited",
+        url: `${ORIGIN}/`,
+        email: "corporate@paleontraining.com",
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "sales",
+          email: "corporate@paleontraining.com",
+          telephone: "+234-707-714-9215",
+          areaServed: ["NG", "ZA", "KE", "GH"],
+          availableLanguage: "English",
+        },
       },
       {
         "@type": "Course",
         name: "AI Workflow Productivity & Process Transformation",
         description:
-          "Corporate training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, for organisations in Nigeria, South Africa, Kenya and Ghana.",
-        provider: { "@type": "Organization", name: "Paleon Training Limited", url: ORIGIN },
+          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered live online for companies in South Africa, Kenya and Ghana, and in-house, online or hybrid in Nigeria.",
+        provider: { "@id": `${ORIGIN}/#organization` },
         url,
         inLanguage: "en",
         audience: { "@type": "BusinessAudience", audienceType: "Organisations and their employees" },
@@ -149,9 +213,9 @@ export function renderPromotionAiWorkflow(): string {
   const ctx: PageContext = { country: "NG", hub: true, detected: null, chosen: null };
   const url = `${ORIGIN}${PROMOTION_AI_PATH}`;
   const headHtml = head(ctx, {
-    title: "AI Workflow Productivity & Process Transformation | Paleon Training",
+    title: "AI Workforce & Process Transformation Training | South Africa, Kenya, Ghana",
     description:
-      "Watch the programme video. Corporate AI training that frees your workforce from busywork and builds a lasting competitive advantage. Nigeria, South Africa, Kenya and Ghana.",
+      "AI workforce and process transformation training for companies in South Africa, Kenya and Ghana: live online, plus cybersecurity awareness for every employee. Enquire today.",
     canonicalPath: PROMOTION_AI_PATH,
     alternatesFor: corporateAiPath,
     xDefault: CORPORATE_HUB_PATH,
@@ -167,7 +231,7 @@ export function renderPromotionAiWorkflow(): string {
         ${flagSvg(k, "flag flag-md")}
         <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
         <span class="ca-country-note">${escapeHtml(DELIVERY[k])}</span>
-        <span class="ca-country-go">Details for ${escapeHtml(COUNTRIES[k].name)} &rarr;</span>
+        <span class="ca-country-go">AI training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</span>
       </a>`,
   ).join("\n");
   const flags = MARKET_ORDER.map((k) => `<li>${flagSvg(k, "flag flag-sm")}<span>${escapeHtml(COUNTRIES[k].name)}</span></li>`).join("");
@@ -190,10 +254,10 @@ ${header(ctx, "/")}
       <p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}">Corporate training</a> <span aria-hidden="true">/</span> AI Workflow Productivity</p>
       <div class="ca-hero-grid">
         <div class="hero-inner ca-hero-copy">
-          <span class="eyebrow">Corporate programme &middot; Nigeria, South Africa, Kenya and Ghana</span>
-          <h1 class="hero-title ca-hero-title">AI Workflow Productivity &amp; Process Transformation</h1>
+          <span class="eyebrow">AI Workflow Productivity &amp; Process Transformation &middot; South Africa, Kenya, Ghana and Nigeria</span>
+          <h1 class="hero-title ca-hero-title">AI workforce and process transformation training for companies</h1>
           <p class="ca-headline">Less busywork. Better work. An advantage that lasts.</p>
-          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both.</p>
+          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, delivered live online for companies in South Africa, Kenya and Ghana, and in-house in Nigeria.</p>
           <div class="hero-ctas">
             <a class="btn btn-signal btn-lg" href="#video">Watch the video</a>
             ${ctaButton(CONSULTATION, true)}
@@ -211,7 +275,7 @@ ${header(ctx, "/")}
     <div class="wrap">
       <span class="section-eyebrow">Programme video &middot; 1 min 53 s</span>
       <h2 class="section-title" id="video-title">See the programme in under two minutes</h2>
-      <p class="ca-p">For corporate clients in Nigeria, South Africa, Kenya and Ghana: where time is lost in everyday work, how AI helps, and how we keep it safe. Press play with the sound on.</p>
+      <p class="ca-p">For companies in South Africa, Kenya, Ghana and Nigeria: where time is lost in everyday work, how AI helps, and how we keep it safe. Press play with the sound on.</p>
       <figure class="ca-video pw-video">
         <video controls playsinline preload="metadata" poster="${POSTER}" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 53 seconds)">
           <source src="${VIDEO}" type="video/mp4">
@@ -302,10 +366,27 @@ ${header(ctx, "/")}
   <section class="section section-paper ca-section" id="countries" aria-labelledby="countries-title">
     <div class="wrap">
       <span class="section-eyebrow">Where we deliver</span>
-      <h2 class="section-title" id="countries-title">For organisations in four countries</h2>
+      <h2 class="section-title" id="countries-title">AI workforce and process transformation training in South Africa, Kenya, Ghana and Nigeria</h2>
       <p class="ca-booked"><strong>Fully booked until January 2027.</strong> Enquire now to reserve your dates from January 2027.</p>
       <div class="ca-countries">${countryCards}</div>
       <p class="ca-p pw-more"><a href="${CORPORATE_HUB_PATH}"><strong>See all corporate training programmes &rarr;</strong></a></p>
+    </div>
+  </section>
+
+  <section class="section section-dark ca-section" id="cybersecurity" aria-labelledby="cybersecurity-title">
+    <div class="wrap">
+      <span class="section-eyebrow">AI and cybersecurity together</span>
+      <h2 class="section-title" id="cybersecurity-title">AI makes your teams faster. Cybersecurity training keeps them safe.</h2>
+      <p class="ca-p">Using AI at work brings new risks. The organisations that gain most from AI train their whole workforce in cybersecurity awareness too, so people can spot the threats AI has made more convincing.</p>
+      <div class="ca-cards ca-cards-3">${AI_RISKS.map(([h, p]) => `<div class="ca-card"><h3>${escapeHtml(h)}</h3><p>${escapeHtml(p)}</p></div>`).join("")}</div>
+      <p class="ca-p"><strong>CyberSecure Workforce</strong> is our cybersecurity awareness training for every employee, from the front desk to the boardroom. Available now:</p>
+      <ul class="ca-links">${MARKET_ORDER.map(
+        (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</a></li>`,
+      ).join("")}</ul>
+      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (fully booked until January 2027): ${MARKET_ORDER.map(
+        (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
+      ).join(", ")}.</p>
+      <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
     </div>
   </section>
 
