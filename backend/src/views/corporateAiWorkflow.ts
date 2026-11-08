@@ -466,10 +466,50 @@ const HUB_DELIVERY: Record<CountryCode, string> = {
   GH: "Live online training for teams across Ghana.",
 };
 
+// Country cards on the hub (2026-11-08, SEO for employers in South Africa, Kenya and Ghana).
+const HUB_COUNTRY_SEO: { code: CountryCode; h: string; p: string }[] = [
+  {
+    code: "ZA",
+    h: "Corporate training in South Africa",
+    p: "Live online cybersecurity awareness and AI productivity training for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
+  },
+  {
+    code: "KE",
+    h: "Corporate training in Kenya",
+    p: "Live online cybersecurity awareness and AI productivity training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Practical sessions for every employee, from the front desk to the boardroom, with examples from your sector.",
+  },
+  {
+    code: "GH",
+    h: "Corporate training in Ghana",
+    p: "Live online cybersecurity awareness and AI productivity training for companies in Accra, Kumasi, Tema, Takoradi and across Ghana. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
+  },
+  {
+    code: "NG",
+    h: "Corporate training in Nigeria",
+    p: "In-house, online or hybrid cybersecurity awareness and AI productivity training for organisations in Lagos, Abuja, Port Harcourt, Warri and across Nigeria. We provide the attendance records and documentation for ITF reimbursement claims.",
+  },
+];
+
 const HUB_FAQ: { q: string; a: string }[] = [
   {
     q: "Which countries do you deliver corporate training in?",
     a: "Nigeria, South Africa, Kenya and Ghana. In Nigeria we train in-house, online or hybrid. In South Africa, Kenya and Ghana, training is delivered live online with a facilitator.",
+  },
+  {
+    q: "Do you offer cybersecurity awareness training for companies in South Africa?",
+    a: "Yes. CyberSecure Workforce is delivered live online with a facilitator to teams across South Africa, including Johannesburg, Cape Town, Durban and Pretoria. Employees learn to spot phishing, stop payment fraud, protect customer information and report incidents quickly.",
+  },
+  {
+    q: "Do you offer cybersecurity awareness training for companies in Kenya?",
+    a: "Yes. CyberSecure Workforce is delivered live online with a facilitator to teams across Kenya, including Nairobi, Mombasa and Kisumu. It is written for non-technical staff and uses realistic workplace scenarios.",
+  },
+  {
+    q: "Do you offer cybersecurity awareness training for companies in Ghana?",
+    a: "Yes. CyberSecure Workforce is delivered live online with a facilitator to teams across Ghana, including Accra, Kumasi, Tema and Takoradi. Staff learn to recognise scams, impersonation and fake payment requests, and to protect business information.",
+  },
+  {
+    q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
+    a: "Yes. AI Workflow Productivity & Process Transformation is delivered live online in all three countries, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. Both are fully booked until January 2027; you can enquire now to reserve a place from January 2027.",
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
@@ -506,6 +546,10 @@ const HUB_FAQ: { q: string; a: string }[] = [
   {
     q: "How quickly will you reply to an enquiry?",
     a: "Within one working day. Complete the form below or email corporate@paleontraining.com.",
+  },
+  {
+    q: "How do we get started?",
+    a: "Book a corporate training consultation or request a proposal using the form on this page, email corporate@paleontraining.com, or message us on WhatsApp on +44 7508 823495. Tell us your country, team size and what you want to improve.",
   },
 ];
 
@@ -551,6 +595,38 @@ function hubJsonLd(url: string): object {
         ],
       },
       {
+        "@type": "Service",
+        "@id": `${url}#cybersecure-service`,
+        name: "CyberSecure Workforce: cybersecurity awareness training for employees",
+        serviceType: "Cybersecurity awareness training",
+        description:
+          "Live, facilitated cybersecurity awareness training for non-technical employees: phishing, payment fraud, impersonation, data protection, safe AI use and incident reporting.",
+        url: `${url}#cybersecure`,
+        provider: { "@id": `${ORIGIN}/#organization` },
+        areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
+        audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
+      },
+      {
+        "@type": "Service",
+        "@id": `${url}#ai-workflow-service`,
+        name: "AI Workflow Productivity & Process Transformation: AI training for employees",
+        serviceType: "Corporate AI training",
+        description:
+          "Practical AI productivity training for every department, with confidentiality, accuracy checks and human review built in, ending with a real workplace project.",
+        url: `${url}#ai-workflow`,
+        provider: { "@id": `${ORIGIN}/#organization` },
+        areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
+        audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
+          { "@type": "ListItem", position: 2, name: "Corporate training", item: url },
+        ],
+      },
+      {
         "@type": "FAQPage",
         "@id": `${url}#faq`,
         mainEntity: HUB_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
@@ -562,6 +638,14 @@ function hubJsonLd(url: string): object {
         url: `${ORIGIN}/`,
         email: "corporate@paleontraining.com",
         areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "sales",
+          email: "corporate@paleontraining.com",
+          telephone: "+234-707-714-9215",
+          areaServed: ["NG", "ZA", "KE", "GH"],
+          availableLanguage: "English",
+        },
         address: {
           "@type": "PostalAddress",
           streetAddress: "Off NNPC Junior Staff Club 10",
@@ -584,9 +668,9 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
   const home = ctx.hub ? "/" : COUNTRIES[ctx.country].site.path;
   const url = `${ORIGIN}${CORPORATE_HUB_PATH}`;
   const headHtml = head(ctx, {
-    title: "Corporate & AI Training for Organisations | Paleon Training",
+    title: "Cybersecurity & AI Workforce Training | South Africa, Kenya, Ghana",
     description:
-      "AI productivity, cybersecurity awareness and executive training for organisations in Nigeria, South Africa, Kenya and Ghana. Practical and customised.",
+      "Cybersecurity awareness and AI training for employees, live online for companies in South Africa, Kenya and Ghana, and in-house in Nigeria. Get a proposal.",
     canonicalPath: CORPORATE_HUB_PATH,
     alternatesFor: corporateAiPath,
     xDefault: CORPORATE_HUB_PATH,
@@ -639,10 +723,10 @@ ${header(ctx, home)}
   <section class="hero ca-hero" id="top">
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
-        <span class="eyebrow">Corporate training &middot; Nigeria, South Africa, Kenya and Ghana</span>
-        <h1 class="hero-title ca-hero-title">Corporate training that changes how your teams work</h1>
-        <p class="ca-headline">Practical AI and digital skills, built around your organisation.</p>
-        <p class="hero-sub">Paleon Training designs staff training for organisations across four countries: AI productivity for every department, cybersecurity awareness for every employee, professional AI + cybersecurity development for specialists, digital skills packages for teams, and executive programmes for leaders. Every programme is built around real workplace tasks, not theory.</p>
+        <span class="eyebrow">Corporate training for employers &middot; South Africa, Kenya, Ghana and Nigeria</span>
+        <h1 class="hero-title ca-hero-title">Cybersecurity and AI workforce training for companies</h1>
+        <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
+        <p class="hero-sub">Paleon Training helps business owners, managing directors and HR leaders train their staff in two areas that now matter to every company: <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered live online for companies in South Africa, Kenya and Ghana, and in-house, online or hybrid in Nigeria. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
           ${ctaButton(CONSULTATION, true)}
           ${ctaButton(PROPOSAL, true)}
@@ -703,6 +787,23 @@ ${header(ctx, home)}
       </figure>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${accCards}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="by-country" aria-labelledby="by-country-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Where we train</span>
+      <h2 class="section-title" id="by-country-title">Cybersecurity and AI training for companies in South Africa, Kenya, Ghana and Nigeria</h2>
+      <p class="ca-p">Every programme is led by a live facilitator, uses examples from your sector and is scheduled around your working day.</p>
+      <div class="ca-cards">${HUB_COUNTRY_SEO.map(
+        (c) => `<div class="ca-card">
+          <h3>${flagSvg(c.code, "flag flag-sm")} ${escapeHtml(c.h)}</h3>
+          <p>${escapeHtml(c.p)}</p>
+          <p class="ca-card-link"><a href="${cyberSecurePath(c.code)}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[c.code].name)} &rarr;</a></p>
+          <p class="ca-card-link"><a href="${corporateAiPath(c.code)}">AI training for employees in ${escapeHtml(COUNTRIES[c.code].name)} &rarr;</a></p>
+        </div>`,
+      ).join("\n")}</div>
+      <div class="ca-ctas">${ctaButton(PROPOSAL, true)}</div>
     </div>
   </section>
 
