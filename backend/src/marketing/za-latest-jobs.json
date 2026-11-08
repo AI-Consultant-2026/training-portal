@@ -1,7 +1,43 @@
 {
- "updated": "2026-11-07",
+ "updated": "2026-11-08",
  "source": "MyJobMag South Africa (myjobmag.co.za)",
  "jobs": [
+  {
+   "sector": "Banking & Finance",
+   "role": "Executive Assistant(Job Number: 2600008X)",
+   "company": "KPMG South Africa",
+   "location": "Cape Town",
+   "province": "Western Cape",
+   "posted": "2026-11-08",
+   "deadline": "2026-12-08",
+   "requirements": "Function and Business Unit: Infrastructure – Business Support Description of the role and purpose of the job: Providing and prioritising operational and administrative support to the…",
+   "link": "https://www.myjobmag.co.za/job/executive-assistant-job-number-2600008x-kpmg-south-africa",
+   "course": null
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Executive Assistant (Job Number: 2600008Y)",
+   "company": "KPMG South Africa",
+   "location": "Johannesburg",
+   "province": "Gauteng",
+   "posted": "2026-11-08",
+   "deadline": "2026-12-08",
+   "requirements": "Function and Business Unit: Infrastructure – Business Support Description of the role and purpose of the job: Providing and prioritising operational and administrative support to the…",
+   "link": "https://www.myjobmag.co.za/job/executive-assistant-job-number-2600008y-kpmg-south-africa",
+   "course": null
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Tax & Legal Risk Compliance Specialist(Job Number: 2600008Z)",
+   "company": "KPMG South Africa",
+   "location": "Johannesburg",
+   "province": "Gauteng",
+   "posted": "2026-11-08",
+   "deadline": "2026-12-08",
+   "requirements": "Description of the role and purpose of the job: To ensure that all internal risk management procedures, as prescribed by KPMG Global Risk Management, are completed for all Tax & Legal…",
+   "link": "https://www.myjobmag.co.za/job/tax-legal-risk-compliance-specialist-job-number-2600008z-kpmg-south-africa",
+   "course": null
+  },
   {
    "sector": "Mining, Oil & Energy",
    "role": "Operator (Scaler) - B3",
@@ -577,42 +613,6 @@
    "requirements": "Job Description Fully accountable to provide functional support for the Costing and Recoveries services to various areas in the bank. This will involve develop and implement Costing &…",
    "link": "https://www.myjobmag.co.za/job/finance-manager-standard-bank-group",
    "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Broker Consultant (PG 10): SanlamConnect: East Coast Region :Port Shepstone",
-   "company": "Sanlam Group",
-   "location": "KwaZulu-Natal",
-   "province": "KwaZulu-Natal",
-   "posted": "2026-11-05",
-   "deadline": "2026-12-05",
-   "requirements": "Purpose of the Role This role will report to the Business Manager Your primary focus will be building a supporting portfolio of brokers to increase new business. The Broker Consultant is the…",
-   "link": "https://www.myjobmag.co.za/job/broker-consultant-pg-10-sanlamconnect-east-coast-region-port-shepstone-sanlam",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Broker Consultant (PG10): SanlamConnect East Coast: Umhlanga",
-   "company": "Sanlam Group",
-   "location": "KwaZulu-Natal",
-   "province": "KwaZulu-Natal",
-   "posted": "2026-11-05",
-   "deadline": "2026-12-05",
-   "requirements": "Purpose of the Role This role will report to the Business Manager Your primary focus will be building a supporting portfolio of brokers to increase new business. The Broker Consultant is the…",
-   "link": "https://www.myjobmag.co.za/job/broker-consultant-pg10-sanlamconnect-east-coast-umhlanga-sanlam",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Senior DevOps Engineer / Technical Lead",
-   "company": "Sanlam Group",
-   "location": "South Africa (various)",
-   "province": "Various",
-   "posted": "2026-11-05",
-   "deadline": "2026-12-05",
-   "requirements": "Purpose of the Role The Senior DevOps Engineer / Technical Lead is responsible for the hands-on design, implementation, operation and continuous improvement of the organisation’s DevOps…",
-   "link": "https://www.myjobmag.co.za/job/senior-devops-engineer-technical-lead-sanlam-1",
-   "course": "Cyber Security Fundamentals"
   },
   {
    "sector": "ICT & Telecoms",
