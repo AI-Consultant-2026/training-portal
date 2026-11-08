@@ -159,6 +159,7 @@ function hero(code: CountryCode, c: CyberPageContent): string {
     .map((t) => `<li>${rich(t)}</li>`)
     .join("");
   return `<section class="hero ca-hero" id="top">
+    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}?country=${cc}">Corporate training</a> <span aria-hidden="true">/</span> Cybersecurity awareness training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
@@ -181,18 +182,60 @@ function hero(code: CountryCode, c: CyberPageContent): string {
   </section>`;
 }
 
-export function cyberFaqItems(c: CyberPageContent): { q: string; a: string }[] {
+// Local SEO (2026-11-08): the cities each page names, plus three extra FAQs per country
+// (cities, cost, combining with AI training) that also feed the FAQPage JSON-LD.
+const CITIES: Record<CountryCode, string[]> = {
+  NG: ["Lagos", "Abuja", "Port Harcourt", "Warri", "Ibadan", "Kano"],
+  ZA: ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Gqeberha", "Bloemfontein"],
+  KE: ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret"],
+  GH: ["Accra", "Kumasi", "Tema", "Takoradi", "Tamale", "Cape Coast"],
+};
+
+function cityList(code: CountryCode): string {
+  const list = CITIES[code];
+  return `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;
+}
+
+function deliveryPhrase(code: CountryCode): string {
+  return code === "NG" ? "in-house, live online or hybrid" : "live online with a facilitator";
+}
+
+function extraFaqs(code: CountryCode): { q: string; a: string }[] {
+  const country = COUNTRIES[code].name;
+  return [
+    {
+      q: `Do you offer cybersecurity awareness training for companies in ${cityList(code)}?`,
+      a: `Yes. CyberSecure Workforce is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Every session is scheduled around your working day.`,
+    },
+    {
+      q: "How much does cybersecurity awareness training for employees cost?",
+      a: "It depends on the number of employees, the package and the delivery method. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+    },
+    {
+      q: "Can we combine cybersecurity training with AI training for our staff?",
+      a: `Yes. Many organisations pair CyberSecure Workforce with AI Workflow Productivity & Process Transformation, so staff learn to use AI tools and to recognise the new risks they bring. Both are available for companies in ${country}.`,
+    },
+  ];
+}
+
+export function cyberFaqItems(c: CyberPageContent, code?: CountryCode): { q: string; a: string }[] {
   const out: { q: string; a: string }[] = [];
   for (const block of c.sections["Frequently asked questions"].blocks) {
     if (!("p" in block)) continue;
     const m = /^\*\*(.+?\?)\*\*\s*(.*)$/.exec(block.p);
     if (m) out.push({ q: m[1], a: m[2] });
   }
+  if (code) {
+    // Keep "How do we request a proposal?" last: the new questions go before it.
+    const last = out.length && /proposal\?$/i.test(out[out.length - 1].q) ? out.pop() : undefined;
+    out.push(...extraFaqs(code));
+    if (last) out.push(last);
+  }
   return out;
 }
 
-function faq(c: CyberPageContent): string {
-  const items = cyberFaqItems(c)
+function faq(code: CountryCode, c: CyberPageContent): string {
+  const items = cyberFaqItems(c, code)
     .map((f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${rich(f.a)}</p></details>`)
     .join("\n");
   return `<section class="section section-paper ca-section" id="faq" aria-labelledby="faq-title">
@@ -200,6 +243,23 @@ function faq(c: CyberPageContent): string {
       <span class="section-eyebrow">Questions</span>
       <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
       ${items}
+    </div>
+  </section>`;
+}
+
+function whereWeTrain(code: CountryCode): string {
+  const country = COUNTRIES[code].name;
+  const how =
+    code === "NG"
+      ? "We train in-house at your offices or sites, live online, or a mix of both, and provide the attendance records and documentation for ITF reimbursement claims."
+      : "Training is delivered live online with a facilitator, so every office, branch and remote worker can join the same practical sessions.";
+  return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
+    <div class="wrap ca-narrow">
+      <span class="section-eyebrow">Where we train</span>
+      <h2 class="section-title" id="where-title">Cybersecurity awareness training for employees across ${escapeHtml(country)}</h2>
+      <p class="ca-p">Paleon Training runs CyberSecure Workforce for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
+      <p class="ca-p">Sessions are scheduled around your working day, and examples are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
+      <div class="ca-ctas">${ctaButton(CYBER_PROPOSAL, false)}</div>
     </div>
   </section>`;
 }
@@ -252,9 +312,32 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
         },
       },
       {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name: `Cybersecurity awareness training for employees in ${country}`,
+        serviceType: "Cybersecurity awareness training",
+        description: c.description,
+        url,
+        provider: { "@id": `${ORIGIN}/#organization` },
+        areaServed: [
+          { "@type": "Country", name: country },
+          ...CITIES[code].map((name) => ({ "@type": "City", name })),
+        ],
+        audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
+          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 3, name: `Cybersecurity awareness training in ${country}`, item: url },
+        ],
+      },
+      {
         "@type": "FAQPage",
         "@id": `${url}#faq`,
-        mainEntity: cyberFaqItems(c).map((f) => ({
+        mainEntity: cyberFaqItems(c, code).map((f) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\*\*/g, "") },
@@ -266,6 +349,14 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
         name: "Paleon Training Limited",
         url: `${ORIGIN}/`,
         email: "corporate@paleontraining.com",
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "sales",
+          email: "corporate@paleontraining.com",
+          telephone: "+234-707-714-9215",
+          areaServed: ["NG", "ZA", "KE", "GH"],
+          availableLanguage: "English",
+        },
         address: {
           "@type": "PostalAddress",
           streetAddress: "Off NNPC Junior Staff Club 10",
@@ -334,7 +425,8 @@ ${header(ctx, home)}
   ${section(c, "Measurement and deliverables", { id: "measurement" })}
   ${section(c, "Your corporate training journey", { id: "journey", dark: true, eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
-  ${faq(c)}
+  ${whereWeTrain(code)}
+  ${faq(code, c)}
   ${enquiry(code, finalCopy(c), CYBER_FORM)}
   ${related(code)}
 </main>

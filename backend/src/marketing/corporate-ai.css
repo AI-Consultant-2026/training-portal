@@ -196,3 +196,7 @@
 .section-dark .ca-links { margin: 0 0 20px; }
 .section-dark .ca-links a { background: transparent; color: var(--paper); border-color: var(--line); }
 .section-dark .ca-links a:hover { border-color: var(--signal); color: var(--signal-2); }
+
+/* Breadcrumb above the CyberSecure country-page hero (2026-11-08). */
+.cs-crumb-wrap { position: relative; z-index: 1; padding-top: 22px; }
+.cs-crumb-wrap .pw-crumb { margin: 0; }

@@ -13,8 +13,8 @@ export interface CyberPageContent {
 
 export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageContent> = {
   "NG": {
-    "title": "Cybersecurity Awareness Training Nigeria | Paleon Training",
-    "description": "Practical cybersecurity awareness training for Nigerian organisations. Help staff spot phishing, stop payment fraud and protect company data.",
+    "title": "Cybersecurity Awareness Training for Employees in Nigeria",
+    "description": "Cybersecurity awareness training for employees in Lagos, Abuja, Port Harcourt and across Nigeria. In-house, online or hybrid; supports ITF claims. Get a proposal.",
     "images": {
       "hero": "Nigerian finance team checking a suspicious payment request on a laptop in a Lagos office.",
       "awareness": "Nigerian colleagues discussing a suspicious WhatsApp message in an Abuja office.",
@@ -553,8 +553,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
     }
   },
   "ZA": {
-    "title": "Cybersecurity Awareness Training South Africa | Paleon",
-    "description": "Live online cybersecurity awareness training for South African teams. Build safer habits around phishing, payments, personal information and AI.",
+    "title": "Cybersecurity Awareness Training for Employees in South Africa",
+    "description": "Live online cybersecurity awareness training for companies in Johannesburg, Cape Town, Durban and across South Africa. Phishing, fraud and AI risks. Get a proposal.",
     "images": {
       "hero": "South African finance team verifying a supplier payment request together in a Johannesburg office.",
       "awareness": "South African colleagues discussing a suspicious email in a Cape Town office.",
@@ -1058,8 +1058,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
     }
   },
   "GH": {
-    "title": "Cybersecurity Awareness Training Ghana | Paleon Training",
-    "description": "Cybersecurity awareness training for organisations in Ghana. Help staff recognise phishing, mobile money scams and fraud, and protect company data.",
+    "title": "Cybersecurity Awareness Training for Employees in Ghana",
+    "description": "Live online cybersecurity awareness training for companies in Accra, Kumasi, Tema and across Ghana. Phishing, mobile money scams and fraud. Get a proposal.",
     "images": {
       "hero": "Ghanaian professionals reviewing a suspicious message on a phone and laptop in an Accra office.",
       "awareness": "Ghanaian colleagues discussing how to verify a payment request.",
@@ -1560,8 +1560,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
     }
   },
   "KE": {
-    "title": "Cybersecurity Awareness Training Kenya | Paleon Training",
-    "description": "Practical cybersecurity awareness training for Kenyan teams. Help staff recognise phishing, account takeover and AI scams, and report incidents fast.",
+    "title": "Cybersecurity Awareness Training for Employees in Kenya",
+    "description": "Live online cybersecurity awareness training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Phishing, account takeover and AI scams. Get a proposal.",
     "images": {
       "hero": "Kenyan team reviewing a security prompt on a phone and laptop in a Nairobi office.",
       "awareness": "Kenyan colleagues discussing a suspicious voice note.",
