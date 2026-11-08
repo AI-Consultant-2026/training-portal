@@ -151,6 +151,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "Hero", "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Hero", "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Hero", "Supporting statement"))}</p>
+        <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
         <div class="hero-ctas">
           ${ctaButton(field(c, "Hero", "Primary CTA") || CONSULTATION, true)}
           ${ctaButton(field(c, "Hero", "Secondary CTA") || PROPOSAL, true)}
@@ -174,7 +175,11 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer AI training for employees in ${cityList(code)}?`,
-      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Sessions are scheduled around your working day.`,
+      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. The programme is fully booked until January 2027; you can enquire now to reserve dates from January 2027.`,
+    },
+    {
+      q: "When can we start?",
+      a: "The programme is fully booked until January 2027. Enquire now to reserve your dates from January 2027; we can complete the needs assessment with you in advance, so your teams are ready to start.",
     },
     {
       q: "How much does corporate AI training cost?",
@@ -182,7 +187,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "Can we combine AI training with cybersecurity training for our staff?",
-      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available for companies in ${country}.`,
+      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. CyberSecure Workforce is available now for companies in ${country}, so many organisations start with cybersecurity training and add AI training from January 2027.`,
     },
   ];
 }
@@ -211,6 +216,7 @@ function whereWeTrain(code: CountryCode): string {
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">AI workforce and process transformation training across ${escapeHtml(country)}</h2>
+      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
       <p class="ca-p">Paleon Training runs AI Workflow Productivity &amp; Process Transformation for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Sessions are scheduled around your working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       <div class="ca-ctas">${ctaButton(PROPOSAL, false)}</div>
