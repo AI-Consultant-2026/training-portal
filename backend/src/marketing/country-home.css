@@ -445,3 +445,25 @@ mark.tbc {
 .cc-faq h3 { font-size: 19px; margin: 22px 0 6px; color: var(--charcoal); }
 .cc-faq p { margin: 0; font-size: 17px; line-height: 1.65; color: #3A342A; }
 .cc-end { margin-top: 28px; }
+
+/* Employer-first menu on the corporate pages (2026-11-08): the learner links sit under
+   "For individuals" -- a <details> so it works without JS (the CSP blocks inline scripts). */
+.nav-group details > summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; min-height: 44px;
+  font-size: 16px; font-weight: 500; color: var(--charcoal);
+}
+.nav-group details > summary::-webkit-details-marker { display: none; }
+.nav-group details > summary::after { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); }
+.nav-group details[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
+.nav-group details > summary:hover { color: var(--signal-text); }
+.nav-sub { list-style: none; margin: 0; padding: 0 0 4px 16px; border-left: 2px solid var(--line-light); }
+@media (min-width: 1180px) {
+  .nav-group { position: relative; }
+  .nav-group details > summary { font-size: 14.5px; white-space: nowrap; }
+  .nav-sub {
+    position: absolute; top: calc(100% + 6px); right: 0; z-index: 50; min-width: 200px;
+    padding: 8px 16px; border: 1px solid var(--line-light); border-radius: var(--radius);
+    background: var(--paper); box-shadow: 0 12px 24px rgba(16,21,31,0.12);
+  }
+}

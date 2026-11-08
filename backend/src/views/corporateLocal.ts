@@ -49,3 +49,13 @@ export const PROGRAMME_LINKS: { slug: string; name: string }[] = [
   { slug: "corporate-training/cybersecure-workforce", name: "CyberSecure Workforce" },
   { slug: "corporate-training/ai-cybersecurity-professional-accelerator", name: "AI + Cybersecurity Professional Accelerator" },
 ];
+
+// Each country's data protection law (2026-11-08), named beside the cybersecurity programme
+// for compliance-minded boards. Same names as the CyberSecure Workforce FAQs. Awareness
+// training only: never claim it makes an organisation compliant.
+export const DATA_PROTECTION_LAW: Record<CountryCode, string> = {
+  NG: "the Nigeria Data Protection Act 2023 (NDPA)",
+  ZA: "the Protection of Personal Information Act (POPIA)",
+  KE: "Kenya's Data Protection Act, 2019",
+  GH: "Ghana's Data Protection Act, 2012 (Act 843)",
+};

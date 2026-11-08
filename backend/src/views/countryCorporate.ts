@@ -8,7 +8,7 @@ import {
   enquiry,
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
-import { CITIES, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { CITIES, DATA_PROTECTION_LAW, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 
 // Corporate training pages for South Africa, Kenya and Ghana (2026-11-08) at
@@ -149,7 +149,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, home, "/")}
+${header(ctx, home, "/", true)}
 <main id="main">
   <section class="hero ca-hero" id="top">
     <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}">Corporate training</a> <span aria-hidden="true">/</span> ${escapeHtml(country)}</p></div>
@@ -179,6 +179,7 @@ ${header(ctx, home, "/")}
         <div class="ca-card">
           <h3><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness training</a></h3>
           <p>Every employee learns to recognise, stop and report phishing, payment fraud and impersonation, protect business information and use AI tools safely. Twelve practical modules for non-technical staff, from the boardroom to the front desk.</p>
+          <p>It builds awareness of handling personal and customer data responsibly, in line with your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}. Awareness training, not legal advice.</p>
           <p class="ca-card-link"><a href="${cyberSecurePath(code)}">Cybersecurity awareness training in ${escapeHtml(country)} &rarr;</a></p>
         </div>
         <div class="ca-card">
@@ -205,6 +206,15 @@ ${header(ctx, home, "/")}
       <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. Training is live online with a facilitator, so every office, branch and remote worker can join the same practical sessions, scheduled around your working day.</p>
       <p class="ca-p">Examples and workplace projects are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="resources" aria-labelledby="resources-title">
+    <div class="wrap ca-narrow">
+      <span class="section-eyebrow">Free resources for directors</span>
+      <h2 class="section-title" id="resources-title">Start with a free readiness check</h2>
+      <p class="ca-p">Ten quick questions show how ready your organisation in ${escapeHtml(country)} is for cyber threats and for safe AI use, with a scorecard of your priority gaps by email: <a href="/ai-cyber-readiness-check?country=${cc}"><strong>take the AI &amp; Cyber Readiness Check</strong></a>.</p>
+      <p class="ca-p">Also for directors: our <a href="/ai-use-policy-template">AI use policy template</a> and <a href="/board-cyber-risk-briefing">board cyber-risk briefing</a>.</p>
     </div>
   </section>
 

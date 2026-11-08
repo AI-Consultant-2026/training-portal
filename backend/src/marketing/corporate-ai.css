@@ -200,3 +200,47 @@
 /* Breadcrumb above the CyberSecure country-page hero (2026-11-08). */
 .cs-crumb-wrap { position: relative; z-index: 1; padding-top: 22px; }
 .cs-crumb-wrap .pw-crumb { margin: 0; }
+
+/* Homepage "Choose your country" (2026-11-08): compact, and on phones a single row of four
+   flags so the headline stays near the top of the screen. */
+.ca-choose { padding-top: 32px; padding-bottom: 32px; }
+.ca-choose .section-title { margin-bottom: 6px; }
+@media (max-width: 639px) {
+  .ca-choose { padding-top: 16px; padding-bottom: 16px; }
+  .ca-choose .section-title { font-size: 18px; margin-bottom: 10px; }
+  .ca-choose .ca-p { display: none; }
+  .ca-choose .ca-countries { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 0; }
+  .ca-choose .ca-country { align-items: center; text-align: center; gap: 6px; padding: 10px 4px; border-top-width: 3px; }
+  .ca-choose .ca-country-note, .ca-choose .ca-country-go { display: none; }
+  .ca-choose .ca-country-name { font-family: var(--font-body); font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+}
+
+/* Data-protection note under the cybersecurity programme (2026-11-08). */
+.ca-law { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 6px; }
+.ca-law li { padding-left: 14px; border-left: 3px solid var(--signal); }
+
+/* AI & Cyber Readiness Check (2026-11-08) */
+.rc-part { margin: 8px 0 16px; font-size: 24px; }
+.rc-q { border: 1px solid var(--line-light); border-radius: var(--radius-lg); background: var(--white); padding: 16px 18px; margin: 0 0 14px; }
+.rc-q legend { float: left; width: 100%; margin-bottom: 6px; font-weight: 600; line-height: 1.45; padding: 0; }
+.rc-q legend + * { clear: both; }
+.rc-num { color: var(--signal-text); }
+.rc-opt { display: flex; align-items: flex-start; gap: 10px; padding: 8px 4px; cursor: pointer; line-height: 1.45; }
+.rc-opt input { margin-top: 4px; accent-color: var(--signal); width: 18px; height: 18px; flex-shrink: 0; }
+.rc-result { border: 1px solid var(--line-light); border-top: 4px solid var(--signal); border-radius: var(--radius-lg); background: var(--white); padding: 24px; }
+.rc-result h3 { font-family: var(--font-display); font-size: 20px; margin: 20px 0 10px; }
+.rc-score { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 4px 0 8px; }
+.rc-score strong { font-family: var(--font-display); font-size: 52px; line-height: 1; }
+.rc-score span { font-size: 20px; font-weight: 700; color: var(--signal-text); }
+.rc-bars p { display: flex; justify-content: space-between; margin: 12px 0 6px; }
+.rc-bar { height: 10px; border-radius: 6px; background: var(--paper-2, #EFEADA); overflow: hidden; }
+.rc-bar span { display: block; height: 100%; width: 0; background: var(--signal); transition: width .6s ease; }
+.rc-gaps { padding-left: 20px; list-style: decimal; display: grid; gap: 8px; }
+.rc-email { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line-light); }
+.rc-email .ca-form { background: none; padding: 0; box-shadow: none; }
+
+/* Director resources articles (2026-11-08) */
+.rs-toc { border: 1px solid var(--line-light); border-radius: var(--radius-lg); background: var(--white); padding: 16px 20px; margin-bottom: 28px; }
+.rs-toc ol { list-style: decimal; padding-left: 20px; display: grid; gap: 4px; }
+.rs-section { margin-bottom: 28px; }
+.rs-section .section-title { font-size: 24px; }

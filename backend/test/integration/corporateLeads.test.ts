@@ -236,3 +236,96 @@ describe("AI + Cybersecurity Professional Accelerator corporate pages", () => {
     expect((await request(app).get("/cyber-security-fundamentals-course")).text).toContain(`href="/ng/${PATH}"`);
   });
 });
+
+describe("AI & Cyber Readiness Check (2026-11-08)", () => {
+  const check = {
+    name: "Thandi Mokoena",
+    jobTitle: "Managing Director",
+    organisation: "Example Logistics (Pty) Ltd",
+    country: "ZA",
+    email: "thandi@example.co.za",
+    employees: "50–249",
+    // Cyber: 0,1,0,1,0 (20%); AI: 2,2,1,2,2 (90%).
+    answers: [0, 1, 0, 1, 0, 2, 2, 1, 2, 2],
+    consent: true,
+    page: "/ai-cyber-readiness-check",
+  };
+
+  it("serves the check with ten questions, scored in the browser by readiness-check.js", async () => {
+    const res = await request(app).get("/ai-cyber-readiness-check?country=ke");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ai-cyber-readiness-check">');
+    expect(res.text.match(/<fieldset class="rc-q"/g)?.length).toBe(10);
+    expect(res.text).toContain('<script src="/readiness-check.js" defer></script>');
+    expect(res.text).toContain('<option value="KE" selected>Kenya</option>');
+    expect(res.text).toContain("/ke/corporate-training/cybersecure-workforce");
+    expect((await request(app).get("/readiness-check.js")).status).toBe(200);
+  });
+
+  it("scores the answers on the server, saves an employer lead and emails the scorecard and corporate@", async () => {
+    const res = await request(app).post("/api/leads/readiness").send({ ...check, updates: true });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toMatchObject({ score: 55, cyber: 20, ai: 90, band: "developing" });
+    const lead = await Lead.findByPk(res.body.id);
+    expect(lead).toMatchObject({ source: "ai-cyber-readiness", course: "AI & Cyber Readiness Check (Corporate)", country: "ZA", phone: null });
+    expect(lead?.details).toMatchObject({ organisation: check.organisation, score: "55", cyber: "20", ai: "90", band: "Developing" });
+    expect(lead?.marketingConsentAt).not.toBeNull();
+    // Not a learner: the nurture emails are stamped as done.
+    expect(lead?.welcomeEmailSentAt).not.toBeNull();
+
+    expect(memAdapter.sentMessages).toHaveLength(2);
+    const [scorecard, notice] = memAdapter.sentMessages;
+    expect(scorecard).toMatchObject({ to: check.email, replyTo: config.corporateEnquiriesEmail });
+    expect(scorecard.subject).toContain("55% (Developing)");
+    expect(scorecard.text).toContain("Cybersecurity: 20% · AI use: 90%");
+    // Weakest area first: cybersecurity training is suggested first, with the country's page.
+    expect(scorecard.text.indexOf("CyberSecure Workforce")).toBeLessThan(scorecard.text.indexOf("AI Workflow Productivity"));
+    expect(scorecard.text).toContain("https://paleontraining.com/za/corporate-training/cybersecure-workforce");
+    expect(notice).toMatchObject({ to: config.corporateEnquiriesEmail, replyTo: check.email });
+    expect(notice.subject).toContain("scored 55%");
+  });
+
+  it("rejects incomplete answers, out-of-range answers and a missing consent", async () => {
+    expect((await request(app).post("/api/leads/readiness").send({ ...check, answers: [2, 2, 2] })).status).toBe(400);
+    expect((await request(app).post("/api/leads/readiness").send({ ...check, answers: [3, 2, 2, 2, 2, 2, 2, 2, 2, 2] })).status).toBe(400);
+    expect((await request(app).post("/api/leads/readiness").send({ ...check, consent: false })).status).toBe(400);
+    expect(await Lead.count()).toBe(0);
+  });
+});
+
+describe("Director resources and the employer-first menu (2026-11-08)", () => {
+  it.each([
+    ["/ai-use-policy-template", "AI use policy template for organisations"],
+    ["/board-cyber-risk-briefing", "Board cyber-risk briefing for directors"],
+  ])("serves %s", async (path, h1) => {
+    const res = await request(app).get(path);
+    expect(res.status).toBe(200);
+    expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com${path}">`);
+    expect(res.text).toContain(h1);
+    expect(res.text).toContain('"@type":"Article"');
+    expect(res.text).toContain("not legal advice");
+  });
+
+  it("links the resources from the homepage, and names each country's data protection law there", async () => {
+    const home = (await request(app).get("/")).text;
+    expect(home).toContain('id="resources"');
+    for (const href of ["/ai-cyber-readiness-check", "/ai-use-policy-template", "/board-cyber-risk-briefing"]) expect(home).toContain(`href="${href}"`);
+    for (const law of ["Nigeria Data Protection Act 2023", "Protection of Personal Information Act (POPIA)", "Data Protection Act, 2019", "Act 843"]) {
+      expect(home).toContain(law);
+    }
+    expect((await request(app).get("/ke/corporate-training")).text).toContain("Kenya&#39;s Data Protection Act, 2019");
+  });
+
+  it("groups the learner links under For individuals on corporate pages only", async () => {
+    for (const path of ["/", "/za/corporate-training", "/ng/corporate-training/cybersecure-workforce", "/ai-use-policy-template"]) {
+      const html = (await request(app).get(path)).text;
+      expect(html).toContain('<li class="nav-group"><details><summary>For individuals</summary>');
+      expect(html).toContain('<a href="/ai-cyber-readiness-check">Free Readiness Check</a>');
+      expect(html).toContain("Corporate training &middot;");
+    }
+    const learner = (await request(app).get("/ng")).text;
+    expect(learner).not.toContain("For individuals");
+    expect(learner).toContain("Digital skills &middot; Nigeria");
+  });
+});

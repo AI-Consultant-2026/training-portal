@@ -978,6 +978,24 @@
     "category": "Corporate"
   },
   {
+    "title": "Free AI & Cyber Readiness Check for Organisations",
+    "description": "Ten quick questions for business owners and directors: how ready is your organisation for cyber threats and safe AI use? Instant score and free scorecard.",
+    "url": "/ai-cyber-readiness-check",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI Use Policy Template for Organisations",
+    "description": "Free plain-language AI use policy template: approved tools, data that must never go into AI, human review, security and training.",
+    "url": "/ai-use-policy-template",
+    "category": "Corporate"
+  },
+  {
+    "title": "Board Cyber-Risk Briefing for Directors",
+    "description": "The cyber risks boards should understand, ten questions directors should ask management, and the measures that show readiness.",
+    "url": "/board-cyber-risk-briefing",
+    "category": "Corporate"
+  },
+  {
     "title": "Corporate Training in South Africa",
     "description": "Corporate AI and cybersecurity training for employees across South Africa, live online with a facilitator.",
     "url": "/za/corporate-training",

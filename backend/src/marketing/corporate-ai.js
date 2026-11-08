@@ -3,6 +3,15 @@
 // because the site's CSP blocks inline scripts.
 (function () {
   "use strict";
+  // GA4 (2026-11-08): which country an employer picks on the homepage's "Choose your
+  // country" selector and footer, and clicks to the director resources.
+  document.addEventListener("click", function (e) {
+    if (!window.ptTrack || !e.target.closest) return;
+    var pick = e.target.closest(".ca-choose [data-pick-country], .footer-country[data-pick-country]");
+    if (pick) window.ptTrack("corporate_country_select", { country: pick.getAttribute("data-pick-country"), link_location: pick.classList.contains("footer-country") ? "footer" : "homepage_selector" });
+    var res = e.target.closest('a[href^="/ai-cyber-readiness-check"], a[href="/ai-use-policy-template"], a[href="/board-cyber-risk-briefing"]');
+    if (res) window.ptTrack("director_resource_click", { resource: res.getAttribute("href").split("?")[0].slice(1), page_path: location.pathname });
+  });
   var form = document.getElementById("caForm");
   if (!form) return;
   var submit = document.getElementById("caSubmit");
@@ -64,7 +73,7 @@
         form.hidden = true;
         thanks.hidden = false;
         thanks.focus();
-        if (window.ptTrack) window.ptTrack("generate_lead", { form: "corporate_" + programme.replace(/-/g, "_"), country: body.country, intent: body.intent });
+        if (window.ptTrack) window.ptTrack("generate_lead", { form: "corporate_" + programme.replace(/-/g, "_"), lead_type: "corporate", programme: programme, country: body.country, intent: body.intent, page_path: location.pathname });
       })
       .catch(function (err) {
         showError((err && err.userMessage) || "Something went wrong. Please email corporate@paleontraining.com.");

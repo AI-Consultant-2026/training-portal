@@ -233,27 +233,42 @@ export function previewHref(country: CountryCode, slug: string): string {
 
 // `home` is the learner homepage the menu's section links point at; `logoHref` is where
 // the logo goes (the corporate homepage passes "/" while its menu links go to /ng etc.).
-export function header(ctx: PageContext, home: string, logoHref = home): string {
+// `corporate` (2026-11-08) is the employer-first menu used on the corporate pages: the
+// learner sections are grouped under "For individuals".
+export function header(ctx: PageContext, home: string, logoHref = home, corporate = false): string {
   const c = COUNTRIES[ctx.country];
+  const place = ctx.hub ? "Africa" : escapeHtml(c.name);
+  const learnerLinks = `<li><a href="${home}#courses">Courses</a></li>
+        <li><a href="${home}#career-match">Career Match</a></li>
+        <li><a href="${home}#how">How it works</a></li>
+        <li><a href="${home}#why">Why Paleon</a></li>`;
+  const links = corporate
+    ? `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
+        <li><a href="/ai-cyber-readiness-check">Free Readiness Check</a></li>
+        <li><a href="/#resources">Resources</a></li>
+        <li class="nav-group"><details><summary>For individuals</summary><ul class="nav-sub">
+        ${learnerLinks}
+        <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
+        </ul></details></li>
+        <li class="nav-phone-only"><a href="/support">Support</a></li>
+        <li><a href="/login">Login</a></li>`
+    : `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
+        ${learnerLinks}
+        <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
+        <li class="nav-phone-only"><a href="/support">Support</a></li>
+        <li><a href="/login">Login</a></li>`;
   return `<header class="site-header">
   <div class="wrap header-row">
     <a class="logo" href="${logoHref}">
       ${LOGO_MARK("#211D17")}
       <span>
         <span class="logo-word">Paleon Training</span>
-        <span class="logo-sub">Digital skills &middot; ${ctx.hub ? "Africa" : escapeHtml(c.name)}</span>
+        <span class="logo-sub">${corporate ? "Corporate training" : "Digital skills"} &middot; ${place}</span>
       </span>
     </a>
     <nav class="main-nav" aria-label="Main">
       <ul class="nav-links" id="navLinks">
-        <li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
-        <li><a href="${home}#courses">Courses</a></li>
-        <li><a href="${home}#career-match">Career Match</a></li>
-        <li><a href="${home}#how">How it works</a></li>
-        <li><a href="${home}#why">Why Paleon</a></li>
-        <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
-        <li class="nav-phone-only"><a href="/support">Support</a></li>
-        <li><a href="/login">Login</a></li>
+        ${links}
       </ul>
     </nav>
     <div class="header-actions">

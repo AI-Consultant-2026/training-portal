@@ -378,7 +378,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, home)}
+${header(ctx, home, home, true)}
 <main id="main">
   ${hero(code, c)}
   ${section(c, "Problem", { id: "problem", eyebrowOverride: "The challenge", listClass: "ca-list ca-list-x" })}

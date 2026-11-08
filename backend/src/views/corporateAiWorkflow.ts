@@ -1,4 +1,4 @@
-import { SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { DATA_PROTECTION_LAW, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
   CORPORATE_DELIVERY,
@@ -483,7 +483,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, home)}
+${header(ctx, home, home, true)}
 <main id="main">
   ${hero(code, c)}
   ${section(c, "Problem", { id: "problem", eyebrowOverride: "The challenge", listClass: "ca-list ca-list-x" })}
@@ -797,7 +797,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, home, "/")}
+${header(ctx, home, "/", true)}
 <main id="main">
   <section class="section section-paper ca-section ca-choose" id="choose-country" aria-labelledby="choose-country-title">
     <div class="wrap">
@@ -838,6 +838,9 @@ ${header(ctx, home, "/")}
           <source src="/videos/corporate/cybersecure-workforce-essentials.mp4" type="video/mp4">
         </video>
       </figure>
+      <p class="ca-p"><strong>Data protection, in plain language.</strong> The programme builds awareness of handling personal and customer data responsibly, in line with your obligations under your country&rsquo;s law:</p>
+      <ul class="ca-law">${MARKET_ORDER.map((k) => `<li><strong>${escapeHtml(COUNTRIES[k].name)}:</strong> ${escapeHtml(DATA_PROTECTION_LAW[k].replace(/^the /, ""))}</li>`).join("")}</ul>
+      <p class="ca-p ca-hint">Awareness training to support your compliance programme; it is not legal advice.</p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${cyberCards}</div>
     </div>
@@ -890,6 +893,30 @@ ${header(ctx, home, "/")}
         </div>`,
       ).join("\n")}</div>
       <div class="ca-ctas">${ctaButton(PROPOSAL, true)}</div>
+    </div>
+  </section>
+
+  <section class="section section-paper ca-section" id="resources" aria-labelledby="resources-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Free resources for directors</span>
+      <h2 class="section-title" id="resources-title">Tools for business owners, CEOs and managing directors</h2>
+      <div class="ca-cards">
+        <div class="ca-card">
+          <h3><a href="/ai-cyber-readiness-check">AI &amp; Cyber Readiness Check</a></h3>
+          <p>Ten quick questions on how ready your organisation is for cyber threats and for safe AI use. See your score straight away and get a scorecard with your priority gaps by email.</p>
+          <p class="ca-card-link"><a href="/ai-cyber-readiness-check">Take the free check &rarr;</a></p>
+        </div>
+        <div class="ca-card">
+          <h3><a href="/ai-use-policy-template">AI use policy template for organisations</a></h3>
+          <p>A plain-language starting point for your own AI policy: approved tools, what data must never go into AI, human review, accountability and training.</p>
+          <p class="ca-card-link"><a href="/ai-use-policy-template">Read the template &rarr;</a></p>
+        </div>
+        <div class="ca-card">
+          <h3><a href="/board-cyber-risk-briefing">Board cyber-risk briefing</a></h3>
+          <p>The cyber risks boards should understand, the questions directors should ask management, and the measures that show whether your people are ready.</p>
+          <p class="ca-card-link"><a href="/board-cyber-risk-briefing">Read the briefing &rarr;</a></p>
+        </div>
+      </div>
     </div>
   </section>
 

@@ -18,6 +18,7 @@ import {
 import { buildLeadFollowUpEmail, buildLeadWelcomeEmail, FollowUpStep } from "./templates/leadNurture";
 import { buildPasswordResetEmail } from "./templates/passwordReset";
 import { buildQuizGradedEmail, QuizAnswerFeedback } from "./templates/quizGraded";
+import { buildReadinessNotificationEmail, buildReadinessScorecardEmail } from "./templates/readinessScorecard";
 import { buildWelcomeEmail } from "./templates/welcome";
 
 async function sendEmail(message: EmailMessage): Promise<void> {
@@ -104,6 +105,16 @@ export async function sendCorporateEnquiryEmail(lead: {
   details?: Record<string, string> | null;
 }): Promise<void> {
   await sendEmail(buildCorporateEnquiryEmail(lead));
+}
+
+// The AI & Cyber Readiness Check (2026-11-08): the scorecard to the employer, and a
+// notification to corporate@.
+export async function sendReadinessScorecardEmail(input: Parameters<typeof buildReadinessScorecardEmail>[0]): Promise<void> {
+  await sendEmail(buildReadinessScorecardEmail(input));
+}
+
+export async function sendReadinessNotificationEmail(lead: Parameters<typeof buildReadinessNotificationEmail>[0]): Promise<void> {
+  await sendEmail(buildReadinessNotificationEmail(lead));
 }
 
 export async function sendLeadWelcomeEmail(lead: {

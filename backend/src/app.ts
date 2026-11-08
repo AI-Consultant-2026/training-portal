@@ -27,6 +27,14 @@ import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { countryCorporatePath } from "./views/corporateLocal";
 import { COUNTRY_CORPORATE_CODES, renderCountryCorporate } from "./views/countryCorporate";
+import {
+  AI_POLICY_PATH,
+  BOARD_BRIEFING_PATH,
+  READINESS_PATH,
+  renderAiPolicyTemplate,
+  renderBoardCyberBriefing,
+  renderReadinessCheck,
+} from "./views/directorResources";
 import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -254,6 +262,27 @@ export function createApp() {
   // from the hub. Express routing is case-insensitive, so the lowercase URL works too.
   app.get(PROMOTION_AI_PATH, (req, res) => {
     res.type("html").send(renderPromotionAiWorkflow());
+  });
+  // Free resources for directors (2026-11-08): the readiness check keeps ?country= (or the
+  // remembered country) for its programme links and form; the two articles are general.
+  app.get(READINESS_PATH, (req, res) => {
+    const asked = String(req.query.country ?? "").toUpperCase();
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderReadinessCheck(isCountryCode(asked) ? asked : null, chosenCountry(req)));
+  });
+  app.get(AI_POLICY_PATH, (req, res) => {
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderAiPolicyTemplate(chosenCountry(req)));
+  });
+  app.get(BOARD_BRIEFING_PATH, (req, res) => {
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderBoardCyberBriefing(chosenCountry(req)));
+  });
+  app.get("/readiness-check.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "readiness-check.js"));
   });
   app.get("/corporate-ai.css", (req, res) => {
     res.type("text/css").sendFile(path.join(__dirname, "marketing", "corporate-ai.css"));

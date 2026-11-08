@@ -246,7 +246,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, COUNTRIES.NG.site.path, "/")}
+${header(ctx, COUNTRIES.NG.site.path, "/", true)}
 <main id="main">
   <section class="hero ca-hero pw-hero" id="top">
     <div class="wrap">
