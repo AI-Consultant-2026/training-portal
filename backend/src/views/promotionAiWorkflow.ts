@@ -198,7 +198,7 @@ function jsonLd(url: string): object {
         description: "Where time is lost, how AI helps, and how Paleon Training keeps it safe. A short introduction to the corporate programme.",
         thumbnailUrl: `${ORIGIN}${POSTER}`,
         contentUrl: `${ORIGIN}${VIDEO}`,
-        uploadDate: "2026-11-06",
+        uploadDate: "2026-11-06T12:00:00+00:00",
         duration: "PT1M53S",
       },
       {
