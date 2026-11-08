@@ -61,14 +61,15 @@ describe("Country homepages", () => {
   });
 
   it("lists every country version with hreflang plus x-default, and has no inline scripts", async () => {
-    for (const path of ["/", "/ng", "/za", "/ke", "/gh"]) {
+    // "/" is the corporate homepage since 2026-11-08, so the learner homepages' x-default is /ng.
+    for (const path of ["/ng", "/za", "/ke", "/gh"]) {
       const res = await request(app).get(path);
       for (const [lang, href] of [
         ["en-NG", "/ng"],
         ["en-ZA", "/za"],
         ["en-KE", "/ke"],
         ["en-GH", "/gh"],
-        ["x-default", "/"],
+        ["x-default", "/ng"],
       ]) {
         expect(res.text).toContain(`<link rel="alternate" hreflang="${lang}" href="https://paleontraining.com${href}">`);
       }
@@ -132,22 +133,51 @@ describe("Country homepages", () => {
   });
 });
 
-describe("Hub, remembered country and the country banner", () => {
-  it("shows Nigeria at / by default, canonical to /, without redirecting", async () => {
+describe("Corporate homepage, remembered country and the country banner", () => {
+  it("serves the corporate training homepage at /, country selector first, without redirecting", async () => {
     const res = await request(app).get("/");
     expect(res.status).toBe(200);
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/">');
-    expect(res.text).toContain("Oil &amp; Gas, Banking and Telecoms");
+    expect(res.text).toContain("Cybersecurity and AI workforce training for companies");
     expect(res.headers["cache-control"]).toBe("private, no-cache");
     expect(res.headers.vary).toMatch(/Cookie/);
+    // The country selector comes before the hero and links to each country's corporate page.
+    const main = res.text.slice(res.text.indexOf('<main id="main">'));
+    expect(main.indexOf('id="choose-country"')).toBeLessThan(main.indexOf('id="top"'));
+    const chooser = main.slice(0, main.indexOf('id="top"'));
+    for (const href of ["/corporate-training-nigeria", "/za/corporate-training", "/ke/corporate-training", "/gh/corporate-training"]) {
+      expect(chooser).toContain(`href="${href}"`);
+    }
+    for (const [lang, href] of [
+      ["en-NG", "/corporate-training-nigeria"],
+      ["en-ZA", "/za/corporate-training"],
+      ["en-KE", "/ke/corporate-training"],
+      ["en-GH", "/gh/corporate-training"],
+      ["x-default", "/"],
+    ]) {
+      expect(res.text).toContain(`<link rel="alternate" hreflang="${lang}" href="https://paleontraining.com${href}">`);
+    }
+    // The logo goes home; the learner sections are on /ng.
+    expect(res.text).toContain('<a class="logo" href="/">');
+    expect(res.text).toContain('href="/ng#courses"');
+    expect(res.text).not.toContain('href="/#courses"');
   });
 
   it("shows the remembered country at / on the next visit", async () => {
     const res = await request(app).get("/").set("Cookie", "paleon_country=KE");
     expect(res.status).toBe(200);
-    expect(res.text).toContain("Telecoms, Fintech and Energy");
-    expect(res.text).toContain('data-waitlist-form data-country="KE"');
+    expect(res.text).toContain('<body data-country="KE" data-hub>');
+    expect(res.text).toContain('href="/ke#courses"');
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/">');
+  });
+
+  it("moves the old corporate hub address to / permanently, keeping the query string", async () => {
+    const plain = await request(app).get("/corporate-training");
+    expect(plain.status).toBe(301);
+    expect(plain.headers.location).toBe("/");
+    const za = await request(app).get("/corporate-training?country=za");
+    expect(za.status).toBe(301);
+    expect(za.headers.location).toBe("/?country=za");
   });
 
   it("suggests the visitor's own country from the CDN header, never redirecting", async () => {
@@ -393,7 +423,7 @@ describe("Employers card on the country homepages", () => {
     const html = (await request(app).get(`/${cc}`)).text;
     const card = html.slice(html.indexOf("Training a team?"), html.indexOf("</li>", html.indexOf("Training a team?")));
 
-    expect(card).toContain(`<a href="/corporate-training?country=${cc}">Corporate Training</a>`);
+    expect(card).toContain(`<a href="/?country=${cc}">Corporate Training</a>`);
     expect(card).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity">AI Workflow Productivity &amp; Process Transformation</a>`);
     expect(card).toContain(`href="/${cc}/corporate-training/cybersecure-workforce">CyberSecure Workforce</a>`);
     expect(card).toContain(`href="/${cc}/corporate-training/ai-cybersecurity-professional-accelerator">AI + Cybersecurity Professional Accelerator</a>`);
@@ -401,16 +431,56 @@ describe("Employers card on the country homepages", () => {
   });
 
   it.each([
-    ["/", "/corporate-training"],
-    ["/ng", "/corporate-training?country=ng"],
-    ["/za", "/corporate-training?country=za"],
-    ["/gh", "/corporate-training?country=gh"],
-    ["/ke", "/corporate-training?country=ke"],
-  ])("%s has a Corporate Training menu item linking to the hub in its own country", async (path, href) => {
+    ["/", "/"],
+    ["/ng", "/?country=ng"],
+    ["/za", "/?country=za"],
+    ["/gh", "/?country=gh"],
+    ["/ke", "/?country=ke"],
+    ["/za/corporate-training", "/?country=za"],
+  ])("%s has Corporate Training as the first menu item, linking to the hub in its own country", async (path, href) => {
     const html = (await request(app).get(path)).text;
     const nav = html.slice(html.indexOf('id="navLinks"'), html.indexOf("</ul>", html.indexOf('id="navLinks"')));
-    expect(nav).toContain(`<li><a href="${href}">Corporate Training</a></li>`);
+    expect(nav).toMatch(new RegExp(`^id="navLinks">\\s*<li><a href="${href.replace(/[?]/g, "\\?")}">Corporate Training</a></li>`));
     expect(nav).not.toContain("For employers");
+  });
+});
+
+describe("Footer: corporate programmes and country corporate pages (2026-11-08)", () => {
+  const footerOf = (html: string) => html.slice(html.indexOf('<footer class="site-footer">'));
+
+  it.each([
+    ["/", ["/#ai-workflow", "/#cybersecure", "/#accelerator"]],
+    ["/ng", ["/ng/corporate-training/ai-workflow-productivity", "/ng/corporate-training/cybersecure-workforce", "/ng/corporate-training/ai-cybersecurity-professional-accelerator"]],
+    ["/za/corporate-training", ["/za/corporate-training/ai-workflow-productivity", "/za/corporate-training/cybersecure-workforce", "/za/corporate-training/ai-cybersecurity-professional-accelerator"]],
+  ])("%s lists the three corporate programmes and links each country to its corporate page", async (path, programmes) => {
+    const f = footerOf((await request(app).get(path)).text);
+    expect(f).toContain('<h2 class="footer-heading">Corporate Training</h2>');
+    expect(f).not.toContain('<h2 class="footer-heading">Courses</h2>');
+    for (const href of programmes) expect(f).toContain(`href="${href}"`);
+    for (const href of ["/corporate-training-nigeria", "/za/corporate-training", "/ke/corporate-training", "/gh/corporate-training"]) {
+      expect(f).toContain(`<a class="footer-country" href="${href}"`);
+    }
+  });
+});
+
+describe("Country corporate training pages (2026-11-08)", () => {
+  it.each([
+    ["za", "South Africa", "Johannesburg"],
+    ["ke", "Kenya", "Nairobi"],
+    ["gh", "Ghana", "Accra"],
+  ])("serves /%s/corporate-training with its three programmes", async (cc, name, city) => {
+    const res = await request(app).get(`/${cc}/corporate-training`);
+    expect(res.status).toBe(200);
+    expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/${cc}/corporate-training">`);
+    expect(res.text).toContain(`Corporate training in ${name}: AI and cybersecurity training for employees`);
+    expect(res.text).toContain(city);
+    for (const slug of ["ai-workflow-productivity", "cybersecure-workforce", "ai-cybersecurity-professional-accelerator"]) {
+      expect(res.text).toContain(`href="/${cc}/corporate-training/${slug}"`);
+    }
+    expect(res.text).toContain('id="enquiry"');
+    expect(res.text).toContain('"@type":"FAQPage"');
+    expect(res.text).not.toContain("ITF");
+    expect(res.text).not.toContain('name="delivery"');
   });
 });
 
@@ -425,7 +495,7 @@ describe("Footer extras (2026-11-03)", () => {
   });
 
   it.each([
-    "/", "/za", "/gh", "/ke", "/corporate-training", "/ng/corporate-training/ai-workflow-productivity",
+    "/", "/za", "/gh", "/ke", "/za/corporate-training", "/ng/corporate-training/ai-workflow-productivity",
     "/za/corporate-training/cybersecure-workforce", "/gh/corporate-training/ai-cybersecurity-professional-accelerator",
     "/cyber-security-fundamentals-course", "/za/cyber-security-fundamentals-course",
   ])("%s leaves them out of the footer", async (path) => {
@@ -433,7 +503,8 @@ describe("Footer extras (2026-11-03)", () => {
     expect(res.status).toBe(200);
     const f = footerOf(res.text);
     expect(f).toContain(`href="/support"`);
-    for (const href of extras) expect(f).not.toContain(`href="${href}"`);
+    // Since 2026-11-08 every footer links Nigeria (in its country list) to /corporate-training-nigeria.
+    for (const href of extras.filter((h) => h !== "/corporate-training-nigeria")) expect(f).not.toContain(`href="${href}"`);
   });
 });
 
@@ -443,22 +514,22 @@ describe("Country kept across the corporate hub and free lessons (2026-11-03)", 
     ["gh", "GH", "Ghana"],
     ["ke", "KE", "Kenya"],
     ["ng", "NG", "Nigeria"],
-  ])("/corporate-training?country=%s shows that country", async (cc, code, name) => {
-    const res = await request(app).get(`/corporate-training?country=${cc}`);
+  ])("/?country=%s shows that country", async (cc, code, name) => {
+    const res = await request(app).get(`/?country=${cc}`);
     expect(res.status).toBe(200);
     expect(res.text).toContain(`<body data-country="${code}">`);
     expect(res.text).toContain(`Digital skills &middot; ${name}`);
-    expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/corporate-training">`);
+    expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/">`);
     const nav = res.text.slice(res.text.indexOf('id="navLinks"'), res.text.indexOf("</ul>", res.text.indexOf('id="navLinks"')));
     expect(nav).toContain(`href="/${cc}#courses"`);
-    expect(nav).toContain(`href="/corporate-training?country=${cc}"`);
+    expect(nav).toContain(`href="/?country=${cc}"`);
   });
 
-  it("/corporate-training without a country uses the remembered one, then Nigeria", async () => {
-    expect((await request(app).get("/corporate-training")).text).toContain('<body data-country="NG" data-hub>');
-    const res = await request(app).get("/corporate-training").set("Cookie", "paleon_country=GH");
+  it("/ without a country uses the remembered one, then Nigeria", async () => {
+    expect((await request(app).get("/")).text).toContain('<body data-country="NG" data-hub>');
+    const res = await request(app).get("/").set("Cookie", "paleon_country=GH");
     expect(res.text).toContain('<body data-country="GH" data-hub>');
-    expect((await request(app).get("/corporate-training?country=xx")).text).toContain('<body data-country="NG" data-hub>');
+    expect((await request(app).get("/?country=xx")).text).toContain('<body data-country="NG" data-hub>');
   });
 
   it.each(["za", "gh", "ke"])("/%s free-lesson links carry the country", async (cc) => {
@@ -479,13 +550,13 @@ describe("AI Workflow promotion page (2026-11-07)", () => {
     expect(res.text).toContain('<source src="/videos/corporate/ai-workflow-productivity.mp4" type="video/mp4">');
     expect(res.text).toContain("How the programme turns skills into a competitive edge");
     expect(res.text).toContain('data-programme="ai-workflow"');
-    expect(res.text).toContain('href="/corporate-training"');
+    expect(res.text).toContain('<a href="/">Corporate training</a>');
     expect(res.text).not.toContain('<link rel="alternate" hreflang');
     for (const cc of ["ng", "za", "ke", "gh"]) expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
     expect((await request(app).get("/promotion-ai-workflow-productivity")).status).toBe(200);
   });
 
   it("the corporate hub links to it", async () => {
-    expect((await request(app).get("/corporate-training")).text).toContain('href="/Promotion-AI-Workflow-Productivity"');
+    expect((await request(app).get("/")).text).toContain('href="/Promotion-AI-Workflow-Productivity"');
   });
 });

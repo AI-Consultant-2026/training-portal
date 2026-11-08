@@ -25,6 +25,8 @@ import { CORPORATE_HUB_PATH, corporateAiPath, renderCorporateAiWorkflow, renderC
 import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
+import { countryCorporatePath } from "./views/corporateLocal";
+import { COUNTRY_CORPORATE_CODES, renderCountryCorporate } from "./views/countryCorporate";
 import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -185,10 +187,8 @@ export function createApp() {
     res.vary("CF-IPCountry");
     res.type("html").send(html);
   };
-  app.get("/", (req, res) => {
-    const chosen = chosenCountry(req);
-    sendCountryPage(res, renderCountryHome({ country: chosen ?? "NG", hub: true, detected: visitorCountry(req), chosen }));
-  });
+  // "/" is the corporate training homepage since 2026-11-08 (CORPORATE_HUB_PATH, below);
+  // the learner homepages stay at /ng, /za, /ke and /gh.
   for (const code of MARKET_ORDER) {
     const { path: folder } = COUNTRIES[code].site;
     app.get(folder, (req, res) => {
@@ -231,7 +231,19 @@ export function createApp() {
       res.type("html").send(renderAccelerator(code));
     });
   }
-  // The corporate training hub linking them (2026-11-02).
+  // The corporate training pages for South Africa, Kenya and Ghana (2026-11-08):
+  // /za, /ke and /gh/corporate-training. Nigeria's is the static /corporate-training-nigeria.
+  for (const code of COUNTRY_CORPORATE_CODES) {
+    app.get(countryCorporatePath(code), (req, res) => {
+      res.type("html").send(renderCountryCorporate(code));
+    });
+  }
+  // The corporate training hub linking them (2026-11-02), the homepage since 2026-11-08.
+  // Its old address redirects here, keeping ?country=.
+  app.get("/corporate-training", (req, res) => {
+    const query = req.originalUrl.indexOf("?");
+    res.redirect(301, query === -1 ? "/" : "/" + req.originalUrl.slice(query));
+  });
   app.get(CORPORATE_HUB_PATH, (req, res) => {
     const asked = String(req.query.country ?? "").toUpperCase();
     res.set("Cache-Control", "private, no-cache");

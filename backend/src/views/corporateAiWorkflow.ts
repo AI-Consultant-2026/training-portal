@@ -1,4 +1,4 @@
-import { SALES_CONTACT, areaServed, cityList, deliveryPhrase } from "./corporateLocal";
+import { SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
   CORPORATE_DELIVERY,
@@ -30,8 +30,9 @@ import {
 // delivery and mentions ITF reimbursement; Ghana, Kenya and South Africa are live online only.
 
 export const CORPORATE_AI_SLUG = "corporate-training/ai-workflow-productivity";
-// The corporate training hub (2026-11-02): x-default for the four country pages.
-export const CORPORATE_HUB_PATH = "/corporate-training";
+// The corporate training hub (2026-11-02), the homepage since 2026-11-08 (it was
+// /corporate-training, which now redirects here): x-default for the four country pages.
+export const CORPORATE_HUB_PATH = "/";
 
 export function corporateAiPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${CORPORATE_AI_SLUG}`;
@@ -144,7 +145,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
     .map((t) => `<li>${rich(t)}</li>`)
     .join("");
   return `<section class="hero ca-hero" id="top">
-    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}?country=${cc}">Corporate training</a> <span aria-hidden="true">/</span> AI training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
+    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${countryCorporatePath(code)}">Corporate training in ${escapeHtml(COUNTRIES[code].name)}</a> <span aria-hidden="true">/</span> AI training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Hero", "Eyebrow"))}</span>
@@ -360,7 +361,7 @@ export function contactLine(line: string): string {
 function related(code: CountryCode): string {
   const c = COUNTRIES[code];
   const links = [
-    `<li><a href="${CORPORATE_HUB_PATH}?country=${code.toLowerCase()}">All corporate training</a></li>`,
+    `<li><a href="${countryCorporatePath(code)}">All corporate training in ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
     code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
@@ -416,7 +417,7 @@ function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object
         "@id": `${url}#breadcrumb`,
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
-          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 2, name: `Corporate training in ${country}`, item: `${ORIGIN}${countryCorporatePath(code)}` },
           { "@type": "ListItem", position: 3, name: `AI training in ${country}`, item: url },
         ],
       },
@@ -650,6 +651,11 @@ function hubJsonLd(url: string): object {
         hasPart: [
           ...MARKET_ORDER.map((k) => ({
             "@type": "WebPage",
+            url: `${ORIGIN}${countryCorporatePath(k)}`,
+            name: `Corporate training in ${COUNTRIES[k].name}`,
+          })),
+          ...MARKET_ORDER.map((k) => ({
+            "@type": "WebPage",
             url: `${ORIGIN}${corporateAiPath(k)}`,
             name: `AI Workflow Productivity & Process Transformation in ${COUNTRIES[k].name}`,
           })),
@@ -690,14 +696,6 @@ function hubJsonLd(url: string): object {
         audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
       },
       {
-        "@type": "BreadcrumbList",
-        "@id": `${url}#breadcrumb`,
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
-          { "@type": "ListItem", position: 2, name: "Corporate training", item: url },
-        ],
-      },
-      {
         "@type": "FAQPage",
         "@id": `${url}#faq`,
         mainEntity: HUB_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
@@ -736,20 +734,30 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
   const ctx: PageContext = country
     ? { country, hub: false, detected: null, chosen: country }
     : { country: chosen ?? "NG", hub: true, detected: null, chosen };
-  const home = ctx.hub ? "/" : COUNTRIES[ctx.country].site.path;
+  // The homepage since 2026-11-08: the logo goes to "/", the menu's section links (Courses,
+  // Why Paleon ...) to the visitor's learner homepage, /ng by default.
+  const home = COUNTRIES[ctx.country].site.path;
   const url = `${ORIGIN}${CORPORATE_HUB_PATH}`;
   const headHtml = head(ctx, {
-    title: "Cybersecurity & AI Workforce Training | South Africa, Kenya, Ghana",
+    title: "Corporate AI & Cybersecurity Training | Nigeria, South Africa, Kenya, Ghana",
     description:
-      "Cybersecurity awareness and AI training for employees, live online for companies in South Africa, Kenya and Ghana, and in-house in Nigeria. Get a proposal.",
+      "AI and cybersecurity training for employees, for companies in Nigeria, South Africa, Kenya and Ghana. In-house in Nigeria, live online across Africa. Get a proposal.",
     canonicalPath: CORPORATE_HUB_PATH,
-    alternatesFor: corporateAiPath,
+    alternatesFor: countryCorporatePath,
     xDefault: CORPORATE_HUB_PATH,
     jsonLd: hubJsonLd(url),
   })
     .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ORIGIN}/images/og/corporate-ai-workflow-ng.jpg"`)
     .replace("</head>", '<link rel="stylesheet" href="/corporate-ai.css">\n</head>');
 
+  const chooseCards = MARKET_ORDER.map(
+    (k) => `<a class="ca-country" href="${countryCorporatePath(k)}" hreflang="${COUNTRIES[k].site.locale}" data-pick-country="${k}">
+        ${flagSvg(k, "flag flag-md")}
+        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
+        <span class="ca-country-note">${escapeHtml(HUB_DELIVERY[k])}</span>
+        <span class="ca-country-go">Corporate training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</span>
+      </a>`,
+  ).join("\n");
   const countryCards = MARKET_ORDER.map(
     (k) => `<a class="ca-country" href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">
         ${flagSvg(k, "flag flag-md")}
@@ -789,8 +797,15 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, home)}
+${header(ctx, home, "/")}
 <main id="main">
+  <section class="section section-paper ca-section ca-choose" id="choose-country" aria-labelledby="choose-country-title">
+    <div class="wrap">
+      <p class="section-title" id="choose-country-title">Choose your country</p>
+      <p class="ca-p">Corporate AI and cybersecurity training for your organisation, with delivery options for your country:</p>
+      <div class="ca-countries">${chooseCards}</div>
+    </div>
+  </section>
   <section class="hero ca-hero" id="top">
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
@@ -902,7 +917,7 @@ ${header(ctx, home)}
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>
-${footer(ctx, home)}
+${footer(ctx, home, false, "/")}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 </body>

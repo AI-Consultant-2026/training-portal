@@ -31,3 +31,21 @@ export const SALES_CONTACT = {
   areaServed: ["NG", "ZA", "KE", "GH"],
   availableLanguage: "English",
 };
+
+// The corporate training homepage (2026-11-08): the corporate hub moved from
+// /corporate-training to "/", and each country has its own corporate training page.
+// Nigeria's is the static /corporate-training-nigeria; the others are
+// /za, /ke and /gh/corporate-training (views/countryCorporate.ts).
+export const CORPORATE_HOME_PATH = "/";
+
+export function countryCorporatePath(code: CountryCode): string {
+  return code === "NG" ? "/corporate-training-nigeria" : `${COUNTRIES[code].site.path}/corporate-training`;
+}
+
+// The three programme pages per country. Kept here (no view imports) so countryHome.ts
+// can link to them from the shared footer without a circular import.
+export const PROGRAMME_LINKS: { slug: string; name: string }[] = [
+  { slug: "corporate-training/ai-workflow-productivity", name: "AI Workflow Productivity & Process Transformation" },
+  { slug: "corporate-training/cybersecure-workforce", name: "CyberSecure Workforce" },
+  { slug: "corporate-training/ai-cybersecurity-professional-accelerator", name: "AI + Cybersecurity Professional Accelerator" },
+];

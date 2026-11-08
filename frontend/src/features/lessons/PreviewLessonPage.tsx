@@ -69,7 +69,7 @@ export function PreviewLessonPage() {
     return (
       <div className="mx-auto max-w-3xl px-6 py-10">
         <Alert message="We couldn't find that course preview." />
-        <a href="/#courses" className="mt-4 inline-block text-sm font-medium text-blue-600 hover:underline">
+        <a href="/ng#courses" className="mt-4 inline-block text-sm font-medium text-blue-600 hover:underline">
           See all courses
         </a>
       </div>

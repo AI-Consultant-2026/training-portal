@@ -109,8 +109,8 @@ describe("Corporate AI training pages", () => {
     expect((await request(app).get("/images/corporate-ai/..%2Fog%2Fcorporate-ai-workflow-ng.jpg")).status).toBe(404);
   });
 
-  it("serves the corporate training hub, linking to each country page", async () => {
-    const res = await request(app).get("/corporate-training");
+  it("serves the corporate training hub at /, linking to each country page", async () => {
+    const res = await request(app).get("/");
 
     expect(res.status).toBe(200);
     for (const cc of ["ng", "za", "gh", "ke"]) {
@@ -118,14 +118,15 @@ describe("Corporate AI training pages", () => {
     }
     // The visitor picks a country, so the hub form has no country preselected.
     expect(res.text).toContain('<option value="">Choose your country</option>');
-    expect(res.text).toContain('hreflang="x-default" href="https://paleontraining.com/corporate-training"');
+    expect(res.text).toContain('hreflang="x-default" href="https://paleontraining.com/"');
   });
 
   it("links the homepages and footers to the corporate pages", async () => {
     const res = await request(app).get("/za");
 
     expect(res.text).toContain('href="/za/corporate-training/ai-workflow-productivity"');
-    expect(res.text).toContain('href="/corporate-training?country=za"');
+    expect(res.text).toContain('href="/?country=za"');
+    expect(res.text).toContain('href="/za/corporate-training"');
   });
 });
 
@@ -177,7 +178,7 @@ describe("CyberSecure Workforce corporate pages", () => {
   });
 
   it("is linked from the hub, the AI pages, the homepages and the Cyber Security course pages", async () => {
-    const hub = await request(app).get("/corporate-training");
+    const hub = await request(app).get("/");
     for (const cc of ["ng", "za", "gh", "ke"]) expect(hub.text).toContain(`href="/${cc}/corporate-training/cybersecure-workforce"`);
     expect((await request(app).get("/gh/corporate-training/ai-workflow-productivity")).text).toContain('href="/gh/corporate-training/cybersecure-workforce"');
     expect((await request(app).get("/ke")).text).toContain('href="/ke/corporate-training/cybersecure-workforce"');
@@ -226,7 +227,7 @@ describe("AI + Cybersecurity Professional Accelerator corporate pages", () => {
   });
 
   it("is linked from the hub, the AI and CyberSecure pages, the homepages and the course pages", async () => {
-    const hub = await request(app).get("/corporate-training");
+    const hub = await request(app).get("/");
     for (const cc of ["ng", "za", "gh", "ke"]) expect(hub.text).toContain(`href="/${cc}/${PATH}"`);
     expect((await request(app).get("/gh/corporate-training/ai-workflow-productivity")).text).toContain(`href="/gh/${PATH}"`);
     expect((await request(app).get("/za/corporate-training/cybersecure-workforce")).text).toContain(`href="/za/${PATH}"`);

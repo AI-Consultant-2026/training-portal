@@ -13,7 +13,7 @@ import {
   rich,
 } from "./corporateAiWorkflow";
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
-import { CITIES, SALES_CONTACT, cityList, deliveryPhrase } from "./corporateLocal";
+import { CITIES, SALES_CONTACT, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
@@ -160,7 +160,7 @@ function hero(code: CountryCode, c: CyberPageContent): string {
     .map((t) => `<li>${rich(t)}</li>`)
     .join("");
   return `<section class="hero ca-hero" id="top">
-    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}?country=${cc}">Corporate training</a> <span aria-hidden="true">/</span> Cybersecurity awareness training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
+    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${countryCorporatePath(code)}">Corporate training in ${escapeHtml(COUNTRIES[code].name)}</a> <span aria-hidden="true">/</span> Cybersecurity awareness training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
@@ -258,7 +258,7 @@ function finalCopy(c: CyberPageContent): EnquiryCopy {
 function related(code: CountryCode): string {
   const c = COUNTRIES[code];
   const links = [
-    `<li><a href="${CORPORATE_HUB_PATH}?country=${code.toLowerCase()}">All corporate training</a></li>`,
+    `<li><a href="${countryCorporatePath(code)}">All corporate training in ${escapeHtml(COUNTRIES[code].name)}</a></li>`,
     `<li><a href="${corporateAiPath(code)}">AI Workflow Productivity for teams in ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator for specialists</a></li>`,
     `<li><a href="${coursePagePath(code, "cyber-security-fundamentals")}">Cyber Security Fundamentals (individual course)</a></li>`,
@@ -315,7 +315,7 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
         "@id": `${url}#breadcrumb`,
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
-          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 2, name: `Corporate training in ${COUNTRIES[code].name}`, item: `${ORIGIN}${countryCorporatePath(code)}` },
           { "@type": "ListItem", position: 3, name: `Cybersecurity awareness training in ${country}`, item: url },
         ],
       },

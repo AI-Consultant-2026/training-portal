@@ -972,9 +972,27 @@
     "category": "Corporate"
   },
   {
-    "title": "Cybersecurity & AI Workforce Training for Companies",
-    "description": "Cybersecurity awareness and AI training for employees: live online in South Africa, Kenya and Ghana, in-house in Nigeria.",
-    "url": "/corporate-training",
+    "title": "Corporate AI & Cybersecurity Training for Companies",
+    "description": "AI and cybersecurity training for employees in Nigeria, South Africa, Kenya and Ghana: in-house in Nigeria, live online across Africa.",
+    "url": "/",
+    "category": "Corporate"
+  },
+  {
+    "title": "Corporate Training in South Africa",
+    "description": "Corporate AI and cybersecurity training for employees across South Africa, live online with a facilitator.",
+    "url": "/za/corporate-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Corporate Training in Kenya",
+    "description": "Corporate AI and cybersecurity training for employees across Kenya, live online with a facilitator.",
+    "url": "/ke/corporate-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Corporate Training in Ghana",
+    "description": "Corporate AI and cybersecurity training for employees across Ghana, live online with a facilitator.",
+    "url": "/gh/corporate-training",
     "category": "Corporate"
   },
   {

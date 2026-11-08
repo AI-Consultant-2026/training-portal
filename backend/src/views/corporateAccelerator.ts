@@ -12,7 +12,7 @@ import {
   heading,
   rich,
 } from "./corporateAiWorkflow";
-import { SALES_CONTACT, areaServed, cityList, deliveryPhrase } from "./corporateLocal";
+import { SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 
@@ -154,7 +154,7 @@ function hero(code: CountryCode, c: AccPageContent): string {
     .map((t) => `<li>${rich(t)}</li>`)
     .join("");
   return `<section class="hero ca-hero" id="top">
-    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}?country=${cc}">Corporate training</a> <span aria-hidden="true">/</span> AI and cybersecurity training for professionals in ${escapeHtml(COUNTRIES[code].name)}</p></div>
+    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${countryCorporatePath(code)}">Corporate training in ${escapeHtml(COUNTRIES[code].name)}</a> <span aria-hidden="true">/</span> AI and cybersecurity training for professionals in ${escapeHtml(COUNTRIES[code].name)}</p></div>
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
@@ -257,7 +257,7 @@ function finalCopy(c: AccPageContent): EnquiryCopy {
 function related(code: CountryCode): string {
   const c = COUNTRIES[code];
   const links = [
-    `<li><a href="${CORPORATE_HUB_PATH}?country=${code.toLowerCase()}">All corporate training</a></li>`,
+    `<li><a href="${countryCorporatePath(code)}">All corporate training in ${escapeHtml(COUNTRIES[code].name)}</a></li>`,
     `<li><a href="${corporateAiPath(code)}">AI Workflow Productivity for teams in ${escapeHtml(c.name)}</a></li>`,
     `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: awareness for all staff</a></li>`,
     `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
@@ -312,7 +312,7 @@ function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
         "@id": `${url}#breadcrumb`,
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
-          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 2, name: `Corporate training in ${COUNTRIES[code].name}`, item: `${ORIGIN}${countryCorporatePath(code)}` },
           { "@type": "ListItem", position: 3, name: `AI and cybersecurity training in ${country}`, item: url },
         ],
       },

@@ -150,9 +150,8 @@ function jsonLd(url: string): object {
         "@type": "BreadcrumbList",
         "@id": `${url}#breadcrumb`,
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
-          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
-          { "@type": "ListItem", position: 3, name: "AI workforce and process transformation training", item: url },
+          { "@type": "ListItem", position: 1, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 2, name: "AI workforce and process transformation training", item: url },
         ],
       },
       {
@@ -247,7 +246,7 @@ ${SEARCH_OVERLAY}
     <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
   </div>
 </div>
-${header(ctx, "/")}
+${header(ctx, COUNTRIES.NG.site.path, "/")}
 <main id="main">
   <section class="hero ca-hero pw-hero" id="top">
     <div class="wrap">
@@ -405,7 +404,7 @@ ${header(ctx, "/")}
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>
-${footer(ctx, "/")}
+${footer(ctx, COUNTRIES.NG.site.path, false, "/")}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 </body>

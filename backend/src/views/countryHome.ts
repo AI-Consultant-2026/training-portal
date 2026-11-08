@@ -10,6 +10,7 @@ import {
   isLive,
 } from "../constants/countries";
 import { LEAD_INTERESTS, REGISTRATION_STATUSES, leadSourcesFor } from "../validators/leads.validators";
+import { countryCorporatePath, PROGRAMME_LINKS } from "./corporateLocal";
 import { flagSvg } from "./flags";
 
 // Country homepages (2026-10-30): /ng, /za, /ke, /gh, and the hub at / (the same page with
@@ -221,19 +222,22 @@ function countryMenu(ctx: PageContext): string {
 // Links that keep the visitor's country (2026-11-03): the corporate training hub and the
 // free-lesson pages are single URLs, so a country page passes its country along and the
 // page renders in that country (header, currency) instead of defaulting to Nigeria.
+// The hub is the homepage since 2026-11-08.
 export function corporateHubHref(ctx: Pick<PageContext, "country" | "hub">): string {
-  return ctx.hub ? "/corporate-training" : `/corporate-training?country=${ctx.country.toLowerCase()}`;
+  return ctx.hub ? "/" : `/?country=${ctx.country.toLowerCase()}`;
 }
 
 export function previewHref(country: CountryCode, slug: string): string {
   return country === "NG" ? `/preview/${slug}` : `/preview/${slug}?country=${country.toLowerCase()}`;
 }
 
-export function header(ctx: PageContext, home: string): string {
+// `home` is the learner homepage the menu's section links point at; `logoHref` is where
+// the logo goes (the corporate homepage passes "/" while its menu links go to /ng etc.).
+export function header(ctx: PageContext, home: string, logoHref = home): string {
   const c = COUNTRIES[ctx.country];
   return `<header class="site-header">
   <div class="wrap header-row">
-    <a class="logo" href="${home}">
+    <a class="logo" href="${logoHref}">
       ${LOGO_MARK("#211D17")}
       <span>
         <span class="logo-word">Paleon Training</span>
@@ -242,11 +246,11 @@ export function header(ctx: PageContext, home: string): string {
     </a>
     <nav class="main-nav" aria-label="Main">
       <ul class="nav-links" id="navLinks">
+        <li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
         <li><a href="${home}#courses">Courses</a></li>
         <li><a href="${home}#career-match">Career Match</a></li>
         <li><a href="${home}#how">How it works</a></li>
         <li><a href="${home}#why">Why Paleon</a></li>
-        <li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
         <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>
@@ -566,11 +570,19 @@ const NIGERIA_GUIDES: [string, string][] = [
 
 // The Nigeria guides, Consultancy and University Partnerships links appear only on the /ng
 // homepage footer (2026-11-03); every other page that uses this footer leaves them out.
-export function footer(ctx: PageContext, home: string, nigeriaHome = false): string {
+// Footer (2026-11-08): the country links go to each country's corporate training page, and
+// the "Corporate Training" column lists the three corporate programmes (on the homepage,
+// its sections; elsewhere, the visitor's country pages).
+export function footer(ctx: PageContext, home: string, nigeriaHome = false, logoHref = home): string {
   const countries = MARKET_ORDER.map((code) => {
     const k = COUNTRIES[code];
-    return `<li><a class="footer-country" href="${k.site.path}" data-pick-country="${code}">${flagSvg(code, "flag flag-sm")}<span>${escapeHtml(k.name)}</span><span class="footer-path">${k.site.path}</span></a></li>`;
+    return `<li><a class="footer-country" href="${countryCorporatePath(code)}" data-pick-country="${code}">${flagSvg(code, "flag flag-sm")}<span>${escapeHtml(k.name)}</span></a></li>`;
   }).join("");
+  const HOME_SECTIONS = ["#ai-workflow", "#cybersecure", "#accelerator"];
+  const programmes = PROGRAMME_LINKS.map(
+    (p, i) =>
+      `<li><a href="${ctx.hub ? `/${HOME_SECTIONS[i]}` : `${COUNTRIES[ctx.country].site.path}/${p.slug}`}">${escapeHtml(p.name)}</a></li>`,
+  ).join("");
   const extras = nigeriaHome
     ? [["/consultancy", "Consultancy"], ["/university-partners", "University Partnerships"], ...NIGERIA_GUIDES]
         .map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("")
@@ -578,7 +590,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false): str
   return `<footer class="site-footer">
   <div class="wrap footer-top">
     <div class="footer-brand">
-      <a class="logo" href="${home}">${LOGO_MARK("#F7F4EC")}<span class="logo-word">Paleon Training</span></a>
+      <a class="logo" href="${logoHref}">${LOGO_MARK("#F7F4EC")}<span class="logo-word">Paleon Training</span></a>
       <p class="footer-tag">Digital skills for Africa&rsquo;s growth industries. Led from London, delivered in Nigeria, South Africa, Kenya and Ghana.</p>
       <p class="footer-tag">Paleon Training Limited<br>No.5 Beji Court, Off NNPC Junior Staff Club 10<br>Warri, 320001, Delta State, Nigeria<br><a href="tel:+2347077149215">+234 707 714 9215 (WhatsApp/Call)</a></p>
     </div>
@@ -586,11 +598,9 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false): str
       <h2 class="footer-heading">Countries</h2>
       <ul class="footer-links">${countries}</ul>
     </nav>
-    <nav aria-label="Courses">
-      <h2 class="footer-heading">Courses</h2>
-      <ul class="footer-links">
-        ${HOMEPAGE_COURSES.map((slug) => `<li><a href="${coursePagePath(ctx.country, slug)}">${COURSE_INFO[slug].title}</a></li>`).join("")}
-      </ul>
+    <nav aria-label="Corporate Training">
+      <h2 class="footer-heading">Corporate Training</h2>
+      <ul class="footer-links">${programmes}</ul>
       <h2 class="footer-heading footer-heading-gap">Paleon</h2>
       <ul class="footer-links">
         <li><a href="${home}#why">Why Paleon</a></li>
@@ -761,6 +771,8 @@ export function renderCountryHome(ctx: PageContext): string {
     description,
     canonicalPath,
     alternatesFor: (code) => COUNTRIES[code].site.path,
+    // "/" is the corporate homepage since 2026-11-08, so it is no longer these pages' x-default.
+    xDefault: COUNTRIES.NG.site.path,
     jsonLd: homeJsonLd(ctx, `${ORIGIN}${canonicalPath}`),
   })}
 <body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}${whatsappAttr(ctx.country)}>
