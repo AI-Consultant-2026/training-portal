@@ -20,8 +20,8 @@ export interface CorporatePageContent {
 
 export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   "NG": {
-    "title": "AI Corporate Training Nigeria | Paleon Training",
-    "description": "Practical AI productivity training for Nigerian organisations. Help staff use AI to cut repetitive work, speed up reports and redesign workflows safely.",
+    "title": "AI Workforce & Process Transformation Training in Nigeria",
+    "description": "AI training for employees in Lagos, Abuja, Port Harcourt and across Nigeria. In-house, online or hybrid; supports ITF claims. Get a proposal.",
     "images": {
       "hero": "Nigerian professionals reviewing an AI-assisted report on a laptop in a modern Lagos office",
       "collaboration": "Nigerian operations team mapping a workflow on a whiteboard",
@@ -348,8 +348,8 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
     }
   },
   "ZA": {
-    "title": "AI Corporate Training South Africa | Paleon Training",
-    "description": "Governed, practical AI training for South African teams. Help staff use AI to streamline workflows, speed up reporting and work more efficiently.",
+    "title": "AI Workforce & Process Transformation Training in South Africa",
+    "description": "Live online AI training for employees of companies in Johannesburg, Cape Town, Durban and across South Africa. Faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "South African professionals discussing an AI-assisted workflow on a large screen in a Johannesburg office",
       "collaboration": "South African operations team redesigning a process together",
@@ -661,8 +661,8 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
     }
   },
   "GH": {
-    "title": "AI Corporate Training Ghana | Paleon Training",
-    "description": "AI productivity training for Ghanaian organisations. Teach staff to use AI to reduce repetitive admin, improve processes and build digital capability.",
+    "title": "AI Workforce & Process Transformation Training in Ghana",
+    "description": "Live online AI training for employees of companies in Accra, Kumasi, Tema and across Ghana. Less admin, faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "Ghanaian professionals mapping an AI-assisted workflow on a laptop and whiteboard in an Accra office",
       "collaboration": "Ghanaian team improving a business process together",
@@ -970,8 +970,8 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
     }
   },
   "KE": {
-    "title": "AI Corporate Training Kenya | Paleon Training",
-    "description": "Turn everyday AI use into structured, productive workflows. Practical AI training for Kenyan teams in banking, fintech, telecoms, logistics and more.",
+    "title": "AI Workforce & Process Transformation Training in Kenya",
+    "description": "Live online AI training for employees of companies in Nairobi, Mombasa, Kisumu and across Kenya. Faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "Kenyan professionals reviewing an AI-assisted dashboard together in a Nairobi office",
       "collaboration": "Kenyan team designing a shared AI workflow",

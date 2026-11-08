@@ -1,3 +1,4 @@
+import { SALES_CONTACT, areaServed, cityList, deliveryPhrase } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
   CORPORATE_DELIVERY,
@@ -143,6 +144,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
     .map((t) => `<li>${rich(t)}</li>`)
     .join("");
   return `<section class="hero ca-hero" id="top">
+    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}?country=${cc}">Corporate training</a> <span aria-hidden="true">/</span> AI training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Hero", "Eyebrow"))}</span>
@@ -165,18 +167,59 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
   </section>`;
 }
 
-function faqItems(c: CorporatePageContent): { q: string; a: string }[] {
+// Three extra FAQs per country (2026-11-08, local SEO): cities, cost, combining with
+// cybersecurity training. They go before the proposal question and feed the FAQPage JSON-LD.
+function extraFaqs(code: CountryCode): { q: string; a: string }[] {
+  const country = COUNTRIES[code].name;
+  return [
+    {
+      q: `Do you offer AI training for employees in ${cityList(code)}?`,
+      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Sessions are scheduled around your working day.`,
+    },
+    {
+      q: "How much does corporate AI training cost?",
+      a: "It depends on the number of employees, the delivery method and how much we customise the programme. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+    },
+    {
+      q: "Can we combine AI training with cybersecurity training for our staff?",
+      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available for companies in ${country}.`,
+    },
+  ];
+}
+
+function faqItems(c: CorporatePageContent, code?: CountryCode): { q: string; a: string }[] {
   const out: { q: string; a: string }[] = [];
   for (const block of c.sections["Frequently asked questions"].blocks) {
     if (!("p" in block)) continue;
     const m = /^\*\*(.+?\?)\*\*\s*(.*)$/.exec(block.p);
     if (m) out.push({ q: m[1], a: m[2] });
   }
+  if (code) {
+    const at = out.findIndex((f) => /request a (corporate )?proposal\?$/i.test(f.q));
+    out.splice(at === -1 ? out.length : at, 0, ...extraFaqs(code));
+  }
   return out;
 }
 
-function faq(c: CorporatePageContent): string {
-  const items = faqItems(c)
+function whereWeTrain(code: CountryCode): string {
+  const country = COUNTRIES[code].name;
+  const how =
+    code === "NG"
+      ? "We train in-house at your offices or sites, live online, or a mix of both, and provide the attendance records and documentation for ITF reimbursement claims."
+      : "Training is delivered live online with a facilitator, so every office, branch and remote worker can join the same practical sessions.";
+  return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
+    <div class="wrap ca-narrow">
+      <span class="section-eyebrow">Where we train</span>
+      <h2 class="section-title" id="where-title">AI workforce and process transformation training across ${escapeHtml(country)}</h2>
+      <p class="ca-p">Paleon Training runs AI Workflow Productivity &amp; Process Transformation for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
+      <p class="ca-p">Sessions are scheduled around your working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
+      <div class="ca-ctas">${ctaButton(PROPOSAL, false)}</div>
+    </div>
+  </section>`;
+}
+
+function faq(code: CountryCode, c: CorporatePageContent): string {
+  const items = faqItems(c, code)
     .map((f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${rich(f.a)}</p></details>`)
     .join("\n");
   return `<section class="section section-paper ca-section" id="faq" aria-labelledby="faq-title">
@@ -352,9 +395,29 @@ function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object
         },
       },
       {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name: `AI workforce and process transformation training in ${country}`,
+        serviceType: "AI workforce and process transformation training",
+        description: c.description,
+        url,
+        provider: { "@id": `${ORIGIN}/#organization` },
+        areaServed: areaServed(code),
+        audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
+          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 3, name: `AI training in ${country}`, item: url },
+        ],
+      },
+      {
         "@type": "FAQPage",
         "@id": `${url}#faq`,
-        mainEntity: faqItems(c).map((f) => ({
+        mainEntity: faqItems(c, code).map((f) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\*\*/g, "") },
@@ -366,6 +429,7 @@ function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object
         name: "Paleon Training Limited",
         url: `${ORIGIN}/`,
         email: "corporate@paleontraining.com",
+        contactPoint: SALES_CONTACT,
         address: {
           "@type": "PostalAddress",
           streetAddress: "Off NNPC Junior Staff Club 10",
@@ -428,7 +492,8 @@ ${header(ctx, home)}
   })}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
-  ${faq(c)}
+  ${whereWeTrain(code)}
+  ${faq(code, c)}
   ${enquiry(code, finalCopy(c))}
   ${related(code)}
 </main>

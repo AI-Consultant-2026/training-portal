@@ -13,6 +13,7 @@ import {
   rich,
 } from "./corporateAiWorkflow";
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
+import { CITIES, SALES_CONTACT, cityList, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
@@ -184,22 +185,6 @@ function hero(code: CountryCode, c: CyberPageContent): string {
 
 // Local SEO (2026-11-08): the cities each page names, plus three extra FAQs per country
 // (cities, cost, combining with AI training) that also feed the FAQPage JSON-LD.
-const CITIES: Record<CountryCode, string[]> = {
-  NG: ["Lagos", "Abuja", "Port Harcourt", "Warri", "Ibadan", "Kano"],
-  ZA: ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Gqeberha", "Bloemfontein"],
-  KE: ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret"],
-  GH: ["Accra", "Kumasi", "Tema", "Takoradi", "Tamale", "Cape Coast"],
-};
-
-function cityList(code: CountryCode): string {
-  const list = CITIES[code];
-  return `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;
-}
-
-function deliveryPhrase(code: CountryCode): string {
-  return code === "NG" ? "in-house, live online or hybrid" : "live online with a facilitator";
-}
-
 function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   const country = COUNTRIES[code].name;
   return [
@@ -349,14 +334,7 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
         name: "Paleon Training Limited",
         url: `${ORIGIN}/`,
         email: "corporate@paleontraining.com",
-        contactPoint: {
-          "@type": "ContactPoint",
-          contactType: "sales",
-          email: "corporate@paleontraining.com",
-          telephone: "+234-707-714-9215",
-          areaServed: ["NG", "ZA", "KE", "GH"],
-          availableLanguage: "English",
-        },
+        contactPoint: SALES_CONTACT,
         address: {
           "@type": "PostalAddress",
           streetAddress: "Off NNPC Junior Staff Club 10",
