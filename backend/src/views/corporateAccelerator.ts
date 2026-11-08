@@ -12,6 +12,7 @@ import {
   heading,
   rich,
 } from "./corporateAiWorkflow";
+import { SALES_CONTACT, areaServed, cityList, deliveryPhrase } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 
@@ -153,12 +154,14 @@ function hero(code: CountryCode, c: AccPageContent): string {
     .map((t) => `<li>${rich(t)}</li>`)
     .join("");
   return `<section class="hero ca-hero" id="top">
+    <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}?country=${cc}">Corporate training</a> <span aria-hidden="true">/</span> AI and cybersecurity training for professionals in ${escapeHtml(COUNTRIES[code].name)}</p></div>
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
+        <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
         <div class="hero-ctas">
           ${ctaButton(field(c, "Primary CTA") || ACC_CONSULTATION, true)}
           ${ctaButton(field(c, "Secondary CTA") || ACC_PROPOSAL, true)}
@@ -175,18 +178,65 @@ function hero(code: CountryCode, c: AccPageContent): string {
   </section>`;
 }
 
-function faqItems(c: AccPageContent): { q: string; a: string }[] {
+// Local SEO (2026-11-08): extra FAQs per country (cities, start date, cost, starting with
+// CyberSecure Workforce), placed before the proposal question and in the FAQPage JSON-LD.
+// The Accelerator is fully booked until January 2027, as on the corporate hub.
+function extraFaqs(code: CountryCode): { q: string; a: string }[] {
+  const country = COUNTRIES[code].name;
+  return [
+    {
+      q: `Do you offer AI and cybersecurity training for professionals in ${cityList(code)}?`,
+      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. It is fully booked until January 2027; you can enquire now to reserve places from January 2027.`,
+    },
+    {
+      q: "When can our team start?",
+      a: "The Accelerator is fully booked until January 2027. Enquire now to reserve places for your team from January 2027; we can agree the participants and the capstone challenge with you in advance.",
+    },
+    {
+      q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
+      a: "It depends on the number of participants, the delivery method and how much we customise the programme. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+    },
+    {
+      q: "Can we train the rest of our staff in cybersecurity while we wait?",
+      a: `Yes. CyberSecure Workforce, our cybersecurity awareness programme for every employee, is available now for companies in ${country}. Many organisations train the whole workforce first, then develop their specialists through the Accelerator from January 2027.`,
+    },
+  ];
+}
+
+function faqItems(c: AccPageContent, code?: CountryCode): { q: string; a: string }[] {
   const out: { q: string; a: string }[] = [];
   for (const block of c.sections["Frequently asked questions"].blocks) {
     if (!("p" in block)) continue;
     const m = /^\*\*(.+?\?)\*\*\s*(.*)$/.exec(block.p);
     if (m) out.push({ q: m[1], a: m[2] });
   }
+  if (code) {
+    const at = out.findIndex((f) => /request a (corporate )?proposal\?$/i.test(f.q));
+    out.splice(at === -1 ? out.length : at, 0, ...extraFaqs(code));
+  }
   return out;
 }
 
-function faq(c: AccPageContent): string {
-  const items = faqItems(c)
+function whereWeTrain(code: CountryCode): string {
+  const country = COUNTRIES[code].name;
+  const how =
+    code === "NG"
+      ? "We train in-house at your offices or sites, live online, or a mix of both, and provide the attendance records and documentation for ITF reimbursement claims."
+      : "Training is delivered live online with a facilitator, so specialists in every office and branch can join the same sessions and work on one capstone.";
+  return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
+    <div class="wrap ca-narrow">
+      <span class="section-eyebrow">Where we train</span>
+      <h2 class="section-title" id="where-title">AI and cybersecurity training for professionals across ${escapeHtml(country)}</h2>
+      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+      <p class="ca-p">Paleon Training runs the AI + Cybersecurity Professional Accelerator for IT, security, risk, data and digital teams in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
+      <p class="ca-p">Scenarios and the capstone are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services. Need cybersecurity awareness for every employee now? <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a> is available today.</p>
+      <div class="ca-ctas">${ctaButton(ACC_PROPOSAL, false)}</div>
+    </div>
+  </section>`;
+}
+
+function faq(code: CountryCode, c: AccPageContent): string {
+  const items = faqItems(c, code)
     .map((f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${rich(f.a)}</p></details>`)
     .join("\n");
   return `<section class="section section-paper ca-section" id="faq" aria-labelledby="faq-title">
@@ -247,9 +297,29 @@ function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
         },
       },
       {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name: `AI and cybersecurity training for professionals in ${country}`,
+        serviceType: "AI and cybersecurity professional training",
+        description: c.description,
+        url,
+        provider: { "@id": `${ORIGIN}/#organization` },
+        areaServed: areaServed(code),
+        audience: { "@type": "BusinessAudience", audienceType: "IT, security, risk, data and digital teams" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
+          { "@type": "ListItem", position: 2, name: "Corporate training", item: `${ORIGIN}${CORPORATE_HUB_PATH}` },
+          { "@type": "ListItem", position: 3, name: `AI and cybersecurity training in ${country}`, item: url },
+        ],
+      },
+      {
         "@type": "FAQPage",
         "@id": `${url}#faq`,
-        mainEntity: faqItems(c).map((f) => ({
+        mainEntity: faqItems(c, code).map((f) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\*\*/g, "") },
@@ -261,6 +331,7 @@ function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
         name: "Paleon Training Limited",
         url: `${ORIGIN}/`,
         email: "corporate@paleontraining.com",
+        contactPoint: SALES_CONTACT,
         address: {
           "@type": "PostalAddress",
           streetAddress: "Off NNPC Junior Staff Club 10",
@@ -323,7 +394,8 @@ ${header(ctx, home)}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${section(c, "Programme comparison", { id: "compare", dark: true })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
-  ${faq(c)}
+  ${whereWeTrain(code)}
+  ${faq(code, c)}
   ${enquiry(code, finalCopy(c), ACC_FORM)}
   ${related(code)}
 </main>

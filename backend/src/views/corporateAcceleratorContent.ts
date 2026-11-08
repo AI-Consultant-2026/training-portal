@@ -14,8 +14,8 @@ export interface AccPageContent {
 
 export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageContent> = {
   "NG": {
-    "title": "AI and Cybersecurity Training Nigeria | Paleon Training",
-    "description": "AI and cybersecurity training for Nigerian professionals and teams. Build AI capability, manage AI risk and support secure digital transformation.",
+    "title": "AI & Cybersecurity Training for Professionals in Nigeria",
+    "description": "AI and cybersecurity training for IT, risk and data teams in Lagos, Abuja, Port Harcourt and across Nigeria. In-house or online; supports ITF claims.",
     "images": {
       "hero": "Nigerian technology and risk professionals reviewing an AI security dashboard together in a Lagos office.",
       "ai": "Nigerian business analyst using an AI assistant on a laptop and checking the output against a report.",
@@ -520,8 +520,8 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
     }
   },
   "ZA": {
-    "title": "AI and Cybersecurity Training South Africa | Paleon",
-    "description": "Live online AI and cybersecurity training for South African professionals. Build AI capability with governance, POPIA-aware data handling and risk control.",
+    "title": "AI & Cybersecurity Training for Professionals in South Africa",
+    "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Johannesburg, Cape Town, Durban and across South Africa. Get a proposal.",
     "images": {
       "hero": "South African risk and technology professionals reviewing an AI governance dashboard in a Johannesburg office.",
       "ai": "South African analyst using an AI tool and verifying its output in a Cape Town office.",
@@ -980,8 +980,8 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
     }
   },
   "GH": {
-    "title": "AI and Cybersecurity Training Ghana | Paleon Training",
-    "description": "AI and cybersecurity training for professionals in Ghana. Help your teams use AI well, manage new cyber risks and lead secure digital transformation.",
+    "title": "AI & Cybersecurity Training for Professionals in Ghana",
+    "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Accra, Kumasi, Tema and across Ghana. Lead secure AI adoption.",
     "images": {
       "hero": "Ghanaian technology and finance professionals reviewing an AI security dashboard in an Accra office.",
       "ai": "Ghanaian product manager using an AI assistant to draft a report.",
@@ -1433,8 +1433,8 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
     }
   },
   "KE": {
-    "title": "AI and Cybersecurity Training Kenya | Paleon Training",
-    "description": "AI and cybersecurity training for Kenyan professionals and teams. Use AI with confidence, manage AI risk and support secure, fast-moving innovation.",
+    "title": "AI & Cybersecurity Training for Professionals in Kenya",
+    "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Nairobi, Mombasa, Kisumu and across Kenya. Lead secure AI adoption.",
     "images": {
       "hero": "Kenyan product and security professionals reviewing an AI risk dashboard in a Nairobi office.",
       "ai": "Kenyan data analyst using an AI tool and checking the results.",
