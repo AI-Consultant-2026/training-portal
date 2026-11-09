@@ -15,6 +15,7 @@ import {
 import { SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { trainerStandards } from "./trainerStandards";
 
 // The "AI + Cybersecurity Professional Accelerator" corporate pages (2026-11-02): one per
 // country at /<cc>/corporate-training/ai-cybersecurity-professional-accelerator. Copy lives in
@@ -395,6 +396,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Programme comparison", { id: "compare", dark: true })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
   ${whereWeTrain(code)}
+  ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c), ACC_FORM)}
   ${related(code)}

@@ -21,6 +21,7 @@ import {
   scripts,
   whatsappAttr,
 } from "./countryHome";
+import { trainerStandards } from "./trainerStandards";
 
 // The "AI Workflow Productivity & Process Transformation" corporate pages (2026-11-02):
 // one per country at /<cc>/corporate-training/ai-workflow-productivity. Copy lives in
@@ -500,6 +501,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${whereWeTrain(code)}
+  ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c))}
   ${related(code)}
@@ -563,6 +565,10 @@ const HUB_COUNTRY_SEO: { code: CountryCode; h: string; p: string }[] = [
 ];
 
 const HUB_FAQ: { q: string; a: string }[] = [
+  {
+    q: "Who delivers the training, and what qualifications do your trainers have?",
+    a: "Every programme is led by a live facilitator with practical experience in the subject and a relevant degree or recognised industry certification, checked by us before they are booked. Trainers complete an assessed trial session and sign a confidentiality agreement. Before your programme starts, we send you your lead trainer's profile.",
+  },
   {
     q: "Which countries do you deliver corporate training in?",
     a: "Nigeria, South Africa, Kenya and Ghana. In Nigeria we train in-house, online or hybrid. In South Africa, Kenya and Ghana, training is delivered live online with a facilitator.",
@@ -927,6 +933,8 @@ ${header(ctx, home, "/", true)}
       </div>
     </div>
   </section>
+
+  ${trainerStandards()}
 
   <section class="section section-dark ca-section" id="journey" aria-labelledby="journey-title">
     <div class="wrap">

@@ -11,6 +11,7 @@ import {
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { trainerStandards } from "./trainerStandards";
 
 // Corporate training pages for South Africa, Kenya and Ghana (2026-11-08) and Nigeria
 // (2026-11-09, replacing the static /corporate-training-nigeria, which now 301s) at
@@ -221,6 +222,8 @@ ${header(ctx, home, "/", true)}
       <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
     </div>
   </section>
+
+  ${trainerStandards()}
 
   <section class="section section-paper ca-section" id="resources" aria-labelledby="resources-title">
     <div class="wrap ca-narrow">

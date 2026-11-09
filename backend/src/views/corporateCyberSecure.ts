@@ -15,6 +15,7 @@ import {
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
 import { CITIES, SALES_CONTACT, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { trainerStandards } from "./trainerStandards";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
 // country at /<cc>/corporate-training/cybersecure-workforce. Copy lives in
@@ -404,6 +405,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Your corporate training journey", { id: "journey", dark: true, eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
   ${whereWeTrain(code)}
+  ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c), CYBER_FORM)}
   ${related(code)}
