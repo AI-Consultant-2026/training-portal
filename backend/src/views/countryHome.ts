@@ -204,8 +204,8 @@ function countryMenu(ctx: PageContext): string {
   const c = COUNTRIES[ctx.country];
   const items = MARKET_ORDER.map((code) => {
     const k = COUNTRIES[code];
-    const current = code === ctx.country && !ctx.hub;
-    return `<li><a class="country-menu-item" href="${k.site.path}" data-pick-country="${code}"${current ? ' aria-current="page"' : ""}>${flagSvg(code, "flag flag-md")}<span class="cm-name">${escapeHtml(k.name)}</span><span class="cm-cur">${escapeHtml(k.site.currency.symbol)} ${escapeHtml(k.site.currency.code)}</span>${code === ctx.country ? '<svg class="cm-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>' : ""}</a></li>`;
+    // Since 2026-11-09 the header dropdown goes to each country's corporate training page.
+    return `<li><a class="country-menu-item" href="${countryCorporatePath(code)}" hreflang="${k.site.locale}" data-pick-country="${code}">${flagSvg(code, "flag flag-md")}<span class="cm-name">${escapeHtml(k.name)}</span><span class="cm-cur">${escapeHtml(k.site.currency.symbol)} ${escapeHtml(k.site.currency.code)}</span>${code === ctx.country ? '<svg class="cm-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>' : ""}</a></li>`;
   }).join("\n");
   return `<div class="country-switch">
   <button type="button" class="country-btn" id="countryBtn" aria-expanded="false" aria-controls="countryMenu" aria-label="Change country, currently ${escapeHtml(c.name)}">
