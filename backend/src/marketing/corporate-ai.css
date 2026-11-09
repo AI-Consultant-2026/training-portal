@@ -201,18 +201,18 @@
 .cs-crumb-wrap { position: relative; z-index: 1; padding-top: 22px; }
 .cs-crumb-wrap .pw-crumb { margin: 0; }
 
-/* Homepage "Choose your country" (2026-11-08): compact, and on phones a single row of four
-   flags so the headline stays near the top of the screen. */
-.ca-choose { padding-top: 32px; padding-bottom: 32px; }
-.ca-choose .section-title { margin-bottom: 6px; }
+/* Homepage "Choose your country" (2026-11-09): the learner homepages' dark country cards
+   (.ctry-card in country-home.css). On phones a 2x2 grid of flag + name, so the headline
+   stays near the top of the screen. */
+.ca-choose { padding-top: 28px; padding-bottom: 28px; }
+.ca-choose .ctry-picker { margin-top: 0; }
 @media (max-width: 639px) {
   .ca-choose { padding-top: 16px; padding-bottom: 16px; }
-  .ca-choose .section-title { font-size: 18px; margin-bottom: 10px; }
-  .ca-choose .ca-p { display: none; }
-  .ca-choose .ca-countries { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 0; }
-  .ca-choose .ca-country { align-items: center; text-align: center; gap: 6px; padding: 10px 4px; border-top-width: 3px; }
-  .ca-choose .ca-country-note, .ca-choose .ca-country-go { display: none; }
-  .ca-choose .ca-country-name { font-family: var(--font-body); font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+  .ca-choose .ctry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .ca-choose .ctry-card { min-height: 0; padding: 10px 12px; gap: 10px; }
+  .ca-choose .ctry-card .flag-lg { width: 36px; height: 24px; }
+  .ca-choose .ctry-meta, .ca-choose .ctry-status { display: none; }
+  .ca-choose .ctry-name { font-size: 15px; }
 }
 
 /* Data-protection note under the cybersecurity programme (2026-11-08). */

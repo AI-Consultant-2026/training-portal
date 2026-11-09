@@ -750,14 +750,18 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
     .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ORIGIN}/images/og/corporate-ai-workflow-ng.jpg"`)
     .replace("</head>", '<link rel="stylesheet" href="/corporate-ai.css">\n</head>');
 
-  const chooseCards = MARKET_ORDER.map(
-    (k) => `<a class="ca-country" href="${countryCorporatePath(k)}" hreflang="${COUNTRIES[k].site.locale}" data-pick-country="${k}">
-        ${flagSvg(k, "flag flag-md")}
-        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
-        <span class="ca-country-note">${escapeHtml(HUB_DELIVERY[k])}</span>
-        <span class="ca-country-go">Corporate training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</span>
-      </a>`,
-  ).join("\n");
+  // Homepage country selector (2026-11-09): the same card format as the learner homepages'
+  // "Choose your country" (flag, name, currency, status pill), linking to each country's
+  // corporate training page. The pill shows how corporate training is delivered there.
+  const chooseCards = MARKET_ORDER.map((k) => {
+    const c = COUNTRIES[k];
+    const selected = ctx.chosen === k;
+    return `<li><a class="ctry-card${selected ? " is-selected" : ""}" href="${countryCorporatePath(k)}" hreflang="${c.site.locale}" data-pick-country="${k}">
+        ${flagSvg(k, "flag flag-lg")}
+        <span class="ctry-body"><span class="ctry-name">${escapeHtml(c.name)}</span><span class="ctry-meta">Prices in ${escapeHtml(c.site.currency.symbol)} ${escapeHtml(c.site.currency.code)}</span></span>
+        <span class="ctry-status is-live">${k === "NG" ? "In-house &middot; online" : "Live online"}</span>
+      </a></li>`;
+  }).join("\n");
   const countryCards = MARKET_ORDER.map(
     (k) => `<a class="ca-country" href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">
         ${flagSvg(k, "flag flag-md")}
@@ -799,11 +803,10 @@ ${SEARCH_OVERLAY}
 </div>
 ${header(ctx, home, "/", true)}
 <main id="main">
-  <section class="section section-paper ca-section ca-choose" id="choose-country" aria-labelledby="choose-country-title">
-    <div class="wrap">
-      <p class="section-title" id="choose-country-title">Choose your country</p>
-      <p class="ca-p">Corporate AI and cybersecurity training for your organisation, with delivery options for your country:</p>
-      <div class="ca-countries">${chooseCards}</div>
+  <section class="section section-dark ca-choose" id="choose-country" aria-labelledby="choose-country-title">
+    <div class="wrap ctry-picker">
+      <p class="ctry-title" id="choose-country-title">Choose your country</p>
+      <ul class="ctry-grid" aria-labelledby="choose-country-title">${chooseCards}</ul>
     </div>
   </section>
   <section class="hero ca-hero" id="top">
