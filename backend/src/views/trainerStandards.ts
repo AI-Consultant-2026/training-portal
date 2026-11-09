@@ -49,11 +49,11 @@ export const TRAINERS: Trainer[] = [
   {
     slug: "ken-uwotu",
     name: "Ken Uwotu",
-    role: "Managing Director, Paleon Training Limited",
+    role: "Managing Director and Programme Director, Paleon Training Limited",
     photo: "/images/team/ken-uwotu.jpg",
     credential: "Master's degree with Distinction, Business Information Technology",
-    programmes: ["CyberSecure Workforce", "AI Workflow Productivity & Process Transformation", "AI + Cybersecurity Professional Accelerator"],
-    bio: "Ken founded Paleon Training and leads its corporate programmes. Before Paleon, he spent more than five years as an IT business consultant, including verification and validation work, and more than eight years as a senior consultant at Hellocare Consulting, advising UK care providers on regulation, compliance and governance.",
+    programmes: ["AI Workflow Productivity & Process Transformation"],
+    bio: "Ken founded Paleon Training. As Programme Director he designs and oversees all three corporate programmes; cybersecurity sessions are delivered by facilitators with hands-on security experience. Before Paleon, he spent more than five years as an IT business consultant, including verification and validation work, and more than eight years as a senior consultant at Hellocare Consulting, advising UK care providers on regulation, compliance and governance.",
     linkedin: "https://www.linkedin.com/in/ken-uwotu-b687911a1/",
   },
 ];
@@ -85,7 +85,7 @@ function profileCard(t: Trainer): string {
           <h3 id="tr-${t.slug}">${esc(t.name)}</h3>
           <p class="tr-role">${esc(t.role)}</p>
           <p class="tr-cred"><strong>Qualification:</strong> ${esc(t.credential)}</p>
-          <p class="tr-cred"><strong>Programmes:</strong> ${t.programmes.map(esc).join(" &middot; ")}</p>
+          <p class="tr-cred"><strong>Trains on:</strong> ${t.programmes.map(esc).join(" &middot; ")}</p>
           <p>${esc(t.bio)}</p>
           <p class="tr-link"><a href="${t.linkedin}" rel="noopener" target="_blank">View ${esc(t.name.split(" ")[0])}'s LinkedIn profile &rarr;</a></p>
         </div>
