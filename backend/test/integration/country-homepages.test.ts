@@ -463,6 +463,19 @@ describe("Footer: corporate programmes and country corporate pages (2026-11-08)"
   });
 });
 
+describe("Header logo (2026-11-09)", () => {
+  it.each([
+    "/ng", "/za", "/gh/corporate-training", "/ke/corporate-training/ai-workflow-productivity",
+    "/za/corporate-training/cybersecure-workforce", "/ng/corporate-training/ai-cybersecurity-professional-accelerator",
+    "/za/cyber-security-fundamentals-course",
+  ])("%s: the logo links to the corporate training homepage", async (path) => {
+    const res = await request(app).get(path);
+    expect(res.status).toBe(200);
+    const headerHtml = res.text.slice(res.text.indexOf('<header class="site-header">'), res.text.indexOf("</header>"));
+    expect(headerHtml).toContain('<a class="logo" href="/">');
+  });
+});
+
 describe("Country corporate training pages (2026-11-08)", () => {
   it.each([
     ["za", "South Africa", "Johannesburg"],

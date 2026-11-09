@@ -232,10 +232,10 @@ export function previewHref(country: CountryCode, slug: string): string {
 }
 
 // `home` is the learner homepage the menu's section links point at; `logoHref` is where
-// the logo goes (the corporate homepage passes "/" while its menu links go to /ng etc.).
+// the logo goes: the corporate training homepage "/" on every page since 2026-11-09.
 // `corporate` (2026-11-08) is the employer-first menu used on the corporate pages: the
 // learner sections are grouped under "For individuals".
-export function header(ctx: PageContext, home: string, logoHref = home, corporate = false): string {
+export function header(ctx: PageContext, home: string, logoHref = "/", corporate = false): string {
   const c = COUNTRIES[ctx.country];
   const place = ctx.hub ? "Africa" : escapeHtml(c.name);
   const learnerLinks = `<li><a href="${home}#courses">Courses</a></li>
