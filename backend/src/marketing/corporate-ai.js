@@ -9,7 +9,7 @@
     if (!window.ptTrack || !e.target.closest) return;
     var pick = e.target.closest(".ca-choose [data-pick-country], .footer-country[data-pick-country], .country-menu-item[data-pick-country]");
     if (pick) window.ptTrack("corporate_country_select", { country: pick.getAttribute("data-pick-country"), link_location: pick.classList.contains("footer-country") ? "footer" : pick.classList.contains("country-menu-item") ? "header_menu" : "homepage_selector" });
-    var res = e.target.closest('a[href^="/ai-cyber-readiness-check"], a[href="/ai-use-policy-template"], a[href="/board-cyber-risk-briefing"]');
+    var res = e.target.closest('a[href^="/ai-cyber-readiness-check"], a[href="/ai-use-policy-template"], a[href="/board-cyber-risk-briefing"], a[href^="/corporate-guides"]');
     if (res) window.ptTrack("director_resource_click", { resource: res.getAttribute("href").split("?")[0].slice(1), page_path: location.pathname });
   });
   var form = document.getElementById("caForm");

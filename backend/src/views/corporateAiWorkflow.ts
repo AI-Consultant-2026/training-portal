@@ -919,6 +919,11 @@ ${header(ctx, home, "/", true)}
           <p>The cyber risks boards should understand, the questions directors should ask management, and the measures that show whether your people are ready.</p>
           <p class="ca-card-link"><a href="/board-cyber-risk-briefing">Read the briefing &rarr;</a></p>
         </div>
+        <div class="ca-card">
+          <h3><a href="/corporate-guides">Corporate training guides</a></h3>
+          <p>Free guides on POPIA, NDPA, Kenya and Ghana data protection training, cybersecurity awareness, training levies, AI for staff and advice by sector.</p>
+          <p class="ca-card-link"><a href="/corporate-guides">Browse the guides &rarr;</a></p>
+        </div>
       </div>
     </div>
   </section>

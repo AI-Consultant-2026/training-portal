@@ -18,7 +18,7 @@ export const READINESS_PATH = "/ai-cyber-readiness-check";
 export const AI_POLICY_PATH = "/ai-use-policy-template";
 export const BOARD_BRIEFING_PATH = "/board-cyber-risk-briefing";
 
-const PROGRAMMES = {
+export const PROGRAMMES = {
   "cybersecure-workforce": { name: "CyberSecure Workforce", slug: "corporate-training/cybersecure-workforce" },
   "ai-workflow": { name: "AI Workflow Productivity & Process Transformation", slug: "corporate-training/ai-workflow-productivity" },
   "ai-cyber-accelerator": {
@@ -27,7 +27,7 @@ const PROGRAMMES = {
   },
 };
 
-function shell(
+export function shell(
   ctx: PageContext,
   opts: { title: string; description: string; path: string; jsonLd: object; body: string; extraScript?: string },
 ): string {
@@ -101,7 +101,7 @@ function crumb(name: string): string {
   return `<div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${CORPORATE_HUB_PATH}">Corporate training</a> <span aria-hidden="true">/</span> ${escapeHtml(name)}</p></div>`;
 }
 
-function countryLinks(): string {
+export function countryLinks(): string {
   return MARKET_ORDER.map((k) => `<a href="${countryCorporatePath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(" &middot; ");
 }
 
@@ -231,13 +231,13 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
 // ---------------------------------------------------------------------------------
 // Articles: the AI use policy template and the board cyber-risk briefing.
 
-interface ArticleSection {
+export interface ArticleSection {
   h: string;
   /** Paragraphs; a string starting "- " lines is a list. */
   body: string[];
 }
 
-function article(sections: ArticleSection[]): string {
+export function article(sections: ArticleSection[]): string {
   return sections
     .map(
       (s, i) => `<section class="rs-section" id="s${i + 1}" aria-labelledby="s${i + 1}-title">
@@ -257,7 +257,7 @@ function article(sections: ArticleSection[]): string {
     .join("\n      ");
 }
 
-function toc(sections: ArticleSection[]): string {
+export function toc(sections: ArticleSection[]): string {
   return `<nav class="rs-toc" aria-label="Contents"><p><strong>Contents</strong></p><ol>${sections
     .map((s, i) => `<li><a href="#s${i + 1}">${escapeHtml(s.h)}</a></li>`)
     .join("")}</ol></nav>`;

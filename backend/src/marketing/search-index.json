@@ -1060,5 +1060,161 @@
     "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Accra, Kumasi, Tema and across Ghana. Lead secure AI adoption.",
     "url": "/gh/corporate-training/ai-cybersecurity-professional-accelerator",
     "category": "Corporate"
+  },
+  {
+    "title": "Corporate AI & Cybersecurity Training Guides",
+    "description": "Free guides for employers: data protection training, cybersecurity awareness, training levies, AI for staff and sector advice.",
+    "url": "/corporate-guides",
+    "category": "Corporate"
+  },
+  {
+    "title": "POPIA training for staff: what South African employers need to know",
+    "description": "What POPIA expects of employers, why staff awareness training matters to the Information Officer, and what effective POPIA training for employees covers.",
+    "url": "/corporate-guides/popia-training-for-staff-south-africa",
+    "category": "Corporate"
+  },
+  {
+    "title": "Kenya's Data Protection Act, 2019",
+    "description": "What Kenya's Data Protection Act 2019 expects of employers, the 72-hour breach rule, ODPC penalties, and what data protection training for staff should cover.",
+    "url": "/corporate-guides/kenya-data-protection-act-staff-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Nigeria Data Protection Act (NDPA) 2023",
+    "description": "What the Nigeria Data Protection Act 2023 expects of employers, NDPC fines and the 72-hour breach rule, and what NDPA training for staff should cover.",
+    "url": "/corporate-guides/ndpa-data-protection-training-nigeria",
+    "category": "Corporate"
+  },
+  {
+    "title": "Ghana's Data Protection Act and Cybersecurity Act",
+    "description": "What Ghana's Data Protection Act 2012 (Act 843) and Cybersecurity Act 2020 (Act 1038) mean for employers, and what staff training on them should cover.",
+    "url": "/corporate-guides/ghana-data-protection-cybersecurity-act-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity awareness training for employees in Nigeria",
+    "description": "Why Nigerian organisations train staff in cybersecurity, the scams they face, what good awareness training covers, and how to deliver it in-house or online.",
+    "url": "/corporate-guides/cybersecurity-awareness-training-nigeria",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity awareness training for employees in South Africa",
+    "description": "Why South African organisations train staff in cybersecurity, the attacks they face, how training supports POPIA, and what effective awareness training covers.",
+    "url": "/corporate-guides/cybersecurity-awareness-training-south-africa",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity awareness training for employees in Kenya",
+    "description": "Why Kenyan organisations train staff in cybersecurity, the scams they face, how training supports the Data Protection Act 2019, and what it should cover.",
+    "url": "/corporate-guides/cybersecurity-awareness-training-kenya",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity awareness training for employees in Ghana",
+    "description": "Why Ghanaian organisations train staff in cybersecurity, the mobile money and phishing scams they face, the laws involved, and what training should cover.",
+    "url": "/corporate-guides/cybersecurity-awareness-training-ghana",
+    "category": "Corporate"
+  },
+  {
+    "title": "ITF reimbursement for staff training in Nigeria",
+    "description": "How the Industrial Training Fund (ITF) contribution and reimbursement work for Nigerian employers, and how to keep the training records a claim needs.",
+    "url": "/corporate-guides/itf-reimbursement-staff-training-nigeria",
+    "category": "Corporate"
+  },
+  {
+    "title": "Skills Development Levy, SETA grants and B-BBEE",
+    "description": "How South Africa's Skills Development Levy, SETA mandatory and discretionary grants and the B-BBEE skills development element relate to AI and cyber training.",
+    "url": "/corporate-guides/skills-development-levy-training-south-africa",
+    "category": "Corporate"
+  },
+  {
+    "title": "The NITA training levy in Kenya",
+    "description": "How Kenya's National Industrial Training Authority (NITA) levy and reimbursement work, what qualifies, and how to plan AI and cybersecurity training budgets.",
+    "url": "/corporate-guides/nita-training-levy-kenya",
+    "category": "Corporate"
+  },
+  {
+    "title": "Business email compromise (BEC) training for staff and finance teams",
+    "description": "How business email compromise works, why finance and executive teams are targeted, and the training and controls that stop BEC losses in African organisations.",
+    "url": "/corporate-guides/business-email-compromise-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Phishing awareness training for employees: what actually works",
+    "description": "Why phishing still works, the signs staff should spot, how to build a reporting culture, and what effective phishing awareness training for employees includes.",
+    "url": "/corporate-guides/phishing-awareness-training-for-employees",
+    "category": "Corporate"
+  },
+  {
+    "title": "Invoice and payment fraud prevention training for finance teams",
+    "description": "How fake invoices, bank-detail changes and urgent payment scams work, and the verification habits and training that protect finance teams from payment fraud.",
+    "url": "/corporate-guides/invoice-and-payment-fraud-prevention-training",
+    "category": "Corporate"
+  },
+  {
+    "title": "Deepfake and AI voice fraud: training for executives and their teams",
+    "description": "How criminals use AI-cloned voices and deepfake video to impersonate executives, and the training and verification steps that protect your organisation.",
+    "url": "/corporate-guides/deepfake-and-voice-fraud-training-for-executives",
+    "category": "Corporate"
+  },
+  {
+    "title": "ChatGPT and AI tools training for employees: a guide for employers",
+    "description": "Why employers train staff to use ChatGPT, Claude, Gemini and Copilot, what good AI training covers, how to keep data safe, and how to measure the benefit.",
+    "url": "/corporate-guides/chatgpt-training-for-employees",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI training for managers and leadership teams",
+    "description": "What managers and leadership teams need to know about AI: where it adds value, how to redesign workflows, managing risk, and leading staff through the change.",
+    "url": "/corporate-guides/ai-training-for-managers",
+    "category": "Corporate"
+  },
+  {
+    "title": "Microsoft Copilot training for staff: getting real value, safely",
+    "description": "How to get value from Microsoft Copilot across Outlook, Word, Excel, PowerPoint and Teams, the data access risks to manage, and what staff training covers.",
+    "url": "/corporate-guides/microsoft-copilot-training-for-staff",
+    "category": "Corporate"
+  },
+  {
+    "title": "Generative AI risks for business",
+    "description": "The main generative AI risks for organisations, from shadow AI and data leakage to made-up answers and AI-powered scams, and how policy and training manage them.",
+    "url": "/corporate-guides/generative-ai-risks-for-business",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity and AI training for banks, fintechs and financial services",
+    "description": "Cybersecurity and AI training priorities for banks, microfinance banks, fintechs and insurers in Nigeria, South Africa, Kenya and Ghana: fraud, regulation and data.",
+    "url": "/corporate-guides/cybersecurity-training-for-banks-and-fintechs",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity and AI training for oil and gas and energy companies",
+    "description": "Cybersecurity and AI training priorities for oil and gas, power and energy companies in Africa: operational technology risk, fraud, contractors and safe AI use.",
+    "url": "/corporate-guides/cybersecurity-ai-training-oil-and-gas",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity and AI training for telecoms and technology companies",
+    "description": "Cybersecurity and AI training priorities for telecoms operators, ISPs and tech companies in Africa: SIM-swap, insider risk, customer data and AI in operations.",
+    "url": "/corporate-guides/cybersecurity-training-for-telecoms",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity and AI training for NGOs, charities and development organisations",
+    "description": "Cybersecurity and AI training for NGOs and charities in Nigeria, South Africa, Kenya and Ghana: donor fraud, beneficiary data, field teams and AI on a tight budget.",
+    "url": "/corporate-guides/cybersecurity-ai-training-for-ngos",
+    "category": "Corporate"
+  },
+  {
+    "title": "Cybersecurity and AI training for government and public sector organisations",
+    "description": "Cybersecurity and AI training for ministries, agencies and state-owned enterprises in Nigeria, South Africa, Kenya and Ghana: citizen data, fraud and AI use.",
+    "url": "/corporate-guides/cybersecurity-ai-training-for-government",
+    "category": "Corporate"
+  },
+  {
+    "title": "How to choose a corporate cybersecurity and AI training provider",
+    "description": "Twelve questions to ask before you buy cybersecurity or AI training for your staff: relevance, delivery, measurement, records, accreditation and cost.",
+    "url": "/corporate-guides/how-to-choose-a-corporate-cybersecurity-training-provider",
+    "category": "Corporate"
   }
 ]

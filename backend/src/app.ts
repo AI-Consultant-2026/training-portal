@@ -35,6 +35,7 @@ import {
   renderBoardCyberBriefing,
   renderReadinessCheck,
 } from "./views/directorResources";
+import { GUIDES_PATH, renderGuide, renderGuidesHub } from "./views/corporateGuides";
 import { flagSvg } from "./views/flags";
 import * as paymentsController from "./controllers/payments.controller";
 
@@ -281,6 +282,19 @@ export function createApp() {
     res.set("Cache-Control", "private, no-cache");
     res.vary("Cookie");
     res.type("html").send(renderBoardCyberBriefing(chosenCountry(req)));
+  });
+  // Corporate guides (2026-11-09): the hub and one article per guide.
+  app.get(GUIDES_PATH, (req, res) => {
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderGuidesHub(chosenCountry(req)));
+  });
+  app.get(`${GUIDES_PATH}/:slug`, (req, res, next) => {
+    const html = renderGuide(req.params.slug, chosenCountry(req));
+    if (!html) return next();
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(html);
   });
   app.get("/readiness-check.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "readiness-check.js"));

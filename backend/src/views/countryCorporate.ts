@@ -1,3 +1,4 @@
+import { GUIDES } from "../constants/corporateGuides";
 import { COUNTRIES, CountryCode } from "../constants/countries";
 import {
   CORPORATE_HUB_PATH,
@@ -227,6 +228,9 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="resources-title">Start with a free readiness check</h2>
       <p class="ca-p">Ten quick questions show how ready your organisation in ${escapeHtml(country)} is for cyber threats and for safe AI use, with a scorecard of your priority gaps by email: <a href="/ai-cyber-readiness-check?country=${cc}"><strong>take the AI &amp; Cyber Readiness Check</strong></a>.</p>
       <p class="ca-p">Also for directors: our <a href="/ai-use-policy-template">AI use policy template</a> and <a href="/board-cyber-risk-briefing">board cyber-risk briefing</a>.</p>
+      <p class="ca-p">Guides for employers in ${escapeHtml(country)}: ${GUIDES.filter((g) => g.country === code)
+        .map((g) => `<a href="/corporate-guides/${g.slug}">${escapeHtml(g.h1.split(":")[0])}</a>`)
+        .join(" &middot; ")} &middot; <a href="/corporate-guides">all guides</a>.</p>
     </div>
   </section>
 
