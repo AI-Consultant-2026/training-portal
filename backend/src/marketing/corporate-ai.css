@@ -244,3 +244,18 @@
 .rs-toc ol { list-style: decimal; padding-left: 20px; display: grid; gap: 4px; }
 .rs-section { margin-bottom: 28px; }
 .rs-section .section-title { font-size: 24px; }
+
+/* Image and video sizes (2026-11-09): in proportion to the text and lined up with its left
+   edge. Without this, below 980px every image stretched to the full page width (up to
+   824px) and videos were 880-960px wide (the promotion page's video was centred). */
+.ca-img, .ca-hero-media img { display: block; max-width: 560px; margin-left: 0; margin-right: auto; }
+.ca-video, .ca-video-ph { max-width: 640px; margin-left: 0; margin-right: auto; }
+.pw-watch .ca-video { max-width: 640px; margin-left: 0; margin-right: auto; }
+.pw-watch .section-title, .pw-watch .section-eyebrow, .pw-watch > .wrap > .ca-p { text-align: left; margin-left: 0; }
+.pw-watch .ca-ctas { justify-content: flex-start; }
+@media (min-width: 980px) {
+  /* Hero: the picture's top lines up with the eyebrow above the headline. */
+  .ca-hero-grid { align-items: start; }
+  .ca-hero-media { padding: 48px 0 0; }
+  .ca-hero-media img, .ca-aside .ca-img { max-width: 440px; }
+}
