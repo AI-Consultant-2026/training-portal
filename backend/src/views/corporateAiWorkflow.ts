@@ -21,7 +21,7 @@ import {
   scripts,
   whatsappAttr,
 } from "./countryHome";
-import { trainerStandards } from "./trainerStandards";
+import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 
 // The "AI Workflow Productivity & Process Transformation" corporate pages (2026-11-02):
 // one per country at /<cc>/corporate-training/ai-workflow-productivity. Copy lives in
@@ -647,6 +647,7 @@ function hubJsonLd(url: string): object {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      ...trainerPersonLd(),
       {
         "@type": "CollectionPage",
         "@id": `${url}#page`,

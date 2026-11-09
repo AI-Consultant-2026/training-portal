@@ -259,3 +259,19 @@
   .ca-hero-media { padding: 48px 0 0; }
   .ca-hero-media img, .ca-aside .ca-img { max-width: 440px; }
 }
+
+/* Trainer profiles (2026-11-09) */
+.tr-profile { display: grid; gap: 20px; border: 1px solid var(--line-light); border-radius: var(--radius-lg); background: var(--white); padding: 20px; margin: 8px 0 28px; }
+.tr-photo { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; }
+.tr-body { min-width: 0; overflow-wrap: anywhere; }
+.tr-body h3 { font-size: 24px; margin-bottom: 2px; }
+.tr-role { color: var(--charcoal-soft); margin-bottom: 10px; }
+.tr-cred { margin-bottom: 4px; }
+.tr-body p { line-height: 1.55; }
+.tr-body p + p:not(.tr-cred) { margin-top: 10px; }
+.tr-link a { font-weight: 600; }
+.tr-sub { font-size: 24px; margin: 8px 0 8px; }
+@media (min-width: 720px) {
+  .tr-profile { grid-template-columns: 200px 1fr; align-items: start; padding: 28px; }
+  .tr-photo { width: 200px; height: 200px; }
+}

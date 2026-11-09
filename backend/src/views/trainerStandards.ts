@@ -1,3 +1,5 @@
+import { ORIGIN } from "./countryHome";
+
 // "How we choose our trainers" (2026-11-09): the standards every Paleon corporate facilitator
 // must meet. Shown on the corporate homepage, the four country corporate pages and the twelve
 // programme pages until named trainer profiles (with real, verified credentials) replace it.
@@ -30,11 +32,73 @@ export const TRAINER_STANDARDS: { h: string; p: string }[] = [
   },
 ];
 
+// Named trainers (2026-11-09). Only real people, with credentials and consent supplied by
+// the user. Ken's details: degree from the user; career from his own LinkedIn profile.
+export interface Trainer {
+  slug: string;
+  name: string;
+  role: string;
+  photo: string;
+  credential: string;
+  programmes: string[];
+  bio: string;
+  linkedin: string;
+}
+
+export const TRAINERS: Trainer[] = [
+  {
+    slug: "ken-uwotu",
+    name: "Ken Uwotu",
+    role: "Managing Director, Paleon Training Limited",
+    photo: "/images/team/ken-uwotu.jpg",
+    credential: "Master's degree with Distinction, Business Information Technology",
+    programmes: ["CyberSecure Workforce", "AI Workflow Productivity & Process Transformation", "AI + Cybersecurity Professional Accelerator"],
+    bio: "Ken founded Paleon Training and leads its corporate programmes. Before Paleon, he spent more than five years as an IT business consultant, including verification and validation work, and more than eight years as a senior consultant at Hellocare Consulting, advising UK care providers on regulation, compliance and governance.",
+    linkedin: "https://www.linkedin.com/in/ken-uwotu-b687911a1/",
+  },
+];
+
+const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+export function trainerPersonLd(): object[] {
+  return TRAINERS.map((t) => ({
+    "@type": "Person",
+    "@id": `${ORIGIN}/#${t.slug}`,
+    name: t.name,
+    jobTitle: t.role.split(",")[0],
+    image: `${ORIGIN}${t.photo}`,
+    worksFor: { "@id": `${ORIGIN}/#organization` },
+    sameAs: [t.linkedin],
+    knowsAbout: ["Cybersecurity awareness training", "Generative AI in the workplace", "Business information technology"],
+    hasCredential: {
+      "@type": "EducationalOccupationalCredential",
+      credentialCategory: "degree",
+      name: t.credential,
+    },
+  }));
+}
+
+function profileCard(t: Trainer): string {
+  return `<article class="tr-profile" aria-labelledby="tr-${t.slug}">
+        <img class="tr-photo" src="${t.photo}" alt="${esc(t.name)}, ${esc(t.role)}" width="600" height="600" loading="lazy">
+        <div class="tr-body">
+          <h3 id="tr-${t.slug}">${esc(t.name)}</h3>
+          <p class="tr-role">${esc(t.role)}</p>
+          <p class="tr-cred"><strong>Qualification:</strong> ${esc(t.credential)}</p>
+          <p class="tr-cred"><strong>Programmes:</strong> ${t.programmes.map(esc).join(" &middot; ")}</p>
+          <p>${esc(t.bio)}</p>
+          <p class="tr-link"><a href="${t.linkedin}" rel="noopener" target="_blank">View ${esc(t.name.split(" ")[0])}'s LinkedIn profile &rarr;</a></p>
+        </div>
+      </article>`;
+}
+
 export function trainerStandards(): string {
   return `<section class="section section-paper ca-section" id="trainers" aria-labelledby="trainers-title">
     <div class="wrap">
       <span class="section-eyebrow">Who trains your people</span>
-      <h2 class="section-title" id="trainers-title">How we choose our trainers</h2>
+      <h2 class="section-title" id="trainers-title">Meet our trainers</h2>
+      ${TRAINERS.map(profileCard).join("\n      ")}
+      <h3 class="tr-sub">How we choose our trainers</h3>
       <p class="ca-p">Every Paleon programme is led by a live facilitator. Before anyone trains your staff, they must meet these standards:</p>
       <div class="ca-cards">${TRAINER_STANDARDS.map((s) => `
         <div class="ca-card"><h3>${s.h}</h3><p>${s.p}</p></div>`).join("")}

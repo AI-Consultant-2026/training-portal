@@ -320,6 +320,11 @@ export function createApp() {
     res.set("Cache-Control", "public, max-age=86400");
     res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "cybersecure", req.params.file));
   });
+  // Trainer headshots (2026-11-09), same rule.
+  app.get("/images/team/:file([a-z0-9-]+\\.jpg)", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").sendFile(path.join(__dirname, "marketing", "images", "team", req.params.file));
+  });
   const permanentRedirect = (to: string) => (req: express.Request, res: express.Response) => {
     const query = req.originalUrl.indexOf("?");
     res.redirect(301, query === -1 ? to : to + req.originalUrl.slice(query));
