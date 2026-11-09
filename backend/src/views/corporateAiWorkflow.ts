@@ -837,8 +837,8 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="cybersecure-title">CyberSecure Workforce: cybersecurity awareness training</h2>
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <figure class="ca-video">
-        <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce Essentials (1 minute 47 seconds)">
-          <source src="/videos/corporate/cybersecure-workforce-essentials.mp4" type="video/mp4">
+        <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce Essentials (1 minute 48 seconds)">
+          <source src="/videos/corporate/cybersecure-workforce-essentials.mp4?v=2" type="video/mp4">
         </video>
       </figure>
       <p class="ca-p"><strong>Data protection, in plain language.</strong> The programme builds awareness of handling personal and customer data responsibly, in line with your obligations under your country&rsquo;s law:</p>
@@ -856,8 +856,8 @@ ${header(ctx, home, "/", true)}
       <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
       <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
       <figure class="ca-video">
-        <video controls playsinline preload="none" poster="/videos/corporate/ai-workflow-productivity.jpg" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 53 seconds)">
-          <source src="/videos/corporate/ai-workflow-productivity.mp4" type="video/mp4">
+        <video controls playsinline preload="none" poster="/videos/corporate/ai-workflow-productivity.jpg" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 54 seconds)">
+          <source src="/videos/corporate/ai-workflow-productivity.mp4?v=2" type="video/mp4">
         </video>
       </figure>
       <p class="ca-p"><a href="/Promotion-AI-Workflow-Productivity"><strong>Explore the programme: what it is, what your workforce gains and how it builds a competitive advantage &rarr;</strong></a></p>
@@ -873,8 +873,8 @@ ${header(ctx, home, "/", true)}
       <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
       <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
       <figure class="ca-video">
-        <video controls playsinline preload="none" poster="/videos/corporate/ai-cybersecurity-accelerator.jpg" aria-label="Video: AI + Cybersecurity Professional Accelerator (1 minute 51 seconds)">
-          <source src="/videos/corporate/ai-cybersecurity-accelerator.mp4" type="video/mp4">
+        <video controls playsinline preload="none" poster="/videos/corporate/ai-cybersecurity-accelerator.jpg" aria-label="Video: AI + Cybersecurity Professional Accelerator (1 minute 55 seconds)">
+          <source src="/videos/corporate/ai-cybersecurity-accelerator.mp4?v=2" type="video/mp4">
         </video>
       </figure>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>

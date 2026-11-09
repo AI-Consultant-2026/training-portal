@@ -21,7 +21,7 @@ import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, 
 
 export const PROMOTION_AI_PATH = "/Promotion-AI-Workflow-Productivity";
 
-const VIDEO = "/videos/corporate/ai-workflow-productivity.mp4";
+const VIDEO = "/videos/corporate/ai-workflow-productivity.mp4?v=2";
 const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
 const CONSULTATION = "Book a Corporate Training Consultation";
 const PROPOSAL = "Request a Corporate Training Proposal";
@@ -198,7 +198,7 @@ function jsonLd(url: string): object {
         thumbnailUrl: `${ORIGIN}${POSTER}`,
         contentUrl: `${ORIGIN}${VIDEO}`,
         uploadDate: "2026-11-06T12:00:00+00:00",
-        duration: "PT1M53S",
+        duration: "PT1M54S",
       },
       {
         "@type": "FAQPage",
@@ -276,7 +276,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <h2 class="section-title" id="video-title">See the programme in under two minutes</h2>
       <p class="ca-p">For companies in South Africa, Kenya, Ghana and Nigeria: where time is lost in everyday work, how AI helps, and how we keep it safe. Press play with the sound on.</p>
       <figure class="ca-video pw-video">
-        <video controls playsinline preload="metadata" poster="${POSTER}" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 53 seconds)">
+        <video controls playsinline preload="metadata" poster="${POSTER}" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 54 seconds)">
           <source src="${VIDEO}" type="video/mp4">
           <a href="${VIDEO}">Download the programme video (MP4)</a>
         </video>

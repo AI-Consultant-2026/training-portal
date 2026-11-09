@@ -579,7 +579,7 @@ describe("AI Workflow promotion page (2026-11-07)", () => {
     const res = await request(app).get("/Promotion-AI-Workflow-Productivity");
     expect(res.status).toBe(200);
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/Promotion-AI-Workflow-Productivity">');
-    expect(res.text).toContain('<source src="/videos/corporate/ai-workflow-productivity.mp4" type="video/mp4">');
+    expect(res.text).toContain('<source src="/videos/corporate/ai-workflow-productivity.mp4?v=2" type="video/mp4">');
     expect(res.text).toContain("How the programme turns skills into a competitive edge");
     expect(res.text).toContain('data-programme="ai-workflow"');
     expect(res.text).toContain('<a href="/">Corporate training</a>');
