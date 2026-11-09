@@ -8,7 +8,7 @@
   var POPULAR_URLS = [
     "/digital-skills-training-nigeria",
     "/oil-and-gas-careers-nigeria",
-    "/corporate-training-nigeria",
+    "/ng/corporate-training",
     "/graduate-to-job-ready-nigeria",
     "/university-partners",
   ];

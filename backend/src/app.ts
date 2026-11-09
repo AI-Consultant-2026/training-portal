@@ -239,8 +239,9 @@ export function createApp() {
       res.type("html").send(renderAccelerator(code));
     });
   }
-  // The corporate training pages for South Africa, Kenya and Ghana (2026-11-08):
-  // /za, /ke and /gh/corporate-training. Nigeria's is the static /corporate-training-nigeria.
+  // The corporate training pages for each country: /za, /ke and /gh/corporate-training
+  // (2026-11-08) and /ng/corporate-training (2026-11-09, replacing the static
+  // /corporate-training-nigeria, which 301s below).
   for (const code of COUNTRY_CORPORATE_CODES) {
     app.get(countryCorporatePath(code), (req, res) => {
       res.type("html").send(renderCountryCorporate(code));
@@ -507,10 +508,11 @@ export function createApp() {
   app.get("/oil-and-gas-careers-nigeria", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "oil-and-gas-careers-nigeria.html"));
   });
-  // SEO content page targeting B2B "corporate training providers in Nigeria" searches --
-  // same reused design system as oil-and-gas-careers-nigeria.html above, same pattern.
+  // The old static Nigeria corporate training page: replaced on 2026-11-09 by
+  // /ng/corporate-training (views/countryCorporate.ts). 301 keeps its search ranking.
   app.get("/corporate-training-nigeria", (req, res) => {
-    res.sendFile(path.join(__dirname, "marketing", "corporate-training-nigeria.html"));
+    const query = req.originalUrl.indexOf("?");
+    res.redirect(301, "/ng/corporate-training" + (query >= 0 ? req.originalUrl.slice(query) : ""));
   });
   // Sector-specific spoke off corporate-training-nigeria.html above (the hub) -- targets
   // "cybersecurity training for banks in Nigeria" / "telecom staff technical training

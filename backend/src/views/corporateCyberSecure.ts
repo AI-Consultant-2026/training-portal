@@ -263,7 +263,7 @@ function related(code: CountryCode): string {
     `<li><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator for specialists</a></li>`,
     `<li><a href="${coursePagePath(code, "cyber-security-fundamentals")}">Cyber Security Fundamentals (individual course)</a></li>`,
     `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
-    code === "NG" ? `<li><a href="/corporate-training-nigeria">Corporate course packages in Nigeria</a></li>` : "",
+    code === "NG" ? `<li><a href="/ng/corporate-training">Corporate training in Nigeria</a></li>` : "",
     ...MARKET_ORDER.filter((k) => k !== code).map(
       (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,
     ),

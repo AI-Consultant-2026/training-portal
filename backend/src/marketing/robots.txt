@@ -8,7 +8,7 @@ Allow: /executive-training
 Allow: /trainingportalprocess
 Allow: /oil-and-gas-careers-nigeria
 Allow: /latest-jobs-board
-Allow: /corporate-training-nigeria
+Allow: /ng/corporate-training
 Allow: /banking-telecom-training-nigeria
 Allow: /digital-skills-jobs-nigeria
 Allow: /hse-training-nigeria

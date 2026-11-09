@@ -17,7 +17,7 @@ MARKETING_DIR = os.path.dirname(os.path.abspath(__file__))
 URLS = [
     "welcome", "executive-training", "trainingportalprocess",
     "cyber-security-fundamentals-course", "gis-and-drone-mapping-course", "digital-marketing-course", "hse-fundamentals-course", "ghana", "kenya", "south-africa", "refer", "ambassadors", "ambassador-walkthrough",
-    "oil-and-gas-careers-nigeria", "corporate-training-nigeria",
+    "oil-and-gas-careers-nigeria",
     "banking-telecom-training-nigeria", "digital-skills-jobs-nigeria",
     "hse-training-nigeria", "university-partners", "consultancy",
     "digital-skills-training-nigeria", "degree-but-no-job-nigeria",
@@ -139,7 +139,7 @@ URLS = [
 # category_for()'s keyword rules below.
 CATEGORY = {
     "welcome": "Home", "executive-training": "Corporate", "trainingportalprocess": "How it works",
-    "corporate-training-nigeria": "Corporate", "banking-telecom-training-nigeria": "Corporate",
+    "banking-telecom-training-nigeria": "Corporate",
     "university-partners": "Partnerships",
     "support": "Support", "terms": "Legal", "privacy": "Legal",
     "cyber-security-fundamentals-course": "Courses", "gis-and-drone-mapping-course": "Courses",

@@ -34,12 +34,12 @@ export const SALES_CONTACT = {
 
 // The corporate training homepage (2026-11-08): the corporate hub moved from
 // /corporate-training to "/", and each country has its own corporate training page.
-// Nigeria's is the static /corporate-training-nigeria; the others are
-// /za, /ke and /gh/corporate-training (views/countryCorporate.ts).
+// All four are /<cc>/corporate-training (Nigeria's moved there from the static
+// /corporate-training-nigeria on 2026-11-09, which now 301s) (views/countryCorporate.ts).
 export const CORPORATE_HOME_PATH = "/";
 
 export function countryCorporatePath(code: CountryCode): string {
-  return code === "NG" ? "/corporate-training-nigeria" : `${COUNTRIES[code].site.path}/corporate-training`;
+  return `${COUNTRIES[code].site.path}/corporate-training`;
 }
 
 // The three programme pages per country. Kept here (no view imports) so countryHome.ts

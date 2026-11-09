@@ -574,7 +574,7 @@ const NIGERIA_GUIDES: [string, string][] = [
   ["/digital-skills-jobs-nigeria", "Digital Skills &amp; Jobs Guide"],
   ["/oil-and-gas-careers-nigeria", "Oil &amp; Gas Careers Guide"],
   ["/hse-training-nigeria", "HSE Careers &amp; Training"],
-  ["/corporate-training-nigeria", "Corporate Training"],
+  ["/ng/corporate-training", "Corporate Training"],
   ["/banking-telecom-training-nigeria", "Banking &amp; Telecom Training"],
   ["/degree-but-no-job-nigeria", "Degree But No Job?"],
   ["/nysc-digital-skills", "NYSC Digital Skills"],

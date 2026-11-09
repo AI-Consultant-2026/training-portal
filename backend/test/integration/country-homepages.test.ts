@@ -145,11 +145,11 @@ describe("Corporate homepage, remembered country and the country banner", () => 
     const main = res.text.slice(res.text.indexOf('<main id="main">'));
     expect(main.indexOf('id="choose-country"')).toBeLessThan(main.indexOf('id="top"'));
     const chooser = main.slice(0, main.indexOf('id="top"'));
-    for (const href of ["/corporate-training-nigeria", "/za/corporate-training", "/ke/corporate-training", "/gh/corporate-training"]) {
+    for (const href of ["/ng/corporate-training", "/za/corporate-training", "/ke/corporate-training", "/gh/corporate-training"]) {
       expect(chooser).toContain(`href="${href}"`);
     }
     for (const [lang, href] of [
-      ["en-NG", "/corporate-training-nigeria"],
+      ["en-NG", "/ng/corporate-training"],
       ["en-ZA", "/za/corporate-training"],
       ["en-KE", "/ke/corporate-training"],
       ["en-GH", "/gh/corporate-training"],
@@ -457,7 +457,7 @@ describe("Footer: corporate programmes and country corporate pages (2026-11-08)"
     expect(f).toContain('<h2 class="footer-heading">Corporate Training</h2>');
     expect(f).not.toContain('<h2 class="footer-heading">Courses</h2>');
     for (const href of programmes) expect(f).toContain(`href="${href}"`);
-    for (const href of ["/corporate-training-nigeria", "/za/corporate-training", "/ke/corporate-training", "/gh/corporate-training"]) {
+    for (const href of ["/ng/corporate-training", "/za/corporate-training", "/ke/corporate-training", "/gh/corporate-training"]) {
       expect(f).toContain(`<a class="footer-country" href="${href}"`);
     }
   });
@@ -482,16 +482,35 @@ describe("Country corporate training pages (2026-11-08)", () => {
     expect(res.text).not.toContain("ITF");
     expect(res.text).not.toContain('name="delivery"');
   });
+
+  // 2026-11-09: Nigeria's page moved from the static /corporate-training-nigeria to the same
+  // template; the old address 301s, keeping the query string.
+  it("serves /ng/corporate-training with Nigeria delivery and ITF, and 301s the old address", async () => {
+    const res = await request(app).get("/ng/corporate-training");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ng/corporate-training">');
+    expect(res.text).toContain("Corporate training in Nigeria: AI and cybersecurity training for employees");
+    expect(res.text).toContain("Lagos");
+    expect(res.text).toContain("In-house, online or hybrid across Nigeria");
+    expect(res.text).toContain("ITF reimbursement");
+    for (const slug of ["ai-workflow-productivity", "cybersecure-workforce", "ai-cybersecurity-professional-accelerator"]) {
+      expect(res.text).toContain(`href="/ng/corporate-training/${slug}"`);
+    }
+    expect(res.text).toContain('hreflang="en-ZA" href="https://paleontraining.com/za/corporate-training"');
+    const old = await request(app).get("/corporate-training-nigeria?utm_source=x");
+    expect(old.status).toBe(301);
+    expect(old.headers.location).toBe("/ng/corporate-training?utm_source=x");
+  });
 });
 
 describe("Footer extras (2026-11-03)", () => {
-  const extras = ["/consultancy", "/university-partners", "/digital-skills-training-nigeria", "/graduate-to-job-ready-nigeria", "/corporate-training-nigeria"];
+  const extras = ["/consultancy", "/university-partners", "/digital-skills-training-nigeria", "/graduate-to-job-ready-nigeria", "/ng/corporate-training"];
   const footerOf = (html: string) => html.slice(html.indexOf('<footer class="site-footer">'));
 
   it("/ng keeps Consultancy, University Partnerships and the 11 Nigeria guides", async () => {
     const f = footerOf((await request(app).get("/ng")).text);
     for (const href of extras) expect(f).toContain(`href="${href}"`);
-    expect((f.match(/<li><a href="\/[a-z0-9-]+-nigeria"|href="\/nysc-digital-skills"|href="\/oil-gas-banking-telecoms-digital-skills"|href="\/four-digital-skills-nigerian-graduates"/g) || []).length).toBeGreaterThanOrEqual(11);
+    expect((f.match(/<li><a href="\/[a-z0-9-]+-nigeria"|href="\/nysc-digital-skills"|href="\/oil-gas-banking-telecoms-digital-skills"|href="\/four-digital-skills-nigerian-graduates"/g) || []).length).toBeGreaterThanOrEqual(10); // + the corporate training guide, now /ng/corporate-training (checked above)
   });
 
   it.each([
@@ -503,8 +522,8 @@ describe("Footer extras (2026-11-03)", () => {
     expect(res.status).toBe(200);
     const f = footerOf(res.text);
     expect(f).toContain(`href="/support"`);
-    // Since 2026-11-08 every footer links Nigeria (in its country list) to /corporate-training-nigeria.
-    for (const href of extras.filter((h) => h !== "/corporate-training-nigeria")) expect(f).not.toContain(`href="${href}"`);
+    // Since 2026-11-08 every footer links Nigeria (in its country list) to /ng/corporate-training.
+    for (const href of extras.filter((h) => h !== "/ng/corporate-training")) expect(f).not.toContain(`href="${href}"`);
   });
 });
 

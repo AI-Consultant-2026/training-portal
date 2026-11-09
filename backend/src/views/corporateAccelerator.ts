@@ -262,7 +262,7 @@ function related(code: CountryCode): string {
     `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: awareness for all staff</a></li>`,
     `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
     `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
-    code === "NG" ? `<li><a href="/corporate-training-nigeria">Corporate training in Nigeria</a></li>` : "",
+    code === "NG" ? `<li><a href="/ng/corporate-training">Corporate training in Nigeria</a></li>` : "",
     code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
     ...MARKET_ORDER.filter((k) => k !== code).map(
       (k) => `<li><a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">AI and cybersecurity training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,

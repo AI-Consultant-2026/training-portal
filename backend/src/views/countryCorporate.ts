@@ -11,13 +11,18 @@ import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 
-// Corporate training pages for South Africa, Kenya and Ghana (2026-11-08) at
-// /za, /ke and /gh/corporate-training: the country's corporate landing page, linked from the
-// homepage's "Choose your country" selector and the footer's country links. Each lists the
-// three corporate programmes for that country. Nigeria's equivalent is the static
-// /corporate-training-nigeria page. Training in these countries is live online only.
+// Corporate training pages for South Africa, Kenya and Ghana (2026-11-08) and Nigeria
+// (2026-11-09, replacing the static /corporate-training-nigeria, which now 301s) at
+// /ng, /za, /ke and /gh/corporate-training: the country's corporate landing page, linked from
+// the homepage's "Choose your country" selector, the header country menu and the footer's
+// country links. Each lists the three corporate programmes for that country. Training is
+// live online only in South Africa, Kenya and Ghana; in Nigeria it is also in-house or hybrid,
+// and supports ITF reimbursement claims.
 
-export const COUNTRY_CORPORATE_CODES: CountryCode[] = ["ZA", "KE", "GH"];
+export const COUNTRY_CORPORATE_CODES: CountryCode[] = ["NG", "ZA", "KE", "GH"];
+
+const ITF_NOTE =
+  "Registered employers who contribute to the Industrial Training Fund (ITF) can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF.";
 
 const CONSULTATION = "Book a Corporate Training Consultation";
 const PROPOSAL = "Request a Corporate Training Proposal";
@@ -35,6 +40,9 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       q: `Do you train companies in ${cityList(code)}?`,
       a: `Yes. Training is delivered ${deliveryPhrase(code)} for organisations in ${cityList(code)} and anywhere else in ${country}, so every office, branch and remote worker can join the same practical sessions.`,
     },
+    ...(code === "NG"
+      ? [{ q: "Can the training support an ITF reimbursement claim?", a: `Yes. ${ITF_NOTE}` }]
+      : []),
     {
       q: "When can our team start?",
       a: "CyberSecure Workforce can be scheduled now. AI Workflow Productivity and the AI + Cybersecurity Professional Accelerator are fully booked until January 2027; you can enquire now to reserve a place from January 2027.",
@@ -121,7 +129,10 @@ export function renderCountryCorporate(code: CountryCode): string {
   const canonicalPath = countryCorporatePath(code);
   const url = `${ORIGIN}${canonicalPath}`;
   const title = `Corporate Training in ${country} | AI & Cybersecurity for Staff`;
-  const description = `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. Live online with a facilitator. Get a proposal.`;
+  const ng = code === "NG";
+  const description = ng
+    ? `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across Nigeria. In-house, online or hybrid; supports ITF claims. Get a proposal.`
+    : `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. Live online with a facilitator. Get a proposal.`;
   const ogImage = `${ORIGIN}/images/og/corporate-ai-workflow-${cc}.jpg`;
   const headHtml = head(ctx, {
     title,
@@ -158,12 +169,12 @@ ${header(ctx, home, "/", true)}
         <span class="eyebrow">Corporate training &middot; ${escapeHtml(country)}</span>
         <h1 class="hero-title ca-hero-title">Corporate training in ${escapeHtml(country)}: AI and cybersecurity training for employees</h1>
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
-        <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered live online with a facilitator, built around real workplace tasks.</p>
+        <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered ${ng ? "in-house at your offices, live online or hybrid" : "live online with a facilitator"}, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
         <div class="hero-ctas">
           ${ctaButton(CONSULTATION, true)}
           ${ctaButton(PROPOSAL, true)}
         </div>
-        <ul class="ca-trust"><li>Live online across ${escapeHtml(country)}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
+        <ul class="ca-trust"><li>${ng ? "In-house, online or hybrid across Nigeria" : `Live online across ${escapeHtml(country)}`}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
       </div>
       <div class="ca-hero-media">
         <img src="/images/corporate-ai/${cc}-hero.jpg" alt="${escapeHtml(CORPORATE_AI_CONTENT[code].images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
@@ -203,8 +214,9 @@ ${header(ctx, home, "/", true)}
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">Staff training for organisations across ${escapeHtml(country)}</h2>
-      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. Training is live online with a facilitator, so every office, branch and remote worker can join the same practical sessions, scheduled around your working day.</p>
-      <p class="ca-p">Examples and workplace projects are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
+      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${ng ? "Training is delivered in-house at your offices, live online with a facilitator, or hybrid, so head office, branches, sites and remote workers can all take part, scheduled around your working day." : "Training is live online with a facilitator, so every office, branch and remote worker can join the same practical sessions, scheduled around your working day."}</p>
+      <p class="ca-p">Examples and workplace projects are adapted to your sector: ${ng ? "banking and financial services, oil and gas and energy, telecoms, manufacturing, healthcare, education, government and professional services" : "banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services"}.</p>
+      ${ng ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_NOTE)}</p>` : ""}
       <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
     </div>
   </section>
@@ -230,7 +242,9 @@ ${header(ctx, home, "/", true)}
     title: `Tell us what your organisation in ${country} needs`,
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
     note: "Prefer to talk first? Choose **Book a Corporate Training Consultation** and we will arrange a call.",
-    contact: "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495",
+    contact: ng
+      ? "Email: corporate@paleontraining.com · Phone: +234 707 714 9215 · WhatsApp: +44 7508 823495"
+      : "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495",
   })}
 </main>
 ${footer(ctx, home, false, "/")}
