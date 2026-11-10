@@ -73,6 +73,12 @@ const PartnerPipelinePage = lazyImport(
   () => import("../features/admin/PartnerPipelinePage"),
   "PartnerPipelinePage",
 );
+const CompanyJoinPage = lazyImport(() => import("../features/corporate/CompanyJoinPage"), "CompanyJoinPage");
+const CompanyPage = lazyImport(() => import("../features/corporate/CompanyPage"), "CompanyPage");
+const AdminCorporateClientsPage = lazyImport(
+  () => import("../features/admin/AdminCorporateClientsPage"),
+  "AdminCorporateClientsPage",
+);
 const ReferralPage = lazyImport(() => import("../features/referrals/ReferralPage"), "ReferralPage");
 const AdminReferralsPage = lazyImport(
   () => import("../features/admin/AdminReferralsPage"),
@@ -111,6 +117,8 @@ export function AppRouter() {
         {/* Public free first lesson ("Try Day 1 free"), no login needed. */}
         <Route path="/preview/:slug" element={<PreviewLessonPage />} />
         <Route path="/sponsor/:token" element={<SponsorPage />} />
+        {/* Corporate staff portal: a company's staff sign-up link (public). */}
+        <Route path="/company/join/:code" element={<CompanyJoinPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/courses" element={<CourseListPage />} />
           <Route path="/courses/:slug" element={<CourseDetailPage />} />
@@ -118,6 +126,7 @@ export function AppRouter() {
           <Route path="/courses/:slug/pay/bank-transfer" element={<OldPaymentLinkRedirect />} />
           <Route path="/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/dashboard" element={<StudentDashboardPage />} />
+          <Route path="/company" element={<CompanyPage />} />
           {/* Students' own referral code + stats. The public Refer & Earn page at /refer is
               served by the backend (a static marketing page); in-app links that still point at
               /refer land here instead of doing a full page load. */}
@@ -152,6 +161,7 @@ export function AppRouter() {
             <Route path="/admin/partner-pipeline" element={<PartnerPipelinePage />} />
             <Route path="/admin/email-client" element={<EmailClientPage />} />
             <Route path="/admin/referrals" element={<AdminReferralsPage />} />
+            <Route path="/admin/corporate-clients" element={<AdminCorporateClientsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

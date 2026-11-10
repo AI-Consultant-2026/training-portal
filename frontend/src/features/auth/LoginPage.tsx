@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
@@ -11,13 +11,18 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // Return to the page that sent them here (e.g. a company staff sign-up link). Only
+  // same-site paths, so a crafted ?next= can't bounce people to another website.
+  const next = searchParams.get("next");
+  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
   const { status, error } = useAppSelector((state) => state.auth);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(result)) {
-      navigate(result.payload.user.role === "admin" ? "/admin" : "/dashboard");
+      navigate(safeNext ?? (result.payload.user.role === "admin" ? "/admin" : "/dashboard"));
     }
   }
 

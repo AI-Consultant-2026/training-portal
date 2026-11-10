@@ -5,6 +5,15 @@ import * as referralsController from "../controllers/referrals.controller";
 import * as zoomAttendeesController from "../controllers/zoomAttendees.controller";
 import * as ambassadorNoticesController from "../controllers/ambassadorNotices.controller";
 import * as salesRepsController from "../controllers/salesReps.controller";
+import * as corporateController from "../controllers/corporate.controller";
+import {
+  adminInviteSchema,
+  clientIdSchema,
+  createClientSchema,
+  memberSchema,
+  setManagerSchema,
+  updateClientSchema,
+} from "../validators/corporate.validators";
 import {
   createSalesRepSchema,
   deleteSalesRepPaymentSchema,
@@ -78,6 +87,21 @@ adminRouter.get("/notices", ambassadorNoticesController.listAll);
 adminRouter.post("/notices", validate(createNoticeSchema), ambassadorNoticesController.create);
 adminRouter.patch("/notices/:id", validate(updateNoticeSchema), ambassadorNoticesController.update);
 adminRouter.delete("/notices/:id", validate(noticeIdSchema), ambassadorNoticesController.remove);
+
+// Corporate staff portal: companies, their seats per corporate course, and their staff.
+adminRouter.get("/corporate-clients", corporateController.listClients);
+adminRouter.post("/corporate-clients", validate(createClientSchema), corporateController.createClient);
+adminRouter.get("/corporate-clients/:id", validate(clientIdSchema), corporateController.getClient);
+adminRouter.patch("/corporate-clients/:id", validate(updateClientSchema), corporateController.updateClient);
+adminRouter.delete("/corporate-clients/:id", validate(clientIdSchema), corporateController.deleteClient);
+adminRouter.post("/corporate-clients/:id/join-code", validate(clientIdSchema), corporateController.regenerateCode);
+adminRouter.post("/corporate-clients/:id/invites", validate(adminInviteSchema), corporateController.adminInvite);
+adminRouter.patch(
+  "/corporate-clients/:id/members/:userId",
+  validate(setManagerSchema),
+  corporateController.setManager,
+);
+adminRouter.delete("/corporate-clients/:id/members/:userId", validate(memberSchema), corporateController.removeMember);
 
 // Commission sales reps: REP codes, their students' sales, commission owed and payments made.
 adminRouter.get("/sales-reps", salesRepsController.list);

@@ -1,4 +1,4 @@
-import { Transaction } from "sequelize";
+import { Op, Transaction } from "sequelize";
 import * as emails from "../emails";
 import { DEPOSIT_UNLOCKED_DAYS } from "../constants/coursePricing";
 import { Course, CourseModule, Enrollment, Payment, User } from "../models";
@@ -9,6 +9,9 @@ export async function enrollStudent(courseId: string, studentId: string): Promis
   const course = await Course.findByPk(courseId);
   if (!course || course.status !== "published") {
     throw ApiError.notFound("Course not found");
+  }
+  if ((course.metadata as { corporate?: boolean } | null)?.corporate === true) {
+    throw ApiError.forbidden("This course is for company staff. Use the sign-up link your employer gave you.");
   }
 
   const existing = await Enrollment.findOne({ where: { courseId, studentId } });
@@ -31,8 +34,9 @@ export async function enrollStudent(courseId: string, studentId: string): Promis
 }
 
 export async function listMyEnrollments(studentId: string): Promise<Enrollment[]> {
+  // A suspended company seat (the person left the company) drops off their dashboard.
   return Enrollment.findAll({
-    where: { studentId },
+    where: { studentId, [Op.not]: { status: "suspended", corporateClientId: { [Op.ne]: null } } },
     include: [{ model: Course, as: "course" }],
     order: [["enrolledDate", "DESC"]],
   });

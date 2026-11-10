@@ -16,6 +16,7 @@ export interface EnrollmentAttributes {
   depositPaidAt: Date | null;
   refundedAt: Date | null;
   refundNote: string | null;
+  corporateClientId: string | null;
 }
 
 export type EnrollmentCreationAttributes = Optional<
@@ -31,6 +32,7 @@ export type EnrollmentCreationAttributes = Optional<
   | "depositPaidAt"
   | "refundedAt"
   | "refundNote"
+  | "corporateClientId"
 >;
 
 export class Enrollment
@@ -50,6 +52,7 @@ export class Enrollment
   declare depositPaidAt: Date | null;
   declare refundedAt: Date | null;
   declare refundNote: string | null;
+  declare corporateClientId: string | null;
 }
 
 export function initEnrollmentModel(sequelize: Sequelize) {
@@ -111,6 +114,8 @@ export function initEnrollmentModel(sequelize: Sequelize) {
       // Cooling-off refund recorded by an admin (see refund.service.ts).
       refundedAt: { type: DataTypes.DATE, allowNull: true, field: "refunded_at" },
       refundNote: { type: DataTypes.TEXT, allowNull: true, field: "refund_note" },
+      // Set when a company's seat paid for this enrollment (corporate staff portal).
+      corporateClientId: { type: DataTypes.UUID, allowNull: true, field: "corporate_client_id" },
     },
     {
       sequelize,

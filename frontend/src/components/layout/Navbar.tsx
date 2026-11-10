@@ -12,6 +12,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const isCorporateStaff = Boolean(user?.profileData?.corporateClient);
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -39,7 +40,14 @@ export function Navbar() {
       <Link to="/dashboard" className={linkClassName} onClick={closeMenu}>
         Dashboard
       </Link>
-      {user.role === "student" && (
+      {/* Corporate staff (set when they join with their company's link) get a Company
+          page instead of the learner referral scheme. */}
+      {isCorporateStaff && (
+        <Link to="/company" className={linkClassName} onClick={closeMenu}>
+          Company
+        </Link>
+      )}
+      {user.role === "student" && !isCorporateStaff && (
         <Link to="/refer/me" className={linkClassName} onClick={closeMenu}>
           Refer &amp; earn
         </Link>

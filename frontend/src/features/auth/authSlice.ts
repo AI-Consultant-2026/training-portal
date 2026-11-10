@@ -140,6 +140,14 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
     },
+    // A session started outside the login/register thunks, e.g. a corporate staff
+    // member creating their login from their company's join link.
+    sessionStarted(state, action: PayloadAction<{ user: User; accessToken: string }>) {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
+      state.status = "succeeded";
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -234,5 +242,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAccessToken, clearSession } = authSlice.actions;
+export const { setAccessToken, clearSession, sessionStarted } = authSlice.actions;
 export default authSlice.reducer;

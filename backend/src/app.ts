@@ -1242,6 +1242,7 @@ export function createApp() {
       "quizzes",
       "instructor",
       "admin",
+      "company",
     ]);
     // Free-lesson pages are server-rendered for crawlers (see previewPage.service.ts);
     // an unknown or unpublished course gets the SPA shell with a 404 status.

@@ -18,6 +18,8 @@ export function EmailVerificationBanner() {
     !user ||
     user.emailVerifiedAt ||
     user.role !== "student" ||
+    // Company staff are already on their courses; "verify to enroll" doesn't apply to them.
+    Boolean(user.profileData?.corporateClient) ||
     location.pathname === "/login" ||
     location.pathname === "/register"
   ) {

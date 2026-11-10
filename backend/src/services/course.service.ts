@@ -66,6 +66,13 @@ export function isAdminOnlyCourse(course: Course): boolean {
   return (course.metadata as { adminOnly?: boolean } | null)?.adminOnly === true;
 }
 
+// The three corporate programmes (2026-11-10): sold to companies, not individuals. Only
+// staff with a company seat (corporate.service.ts) are enrolled; the public catalogue,
+// self-enrolment and the free preview all leave them out.
+export function isCorporateCourse(course: Course): boolean {
+  return (course.metadata as { corporate?: boolean } | null)?.corporate === true;
+}
+
 export function assertCourseAccessible(course: Course, requester: { role: string } | undefined): void {
   if (isAdminOnlyCourse(course) && requester?.role !== "admin") {
     throw ApiError.notFound("Course not found");
@@ -147,7 +154,7 @@ function localPricesFor(slug: string): PublicCoursePreview["localPrices"] {
 // slug, so this can't be used to read anything that isn't already in the catalog.
 export async function getPublicCoursePreview(slug: string): Promise<PublicCoursePreview> {
   const course = await Course.findOne({ where: { slug } });
-  if (!course || course.status !== "published" || isAdminOnlyCourse(course)) {
+  if (!course || course.status !== "published" || isAdminOnlyCourse(course) || isCorporateCourse(course)) {
     throw ApiError.notFound("Course not found");
   }
   // Imported lazily: lesson.service imports this module too.

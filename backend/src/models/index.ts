@@ -30,6 +30,7 @@ import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCh
 import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
 import { WaitlistSignup, initWaitlistSignupModel } from "./waitlistSignup.model";
 import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
+import { CorporateClient, CorporateMember, CorporateSeat, initCorporateModels } from "./corporate.model";
 import {
   SalesRep,
   SalesRepPayment,
@@ -91,6 +92,7 @@ initAmbassadorNoticeModel(sequelize);
 initSalesRepModel(sequelize);
 initSalesRepStudentModel(sequelize);
 initSalesRepPaymentModel(sequelize);
+initCorporateModels(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -197,8 +199,20 @@ EmailCampaign.hasMany(EmailCampaignRecipient, { foreignKey: "campaignId", as: "r
 EmailCampaignRecipient.belongsTo(EmailCampaign, { foreignKey: "campaignId", as: "campaign" });
 EmailCampaign.hasMany(EmailCampaignAttachment, { foreignKey: "campaignId", as: "attachments" });
 
+// Corporate staff portal: a company's seats per course and its staff (members).
+CorporateClient.hasMany(CorporateSeat, { foreignKey: "clientId", as: "seats" });
+CorporateSeat.belongsTo(CorporateClient, { foreignKey: "clientId", as: "client" });
+CorporateSeat.belongsTo(Course, { foreignKey: "courseId", as: "course" });
+CorporateClient.hasMany(CorporateMember, { foreignKey: "clientId", as: "members" });
+CorporateMember.belongsTo(CorporateClient, { foreignKey: "clientId", as: "client" });
+CorporateMember.belongsTo(User, { foreignKey: "userId", as: "user" });
+User.hasOne(CorporateMember, { foreignKey: "userId", as: "corporateMembership" });
+
 export {
   AmbassadorNotice,
+  CorporateClient,
+  CorporateMember,
+  CorporateSeat,
   Assignment,
   AssignmentSubmission,
   Capstone,

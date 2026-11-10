@@ -58,7 +58,7 @@ const ZOOM_STATUS_BY_REGISTRATION_STATUS: Record<string, string> = {
 const PASSWORD_RESET_PURPOSE = "password-reset";
 const EMAIL_VERIFICATION_PURPOSE = "email-verification";
 
-function sendVerificationEmail(user: User): void {
+export function sendVerificationEmail(user: User): void {
   const verifyToken = jwt.sign({ sub: user.id, purpose: EMAIL_VERIFICATION_PURPOSE }, config.jwt.accessSecret, {
     expiresIn: "24h",
   });

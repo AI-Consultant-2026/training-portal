@@ -10,6 +10,7 @@ import { Enrollment } from "../../types/api";
 export function StudentDashboardPage() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const corporateClient = (user?.profileData?.corporateClient as string | undefined) ?? null;
   const { items: enrollments, status, error } = useAppSelector((state) => state.enrollments);
 
   useEffect(() => {
@@ -20,45 +21,61 @@ export function StudentDashboardPage() {
     <div className="mx-auto max-w-4xl px-6 py-10">
       <h1 className="text-2xl font-semibold text-gray-900">Welcome back, {user?.firstName}</h1>
 
-      <Link
-        to="/refer/me"
-        className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm hover:bg-blue-100"
-      >
-        <span className="text-blue-900">
-          <span className="font-medium">Refer a friend, earn rewards.</span> Airtime, data or course
-          credit for every friend who joins and pays.
-        </span>
-        <span className="shrink-0 font-medium text-blue-700">Get your code →</span>
-      </Link>
+      {corporateClient ? (
+        // Company staff (corporate staff portal): their company area instead of the
+        // learner referral scheme and jobs board.
+        <Link
+          to="/company"
+          className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm hover:bg-blue-100"
+        >
+          <span className="text-blue-900">
+            <span className="font-medium">Staff training from {corporateClient}.</span> Your courses are below.
+          </span>
+          <span className="shrink-0 font-medium text-blue-700">Company page →</span>
+        </Link>
+      ) : (
+        <>
+        <Link
+          to="/refer/me"
+          className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm hover:bg-blue-100"
+        >
+          <span className="text-blue-900">
+            <span className="font-medium">Refer a friend, earn rewards.</span> Airtime, data or course
+            credit for every friend who joins and pays.
+          </span>
+          <span className="shrink-0 font-medium text-blue-700">Get your code →</span>
+        </Link>
 
-      {/* Static marketing page served by the backend, not a SPA route -- plain <a>.
-          Kenyan, Ghanaian and South African students get their own country's board (2026-10-30). */}
-      <a
-        href={
-          user?.country === "KE"
-            ? "/ke/latest-jobs-board"
-            : user?.country === "GH"
-              ? "/gh/latest-jobs-board"
-              : user?.country === "ZA"
-                ? "/za/latest-jobs-board"
-                : "/latest-jobs-board"
-        }
-        className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm hover:bg-emerald-100"
-      >
-        <span className="text-emerald-900">
-          <span className="font-medium">Latest jobs board.</span>{" "}
-          {user?.country === "KE" ? (
-            <>New energy, banking and ICT vacancies in Kenya.</>
-          ) : user?.country === "GH" ? (
-            <>New mining, oil, banking and ICT vacancies in Ghana.</>
-          ) : user?.country === "ZA" ? (
-            <>New mining, energy, banking and ICT vacancies in South Africa.</>
-          ) : (
-            <>New oil &amp; gas, banking and ICT vacancies in Nigeria, updated daily.</>
-          )}
-        </span>
-        <span className="shrink-0 font-medium text-emerald-700">See the jobs →</span>
-      </a>
+        {/* Static marketing page served by the backend, not a SPA route -- plain <a>.
+            Kenyan, Ghanaian and South African students get their own country's board (2026-10-30). */}
+        <a
+          href={
+            user?.country === "KE"
+              ? "/ke/latest-jobs-board"
+              : user?.country === "GH"
+                ? "/gh/latest-jobs-board"
+                : user?.country === "ZA"
+                  ? "/za/latest-jobs-board"
+                  : "/latest-jobs-board"
+          }
+          className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm hover:bg-emerald-100"
+        >
+          <span className="text-emerald-900">
+            <span className="font-medium">Latest jobs board.</span>{" "}
+            {user?.country === "KE" ? (
+              <>New energy, banking and ICT vacancies in Kenya.</>
+            ) : user?.country === "GH" ? (
+              <>New mining, oil, banking and ICT vacancies in Ghana.</>
+            ) : user?.country === "ZA" ? (
+              <>New mining, energy, banking and ICT vacancies in South Africa.</>
+            ) : (
+              <>New oil &amp; gas, banking and ICT vacancies in Nigeria, updated daily.</>
+            )}
+          </span>
+          <span className="shrink-0 font-medium text-emerald-700">See the jobs →</span>
+        </a>
+        </>
+      )}
 
       {status === "loading" && (
         <div className="flex justify-center py-16">

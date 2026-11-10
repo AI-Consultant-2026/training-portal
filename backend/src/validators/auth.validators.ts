@@ -25,7 +25,7 @@ const COMMON_WEAK_PASSWORDS = new Set([
   "monkey123",
 ]);
 
-const passwordSchema = z
+export const passwordSchema = z
   .string()
   .min(10, "Password must be at least 10 characters")
   .refine((val) => /[a-zA-Z]/.test(val) && /[0-9]/.test(val), {

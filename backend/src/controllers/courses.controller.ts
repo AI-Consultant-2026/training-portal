@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import * as capstoneService from "../services/capstone.service";
 import * as courseService from "../services/course.service";
 import * as lessonService from "../services/lesson.service";
+import { Enrollment } from "../models";
+import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
 
 export const listCourses = asyncHandler(async (req: Request, res: Response) => {
@@ -17,12 +19,35 @@ export const listCourses = asyncHandler(async (req: Request, res: Response) => {
     (course) => !courseService.isAdminOnlyCourse(course) || req.user?.role === "admin",
   );
 
-  res.json({ courses: visible });
+  // Corporate courses appear only for staff and admins/instructors, and for a learner
+  // only when their company has enrolled them.
+  const isStaff = req.user?.role === "admin" || req.user?.role === "instructor";
+  const myCourseIds =
+    !isStaff && req.user && visible.some(courseService.isCorporateCourse)
+      ? new Set(
+          (
+            await Enrollment.findAll({ where: { studentId: req.user.id }, attributes: ["courseId", "status"] })
+          )
+            .filter((e) => e.status !== "suspended")
+            .map((e) => e.courseId),
+        )
+      : new Set<string>();
+  const catalogue = visible.filter(
+    (course) => isStaff || !courseService.isCorporateCourse(course) || myCourseIds.has(course.id),
+  );
+
+  res.json({ courses: catalogue });
 });
 
 export const getCourse = asyncHandler(async (req: Request, res: Response) => {
   const course = await courseService.getCourseByIdOrSlug(req.params.id);
   courseService.assertCourseAccessible(course, req.user);
+  if (courseService.isCorporateCourse(course) && req.user?.role !== "admin" && req.user?.role !== "instructor") {
+    const enrolled = req.user
+      ? await Enrollment.findOne({ where: { courseId: course.id, studentId: req.user.id } })
+      : null;
+    if (!enrolled || enrolled.status === "suspended") throw ApiError.notFound("Course not found");
+  }
   res.json({ course });
 });
 

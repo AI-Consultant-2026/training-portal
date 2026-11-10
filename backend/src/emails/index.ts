@@ -6,6 +6,7 @@ import { COUNTRIES, CountryCode } from "../constants/countries";
 import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
 import { buildCorporateEnquiryEmail } from "./templates/corporateEnquiry";
+import { buildCorporateInviteEmail, buildCorporateWelcomeEmail } from "./templates/corporate";
 import { buildCourseCompletedEmail } from "./templates/courseCompleted";
 import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
@@ -173,4 +174,12 @@ export async function sendPaymentConfirmedEmail(input: Parameters<typeof buildPa
 
 export async function sendPaystackUnmatchedEmail(input: Parameters<typeof buildPaystackUnmatchedEmail>[0]): Promise<void> {
   await sendEmail(buildPaystackUnmatchedEmail(input));
+}
+
+export async function sendCorporateInviteEmail(input: Parameters<typeof buildCorporateInviteEmail>[0]): Promise<void> {
+  await sendEmail(buildCorporateInviteEmail(input));
+}
+
+export async function sendCorporateWelcomeEmail(input: Parameters<typeof buildCorporateWelcomeEmail>[0]): Promise<void> {
+  await sendEmail(buildCorporateWelcomeEmail(input));
 }
