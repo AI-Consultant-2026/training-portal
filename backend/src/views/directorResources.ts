@@ -2,7 +2,7 @@ import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import { READINESS_BANDS, READINESS_QUESTIONS } from "../constants/readinessCheck";
 import { CORPORATE_EMPLOYEE_BANDS } from "../validators/corporateLeads.validators";
 import { CORPORATE_HUB_PATH, options } from "./corporateAiWorkflow";
-import { DATA_PROTECTION_LAW, countryCorporatePath } from "./corporateLocal";
+import { DATA_PROTECTION_LAW, ORGANIZATION_LD, countryCorporatePath } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts } from "./countryHome";
 
 // Free resources for business owners, CEOs and managing directors (2026-11-08), linked from
@@ -29,7 +29,7 @@ export const PROGRAMMES = {
 
 export function shell(
   ctx: PageContext,
-  opts: { title: string; description: string; path: string; jsonLd: object; body: string; extraScript?: string },
+  opts: { title: string; description: string; path: string; jsonLd: object; body: string; extraScript?: string; ogImage?: string },
 ): string {
   const home = COUNTRIES[ctx.country].site.path;
   const headHtml = head(ctx, {
@@ -41,7 +41,7 @@ export function shell(
     xDefault: opts.path,
     jsonLd: opts.jsonLd,
   })
-    .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ORIGIN}/images/og/corporate-ai-workflow-ng.jpg"`)
+    .replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"/g, `$1${ORIGIN}/images/og/${opts.ogImage ?? "corporate-ai-workflow-ng"}.jpg"`)
     .replace("</head>", '<link rel="stylesheet" href="/corporate-ai.css">\n</head>');
   return `${headHtml}
 <body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
@@ -71,6 +71,7 @@ function pageLd(path: string, name: string, description: string, type = "WebPage
   return {
     "@context": "https://schema.org",
     "@graph": [
+      ORGANIZATION_LD,
       {
         "@type": type,
         "@id": `${url}#page`,
@@ -79,8 +80,8 @@ function pageLd(path: string, name: string, description: string, type = "WebPage
         headline: name,
         description,
         inLanguage: "en",
-        author: { "@type": "Organization", name: "Paleon Training Limited", url: `${ORIGIN}/` },
-        publisher: { "@type": "Organization", "@id": `${ORIGIN}/#organization`, name: "Paleon Training Limited", url: `${ORIGIN}/` },
+        author: { "@id": `${ORIGIN}/#organization` },
+        publisher: { "@id": `${ORIGIN}/#organization` },
         datePublished: "2026-11-08",
         dateModified: "2026-11-08",
         breadcrumb: { "@id": `${url}#breadcrumb` },
@@ -222,6 +223,7 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
     title,
     description,
     path: READINESS_PATH,
+    ogImage: "ai-cyber-readiness-check",
     jsonLd: pageLd(READINESS_PATH, "AI & Cyber Readiness Check", description),
     body,
     extraScript: '<script src="/readiness-check.js" defer></script>',

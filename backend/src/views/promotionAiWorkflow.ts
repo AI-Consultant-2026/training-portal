@@ -1,5 +1,6 @@
 import { COUNTRIES, MARKET_ORDER } from "../constants/countries";
 import { flagSvg } from "./flags";
+import { ORGANIZATION_LD } from "./corporateLocal";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import {
   CORPORATE_HUB_PATH,
@@ -166,21 +167,7 @@ function jsonLd(url: string): object {
         areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
         audience: { "@type": "BusinessAudience", audienceType: "Companies and organisations" },
       },
-      {
-        "@type": "Organization",
-        "@id": `${ORIGIN}/#organization`,
-        name: "Paleon Training Limited",
-        url: `${ORIGIN}/`,
-        email: "corporate@paleontraining.com",
-        contactPoint: {
-          "@type": "ContactPoint",
-          contactType: "sales",
-          email: "corporate@paleontraining.com",
-          telephone: "+234-707-714-9215",
-          areaServed: ["NG", "ZA", "KE", "GH"],
-          availableLanguage: "English",
-        },
-      },
+      ORGANIZATION_LD,
       {
         "@type": "Course",
         name: "AI Workflow Productivity & Process Transformation",

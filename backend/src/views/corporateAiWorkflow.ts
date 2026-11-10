@@ -1,4 +1,4 @@
-import { DATA_PROTECTION_LAW, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { DATA_PROTECTION_LAW, areaServed, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
   CORPORATE_DELIVERY,
@@ -431,26 +431,7 @@ function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object
           acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\*\*/g, "") },
         })),
       },
-      {
-        "@type": "Organization",
-        "@id": `${ORIGIN}/#organization`,
-        name: "Paleon Training Limited",
-        url: `${ORIGIN}/`,
-        email: "corporate@paleontraining.com",
-        contactPoint: SALES_CONTACT,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "Off NNPC Junior Staff Club 10",
-          addressLocality: "Warri",
-          addressRegion: "Delta State",
-          addressCountry: "NG",
-        },
-        sameAs: [
-          "https://www.facebook.com/profile.php?id=61593708334223",
-          "https://www.linkedin.com/company/146121029/",
-          "https://www.instagram.com/paleontraining/",
-        ],
-      },
+      ORGANIZATION_LD,
     ],
   };
 }
@@ -643,11 +624,46 @@ const HUB_JOURNEY = [
 const HUB_DEFINITION =
   "Paleon Training provides corporate training for organisations in Nigeria, South Africa, Kenya and Ghana. Its flagship programmes are AI Workflow Productivity & Process Transformation, which teaches employees to use generative AI to save time and redesign repetitive work, CyberSecure Workforce, which trains every employee to recognise, stop and report cyber threats, and the AI + Cybersecurity Professional Accelerator for the professionals who lead secure AI adoption.";
 
+// The three programme videos on the homepage (2026-11-10), marked up so Google can show them
+// in video results. Durations match the files with end cards (cec0a21).
+const HUB_VIDEOS = [
+  {
+    slug: "cybersecure-workforce-essentials",
+    name: "CyberSecure Workforce Essentials",
+    description: "How phishing, payment fraud and data leaks reach ordinary staff, and how Paleon's CyberSecure Workforce training builds a cyber-aware workforce.",
+    duration: "PT1M48S",
+  },
+  {
+    slug: "ai-workflow-productivity",
+    name: "AI Workflow Productivity & Process Transformation",
+    description: "Where time is lost, how AI helps, and how Paleon Training keeps it safe. A short introduction to the corporate AI programme.",
+    duration: "PT1M54S",
+  },
+  {
+    slug: "ai-cybersecurity-accelerator",
+    name: "AI + Cybersecurity Professional Accelerator",
+    description: "An introduction to Paleon's combined AI and cybersecurity programme for managers and professionals who lead secure, AI-ready teams.",
+    duration: "PT1M55S",
+  },
+];
+
 function hubJsonLd(url: string): object {
   return {
     "@context": "https://schema.org",
     "@graph": [
       ...trainerPersonLd(),
+      ...HUB_VIDEOS.map((v) => ({
+        "@type": "VideoObject",
+        "@id": `${ORIGIN}/#video-${v.slug}`,
+        name: v.name,
+        description: v.description,
+        thumbnailUrl: `${ORIGIN}/videos/corporate/${v.slug}.jpg`,
+        contentUrl: `${ORIGIN}/videos/corporate/${v.slug}.mp4?v=2`,
+        uploadDate: "2026-11-09T12:00:00+00:00",
+        duration: v.duration,
+        inLanguage: "en",
+        publisher: { "@id": `${ORIGIN}/#organization` },
+      })),
       {
         "@type": "CollectionPage",
         "@id": `${url}#page`,
@@ -707,29 +723,7 @@ function hubJsonLd(url: string): object {
         "@id": `${url}#faq`,
         mainEntity: HUB_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
       },
-      {
-        "@type": "Organization",
-        "@id": `${ORIGIN}/#organization`,
-        name: "Paleon Training Limited",
-        url: `${ORIGIN}/`,
-        email: "corporate@paleontraining.com",
-        areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
-        contactPoint: {
-          "@type": "ContactPoint",
-          contactType: "sales",
-          email: "corporate@paleontraining.com",
-          telephone: "+234-707-714-9215",
-          areaServed: ["NG", "ZA", "KE", "GH"],
-          availableLanguage: "English",
-        },
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "Off NNPC Junior Staff Club 10",
-          addressLocality: "Warri",
-          addressRegion: "Delta State",
-          addressCountry: "NG",
-        },
-      },
+      ORGANIZATION_LD,
     ],
   };
 }

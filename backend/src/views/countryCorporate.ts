@@ -9,7 +9,7 @@ import {
   enquiry,
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
-import { CITIES, DATA_PROTECTION_LAW, SALES_CONTACT, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { CITIES, DATA_PROTECTION_LAW, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { trainerStandards } from "./trainerStandards";
 
@@ -69,6 +69,7 @@ function jsonLd(code: CountryCode, url: string, title: string, description: stri
   return {
     "@context": "https://schema.org",
     "@graph": [
+      ORGANIZATION_LD,
       {
         "@type": "WebPage",
         "@id": `${url}#page`,
@@ -94,13 +95,7 @@ function jsonLd(code: CountryCode, url: string, title: string, description: stri
         serviceType: "Corporate AI and cybersecurity training for employees",
         description,
         url,
-        provider: {
-          "@type": "Organization",
-          "@id": `${ORIGIN}/#organization`,
-          name: "Paleon Training Limited",
-          url: `${ORIGIN}/`,
-          contactPoint: SALES_CONTACT,
-        },
+        provider: { "@id": `${ORIGIN}/#organization` },
         areaServed: areaServed(code),
         audience: { "@type": "BusinessAudience", audienceType: "Business owners, CEOs, managing directors and HR leaders" },
         hasOfferCatalog: {

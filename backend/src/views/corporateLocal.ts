@@ -59,3 +59,37 @@ export const DATA_PROTECTION_LAW: Record<CountryCode, string> = {
   KE: "Kenya's Data Protection Act, 2019",
   GH: "Ghana's Data Protection Act, 2012 (Act 843)",
 };
+
+// One Organization node for every corporate page (2026-11-10), so Google sees the same
+// company everywhere: logo, phone, full address and the company's social profiles. Hard-codes
+// the origin because countryHome.ts (where ORIGIN lives) imports this file.
+const SITE = "https://paleontraining.com";
+export const ORGANIZATION_LD = {
+  "@type": "Organization",
+  "@id": `${SITE}/#organization`,
+  name: "Paleon Training Limited",
+  alternateName: "Paleon Training",
+  url: `${SITE}/`,
+  logo: { "@type": "ImageObject", url: `${SITE}/images/og/paleon-training-logo.jpg`, width: 512, height: 512 },
+  image: `${SITE}/images/og/paleon-training-logo.jpg`,
+  description:
+    "Paleon Training Limited runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: in-house in Nigeria and live online across Africa.",
+  email: "corporate@paleontraining.com",
+  telephone: "+234-707-714-9215",
+  contactPoint: SALES_CONTACT,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "No.5 Beji Court, Off NNPC Junior Staff Club 10",
+    addressLocality: "Warri",
+    addressRegion: "Delta State",
+    postalCode: "320001",
+    addressCountry: "NG",
+  },
+  areaServed: ["Nigeria", "South Africa", "Kenya", "Ghana"].map((name) => ({ "@type": "Country", name })),
+  founder: { "@type": "Person", "@id": `${SITE}/#ken-uwotu`, name: "Ken Uwotu" },
+  sameAs: [
+    "https://www.linkedin.com/company/146121029/",
+    "https://www.facebook.com/profile.php?id=61593708334223",
+    "https://www.instagram.com/paleontraining/",
+  ],
+};

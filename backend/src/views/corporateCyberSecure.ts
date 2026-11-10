@@ -13,7 +13,7 @@ import {
   rich,
 } from "./corporateAiWorkflow";
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
-import { CITIES, SALES_CONTACT, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { CITIES, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { trainerStandards } from "./trainerStandards";
 
@@ -329,26 +329,7 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
           acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\*\*/g, "") },
         })),
       },
-      {
-        "@type": "Organization",
-        "@id": `${ORIGIN}/#organization`,
-        name: "Paleon Training Limited",
-        url: `${ORIGIN}/`,
-        email: "corporate@paleontraining.com",
-        contactPoint: SALES_CONTACT,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "Off NNPC Junior Staff Club 10",
-          addressLocality: "Warri",
-          addressRegion: "Delta State",
-          addressCountry: "NG",
-        },
-        sameAs: [
-          "https://www.facebook.com/profile.php?id=61593708334223",
-          "https://www.linkedin.com/company/146121029/",
-          "https://www.instagram.com/paleontraining/",
-        ],
-      },
+      ORGANIZATION_LD,
     ],
   };
 }

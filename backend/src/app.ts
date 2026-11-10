@@ -134,6 +134,12 @@ export function createApp() {
   app.get("/robots.txt", (req, res) => {
     res.type("text/plain").sendFile(path.join(__dirname, "marketing", "robots.txt"));
   });
+  // llms.txt (2026-11-10): a plain-text map of the site for AI answer engines (ChatGPT,
+  // Perplexity, Claude): the corporate programmes, country pages, director tools and guides.
+  app.get("/llms.txt", (req, res) => {
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("text/plain").sendFile(path.join(__dirname, "marketing", "llms.txt"));
+  });
   app.get("/sitemap.xml", (req, res) => {
     res.type("application/xml").sendFile(path.join(__dirname, "marketing", "sitemap.xml"));
   });

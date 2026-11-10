@@ -1,0 +1,64 @@
+# Paleon Training
+
+> Paleon Training Limited (Warri, Nigeria) runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: in-house, live online or hybrid in Nigeria, and live online with a facilitator across Africa. It also runs self-paced digital skills courses for graduates in Nigeria.
+
+Contact for organisations: corporate@paleontraining.com, +234 707 714 9215. Every corporate programme is led by a live facilitator. Programme Director: Ken Uwotu.
+
+## Corporate training programmes
+
+- [Corporate training homepage](https://paleontraining.com/): the three programmes, who trains your staff, and how a programme runs
+- AI Workflow Productivity & Process Transformation: generative AI for everyday work and redesigning repetitive workflows, with responsible-use rules. [Nigeria](https://paleontraining.com/ng/corporate-training/ai-workflow-productivity) · [South Africa](https://paleontraining.com/za/corporate-training/ai-workflow-productivity) · [Kenya](https://paleontraining.com/ke/corporate-training/ai-workflow-productivity) · [Ghana](https://paleontraining.com/gh/corporate-training/ai-workflow-productivity)
+- CyberSecure Workforce: cybersecurity awareness training for every employee (phishing, payment fraud, data protection). [Nigeria](https://paleontraining.com/ng/corporate-training/cybersecure-workforce) · [South Africa](https://paleontraining.com/za/corporate-training/cybersecure-workforce) · [Kenya](https://paleontraining.com/ke/corporate-training/cybersecure-workforce) · [Ghana](https://paleontraining.com/gh/corporate-training/cybersecure-workforce)
+- AI + Cybersecurity Professional Accelerator: combined AI and cybersecurity programme for managers and professionals. [Nigeria](https://paleontraining.com/ng/corporate-training/ai-cybersecurity-professional-accelerator) · [South Africa](https://paleontraining.com/za/corporate-training/ai-cybersecurity-professional-accelerator) · [Kenya](https://paleontraining.com/ke/corporate-training/ai-cybersecurity-professional-accelerator) · [Ghana](https://paleontraining.com/gh/corporate-training/ai-cybersecurity-professional-accelerator)
+
+## Corporate training by country
+
+- [Nigeria](https://paleontraining.com/ng/corporate-training): in-house, online or hybrid; supports ITF claims
+- [South Africa](https://paleontraining.com/za/corporate-training)
+- [Kenya](https://paleontraining.com/ke/corporate-training)
+- [Ghana](https://paleontraining.com/gh/corporate-training)
+
+## Free tools for directors
+
+- [AI & Cyber Readiness Check](https://paleontraining.com/ai-cyber-readiness-check): ten questions, instant score
+- [AI use policy template](https://paleontraining.com/ai-use-policy-template)
+- [Board cyber-risk briefing](https://paleontraining.com/board-cyber-risk-briefing)
+
+## Guides for employers
+
+- [All corporate training guides](https://paleontraining.com/corporate-guides)
+- [POPIA training for staff: what South African employers need to know](https://paleontraining.com/corporate-guides/popia-training-for-staff-south-africa)
+- [Kenya's Data Protection Act, 2019: a staff training guide for employers](https://paleontraining.com/corporate-guides/kenya-data-protection-act-staff-training)
+- [Nigeria Data Protection Act (NDPA) 2023: a staff training guide for employers](https://paleontraining.com/corporate-guides/ndpa-data-protection-training-nigeria)
+- [Ghana's Data Protection Act and Cybersecurity Act: a staff training guide](https://paleontraining.com/corporate-guides/ghana-data-protection-cybersecurity-act-training)
+- [Cybersecurity awareness training for employees in Nigeria](https://paleontraining.com/corporate-guides/cybersecurity-awareness-training-nigeria)
+- [Cybersecurity awareness training for employees in South Africa](https://paleontraining.com/corporate-guides/cybersecurity-awareness-training-south-africa)
+- [Cybersecurity awareness training for employees in Kenya](https://paleontraining.com/corporate-guides/cybersecurity-awareness-training-kenya)
+- [Cybersecurity awareness training for employees in Ghana](https://paleontraining.com/corporate-guides/cybersecurity-awareness-training-ghana)
+- [ITF reimbursement for staff training in Nigeria: how employers can recover training costs](https://paleontraining.com/corporate-guides/itf-reimbursement-staff-training-nigeria)
+- [Skills Development Levy, SETA grants and B-BBEE: funding staff training in South Africa](https://paleontraining.com/corporate-guides/skills-development-levy-training-south-africa)
+- [The NITA training levy in Kenya: what employers should know before buying training](https://paleontraining.com/corporate-guides/nita-training-levy-kenya)
+- [Business email compromise (BEC) training for staff and finance teams](https://paleontraining.com/corporate-guides/business-email-compromise-training)
+- [Phishing awareness training for employees: what actually works](https://paleontraining.com/corporate-guides/phishing-awareness-training-for-employees)
+- [Invoice and payment fraud prevention training for finance teams](https://paleontraining.com/corporate-guides/invoice-and-payment-fraud-prevention-training)
+- [Deepfake and AI voice fraud: training for executives and their teams](https://paleontraining.com/corporate-guides/deepfake-and-voice-fraud-training-for-executives)
+- [ChatGPT and AI tools training for employees: a guide for employers](https://paleontraining.com/corporate-guides/chatgpt-training-for-employees)
+- [AI training for managers and leadership teams](https://paleontraining.com/corporate-guides/ai-training-for-managers)
+- [Microsoft Copilot training for staff: getting real value, safely](https://paleontraining.com/corporate-guides/microsoft-copilot-training-for-staff)
+- [Generative AI risks for business: shadow AI, data leaks and how to manage them](https://paleontraining.com/corporate-guides/generative-ai-risks-for-business)
+- [Cybersecurity and AI training for banks, fintechs and financial services](https://paleontraining.com/corporate-guides/cybersecurity-training-for-banks-and-fintechs)
+- [Cybersecurity and AI training for oil and gas and energy companies](https://paleontraining.com/corporate-guides/cybersecurity-ai-training-oil-and-gas)
+- [Cybersecurity and AI training for telecoms and technology companies](https://paleontraining.com/corporate-guides/cybersecurity-training-for-telecoms)
+- [Cybersecurity and AI training for NGOs, charities and development organisations](https://paleontraining.com/corporate-guides/cybersecurity-ai-training-for-ngos)
+- [Cybersecurity and AI training for government and public sector organisations](https://paleontraining.com/corporate-guides/cybersecurity-ai-training-for-government)
+- [How to choose a corporate cybersecurity and AI training provider](https://paleontraining.com/corporate-guides/how-to-choose-a-corporate-cybersecurity-training-provider)
+
+## Courses for individuals (Nigeria)
+
+- [Digital skills training in Nigeria](https://paleontraining.com/digital-skills-training-nigeria)
+- [Cyber Security Fundamentals](https://paleontraining.com/cyber-security-fundamentals-course) · [GIS and Drone Mapping](https://paleontraining.com/gis-and-drone-mapping-course) · [Digital Marketing](https://paleontraining.com/digital-marketing-course) · [HSE Fundamentals](https://paleontraining.com/hse-fundamentals-course) · [AI & Machine Learning Fundamentals](https://paleontraining.com/ai-machine-learning-fundamentals-course)
+
+## Optional
+
+- [Privacy policy](https://paleontraining.com/privacy)
+- [Terms](https://paleontraining.com/terms)

@@ -1,7 +1,7 @@
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import { GUIDES, GUIDE_BY_SLUG, GUIDE_CATEGORIES, Guide, ProgrammeKey } from "../constants/corporateGuides";
 import { CORPORATE_HUB_PATH } from "./corporateAiWorkflow";
-import { countryCorporatePath } from "./corporateLocal";
+import { ORGANIZATION_LD, countryCorporatePath } from "./corporateLocal";
 import { ORIGIN, PageContext, escapeHtml } from "./countryHome";
 import { AI_POLICY_PATH, BOARD_BRIEFING_PATH, PROGRAMMES, READINESS_PATH, article, countryLinks, shell, toc } from "./directorResources";
 
@@ -98,6 +98,7 @@ export function renderGuide(slug: string, chosen: CountryCode | null): string | 
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      ORGANIZATION_LD,
       {
         "@type": "Article",
         "@id": `${url}#article`,
@@ -106,8 +107,8 @@ export function renderGuide(slug: string, chosen: CountryCode | null): string | 
         name: g.title,
         description: g.description,
         inLanguage: "en",
-        author: { "@type": "Organization", name: "Paleon Training Limited", url: `${ORIGIN}/` },
-        publisher: { "@type": "Organization", "@id": `${ORIGIN}/#organization`, name: "Paleon Training Limited", url: `${ORIGIN}/` },
+        author: { "@id": `${ORIGIN}/#organization` },
+        publisher: { "@id": `${ORIGIN}/#organization` },
         datePublished: DATE,
         dateModified: DATE,
         mainEntityOfPage: url,
@@ -161,6 +162,7 @@ export function renderGuidesHub(chosen: CountryCode | null): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      ORGANIZATION_LD,
       {
         "@type": "CollectionPage",
         "@id": `${url}#page`,
@@ -168,7 +170,7 @@ export function renderGuidesHub(chosen: CountryCode | null): string {
         name,
         description,
         inLanguage: "en",
-        publisher: { "@type": "Organization", "@id": `${ORIGIN}/#organization`, name: "Paleon Training Limited", url: `${ORIGIN}/` },
+        publisher: { "@id": `${ORIGIN}/#organization` },
         breadcrumb: { "@id": `${url}#breadcrumb` },
         mainEntity: {
           "@type": "ItemList",
