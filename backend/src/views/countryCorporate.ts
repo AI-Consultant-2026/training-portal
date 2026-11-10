@@ -117,6 +117,11 @@ function jsonLd(code: CountryCode, url: string, title: string, description: stri
   };
 }
 
+// Nigeria's corporate page has its own hero (2026-11-10, user request: more representative of
+// Nigeria); the NG AI Workflow programme page keeps ng-hero.jpg.
+const NG_CORPORATE_HERO_ALT =
+  "Three Nigerian colleagues, a man in a native kaftan-style top and two women, one in an Ankara skirt, working on a laptop in a Lagos office overlooking the Lekki-Ikoyi bridge";
+
 export function renderCountryCorporate(code: CountryCode): string {
   const c = COUNTRIES[code];
   const country = c.name;
@@ -174,7 +179,7 @@ ${header(ctx, home, "/", true)}
         <ul class="ca-trust"><li>${ng ? "In-house, online or hybrid across Nigeria" : `Live online across ${escapeHtml(country)}`}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
       </div>
       <div class="ca-hero-media">
-        <img src="/images/corporate-ai/${cc}-hero.jpg" alt="${escapeHtml(CORPORATE_AI_CONTENT[code].images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
+        <img src="/images/corporate-ai/${code === "NG" ? "ng-corporate" : cc}-hero.jpg" alt="${escapeHtml(code === "NG" ? NG_CORPORATE_HERO_ALT : CORPORATE_AI_CONTENT[code].images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
       </div>
     </div>
   </section>
