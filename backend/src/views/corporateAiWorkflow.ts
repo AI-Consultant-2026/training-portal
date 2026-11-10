@@ -753,14 +753,14 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
 
   // Homepage country selector (2026-11-09): the same card format as the learner homepages'
   // "Choose your country" (flag, name, currency, status pill), linking to each country's
-  // corporate training page. The pill shows how corporate training is delivered there.
+  // corporate training page. The pill reads "Live online" for every country (2026-11-10).
   const chooseCards = MARKET_ORDER.map((k) => {
     const c = COUNTRIES[k];
     const selected = ctx.chosen === k;
     return `<li><a class="ctry-card${selected ? " is-selected" : ""}" href="${countryCorporatePath(k)}" hreflang="${c.site.locale}" data-pick-country="${k}">
         ${flagSvg(k, "flag flag-lg")}
         <span class="ctry-body"><span class="ctry-name">${escapeHtml(c.name)}</span><span class="ctry-meta">Prices in ${escapeHtml(c.site.currency.symbol)} ${escapeHtml(c.site.currency.code)}</span></span>
-        <span class="ctry-status is-live">${k === "NG" ? "In-house &middot; online" : "Live online"}</span>
+        <span class="ctry-status is-live">Live online</span>
       </a></li>`;
   }).join("\n");
   const countryCards = MARKET_ORDER.map(
