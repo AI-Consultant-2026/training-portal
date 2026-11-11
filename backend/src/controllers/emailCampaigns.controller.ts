@@ -86,3 +86,17 @@ export const confirmSend = asyncHandler(async (req: Request, res: Response) => {
   await emailCampaignService.confirmSend(req.params.id as string);
   res.status(202).json({ status: "sending" });
 });
+
+export const scheduleCampaign = asyncHandler(async (req: Request, res: Response) => {
+  const campaign = await emailCampaignService.scheduleCampaign(
+    req.params.id as string,
+    new Date(req.body.sendAt),
+    req.user!.id,
+  );
+  res.json({ campaign });
+});
+
+export const unscheduleCampaign = asyncHandler(async (req: Request, res: Response) => {
+  const campaign = await emailCampaignService.unscheduleCampaign(req.params.id as string);
+  res.json({ campaign });
+});

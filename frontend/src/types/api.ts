@@ -721,6 +721,8 @@ export interface EmailCampaign {
   duplicateRecipients: number;
   sentCount: number;
   failedCount: number;
+  // ISO time while the draft is queued to send later (Schedule send); null otherwise.
+  scheduledAt?: string | null;
   createdAt: string;
   updatedAt: string;
   recipients?: EmailCampaignRecipient[];

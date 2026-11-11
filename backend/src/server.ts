@@ -1,6 +1,7 @@
 import "./instrument";
 import { createApp } from "./app";
 import { config } from "./config";
+import { startEmailCampaignScheduleJob } from "./jobs/emailCampaignSchedule.job";
 import { startLeadNurtureJobs } from "./jobs/leadNurture.job";
 import { sequelize } from "./models";
 import { resumeInterruptedCampaigns } from "./services/emailCampaign.service";
@@ -21,6 +22,7 @@ async function start() {
   // createApp() directly and never run this file, but this guard costs nothing).
   if (config.nodeEnv !== "test") {
     startLeadNurtureJobs();
+    startEmailCampaignScheduleJob();
     resumeInterruptedCampaigns().catch((err) => {
       logger.error("Failed to resume interrupted email campaigns on startup", err);
     });

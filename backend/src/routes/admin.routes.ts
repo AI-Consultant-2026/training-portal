@@ -48,6 +48,7 @@ import {
   campaignIdSchema,
   removeRecipientSchema,
   sendTestEmailSchema,
+  scheduleCampaignSchema,
   toggleRecipientSchema,
   updateCampaignSchema,
 } from "../validators/emailCampaigns.validators";
@@ -227,4 +228,14 @@ adminRouter.post(
   "/email-campaigns/:id/send",
   validate(campaignIdSchema),
   emailCampaignsController.confirmSend,
+);
+adminRouter.put(
+  "/email-campaigns/:id/schedule",
+  validate(scheduleCampaignSchema),
+  emailCampaignsController.scheduleCampaign,
+);
+adminRouter.delete(
+  "/email-campaigns/:id/schedule",
+  validate(campaignIdSchema),
+  emailCampaignsController.unscheduleCampaign,
 );

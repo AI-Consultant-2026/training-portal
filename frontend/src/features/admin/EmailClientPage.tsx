@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import * as emailCampaignsApi from "../../api/emailCampaigns.api";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -1211,6 +1212,7 @@ function SendStep({
               Confirm &amp; Send
             </Button>
           </div>
+          <ScheduleSend campaign={campaign} selectedCount={selectedCount} />
         </>
       )}
 
@@ -1359,6 +1361,92 @@ function ResultsStep({
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+// Schedule send (2026-11-11): queue this draft to send at a set time. The server starts it
+// within about 30 seconds of that time, with the same checks as Confirm & Send.
+function ScheduleSend({
+  campaign,
+  selectedCount,
+}: {
+  campaign: import("../../types/api").EmailCampaign;
+  selectedCount: number;
+}) {
+  const dispatch = useAppDispatch();
+  const [when, setWhen] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function run(action: () => Promise<unknown>) {
+    setBusy(true);
+    setError(null);
+    try {
+      await action();
+      await dispatch(fetchCampaign(campaign.id));
+    } catch (err) {
+      const message =
+        (err as { response?: { data?: { error?: { message?: string }; message?: string } } }).response?.data?.error
+          ?.message ??
+        (err as { response?: { data?: { message?: string } } }).response?.data?.message ??
+        "Couldn't update the schedule.";
+      setError(message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (campaign.scheduledAt) {
+    return (
+      <div className="mt-6 rounded-md border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+        Scheduled to send on <strong>{new Date(campaign.scheduledAt).toLocaleString()}</strong> (your time).
+        <div className="mt-3">
+          <Button
+            variant="secondary"
+            isLoading={busy}
+            onClick={() => run(() => emailCampaignsApi.unscheduleCampaign(campaign.id))}
+          >
+            Cancel schedule
+          </Button>
+        </div>
+        {error && (
+          <div className="mt-3">
+            <Alert message={error} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 border-t border-gray-200 pt-4">
+      <label htmlFor="schedule-at" className="block text-sm font-medium text-gray-700">
+        Or schedule it for later
+      </label>
+      <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <input
+          id="schedule-at"
+          type="datetime-local"
+          value={when}
+          onChange={(e) => setWhen(e.target.value)}
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+        />
+        <Button
+          variant="secondary"
+          isLoading={busy}
+          disabled={!when || selectedCount === 0}
+          onClick={() => run(() => emailCampaignsApi.scheduleCampaign(campaign.id, new Date(when).toISOString()))}
+        >
+          Schedule send
+        </Button>
+      </div>
+      <p className="mt-1 text-xs text-gray-500">The time is in your computer's time zone.</p>
+      {error && (
+        <div className="mt-3">
+          <Alert message={error} />
+        </div>
+      )}
     </div>
   );
 }

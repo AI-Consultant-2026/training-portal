@@ -94,3 +94,13 @@ export async function sendTestEmail(
 export async function confirmSend(campaignId: string): Promise<void> {
   await axiosClient.post(`/admin/email-campaigns/${campaignId}/send`);
 }
+
+export async function scheduleCampaign(id: string, sendAt: string): Promise<EmailCampaign> {
+  const res = await axiosClient.put<{ campaign: EmailCampaign }>(`/admin/email-campaigns/${id}/schedule`, { sendAt });
+  return res.data.campaign;
+}
+
+export async function unscheduleCampaign(id: string): Promise<EmailCampaign> {
+  const res = await axiosClient.delete<{ campaign: EmailCampaign }>(`/admin/email-campaigns/${id}/schedule`);
+  return res.data.campaign;
+}

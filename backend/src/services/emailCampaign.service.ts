@@ -586,7 +586,7 @@ export async function confirmSend(campaignId: string): Promise<void> {
   // a page refresh: only the request that actually flips draft -> sending wins; any
   // other concurrent/duplicate request sees affectedCount 0 and is rejected outright.
   const [affectedCount] = await EmailCampaign.update(
-    { status: "sending" },
+    { status: "sending", scheduledAt: null },
     { where: { id: campaignId, status: "draft" } },
   );
   if (affectedCount === 0) {
@@ -608,6 +608,66 @@ export async function confirmSend(campaignId: string): Promise<void> {
   processCampaignSend(campaignId).catch((err) => {
     logger.error(`Campaign ${campaignId} processing crashed`, err);
   });
+}
+
+// Scheduled sending (2026-11-11). A draft can be queued for a set time; the in-process job in
+// jobs/emailCampaignSchedule.job.ts calls runDueScheduledCampaigns() every 30 seconds, which
+// starts each due draft through confirmSend() -- the same checks as clicking "Confirm & Send"
+// (body and sender set, recipients selected, unsubscribes re-checked per recipient at send time).
+// The campaign stays an editable draft while scheduled.
+export async function scheduleCampaign(campaignId: string, sendAt: Date, userId: string) {
+  const campaign = await EmailCampaign.findByPk(campaignId);
+  if (!campaign) throw ApiError.notFound("Campaign not found");
+  if (campaign.status !== "draft") {
+    throw ApiError.conflict("This campaign has already been sent or is sending.");
+  }
+  requireDraftReadyToCompose(campaign);
+  if (Number.isNaN(sendAt.getTime()) || sendAt.getTime() < Date.now() + 60_000) {
+    throw ApiError.badRequest("Choose a send time at least a minute from now.");
+  }
+  const selectedCount = await EmailCampaignRecipient.count({
+    where: { campaignId, isSelected: true, status: { [Op.in]: ["pending", "duplicate"] } },
+  });
+  if (selectedCount === 0) throw ApiError.badRequest("No recipients are selected to send to.");
+  campaign.scheduledAt = sendAt;
+  campaign.scheduledBy = userId;
+  await campaign.save();
+  return campaign;
+}
+
+export async function unscheduleCampaign(campaignId: string) {
+  const campaign = await EmailCampaign.findByPk(campaignId);
+  if (!campaign) throw ApiError.notFound("Campaign not found");
+  campaign.scheduledAt = null;
+  campaign.scheduledBy = null;
+  await campaign.save();
+  return campaign;
+}
+
+export async function runDueScheduledCampaigns(now: Date = new Date()): Promise<{ started: number; failed: number }> {
+  const due = await EmailCampaign.findAll({
+    where: { status: "draft", scheduledAt: { [Op.lte]: now } },
+    order: [["scheduledAt", "ASC"]],
+  });
+  let started = 0;
+  let failed = 0;
+  for (const campaign of due) {
+    // Claim it by clearing the schedule first, so a slow run can't start it twice.
+    const [claimed] = await EmailCampaign.update(
+      { scheduledAt: null },
+      { where: { id: campaign.id, status: "draft", scheduledAt: { [Op.lte]: now } } },
+    );
+    if (claimed === 0) continue;
+    try {
+      await confirmSend(campaign.id);
+      started += 1;
+      logger.info(`Scheduled campaign ${campaign.id} (${campaign.originalFilename}) started sending`);
+    } catch (err) {
+      failed += 1;
+      logger.error(`Scheduled campaign ${campaign.id} (${campaign.originalFilename}) could not start`, err);
+    }
+  }
+  return { started, failed };
 }
 
 // Deliberately not awaited by its callers (confirmSend / resumeInterruptedCampaigns) --

@@ -28,6 +28,9 @@ export interface EmailCampaignAttributes {
   duplicateRecipients: number;
   sentCount: number;
   failedCount: number;
+  // Set while a draft is queued to send at a set time (see scheduleCampaign).
+  scheduledAt: Date | null;
+  scheduledBy: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -41,6 +44,8 @@ export type EmailCampaignCreationAttributes = Optional<
   | "status"
   | "sentCount"
   | "failedCount"
+  | "scheduledAt"
+  | "scheduledBy"
   | "createdAt"
   | "updatedAt"
 >;
@@ -62,6 +67,8 @@ export class EmailCampaign
   declare duplicateRecipients: number;
   declare sentCount: number;
   declare failedCount: number;
+  declare scheduledAt: Date | null;
+  declare scheduledBy: string | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -88,6 +95,8 @@ export function initEmailCampaignModel(sequelize: Sequelize) {
       duplicateRecipients: { type: DataTypes.INTEGER, allowNull: false, field: "duplicate_recipients" },
       sentCount: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0, field: "sent_count" },
       failedCount: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0, field: "failed_count" },
+      scheduledAt: { type: DataTypes.DATE, allowNull: true, field: "scheduled_at" },
+      scheduledBy: { type: DataTypes.UUID, allowNull: true, field: "scheduled_by" },
     },
     {
       sequelize,
