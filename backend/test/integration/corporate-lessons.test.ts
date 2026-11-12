@@ -105,6 +105,37 @@ describe("Quiz attempt limit", () => {
   });
 });
 
+describe("Gap between quiz attempts", () => {
+  it("refuses a new attempt within min_hours_between_attempts of the last one finishing", async () => {
+    const { intro, token } = await setUp("corp-attempt-gap@example.com");
+    await intro.update({ minHoursBetweenAttempts: 24 });
+    const login = await request(app)
+      .post("/api/auth/login")
+      .send({ email: "corp-attempt-gap@example.com", password: "Password123!" });
+    const studentId = login.body.user.id as string;
+    const hoursAgo = (h: number) => new Date(Date.now() - h * 60 * 60 * 1000);
+    const first = await QuizAttempt.create({
+      quizId: intro.id,
+      studentId,
+      attemptNumber: 1,
+      status: "graded",
+      score: 40,
+      startTime: hoursAgo(2),
+      endTime: hoursAgo(1),
+    });
+    const auth = { Authorization: `Bearer ${token}` };
+
+    const tooSoon = await request(app).post(`/api/quizzes/${intro.id}/start`).set(auth);
+    expect(tooSoon.status).toBe(403);
+    expect(tooSoon.body.error.message).toMatch(/at least 24 hours apart/);
+
+    await first.update({ startTime: hoursAgo(26), endTime: hoursAgo(25) });
+    const later = await request(app).post(`/api/quizzes/${intro.id}/start`).set(auth);
+    expect(later.status).toBeLessThan(300);
+    expect(later.body.quiz.minHoursBetweenAttempts).toBe(24);
+  });
+});
+
 describe("Corporate course content", () => {
   it.each([
     [CYBERSECURE_WORKFORCE, 13, 39],

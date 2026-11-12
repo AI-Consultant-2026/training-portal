@@ -429,6 +429,8 @@ export interface Quiz {
   isEnabled: boolean;
   // Null = unlimited attempts.
   maxAttempts?: number | null;
+  // Null = no gap required between attempts.
+  minHoursBetweenAttempts?: number | null;
 }
 
 export interface QuizAnswerOption {

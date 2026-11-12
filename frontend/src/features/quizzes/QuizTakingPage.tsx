@@ -63,12 +63,28 @@ export function QuizTakingPage() {
 
   // Quizzes with an attempt limit (the corporate final assessments) show how many
   // attempts are left and stop offering a retake once they're used up.
-  function retakeButton(attemptNumber: number) {
+  // Quizzes with a gap between attempts (24 hours on the corporate final assessments)
+  // say when the next attempt opens instead of offering Retake straight away.
+  function retakeButton(attemptNumber: number, endTime: string | null) {
     const max = activeAttempt?.quiz.maxAttempts ?? null;
     if (max && attemptNumber >= max) {
       return (
         <p className="text-sm text-gray-600">
           You have used all {max} attempts. Please contact your trainer if you need another.
+        </p>
+      );
+    }
+    const gapHours = activeAttempt?.quiz.minHoursBetweenAttempts ?? null;
+    const availableAt = gapHours
+      ? new Date((endTime ? new Date(endTime).getTime() : Date.now()) + gapHours * 60 * 60 * 1000)
+      : null;
+    if (availableAt && availableAt.getTime() > Date.now()) {
+      return (
+        <p className="text-sm text-gray-600">
+          Attempts must be at least {gapHours} hours apart. Your next attempt opens on{" "}
+          {availableAt.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+          {max ? ` (attempt ${attemptNumber} of ${max} used)` : ""}. Use the time to review the modules behind
+          any questions you missed.
         </p>
       );
     }
@@ -129,7 +145,7 @@ export function QuizTakingPage() {
               message="Submitted — awaiting instructor review of the short-answer question(s). Your score will be available once grading is complete."
             />
             <div className="mt-6 flex items-center gap-4">
-              {retakeButton(attempt.attemptNumber)}
+              {retakeButton(attempt.attemptNumber, attempt.endTime)}
               <Link to={`/quizzes/${id}/attempts`} className="text-sm text-blue-600 hover:underline">
                 View attempt history
               </Link>
@@ -167,7 +183,7 @@ export function QuizTakingPage() {
           </ul>
 
           <div className="mt-6 flex items-center gap-4">
-            {retakeButton(attempt.attemptNumber)}
+            {retakeButton(attempt.attemptNumber, attempt.endTime)}
             <Link to={`/quizzes/${id}/attempts`} className="text-sm text-blue-600 hover:underline">
               View attempt history
             </Link>

@@ -74,6 +74,7 @@ function serializeQuiz(quiz: Quiz) {
     shuffleQuestions: quiz.shuffleQuestions,
     isEnabled: quiz.isEnabled,
     maxAttempts: quiz.maxAttempts,
+    minHoursBetweenAttempts: quiz.minHoursBetweenAttempts,
   };
 }
 
@@ -155,6 +156,25 @@ export async function start(quizId: string, studentId: string) {
       throw ApiError.forbidden(
         `You have used all ${quiz.maxAttempts} attempts at this assessment. Please contact your trainer if you need another.`,
       );
+    }
+  }
+  if (!attempt && quiz.minHoursBetweenAttempts) {
+    // Minimum gap between attempts (the corporate final assessments: 24 hours), counted
+    // from when the previous attempt finished.
+    const last = await QuizAttempt.findOne({
+      where: { quizId, studentId },
+      order: [["attemptNumber", "DESC"]],
+    });
+    if (last) {
+      const finished = (last.endTime ?? last.startTime).getTime();
+      const availableAt = new Date(finished + quiz.minHoursBetweenAttempts * 60 * 60 * 1000);
+      if (availableAt.getTime() > Date.now()) {
+        throw new ApiError(
+          403,
+          `Attempts must be at least ${quiz.minHoursBetweenAttempts} hours apart. Use the time to review the modules behind any questions you missed. You can try again after ${availableAt.toUTCString()}.`,
+          { code: "ATTEMPT_GAP", availableAt: availableAt.toISOString() },
+        );
+      }
     }
   }
   if (!attempt) {
