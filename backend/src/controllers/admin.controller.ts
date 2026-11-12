@@ -96,6 +96,14 @@ export const listWaitlist = asyncHandler(async (_req: Request, res: Response) =>
   res.json({ signups });
 });
 
+export const deleteWaitlistSignup = asyncHandler(async (req: Request, res: Response) => {
+  const deleted = await WaitlistSignup.destroy({ where: { id: req.params.id as string } });
+  if (!deleted) {
+    throw ApiError.notFound("Waitlist sign-up not found");
+  }
+  res.status(204).end();
+});
+
 export const deleteLead = asyncHandler(async (req: Request, res: Response) => {
   if (!req.params.id) {
     throw ApiError.badRequest("Lead id is required");

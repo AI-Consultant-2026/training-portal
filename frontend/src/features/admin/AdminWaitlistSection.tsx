@@ -21,6 +21,16 @@ export function AdminWaitlistSection() {
       .catch(() => setError(true));
   }, []);
 
+  async function handleDelete(s: WaitlistSignup) {
+    if (!window.confirm(`Delete the ${countryName(s.country)} waitlist sign-up ${s.whatsapp}?`)) return;
+    try {
+      await axiosClient.delete(`/admin/waitlist/${s.id}`);
+      setSignups((prev) => (prev ? prev.filter((x) => x.id !== s.id) : prev));
+    } catch {
+      window.alert("Couldn't delete that sign-up. Please try again.");
+    }
+  }
+
   return (
     <>
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Country waitlists</h2>
@@ -38,6 +48,7 @@ export function AdminWaitlistSection() {
                 <th className="px-4 py-2">Country</th>
                 <th className="px-4 py-2">WhatsApp</th>
                 <th className="px-4 py-2">Joined</th>
+                <th className="px-4 py-2" />
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -50,6 +61,11 @@ export function AdminWaitlistSection() {
                     </a>
                   </td>
                   <td className="px-4 py-2 text-gray-600">{new Date(s.createdAt).toLocaleDateString("en-GB")}</td>
+                  <td className="px-4 py-2 text-right">
+                    <button type="button" onClick={() => handleDelete(s)} className="text-sm text-red-700 hover:underline">
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
