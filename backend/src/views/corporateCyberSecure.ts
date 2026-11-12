@@ -11,6 +11,7 @@ import {
   enquiry,
   heading,
   rich,
+  WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
 import { CITIES, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
@@ -27,7 +28,7 @@ import { trainerStandards } from "./trainerStandards";
 
 export { CYBERSECURE_SLUG, cyberSecurePath } from "./corporateAiWorkflow";
 
-export const CYBER_CONSULTATION = "Book a Cybersecurity Training Consultation";
+export const CYBER_CONSULTATION = "Book a Cybersecurity Consultation";
 export const CYBER_PROPOSAL = "Request In-House Training Proposal";
 
 export const CYBER_FORM: EnquiryForm = {
@@ -170,7 +171,7 @@ function hero(code: CountryCode, c: CyberPageContent): string {
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
         <div class="hero-ctas">
-          ${ctaButton(field(c, "Primary CTA") || CYBER_CONSULTATION, true)}
+          ${ctaButton(field(c, "Primary CTA") || WORKFORCE_CTA, true)}
           ${ctaButton(field(c, "Secondary CTA") || CYBER_PROPOSAL, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>

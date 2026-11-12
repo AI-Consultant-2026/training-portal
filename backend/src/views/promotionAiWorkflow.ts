@@ -9,6 +9,7 @@ import {
   ctaButton,
   cyberSecurePath,
   enquiry,
+  WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts } from "./countryHome";
 
@@ -24,7 +25,7 @@ export const PROMOTION_AI_PATH = "/Promotion-AI-Workflow-Productivity";
 
 const VIDEO = "/videos/corporate/ai-workflow-productivity.mp4?v=2";
 const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
-const CONSULTATION = "Book a Corporate Training Consultation";
+
 const PROPOSAL = "Request In-House Training Proposal";
 
 const DELIVERY: Record<string, string> = {
@@ -246,7 +247,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, delivered live online for companies in South Africa, Kenya and Ghana, and in-house in Nigeria.</p>
           <div class="hero-ctas">
             <a class="btn btn-signal btn-lg" href="#video">Watch the video</a>
-            ${ctaButton(CONSULTATION, true)}
+            ${ctaButton(WORKFORCE_CTA, true, `${corporateAiPath("NG")}#buy`)}
           </div>
           <ul class="pw-flags" aria-label="Available in">${flags}</ul>
         </div>
@@ -268,7 +269,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <a href="${VIDEO}">Download the programme video (MP4)</a>
         </video>
       </figure>
-      <div class="ca-ctas">${ctaButton(CONSULTATION, true)} ${ctaButton(PROPOSAL, true)}</div>
+      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${corporateAiPath("NG")}#buy`)} ${ctaButton(PROPOSAL, true)}</div>
     </div>
   </section>
 
@@ -372,7 +373,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (fully booked until January 2027): ${MARKET_ORDER.map(
         (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
       ).join(", ")}.</p>
-      <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
+      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${corporateAiPath("NG")}#buy`)}</div>
     </div>
   </section>
 

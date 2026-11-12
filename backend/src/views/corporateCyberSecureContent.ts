@@ -38,7 +38,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Supporting statement:** Many cyber attacks on businesses start with a person, not a system: a fake supplier invoice, an \"urgent\" message from the MD, a login page that looks real. Paleon Training gives your employees practical cybersecurity skills they use every day. The programme is for banks, fintechs, oil & gas and energy companies, telecoms operators and growing businesses across Nigeria."
           },
           {
-            "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -73,7 +73,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "None of this needs bad intent. It needs people who know what to look for and what to do next."
           },
           {
-            "p": "**CTA after problem:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -190,7 +190,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after course structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -540,7 +540,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising phishing and protecting company information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -578,7 +578,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Supporting statement:** Your security strategy depends on the people who work within it. Paleon Training helps financial services firms, mining houses, retailers, telecoms operators and professional services firms build practical cybersecurity habits across the workforce. Staff learn to spot manipulation, protect personal information and report problems fast, in live online sessions that reach every province."
           },
           {
-            "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -613,7 +613,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "These are everyday behaviours, not technical failures. Behaviour can be trained."
           },
           {
-            "p": "**CTA after problem:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -727,7 +727,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after course structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -989,7 +989,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising phishing and protecting personal information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -1083,7 +1083,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Supporting statement:** More of your work now runs on email, mobile money, cloud apps and messaging, and attackers follow the money and the data. Paleon Training helps banks, mining and energy companies, telecoms operators and growing businesses across Ghana build practical cybersecurity habits. Employees learn to recognise scams, protect information and report problems quickly."
           },
           {
-            "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -1118,7 +1118,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "All of this can be reduced with awareness, practice and a clear way to report."
           },
           {
-            "p": "**CTA after problem:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1232,7 +1232,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after course structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1491,7 +1491,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising scams and protecting company information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -1585,7 +1585,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Supporting statement:** Kenyan teams work on mobile, in the cloud and across apps, and they move quickly. Attackers rely on that speed. Paleon Training helps banks, fintechs, telecoms and technology firms, logistics and agribusiness companies and public institutions build cyber-aware teams. Employees learn to pause, check and report, without slowing the business down."
           },
           {
-            "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -1620,7 +1620,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "The fix is not slower work. It is a few habits everyone practises."
           },
           {
-            "p": "**CTA after problem:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1734,7 +1734,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**CTA after course structure:** Book a Cybersecurity Training Consultation"
+            "p": "**CTA after course structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1993,7 +1993,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising scams and protecting customer data to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."

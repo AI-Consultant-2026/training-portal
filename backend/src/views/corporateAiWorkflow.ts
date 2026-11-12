@@ -55,7 +55,10 @@ export function acceleratorPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${ACCELERATOR_SLUG}`;
 }
 
-const CONSULTATION = "Book a Corporate Training Consultation";
+const CONSULTATION = "Book a Consultation";
+// The main CTA (2026-11-12, owner request): goes to the "Buy learner places online" form,
+// on the page itself (#buy) or, on pages without one, on the country's programme page.
+export const WORKFORCE_CTA = "Book Corporate Workforce Training";
 const PROPOSAL = "Request In-House Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
 const PHONE_PREFIX: Record<CountryCode, string> = { NG: "+234", ZA: "+27", GH: "+233", KE: "+254" };
@@ -80,7 +83,10 @@ function field(c: CorporatePageContent, section: string, label: string): string 
   return "";
 }
 
-export function ctaButton(label: string, dark: boolean): string {
+export function ctaButton(label: string, dark: boolean, buyHref = "#buy"): string {
+  if (label === WORKFORCE_CTA) {
+    return `<a class="btn btn-signal btn-lg" href="${buyHref}" data-buy-cta>${escapeHtml(label)}</a>`;
+  }
   const intent = /proposal/i.test(label) ? "proposal" : "consultation";
   const cls = intent === "proposal" ? (dark ? "btn btn-outline-light btn-lg" : "btn btn-outline-ink btn-lg") : "btn btn-signal btn-lg";
   return `<a class="${cls}" href="#enquiry" data-intent="${intent}">${escapeHtml(label)}</a>`;
@@ -156,7 +162,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
         <p class="hero-sub">${rich(field(c, "Hero", "Supporting statement"))}</p>
         <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
         <div class="hero-ctas">
-          ${ctaButton(field(c, "Hero", "Primary CTA") || CONSULTATION, true)}
+          ${ctaButton(field(c, "Hero", "Primary CTA") || WORKFORCE_CTA, true)}
           ${ctaButton(field(c, "Hero", "Secondary CTA") || PROPOSAL, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
@@ -821,7 +827,7 @@ ${header(ctx, home, "/", true)}
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
         <p class="hero-sub">Paleon Training helps business owners, managing directors and HR leaders train their staff in two areas that now matter to every company: <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered live online for companies in South Africa, Kenya and Ghana, and in-house, online or hybrid in Nigeria. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
-          ${ctaButton(CONSULTATION, true)}
+          ${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(country ?? chosen ?? "NG")}#buy`)}
           ${ctaButton(PROPOSAL, true)}
         </div>
         <ul class="ca-trust"><li>Customised by sector and department</li><li>Responsible AI built in</li><li>Reply within one working day</li></ul>
@@ -948,7 +954,7 @@ ${header(ctx, home, "/", true)}
       <span class="section-eyebrow">How it works</span>
       <h2 class="section-title" id="journey-title">Your corporate training journey</h2>
       <ul class="ca-steps">${HUB_JOURNEY.map((j) => `<li>${rich(j)}</li>`).join("")}</ul>
-      <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
+      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(country ?? chosen ?? "NG")}#buy`)}</div>
     </div>
   </section>
 
@@ -963,7 +969,7 @@ ${header(ctx, home, "/", true)}
   ${enquiry(null, {
     title: "Tell us what your organisation needs",
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
-    note: "Prefer to talk first? Choose **Book a Corporate Training Consultation** and we will arrange a call.",
+    note: "Prefer to talk first? Choose **Book a Consultation** and we will arrange a call.",
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>

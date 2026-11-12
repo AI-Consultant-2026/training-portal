@@ -19,7 +19,7 @@
   var thanks = document.getElementById("caThanks");
   // Each programme's page sets its own button labels on the form (CyberSecure Workforce, 2026-11-02).
   var LABELS = {
-    consultation: form.getAttribute("data-consultation-label") || "Book a Corporate Training Consultation",
+    consultation: form.getAttribute("data-consultation-label") || "Book a Consultation",
     proposal: form.getAttribute("data-proposal-label") || "Request In-House Training Proposal",
   };
   var programme = form.getAttribute("data-programme") || "ai-workflow";

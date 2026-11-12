@@ -7,6 +7,7 @@ import {
   ctaButton,
   cyberSecurePath,
   enquiry,
+  WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
@@ -27,7 +28,7 @@ export const COUNTRY_CORPORATE_CODES: CountryCode[] = ["NG", "ZA", "KE", "GH"];
 const ITF_NOTE =
   "Registered employers who contribute to the Industrial Training Fund (ITF) can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF.";
 
-const CONSULTATION = "Book a Corporate Training Consultation";
+
 const PROPOSAL = "Request In-House Training Proposal";
 const BOOKED =
   '<p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>';
@@ -174,7 +175,7 @@ ${header(ctx, home, "/", true)}
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
         <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered ${ng ? "in-house at your offices, live online or hybrid" : "live online with a facilitator"}, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
         <div class="hero-ctas">
-          ${ctaButton(CONSULTATION, true)}
+          ${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}
           ${ctaButton(PROPOSAL, true)}
         </div>
         <ul class="ca-trust"><li>${ng ? "In-house, online or hybrid across Nigeria" : `Live online across ${escapeHtml(country)}`}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
@@ -222,7 +223,7 @@ ${header(ctx, home, "/", true)}
       <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${ng ? "Training is delivered in-house at your offices, live online with a facilitator, or hybrid, so head office, branches, sites and remote workers can all take part, scheduled around your working day." : "Training is live online with a facilitator, so every office, branch and remote worker can join the same practical sessions, scheduled around your working day."}</p>
       <p class="ca-p">Examples and workplace projects are adapted to your sector: ${ng ? "banking and financial services, oil and gas and energy, telecoms, manufacturing, healthcare, education, government and professional services" : "banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services"}.</p>
       ${ng ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_NOTE)}</p>` : ""}
-      <div class="ca-ctas">${ctaButton(CONSULTATION, true)}</div>
+      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}</div>
     </div>
   </section>
 
@@ -251,7 +252,7 @@ ${header(ctx, home, "/", true)}
   ${enquiry(code, {
     title: `Tell us what your organisation in ${country} needs`,
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
-    note: "Prefer to talk first? Choose **Book a Corporate Training Consultation** and we will arrange a call.",
+    note: "Prefer to talk first? Choose **Book a Consultation** and we will arrange a call.",
     contact: ng
       ? "Email: corporate@paleontraining.com · Phone: +234 707 714 9215 · WhatsApp: +44 7508 823495"
       : "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495",
