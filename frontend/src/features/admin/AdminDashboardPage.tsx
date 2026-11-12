@@ -80,6 +80,21 @@ function downloadLeadsCsv(leads: Lead[]) {
   triggerCsvDownload(leadsToCsv(leads), `leads-${new Date().toISOString().slice(0, 10)}.csv`);
 }
 
+// Admin section buttons at the top of the dashboard (2026-11-12).
+const ADMIN_SECTIONS = [
+  { to: "/admin/course-progress", label: "Course progress" },
+  { to: "/admin/corporate-clients", label: "Corporate clients" },
+  { to: "/admin/corporate-orders", label: "Corporate orders" },
+  { to: "/admin/referrals", label: "Referrals" },
+  { to: "/admin/zoom-attendees", label: "Zoom attendees" },
+  { to: "/admin/notices", label: "Notice board" },
+  { to: "/admin/sales-reps", label: "Sales reps" },
+  { to: "/admin/partner-pipeline", label: "Partner pipeline" },
+  { to: "/admin/email-client", label: "Email client" },
+  { to: "/admin/capstones", label: "Manage capstone projects" },
+  { to: "/admin/candidates", label: "Manage candidates" },
+];
+
 export function AdminDashboardPage() {
   const dispatch = useAppDispatch();
   const { stats, status, error, leads, leadsStatus, coursePayments } = useAppSelector(
@@ -123,53 +138,19 @@ export function AdminDashboardPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <Link to="/admin/course-progress" className="text-sm font-medium text-blue-600 hover:underline">
-            Course progress →
-          </Link>
-          <Link to="/admin/corporate-clients" className="text-sm font-medium text-blue-600 hover:underline">
-            Corporate clients →
-          </Link>
-          <Link to="/admin/corporate-orders" className="text-sm font-medium text-blue-600 hover:underline">
-            Corporate orders →
-          </Link>
-          <Link to="/admin/referrals" className="text-sm font-medium text-blue-600 hover:underline">
-            Referrals →
-          </Link>
-          <Link to="/admin/zoom-attendees" className="text-sm font-medium text-blue-600 hover:underline">
-            Zoom attendees →
-          </Link>
-          <Link to="/admin/notices" className="text-sm font-medium text-blue-600 hover:underline">
-            Notice board →
-          </Link>
-          <Link to="/admin/sales-reps" className="text-sm font-medium text-blue-600 hover:underline">
-            Sales reps →
-          </Link>
+      <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
+      <nav aria-label="Admin sections" className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+        {ADMIN_SECTIONS.map((section) => (
           <Link
-            to="/admin/partner-pipeline"
-            className="text-sm font-medium text-blue-600 hover:underline"
+            key={section.to}
+            to={section.to}
+            className="flex items-center justify-between rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            Partner pipeline →
+            <span>{section.label}</span>
+            <span aria-hidden="true">→</span>
           </Link>
-          <Link
-            to="/admin/email-client"
-            className="text-sm font-medium text-blue-600 hover:underline"
-          >
-            Email client →
-          </Link>
-          <Link to="/admin/capstones" className="text-sm font-medium text-blue-600 hover:underline">
-            Manage capstone projects →
-          </Link>
-          <Link
-            to="/admin/candidates"
-            className="text-sm font-medium text-blue-600 hover:underline"
-          >
-            Manage candidates →
-          </Link>
-        </div>
-      </div>
+        ))}
+      </nav>
 
       <h2 className="mt-8 text-lg font-semibold text-gray-900">Users</h2>
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
