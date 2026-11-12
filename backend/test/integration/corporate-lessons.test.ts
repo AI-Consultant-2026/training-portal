@@ -154,6 +154,7 @@ describe("Corporate course content", () => {
     ];
     all.forEach((q) => expect(q.answers.filter((a) => a.isCorrect)).toHaveLength(1));
     const text = JSON.stringify(course);
+    expect(text.split("Video coming soon:").length - 1).toBe(lessons);
     expect(text).not.toMatch(/Video placeholder|\*Answer:|Lagos|Nairobi|Johannesburg|Nigeria|Kenya|Ghana/);
   });
 });
