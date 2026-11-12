@@ -26,6 +26,23 @@ const MARKDOWN_COMPONENTS = {
   a: (props: React.ComponentPropsWithoutRef<"a">) => (
     <a className="text-blue-600 hover:underline" target="_blank" rel="noreferrer" {...props} />
   ),
+  // Tables (2026-11-12): headings left-aligned (browsers centre <th> by default) and
+  // padding in every cell so neighbouring columns don't run together. The wrapper
+  // scrolls sideways on narrow phones instead of squashing the columns.
+  table: (props: React.ComponentPropsWithoutRef<"table">) => (
+    <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <table className="w-full border-collapse text-left text-sm text-gray-700" {...props} />
+    </div>
+  ),
+  th: (props: React.ComponentPropsWithoutRef<"th">) => (
+    <th
+      className="border-b border-gray-200 bg-gray-50 px-4 py-2.5 text-left align-bottom font-semibold text-gray-900"
+      {...props}
+    />
+  ),
+  td: (props: React.ComponentPropsWithoutRef<"td">) => (
+    <td className="border-b border-gray-100 px-4 py-2.5 align-top" {...props} />
+  ),
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
     <img className="w-full rounded-lg border border-gray-200" {...props} />
   ),
