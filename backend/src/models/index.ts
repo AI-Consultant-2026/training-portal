@@ -31,6 +31,7 @@ import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
 import { WaitlistSignup, initWaitlistSignupModel } from "./waitlistSignup.model";
 import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
 import { CorporateClient, CorporateMember, CorporateSeat, initCorporateModels } from "./corporate.model";
+import { CorporateOrder, initCorporateOrderModel } from "./corporateOrder.model";
 import {
   SalesRep,
   SalesRepPayment,
@@ -93,6 +94,7 @@ initSalesRepModel(sequelize);
 initSalesRepStudentModel(sequelize);
 initSalesRepPaymentModel(sequelize);
 initCorporateModels(sequelize);
+initCorporateOrderModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -212,6 +214,7 @@ export {
   AmbassadorNotice,
   CorporateClient,
   CorporateMember,
+  CorporateOrder,
   CorporateSeat,
   Assignment,
   AssignmentSubmission,

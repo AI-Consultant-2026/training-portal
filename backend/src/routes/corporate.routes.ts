@@ -2,6 +2,7 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { config } from "../config";
 import * as corporateController from "../controllers/corporate.controller";
+import * as corporateOrdersController from "../controllers/corporateOrders.controller";
 import { authenticate } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
 import {
@@ -11,6 +12,7 @@ import {
   managerInviteSchema,
   managerRemoveSchema,
 } from "../validators/corporate.validators";
+import { corporateOrderSchema } from "../validators/corporateOrders.validators";
 
 // Corporate staff portal: the public staff sign-up link and the /company page.
 // Admin management lives under /api/admin/corporate-clients (admin.routes.ts).
@@ -43,3 +45,13 @@ corporateRouter.delete(
   validate(managerRemoveSchema),
   corporateController.managerRemove,
 );
+
+// "Buy learner places" on the corporate pages (2026-11-12): public, so rate-limited.
+const orderRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => config.nodeEnv === "test",
+});
+corporateRouter.post("/orders", orderRateLimiter, validate(corporateOrderSchema), corporateOrdersController.createOrder);

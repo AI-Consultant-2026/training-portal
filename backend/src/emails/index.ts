@@ -7,6 +7,11 @@ import { buildAssignmentGradedEmail } from "./templates/assignmentGraded";
 import { buildCapstoneGradedEmail } from "./templates/capstoneGraded";
 import { buildCorporateEnquiryEmail } from "./templates/corporateEnquiry";
 import { buildCorporateInviteEmail, buildCorporateWelcomeEmail } from "./templates/corporate";
+import {
+  buildCorporateInvoiceRequestEmail,
+  buildCorporateOrderAdminEmail,
+  buildCorporateOrderPaidEmail,
+} from "./templates/corporateOrders";
 import { buildCourseCompletedEmail } from "./templates/courseCompleted";
 import { buildEmailVerificationEmail } from "./templates/emailVerification";
 import { buildEnrollmentConfirmationEmail } from "./templates/enrollmentConfirmation";
@@ -182,4 +187,19 @@ export async function sendCorporateInviteEmail(input: Parameters<typeof buildCor
 
 export async function sendCorporateWelcomeEmail(input: Parameters<typeof buildCorporateWelcomeEmail>[0]): Promise<void> {
   await sendEmail(buildCorporateWelcomeEmail(input));
+}
+
+// Corporate online orders (2026-11-12).
+export async function sendCorporateOrderPaidEmail(input: Parameters<typeof buildCorporateOrderPaidEmail>[0]): Promise<void> {
+  await sendEmail(buildCorporateOrderPaidEmail(input));
+}
+
+export async function sendCorporateInvoiceRequestEmail(
+  input: Parameters<typeof buildCorporateInvoiceRequestEmail>[0],
+): Promise<void> {
+  await sendEmail(buildCorporateInvoiceRequestEmail(input));
+}
+
+export async function sendCorporateOrderAdminEmail(input: Parameters<typeof buildCorporateOrderAdminEmail>[0]): Promise<void> {
+  await sendEmail(buildCorporateOrderAdminEmail(input));
 }

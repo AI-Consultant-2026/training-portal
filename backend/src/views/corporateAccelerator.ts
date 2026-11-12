@@ -387,6 +387,7 @@ ${header(ctx, home, "/", true)}
 ${footer(ctx, home)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
+<script src="/corporate-buy.js" defer></script>
 </body>
 </html>
 `;

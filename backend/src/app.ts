@@ -22,6 +22,8 @@ import { renderCountryAmbassadors } from "./views/countryAmbassadors";
 import { renderCountryCourse } from "./views/countryCourse";
 import { COUNTRY_COOKIE, renderCountryHome } from "./views/countryHome";
 import { CORPORATE_HUB_PATH, corporateAiPath, renderCorporateAiWorkflow, renderCorporateHub } from "./views/corporateAiWorkflow";
+import { renderCorporateCheckoutComplete } from "./views/corporateCheckout";
+import * as corporateOrderService from "./services/corporateOrder.service";
 import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
@@ -260,6 +262,17 @@ export function createApp() {
     const query = req.originalUrl.indexOf("?");
     res.redirect(301, query === -1 ? "/" : "/" + req.originalUrl.slice(query));
   });
+  // Where Flutterwave returns a company after buying learner places (2026-11-12). The
+  // payment is checked with Flutterwave here too, in case the webhook is late.
+  app.get("/corporate-checkout/complete", async (req, res, next) => {
+    try {
+      const result = await corporateOrderService.handleCheckoutReturn(req.query);
+      res.set("Cache-Control", "no-store");
+      res.type("html").send(renderCorporateCheckoutComplete(result));
+    } catch (err) {
+      next(err);
+    }
+  });
   app.get(CORPORATE_HUB_PATH, (req, res) => {
     const asked = String(req.query.country ?? "").toUpperCase();
     res.set("Cache-Control", "private, no-cache");
@@ -310,6 +323,9 @@ export function createApp() {
   });
   app.get("/corporate-ai.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "corporate-ai.js"));
+  });
+  app.get("/corporate-buy.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "corporate-buy.js"));
   });
   // Their photos. The pattern keeps this from serving anything outside that folder.
   app.get("/images/corporate-ai/:file([a-z0-9-]+\\.jpg)", (req, res) => {

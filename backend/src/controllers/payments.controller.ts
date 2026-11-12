@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as paymentService from "../services/payment.service";
+import * as corporateOrderService from "../services/corporateOrder.service";
 import * as flutterwaveService from "../services/flutterwave.service";
 import * as paystackWebhookService from "../services/paystackWebhook.service";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -71,6 +72,10 @@ export const flutterwaveWebhook = asyncHandler(async (req: Request, res: Respons
   }
   // A thrown error (e.g. Flutterwave's API or the database is down) becomes a 500, and
   // Flutterwave tries again later.
-  const outcome = await flutterwaveService.handleFlutterwaveEvent(req.body ?? {});
+  // Corporate seat orders (PLN-corp-...) are set up by their own service; the tx_ref in the
+  // body only picks the handler, and each handler re-fetches the transaction itself.
+  const outcome = corporateOrderService.isCorporateTxRef(req.body?.data?.tx_ref)
+    ? await corporateOrderService.handleCorporateWebhook(req.body ?? {})
+    : await flutterwaveService.handleFlutterwaveEvent(req.body ?? {});
   res.json({ received: true, outcome });
 });

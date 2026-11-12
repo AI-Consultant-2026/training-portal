@@ -349,6 +349,12 @@ async function findActiveClientByCode(code: string): Promise<CorporateClient> {
   return client;
 }
 
+// The person who bought the places online (the company's contact email) becomes its
+// training manager when they sign up with the staff link (2026-11-12).
+function isOrderContact(client: CorporateClient, email: string): boolean {
+  return Boolean(client.contactEmail) && client.contactEmail!.trim().toLowerCase() === email.trim().toLowerCase();
+}
+
 export async function getJoinInfo(code: string) {
   const client = await findActiveClientByCode(code);
   const seats = await seatSummaries(client);
@@ -477,6 +483,7 @@ export async function joinWithNewAccount(code: string, input: JoinNewInput) {
       {
         clientId: client.id,
         userId: created.id,
+        isManager: isOrderContact(client, email),
         jobTitle: input.jobTitle?.trim() || null,
         department: input.department?.trim() || null,
       },
@@ -514,7 +521,7 @@ export async function joinWithExistingAccount(code: string, userId: string, cour
   }
   const titles = await sequelize.transaction(async (transaction) => {
     if (!membership) {
-      await CorporateMember.create({ clientId: client.id, userId }, { transaction });
+      await CorporateMember.create({ clientId: client.id, userId, isManager: isOrderContact(client, user.email) }, { transaction });
       await user.update({ profileData: { ...(user.profileData ?? {}), corporateClient: client.name } }, { transaction });
     }
     return takeSeats(client, userId, courseIds, transaction);

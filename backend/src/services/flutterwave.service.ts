@@ -22,7 +22,8 @@ import * as userService from "./user.service";
 // unlocked, so the webhook body itself is never trusted. Our tx_ref ties the charge to the
 // pending payment recorded when the checkout opened, which names the enrolment.
 
-const API = "https://api.flutterwave.com/v3";
+export const FLUTTERWAVE_API = "https://api.flutterwave.com/v3";
+const API = FLUTTERWAVE_API;
 
 // A pending charge is stored under this prefix until Flutterwave confirms it; it then
 // becomes "flutterwave:<tx_ref>" (its idempotency key, so a repeated webhook is a no-op).
@@ -33,7 +34,7 @@ export function isFlutterwaveConfigured(): boolean {
   return config.flutterwave.secretKey !== "";
 }
 
-function authHeaders(): Record<string, string> {
+export function authHeaders(): Record<string, string> {
   return { Authorization: `Bearer ${config.flutterwave.secretKey}`, "Content-Type": "application/json" };
 }
 
@@ -112,7 +113,7 @@ export async function initializeFlutterwaveCharge(input: {
   return { paymentLink, payment, enrollment };
 }
 
-interface FlutterwaveTransaction {
+export interface FlutterwaveTransaction {
   id?: number;
   tx_ref?: string;
   status?: string;
@@ -122,7 +123,7 @@ interface FlutterwaveTransaction {
   customer?: { email?: string };
 }
 
-async function fetchTransaction(transactionId: string): Promise<FlutterwaveTransaction> {
+export async function fetchTransaction(transactionId: string): Promise<FlutterwaveTransaction> {
   const res = await fetch(`${API}/transactions/${encodeURIComponent(transactionId)}/verify`, {
     headers: authHeaders(),
   });
