@@ -132,6 +132,9 @@ export function AdminDashboardPage() {
           <Link to="/admin/corporate-clients" className="text-sm font-medium text-blue-600 hover:underline">
             Corporate clients →
           </Link>
+          <Link to="/admin/corporate-orders" className="text-sm font-medium text-blue-600 hover:underline">
+            Corporate orders →
+          </Link>
           <Link to="/admin/referrals" className="text-sm font-medium text-blue-600 hover:underline">
             Referrals →
           </Link>

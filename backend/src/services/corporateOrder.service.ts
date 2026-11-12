@@ -203,6 +203,24 @@ export async function applyCorporateTransaction(tx: FlutterwaveTransaction): Pro
     return "unmatched";
   }
 
+  const setUp = await setUpCompany(order, {
+    amount,
+    paidVia: `paid on Flutterwave (transaction ${tx.id ?? "?"})`,
+    flutterwaveTransactionId: tx.id !== undefined ? String(tx.id) : null,
+  });
+  return setUp ? "paid" : "duplicate";
+}
+
+// Creates the company, its seats (sign-ups open for 12 months) and its join link for a
+// paid order, marks the order paid and emails the buyer the link. Returns false if the
+// order was already set up (a webhook and the buyer's return arriving together, or an
+// admin clicking twice).
+async function setUpCompany(
+  order: CorporateOrder,
+  payment: { amount: number; paidVia: string; flutterwaveTransactionId?: string | null },
+): Promise<boolean> {
+  const region = order.region as PriceRegion;
+  const txRef = order.txRef;
   const programme = order.programme as OrderProgramme;
   const slugs = programmesOf(programme).map((p) => PROGRAMME_COURSE_SLUGS[p]);
   const paidAt = new Date();
@@ -210,13 +228,13 @@ export async function applyCorporateTransaction(tx: FlutterwaveTransaction): Pro
   const joinCode = await uniqueJoinCode();
 
   const result = await sequelize.transaction(async (transaction) => {
-    // Lock the order so a webhook and the buyer's return arriving together can't both set it up.
+    // Lock the order so two confirmations arriving together can't both set it up.
     const locked = await CorporateOrder.findByPk(order.id, { lock: transaction.LOCK.UPDATE, transaction });
     if (!locked || locked.status === "paid") return null;
     const courses = await Course.findAll({ where: { slug: slugs }, transaction });
     if (courses.length !== slugs.length) throw new Error(`Corporate courses missing for order ${txRef}`);
 
-    const money = formatRegionMoney(region, amount);
+    const money = formatRegionMoney(region, payment.amount);
     const client = await CorporateClient.create(
       {
         name: order.organisation,
@@ -227,7 +245,7 @@ export async function applyCorporateTransaction(tx: FlutterwaveTransaction): Pro
         contactEmail: order.contactEmail,
         joinCode,
         notes: [
-          `Bought online ${paidAt.toISOString().slice(0, 10)}: ${orderProgrammeName(programme)}, ${order.seats} learners, ${money} paid on Flutterwave (order ${txRef}, transaction ${tx.id ?? "?"}).`,
+          `Bought ${paidAt.toISOString().slice(0, 10)}: ${orderProgrammeName(programme)}, ${order.seats} learners, ${money} ${payment.paidVia} (order ${txRef}).`,
           order.phone ? `Phone: ${order.phone}.` : "",
           region === "INTL" ? `Based in ${order.buyerCountry ?? "another country"}; paid in GBP.` : "",
         ]
@@ -240,18 +258,76 @@ export async function applyCorporateTransaction(tx: FlutterwaveTransaction): Pro
       await CorporateSeat.create({ clientId: client.id, courseId: course.id, seats: order.seats, expiresAt: closesAt }, { transaction });
     }
     await locked.update(
-      { status: "paid", paidAt, clientId: client.id, flutterwaveTransactionId: tx.id !== undefined ? String(tx.id) : null },
+      { status: "paid", paidAt, clientId: client.id, flutterwaveTransactionId: payment.flutterwaveTransactionId ?? null },
       { transaction },
     );
     return { client, titles: slugs.map((s) => courses.find((c) => c.slug === s)!.title), order: locked };
   });
-  if (!result) return "duplicate";
+  if (!result) return false;
 
   const info = summary(result.order, result.titles);
   const signUpsCloseOn = closesAt.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
   await emails.sendCorporateOrderPaidEmail({ ...info, joinCode: result.client.joinCode, signUpsCloseOn });
   await emails.sendCorporateOrderAdminEmail({ ...info, kind: "paid", joinCode: result.client.joinCode });
-  return "paid";
+  return true;
+}
+
+// ---------------------------------------------------------------------------
+// Admin: /admin/corporate-orders (2026-11-12)
+// ---------------------------------------------------------------------------
+
+export async function listOrders() {
+  const orders = await CorporateOrder.findAll({
+    order: [["createdAt", "DESC"]],
+    include: [{ model: CorporateClient, as: "client", attributes: ["id", "name", "joinCode"] }],
+  });
+  return orders.map((o) => {
+    const client = (o as unknown as { client: CorporateClient | null }).client;
+    return {
+      id: o.id,
+      txRef: o.txRef,
+      status: o.status,
+      organisation: o.organisation,
+      contactName: o.contactName,
+      contactEmail: o.contactEmail,
+      phone: o.phone,
+      region: o.region,
+      buyerCountry: o.buyerCountry,
+      programme: o.programme,
+      programmeName: orderProgrammeName(o.programme as OrderProgramme),
+      seats: o.seats,
+      currency: o.currency,
+      unitPrice: Number(o.unitPrice),
+      discountPercent: o.discountPercent,
+      total: Number(o.total),
+      totalLabel: formatRegionMoney(o.region as PriceRegion, Number(o.total)),
+      unitPriceLabel: formatRegionMoney(o.region as PriceRegion, Number(o.unitPrice)),
+      paidAt: o.paidAt,
+      createdAt: o.createdAt,
+      flutterwaveTransactionId: o.flutterwaveTransactionId,
+      client: client ? { id: client.id, name: client.name } : null,
+    };
+  });
+}
+
+// An invoice was paid by bank transfer (or a payment was confirmed outside the site):
+// set the company up exactly as an online payment does.
+export async function adminMarkPaid(id: string) {
+  const order = await CorporateOrder.findByPk(id);
+  if (!order) throw ApiError.notFound("Order not found");
+  if (order.status === "paid") throw ApiError.conflict("This order is already paid and set up");
+  const done = await setUpCompany(order, {
+    amount: Number(order.total),
+    paidVia: `marked paid by an admin${order.status === "invoice_requested" ? " (invoice)" : ""}`,
+  });
+  if (!done) throw ApiError.conflict("This order is already paid and set up");
+}
+
+export async function adminCancel(id: string) {
+  const order = await CorporateOrder.findByPk(id);
+  if (!order) throw ApiError.notFound("Order not found");
+  if (order.status === "paid") throw ApiError.conflict("A paid order can't be cancelled here; refund it in Flutterwave first");
+  await order.update({ status: "cancelled" });
 }
 
 // Webhook: only the transaction id is taken from the body; the transaction is fetched.

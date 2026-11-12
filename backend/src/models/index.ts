@@ -209,6 +209,7 @@ CorporateClient.hasMany(CorporateMember, { foreignKey: "clientId", as: "members"
 CorporateMember.belongsTo(CorporateClient, { foreignKey: "clientId", as: "client" });
 CorporateMember.belongsTo(User, { foreignKey: "userId", as: "user" });
 User.hasOne(CorporateMember, { foreignKey: "userId", as: "corporateMembership" });
+CorporateOrder.belongsTo(CorporateClient, { foreignKey: "clientId", as: "client" });
 
 export {
   AmbassadorNotice,

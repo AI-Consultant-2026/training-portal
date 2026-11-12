@@ -6,6 +6,7 @@ import * as zoomAttendeesController from "../controllers/zoomAttendees.controlle
 import * as ambassadorNoticesController from "../controllers/ambassadorNotices.controller";
 import * as salesRepsController from "../controllers/salesReps.controller";
 import * as corporateController from "../controllers/corporate.controller";
+import * as corporateOrdersController from "../controllers/corporateOrders.controller";
 import {
   adminInviteSchema,
   clientIdSchema,
@@ -97,6 +98,10 @@ adminRouter.patch("/corporate-clients/:id", validate(updateClientSchema), corpor
 adminRouter.delete("/corporate-clients/:id", validate(clientIdSchema), corporateController.deleteClient);
 adminRouter.post("/corporate-clients/:id/join-code", validate(clientIdSchema), corporateController.regenerateCode);
 adminRouter.post("/corporate-clients/:id/invites", validate(adminInviteSchema), corporateController.adminInvite);
+// Corporate online orders (2026-11-12): paid, awaiting payment and invoice requests.
+adminRouter.get("/corporate-orders", corporateOrdersController.listOrders);
+adminRouter.post("/corporate-orders/:id/mark-paid", validate(clientIdSchema), corporateOrdersController.markPaid);
+adminRouter.post("/corporate-orders/:id/cancel", validate(clientIdSchema), corporateOrdersController.cancelOrder);
 adminRouter.patch(
   "/corporate-clients/:id/members/:userId",
   validate(setManagerSchema),

@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   adminInviteStaff,
   apiErrorMessage,
@@ -115,10 +115,16 @@ export function AdminCorporateClientsPage() {
     return data;
   }
 
+  // /admin/corporate-clients?client=<id> opens that company (linked from /admin/corporate-orders).
+  const [searchParams] = useSearchParams();
+  const linkedClientId = searchParams.get("client");
+
   useEffect(() => {
     reload()
+      .then(() => (linkedClientId ? openClient(linkedClientId) : undefined))
       .catch(() => setError("Couldn't load companies."))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function openClient(id: string) {

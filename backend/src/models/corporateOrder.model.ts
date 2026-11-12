@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
 // Corporate online orders (2026-11-12), see migration 20261112070000-create-corporate-orders.
 
-export type CorporateOrderStatus = "pending" | "paid" | "invoice_requested" | "failed";
+export type CorporateOrderStatus = "pending" | "paid" | "invoice_requested" | "failed" | "cancelled";
 
 export interface CorporateOrderAttributes {
   id: string;

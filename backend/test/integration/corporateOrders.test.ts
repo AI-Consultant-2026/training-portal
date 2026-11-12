@@ -233,3 +233,93 @@ describe("Corporate online orders", () => {
     expect(await CorporateClient.count()).toBe(0);
   });
 });
+
+describe("Admin: corporate orders", () => {
+  const original = { ...config.flutterwave };
+  beforeEach(async () => {
+    config.flutterwave.secretKey = "FLWSECK_TEST-jest";
+    config.flutterwave.secretHash = HASH;
+    await makeCourses();
+  });
+  afterEach(() => jest.restoreAllMocks());
+  afterAll(() => {
+    config.flutterwave.secretKey = original.secretKey;
+    config.flutterwave.secretHash = original.secretHash;
+  });
+
+  async function adminToken() {
+    await User.create({
+      email: "corp-admin@example.com",
+      passwordHash: await bcrypt.hash("Password123!", 4),
+      firstName: "Admin",
+      lastName: "User",
+      role: "admin",
+      emailVerifiedAt: new Date(),
+    });
+    const res = await request(app).post("/api/auth/login").send({ email: "corp-admin@example.com", password: "Password123!" });
+    return res.body.accessToken as string;
+  }
+
+  it("lists orders for admins only", async () => {
+    mockFlutterwave();
+    await order({ region: "ZA", programme: "cybersecure", seats: 250 });
+    expect((await request(app).get("/api/admin/corporate-orders")).status).toBe(401);
+    const token = await adminToken();
+    const res = await request(app).get("/api/admin/corporate-orders").set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.orders).toHaveLength(1);
+    expect(res.body.orders[0]).toMatchObject({
+      status: "invoice_requested",
+      organisation: "Acme Bank Ltd",
+      seats: 250,
+      total: 175000,
+      totalLabel: "R175,000",
+      programmeName: "CyberSecure Workforce Essentials",
+      client: null,
+    });
+  });
+
+  it("marks a paid invoice as paid, setting the company up and emailing the buyer", async () => {
+    mockFlutterwave();
+    const placed = await order({ region: "NG", programme: "all-three", seats: 300 });
+    const token = await adminToken();
+    const list = await request(app).get("/api/admin/corporate-orders").set("Authorization", `Bearer ${token}`);
+    const id = list.body.orders[0].id;
+    memAdapter.clear();
+
+    const res = await request(app).post(`/api/admin/corporate-orders/${id}/mark-paid`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.orders[0]).toMatchObject({ status: "paid", client: { name: "Acme Bank Ltd" } });
+    const saved = await CorporateOrder.findOne({ where: { txRef: placed.body.txRef } });
+    const seats = await CorporateSeat.findAll({ where: { clientId: saved!.clientId! } });
+    expect(seats.map((s) => s.seats)).toEqual([300, 300, 300]);
+    const client = await CorporateClient.findByPk(saved!.clientId!);
+    expect(client?.notes).toContain("marked paid by an admin (invoice)");
+    expect(memAdapter.sentMessages.some((m) => m.to === "ngozi@acmebank.example" && m.text.includes(`/company/join/${client!.joinCode}`))).toBe(true);
+
+    // Clicking again does nothing more.
+    const again = await request(app).post(`/api/admin/corporate-orders/${id}/mark-paid`).set("Authorization", `Bearer ${token}`);
+    expect(again.status).toBe(409);
+    expect(await CorporateClient.count()).toBe(1);
+  });
+
+  it("cancels an unpaid order but not a paid one", async () => {
+    mockFlutterwave();
+    const unpaid = await order({ region: "KE", programme: "cybersecure", seats: 5 });
+    const paid = await order({ region: "KE", programme: "ai-workflow", seats: 5 });
+    await webhook(paid.body.txRef);
+    const token = await adminToken();
+    const byRef = async (txRef: string) => (await CorporateOrder.findOne({ where: { txRef } }))!;
+
+    const cancel = await request(app)
+      .post(`/api/admin/corporate-orders/${(await byRef(unpaid.body.txRef)).id}/cancel`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(cancel.status).toBe(200);
+    expect((await byRef(unpaid.body.txRef)).status).toBe("cancelled");
+
+    const refused = await request(app)
+      .post(`/api/admin/corporate-orders/${(await byRef(paid.body.txRef)).id}/cancel`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(refused.status).toBe(409);
+  });
+});

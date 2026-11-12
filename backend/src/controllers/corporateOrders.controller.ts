@@ -20,3 +20,19 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   });
   res.status(201).json(result);
 });
+
+// --- Admin: /admin/corporate-orders ---------------------------------------------
+
+export const listOrders = asyncHandler(async (_req: Request, res: Response) => {
+  res.json({ orders: await corporateOrderService.listOrders() });
+});
+
+export const markPaid = asyncHandler(async (req: Request, res: Response) => {
+  await corporateOrderService.adminMarkPaid(req.params.id);
+  res.json({ orders: await corporateOrderService.listOrders() });
+});
+
+export const cancelOrder = asyncHandler(async (req: Request, res: Response) => {
+  await corporateOrderService.adminCancel(req.params.id);
+  res.json({ orders: await corporateOrderService.listOrders() });
+});

@@ -75,7 +75,7 @@ export function buildCorporateOrderAdminEmail(
 ): EmailMessage {
   const lines = [
     o.kind === "paid"
-      ? `PAID online: ${o.organisation} bought ${o.seats} learner places. The company, its seats and its join link were set up automatically.`
+      ? `PAID: ${o.organisation} bought ${o.seats} learner places. The company, its seats and its join link were set up automatically.`
       : `INVOICE REQUEST: ${o.organisation} wants an invoice for ${o.seats} learner places${o.reason ? ` (${o.reason})` : ""}. Send the invoice within one working day; once paid, create the company in /admin (Corporate clients).`,
     ...orderLines(o),
     `Courses: ${o.courseTitles.join("; ")}`,

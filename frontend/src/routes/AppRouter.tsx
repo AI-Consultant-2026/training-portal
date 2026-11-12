@@ -79,6 +79,10 @@ const AdminCorporateClientsPage = lazyImport(
   () => import("../features/admin/AdminCorporateClientsPage"),
   "AdminCorporateClientsPage",
 );
+const AdminCorporateOrdersPage = lazyImport(
+  () => import("../features/admin/AdminCorporateOrdersPage"),
+  "AdminCorporateOrdersPage",
+);
 const ReferralPage = lazyImport(() => import("../features/referrals/ReferralPage"), "ReferralPage");
 const AdminReferralsPage = lazyImport(
   () => import("../features/admin/AdminReferralsPage"),
@@ -162,6 +166,7 @@ export function AppRouter() {
             <Route path="/admin/email-client" element={<EmailClientPage />} />
             <Route path="/admin/referrals" element={<AdminReferralsPage />} />
             <Route path="/admin/corporate-clients" element={<AdminCorporateClientsPage />} />
+            <Route path="/admin/corporate-orders" element={<AdminCorporateOrdersPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
