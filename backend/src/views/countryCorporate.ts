@@ -252,7 +252,7 @@ ${header(ctx, home, "/", true)}
   ${enquiry(code, {
     title: `Tell us what your organisation in ${country} needs`,
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
-    note: "Prefer to talk first? Choose **Book a Consultation** and we will arrange a call.",
+    note: "Tell us your team size and what you want to improve, and we will send a proposal shaped around your organisation.",
     contact: ng
       ? "Email: corporate@paleontraining.com · Phone: +234 707 714 9215 · WhatsApp: +44 7508 823495"
       : "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495",

@@ -388,7 +388,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
   ${enquiry(null, {
     title: "Find your first three workflows",
     lede: "Tell us about your organisation, your teams and the work you want to improve. We will reply within one working day to arrange a short consultation.",
-    note: "Prefer a written offer? Choose **Request In-House Training Proposal** and we will send one shaped around your needs.",
+    note: "Tell us your team size and what you want to improve, and we will send a proposal shaped around your organisation.",
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>

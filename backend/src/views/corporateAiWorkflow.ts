@@ -59,6 +59,9 @@ const CONSULTATION = "Book a Consultation";
 // The main CTA (2026-11-12, owner request): goes to the "Buy learner places online" form,
 // on the page itself (#buy) or, on pages without one, on the country's programme page.
 export const WORKFORCE_CTA = "Book Corporate Workforce Training";
+// The enquiry form (2026-11-12, owner request): one button, always a proposal request;
+// the consultation/proposal choice at the top of the form was removed.
+const ENQUIRY_SUBMIT = "Request In-House Training Proposal";
 const PROPOSAL = "Request In-House Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
 const PHONE_PREFIX: Record<CountryCode, string> = { NG: "+234", ZA: "+27", GH: "+233", KE: "+254" };
@@ -313,10 +316,8 @@ export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: Enqui
         <p class="ca-p">${rich(note)}</p>
         <p class="ca-contact">${contactLine(contact)}</p>
       </div>
-      <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}" data-programme="${form.programme}" data-consultation-label="${escapeHtml(form.consultation)}" data-proposal-label="${escapeHtml(form.submit)}">
-        <p class="ca-intent" role="group" aria-label="What would you like?">
-          <label><input type="radio" name="intent" value="consultation" checked> ${escapeHtml(form.consultation)}</label>
-          <label><input type="radio" name="intent" value="proposal"> ${escapeHtml(form.proposal)}</label>
+      <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}" data-programme="${form.programme}">
+        <input type="hidden" name="intent" value="proposal">
         </p>
         <div class="ca-grid">
           <div class="form-row"><label class="form-label" for="ca-name">Name</label><input class="form-input" id="ca-name" name="name" autocomplete="name" required maxlength="150"></div>
@@ -335,7 +336,7 @@ export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: Enqui
         <label class="consent-check"><input type="checkbox" name="consent" required> <span>I agree that Paleon Training may use these details to respond to my enquiry, as described in the <a href="/privacy">Privacy Policy</a>.</span></label>
         <label class="consent-check"><input type="checkbox" name="updates"> <span>Send me occasional updates about Paleon corporate training. I can unsubscribe at any time. <span class="optional">(optional)</span></span></label>
         <p class="form-error" id="caError" role="alert" hidden></p>
-        <button type="submit" class="btn btn-signal btn-lg btn-block" id="caSubmit">${escapeHtml(form.submit)}</button>
+        <button type="submit" class="btn btn-signal btn-lg btn-block" id="caSubmit">${escapeHtml(ENQUIRY_SUBMIT)}</button>
         <p class="form-note">We reply within one working day. Your details are used only to respond to this enquiry. <a href="/privacy">Privacy Policy</a>.</p>
       </form>
       <div class="ca-thanks" id="caThanks" hidden tabindex="-1">
@@ -969,7 +970,7 @@ ${header(ctx, home, "/", true)}
   ${enquiry(null, {
     title: "Tell us what your organisation needs",
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
-    note: "Prefer to talk first? Choose **Book a Consultation** and we will arrange a call.",
+    note: "Tell us your team size and what you want to improve, and we will send a proposal shaped around your organisation.",
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>

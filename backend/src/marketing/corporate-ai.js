@@ -17,28 +17,14 @@
   var submit = document.getElementById("caSubmit");
   var errorBox = document.getElementById("caError");
   var thanks = document.getElementById("caThanks");
-  // Each programme's page sets its own button labels on the form (CyberSecure Workforce, 2026-11-02).
-  var LABELS = {
-    consultation: form.getAttribute("data-consultation-label") || "Book a Consultation",
-    proposal: form.getAttribute("data-proposal-label") || "Request In-House Training Proposal",
-  };
   var programme = form.getAttribute("data-programme") || "ai-workflow";
 
-  function setIntent(intent) {
-    var radio = form.querySelector('input[name="intent"][value="' + intent + '"]');
-    if (radio) radio.checked = true;
-    submit.textContent = LABELS[intent] || LABELS.proposal;
-  }
-  setIntent("consultation");
-
+  // Proposal CTAs scroll to the form (their href is #enquiry); the form has a single
+  // "Request In-House Training Proposal" button since 2026-11-12, so nothing to switch.
   document.querySelectorAll("[data-intent]").forEach(function (el) {
     el.addEventListener("click", function () {
-      setIntent(el.getAttribute("data-intent"));
       if (window.ptTrack) window.ptTrack("corporate_cta_click", { intent: el.getAttribute("data-intent"), programme: programme, country: form.getAttribute("data-country") });
     });
-  });
-  form.querySelectorAll('input[name="intent"]').forEach(function (r) {
-    r.addEventListener("change", function () { setIntent(r.value); });
   });
 
   function showError(msg) {
