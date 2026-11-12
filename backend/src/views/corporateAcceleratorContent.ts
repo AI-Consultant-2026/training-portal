@@ -40,7 +40,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Supporting statement:** Nigerian banks, fintechs, energy companies and telecoms operators are moving quickly with AI. Each new AI tool brings new security, data and governance questions. The AI + Cybersecurity Professional Accelerator develops professionals who can use AI effectively, understand the cyber risks it brings, and lead secure digital transformation inside your organisation."
           },
           {
-            "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -84,7 +84,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Most organisations have people who understand AI, and people who understand security. Few have people who understand both. That gap is where mistakes happen."
           },
           {
-            "p": "**CTA after problem:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -217,7 +217,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -431,7 +431,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Many organisations combine them: CyberSecure Workforce for all staff, AI Workflow for every team, and the Accelerator for the people who will lead AI adoption."
           },
           {
-            "p": "**CTA after comparison:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after comparison:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -507,7 +507,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **contribute to secure digital transformation.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
@@ -546,7 +546,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Supporting statement:** South African boards and executive committees are asking two questions at once: how fast can we use AI, and who is accountable for the risk? The AI + Cybersecurity Professional Accelerator develops professionals in financial services, mining, telecoms, retail and the public sector who can use AI well, assess its security and governance risks, and support responsible adoption. Live online, for teams in every province."
           },
           {
-            "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -589,7 +589,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Most organisations have AI enthusiasts and security specialists. Few have professionals who connect the two."
           },
           {
-            "p": "**CTA after problem:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -719,7 +719,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -897,7 +897,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "**CTA after comparison:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after comparison:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -967,7 +967,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **contribute to secure, accountable digital transformation.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
@@ -1006,7 +1006,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Supporting statement:** Banks, fintechs, telecoms operators and mining and energy companies in Ghana are adding AI to customer service, operations and reporting. Every new tool needs people who understand both what AI can do and what it can expose. The AI + Cybersecurity Professional Accelerator develops those professionals inside your organisation, in live online sessions."
           },
           {
-            "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -1049,7 +1049,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Many organisations are building AI skills and security skills in separate teams. The Accelerator brings them together in the same people."
           },
           {
-            "p": "**CTA after problem:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1176,7 +1176,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1353,7 +1353,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "**CTA after comparison:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after comparison:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1420,7 +1420,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **contribute to secure digital transformation.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
@@ -1459,7 +1459,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Supporting statement:** Kenyan banks, fintechs, telecoms and technology firms build and ship digital services fast, and AI is now part of many of them. Speed needs people who can see the risks as clearly as the opportunities. The AI + Cybersecurity Professional Accelerator develops professionals who can apply AI, manage AI and cyber risk, and keep innovation secure. Live online, for teams in Nairobi and across Kenya."
           },
           {
-            "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
+            "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
@@ -1502,7 +1502,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Fast teams need professionals who build security into AI work from the start, not after launch."
           },
           {
-            "p": "**CTA after problem:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after problem:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1629,7 +1629,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1806,7 +1806,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "**CTA after comparison:** Book an AI + Cybersecurity Consultation"
+            "p": "**CTA after comparison:** Book Corporate Workforce Training"
           }
         ]
       },
@@ -1873,7 +1873,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **keep innovation secure.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."

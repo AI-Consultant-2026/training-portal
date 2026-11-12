@@ -11,6 +11,7 @@ import {
   enquiry,
   heading,
   rich,
+  WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
 import { areaServed, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
@@ -27,7 +28,7 @@ import { trainerStandards } from "./trainerStandards";
 
 export { ACCELERATOR_SLUG, acceleratorPath } from "./corporateAiWorkflow";
 
-export const ACC_CONSULTATION = "Book an AI + Cybersecurity Consultation";
+export const ACC_CONSULTATION = "Book an AI + Cybersecurity Consultation"; // enquiry form only (no longer shown)
 export const ACC_PROPOSAL = "Request In-House Training Proposal";
 
 export const ACC_FORM: EnquiryForm = {
@@ -165,7 +166,7 @@ function hero(code: CountryCode, c: AccPageContent): string {
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
         <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
         <div class="hero-ctas">
-          ${ctaButton(field(c, "Primary CTA") || ACC_CONSULTATION, true)}
+          ${ctaButton(field(c, "Primary CTA") || WORKFORCE_CTA, true)}
           ${ctaButton(field(c, "Secondary CTA") || ACC_PROPOSAL, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
