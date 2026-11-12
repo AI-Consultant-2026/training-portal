@@ -15,6 +15,7 @@ import {
 import { areaServed, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 
 // The "AI + Cybersecurity Professional Accelerator" corporate pages (2026-11-02): one per
@@ -195,7 +196,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
-      a: "It depends on the number of participants, the delivery method and how much we customise the programme. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+      a: pricingFaqAnswer(code, "accelerator"),
     },
     {
       q: "Can we train the rest of our staff in cybersecurity while we wait?",
@@ -376,6 +377,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${section(c, "Programme comparison", { id: "compare", dark: true })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
+  ${pricingSection(code, "accelerator", true)}
   ${whereWeTrain(code)}
   ${trainerStandards()}
   ${faq(code, c)}

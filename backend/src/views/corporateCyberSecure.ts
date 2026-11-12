@@ -15,6 +15,7 @@ import {
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
 import { CITIES, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
@@ -195,7 +196,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "How much does cybersecurity awareness training for employees cost?",
-      a: "It depends on the number of employees, the package and the delivery method. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+      a: pricingFaqAnswer(code, "cybersecure"),
     },
     {
       q: "Can we combine cybersecurity training with AI training for our staff?",
@@ -382,9 +383,10 @@ ${header(ctx, home, "/", true)}
   })}
   ${section(c, "Corporate delivery options", { id: "delivery", eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
   ${section(c, "Corporate packages", { id: "packages", dark: true, eyebrowOverride: "Packages", titleOverride: "Three ways to run the programme" })}
-  ${section(c, "Measurement and deliverables", { id: "measurement" })}
-  ${section(c, "Your corporate training journey", { id: "journey", dark: true, eyebrowOverride: "How it works", listClass: "ca-steps" })}
-  ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
+  ${pricingSection(code, "cybersecure", false)}
+  ${section(c, "Measurement and deliverables", { id: "measurement", dark: true })}
+  ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
+  ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${whereWeTrain(code)}
   ${trainerStandards()}
   ${faq(code, c)}

@@ -21,6 +21,7 @@ import {
   scripts,
   whatsappAttr,
 } from "./countryHome";
+import { hubPricingFaqAnswer, pricingFaqAnswer, pricingSection, pricingSummaryTable } from "./corporatePricing";
 import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 
 // The "AI Workflow Productivity & Process Transformation" corporate pages (2026-11-02):
@@ -185,7 +186,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "How much does corporate AI training cost?",
-      a: "It depends on the number of employees, the delivery method and how much we customise the programme. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+      a: pricingFaqAnswer(code, "ai-workflow"),
     },
     {
       q: "Can we combine AI training with cybersecurity training for our staff?",
@@ -481,6 +482,7 @@ ${header(ctx, home, "/", true)}
   })}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
+  ${pricingSection(code, "ai-workflow", true)}
   ${whereWeTrain(code)}
   ${trainerStandards()}
   ${faq(code, c)}
@@ -592,7 +594,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How much does corporate training cost?",
-    a: "Pricing depends on group size, delivery method and customisation. Request a corporate training proposal and we will send a quote.",
+    a: hubPricingFaqAnswer(),
   },
   {
     q: "Can you provide attendance records?",
@@ -880,6 +882,15 @@ ${header(ctx, home, "/", true)}
       </figure>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${accCards}</div>
+    </div>
+  </section>
+
+  <section class="section section-dark ca-section" id="pricing" aria-labelledby="pricing-title">
+    <div class="wrap">
+      <span class="section-eyebrow">Pricing</span>
+      <h2 class="section-title" id="pricing-title">Corporate training prices in Nigeria, South Africa, Kenya and Ghana</h2>
+      ${pricingSummaryTable([...MARKET_ORDER])}
+      <div class="ca-ctas">${ctaButton(PROPOSAL, true)}</div>
     </div>
   </section>
 

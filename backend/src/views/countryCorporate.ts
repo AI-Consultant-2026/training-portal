@@ -11,6 +11,7 @@ import {
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 
 // Corporate training pages for South Africa, Kenya and Ghana (2026-11-08) and Nigeria
@@ -55,7 +56,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "How much does corporate training cost?",
-      a: "It depends on the number of employees, the programme and how much we customise it. Request a proposal with your team size and we will send a written quotation. We reply within one working day.",
+      a: pricingFaqAnswer(code, null),
     },
     {
       q: "How do we get started?",
@@ -208,6 +209,8 @@ ${header(ctx, home, "/", true)}
           <p class="ca-card-link"><a href="${acceleratorPath(code)}">AI and cybersecurity training for professionals in ${escapeHtml(country)} &rarr;</a></p>
         </div>
       </div>
+      <h3 class="cp-subtitle" id="pricing">Prices in ${escapeHtml(country)}</h3>
+      ${pricingSummaryTable([code])}
       <div class="ca-ctas">${ctaButton(PROPOSAL, false)}</div>
     </div>
   </section>
