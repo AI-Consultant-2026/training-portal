@@ -73,6 +73,7 @@ function serializeQuiz(quiz: Quiz) {
     questionCount: quiz.questionCount,
     shuffleQuestions: quiz.shuffleQuestions,
     isEnabled: quiz.isEnabled,
+    maxAttempts: quiz.maxAttempts,
   };
 }
 
@@ -146,6 +147,16 @@ export async function start(quizId: string, studentId: string) {
   });
 
   let attempt = existing;
+  if (!attempt && quiz.maxAttempts) {
+    // Attempt limit (e.g. the corporate final assessments: 3). An attempt still in
+    // progress can always be resumed; only starting a new one is refused.
+    const used = await QuizAttempt.count({ where: { quizId, studentId } });
+    if (used >= quiz.maxAttempts) {
+      throw ApiError.forbidden(
+        `You have used all ${quiz.maxAttempts} attempts at this assessment. Please contact your trainer if you need another.`,
+      );
+    }
+  }
   if (!attempt) {
     const maxAttemptNumber = await QuizAttempt.max("attemptNumber", { where: { quizId, studentId } });
     try {

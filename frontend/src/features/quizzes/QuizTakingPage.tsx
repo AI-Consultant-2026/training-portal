@@ -61,6 +61,29 @@ export function QuizTakingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deadline, submitResult]);
 
+  // Quizzes with an attempt limit (the corporate final assessments) show how many
+  // attempts are left and stop offering a retake once they're used up.
+  function retakeButton(attemptNumber: number) {
+    const max = activeAttempt?.quiz.maxAttempts ?? null;
+    if (max && attemptNumber >= max) {
+      return (
+        <p className="text-sm text-gray-600">
+          You have used all {max} attempts. Please contact your trainer if you need another.
+        </p>
+      );
+    }
+    return (
+      <>
+        <Button onClick={handleRetake}>Retake quiz</Button>
+        {max && (
+          <span className="text-sm text-gray-500">
+            Attempt {attemptNumber} of {max} used
+          </span>
+        )}
+      </>
+    );
+  }
+
   function handleRetake() {
     if (id) {
       dispatch(resetQuizAttempt());
@@ -106,7 +129,7 @@ export function QuizTakingPage() {
               message="Submitted — awaiting instructor review of the short-answer question(s). Your score will be available once grading is complete."
             />
             <div className="mt-6 flex items-center gap-4">
-              <Button onClick={handleRetake}>Retake quiz</Button>
+              {retakeButton(attempt.attemptNumber)}
               <Link to={`/quizzes/${id}/attempts`} className="text-sm text-blue-600 hover:underline">
                 View attempt history
               </Link>
@@ -144,7 +167,7 @@ export function QuizTakingPage() {
           </ul>
 
           <div className="mt-6 flex items-center gap-4">
-            <Button onClick={handleRetake}>Retake quiz</Button>
+            {retakeButton(attempt.attemptNumber)}
             <Link to={`/quizzes/${id}/attempts`} className="text-sm text-blue-600 hover:underline">
               View attempt history
             </Link>

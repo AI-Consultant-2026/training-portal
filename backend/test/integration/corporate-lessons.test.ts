@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
-import { Course, CourseModule, Enrollment, Lesson, Quiz, User } from "../../src/models";
+import { Course, CourseModule, Enrollment, Lesson, Quiz, QuizAttempt, User } from "../../src/models";
 import { CYBERSECURE_WORKFORCE } from "../../src/seeders/data/curriculumCorporateCyberSecure";
 import { AI_WORKFLOW } from "../../src/seeders/data/curriculumCorporateAiWorkflow";
 import { AI_CYBER_ACCELERATOR } from "../../src/seeders/data/curriculumCorporateAccelerator";
@@ -80,6 +80,28 @@ describe("Corporate course lesson and assessment rules", () => {
     await request(app).post(`/api/lessons/${lessons[2].id}/mark-complete`).set(auth).expect(200);
     const ready = await request(app).post(`/api/quizzes/${assessment.id}/start`).set(auth);
     expect(ready.status).toBeLessThan(300);
+  });
+});
+
+describe("Quiz attempt limit", () => {
+  it("refuses a new attempt once max_attempts are used, but allows them until then", async () => {
+    const { intro, token } = await setUp("corp-attempt-limit@example.com");
+    await intro.update({ maxAttempts: 3 });
+    const login = await request(app)
+      .post("/api/auth/login")
+      .send({ email: "corp-attempt-limit@example.com", password: "Password123!" });
+    const studentId = login.body.user.id as string;
+    for (const attemptNumber of [1, 2]) {
+      await QuizAttempt.create({ quizId: intro.id, studentId, attemptNumber, status: "graded", score: 40 });
+    }
+    const third = await request(app).post(`/api/quizzes/${intro.id}/start`).set("Authorization", `Bearer ${token}`);
+    expect(third.status).toBeLessThan(300);
+    expect(third.body.quiz.maxAttempts).toBe(3);
+    await QuizAttempt.update({ status: "graded", score: 50 }, { where: { id: third.body.attempt.id } });
+
+    const fourth = await request(app).post(`/api/quizzes/${intro.id}/start`).set("Authorization", `Bearer ${token}`);
+    expect(fourth.status).toBe(403);
+    expect(fourth.body.error.message).toMatch(/all 3 attempts/);
   });
 });
 

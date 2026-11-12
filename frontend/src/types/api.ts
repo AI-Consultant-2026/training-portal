@@ -427,6 +427,8 @@ export interface Quiz {
   questionCount: number;
   shuffleQuestions: boolean;
   isEnabled: boolean;
+  // Null = unlimited attempts.
+  maxAttempts?: number | null;
 }
 
 export interface QuizAnswerOption {

@@ -11,6 +11,8 @@ export interface QuizAttributes {
   questionCount: number;
   shuffleQuestions: boolean;
   isEnabled: boolean;
+  // Null = unlimited attempts.
+  maxAttempts: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,6 +25,7 @@ export type QuizCreationAttributes = Optional<
   | "timeLimitMinutes"
   | "shuffleQuestions"
   | "isEnabled"
+  | "maxAttempts"
   | "createdAt"
   | "updatedAt"
 >;
@@ -38,6 +41,7 @@ export class Quiz extends Model<QuizAttributes, QuizCreationAttributes> implemen
   declare questionCount: number;
   declare shuffleQuestions: boolean;
   declare isEnabled: boolean;
+  declare maxAttempts: number | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -74,6 +78,7 @@ export function initQuizModel(sequelize: Sequelize) {
         defaultValue: true,
         field: "is_enabled",
       },
+      maxAttempts: { type: DataTypes.INTEGER, allowNull: true, field: "max_attempts" },
     },
     {
       sequelize,
