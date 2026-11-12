@@ -9,7 +9,7 @@ import { track } from "../../lib/analytics";
 import { CoursePreview } from "../../types/api";
 import { formatPrice, isFlutterwave } from "../payments/checkout";
 import { PaymentTrustStrip } from "../payments/PaymentTrustStrip";
-import { LessonContent } from "./LessonContent";
+import { hasVideoMarker, LessonContent } from "./LessonContent";
 
 const WHATSAPP_URL = "https://wa.me/447508823495";
 
@@ -86,6 +86,12 @@ export function PreviewLessonPage() {
 
   const { course, module, lesson } = preview;
   const youtubeVideoId = lesson.videoUrl ? extractYouTubeId(lesson.videoUrl) : null;
+  const videoPlayer =
+    youtubeVideoId && lesson.videoUrl ? (
+      <YouTubePlayer videoId={youtubeVideoId} videoUrl={lesson.videoUrl} title={lesson.title} />
+    ) : null;
+  // A lesson can mark where its video goes; otherwise it sits below the text.
+  const videoInline = !!videoPlayer && hasVideoMarker(lesson.content);
   const remaining = Math.max(course.lessonCount - 1, 0);
   // A visitor from a live Ghana, Kenya or South Africa sees their own currency (2026-10-30).
   const country = visitorCountry(searchParams.get("country"), user?.country);
@@ -115,13 +121,13 @@ export function PreviewLessonPage() {
       <h1 className="mt-1 text-2xl font-semibold text-gray-900">{lesson.title}</h1>
       <p className="mt-1 text-sm text-gray-500">{lesson.durationMinutes} min</p>
 
-      <LessonContent content={lesson.content} images={lesson.images ?? []} />
+      <LessonContent
+        content={lesson.content}
+        images={lesson.images ?? []}
+        video={videoInline ? videoPlayer : undefined}
+      />
 
-      {youtubeVideoId && lesson.videoUrl && (
-        <div className="mt-6">
-          <YouTubePlayer videoId={youtubeVideoId} videoUrl={lesson.videoUrl} title={lesson.title} />
-        </div>
-      )}
+      {!videoInline && videoPlayer && <div className="mt-6">{videoPlayer}</div>}
 
       <div className="mt-10 rounded-lg border-2 border-blue-600 bg-blue-50 p-5">
         <h2 className="text-lg font-semibold text-gray-900">Enjoyed this? Lesson 2 is waiting.</h2>

@@ -9,7 +9,7 @@ import { fetchMyEnrollments } from "../enrollments/enrollmentsSlice";
 import { CheckpointVideoPlayer, extractYouTubeId } from "./CheckpointVideoPlayer";
 import { DayTasksDialog } from "./DayTasksDialog";
 import { DEPOSIT_LABEL } from "../payments/paymentCopy";
-import { LessonContent } from "./LessonContent";
+import { hasVideoMarker, LessonContent } from "./LessonContent";
 import {
   fetchCheckpoints,
   fetchLesson,
@@ -118,6 +118,30 @@ export function LessonDetailPage() {
   // once payment is confirmed -- before that, the payment lock above wins.
   const nextTaskGate = !isNextLocked ? (navigation?.nextTaskGate ?? null) : null;
 
+  const videoPlayer = youtubeVideoId ? (
+    <CheckpointVideoPlayer
+      lessonId={lesson.id}
+      videoId={youtubeVideoId}
+      videoUrl={lesson.videoUrl!}
+      checkpoints={checkpoints}
+    />
+  ) : (
+    lesson.videoUrl && (
+      <div className="mt-6">
+        <a
+          href={lesson.videoUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-sm font-medium text-blue-600 hover:underline"
+        >
+          Watch video
+        </a>
+      </div>
+    )
+  );
+  // Corporate lessons mark where their video goes; others keep it below the text.
+  const videoInline = !!videoPlayer && hasVideoMarker(lesson.content);
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
       <h1 className="text-2xl font-semibold text-gray-900">{lesson.title}</h1>
@@ -125,29 +149,13 @@ export function LessonDetailPage() {
 
       {error && <Alert message={error} />}
 
-      <LessonContent content={lesson.content} images={lesson.images ?? []} />
+      <LessonContent
+        content={lesson.content}
+        images={lesson.images ?? []}
+        video={videoInline ? videoPlayer : undefined}
+      />
 
-      {youtubeVideoId ? (
-        <CheckpointVideoPlayer
-          lessonId={lesson.id}
-          videoId={youtubeVideoId}
-          videoUrl={lesson.videoUrl!}
-          checkpoints={checkpoints}
-        />
-      ) : (
-        lesson.videoUrl && (
-          <div className="mt-6">
-            <a
-              href={lesson.videoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm font-medium text-blue-600 hover:underline"
-            >
-              Watch video
-            </a>
-          </div>
-        )
-      )}
+      {!videoInline && videoPlayer}
 
       {links.length > 0 && (
         <div className="mt-6">

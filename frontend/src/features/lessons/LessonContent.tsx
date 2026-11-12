@@ -59,18 +59,39 @@ const MARKDOWN_COMPONENTS = {
   ),
 };
 
-type ContentSegment = { kind: "markdown"; text: string } | { kind: "image"; image: LessonImage };
+// Where a lesson's video goes (2026-11-12). Loading a corporate lesson video replaces
+// its "Video coming soon" note with this paragraph, so the player appears exactly where
+// the note was. An HTML comment renders as nothing if a lesson has the marker but no
+// video, and it keeps the paragraph count the same, so image positions don't move.
+export const LESSON_VIDEO_MARKER = "<!-- lesson-video -->";
+
+export function hasVideoMarker(content: string): boolean {
+  return content.split("\n\n").some((paragraph) => paragraph.trim() === LESSON_VIDEO_MARKER);
+}
+
+type ContentSegment =
+  | { kind: "markdown"; text: string }
+  | { kind: "image"; image: LessonImage }
+  | { kind: "video" };
 
 // Groups the plain-text/markdown content into chunks split at each image's
 // `afterParagraph` boundary (paragraphs are blank-line-separated blocks),
 // so each chunk still parses as valid, self-contained markdown.
-function buildContentSegments(content: string, images: LessonImage[]): ContentSegment[] {
+function buildContentSegments(content: string, images: LessonImage[], withVideo: boolean): ContentSegment[] {
   const paragraphs = content.split("\n\n");
   const segments: ContentSegment[] = [];
   let buffer: string[] = [];
 
   paragraphs.forEach((paragraph, index) => {
-    buffer.push(paragraph);
+    if (paragraph.trim() === LESSON_VIDEO_MARKER) {
+      if (withVideo) {
+        if (buffer.length > 0) segments.push({ kind: "markdown", text: buffer.join("\n\n") });
+        buffer = [];
+        segments.push({ kind: "video" });
+      }
+    } else {
+      buffer.push(paragraph);
+    }
     images
       .filter((image) => image.afterParagraph === index)
       .forEach((image) => {
@@ -89,12 +110,23 @@ function buildContentSegments(content: string, images: LessonImage[]): ContentSe
 
 // The lesson body -- markdown text with the lesson's illustrations placed between
 // paragraphs. Shared by the in-portal lesson page and the public free-preview page.
-export function LessonContent({ content, images }: { content: string; images: LessonImage[] }) {
-  const segments = buildContentSegments(content, images);
+export function LessonContent({
+  content,
+  images,
+  video,
+}: {
+  content: string;
+  images: LessonImage[];
+  // The lesson's video player, shown at the LESSON_VIDEO_MARKER paragraph.
+  video?: React.ReactNode;
+}) {
+  const segments = buildContentSegments(content, images, video !== undefined && video !== null && video !== false);
   return (
     <div className="mt-4 flex flex-col gap-4">
       {segments.map((segment, index) =>
-        segment.kind === "markdown" ? (
+        segment.kind === "video" ? (
+          <div key={index}>{video}</div>
+        ) : segment.kind === "markdown" ? (
           <ReactMarkdown
             key={index}
             remarkPlugins={[remarkGfm]}
