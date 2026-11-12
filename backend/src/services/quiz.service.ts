@@ -13,7 +13,8 @@ import {
   User,
   sequelize,
 } from "../models";
-import { isFirstModuleLessonCompleted } from "./lesson.service";
+import { isModuleQuizUnlocked } from "./lesson.service";
+import { isCorporateCourse } from "./course.service";
 import { ApiError } from "../utils/ApiError";
 import { shuffle } from "../utils/shuffle";
 
@@ -131,9 +132,13 @@ export async function start(quizId: string, studentId: string) {
     throw ApiError.forbidden("This quiz is not available right now.");
   }
 
-  const unlocked = await isFirstModuleLessonCompleted(quiz.moduleId, studentId);
+  const unlocked = await isModuleQuizUnlocked(quiz, studentId);
   if (!unlocked) {
-    throw ApiError.forbidden("Complete this day's first lesson before you can start the quiz.");
+    throw ApiError.forbidden(
+      isCorporateCourse(course)
+        ? "Complete this module's lessons before you start the assessment."
+        : "Complete this day's first lesson before you can start the quiz.",
+    );
   }
 
   const existing = await QuizAttempt.findOne({

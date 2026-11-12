@@ -14,7 +14,7 @@ import {
   sequelize,
 } from "../models";
 import { ApiError } from "../utils/ApiError";
-import { assertCourseAccessible } from "./course.service";
+import { assertCourseAccessible, isCorporateCourse } from "./course.service";
 import { getEnrollmentForCourseAndStudent, hasPaidAccessToModule, recalculateProgress } from "./enrollment.service";
 
 // Free preview (2026-09-25): every course's very first lesson -- the first lesson of the
@@ -195,6 +195,9 @@ export async function getModuleTaskStatus(moduleId: string, studentId: string): 
 export async function getLessonTaskGate(lesson: Lesson, studentId: string): Promise<ModuleTaskStatus | null> {
   const siblings = await listLessonsForModule(lesson.moduleId);
   if (siblings.length === 0 || siblings[0].id === lesson.id) return null;
+  // Corporate courses have no day gate: a module's lessons run straight through and its
+  // assessment comes after them (see isModuleQuizUnlocked).
+  if (await isCorporateModule(lesson.moduleId)) return null;
   if (await isLessonCompletedByStudent(lesson.id, studentId)) return null;
   const status = await getModuleTaskStatus(lesson.moduleId, studentId);
   return status.complete ? null : status;
@@ -367,6 +370,32 @@ export async function isFirstModuleLessonCompleted(moduleId: string, studentId: 
   const lessons = await listLessonsForModule(moduleId);
   if (lessons.length === 0) return true;
   return isLessonCompletedByStudent(lessons[0].id, studentId);
+}
+
+export async function isCorporateModule(moduleId: string): Promise<boolean> {
+  const courseModule = await CourseModule.findByPk(moduleId, { attributes: ["courseId"] });
+  if (!courseModule) return false;
+  const course = await Course.findByPk(courseModule.courseId, { attributes: ["id", "metadata"] });
+  return !!course && isCorporateCourse(course);
+}
+
+// Whether a student may start a quiz. Graduate courses: once the day's first lesson is
+// complete (isFirstModuleLessonCompleted). Corporate courses (2026-11-12): an unscored
+// quiz (pass mark 0, the introductory assessment) is open from the start, and a module
+// or final assessment opens once every lesson in its module is complete.
+export async function isModuleQuizUnlocked(
+  quiz: { moduleId: string; passingScore: number },
+  studentId: string,
+): Promise<boolean> {
+  if (!(await isCorporateModule(quiz.moduleId))) {
+    return isFirstModuleLessonCompleted(quiz.moduleId, studentId);
+  }
+  if (quiz.passingScore === 0) return true;
+  const lessons = await listLessonsForModule(quiz.moduleId);
+  for (const lesson of lessons) {
+    if (!(await isLessonCompletedByStudent(lesson.id, studentId))) return false;
+  }
+  return true;
 }
 
 // Distinct from enrollment.service.ts's getEnrollmentForCourseAndStudent (which allows

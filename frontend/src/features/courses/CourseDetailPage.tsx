@@ -180,6 +180,11 @@ export function CourseDetailPage() {
   const myEnrollment = course ? enrollments.find((e) => e.courseId === course.id) : undefined;
   const isEnrolled = myEnrollment !== undefined;
   const isPaidInFull = !!myEnrollment?.paymentConfirmed;
+  // Corporate courses (2026-11-12) are organised in modules, not days: no day gate between
+  // lessons, an unscored introductory assessment that's open from the start, and module
+  // assessments that unlock once all of the module's lessons are complete (same rules as
+  // lesson.service.ts / quiz.service.ts).
+  const isCorporate = course?.metadata?.corporate === true;
   // Instalments (2026-10-11): a deposit opens the first days (course order: week, then
   // module order -- the same rule as enrollment.service.ts's getDepositUnlockedModuleIds).
   const hasDepositOnly = !isPaidInFull && !!myEnrollment?.depositPaidAt;
@@ -472,6 +477,7 @@ export function CourseDetailPage() {
               // quiz and assignment (lesson.service.ts's getLessonTaskGate). A lesson
               // already completed stays open.
               const isTaskLocked =
+                !isCorporate &&
                 user?.role === "student" &&
                 hasModuleAccess(mod.id) &&
                 index > 0 &&
@@ -527,7 +533,9 @@ export function CourseDetailPage() {
           };
           return (
             <li key={mod.id} className="rounded-md border border-gray-200 bg-white p-3">
-              <span className="text-xs font-medium uppercase text-gray-400">Day {mod.weekNumber}</span>
+              <span className="text-xs font-medium uppercase text-gray-400">
+                {isCorporate ? "Module" : "Day"} {mod.weekNumber}
+              </span>
               <p className="font-medium text-gray-900">{mod.title}</p>
               <p className="text-sm text-gray-600">{mod.description}</p>
 
@@ -536,8 +544,13 @@ export function CourseDetailPage() {
                   content.assignments.length > 0 ||
                   content.quizzes.length > 0) && (
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-3">
-                  {content.lessons.slice(0, 1).map((lesson) => renderLesson(lesson, 0))}
-                  {content.quizzes.map((q) => {
+                  {(isCorporate ? content.lessons : content.lessons.slice(0, 1)).map((lesson, i) =>
+                    renderLesson(lesson, i),
+                  )}
+                  {[...content.quizzes]
+                    // Corporate: the unscored introductory assessment comes first.
+                    .sort((a, b) => (isCorporate ? Number(a.passingScore > 0) - Number(b.passingScore > 0) : 0))
+                    .map((q) => {
                     // Admin-disabled takes precedence over everything else -- an instructor
                     // pulled this quiz from availability, which is a different, stronger
                     // gate than the lesson-completion lock below and applies to every role,
@@ -561,7 +574,13 @@ export function CourseDetailPage() {
                     const firstLessonCompleted =
                       content.lessons.length === 0 ||
                       !!courseProgress?.completedLessonIds.includes(content.lessons[0].id);
-                    const isLocked = user?.role === "student" && !firstLessonCompleted;
+                    const allLessonsCompleted = content.lessons.every(
+                      (l) => !!courseProgress?.completedLessonIds.includes(l.id),
+                    );
+                    const quizUnlocked = isCorporate
+                      ? q.passingScore === 0 || allLessonsCompleted
+                      : firstLessonCompleted;
+                    const isLocked = user?.role === "student" && !quizUnlocked;
                     const isSubmitted = courseProgress?.submittedQuizIds.includes(q.id);
 
                     if (isLocked) {
@@ -569,7 +588,11 @@ export function CourseDetailPage() {
                         <span
                           key={q.id}
                           className="text-sm font-medium text-gray-400"
-                          title="Complete this day's first lesson to unlock the quiz"
+                          title={
+                            isCorporate
+                              ? "Complete this module's lessons to unlock the assessment"
+                              : "Complete this day's first lesson to unlock the quiz"
+                          }
                         >
                           Quiz: {q.title} (locked)
                         </span>
@@ -612,7 +635,7 @@ export function CourseDetailPage() {
                       </Link>
                     );
                   })}
-                  {content.lessons.slice(1).map((lesson, i) => renderLesson(lesson, i + 1))}
+                  {!isCorporate && content.lessons.slice(1).map((lesson, i) => renderLesson(lesson, i + 1))}
                 </div>
               )}
 
