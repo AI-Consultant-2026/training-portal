@@ -149,8 +149,14 @@ function section(
   </section>`;
 }
 
+// Nigeria's corporate hub hero, also used on the NG AI Workflow page since 2026-11-12 (user request).
+export const NG_CORPORATE_HERO_ALT =
+  "Three Nigerian colleagues, a man in a native kaftan-style top and two women, one in an Ankara skirt, working on a laptop in a Lagos office overlooking the Lekki-Ikoyi bridge";
+
 function hero(code: CountryCode, c: CorporatePageContent): string {
   const cc = code.toLowerCase();
+  const heroSrc = code === "NG" ? "/images/corporate-ai/ng-corporate-hero.jpg" : `/images/corporate-ai/${cc}-hero.jpg`;
+  const heroAlt = code === "NG" ? NG_CORPORATE_HERO_ALT : c.images.hero;
   const trust = field(c, "Hero", "Trust line")
     .split(" · ")
     .map((t) => `<li>${rich(t)}</li>`)
@@ -171,7 +177,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
         <ul class="ca-trust">${trust}</ul>
       </div>
       <div class="ca-hero-media">
-        <img src="/images/corporate-ai/${cc}-hero.jpg" alt="${escapeHtml(c.images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
+        <img src="${heroSrc}" alt="${escapeHtml(heroAlt)}" width="1600" height="900" fetchpriority="high" decoding="async">
       </div>
     </div>
   </section>

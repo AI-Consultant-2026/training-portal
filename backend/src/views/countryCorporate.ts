@@ -8,6 +8,7 @@ import {
   cyberSecurePath,
   enquiry,
   WORKFORCE_CTA,
+  NG_CORPORATE_HERO_ALT,
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
@@ -120,9 +121,8 @@ function jsonLd(code: CountryCode, url: string, title: string, description: stri
 }
 
 // Nigeria's corporate page has its own hero (2026-11-10, user request: more representative of
-// Nigeria); the NG AI Workflow programme page keeps ng-hero.jpg.
-const NG_CORPORATE_HERO_ALT =
-  "Three Nigerian colleagues, a man in a native kaftan-style top and two women, one in an Ankara skirt, working on a laptop in a Lagos office overlooking the Lekki-Ikoyi bridge";
+// Nigeria). Since 2026-11-12 the NG AI Workflow programme page uses the same image (see
+// NG_CORPORATE_HERO_ALT in corporateAiWorkflow.ts).
 
 export function renderCountryCorporate(code: CountryCode): string {
   const c = COUNTRIES[code];
