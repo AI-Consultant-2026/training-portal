@@ -48,7 +48,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line under the buttons:** Online, in-house or hybrid delivery · Customised by department · Responsible AI built in · Supports ITF reimbursement claims"
@@ -130,7 +130,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Results depend on your processes and how the training is applied. We help you measure them; we do not promise fixed savings."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -198,7 +198,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery method and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
           },
           {
             "p": "**ITF reimbursement:** Nigerian employers that pay the ITF training levy can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs."
@@ -335,7 +335,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
@@ -376,7 +376,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online training for teams in Johannesburg, Cape Town, Durban and across South Africa · Department-specific · Responsible-AI first"
@@ -456,7 +456,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Outcomes vary by organisation. We help you measure them rather than promise fixed savings."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -517,7 +517,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "Costs depend on group size, delivery and customisation. **Request a Corporate Training Proposal** for a tailored quote."
+            "p": "Costs depend on group size, delivery and customisation. **Request In-House Training Proposal** for a tailored quote."
           }
         ]
       },
@@ -648,7 +648,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
@@ -689,7 +689,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online training for teams in Accra, Kumasi, Takoradi, Tema and across Ghana · Built for every department · Safe, responsible AI use"
@@ -768,7 +768,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Every organisation is different. We help you measure progress instead of promising fixed savings."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -829,7 +829,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "Costs depend on numbers, delivery and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Costs depend on numbers, delivery and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -957,7 +957,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
@@ -998,7 +998,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Primary CTA:** Book a Corporate Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online training for teams in Nairobi, Mombasa, Kisumu and across Kenya · Tailored by team · Responsible AI throughout"
@@ -1077,7 +1077,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Results depend on your context. We help you measure them; we do not promise fixed savings."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -1138,7 +1138,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size, delivery and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -1269,7 +1269,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Help your employees move from simply knowing about AI to **using AI effectively in everyday business workflows.**"
           },
           {
-            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Corporate Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."

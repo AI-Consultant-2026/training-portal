@@ -56,7 +56,7 @@ export function acceleratorPath(country: CountryCode): string {
 }
 
 const CONSULTATION = "Book a Corporate Training Consultation";
-const PROPOSAL = "Request a Corporate Training Proposal";
+const PROPOSAL = "Request In-House Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
 const PHONE_PREFIX: Record<CountryCode, string> = { NG: "+234", ZA: "+27", GH: "+233", KE: "+254" };
 
@@ -275,7 +275,7 @@ const AI_FORM: EnquiryForm = {
   programme: "ai-workflow",
   consultation: CONSULTATION,
   proposal: PROPOSAL,
-  submit: "Request Corporate Training Proposal",
+  submit: "Request In-House Training Proposal",
   requirements: CORPORATE_REQUIREMENTS,
   messagePlaceholder: "The teams, processes or tasks you want to improve",
 };

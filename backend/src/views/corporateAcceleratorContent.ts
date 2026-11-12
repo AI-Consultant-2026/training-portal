@@ -43,7 +43,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** 12 professional modules · Real-workplace capstone project · In-house, online or hybrid · Supports ITF reimbursement claims"
@@ -152,7 +152,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "No programme can guarantee that an organisation will avoid every incident. The Accelerator builds the people side of secure AI adoption, alongside your technical controls."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -359,7 +359,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery method and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
           },
           {
             "p": "**ITF reimbursement:** employers that pay the ITF training levy can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs."
@@ -507,7 +507,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **contribute to secure digital transformation.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
@@ -549,7 +549,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online across South Africa · 12 professional modules · Real-workplace capstone · Governance and POPIA awareness built in"
@@ -654,7 +654,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Training builds capability; it cannot guarantee that no incident will occur. It works best alongside your technical and governance controls."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -831,7 +831,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -967,7 +967,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **contribute to secure, accountable digital transformation.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
@@ -1009,7 +1009,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online across Ghana · 12 professional modules · Real-workplace capstone · Responsible AI built in"
@@ -1114,7 +1114,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Training builds capability; it cannot promise that no incident will happen."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -1287,7 +1287,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -1420,7 +1420,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **contribute to secure digital transformation.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
@@ -1462,7 +1462,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Primary CTA:** Book an AI + Cybersecurity Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online across Kenya · 12 professional modules · Real-workplace capstone · AI governance and data protection built in"
@@ -1567,7 +1567,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Training builds capability; it cannot promise that no incident will happen."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -1740,7 +1740,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -1873,7 +1873,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Develop professionals who can use AI effectively, understand emerging cyber risks and **keep innovation secure.**"
           },
           {
-            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book an AI + Cybersecurity Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."

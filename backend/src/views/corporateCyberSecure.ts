@@ -28,13 +28,13 @@ import { trainerStandards } from "./trainerStandards";
 export { CYBERSECURE_SLUG, cyberSecurePath } from "./corporateAiWorkflow";
 
 export const CYBER_CONSULTATION = "Book a Cybersecurity Training Consultation";
-export const CYBER_PROPOSAL = "Request a Corporate Training Proposal";
+export const CYBER_PROPOSAL = "Request In-House Training Proposal";
 
 export const CYBER_FORM: EnquiryForm = {
   programme: "cybersecure-workforce",
   consultation: CYBER_CONSULTATION,
   proposal: CYBER_PROPOSAL,
-  submit: "Request Corporate Cybersecurity Training Proposal",
+  submit: "Request In-House Training Proposal",
   requirements: CYBERSECURE_REQUIREMENTS,
   messagePlaceholder: "Your teams, concerns, or anything that has already happened",
 };

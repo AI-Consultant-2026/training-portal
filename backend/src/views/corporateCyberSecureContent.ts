@@ -41,7 +41,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** In-house, online or hybrid · Built for non-technical staff · Covers AI-related risks · Supports ITF reimbursement claims"
@@ -142,7 +142,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "No training can stop every attack. CyberSecure Workforce reduces the risks that come from people, alongside your technical controls."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -377,7 +377,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery method and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
           },
           {
             "p": "**ITF reimbursement:** employers that pay the ITF training levy can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs."
@@ -526,7 +526,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Does the training cover data protection?** It builds awareness of handling personal and confidential data responsibly, in line with your obligations under the Nigeria Data Protection Act 2023. It is not legal advice."
           },
           {
-            "p": "**How can we request a corporate training proposal?** Complete the form below or email corporate@paleontraining.com. We reply within one working day."
+            "p": "**How can we request an in-house training proposal?** Complete the form below or email corporate@paleontraining.com. We reply within one working day."
           }
         ]
       },
@@ -540,7 +540,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising phishing and protecting company information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -581,7 +581,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online training across South Africa · Department-specific scenarios · Personal-information handling built in · Covers AI-related risks"
@@ -679,7 +679,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Training reduces human-related risk; it does not guarantee that no incident will occur. It works best alongside your technical and governance controls."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -885,7 +885,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -989,7 +989,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising phishing and protecting personal information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -1086,7 +1086,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online training across Ghana · Plain-language, for every employee · Mobile and messaging security included · Covers AI-related risks"
@@ -1184,7 +1184,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Training reduces human-related risk; it cannot promise that no incident will happen."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -1390,7 +1390,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -1491,7 +1491,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising scams and protecting company information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -1588,7 +1588,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book a Cybersecurity Training Consultation"
           },
           {
-            "p": "**Secondary CTA:** Request a Corporate Training Proposal"
+            "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
             "p": "**Trust line:** Live online training across Kenya · Tailored by team · Mobile, cloud and AI risks covered · Practical scenarios throughout"
@@ -1686,7 +1686,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Training reduces human-related risk; it does not guarantee that no incident will occur."
           },
           {
-            "p": "**CTA after benefits:** Request a Corporate Training Proposal"
+            "p": "**CTA after benefits:** Request In-House Training Proposal"
           }
         ]
       },
@@ -1892,7 +1892,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request a Corporate Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -1993,7 +1993,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising scams and protecting customer data to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request a Corporate Training Proposal"
+            "p": "**Primary:** Book a Cybersecurity Training Consultation **Secondary:** Request In-House Training Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."

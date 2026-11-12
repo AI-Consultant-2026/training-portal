@@ -28,13 +28,13 @@ import { trainerStandards } from "./trainerStandards";
 export { ACCELERATOR_SLUG, acceleratorPath } from "./corporateAiWorkflow";
 
 export const ACC_CONSULTATION = "Book an AI + Cybersecurity Consultation";
-export const ACC_PROPOSAL = "Request a Corporate Training Proposal";
+export const ACC_PROPOSAL = "Request In-House Training Proposal";
 
 export const ACC_FORM: EnquiryForm = {
   programme: "ai-cyber-accelerator",
   consultation: ACC_CONSULTATION,
   proposal: ACC_PROPOSAL,
-  submit: "Request Corporate Training Proposal",
+  submit: "Request In-House Training Proposal",
   requirements: ACCELERATOR_REQUIREMENTS,
   messagePlaceholder: "Your AI plans, the teams you want to develop, or the challenges you face",
 };

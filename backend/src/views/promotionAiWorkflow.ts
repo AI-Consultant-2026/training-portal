@@ -25,7 +25,7 @@ export const PROMOTION_AI_PATH = "/Promotion-AI-Workflow-Productivity";
 const VIDEO = "/videos/corporate/ai-workflow-productivity.mp4?v=2";
 const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
 const CONSULTATION = "Book a Corporate Training Consultation";
-const PROPOSAL = "Request a Corporate Training Proposal";
+const PROPOSAL = "Request In-House Training Proposal";
 
 const DELIVERY: Record<string, string> = {
   NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
@@ -387,7 +387,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
   ${enquiry(null, {
     title: "Find your first three workflows",
     lede: "Tell us about your organisation, your teams and the work you want to improve. We will reply within one working day to arrange a short consultation.",
-    note: "Prefer a written offer? Choose **Request a Corporate Training Proposal** and we will send one shaped around your needs.",
+    note: "Prefer a written offer? Choose **Request In-House Training Proposal** and we will send one shaped around your needs.",
     contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
   })}
 </main>

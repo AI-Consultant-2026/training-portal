@@ -28,7 +28,7 @@ const ITF_NOTE =
   "Registered employers who contribute to the Industrial Training Fund (ITF) can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF.";
 
 const CONSULTATION = "Book a Corporate Training Consultation";
-const PROPOSAL = "Request a Corporate Training Proposal";
+const PROPOSAL = "Request In-House Training Proposal";
 const BOOKED =
   '<p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>';
 
