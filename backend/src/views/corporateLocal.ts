@@ -106,3 +106,12 @@ export const ORGANIZATION_LD = {
     "https://www.instagram.com/paleontraining/",
   ],
 };
+
+// South Africa's training-funding note (owner, 2026-11-13), in the page body as the Nigeria
+// page explains the ITF. Facts as in the corporate guide skills-development-levy-training-south-africa.
+export const ZA_FUNDING_GUIDE_PATH = "/corporate-guides/skills-development-levy-training-south-africa";
+export const ZA_FUNDING_PARAGRAPHS: string[] = [
+  "**Skills Development Levy.** Employers whose annual payroll exceeds R500,000 pay a Skills Development Levy of 1% of payroll through SARS. Most of it goes to the Sector Education and Training Authority (SETA) for your industry.",
+  "**SETA grants.** If you submit your Workplace Skills Plan (WSP) and Annual Training Report (ATR) to your SETA on time, usually by 30 April, you can receive a mandatory grant of 20% of the levy you paid. You can include our programmes in both, and every learner's certificate and dated attendance record gives you the evidence. Discretionary grants are separate and follow each SETA's own criteria.",
+  "**B-BBEE skills spend.** Skills development spend counts towards the skills development element of your B-BBEE scorecard. How a specific programme is recognised depends on the Codes, so ask your verification agency before you count on the points. Our programmes are practical workplace training with Paleon's own certificate of completion; they are not SETA-accredited qualifications.",
+];

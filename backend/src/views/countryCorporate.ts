@@ -12,7 +12,7 @@ import {
   NG_CORPORATE_HERO_ALT,
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
-import { CITIES, DATA_PROTECTION_LAW, WHO_WE_SERVE, servingLine, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { CITIES, DATA_PROTECTION_LAW, WHO_WE_SERVE, ZA_FUNDING_GUIDE_PATH, ZA_FUNDING_PARAGRAPHS, servingLine, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { INVOICE_FAQ, pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
@@ -39,6 +39,13 @@ import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 
 export const COUNTRY_CORPORATE_CODES: CountryCode[] = ["NG", "ZA", "KE", "GH"];
 
+// South Africa: Skills Development Levy, SETA grants and B-BBEE, as Nigeria explains the ITF.
+export function zaFundingHtml(): string {
+  const bold = (t: string) => escapeHtml(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  return `${ZA_FUNDING_PARAGRAPHS.map((p) => `<p class="ca-p">${bold(p)}</p>`).join("\n      ")}
+      <p class="ca-p"><a href="${ZA_FUNDING_GUIDE_PATH}">Read our guide to the Skills Development Levy, SETA grants and B-BBEE &rarr;</a></p>`;
+}
+
 const ITF_NOTE =
   "Registered employers who contribute to the Industrial Training Fund (ITF) can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF.";
 
@@ -57,6 +64,14 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
     },
     ...(code === "NG"
       ? [{ q: "Can the training support an ITF reimbursement claim?", a: `Yes. ${ITF_NOTE}` }]
+      : []),
+    ...(code === "ZA"
+      ? [
+          {
+            q: "Does the training count for the Skills Development Levy, SETA grants or B-BBEE?",
+            a: "You can include it in your Workplace Skills Plan and Annual Training Report, which you submit to claim the SETA mandatory grant (20% of the levy paid). Skills spend also counts towards the B-BBEE skills development element; your verification agency confirms how a programme is recognised. Our programmes are not SETA-accredited.",
+          },
+        ]
       : []),
     {
       q: "When can our team start?",
@@ -168,7 +183,7 @@ export function renderCountryCorporate(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-${corporateUtilBar(home)}
+${corporateUtilBar(home, code)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   <section class="hero ca-hero" id="top">
@@ -232,6 +247,7 @@ ${header(ctx, home, "/", true)}
       <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Organisations across ${escapeHtml(country)}, fully online. Training is online, per learner or in a private company portal: self-paced courses, so head office, branches, sites and remote workers can all take part around their working day. There are no live or facilitator-led sessions.</p>
       <p class="ca-p">Examples and workplace projects are adapted to your sector: ${ng ? "banking and financial services, oil and gas and energy, telecoms, manufacturing, healthcare, education, government and professional services" : "banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services"}.</p>
       ${ng ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_NOTE)}</p>` : ""}
+      ${code === "ZA" ? zaFundingHtml() : ""}
       <p class="ca-p">Sector pages: ${SECTORS.map((sec) => `<a href="${SECTORS_PATH}/${sec.slug}?country=${cc}">${escapeHtml(sec.name)}</a>`).join(" &middot; ")}.</p>
       <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}${callButton(true)}</div>
     </div>

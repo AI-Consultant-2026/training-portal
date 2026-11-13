@@ -55,7 +55,7 @@ export function shell(
 <body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-${corporateUtilBar(home)}
+${corporateUtilBar(home, ctx.hub ? ctx.chosen ?? null : ctx.country)}
 ${header(ctx, home, "/", true)}
 <main id="main">
 ${opts.body}

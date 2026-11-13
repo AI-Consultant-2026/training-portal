@@ -170,7 +170,7 @@ export function pricingSection(code: CountryCode, programme: PricedProgramme, da
       <p class="ca-p"><strong>Outside Nigeria, South Africa, Kenya and Ghana?</strong> Pay in pounds: ${escapeHtml(formatRegionMoney("INTL", CORPORATE_PRICES[programme].INTL))} per learner, with the same discounts.</p>
       <p class="ca-p ca-hint">${escapeHtml(TERMS)} ${escapeHtml(invoiceSentence(code))}</p>
       ${buyForm(code, programme)}
-      <p class="ca-p cp-after"><strong>Rolling out to the whole organisation?</strong> We set up a private company space for your staff: <a href="#enquiry" data-intent="proposal">request a proposal</a> and we will reply within one working day.</p>
+      <p class="ca-p cp-after"><strong>Rolling out to the whole organisation?</strong> We set up a private company space for your staff: <a href="#enquiry" data-intent="proposal">request a company portal proposal</a> and we will reply within one working day.</p>
       ${termsBlock(dark)}
     </div>
   </section>`;

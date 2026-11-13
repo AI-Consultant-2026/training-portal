@@ -90,3 +90,34 @@ export function buildCorporateOrderAdminEmail(
     html: wrapHtml(lines),
   };
 }
+
+// Free leadership preview (2026-11-13): the links to the sample modules, so the leadership
+// team can come back to them and share them internally.
+const PREVIEW_NAMES: Record<string, string> = {
+  cybersecure: "CyberSecure Workforce",
+  "ai-workflow": "AI Workflow Productivity & Process Transformation",
+  accelerator: "AI + Cybersecurity Professional Accelerator",
+};
+
+export function buildCorporatePreviewEmail(o: {
+  to: string;
+  name: string;
+  organisation: string;
+  links: { programme: string; url: string }[];
+}): EmailMessage {
+  const firstName = o.name.split(/\s+/)[0] || "there";
+  const lines = [
+    `Hi ${firstName},`,
+    `Here is your free leadership preview for ${o.organisation}: module 1 of each programme, self-paced online. Share these links with your leadership team.`,
+    ...o.links.map((l) => `${PREVIEW_NAMES[l.programme] ?? l.programme}: ${l.url}`),
+    "When you have looked through it, reply and tell us what your team thought, or what you would want covered for your staff. We will reply within one working day.",
+    "Ken Uwotu, Managing Director, Paleon Training. corporate@paleontraining.com",
+  ];
+  return {
+    to: o.to,
+    replyTo: config.corporateEnquiriesEmail,
+    subject: `${o.organisation}: your free leadership preview`,
+    text: lines.join("\n\n"),
+    html: wrapHtml(lines),
+  };
+}

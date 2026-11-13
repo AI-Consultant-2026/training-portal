@@ -39,7 +39,9 @@ export function buildCorporateEnquiryEmail(lead: {
     `Email: ${lead.email}`,
   ];
   if (lead.phone) lines.push(`Phone / WhatsApp: ${lead.phone}`);
-  lines.push(`Headcount: ${d.employees ?? ""}`);
+  // The discount tier the headcount falls in (bands match the tiers since 2026-11-13).
+  const tier: Record<string, string> = { "1–9": "list price", "10–49": "10% volume discount", "50–199": "20% volume discount", "200+": "30% volume discount" };
+  lines.push(`Staff to train: ${d.employees ?? ""}${d.employees && tier[d.employees] ? ` (${tier[d.employees]})` : ""}`);
   if (d.department) lines.push(`Department / team: ${d.department}`);
   if (d.requirement) lines.push(`Training requirement: ${d.requirement}`);
   if (d.delivery) lines.push(`Preferred delivery: ${d.delivery}`);

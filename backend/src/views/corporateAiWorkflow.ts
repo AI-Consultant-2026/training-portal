@@ -3,7 +3,8 @@ import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
   CORPORATE_DELIVERY,
   CORPORATE_DEPARTMENTS,
-  CORPORATE_EMPLOYEE_BANDS,
+  CORPORATE_HEADCOUNT_BANDS,
+  HEADCOUNT_BAND_LABELS,
   CORPORATE_REQUIREMENTS,
   CorporateProgramme,
 } from "../validators/corporateLeads.validators";
@@ -259,7 +260,11 @@ function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
     "Training is online, per learner or in a private company portal: your staff learn self-paced online. There are no live or facilitator-led sessions" +
-    (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
+    (code === "NG"
+      ? ". We provide the attendance records and documentation for ITF reimbursement claims."
+      : code === "ZA"
+        ? ". You can include the training in your Workplace Skills Plan and Annual Training Report for the SETA mandatory grant (20% of your Skills Development Levy), and skills spend counts towards the B-BBEE skills development element; your verification agency confirms how it is recognised."
+        : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">AI workforce and process transformation training across ${escapeHtml(country)}</span>
@@ -283,6 +288,17 @@ function faq(code: CountryCode, c: CorporatePageContent): string {
       ${items}
     </div>
   </section>`;
+}
+
+// The enquiry type is visible and pre-selected by the button clicked (owner, 2026-11-13), so
+// every button that opens the form says what it is for. The free preview has its own page.
+function enquiryIntentOptions(): string {
+  const opts: [string, string][] = [
+    ["proposal", "A company portal proposal"],
+    ...(hasOnboardingSlots() ? ([["reserve", "A December onboarding slot"]] as [string, string][]) : []),
+    ["consultation", "A call with a training specialist"],
+  ];
+  return opts.map(([v, l]) => `<option value="${v}">${escapeHtml(l)}</option>`).join("");
 }
 
 export function options(values: readonly string[], placeholder?: string): string {
@@ -350,14 +366,14 @@ export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: Enqui
         <p class="ca-contact">${contactLine(CORPORATE_CONTACT)}</p>
       </div>
       <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}" data-programme="${form.programme}">
-        <input type="hidden" name="intent" value="proposal">
+        <div class="form-row"><label class="form-label" for="ca-intent">What would you like?</label><select class="form-select" id="ca-intent" name="intent">${enquiryIntentOptions()}</select></div>
         <p class="ca-form-intent" id="caIntent" hidden></p>
         <div class="ca-grid">
           <div class="form-row"><label class="form-label" for="ca-name">Name</label><input class="form-input" id="ca-name" name="name" autocomplete="name" required maxlength="150"></div>
           <div class="form-row"><label class="form-label" for="ca-email">Business email</label><input class="form-input" id="ca-email" name="email" type="email" autocomplete="email" required maxlength="200"></div>
           <div class="form-row"><label class="form-label" for="ca-org">Organisation</label><input class="form-input" id="ca-org" name="organisation" autocomplete="organization" required maxlength="200"></div>
           <div class="form-row"><label class="form-label" for="ca-country">Country</label><select class="form-select" id="ca-country" name="country" required>${countryOptions}</select></div>
-          <div class="form-row"><label class="form-label" for="ca-employees">Headcount</label><select class="form-select" id="ca-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Number of employees")}</select></div>
+          <div class="form-row"><label class="form-label" for="ca-employees">Staff to train</label><select class="form-select" id="ca-employees" name="employees" required><option value="">Number of learners</option>${CORPORATE_HEADCOUNT_BANDS.map((b) => `<option value="${escapeHtml(b)}">${escapeHtml(HEADCOUNT_BAND_LABELS[b])}</option>`).join("")}</select></div>
         </div>
         <div class="form-row"><label class="form-label" for="ca-message">What would you like to improve? <span class="optional">(optional)</span></label><input class="form-input" id="ca-message" name="message" maxlength="500" placeholder="For example: phishing clicks in finance, or safe AI use across the sales team"></div>
         <div class="ca-hp" aria-hidden="true"><label for="ca-website">Website</label><input id="ca-website" name="website" tabindex="-1" autocomplete="off"></div>
@@ -497,7 +513,7 @@ export function renderCorporateAiWorkflow(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-${corporateUtilBar(home)}
+${corporateUtilBar(home, code)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   ${hero(code, c)}
@@ -829,7 +845,7 @@ export function renderCorporateHub(
 <body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-${corporateUtilBar(home)}
+${corporateUtilBar(home, ctx.hub ? ctx.chosen ?? null : ctx.country)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   <section class="section section-dark ca-choose" id="choose-country" aria-labelledby="choose-country-title">
@@ -931,7 +947,7 @@ ${header(ctx, home, "/", true)}
     </div>
   </section>
 
-  ${pilotSection(ctx.country, null, false)}
+  ${pilotSection(ctx.chosen ?? null, null, false)}
 
   <section class="section section-dark ca-section" id="sectors" aria-labelledby="sectors-title">
     <div class="wrap">
@@ -994,7 +1010,7 @@ ${header(ctx, home, "/", true)}
     </div>
   </section>
 
-  ${forwardSection(ctx.country, null, false)}
+  ${forwardSection(ctx.chosen ?? null, null, false)}
 
   ${trainerStandards()}
 

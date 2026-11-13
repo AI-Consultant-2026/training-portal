@@ -22,12 +22,12 @@
   // Every CTA scrolls to the form (href #enquiry) and sets what the visitor wants
   // (2026-11-13): a proposal, a December 2026 company onboarding slot, or the free self-paced
   // leadership preview. The form's note and button change to match; the intent is sent with the lead.
-  var intentInput = form.querySelector('input[name="intent"]');
+  var intentInput = form.querySelector('[name="intent"]');
   var intentNote = document.getElementById("caIntent");
   var INTENTS = {
     proposal: { note: "", button: submit.getAttribute("data-default") || submit.textContent },
-    reserve: { note: "", button: "Reserve my team's places" },
-    taster: { note: "Free leadership preview: self-paced online access to sample modules for your leadership team, with no obligation.", button: "Request a free preview" },
+    reserve: { note: "", button: "Reserve our onboarding slot" },
+    consultation: { note: "Tell us a little about your teams and we will arrange a short call with a training specialist.", button: "Ask for a call" },
   };
   // The places left come from the button that was clicked (data-places; one count shared by all programmes).
   function setIntent(name, places) {
@@ -35,11 +35,17 @@
     if (name === "reserve") {
       it.note = "Reserve a December 2026 company onboarding slot" + (places ? " (" + places + (places === "1" ? " slot" : " slots") + " left)" : "") + ". Each slot covers portal setup, your staff sign-up link and a manager login for one organisation. Tell us your organisation and headcount and we will confirm within one working day.";
     }
-    intentInput.value = INTENTS[name] ? name : "proposal";
+    var hasOption = intentInput.querySelector && intentInput.querySelector('option[value="' + name + '"]');
+    intentInput.value = INTENTS[name] && (hasOption || !intentInput.querySelector) ? name : "proposal";
     intentNote.textContent = it.note;
     intentNote.hidden = !it.note;
     submit.textContent = it.button;
   }
+  // The visitor can also change the enquiry type on the form itself.
+  intentInput.addEventListener("change", function () {
+    var slot = document.querySelector("[data-places]");
+    setIntent(intentInput.value, slot ? slot.getAttribute("data-places") : null);
+  });
   document.querySelectorAll("[data-intent]").forEach(function (el) {
     el.addEventListener("click", function () {
       setIntent(el.getAttribute("data-intent"), el.getAttribute("data-places"));

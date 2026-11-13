@@ -5,7 +5,7 @@ import * as leadsController from "../controllers/leads.controller";
 import * as readinessLeadsController from "../controllers/readinessLeads.controller";
 import { config } from "../config";
 import { validate } from "../middleware/validate";
-import { corporateLeadSchema } from "../validators/corporateLeads.validators";
+import { corporateLeadSchema, corporatePreviewSchema } from "../validators/corporateLeads.validators";
 import { createLeadSchema } from "../validators/leads.validators";
 import { readinessLeadSchema } from "../validators/readiness.validators";
 
@@ -37,5 +37,7 @@ leadsRouter.use(leadsRateLimiter);
 leadsRouter.post("/", validate(createLeadSchema), leadsController.create);
 // Enquiries from the AI Workflow Productivity corporate pages (2026-11-02).
 leadsRouter.post("/corporate", validate(corporateLeadSchema), corporateLeadsController.create);
+// The free leadership preview's one-step sign-up (2026-11-13).
+leadsRouter.post("/corporate-preview", validate(corporatePreviewSchema), corporateLeadsController.preview);
 // "Email me my scorecard" on the AI & Cyber Readiness Check (2026-11-08).
 leadsRouter.post("/readiness", validate(readinessLeadSchema), readinessLeadsController.create);

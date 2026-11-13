@@ -258,7 +258,7 @@ export function waysToBuySection(programme: PricedProgramme, code: CountryCode, 
             <li>Managers see each learner&rsquo;s progress; completion and attendance records for your files</li>
           </ul>
           <p class="co-way-example"><strong>Worked example:</strong> tell us your departments and headcount in a 20-minute call, and we reply with a proposal within one working day. All training is online and self-paced: there are no live or facilitator-led sessions.</p>
-          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a proposal</a></div>
+          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a Company Portal Proposal</a></div>
         </div>
       </div>
       ${code === "NG" ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_LINE)}</p>` : ""}
@@ -284,7 +284,7 @@ export function waysToBuyBrief(code: CountryCode, dark = true): string {
           <h3>Private company portal (by proposal)</h3>
           <p class="co-way-explainer">Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&amp;D lead tracks progress from a manager login.</p>
           <p>A private company space in the Paleon portal for your staff only, in Nigeria, South Africa, Kenya and Ghana. Staff join with your sign-up link and managers track progress. ${escapeHtml(invoiceSentence(code))} All training is self-paced online, never live or facilitator-led.</p>
-          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a proposal</a></div>
+          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a Company Portal Proposal</a></div>
         </div>
       </div>`;
 }
@@ -297,9 +297,10 @@ export function pilotTotal(programme: PricedProgramme, code: CountryCode): numbe
 const PILOT_GUARANTEE_TERMS = "if you order a wider rollout within 90 days, the full pilot fee is credited against it.";
 export const PILOT_GUARANTEE = `Pilot guarantee: ${PILOT_GUARANTEE_TERMS}`;
 
-/** Pilot prices for every country (rows: programmes, columns: countries); the visitor's country first. */
-function pilotTable(code: CountryCode, list: PricedProgramme[]): string {
-  const order = [code, ...MARKET_ORDER.filter((k) => k !== code)];
+/** Pilot prices. On a country page only that country's column (owner, 2026-11-13: "show only
+ * the local set"); on the homepage with no country chosen (code null), all four countries. */
+function pilotTable(code: CountryCode | null, list: PricedProgramme[]): string {
+  const order = code ? [code] : [...MARKET_ORDER];
   const head = order.map((k) => `<th scope="col">${escapeHtml(COUNTRIES[k].name)}</th>`).join("");
   const rows = list
     .map(
@@ -312,17 +313,25 @@ function pilotTable(code: CountryCode, list: PricedProgramme[]): string {
   return `<div class="cp-table-wrap co-pilot-table"><table class="cp-table"><caption>${PILOT_STAFF}-learner pilot, self-paced, including the 10% volume discount</caption><thead><tr><th scope="col">Programme</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-export function pilotSection(code: CountryCode, programme: PricedProgramme | null, dark: boolean): string {
+/** `code` null = the homepage with no country chosen: the buttons go to each country's own
+ * corporate page (its pilot section), never to Nigeria's pages for everyone. */
+export function pilotSection(code: CountryCode | null, programme: PricedProgramme | null, dark: boolean): string {
   const list = programme ? [programme] : [...PRICED_PROGRAMMES];
-  // Each pilot button goes to the buy form of its own programme, in the visitor's country.
-  const buttons = list
-    .map(
-      (p) =>
-        `<a class="btn ${list.length === 1 ? "btn-signal btn-lg" : "btn-signal"}" href="${programme ? "#buy" : `${programmePagePath(p, code)}#buy`}" data-pilot-cta data-programme="${PROGRAMME_SLUGS[p]}">${
-          list.length === 1 ? `Buy a ${PILOT_STAFF}-learner pilot` : `Pilot ${escapeHtml(PROGRAMME_NAMES[p])}`
-        }</a>`,
-    )
-    .join("");
+  // On a country page each pilot button goes to the buy form of its own programme, in that country.
+  const buttons = code
+    ? list
+        .map(
+          (p) =>
+            `<a class="btn ${list.length === 1 ? "btn-signal btn-lg" : "btn-signal"}" href="${programme ? "#buy" : `${programmePagePath(p, code)}#buy`}" data-pilot-cta data-programme="${PROGRAMME_SLUGS[p]}">${
+              list.length === 1 ? `Buy a ${PILOT_STAFF}-learner pilot` : `Pilot ${escapeHtml(PROGRAMME_NAMES[p])}`
+            }</a>`,
+        )
+        .join("")
+    : MARKET_ORDER.map(
+        (k) =>
+          `<a class="btn btn-signal" href="${COUNTRIES[k].site.path}/corporate-training#pilot" data-pilot-cta data-country="${k}">Pilot in ${escapeHtml(COUNTRIES[k].name)}</a>`,
+      ).join("");
+  const where = code ? `Pilot prices in ${escapeHtml(COUNTRIES[code].name)}:` : "Pilot prices in each country (choose yours to buy):";
   return `<section class="section ${dark ? "section-dark" : "section-paper"} ca-section" id="pilot" aria-labelledby="pilot-title">
     <div class="wrap">
       <span class="section-eyebrow">Start small</span>
@@ -331,7 +340,7 @@ export function pilotSection(code: CountryCode, programme: PricedProgramme | nul
         <div class="ca-card co-way">
           <p class="co-way-tag">Paid pilot</p>
           <h3>Pilot with ${PILOT_STAFF} learners</h3>
-          <p>Put ${PILOT_STAFF} staff through the self-paced programme, review their results with us, then decide on a wider rollout. Pilot prices in Nigeria, South Africa, Kenya and Ghana:</p>
+          <p>Put ${PILOT_STAFF} staff through the self-paced programme, review their results with us, then decide on a wider rollout. ${where}</p>
           ${pilotTable(code, list)}
           <p><strong>${escapeHtml(PILOT_GUARANTEE)}</strong></p>
           <div class="ca-ctas">${buttons}</div>
@@ -339,8 +348,8 @@ export function pilotSection(code: CountryCode, programme: PricedProgramme | nul
         <div class="ca-card co-way">
           <p class="co-way-tag">Free</p>
           <h3>Leadership preview</h3>
-          <p>Free self-paced online access to sample modules for your leadership team, so they can see the cyber and AI risks and opportunities the programme covers before you buy. No obligation.</p>
-          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="taster">Request a free preview</a></div>
+          <p>Free self-paced online access to sample modules for your leadership team, so they can see the cyber and AI risks and opportunities the programme covers before you buy. One short form, and the sample modules open straight away.</p>
+          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="${previewSignupPath(code, programme)}" data-preview-cta>Get the free preview</a></div>
         </div>
       </div>
     </div>
@@ -369,28 +378,28 @@ export function termsBlock(dark = false): string {
 }
 
 // ---- PDFs to forward to whoever signs off.
-export function forwardSection(code: CountryCode, programme: PricedProgramme | null, dark: boolean): string {
+export function forwardSection(code: CountryCode | null, programme: PricedProgramme | null, dark: boolean): string {
   const list = programme ? [programme] : [...PRICED_PROGRAMMES];
-  const items = list
-    .map(
-      (p) => `<li><a href="${brochurePath(p, code)}" download>${escapeHtml(PROGRAMME_NAMES[p])} brochure (PDF)</a></li>
-          <li><a href="${businessCasePath(p, code)}" download>${escapeHtml(PROGRAMME_NAMES[p])}: one-page business case (PDF)</a></li>`,
-    )
-    .join("");
+  const items = (k: CountryCode) =>
+    list
+      .map(
+        (p) => `<li><a href="${brochurePath(p, k)}" download>${escapeHtml(PROGRAMME_NAMES[p])} brochure (PDF)</a></li>
+          <li><a href="${businessCasePath(p, k)}" download>${escapeHtml(PROGRAMME_NAMES[p])}: one-page business case (PDF)</a></li>`,
+      )
+      .join("");
+  // A country page shows only its own PDFs (owner, 2026-11-13). The homepage with no country
+  // chosen lists each country's set under its name.
+  const downloads = code
+    ? `<p class="ca-p">Need approval inside your organisation? Download a brochure and a one-page business case with costs in ${escapeHtml(COUNTRIES[code].site.currency.code)}, the outcomes to expect and how the training supports your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}.</p>
+      <ul class="ca-links co-downloads">${items(code)}</ul>`
+    : `<p class="ca-p">Need approval inside your organisation? Download a brochure and a one-page business case for your country, with costs in your currency, the outcomes to expect and your data protection law.</p>
+      ${MARKET_ORDER.map((k) => `<h3 class="cp-subtitle">${escapeHtml(COUNTRIES[k].name)} (${escapeHtml(COUNTRIES[k].site.currency.code)})</h3>
+      <ul class="ca-links co-downloads">${items(k)}</ul>`).join("\n      ")}`;
   return `<section class="section ${dark ? "section-dark" : "section-paper"} ca-section" id="forward" aria-labelledby="forward-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">For the person who signs it off</span>
       <h2 class="section-title" id="forward-title">Something to forward</h2>
-      <p class="ca-p">Need approval inside your organisation? Download a brochure and a one-page business case with costs in ${escapeHtml(COUNTRIES[code].site.currency.code)}, the outcomes to expect and how the training supports your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}.</p>
-      <ul class="ca-links co-downloads">${items}</ul>
-      <p class="ca-p co-other-pdfs">Versions for other countries, with their own currency and data protection law: ${MARKET_ORDER.filter((k) => k !== code)
-        .map(
-          (k) =>
-            `<span class="co-other-pdf"><strong>${escapeHtml(COUNTRIES[k].name)}</strong> (${escapeHtml(COUNTRIES[k].site.currency.code)}): ${list
-              .map((p) => `<a href="${brochurePath(p, k)}" download>${escapeHtml(PROGRAMME_NAMES[p])} brochure</a>, <a href="${businessCasePath(p, k)}" download>business case</a>`)
-              .join("; ")}</span>`,
-        )
-        .join(" ")}</p>
+      ${downloads}
       <h3 class="cp-subtitle">What you hold at audit time</h3>
       <p class="ca-p">Every learner gets a certificate of completion and a dated attendance record showing each module, quiz and status. Your HR or L&amp;D lead gets a manager login showing the seats used and each learner's progress, so the evidence is ready for an auditor, regulator or insurer.</p>
       <ul class="ca-links co-samples">
@@ -399,4 +408,12 @@ export function forwardSection(code: CountryCode, programme: PricedProgramme | n
       </ul>
     </div>
   </section>`;
+}
+
+// ---- Free leadership preview (owner, 2026-11-13): a dedicated one-step sign-up page that
+// opens sample modules straight away, instead of the general enquiry form.
+export const PREVIEW_PATH = "/corporate-training/free-preview";
+export function previewSignupPath(code: CountryCode | null, programme: PricedProgramme | null): string {
+  const q = [code ? `country=${code.toLowerCase()}` : "", programme ? `programme=${programme}` : ""].filter(Boolean).join("&");
+  return q ? `${PREVIEW_PATH}?${q}` : PREVIEW_PATH;
 }

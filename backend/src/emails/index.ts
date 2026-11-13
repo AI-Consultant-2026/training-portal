@@ -9,6 +9,7 @@ import { buildCorporateEnquiryEmail } from "./templates/corporateEnquiry";
 import { buildCorporateInviteEmail, buildCorporateWelcomeEmail } from "./templates/corporate";
 import {
   buildCorporateInvoiceRequestEmail,
+  buildCorporatePreviewEmail,
   buildCorporateOrderAdminEmail,
   buildCorporateOrderPaidEmail,
 } from "./templates/corporateOrders";
@@ -202,4 +203,9 @@ export async function sendCorporateInvoiceRequestEmail(
 
 export async function sendCorporateOrderAdminEmail(input: Parameters<typeof buildCorporateOrderAdminEmail>[0]): Promise<void> {
   await sendEmail(buildCorporateOrderAdminEmail(input));
+}
+
+// Free leadership preview links (2026-11-13).
+export async function sendCorporatePreviewEmail(input: Parameters<typeof buildCorporatePreviewEmail>[0]): Promise<void> {
+  await sendEmail(buildCorporatePreviewEmail(input));
 }

@@ -252,7 +252,11 @@ function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
     "Training is online, per learner or in a private company portal: your staff learn self-paced online. There are no live or facilitator-led sessions" +
-    (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
+    (code === "NG"
+      ? ". We provide the attendance records and documentation for ITF reimbursement claims."
+      : code === "ZA"
+        ? ". You can include the training in your Workplace Skills Plan and Annual Training Report for the SETA mandatory grant (20% of your Skills Development Levy), and skills spend counts towards the B-BBEE skills development element; your verification agency confirms how it is recognised."
+        : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Cybersecurity awareness training for employees across ${escapeHtml(country)}</span>
@@ -371,7 +375,7 @@ export function renderCyberSecure(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-${corporateUtilBar(home)}
+${corporateUtilBar(home, code)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   ${hero(code, c)}

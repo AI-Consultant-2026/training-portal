@@ -5,7 +5,19 @@ import { COUNTRY_CODES } from "../constants/countries";
 // /ng, /za, /gh and /ke/corporate-training/ai-workflow-productivity.
 // The option lists here and in views/corporateAiWorkflow.ts must match.
 
+// Organisation size (the Readiness Check's "Number of employees").
 export const CORPORATE_EMPLOYEE_BANDS = ["1–49", "50–249", "250–999", "1,000+"] as const;
+
+// The enquiry form's "Staff to train" (owner, 2026-11-13): the same bands as the volume
+// discount tiers, so an enquiry shows which price applies. The old organisation-size bands are
+// still accepted from pages cached before the change.
+export const CORPORATE_HEADCOUNT_BANDS = ["1–9", "10–49", "50–199", "200+"] as const;
+export const HEADCOUNT_BAND_LABELS: Record<(typeof CORPORATE_HEADCOUNT_BANDS)[number], string> = {
+  "1–9": "1–9 learners (list price)",
+  "10–49": "10–49 learners (10% off)",
+  "50–199": "50–199 learners (20% off)",
+  "200+": "200+ learners (30% off)",
+};
 
 export const CORPORATE_DEPARTMENTS = [
   "Whole organisation",
@@ -97,7 +109,7 @@ export const corporateLeadSchema = z.object({
       .optional()
       .transform((v) => (v ? v : undefined))
       .refine((v) => v === undefined || PHONE_REGEX.test(v), { message: "Invalid phone number" }),
-    employees: z.enum(CORPORATE_EMPLOYEE_BANDS),
+    employees: z.enum([...CORPORATE_HEADCOUNT_BANDS, ...CORPORATE_EMPLOYEE_BANDS]),
     department: z.enum(CORPORATE_DEPARTMENTS).optional(),
     requirement: z.enum(ALL_REQUIREMENTS).optional(),
     delivery: z.enum(CORPORATE_DELIVERY).optional(),
@@ -116,3 +128,22 @@ export const corporateLeadSchema = z.object({
 });
 
 export type CorporateLeadInput = z.infer<typeof corporateLeadSchema>["body"];
+
+// The free leadership preview's one-step sign-up (2026-11-13): name, work email, organisation,
+// country and which programme to open first. No headcount: it is not an enquiry.
+export const corporatePreviewSchema = z.object({
+  body: z.object({
+    name: short(),
+    jobTitle: optionalText(150),
+    organisation: short(200),
+    country: z.enum([...COUNTRY_CODES, "XX"]),
+    email: z.string().trim().email().max(200),
+    programme: z.enum(["cybersecure", "ai-workflow", "accelerator"]).default("cybersecure"),
+    consent: z.literal(true, { errorMap: () => ({ message: "Please tick the box so we can send your preview" }) }),
+    updates: z.boolean().optional(),
+    page: optionalText(300),
+    website: z.string().max(0).optional(),
+  }),
+});
+
+export type CorporatePreviewInput = z.infer<typeof corporatePreviewSchema>["body"];

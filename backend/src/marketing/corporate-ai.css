@@ -353,3 +353,15 @@
 .co-other-pdfs { font-size: 15px; line-height: 1.7; }
 .co-other-pdf { display: block; margin-top: 6px; }
 .co-samples { flex-direction: column; align-items: flex-start; }
+
+/* Free leadership preview (2026-11-13) */
+.pv-tabs { margin: 18px 0 8px; }
+.pv-lesson { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--line, #E5E7EB); }
+.pv-lesson h2.section-title { font-size: 26px; }
+.pv-lesson h2:not(.section-title) { font-size: 21px; margin: 26px 0 8px; }
+.pv-lesson h3 { font-size: 18px; margin: 20px 0 6px; }
+.pv-lesson p, .pv-lesson li { font-size: 16.5px; line-height: 1.65; }
+.pv-lesson blockquote { margin: 16px 0; padding: 10px 16px; border-left: 4px solid var(--signal, #2563EB); background: var(--paper-2, #F9FAFB); }
+.pv-lesson details { margin: 8px 0 16px; padding: 10px 14px; border: 1px solid var(--line, #E5E7EB); border-radius: 8px; }
+.pv-lesson summary { cursor: pointer; font-weight: 600; }
+.pv-next { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line, #E5E7EB); }

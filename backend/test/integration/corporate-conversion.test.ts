@@ -98,6 +98,75 @@ describe("Corporate conversion review (2026-11-13)", () => {
     expect(ng).toContain("Volume discounts: 10% for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200+.");
   });
 
+  it("sends homepage pilot buttons to each country's own page, not Nigeria's (owner, 2026-11-13)", async () => {
+    const hub = (await request(app).get("/")).text;
+    const pilot = hub.slice(hub.indexOf('id="pilot"'), hub.indexOf("</section>", hub.indexOf('id="pilot"')));
+    for (const cc of ["za", "ke", "gh", "ng"]) expect(pilot).toContain(`href="/${cc}/corporate-training#pilot" data-pilot-cta`);
+    expect(pilot).not.toContain("/ng/corporate-training/cybersecure-workforce#buy");
+  });
+
+  it("shows support hours in local time on each country's pages", async () => {
+    const hours: [string, string][] = [
+      ["za", "11am&ndash;8pm SAST"],
+      ["ke", "12pm&ndash;9pm EAT"],
+      ["gh", "9am&ndash;6pm GMT"],
+      ["ng", "10am&ndash;7pm WAT"],
+    ];
+    for (const [cc, h] of hours) {
+      const html = (await request(app).get(`/${cc}/corporate-training/cybersecure-workforce`)).text;
+      expect(html).toContain(`<span class="util-note">Mon&ndash;Fri, ${h}</span>`);
+    }
+  });
+
+  it("explains the Skills Development Levy, SETA grants and B-BBEE on the South Africa page", async () => {
+    const za = (await request(app).get("/za/corporate-training")).text;
+    expect(za).toContain("<strong>Skills Development Levy.</strong>");
+    expect(za).toContain("mandatory grant of 20% of the levy you paid");
+    expect(za).toContain("<strong>B-BBEE skills spend.</strong>");
+    expect(za).toContain('href="/corporate-guides/skills-development-levy-training-south-africa"');
+    expect((await request(app).get("/ke/corporate-training")).text).not.toContain("Skills Development Levy.");
+  });
+
+  it("matches the headcount bands to the discount tiers and pre-selects the enquiry type", async () => {
+    const html = (await request(app).get("/za/corporate-training/cybersecure-workforce")).text;
+    for (const b of ["1–9 learners (list price)", "10–49 learners (10% off)", "50–199 learners (20% off)", "200+ learners (30% off)"]) expect(html).toContain(b);
+    expect(html).toContain('<select class="form-select" id="ca-intent" name="intent">');
+    expect(html).toContain('<option value="reserve">A December onboarding slot</option>');
+    expect(html).not.toContain(">Request a proposal<");
+    const res = await request(app).post("/api/leads/corporate").send({
+      name: "Lindiwe Dlamini", organisation: "Example Insurance Ltd", country: "ZA", email: "lindiwe@example.co.za",
+      employees: "50–199", intent: "consultation", programme: "cybersecure-workforce", consent: true,
+    });
+    expect(res.status).toBe(201);
+    expect(memAdapter.sentMessages.at(-1)?.text).toContain("Staff to train: 50–199 (20% volume discount)");
+  });
+
+  it("gives a one-step free preview that opens the sample modules straight away", async () => {
+    const page = (await request(app).get("/corporate-training/free-preview?country=ke&programme=ai-workflow")).text;
+    expect(page).toContain('id="pvForm"');
+    expect(page).toContain('<option value="ai-workflow" selected>');
+    const res = await request(app).post("/api/leads/corporate-preview").send({
+      name: "Amina Otieno", email: "amina@example.co.ke", organisation: "Example Bank Kenya", country: "KE", programme: "ai-workflow", consent: true,
+    });
+    expect(res.status).toBe(201);
+    expect(res.body.url).toMatch(/^\/corporate-training\/free-preview\/ai-workflow\?t=/);
+    const sample = await request(app).get(res.body.url);
+    expect(sample.status).toBe(200);
+    expect(sample.text).toContain("Module 1");
+    expect(sample.text).toContain("Lesson 1:");
+    expect(sample.text).not.toMatch(/Video coming soon/);
+    expect(sample.text).toContain('<meta name="robots" content="noindex">');
+    const toBuyer = memAdapter.sentMessages.find((m) => m.to === "amina@example.co.ke");
+    expect(toBuyer?.subject).toBe("Example Bank Kenya: your free leadership preview");
+    expect(toBuyer?.text).toContain("/corporate-training/free-preview/cybersecure?t=");
+    expect(memAdapter.sentMessages.some((m) => /Leadership preview request/.test(m.subject))).toBe(true);
+    const lead = await Lead.findOne({ where: { email: "amina@example.co.ke" } });
+    expect(lead?.details).toMatchObject({ intent: "taster", organisation: "Example Bank Kenya" });
+    const forged = await request(app).get("/corporate-training/free-preview/ai-workflow?t=abc.def");
+    expect(forged.status).toBe(403);
+    expect(forged.text).not.toContain("Lesson 1:");
+  });
+
   it("uses one corporate email and the UK WhatsApp line, with no Nigerian call line", async () => {
     for (const path of CORPORATE_PAGES) {
       const html = (await request(app).get(path)).text;
@@ -115,7 +184,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
     expect(html).toContain("25 staff × R900 (10% volume discount) = R22,500");
     expect(html).toContain("Pilot with 10 learners");
     expect(html).toContain('<td class="co-here">R9,000</td>');
-    expect(html).toContain('data-intent="taster"');
+    expect(html).toContain('href="/corporate-training/free-preview?country=za&amp;programme=cybersecure" data-preview-cta'.replace("&amp;", "&"));
     // Outcomes come before the module list.
     expect(html.indexOf('id="outcomes"')).toBeLessThan(html.indexOf('id="modules"'));
   });
@@ -232,10 +301,12 @@ describe("Corporate conversion review (2026-11-13)", () => {
 });
 
 describe("Second corporate review (2026-11-13)", () => {
-  it("prices the pilot in every country and sends each pilot button to its own programme", async () => {
+  it("prices the pilot in the local currency only and sends each pilot button to its own programme", async () => {
     const hub = (await request(app).get("/ke/corporate-training")).text;
     const pilot = hub.slice(hub.indexOf('id="pilot"'), hub.indexOf("</section>", hub.indexOf('id="pilot"')));
-    for (const country of ["Nigeria", "South Africa", "Kenya", "Ghana"]) expect(pilot).toContain(`<th scope="col">${country}</th>`);
+    expect(pilot).toContain('<th scope="col">Kenya</th>');
+    for (const country of ["Nigeria", "South Africa", "Ghana"]) expect(pilot).not.toContain(`<th scope="col">${country}</th>`);
+    expect(pilot).not.toMatch(/₦|GH₵|R\d/);
     expect(pilot).toContain('href="/ke/corporate-training/cybersecure-workforce#buy" data-pilot-cta');
     expect(pilot).toContain('href="/ke/corporate-training/ai-workflow-productivity#buy" data-pilot-cta');
     expect(pilot).toContain('href="/ke/corporate-training/ai-cybersecurity-professional-accelerator#buy" data-pilot-cta');
@@ -251,10 +322,12 @@ describe("Second corporate review (2026-11-13)", () => {
     expect(after).not.toContain("Free rescheduling");
   });
 
-  it("links other countries' brochures and the sample certificate and attendance record", async () => {
-    const html = (await request(app).get("/ng/corporate-training/cybersecure-workforce")).text;
+  it("links only the local brochures, and the sample certificate and attendance record", async () => {
+    const html = (await request(app).get("/za/corporate-training/cybersecure-workforce")).text;
     expect(html).toContain('href="/corporate-training/brochures/cybersecure-workforce-za.pdf"');
-    expect(html).toContain('href="/corporate-training/business-case/cybersecure-workforce-ke.pdf"');
+    expect(html).not.toMatch(/(brochures|business-case)\/[a-z-]+-(ng|ke|gh)\.pdf/);
+    const za = (await request(app).get("/za/corporate-training")).text;
+    expect(za).not.toMatch(/(brochures|business-case)\/[a-z-]+-(ng|ke|gh)\.pdf/);
     expect(html).toContain('href="/corporate-training/samples/certificate.pdf"');
     for (const path of ["/corporate-training/samples/certificate.pdf", "/corporate-training/samples/attendance-record.pdf"]) {
       const res = await request(app).get(path).buffer(true);

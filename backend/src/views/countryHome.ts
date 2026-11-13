@@ -240,12 +240,23 @@ export function previewHref(country: CountryCode, slug: string): string {
 // The thin bar above the header on every corporate page (2026-11-13): one email, one
 // WhatsApp line, and the link for individual learners, moved out of the main navigation so
 // business buyers are not distracted by it.
-export function corporateUtilBar(home: string): string {
+// Hours in the visitor's local time (owner, 2026-11-13): the team works 10am-7pm WAT
+// (09:00-18:00 GMT/UTC), shown as each country's own clock. Pages with no single country
+// (the homepage with none chosen, the promotion page) show WAT and GMT.
+export const SUPPORT_HOURS: Record<CountryCode, string> = {
+  NG: "Mon&ndash;Fri, 10am&ndash;7pm WAT",
+  ZA: "Mon&ndash;Fri, 11am&ndash;8pm SAST",
+  KE: "Mon&ndash;Fri, 12pm&ndash;9pm EAT",
+  GH: "Mon&ndash;Fri, 9am&ndash;6pm GMT",
+};
+
+export function corporateUtilBar(home: string, code: CountryCode | null = null): string {
+  const hours = code ? SUPPORT_HOURS[code] : "Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)";
   return `<div class="util-bar">
   <div class="wrap util-row">
     <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
     <a href="https://wa.me/447508823495" target="_blank" rel="noopener">WhatsApp +44 7508 823495</a>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
+    <span class="util-note">${hours}</span>
     <a class="util-individuals" href="${home}">For individuals &rarr;</a>
   </div>
 </div>`;

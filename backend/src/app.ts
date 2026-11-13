@@ -27,6 +27,9 @@ import * as corporateOrderService from "./services/corporateOrder.service";
 import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { renderSector, renderSectorsIndex, SECTORS_PATH } from "./views/corporateSectors";
+import { renderPreviewModule, renderPreviewSignup } from "./views/corporatePreview";
+import { PREVIEW_PATH } from "./views/corporateOffers";
+import { PREVIEW_PROGRAMMES, isValidPreviewToken } from "./services/corporatePreview.service";
 import { BROCHURE_BASE, BUSINESS_CASE_BASE, parsePdfSlug } from "./views/corporateOffers";
 import {
   SAMPLE_ATTENDANCE_PATH,
@@ -273,6 +276,35 @@ export function createApp() {
   });
   // The corporate sector pages (2026-11-13): an index and one page per sector, for all four
   // countries (?country= or the remembered country sets prices and the data protection law).
+  // Free leadership preview (2026-11-13): one-step sign-up, then module 1 of each programme
+  // behind the signed link the sign-up returns.
+  app.get(PREVIEW_PATH, (req, res) => {
+    const asked = String(req.query.country ?? "").toUpperCase();
+    const prog = String(req.query.programme ?? "");
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(
+      renderPreviewSignup(
+        isCountryCode(asked) ? asked : null,
+        (PREVIEW_PROGRAMMES as string[]).includes(prog) ? (prog as (typeof PREVIEW_PROGRAMMES)[number]) : null,
+        chosenCountry(req),
+      ),
+    );
+  });
+  app.get(`${PREVIEW_PATH}/:programme`, (req, res, next) => {
+    const prog = req.params.programme;
+    if (!(PREVIEW_PROGRAMMES as string[]).includes(prog)) return next();
+    const token = typeof req.query.t === "string" ? req.query.t : "";
+    const valid = isValidPreviewToken(token);
+    res.set("Cache-Control", "private, no-store");
+    res.set("X-Robots-Tag", "noindex");
+    res.status(valid ? 200 : 403).type("html").send(
+      renderPreviewModule(prog as (typeof PREVIEW_PROGRAMMES)[number], valid ? token : null, chosenCountry(req)),
+    );
+  });
+  app.get("/corporate-preview.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "corporate-preview.js"));
+  });
   app.get(SECTORS_PATH, (req, res) => {
     const asked = String(req.query.country ?? "").toUpperCase();
     res.set("Cache-Control", "private, no-cache");
