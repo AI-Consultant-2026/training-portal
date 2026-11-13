@@ -363,7 +363,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <ul class="ca-links">${MARKET_ORDER.map(
         (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</a></li>`,
       ).join("")}</ul>
-      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption${hasOnboardingSlots("accelerator") ? ` (company onboarding: ${slotsLeft("accelerator")})` : ""}: ${MARKET_ORDER.map(
+      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption${hasOnboardingSlots("accelerator") ? ` (company onboarding: ${slotsLeft()}, shared with AI Workflow Productivity)` : ""}: ${MARKET_ORDER.map(
         (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
       ).join(", ")}.</p>
       <div class="ca-ctas">${reserveButton("ai-workflow")}</div>

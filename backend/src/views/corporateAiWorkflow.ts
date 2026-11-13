@@ -591,7 +591,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    a: `Yes. AI Workflow Productivity & Process Transformation is available online and in-house in all three countries, self-paced, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. ${onboardingSummary([["ai-workflow", "AI Workflow"], ["accelerator", "the Accelerator"]])}`,
+    a: `Yes. AI Workflow Productivity & Process Transformation is available online and in-house in all three countries, self-paced, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. ${onboardingSummary()}`,
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
@@ -864,7 +864,7 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="cybersecure-title">CyberSecure Workforce: cybersecurity awareness training</h2>
       <p class="ca-headline co-lead">Fewer incidents that start with a person.</p>
       ${outcomeList("cybersecure", ctx.country)}
-      ${cohortNotice("cybersecure")}
+      ${cohortNotice("cybersecure", true)}
       <div class="ca-ctas">${reserveButton("cybersecure")}</div>
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <figure class="ca-video">
@@ -886,7 +886,7 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
       <p class="ca-headline co-lead">Hours saved every week, with the risks managed.</p>
       ${outcomeList("ai-workflow", ctx.country)}
-      ${cohortNotice("ai-workflow")}
+      ${cohortNotice("ai-workflow", true)}
       <div class="ca-ctas">${reserveButton("ai-workflow")}</div>
       <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
       <figure class="ca-video">
@@ -906,7 +906,7 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="accelerator-title">AI + Cybersecurity Professional Accelerator</h2>
       <p class="ca-headline co-lead">Your own people leading secure AI adoption.</p>
       ${outcomeList("accelerator", ctx.country)}
-      ${cohortNotice("accelerator")}
+      ${cohortNotice("accelerator", true)}
       <div class="ca-ctas">${reserveButton("accelerator")}</div>
       <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
       <figure class="ca-video">

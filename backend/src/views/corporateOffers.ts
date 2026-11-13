@@ -18,50 +18,50 @@ function escapeHtml(value: string): string {
 
 const money = (code: CountryCode, amount: number) => formatMoney(code, amount);
 
-// ---- Company onboarding slots left for December 2026, per programme (owner, 2026-11-13).
-// A slot is one organisation's onboarding: portal setup, the staff sign-up link and a manager
-// login. It is not an intake or a cohort: individual places bought online start today.
-// Keep these true and current. At 0 the onboarding line, the reserve button and the FAQ
-// mentions disappear for that programme (December full).
+// ---- Company onboarding slots left for December 2026 (owner, 2026-11-13): ONE count shared
+// by all three programmes. A slot is one organisation's onboarding: portal setup, the staff
+// sign-up link and a manager login. It is not an intake or a cohort: individual places bought
+// online start today. Keep ONBOARDING.slotsLeft true and current. At 0 the onboarding line,
+// the reserve buttons and the FAQ mentions disappear everywhere (December full).
 export const COHORT_NAME = "December 2026";
-export const COHORT_PLACES: Record<PricedProgramme, number> = { "ai-workflow": 12, cybersecure: 8, accelerator: 10 };
+export const ONBOARDING = { slotsLeft: 10 };
 export const RESERVE_CTA = "Reserve a December onboarding slot";
 export const ONBOARDING_COVERS =
   "Each slot covers portal setup, your staff sign-up link and a manager login for one organisation.";
 export const PLACES_START_TODAY = "Individual places bought online start today.";
+const SHARED = "shared across our three corporate programmes";
 
-export function hasOnboardingSlots(programme: PricedProgramme): boolean {
-  return COHORT_PLACES[programme] > 0;
+// The programme argument is kept for call sites; the count is shared.
+export function hasOnboardingSlots(_programme?: PricedProgramme): boolean {
+  return ONBOARDING.slotsLeft > 0;
 }
 
-export function slotsLeft(programme: PricedProgramme): string {
-  const n = COHORT_PLACES[programme];
+export function slotsLeft(_programme?: PricedProgramme): string {
+  const n = ONBOARDING.slotsLeft;
   return `${n} ${COHORT_NAME} slot${n === 1 ? "" : "s"} left`;
 }
 
 /** The onboarding line as plain text (FAQs, JSON-LD); just "places start today" once December is full. */
-export function cohortSentence(programme: PricedProgramme): string {
-  if (!hasOnboardingSlots(programme)) return PLACES_START_TODAY;
-  return `Company onboarding: ${slotsLeft(programme)}. ${ONBOARDING_COVERS} ${PLACES_START_TODAY}`;
+export function cohortSentence(_programme?: PricedProgramme): string {
+  if (!hasOnboardingSlots()) return PLACES_START_TODAY;
+  return `Company onboarding: ${slotsLeft()}. ${ONBOARDING_COVERS} ${PLACES_START_TODAY}`;
 }
 
-/** Several programmes in one sentence, skipping any that are full. */
-export function onboardingSummary(items: [PricedProgramme, string][]): string {
-  const open = items.filter(([p]) => hasOnboardingSlots(p));
-  if (!open.length) return PLACES_START_TODAY;
-  const parts = open.map(([p, name], i) => `${i === 0 ? slotsLeft(p) : `${COHORT_PLACES[p]}`} for ${name}`);
-  const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0];
-  return `Company onboarding: ${list}. ${ONBOARDING_COVERS} ${PLACES_START_TODAY}`;
+/** For pages and answers that cover all the programmes: says the count is shared. */
+export function onboardingSummary(): string {
+  if (!hasOnboardingSlots()) return PLACES_START_TODAY;
+  return `Company onboarding: ${slotsLeft()}, ${SHARED}. ${ONBOARDING_COVERS} ${PLACES_START_TODAY}`;
 }
 
-export function cohortNotice(programme: PricedProgramme): string {
-  if (!hasOnboardingSlots(programme)) return "";
-  return `<p class="ca-booked"><strong>Company onboarding: ${slotsLeft(programme)}.</strong> ${ONBOARDING_COVERS} ${PLACES_START_TODAY}</p>`;
+/** shared = true on pages that show more than one programme, so 10 is not read as 10 each. */
+export function cohortNotice(_programme?: PricedProgramme, shared = false): string {
+  if (!hasOnboardingSlots()) return "";
+  return `<p class="ca-booked"><strong>Company onboarding: ${slotsLeft()}${shared ? `, ${SHARED}` : ""}.</strong> ${ONBOARDING_COVERS} ${PLACES_START_TODAY}</p>`;
 }
 
-export function reserveButton(programme: PricedProgramme): string {
-  if (!hasOnboardingSlots(programme)) return "";
-  return `<a class="btn btn-signal btn-lg" href="#enquiry" data-intent="reserve" data-places="${COHORT_PLACES[programme]}">${escapeHtml(RESERVE_CTA)}</a>`;
+export function reserveButton(_programme?: PricedProgramme): string {
+  if (!hasOnboardingSlots()) return "";
+  return `<a class="btn btn-signal btn-lg" href="#enquiry" data-intent="reserve" data-places="${ONBOARDING.slotsLeft}">${escapeHtml(RESERVE_CTA)}</a>`;
 }
 
 // ---- "Book a 20-minute call": WhatsApp with the message typed in, until there is a calendar.

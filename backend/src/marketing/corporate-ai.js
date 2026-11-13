@@ -29,7 +29,7 @@
     reserve: { note: "", button: "Reserve my team's places" },
     taster: { note: "Free leadership preview: self-paced online access to sample modules for your leadership team, with no obligation.", button: "Request a free preview" },
   };
-  // The places left come from the button that was clicked (data-places, per programme).
+  // The places left come from the button that was clicked (data-places; one count shared by all programmes).
   function setIntent(name, places) {
     var it = INTENTS[name] || INTENTS.proposal;
     if (name === "reserve") {

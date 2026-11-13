@@ -2,7 +2,7 @@ import request from "supertest";
 import { createApp } from "../../src/app";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 import { Lead } from "../../src/models";
-import { COHORT_PLACES, cohortNotice, cohortSentence, onboardingSummary, reserveButton } from "../../src/views/corporateOffers";
+import { ONBOARDING, cohortNotice, cohortSentence, onboardingSummary, reserveButton } from "../../src/views/corporateOffers";
 
 // The owner's 12-point conversion review of the corporate pages (2026-11-13).
 const app = createApp();
@@ -29,8 +29,8 @@ describe("Corporate conversion review (2026-11-13)", () => {
     }
     // December 2026 company onboarding slots per programme; individual places start today (online and in-house only, 2026-11-13).
     for (const [path, places] of [
-      ["/ke/corporate-training/ai-workflow-productivity", 12],
-      ["/za/corporate-training/cybersecure-workforce", 8],
+      ["/ke/corporate-training/ai-workflow-productivity", 10],
+      ["/za/corporate-training/cybersecure-workforce", 10],
       ["/gh/corporate-training/ai-cybersecurity-professional-accelerator", 10],
     ] as const) {
       const html = (await request(app).get(path)).text;
@@ -42,23 +42,27 @@ describe("Corporate conversion review (2026-11-13)", () => {
       expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve a December onboarding slot</a>`);
     }
     const hub = (await request(app).get("/")).text;
-    for (const places of [12, 8, 10]) expect(hub).toContain(`Company onboarding: ${places} December 2026 slots left.`);
+    // One count shared by the three programmes (owner, 2026-11-13); multi-programme pages say so.
+    expect(hub).toContain("Company onboarding: 10 December 2026 slots left, shared across our three corporate programmes.");
+    expect(hub).not.toMatch(/\b(12|8) December 2026 slots/);
+    const za = (await request(app).get("/za/corporate-training")).text;
+    expect(za.match(/Company onboarding: 10 December 2026 slots left, shared/g)?.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("drops the onboarding line, button and FAQ mention when December is full", () => {
-    const saved = { ...COHORT_PLACES };
+  it("drops the onboarding line, buttons and FAQ mentions when December is full", () => {
+    const saved = ONBOARDING.slotsLeft;
     try {
-      COHORT_PLACES.cybersecure = 0;
-      expect(cohortNotice("cybersecure")).toBe("");
-      expect(reserveButton("cybersecure")).toBe("");
-      expect(cohortSentence("cybersecure")).toBe("Individual places bought online start today.");
-      expect(onboardingSummary([["cybersecure", "CyberSecure Workforce"], ["accelerator", "the Accelerator"]])).toContain(
-        "Company onboarding: 10 December 2026 slots left for the Accelerator.",
-      );
-      COHORT_PLACES.accelerator = 1;
+      ONBOARDING.slotsLeft = 0;
+      for (const p of ["cybersecure", "ai-workflow", "accelerator"] as const) {
+        expect(cohortNotice(p)).toBe("");
+        expect(reserveButton(p)).toBe("");
+        expect(cohortSentence(p)).toBe("Individual places bought online start today.");
+      }
+      expect(onboardingSummary()).toBe("Individual places bought online start today.");
+      ONBOARDING.slotsLeft = 1;
       expect(cohortNotice("accelerator")).toContain("1 December 2026 slot left.");
     } finally {
-      Object.assign(COHORT_PLACES, saved);
+      ONBOARDING.slotsLeft = saved;
     }
   });
 

@@ -60,11 +60,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       : []),
     {
       q: "When can our team start?",
-      a: onboardingSummary([
-        ["cybersecure", "CyberSecure Workforce"],
-        ["ai-workflow", "AI Workflow Productivity"],
-        ["accelerator", "the Accelerator"],
-      ]),
+      a: onboardingSummary(),
     },
     {
       q: "Can the training be customised for our organisation?",
@@ -202,7 +198,6 @@ ${header(ctx, home, "/", true)}
         <div class="ca-card">
           <h3><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness training</a></h3>
           ${outcomeList("cybersecure", code)}
-          ${cohortNotice("cybersecure")}
           <p>Every employee learns to recognise, stop and report phishing, payment fraud and impersonation, protect business information and use AI tools safely. Twelve practical modules for non-technical staff, from the boardroom to the front desk.</p>
           <p>It builds awareness of handling personal and customer data responsibly, in line with your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}. Awareness training, not legal advice.</p>
           <p class="ca-card-link"><a href="${cyberSecurePath(code)}">Cybersecurity awareness training in ${escapeHtml(country)} &rarr;</a></p>
@@ -210,18 +205,17 @@ ${header(ctx, home, "/", true)}
         <div class="ca-card">
           <h3><a href="${corporateAiPath(code)}">AI Workflow Productivity &amp; Process Transformation</a></h3>
           ${outcomeList("ai-workflow", code)}
-          ${cohortNotice("ai-workflow")}
           <p>Your employees learn to use AI tools such as ChatGPT, Claude and Gemini on their own work &mdash; reports, emails, meeting follow-ups, documents and data &mdash; and to redesign repetitive workflows safely, with human review. Ten practical modules and a real workplace project.</p>
           <p class="ca-card-link"><a href="${corporateAiPath(code)}">AI training for employees in ${escapeHtml(country)} &rarr;</a></p>
         </div>
         <div class="ca-card">
           <h3><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator</a></h3>
           ${outcomeList("accelerator", code)}
-          ${cohortNotice("accelerator")}
           <p>For the IT, security, risk, data and digital professionals who will lead secure AI adoption. Twelve professional modules and a capstone on a real challenge from their organisation.</p>
           <p class="ca-card-link"><a href="${acceleratorPath(code)}">AI and cybersecurity training for professionals in ${escapeHtml(country)} &rarr;</a></p>
         </div>
       </div>
+      ${cohortNotice(undefined, true)}
       <h3 class="cp-subtitle" id="pricing">Prices in ${escapeHtml(country)}</h3>
       ${pricingSummaryTable([code])}
       <h3 class="cp-subtitle">Two ways to buy</h3>
