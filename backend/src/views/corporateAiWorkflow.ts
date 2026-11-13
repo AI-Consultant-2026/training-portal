@@ -26,10 +26,8 @@ import { hubPricingFaqAnswer, pricingFaqAnswer, pricingSection, pricingSummaryTa
 import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 import {
   CALL_URL,
-  COHORT_NAME,
   cohortNotice,
   cohortSentence,
-  COHORT_PLACES,
   RESERVE_CTA,
   callButton,
   forwardSection,
@@ -38,6 +36,8 @@ import {
   pilotSection,
   readinessButton,
   reserveButton,
+  hasOnboardingSlots,
+  onboardingSummary,
   waysToBuyBrief,
   waysToBuySection,
 } from "./corporateOffers";
@@ -225,7 +225,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "When can we start?",
-      a: `${cohortSentence("ai-workflow")} Reserve places now and we will complete the needs assessment with you in advance, so your teams are ready to start.`,
+      a: `${cohortSentence("ai-workflow")}${hasOnboardingSlots("ai-workflow") ? " Reserve an onboarding slot now and we will complete the needs assessment with you in advance, so your teams are ready to start." : ""}`,
     },
     {
       q: "How much does corporate AI training cost?",
@@ -233,7 +233,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "Can we combine AI training with cybersecurity training for our staff?",
-      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available for companies in ${country}, self-paced now or live from the ${COHORT_NAME} cohort.`,
+      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available online and in-house for companies in ${country}, and individual places bought online start today.`,
     },
   ];
 }
@@ -325,7 +325,7 @@ const AI_FORM: EnquiryForm = {
 // The enquiry form (shortened 2026-11-13, owner request): name, business email,
 // organisation, country and headcount only; the rest is collected on the call. `code`
 // presets the country (a country page); null is the hub, where the visitor picks it.
-// The buttons that open it set the intent: proposal, reserve (the December 2026 intake)
+// The buttons that open it set the intent: proposal, reserve (a December 2026 onboarding slot)
 // or taster (the free self-paced leadership preview); corporate-ai.js changes the heading and button.
 export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: EnquiryForm = AI_FORM): string {
   const { title, lede, note } = copy;
@@ -589,7 +589,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    a: `Yes. AI Workflow Productivity & Process Transformation is available online and in-house in all three countries, self-paced, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. The ${COHORT_NAME} intake has ${COHORT_PLACES["ai-workflow"]} places left for AI Workflow and ${COHORT_PLACES.accelerator} for the Accelerator; places bought today start today.`,
+    a: `Yes. AI Workflow Productivity & Process Transformation is available online and in-house in all three countries, self-paced, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. ${onboardingSummary([["ai-workflow", "AI Workflow"], ["accelerator", "the Accelerator"]])}`,
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",

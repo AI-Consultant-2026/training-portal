@@ -1,7 +1,7 @@
 import { COUNTRIES, MARKET_ORDER } from "../constants/countries";
 import { flagSvg } from "./flags";
 import { ORGANIZATION_LD } from "./corporateLocal";
-import { COHORT_PLACES, cohortNotice, cohortSentence, callButton, readinessButton, reserveButton } from "./corporateOffers";
+import { cohortNotice, hasOnboardingSlots, slotsLeft, cohortSentence, callButton, readinessButton, reserveButton } from "./corporateOffers";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import {
   CORPORATE_HUB_PATH,
@@ -122,7 +122,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "When can we start?",
-    `${cohortSentence("ai-workflow")} Reserve places now and complete the needs assessment in advance.`,
+    `${cohortSentence("ai-workflow")}${hasOnboardingSlots("ai-workflow") ? " Reserve an onboarding slot now and complete the needs assessment in advance." : ""}`,
   ],
   [
     "How do we contact you?",
@@ -363,7 +363,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <ul class="ca-links">${MARKET_ORDER.map(
         (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</a></li>`,
       ).join("")}</ul>
-      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (December 2026 intake: ${COHORT_PLACES.accelerator} places left): ${MARKET_ORDER.map(
+      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption${hasOnboardingSlots("accelerator") ? ` (company onboarding: ${slotsLeft("accelerator")})` : ""}: ${MARKET_ORDER.map(
         (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
       ).join(", ")}.</p>
       <div class="ca-ctas">${reserveButton("ai-workflow")}</div>

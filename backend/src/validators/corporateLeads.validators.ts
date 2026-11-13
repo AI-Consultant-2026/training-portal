@@ -65,7 +65,7 @@ export type CorporateProgramme = (typeof CORPORATE_PROGRAMMES)[number];
 // facilitator-led or hybrid. No form asks any more; kept so older leads still validate.
 export const CORPORATE_DELIVERY = ["Online", "In-house", "Not sure"] as const;
 
-// reserve = the December 2026 intake, taster = the free self-paced leadership preview (2026-11-13).
+// reserve = a December 2026 company onboarding slot, taster = the free self-paced leadership preview (2026-11-13).
 export const CORPORATE_INTENTS = ["consultation", "proposal", "reserve", "taster"] as const;
 
 // The words the visitor agreed to, saved with the lead.

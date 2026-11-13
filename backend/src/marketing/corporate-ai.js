@@ -20,7 +20,7 @@
   var programme = form.getAttribute("data-programme") || "ai-workflow";
 
   // Every CTA scrolls to the form (href #enquiry) and sets what the visitor wants
-  // (2026-11-13): a proposal, places in the December 2026 intake, or the free self-paced
+  // (2026-11-13): a proposal, a December 2026 company onboarding slot, or the free self-paced
   // leadership preview. The form's note and button change to match; the intent is sent with the lead.
   var intentInput = form.querySelector('input[name="intent"]');
   var intentNote = document.getElementById("caIntent");
@@ -33,7 +33,7 @@
   function setIntent(name, places) {
     var it = INTENTS[name] || INTENTS.proposal;
     if (name === "reserve") {
-      it.note = "Reserve places in the December 2026 intake" + (places ? ": " + places + " places left" : "") + ". Tell us your organisation and headcount and we will confirm within one working day.";
+      it.note = "Reserve a December 2026 company onboarding slot" + (places ? " (" + places + (places === "1" ? " slot" : " slots") + " left)" : "") + ". Each slot covers portal setup, your staff sign-up link and a manager login for one organisation. Tell us your organisation and headcount and we will confirm within one working day.";
     }
     intentInput.value = INTENTS[name] ? name : "proposal";
     intentNote.textContent = it.note;

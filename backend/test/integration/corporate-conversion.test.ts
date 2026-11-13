@@ -2,6 +2,7 @@ import request from "supertest";
 import { createApp } from "../../src/app";
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 import { Lead } from "../../src/models";
+import { COHORT_PLACES, cohortNotice, cohortSentence, onboardingSummary, reserveButton } from "../../src/views/corporateOffers";
 
 // The owner's 12-point conversion review of the corporate pages (2026-11-13).
 const app = createApp();
@@ -21,24 +22,44 @@ const CORPORATE_PAGES = [
 ];
 
 describe("Corporate conversion review (2026-11-13)", () => {
-  it("never says fully booked, and offers the December 2026 intake on every programme", async () => {
+  it("never says fully booked, and offers December 2026 company onboarding slots on every programme", async () => {
     for (const path of CORPORATE_PAGES) {
       const html = (await request(app).get(path)).text;
       expect(html).not.toMatch(/fully booked|January 2027/i);
     }
-    // December 2026 intake; places left per programme, and places start today (online and in-house only, 2026-11-13).
+    // December 2026 company onboarding slots per programme; individual places start today (online and in-house only, 2026-11-13).
     for (const [path, places] of [
       ["/ke/corporate-training/ai-workflow-productivity", 12],
       ["/za/corporate-training/cybersecure-workforce", 8],
       ["/gh/corporate-training/ai-cybersecurity-professional-accelerator", 10],
     ] as const) {
       const html = (await request(app).get(path)).text;
-      expect(html).toContain(`<strong>December 2026 intake: ${places} places left.</strong> Places bought today start today.`);
+      expect(html).toContain(
+        `<strong>Company onboarding: ${places} December 2026 slots left.</strong> Each slot covers portal setup, your staff sign-up link and a manager login for one organisation. Individual places bought online start today.`,
+      );
+      expect(html).not.toMatch(/intake/i);
       expect(html).not.toMatch(/Booked until/);
-      expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve December 2026 intake places</a>`);
+      expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve a December onboarding slot</a>`);
     }
     const hub = (await request(app).get("/")).text;
-    for (const places of [12, 8, 10]) expect(hub).toContain(`December 2026 intake: ${places} places left.`);
+    for (const places of [12, 8, 10]) expect(hub).toContain(`Company onboarding: ${places} December 2026 slots left.`);
+  });
+
+  it("drops the onboarding line, button and FAQ mention when December is full", () => {
+    const saved = { ...COHORT_PLACES };
+    try {
+      COHORT_PLACES.cybersecure = 0;
+      expect(cohortNotice("cybersecure")).toBe("");
+      expect(reserveButton("cybersecure")).toBe("");
+      expect(cohortSentence("cybersecure")).toBe("Individual places bought online start today.");
+      expect(onboardingSummary([["cybersecure", "CyberSecure Workforce"], ["accelerator", "the Accelerator"]])).toContain(
+        "Company onboarding: 10 December 2026 slots left for the Accelerator.",
+      );
+      COHORT_PLACES.accelerator = 1;
+      expect(cohortNotice("accelerator")).toContain("1 December 2026 slot left.");
+    } finally {
+      Object.assign(COHORT_PLACES, saved);
+    }
   });
 
   it("uses one corporate email and the UK WhatsApp line, with no Nigerian call line", async () => {
@@ -96,7 +117,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
     expect(html).toContain("Book a 20-minute call</a>");
   });
 
-  it("accepts the short form and an intake reservation", async () => {
+  it("accepts the short form and an onboarding slot reservation", async () => {
     const res = await request(app).post("/api/leads/corporate").send({
       name: "Thandi Mokoena",
       organisation: "Example Mining (Pty) Ltd",
@@ -111,8 +132,8 @@ describe("Corporate conversion review (2026-11-13)", () => {
     const lead = await Lead.findByPk(res.body.id);
     expect(lead?.phone).toBeNull();
     expect(lead?.details).toMatchObject({ intent: "reserve", organisation: "Example Mining (Pty) Ltd" });
-    expect(memAdapter.sentMessages[0].subject).toContain("Intake reservation");
-    expect(memAdapter.sentMessages[0].text).toContain("to reserve places in the December 2026 intake");
+    expect(memAdapter.sentMessages[0].subject).toContain("Onboarding slot reservation");
+    expect(memAdapter.sentMessages[0].text).toContain("to reserve a December 2026 company onboarding slot");
   });
 
   it("serves the sector pages and 404s an unknown sector", async () => {

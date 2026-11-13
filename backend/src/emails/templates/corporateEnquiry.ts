@@ -26,7 +26,7 @@ export function buildCorporateEnquiryEmail(lead: {
     d.intent === "proposal"
       ? "a corporate training proposal"
       : d.intent === "reserve"
-        ? "to reserve places in the December 2026 intake"
+        ? "to reserve a December 2026 company onboarding slot"
         : d.intent === "taster"
           ? "a free self-paced leadership preview"
           : "a consultation";
@@ -51,7 +51,7 @@ export function buildCorporateEnquiryEmail(lead: {
   return {
     to: config.corporateEnquiriesEmail,
     replyTo: lead.email,
-    subject: `${d.intent === "reserve" ? "Intake reservation" : d.intent === "taster" ? "Leadership preview request" : `Corporate ${topic} enquiry`}: ${d.organisation ?? lead.name} (${countryName})`,
+    subject: `${d.intent === "reserve" ? "Onboarding slot reservation" : d.intent === "taster" ? "Leadership preview request" : `Corporate ${topic} enquiry`}: ${d.organisation ?? lead.name} (${countryName})`,
     text: lines.join("\n"),
     html: wrapHtml(lines),
   };

@@ -5,7 +5,7 @@ import { DATA_PROTECTION_LAW } from "./corporateLocal";
 // The buying aids shared by every corporate page (2026-11-13, owner's 12-point conversion
 // review): business outcomes before the module list, the two ways to buy (self-paced per
 // learner, or an in-house rollout for the whole organisation, with a worked example for 25
-// staff), the December 2026 intake, a paid 10-learner pilot and a free leadership preview,
+// staff), December 2026 company onboarding slots, a paid 10-learner pilot and a free leadership preview,
 // a "Book a 20-minute call" link, and the PDFs a buyer can forward for sign-off.
 // Delivery (owner, 2026-11-13): corporate training is ONLINE and IN-HOUSE only, meaning
 // self-paced online courses private to the client's own staff. It is NOT live, NOT
@@ -18,21 +18,49 @@ function escapeHtml(value: string): string {
 
 const money = (code: CountryCode, amount: number) => formatMoney(code, amount);
 
-// ---- Places remaining in the December 2026 intake per programme (owner, 2026-11-13).
-// Update here when places fill.
+// ---- Company onboarding slots left for December 2026, per programme (owner, 2026-11-13).
+// A slot is one organisation's onboarding: portal setup, the staff sign-up link and a manager
+// login. It is not an intake or a cohort: individual places bought online start today.
+// Keep these true and current. At 0 the onboarding line, the reserve button and the FAQ
+// mentions disappear for that programme (December full).
 export const COHORT_NAME = "December 2026";
 export const COHORT_PLACES: Record<PricedProgramme, number> = { "ai-workflow": 12, cybersecure: 8, accelerator: 10 };
-export const RESERVE_CTA = `Reserve ${COHORT_NAME} intake places`;
+export const RESERVE_CTA = "Reserve a December onboarding slot";
+export const ONBOARDING_COVERS =
+  "Each slot covers portal setup, your staff sign-up link and a manager login for one organisation.";
+export const PLACES_START_TODAY = "Individual places bought online start today.";
 
+export function hasOnboardingSlots(programme: PricedProgramme): boolean {
+  return COHORT_PLACES[programme] > 0;
+}
+
+export function slotsLeft(programme: PricedProgramme): string {
+  const n = COHORT_PLACES[programme];
+  return `${n} ${COHORT_NAME} slot${n === 1 ? "" : "s"} left`;
+}
+
+/** The onboarding line as plain text (FAQs, JSON-LD); just "places start today" once December is full. */
 export function cohortSentence(programme: PricedProgramme): string {
-  return `The ${COHORT_NAME} intake has ${COHORT_PLACES[programme]} places left, and places bought today start today.`;
+  if (!hasOnboardingSlots(programme)) return PLACES_START_TODAY;
+  return `Company onboarding: ${slotsLeft(programme)}. ${ONBOARDING_COVERS} ${PLACES_START_TODAY}`;
+}
+
+/** Several programmes in one sentence, skipping any that are full. */
+export function onboardingSummary(items: [PricedProgramme, string][]): string {
+  const open = items.filter(([p]) => hasOnboardingSlots(p));
+  if (!open.length) return PLACES_START_TODAY;
+  const parts = open.map(([p, name], i) => `${i === 0 ? slotsLeft(p) : `${COHORT_PLACES[p]}`} for ${name}`);
+  const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0];
+  return `Company onboarding: ${list}. ${ONBOARDING_COVERS} ${PLACES_START_TODAY}`;
 }
 
 export function cohortNotice(programme: PricedProgramme): string {
-  return `<p class="ca-booked"><strong>${COHORT_NAME} intake: ${COHORT_PLACES[programme]} places left.</strong> Places bought today start today.</p>`;
+  if (!hasOnboardingSlots(programme)) return "";
+  return `<p class="ca-booked"><strong>Company onboarding: ${slotsLeft(programme)}.</strong> ${ONBOARDING_COVERS} ${PLACES_START_TODAY}</p>`;
 }
 
 export function reserveButton(programme: PricedProgramme): string {
+  if (!hasOnboardingSlots(programme)) return "";
   return `<a class="btn btn-signal btn-lg" href="#enquiry" data-intent="reserve" data-places="${COHORT_PLACES[programme]}">${escapeHtml(RESERVE_CTA)}</a>`;
 }
 

@@ -17,7 +17,7 @@ import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, foot
 import { pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 import {
-  COHORT_PLACES,
+  onboardingSummary,
   cohortNotice,
   callButton,
   forwardSection,
@@ -60,7 +60,11 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       : []),
     {
       q: "When can our team start?",
-      a: `Places on all three programmes start today. The December 2026 intake has ${COHORT_PLACES.cybersecure} places left for CyberSecure Workforce, ${COHORT_PLACES["ai-workflow"]} for AI Workflow Productivity and ${COHORT_PLACES.accelerator} for the Accelerator.`,
+      a: onboardingSummary([
+        ["cybersecure", "CyberSecure Workforce"],
+        ["ai-workflow", "AI Workflow Productivity"],
+        ["accelerator", "the Accelerator"],
+      ]),
     },
     {
       q: "Can the training be customised for our organisation?",

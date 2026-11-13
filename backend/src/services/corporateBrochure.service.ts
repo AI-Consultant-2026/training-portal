@@ -8,8 +8,10 @@ import { CYBERSECURE_CONTENT } from "../views/corporateCyberSecureContent";
 import { DATA_PROTECTION_LAW } from "../views/corporateLocal";
 import {
   BUYING_TERMS,
-  COHORT_NAME,
-  COHORT_PLACES,
+  hasOnboardingSlots,
+  ONBOARDING_COVERS,
+  PLACES_START_TODAY,
+  slotsLeft,
   EXAMPLE_STAFF,
   OUTCOME_LEAD,
   PILOT_STAFF,
@@ -138,7 +140,7 @@ function labelled(doc: PDFKit.PDFDocument, label: string, text: string, size = 1
 const money = (code: CountryCode, n: number) => formatMoney(code, n);
 const today = () => new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 // All three programmes are booked until December 2026 (owner, 2026-11-13).
-const hasCohort = (p: PricedProgramme) => COHORT_PLACES[p] > 0;
+const hasCohort = hasOnboardingSlots;
 
 export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode, out: NodeJS.WritableStream): void {
   const name = PROGRAMME_NAMES[programme];
@@ -196,7 +198,7 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
   );
   if (hasCohort(programme)) {
     doc.moveDown(0.2);
-    labelled(doc, `${COHORT_NAME} intake:`, `${COHORT_PLACES[programme]} places left. Reserve by email or WhatsApp. Places bought today start today.`);
+    labelled(doc, `Company onboarding:`, `${slotsLeft(programme)}. ${ONBOARDING_COVERS} Reserve by email or WhatsApp. ${PLACES_START_TODAY}`);
   }
   heading(doc, "Start small");
   labelled(doc, `Paid pilot:`, `${PILOT_STAFF} learners self-paced for ${money(code, pilotTotal(programme, code))}. Review the results with us, then decide on a wider rollout.`);
@@ -244,7 +246,7 @@ export function streamBusinessCasePdf(programme: PricedProgramme, code: CountryC
     [
       `Recommended: ${EXAMPLE_STAFF} staff, self-paced online, ${money(code, exampleTotal(programme, code))} in total (${money(code, seatPrice(programme, code, EXAMPLE_STAFF))} per learner after the 10% volume discount, 12 months' access).`,
       `Lower-risk start: a ${PILOT_STAFF}-learner pilot for ${money(code, pilotTotal(programme, code))}, then a decision on rollout.`,
-      `Alternative: an in-house rollout for the whole organisation (a private online space for your staff), priced by proposal after a 20-minute call${hasCohort(programme) ? `; the ${COHORT_NAME} intake has ${COHORT_PLACES[programme]} places left` : ""}.`,
+      `Alternative: an in-house rollout for the whole organisation (a private online space for your staff), priced by proposal after a 20-minute call${hasCohort(programme) ? `; company onboarding has ${slotsLeft(programme)}` : ""}.`,
     ],
     size,
   );

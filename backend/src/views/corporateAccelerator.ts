@@ -27,6 +27,7 @@ import {
   pilotSection,
   readinessButton,
   reserveButton,
+  hasOnboardingSlots,
   waysToBuySection,
 } from "./corporateOffers";
 
@@ -194,7 +195,7 @@ function hero(code: CountryCode, c: AccPageContent): string {
 
 // Local SEO (2026-11-08): extra FAQs per country (cities, start date, cost, starting with
 // CyberSecure Workforce), placed before the proposal question and in the FAQPage JSON-LD.
-// The December 2026 intake (corporateOffers.ts), as on the corporate hub.
+// December 2026 company onboarding slots (corporateOffers.ts), as on the corporate hub.
 function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   const country = COUNTRIES[code].name;
   return [
@@ -204,7 +205,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "When can our team start?",
-      a: `${cohortSentence("accelerator")} Reserve now and we will agree the participants and the capstone challenge with you in advance.`,
+      a: `${cohortSentence("accelerator")}${hasOnboardingSlots("accelerator") ? " Reserve an onboarding slot now and we will agree the participants and the capstone challenge with you in advance." : ""}`,
     },
     {
       q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
