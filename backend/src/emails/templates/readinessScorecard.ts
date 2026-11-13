@@ -75,7 +75,7 @@ export function buildReadinessScorecardEmail(input: {
   lines.push(`Start with ${topP.name}. ${reason}`);
   lines.push(`What it gives you: ${topP.why}.`);
   lines.push(
-    `Cost in ${COUNTRIES[code].name}: ${formatMoney(code, CORPORATE_PRICES[priced][code])} per learner, self-paced. For example, ${workedExample(priced, code)}. Or start with a ${PILOT_STAFF}-learner pilot for ${formatMoney(code, pilotTotal(priced, code))}. All training is online and in-house: self-paced courses private to your staff.`,
+    `Cost in ${COUNTRIES[code].name}: ${formatMoney(code, CORPORATE_PRICES[priced][code])} per learner, self-paced. For example, ${workedExample(priced, code)}. Or start with a ${PILOT_STAFF}-learner pilot for ${formatMoney(code, pilotTotal(priced, code))}. All training is self-paced online, per learner or in a private company portal.`,
   );
   lines.push(`Programme page: ${ORIGIN}${site}/${topP.slug}`);
   lines.push(`Brochure to forward: ${ORIGIN}${brochurePath(priced, code)}`);

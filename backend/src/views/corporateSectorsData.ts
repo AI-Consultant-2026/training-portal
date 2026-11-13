@@ -38,7 +38,7 @@ export const SECTORS: Sector[] = [
     card: "Payment fraud, account takeover and customer-data protection for banks, fintechs, microfinance and insurers, plus safe AI for operations and compliance teams.",
     title: "Cybersecurity & AI Training for Banks and Financial Services | Paleon Training",
     description:
-      "Cybersecurity awareness and AI training for banks, fintechs, microfinance banks and insurers in Nigeria, South Africa, Kenya and Ghana. Self-paced or in-house.",
+      "Cybersecurity awareness and AI training for banks, fintechs, microfinance banks and insurers in Nigeria, South Africa, Kenya and Ghana. Self-paced, per learner or in a private company portal.",
     h1: "Cybersecurity and AI training for banks and financial services",
     lead: "Fraudsters target the people who move money and handle customer data. We train branch, operations, contact-centre and head-office staff to stop fraud at the first step, and help your teams use AI without putting customer information at risk.",
     teams: [
@@ -89,7 +89,7 @@ export const SECTORS: Sector[] = [
       },
       {
         q: "Can we train branch staff in several cities?",
-        a: "Yes. Training is online and in-house: branch and head-office staff all study self-paced in a private space for your bank only, at times that suit them. There are no live or facilitator-led sessions.",
+        a: "Yes. Training is online, per learner or in a private company portal: branch and head-office staff all study self-paced for your bank only, at times that suit them. There are no live or facilitator-led sessions.",
       },
     ],
   },
@@ -211,7 +211,7 @@ export const SECTORS: Sector[] = [
       },
       {
         q: "Can the training cover our own AI and records rules?",
-        a: "Yes. For in-house rollouts we adapt the exercises to your organisation's existing policies on records, information handling and approved tools.",
+        a: "Yes. For private company portals, we adapt the exercises to your organisation's existing policies on records, information handling and approved tools.",
       },
     ],
   },

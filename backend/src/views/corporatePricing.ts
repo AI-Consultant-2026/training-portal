@@ -55,7 +55,7 @@ export function pricingFaqAnswer(code: CountryCode, programme: PricedProgramme |
   return (
     `${what} There are volume discounts of 10% for 10–49 learners, 20% for 50–199 and 30% for 200 or more, ` +
     `and 15% off when the same person takes all three programmes. Each place includes 12 months’ access; VAT is added where applicable. ` +
-    "All training is online and in-house (self-paced, private to your staff), never live or facilitator-led. For an organisation-wide rollout, request a proposal with your team size and we will reply within one working day."
+    "All training is online, per learner or in a private company portal, never live or facilitator-led. For an organisation-wide rollout, request a proposal with your team size and we will reply within one working day."
   );
 }
 
@@ -64,7 +64,7 @@ export function hubPricingFaqAnswer(): string {
   const from = MARKET_ORDER.map((k) => `${money(k, CORPORATE_PRICES.cybersecure[k])} in ${COUNTRIES[k].name}`).join(", ");
   return (
     `Online self-paced programmes start from ${from} per learner (CyberSecure Workforce), with volume discounts of up to 30% and 15% off all three programmes. ` +
-    "All training is online and in-house, never live or facilitator-led. Choose your country page for full prices in your currency."
+    "All training is online, per learner or in a private company portal, never live or facilitator-led. Choose your country page for full prices in your currency."
   );
 }
 
@@ -191,5 +191,5 @@ export function pricingSummaryTable(codes: CountryCode[], withGbp = false): stri
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <p class="ca-p ca-hint">Volume discounts: 10% off for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200 or more (invoiced). All three programmes for the same person: 15% off. Plus VAT where applicable. All training is online and in-house, self-paced.</p>`;
+      <p class="ca-p ca-hint">Volume discounts: 10% off for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200 or more (invoiced). All three programmes for the same person: 15% off. Plus VAT where applicable. All training is online, per learner or in a private company portal, self-paced.</p>`;
 }

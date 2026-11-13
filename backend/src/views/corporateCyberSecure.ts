@@ -34,19 +34,19 @@ import {
 // country at /<cc>/corporate-training/cybersecure-workforce. Copy lives in
 // corporateCyberSecureContent.ts. They reuse the AI Workflow pages' styles, enquiry form
 // and corporate-ai.js; enquiries are saved with source "cybersecure-workforce".
-// Every country offers online, in-house training only (self-paced, private to the client's
+// Every country offers online training only, per learner or in a private company portal (self-paced, private to the client's
 // staff; never live, facilitator-led or hybrid) (2026-11-13); Nigeria also mentions ITF reimbursement.
 
 export { CYBERSECURE_SLUG, cyberSecurePath } from "./corporateAiWorkflow";
 
 export const CYBER_CONSULTATION = "Book a Cybersecurity Consultation";
-export const CYBER_PROPOSAL = "Request In-House Training Proposal";
+export const CYBER_PROPOSAL = "Request a Company Portal Proposal";
 
 export const CYBER_FORM: EnquiryForm = {
   programme: "cybersecure-workforce",
   consultation: CYBER_CONSULTATION,
   proposal: CYBER_PROPOSAL,
-  submit: "Request In-House Training Proposal",
+  submit: "Request a Company Portal Proposal",
   requirements: CYBERSECURE_REQUIREMENTS,
   messagePlaceholder: "Your teams, concerns, or anything that has already happened",
 };
@@ -250,7 +250,7 @@ function faq(code: CountryCode, c: CyberPageContent): string {
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    "Training is online and in-house: your staff learn self-paced online in a private company space that only your organisation can join. There are no live or facilitator-led sessions" +
+    "Training is online, per learner or in a private company portal: your staff learn self-paced online. There are no live or facilitator-led sessions" +
     (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">

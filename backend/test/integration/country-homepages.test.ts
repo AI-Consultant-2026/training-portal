@@ -504,7 +504,7 @@ describe("Country corporate training pages (2026-11-08)", () => {
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ng/corporate-training">');
     expect(res.text).toContain("Corporate training in Nigeria: AI and cybersecurity training for employees");
     expect(res.text).toContain("Lagos");
-    expect(res.text).toContain("Online and in-house across Nigeria");
+    expect(res.text).toContain("Self-paced online, in your own private company portal, across Nigeria");
     expect(res.text).toContain("ITF reimbursement");
     for (const slug of ["ai-workflow-productivity", "cybersecure-workforce", "ai-cybersecurity-professional-accelerator"]) {
       expect(res.text).toContain(`href="/ng/corporate-training/${slug}"`);

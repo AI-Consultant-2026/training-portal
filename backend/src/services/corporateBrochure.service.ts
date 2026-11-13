@@ -191,7 +191,8 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
     `Worked example, ${EXAMPLE_STAFF} staff:`,
     `${EXAMPLE_STAFF} × ${money(code, seatPrice(programme, code, EXAMPLE_STAFF))} = ${money(code, exampleTotal(programme, code))} (10% volume discount).`,
   );
-  heading(doc, "Option 2 · In-house rollout, by proposal");
+  heading(doc, "Option 2 · Private company portal (by proposal)");
+  para(doc, "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login.");
   para(
     doc,
     `A private online company space in the Paleon portal for your staff only, anywhere in ${country}. Staff join with your company sign-up link, managers see progress, and you receive completion and attendance records for your files. For departments or an organisation-wide rollout; invoiced for 200 learners or more. All training is online and self-paced: there are no live, facilitator-led or hybrid sessions.`,
@@ -246,7 +247,7 @@ export function streamBusinessCasePdf(programme: PricedProgramme, code: CountryC
     [
       `Recommended: ${EXAMPLE_STAFF} staff, self-paced online, ${money(code, exampleTotal(programme, code))} in total (${money(code, seatPrice(programme, code, EXAMPLE_STAFF))} per learner after the 10% volume discount, 12 months' access).`,
       `Lower-risk start: a ${PILOT_STAFF}-learner pilot for ${money(code, pilotTotal(programme, code))}, then a decision on rollout.`,
-      `Alternative: an in-house rollout for the whole organisation (a private online space for your staff), priced by proposal after a 20-minute call${hasCohort(programme) ? `; company onboarding has ${slotsLeft(programme)}` : ""}.`,
+      `Alternative: a private company portal for the whole organisation, priced by proposal after a 20-minute call${hasCohort(programme) ? `; company onboarding has ${slotsLeft(programme)}` : ""}.`,
     ],
     size,
   );

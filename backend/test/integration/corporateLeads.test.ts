@@ -161,10 +161,10 @@ describe("CyberSecure Workforce corporate pages", () => {
     expect(res.text).toContain("CyberSecure Workforce: Cybersecurity Awareness Training for Businesses in");
     expect(res.text).toContain(`/images/og/cybersecure-workforce-${cc}.jpg`);
     expect(res.text).toContain('data-programme="cybersecure-workforce"');
-    expect(res.text).toContain("Request In-House Training Proposal");
+    expect(res.text).toContain("Request a Company Portal Proposal");
     // All 12 modules, the packages and the AI Workflow cross-link on every page.
     expect(res.text).toContain("Incident Reporting &amp; Response");
-    expect(res.text).toContain("CyberSecure Workforce in-house rollout</h3>");
+    expect(res.text).toContain("CyberSecure Workforce private company portal</h3>");
     expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
     expect(res.text).not.toContain("Workforce Score");
     expect(res.text).not.toContain("(link:");
@@ -210,7 +210,7 @@ describe("AI + Cybersecurity Professional Accelerator corporate pages", () => {
     expect(res.text).toContain(`/images/og/ai-cyber-accelerator-${cc}.jpg`);
     expect(res.text).toContain(`/images/accelerator/${cc}-hero.jpg`);
     expect(res.text).toContain('data-programme="ai-cyber-accelerator"');
-    expect(res.text).toContain("Request In-House Training Proposal");
+    expect(res.text).toContain("Request a Company Portal Proposal");
     // Only the confirmed promises: reviewer capstone feedback and an unaccredited certificate.
     expect(res.text).toContain("certificate of completion");
     expect(res.text).toContain("not accredited");

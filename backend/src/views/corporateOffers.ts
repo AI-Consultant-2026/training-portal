@@ -4,7 +4,7 @@ import { DATA_PROTECTION_LAW } from "./corporateLocal";
 
 // The buying aids shared by every corporate page (2026-11-13, owner's 12-point conversion
 // review): business outcomes before the module list, the two ways to buy (self-paced per
-// learner, or an in-house rollout for the whole organisation, with a worked example for 25
+// learner, or a private company portal for the whole organisation, with a worked example for 25
 // staff), December 2026 company onboarding slots, a paid 10-learner pilot and a free leadership preview,
 // a "Book a 20-minute call" link, and the PDFs a buyer can forward for sign-off.
 // Delivery (owner, 2026-11-13): corporate training is ONLINE and IN-HOUSE only, meaning
@@ -232,7 +232,7 @@ export function waysToBuySection(programme: PricedProgramme, code: CountryCode, 
   return `<section class="section ${dark ? "section-dark" : "section-paper"} ca-section" id="delivery" aria-labelledby="delivery-title">
     <div class="wrap">
       <span class="section-eyebrow">Two ways to buy</span>
-      <h2 class="section-title" id="delivery-title">Online and in-house: per learner, or for your whole organisation</h2>
+      <h2 class="section-title" id="delivery-title">Online: per learner, or in a private company portal</h2>
       <div class="ca-cards co-ways">
         <div class="ca-card co-way">
           <p class="co-way-tag">Option 1 &middot; fixed price</p>
@@ -248,7 +248,8 @@ export function waysToBuySection(programme: PricedProgramme, code: CountryCode, 
         </div>
         <div class="ca-card co-way">
           <p class="co-way-tag">Option 2 &middot; by proposal</p>
-          <h3>In-house rollout</h3>
+          <h3>Private company portal (by proposal)</h3>
+          <p class="co-way-explainer">Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&amp;D lead tracks progress from a manager login.</p>
           <p class="co-way-price"><strong>A private online space for your staff only</strong></p>
           <ul class="ca-list">
             <li>Your own company space in the Paleon portal, for staff anywhere in ${escapeHtml(country)}; staff join with your company sign-up link</li>
@@ -279,7 +280,8 @@ export function waysToBuyBrief(code: CountryCode, dark = true): string {
         </div>
         <div class="ca-card co-way">
           <p class="co-way-tag">Option 2 &middot; by proposal</p>
-          <h3>In-house rollout, online</h3>
+          <h3>Private company portal (by proposal)</h3>
+          <p class="co-way-explainer">Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&amp;D lead tracks progress from a manager login.</p>
           <p>A private company space in the Paleon portal for your staff only, in Nigeria, South Africa, Kenya and Ghana. Staff join with your sign-up link and managers track progress; invoiced for 200 learners or more. All training is self-paced online, never live or facilitator-led.</p>
           <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a proposal</a></div>
         </div>
@@ -352,7 +354,7 @@ export const BUYING_TERMS: { h: string; p: string }[] = [
     p: "Full refund within 14 days of purchase if no learner has started. Once learners have started there is no refund, but unused seats can be given to other staff at any time during the 12 months' access.",
   },
   {
-    h: "In-house rollouts",
+    h: "Private company portals",
     p: "The same refund and unused-seat terms as self-paced places.",
   },
   { h: "Pilot guarantee", p: PILOT_GUARANTEE_TERMS.replace(/^i/, "I") },

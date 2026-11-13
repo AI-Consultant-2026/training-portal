@@ -1,6 +1,6 @@
 # Paleon Training
 
-> Paleon Training Limited (Warri, Nigeria) runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana. Corporate training is online and in-house only: self-paced courses in a private company space for each organisation's staff; it is not live, facilitator-led or hybrid. It also runs self-paced digital skills courses for graduates in Nigeria.
+> Paleon Training Limited (Warri, Nigeria) runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana. Corporate training is online only, per learner or in a private company portal, as self-paced courses; it is not live, facilitator-led or hybrid. It also runs self-paced digital skills courses for graduates in Nigeria.
 
 Contact for organisations: corporate@paleontraining.com, WhatsApp +44 7508 823495. Programme Director (designs and reviews all corporate courses): Ken Uwotu.
 
@@ -13,7 +13,7 @@ Contact for organisations: corporate@paleontraining.com, WhatsApp +44 7508 82349
 
 ## Corporate training by country
 
-- [Nigeria](https://paleontraining.com/ng/corporate-training): online and in-house; supports ITF claims
+- [Nigeria](https://paleontraining.com/ng/corporate-training): online, per learner or in a private company portal; supports ITF claims
 - [South Africa](https://paleontraining.com/za/corporate-training)
 - [Kenya](https://paleontraining.com/ke/corporate-training)
 - [Ghana](https://paleontraining.com/gh/corporate-training)

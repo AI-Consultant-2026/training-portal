@@ -79,7 +79,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
 
   it("labels the two ways to buy with a worked example for 25 staff", async () => {
     const html = (await request(app).get("/za/corporate-training/cybersecure-workforce")).text;
-    expect(html).toContain("Online and in-house: per learner, or for your whole organisation");
+    expect(html).toContain("Online: per learner, or in a private company portal");
     expect(html).toContain("25 staff × R900 (10% volume discount) = R22,500");
     expect(html).toContain("Pilot with 10 learners");
     expect(html).toContain('<td class="co-here">R9,000</td>');
@@ -95,8 +95,16 @@ describe("Corporate conversion review (2026-11-13)", () => {
     }
     for (const cc of ["za", "ke", "gh", "ng"]) {
       const html = (await request(app).get(`/${cc}/corporate-training/cybersecure-workforce`)).text;
-      expect(html).toContain("In-house rollout");
+      expect(html).toContain("<h3>Private company portal (by proposal)</h3>");
+      expect(html).toContain(
+        "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&amp;D lead tracks progress from a manager login.",
+      );
       expect(html).toContain("A private online space for your staff only");
+    }
+    // "Private company portal" replaces "in-house" in visible copy, titles and metas (owner, 2026-11-13).
+    for (const path of CORPORATE_PAGES) {
+      const html = (await request(app).get(path)).text.replace(/in-house IT/g, "");
+      expect(html).not.toMatch(/in-house/i);
     }
   });
 
@@ -226,7 +234,7 @@ describe("Second corporate review (2026-11-13)", () => {
   it("uses one CyberSecure name, makes no facilitator claim and says Led from the UK", async () => {
     const za = (await request(app).get("/za/corporate-training/cybersecure-workforce")).text;
     expect(za).not.toContain("CyberSecure Workforce Essentials");
-    expect(za).toContain("One product, online and in-house.");
+    expect(za).toContain("One product, online, per learner or in a private company portal.");
     expect(za).not.toContain("Every Paleon programme is led by a live facilitator");
     for (const path of ["/", "/ng"]) {
       const html = (await request(app).get(path)).text;

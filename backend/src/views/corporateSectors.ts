@@ -92,7 +92,7 @@ export function renderSector(slug: string, country: CountryCode | null, chosen: 
       (f) => `<div class="ca-card">
           <h3><a href="${programmePagePath(f.programme, code)}">${escapeHtml(PROGRAMME_NAMES[f.programme])}</a></h3>
           <p>${escapeHtml(f.why)}</p>
-          <p class="cs-meta"><strong>Self-paced:</strong> ${escapeHtml(formatMoney(code, CORPORATE_PRICES[f.programme][code]))} per learner, online and in-house.</p>
+          <p class="cs-meta"><strong>Self-paced:</strong> ${escapeHtml(formatMoney(code, CORPORATE_PRICES[f.programme][code]))} per learner, online, per learner or in a private company portal.</p>
           <p class="ca-card-link"><a href="${programmePagePath(f.programme, code)}">See the programme &rarr;</a></p>
         </div>`,
     )

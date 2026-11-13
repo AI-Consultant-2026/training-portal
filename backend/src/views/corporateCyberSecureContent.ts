@@ -14,7 +14,7 @@ export interface CyberPageContent {
 export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageContent> = {
   "NG": {
     "title": "Cybersecurity Awareness Training for Employees in Nigeria",
-    "description": "Cybersecurity awareness training for employees in Lagos, Abuja, Port Harcourt and across Nigeria. Online and in-house; supports ITF claims. Get a proposal.",
+    "description": "Cybersecurity awareness training for employees in Lagos, Abuja, Port Harcourt and across Nigeria. Online, per learner or in a private company portal; supports ITF claims. Get a proposal.",
     "images": {
       "hero": "Nigerian finance team checking a suspicious payment request on a laptop in a Lagos office.",
       "awareness": "Nigerian colleagues discussing a suspicious WhatsApp message in an Abuja office.",
@@ -41,10 +41,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
-            "p": "**Secondary CTA:** Request In-House Training Proposal"
+            "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Online and in-house, self-paced · Built for non-technical staff · Covers AI-related risks · Supports ITF reimbursement claims"
+            "p": "**Trust line:** Self-paced online, in your own private company portal · Built for non-technical staff · Covers AI-related risks · Supports ITF reimbursement claims"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps employees in Nigerian organisations recognise common cyber threats such as phishing and payment fraud, protect business information and report suspicious activity quickly."
@@ -142,7 +142,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "No training can stop every attack. CyberSecure Workforce reduces the risks that come from people, alongside your technical controls."
           },
           {
-            "p": "**CTA after benefits:** Request In-House Training Proposal"
+            "p": "**CTA after benefits:** Request a Company Portal Proposal"
           }
         ]
       },
@@ -355,8 +355,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
               ],
               [
-                "In-house rollout",
-                "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
+                "Private company portal (by proposal)",
+                "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
               ],
               [
                 "Department-specific modules",
@@ -373,7 +373,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Self-paced places have a fixed price per learner; in-house rollouts for departments or the whole organisation are priced by proposal. All training is online and in-house: there are no live, facilitator-led or hybrid sessions. **Request In-House Training Proposal** for a quote."
+            "p": "Self-paced places have a fixed price per learner; private company portals for departments or the whole organisation are priced by proposal. All training is online, per learner or in a private company portal: there are no live, facilitator-led or hybrid sessions. **Request a Company Portal Proposal** for a quote."
           },
           {
             "p": "**ITF reimbursement:** Nigerian employers that pay the 1% ITF training levy can apply for a refund of up to 50% of the levy they paid, if the ITF approves their training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide the attendance records and programme documentation a claim needs."
@@ -398,13 +398,13 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with knowledge checks, a final assessment and certificates of completion"
               ],
               [
-                "CyberSecure Workforce in-house rollout (recommended)",
+                "CyberSecure Workforce private company portal (recommended)",
                 "Own pace, 12 months' access",
                 "Most organisations",
                 "A private company space for your staff, pre- and post-training assessments, department scenarios, the CyberSecure Workforce Challenge, manager progress view, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation (in-house, online)",
+                "CyberSecure Workforce Transformation (private company portal)",
                 "Own pace, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report, all online: department modules, incident scenarios, and a summary report with an improvement plan"
@@ -412,7 +412,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**One product, online and in-house.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; in-house rollouts and Transformation are priced by proposal."
+            "p": "**One product, online, per learner or in a private company portal.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; private company portals and Transformation are priced by proposal."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."
@@ -447,7 +447,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** we learn about your organisation, people and concerns.",
               "**Assess:** we identify your workforce's awareness needs.",
               "**Customise:** we adapt examples and exercises to your sector and teams.",
-              "**Train:** staff study online and in-house, self-paced in a private company space.",
+              "**Train:** staff study self-paced online, per learner or in your private company portal.",
               "**Practise:** employees apply what they learn to realistic scenarios.",
               "**Strengthen:** we review with you and suggest next steps for continued awareness."
             ]
@@ -504,7 +504,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
+            "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Does the programme cover phishing?** Yes, including email, SMS, WhatsApp, phone scams and business email compromise."
@@ -525,7 +525,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Does the training cover data protection?** It builds awareness of handling personal and confidential data responsibly, in line with your obligations under the Nigeria Data Protection Act 2023. It is not legal advice."
           },
           {
-            "p": "**How can we request an in-house training proposal?** Complete the form below or email corporate@paleontraining.com. We reply within one working day."
+            "p": "**How can we request a company portal proposal?** Complete the form below or email corporate@paleontraining.com. We reply within one working day."
           }
         ]
       },
@@ -539,7 +539,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising phishing and protecting company information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request a Company Portal Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -553,7 +553,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
   },
   "ZA": {
     "title": "Cybersecurity Awareness Training for Employees in South Africa",
-    "description": "Online, in-house cybersecurity awareness training for companies in Johannesburg, Cape Town, Durban and across South Africa. Phishing, fraud and AI risks. Get a proposal.",
+    "description": "Online cybersecurity awareness training, per learner or in a private company portal, for companies in Johannesburg, Cape Town, Durban and across South Africa. Phishing, fraud and AI risks. Get a proposal.",
     "images": {
       "hero": "South African finance team verifying a supplier payment request together in a Johannesburg office.",
       "awareness": "South African colleagues discussing a suspicious email in a Cape Town office.",
@@ -580,10 +580,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
-            "p": "**Secondary CTA:** Request In-House Training Proposal"
+            "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Online and in-house training across South Africa · Department-specific scenarios · Personal-information handling built in · Covers AI-related risks"
+            "p": "**Trust line:** Self-paced online, in your own private company portal, across South Africa · Department-specific scenarios · Personal-information handling built in · Covers AI-related risks"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps South African organisations train employees to recognise phishing and social engineering, handle personal and business information responsibly, and report suspected incidents quickly."
@@ -678,7 +678,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Training reduces human-related risk; it does not guarantee that no incident will occur. It works best alongside your technical and governance controls."
           },
           {
-            "p": "**CTA after benefits:** Request In-House Training Proposal"
+            "p": "**CTA after benefits:** Request a Company Portal Proposal"
           }
         ]
       },
@@ -857,7 +857,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "In South Africa, as everywhere, training is online and in-house: staff learn self-paced in a private company space. There are no live, facilitator-led or hybrid sessions."
+            "p": "In South Africa, as everywhere, training is online, per learner or in a private company portal: staff learn self-paced. There are no live, facilitator-led or hybrid sessions."
           },
           {
             "table": [
@@ -870,8 +870,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
               ],
               [
-                "In-house rollout",
-                "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
+                "Private company portal (by proposal)",
+                "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
               ],
               [
                 "Department-specific modules",
@@ -888,7 +888,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request a Company Portal Proposal** for a quote."
           }
         ]
       },
@@ -900,7 +900,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** understand your organisation, priorities and existing controls.",
               "**Assess:** identify workforce awareness gaps.",
               "**Customise:** adapt scenarios to your sector, systems and teams.",
-              "**Train:** staff study online and in-house, self-paced in a private company space.",
+              "**Train:** staff study self-paced online, per learner or in your private company portal.",
               "**Practise:** apply learning to realistic scenarios.",
               "**Strengthen:** review results and plan refreshers."
             ]
@@ -957,7 +957,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
+            "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Does it cover phishing?** Yes: email, SMS, phone calls and business email compromise."
@@ -992,7 +992,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising phishing and protecting personal information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request a Company Portal Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -1020,13 +1020,13 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with knowledge checks, a final assessment and certificates of completion"
               ],
               [
-                "CyberSecure Workforce in-house rollout (recommended)",
+                "CyberSecure Workforce private company portal (recommended)",
                 "Own pace, 12 months' access",
                 "Most organisations",
                 "A private company space for your staff, pre- and post-training assessments, department scenarios, the CyberSecure Workforce Challenge, manager progress view, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation (in-house, online)",
+                "CyberSecure Workforce Transformation (private company portal)",
                 "Own pace, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report, all online: department modules, incident scenarios, and a summary report with an improvement plan"
@@ -1034,7 +1034,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**One product, online and in-house.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; in-house rollouts and Transformation are priced by proposal."
+            "p": "**One product, online, per learner or in a private company portal.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; private company portals and Transformation are priced by proposal."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."
@@ -1065,7 +1065,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
   },
   "GH": {
     "title": "Cybersecurity Awareness Training for Employees in Ghana",
-    "description": "Online, in-house cybersecurity awareness training for companies in Accra, Kumasi, Tema and across Ghana. Phishing, mobile money scams and fraud. Get a proposal.",
+    "description": "Online cybersecurity awareness training, per learner or in a private company portal, for companies in Accra, Kumasi, Tema and across Ghana. Phishing, mobile money scams and fraud. Get a proposal.",
     "images": {
       "hero": "Ghanaian professionals reviewing a suspicious message on a phone and laptop in an Accra office.",
       "awareness": "Ghanaian colleagues discussing how to verify a payment request.",
@@ -1092,10 +1092,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
-            "p": "**Secondary CTA:** Request In-House Training Proposal"
+            "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Online and in-house training across Ghana · Plain-language, for every employee · Mobile and messaging security included · Covers AI-related risks"
+            "p": "**Trust line:** Self-paced online, in your own private company portal, across Ghana · Plain-language, for every employee · Mobile and messaging security included · Covers AI-related risks"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps organisations in Ghana train employees to recognise phishing, payment and mobile-money scams, protect business and personal data, and report suspicious activity quickly."
@@ -1190,7 +1190,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Training reduces human-related risk; it cannot promise that no incident will happen."
           },
           {
-            "p": "**CTA after benefits:** Request In-House Training Proposal"
+            "p": "**CTA after benefits:** Request a Company Portal Proposal"
           }
         ]
       },
@@ -1369,7 +1369,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "In Ghana, as everywhere, training is online and in-house: staff learn self-paced in a private company space. There are no live, facilitator-led or hybrid sessions."
+            "p": "In Ghana, as everywhere, training is online, per learner or in a private company portal: staff learn self-paced. There are no live, facilitator-led or hybrid sessions."
           },
           {
             "table": [
@@ -1382,8 +1382,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
               ],
               [
-                "In-house rollout",
-                "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
+                "Private company portal (by proposal)",
+                "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
               ],
               [
                 "Department-specific modules",
@@ -1400,7 +1400,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request a Company Portal Proposal** for a quote."
           }
         ]
       },
@@ -1412,7 +1412,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** we learn about your organisation, people and concerns.",
               "**Assess:** we identify your workforce's awareness needs.",
               "**Customise:** we adapt examples and exercises to your sector and teams.",
-              "**Train:** staff study online and in-house, self-paced in a private company space.",
+              "**Train:** staff study self-paced online, per learner or in your private company portal.",
               "**Practise:** employees apply what they learn to realistic scenarios.",
               "**Strengthen:** we review with you and suggest next steps for continued awareness."
             ]
@@ -1469,7 +1469,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
+            "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Does it cover phishing and mobile-money scams?** Yes, along with SMS, WhatsApp and phone scams."
@@ -1501,7 +1501,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising scams and protecting company information to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request a Company Portal Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -1529,13 +1529,13 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with knowledge checks, a final assessment and certificates of completion"
               ],
               [
-                "CyberSecure Workforce in-house rollout (recommended)",
+                "CyberSecure Workforce private company portal (recommended)",
                 "Own pace, 12 months' access",
                 "Most organisations",
                 "A private company space for your staff, pre- and post-training assessments, department scenarios, the CyberSecure Workforce Challenge, manager progress view, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation (in-house, online)",
+                "CyberSecure Workforce Transformation (private company portal)",
                 "Own pace, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report, all online: department modules, incident scenarios, and a summary report with an improvement plan"
@@ -1543,7 +1543,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**One product, online and in-house.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; in-house rollouts and Transformation are priced by proposal."
+            "p": "**One product, online, per learner or in a private company portal.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; private company portals and Transformation are priced by proposal."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."
@@ -1574,7 +1574,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
   },
   "KE": {
     "title": "Cybersecurity Awareness Training for Employees in Kenya",
-    "description": "Online, in-house cybersecurity awareness training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Phishing, account takeover and AI scams. Get a proposal.",
+    "description": "Online cybersecurity awareness training, per learner or in a private company portal, for companies in Nairobi, Mombasa, Kisumu and across Kenya. Phishing, account takeover and AI scams. Get a proposal.",
     "images": {
       "hero": "Kenyan team reviewing a security prompt on a phone and laptop in a Nairobi office.",
       "awareness": "Kenyan colleagues discussing a suspicious voice note.",
@@ -1601,10 +1601,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Primary CTA:** Book Corporate Workforce Training"
           },
           {
-            "p": "**Secondary CTA:** Request In-House Training Proposal"
+            "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Online and in-house training across Kenya · Tailored by team · Mobile, cloud and AI risks covered · Practical scenarios throughout"
+            "p": "**Trust line:** Self-paced online, in your own private company portal, across Kenya · Tailored by team · Mobile, cloud and AI risks covered · Practical scenarios throughout"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps Kenyan organisations train employees to recognise phishing, account takeover and AI-assisted scams, protect business and personal data, and report suspicious activity quickly."
@@ -1699,7 +1699,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Training reduces human-related risk; it does not guarantee that no incident will occur."
           },
           {
-            "p": "**CTA after benefits:** Request In-House Training Proposal"
+            "p": "**CTA after benefits:** Request a Company Portal Proposal"
           }
         ]
       },
@@ -1878,7 +1878,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "In Kenya, as everywhere, training is online and in-house: staff learn self-paced in a private company space. There are no live, facilitator-led or hybrid sessions."
+            "p": "In Kenya, as everywhere, training is online, per learner or in a private company portal: staff learn self-paced. There are no live, facilitator-led or hybrid sessions."
           },
           {
             "table": [
@@ -1891,8 +1891,8 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
               ],
               [
-                "In-house rollout",
-                "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
+                "Private company portal (by proposal)",
+                "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation."
               ],
               [
                 "Department-specific modules",
@@ -1909,7 +1909,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "Pricing depends on group size and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Pricing depends on group size and customisation. **Request a Company Portal Proposal** for a quote."
           }
         ]
       },
@@ -1921,7 +1921,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** we learn about your organisation, people and concerns.",
               "**Assess:** we identify your workforce's awareness needs.",
               "**Customise:** we adapt examples and exercises to your sector and teams.",
-              "**Train:** staff study online and in-house, self-paced in a private company space.",
+              "**Train:** staff study self-paced online, per learner or in your private company portal.",
               "**Practise:** employees apply what they learn to realistic scenarios.",
               "**Strengthen:** we review with you and suggest next steps for continued awareness."
             ]
@@ -1978,7 +1978,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
+            "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Does it cover phishing and account takeover?** Yes, including SIM-swap warning signs, push-prompt fatigue and business email compromise."
@@ -2010,7 +2010,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Give your employees practical cybersecurity knowledge they can use every day: from recognising scams and protecting customer data to **reporting suspicious activity and using AI safely.**"
           },
           {
-            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request In-House Training Proposal"
+            "p": "**Primary:** Book Corporate Workforce Training **Secondary:** Request a Company Portal Proposal"
           },
           {
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
@@ -2038,13 +2038,13 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with knowledge checks, a final assessment and certificates of completion"
               ],
               [
-                "CyberSecure Workforce in-house rollout (recommended)",
+                "CyberSecure Workforce private company portal (recommended)",
                 "Own pace, 12 months' access",
                 "Most organisations",
                 "A private company space for your staff, pre- and post-training assessments, department scenarios, the CyberSecure Workforce Challenge, manager progress view, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation (in-house, online)",
+                "CyberSecure Workforce Transformation (private company portal)",
                 "Own pace, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report, all online: department modules, incident scenarios, and a summary report with an improvement plan"
@@ -2052,7 +2052,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             ]
           },
           {
-            "p": "**One product, online and in-house.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; in-house rollouts and Transformation are priced by proposal."
+            "p": "**One product, online, per learner or in a private company portal.** CyberSecure Workforce is the programme name everywhere. Every package is studied online, at each learner's own pace, in a private company space in the Paleon portal, with 12 months' access. There are no live, facilitator-led or hybrid sessions. Self-paced places have a fixed price per learner; private company portals and Transformation are priced by proposal."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."

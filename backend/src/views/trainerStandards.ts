@@ -100,7 +100,7 @@ export function trainerStandards(): string {
       <h2 class="section-title" id="trainers-title">Who designs our courses</h2>
       ${TRAINERS.map(profileCard).join("\n      ")}
       <h3 class="tr-sub">How we write our courses</h3>
-      <p class="ca-p">All corporate training is online and in-house: your staff study self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions. Every course meets these standards:</p>
+      <p class="ca-p">All corporate training is online, per learner or in a private company portal: your staff study self-paced. There are no live, facilitator-led or hybrid sessions. Every course meets these standards:</p>
       <div class="ca-cards">${TRAINER_STANDARDS.map((s) => `
         <div class="ca-card"><h3>${s.h}</h3><p>${s.p}</p></div>`).join("")}
       </div>

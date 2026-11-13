@@ -27,10 +27,10 @@ const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
 
 
 const DELIVERY: Record<string, string> = {
-  NG: "Online and in-house, self-paced. Supports ITF reimbursement claims.",
-  ZA: "Online and in-house, self-paced, for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
-  KE: "Online and in-house, self-paced, for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
-  GH: "Online and in-house, self-paced, for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
+  NG: "Self-paced online, in your own private company portal. Supports ITF reimbursement claims.",
+  ZA: "Self-paced online, in your own private company portal, for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
+  KE: "Self-paced online, in your own private company portal, for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
+  GH: "Self-paced online, in your own private company portal, for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
 };
 
 // AI brings new cyber risks, so the page points employers to CyberSecure Workforce as well
@@ -102,7 +102,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "Is the training the same in every country?",
-    "The programme is the same in every country: online and in-house only: self-paced courses in a private space for your staff, bought per learner or organisation-wide. Examples are adapted to your sector and teams, and Nigerian employers can use our records for ITF reimbursement claims.",
+    "The programme is the same in every country: online only, per learner or in a private company portal: self-paced courses, bought per learner or organisation-wide. Examples are adapted to your sector and teams, and Nigerian employers can use our records for ITF reimbursement claims.",
   ],
   [
     "How do you measure the results?",
@@ -114,7 +114,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    "Yes. The programme is delivered online and in-house, as self-paced courses private to your staff, for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema), as well as Nigeria.",
+    "Yes. The programme is delivered online, per learner or in a private company portal, for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema), as well as Nigeria.",
   ],
   [
     "Do you also offer cybersecurity training for staff?",
@@ -171,7 +171,7 @@ function jsonLd(url: string): object {
         "@type": "Course",
         name: "AI Workflow Productivity & Process Transformation",
         description:
-          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered online and in-house (self-paced, private to your staff) for companies in South Africa, Kenya, Ghana and Nigeria.",
+          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered online, per learner or in a private company portal for companies in South Africa, Kenya, Ghana and Nigeria.",
         provider: { "@id": `${ORIGIN}/#organization` },
         url,
         inLanguage: "en",
@@ -200,7 +200,7 @@ export function renderPromotionAiWorkflow(): string {
   const headHtml = head(ctx, {
     title: "AI Workforce & Process Transformation Training | South Africa, Kenya, Ghana",
     description:
-      "AI workforce and process transformation training for companies in South Africa, Kenya, Ghana and Nigeria: in-house or online, plus cybersecurity awareness for every employee.",
+      "AI workforce and process transformation training for companies in South Africa, Kenya, Ghana and Nigeria: online, per learner or in a private company portal, plus cybersecurity awareness for every employee.",
     canonicalPath: PROMOTION_AI_PATH,
     alternatesFor: corporateAiPath,
     xDefault: CORPORATE_HUB_PATH,
@@ -236,7 +236,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <span class="eyebrow">AI Workflow Productivity &amp; Process Transformation &middot; South Africa, Kenya, Ghana and Nigeria</span>
           <h1 class="hero-title ca-hero-title">AI workforce and process transformation training for companies</h1>
           <p class="ca-headline">Less busywork. Better work. An advantage that lasts.</p>
-          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, online and in-house as self-paced courses private to your staff, for companies in South Africa, Kenya, Ghana and Nigeria.</p>
+          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, online, per learner or in a private company portal as self-paced courses private to your staff, for companies in South Africa, Kenya, Ghana and Nigeria.</p>
           ${cohortNotice("ai-workflow")}
           <div class="hero-ctas">
             ${reserveButton("ai-workflow")}

@@ -35,19 +35,19 @@ import {
 // country at /<cc>/corporate-training/ai-cybersecurity-professional-accelerator. Copy lives in
 // corporateAcceleratorContent.ts. Same styles, enquiry form and corporate-ai.js as the AI
 // Workflow and CyberSecure Workforce pages; enquiries are saved with source "ai-cyber-accelerator".
-// Every country offers online, in-house training only (self-paced, private to the client's
+// Every country offers online training only, per learner or in a private company portal (self-paced, private to the client's
 // staff; never live, facilitator-led or hybrid) (2026-11-13); Nigeria also mentions ITF reimbursement.
 
 export { ACCELERATOR_SLUG, acceleratorPath } from "./corporateAiWorkflow";
 
 export const ACC_CONSULTATION = "Book an AI + Cybersecurity Consultation"; // enquiry form only (no longer shown)
-export const ACC_PROPOSAL = "Request In-House Training Proposal";
+export const ACC_PROPOSAL = "Request a Company Portal Proposal";
 
 export const ACC_FORM: EnquiryForm = {
   programme: "ai-cyber-accelerator",
   consultation: ACC_CONSULTATION,
   proposal: ACC_PROPOSAL,
-  submit: "Request In-House Training Proposal",
+  submit: "Request a Company Portal Proposal",
   requirements: ACCELERATOR_REQUIREMENTS,
   messagePlaceholder: "Your AI plans, the teams you want to develop, or the challenges you face",
 };
@@ -201,7 +201,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer AI and cybersecurity training for professionals in ${cityList(code)}?`,
-      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. Buy self-paced places per participant, or an in-house rollout for your whole team. ${cohortSentence("accelerator")}`,
+      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. Buy self-paced places per participant, or a private company portal for your whole team. ${cohortSentence("accelerator")}`,
     },
     {
       q: "When can our team start?",
@@ -235,7 +235,7 @@ function faqItems(c: AccPageContent, code?: CountryCode): { q: string; a: string
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    "Training is online and in-house: participants learn self-paced online in a private company space that only your organisation can join. There are no live or facilitator-led sessions" +
+    "Training is online, per learner or in a private company portal: participants learn self-paced online. There are no live or facilitator-led sessions" +
     (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">

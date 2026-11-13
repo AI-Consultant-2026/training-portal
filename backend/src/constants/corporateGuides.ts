@@ -96,7 +96,7 @@ export const GUIDES: Guide[] = [
     faqs: [
       { q: "Is POPIA training mandatory?", a: "POPIA does not prescribe a specific course, but it requires reasonable organisational measures to protect personal information, and the Information Officer's duties include ensuring awareness sessions are conducted. In practice, documented staff training is expected." },
       { q: "Who is the Information Officer?", a: "By default it is the head of the organisation, such as the CEO or managing director. The duties can be delegated to deputy information officers, but accountability remains with the organisation." },
-      { q: "Can POPIA training be delivered online?", a: "Yes. Paleon Training's training is online and in-house: staff in different offices study the same self-paced course in a private space for your organisation, at times that suit them." },
+      { q: "Can POPIA training be delivered online?", a: "Yes. Paleon Training's training is online, per learner or in a private company portal: staff in different offices study the same self-paced course for your organisation, at times that suit them." },
       { q: "Is this guide legal advice?", a: "No. It is general guidance, not legal advice. For your organisation's specific obligations, take advice from a qualified adviser or see the Information Regulator's guidance." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow"],
@@ -148,7 +148,7 @@ export const GUIDES: Guide[] = [
     faqs: [
       { q: "Does the Data Protection Act require staff training?", a: "The Act requires appropriate technical and organisational measures to protect personal data and data protection by design. Staff training is one of the main organisational measures, and records of it help show compliance." },
       { q: "How fast must a breach be reported in Kenya?", a: "Where there is a real risk of harm, the Data Commissioner must be notified within 72 hours of the data controller becoming aware of the breach." },
-      { q: "Can you train teams across Nairobi, Mombasa and Kisumu together?", a: "Yes. Training is online and in-house, so teams in different locations take the same self-paced course in a private space for your organisation." },
+      { q: "Can you train teams across Nairobi, Mombasa and Kisumu together?", a: "Yes. Training is online, per learner or in a private company portal, so teams in different locations take the same self-paced course for your organisation." },
       { q: "Is this guide legal advice?", a: "No. It is general guidance, not legal advice. See the Office of the Data Protection Commissioner's guidance or take legal advice on your organisation's obligations." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow"],
@@ -192,14 +192,14 @@ export const GUIDES: Guide[] = [
       {
         h: "Delivery, records and the ITF",
         body: [
-          "Paleon Training delivers NDPA-focused cybersecurity training online and in-house (self-paced, in a private space for your staff), across Lagos, Abuja, Port Harcourt and the rest of Nigeria. We provide attendance records, which give you evidence of the measures you took and can also support an ITF reimbursement claim.",
+          "Paleon Training delivers NDPA-focused cybersecurity training online, per learner or in a private company portal, across Lagos, Abuja, Port Harcourt and the rest of Nigeria. We provide attendance records, which give you evidence of the measures you took and can also support an ITF reimbursement claim.",
         ],
       },
     ],
     faqs: [
       { q: "Is staff training required under the NDPA?", a: "The NDPA requires appropriate technical and organisational measures to protect personal data. Training staff who handle personal data is one of the most important organisational measures, and the NDPC expects organisations to be able to show what they have done." },
       { q: "Does the NDPR 2019 still apply?", a: "The NDPA 2023 is now the main law. The NDPC's GAID 2025 explains how the Act applies; older instruments apply only where they are consistent with the Act. Check current NDPC guidance for your organisation." },
-      { q: "Can the training be delivered in-house?", a: "Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, so teams in several locations can all take part. We do not run sessions at your offices." },
+      { q: "Can we have our own private company portal?", a: "Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. It is a private company space in the Paleon portal that only your staff can join, so teams in several locations can all take part. We do not run sessions at your offices." },
       { q: "Is this guide legal advice?", a: "No. It is general guidance, not legal advice. See the NDPC's guidance or take legal advice on your organisation's obligations." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow"],
@@ -244,14 +244,14 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training helps",
         body: [
-          "We run online, in-house cybersecurity and AI training (self-paced, private to your staff) for organisations in Accra, Kumasi, Tema and across Ghana, with attendance records for your files.",
+          "We run online cybersecurity and AI training, per learner or in a private company portal for organisations in Accra, Kumasi, Tema and across Ghana, with attendance records for your files.",
         ],
       },
     ],
     faqs: [
       { q: "Do organisations in Ghana have to register with the Data Protection Commission?", a: "Act 843 requires data controllers to register with the Data Protection Commission. Check the Commission's current guidance on registration and renewal for your organisation." },
       { q: "What does the Cyber Security Authority do?", a: "The CSA regulates cybersecurity under Act 1038, including critical information infrastructure, incident reporting and the licensing of cybersecurity service providers." },
-      { q: "Can the training be delivered online for teams across Ghana?", a: "Yes. Training is online and in-house, so teams in different cities take the same self-paced course in a private space for your organisation." },
+      { q: "Can the training be delivered online for teams across Ghana?", a: "Yes. Training is online, per learner or in a private company portal, so teams in different cities take the same self-paced course for your organisation." },
       { q: "Is this guide legal advice?", a: "No. It is general guidance, not legal advice. See the Data Protection Commission's and Cyber Security Authority's guidance, or take legal advice." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow"],
@@ -266,7 +266,7 @@ export const GUIDES: Guide[] = [
     title: "Cybersecurity Awareness Training for Employees in Nigeria",
     h1: "Cybersecurity awareness training for employees in Nigeria",
     description:
-      "Why Nigerian organisations train staff in cybersecurity, the scams they face, what good awareness training covers, and how to deliver it in-house or online.",
+      "Why Nigerian organisations train staff in cybersecurity, the scams they face, what good awareness training covers, and how to deliver it online.",
     lead: "Most cyber losses in Nigerian organisations start with a person: a convincing email, a fake bank alert, an urgent call from someone posing as the MD. Cybersecurity awareness training turns your employees from the easiest target into an early-warning system.",
     sections: [
       {
@@ -289,9 +289,9 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        h: "Online and in-house",
+        h: "Online, per learner or in a private company portal",
         body: [
-          "Paleon Training delivers CyberSecure Workforce online and in-house, in Lagos, Abuja, Port Harcourt, Warri and across Nigeria: staff study self-paced in a private company space. The course uses scenarios from your sector and ends with practical actions for each team. There are no live, facilitator-led or hybrid sessions.",
+          "Paleon Training delivers CyberSecure Workforce online, per learner or in a private company portal, in Lagos, Abuja, Port Harcourt, Warri and across Nigeria: staff study self-paced. The course uses scenarios from your sector and ends with practical actions for each team. There are no live, facilitator-led or hybrid sessions.",
           "We provide attendance records, which help show the organisational measures you took under the NDPA and can support an ITF reimbursement claim.",
         ],
       },
@@ -304,7 +304,7 @@ export const GUIDES: Guide[] = [
     ],
     faqs: [
       { q: "How long does cybersecurity awareness training take?", a: "It depends on your organisation's size, roles and goals. We agree the format and schedule with you during a free consultation rather than offering a fixed package." },
-      { q: "Do you train at our premises in Nigeria?", a: "No. Training is online and in-house: your staff study self-paced in a private company space in the Paleon portal, wherever they work." },
+      { q: "Do you train at our premises in Nigeria?", a: "No. Training is online, per learner or in a private company portal: your staff study self-paced, wherever they work." },
       { q: "Can the training count towards an ITF claim?", a: "Registered employers who contribute to the ITF can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF." },
       { q: "Do staff receive a certificate?", a: NOT_ACCREDITED },
     ],
@@ -340,9 +340,9 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        h: "Online and in-house",
+        h: "Online, per learner or in a private company portal",
         body: [
-          "Paleon Training delivers CyberSecure Workforce online and in-house for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa: staff study self-paced in a private company space, with realistic scenarios rather than click-through slides.",
+          "Paleon Training delivers CyberSecure Workforce online, per learner or in a private company portal for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa: staff study self-paced, with realistic scenarios rather than click-through slides.",
         ],
       },
       {
@@ -354,7 +354,7 @@ export const GUIDES: Guide[] = [
     ],
     faqs: [
       { q: "Is cybersecurity awareness training required in South Africa?", a: "POPIA requires reasonable organisational measures to protect personal information, and sector regulators set their own expectations. Staff awareness training is a widely expected part of meeting those duties." },
-      { q: "Can you train staff in several provinces at once?", a: "Yes. Training is online and in-house, so teams in different cities take the same self-paced course in a private space for your organisation." },
+      { q: "Can you train staff in several provinces at once?", a: "Yes. Training is online, per learner or in a private company portal, so teams in different cities take the same self-paced course for your organisation." },
       { q: "Are your programmes SETA-accredited?", a: NOT_ACCREDITED },
       { q: "How do we start?", a: "Book a free consultation. We discuss your teams, risks and goals and propose a format that fits." },
     ],
@@ -390,9 +390,9 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        h: "Online and in-house",
+        h: "Online, per learner or in a private company portal",
         body: [
-          "Paleon Training delivers CyberSecure Workforce online and in-house (self-paced, private to your staff) for organisations in Nairobi, Mombasa, Kisumu, Nakuru and across Kenya, with attendance records for your compliance files.",
+          "Paleon Training delivers CyberSecure Workforce online, per learner or in a private company portal for organisations in Nairobi, Mombasa, Kisumu, Nakuru and across Kenya, with attendance records for your compliance files.",
         ],
       },
     ],
@@ -434,9 +434,9 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        h: "Online and in-house",
+        h: "Online, per learner or in a private company portal",
         body: [
-          "Paleon Training delivers CyberSecure Workforce online and in-house (self-paced, private to your staff) for organisations in Accra, Kumasi, Tema, Takoradi and across Ghana.",
+          "Paleon Training delivers CyberSecure Workforce online, per learner or in a private company portal for organisations in Accra, Kumasi, Tema, Takoradi and across Ghana.",
         ],
       },
     ],
@@ -484,7 +484,7 @@ export const GUIDES: Guide[] = [
         h: "How Paleon Training helps",
         body: [
           "Paleon Training is a Nigerian company. Registered employers who contribute to the ITF can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF, so we cannot guarantee any claim.",
-          "We deliver AI and cybersecurity training online and in-house (self-paced, private to your staff), anywhere in Nigeria.",
+          "We deliver AI and cybersecurity training online, per learner or in a private company portal, anywhere in Nigeria.",
         ],
       },
     ],
@@ -530,7 +530,7 @@ export const GUIDES: Guide[] = [
         h: "Where Paleon Training fits",
         body: [
           NOT_ACCREDITED + " Our programmes are practical workplace training. You can include them in your WSP and ATR, and your verification agency can advise how the spend is recognised for B-BBEE.",
-          "We deliver AI and cybersecurity training online and in-house (self-paced, private to your staff) for organisations across South Africa.",
+          "We deliver AI and cybersecurity training online, per learner or in a private company portal for organisations across South Africa.",
         ],
       },
     ],
@@ -569,7 +569,7 @@ export const GUIDES: Guide[] = [
         h: "Where Paleon Training fits",
         body: [
           "Paleon Training's programmes are not NITA-approved courses, so budget for them without a NITA reimbursement. Many organisations fund cybersecurity and AI training from their IT, risk or compliance budgets because it reduces fraud, breach and regulatory risk.",
-          "We deliver AI and cybersecurity training online and in-house (self-paced, private to your staff) for organisations across Kenya. " + NOT_ACCREDITED,
+          "We deliver AI and cybersecurity training online, per learner or in a private company portal for organisations across Kenya. " + NOT_ACCREDITED,
         ],
       },
       {
@@ -674,7 +674,7 @@ export const GUIDES: Guide[] = [
       { q: "Should we run phishing simulations?", a: "Simulations can help measure progress, but they work best alongside good training and a positive reporting culture, not as a way to catch people out." },
       { q: "How often should staff be trained?", a: "At least once a year, with short refreshers when new scams appear or after an incident." },
       { q: "Is phishing training enough on its own?", a: "No. Pair it with multi-factor authentication, payment verification rules and a clear incident process." },
-      { q: "Where do you deliver training?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver training?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["cybersecure-workforce"],
     related: ["business-email-compromise-training", "cybersecurity-awareness-training-nigeria", "cybersecurity-awareness-training-south-africa"],
@@ -808,7 +808,7 @@ export const GUIDES: Guide[] = [
       { q: "Which AI tools do you train on?", a: "We teach skills that work across the main assistants, including ChatGPT, Claude, Gemini and Microsoft Copilot, using the tools your organisation has approved." },
       { q: "Do staff need technical skills?", a: "No. The AI Workflow Productivity programme is designed for everyday office roles." },
       { q: "Do you help with an AI policy?", a: "Yes. Our free AI use policy template is a starting point, and the training covers how to apply it." },
-      { q: "Where do you deliver AI training?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver AI training?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["ai-workflow", "ai-cyber-accelerator"],
     related: ["ai-training-for-managers", "microsoft-copilot-training-for-staff", "generative-ai-risks-for-business"],
@@ -852,7 +852,7 @@ export const GUIDES: Guide[] = [
       { q: "Is this training for technical managers?", a: "No. It is for managers in any function: operations, finance, HR, sales and customer service." },
       { q: "Can the leadership team go first?", a: "Yes. Leaders can take a free self-paced preview before training is rolled out to staff." },
       { q: "Do you cover AI governance?", a: "Yes, at a practical level: approved tools, data rules, human review and accountability." },
-      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["ai-workflow", "ai-cyber-accelerator"],
     related: ["chatgpt-training-for-employees", "generative-ai-risks-for-business", "how-to-choose-a-corporate-cybersecurity-training-provider"],
@@ -896,7 +896,7 @@ export const GUIDES: Guide[] = [
       { q: "Do we need Copilot licences for the training?", a: "Not necessarily. We teach skills that apply to whichever approved AI tools your organisation uses, and focus on Copilot where you have it." },
       { q: "Is Copilot safe for confidential data?", a: "Copilot respects existing Microsoft 365 permissions, so the risk depends on how your files are shared. Review permissions and set clear rules before a wide rollout." },
       { q: "Can you train non-technical staff?", a: "Yes. The training is designed for everyday office roles." },
-      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["ai-workflow"],
     related: ["chatgpt-training-for-employees", "ai-training-for-managers", "generative-ai-risks-for-business"],
@@ -978,7 +978,7 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training helps",
         body: [
-          "We run CyberSecure Workforce and AI Workflow Productivity for financial services teams, with scenarios built around banking and fintech operations. In all four countries training is online and in-house: self-paced, in a private space for your staff.",
+          "We run CyberSecure Workforce and AI Workflow Productivity for financial services teams, with scenarios built around banking and fintech operations. In all four countries training is online, per learner or in a private company portal, self-paced.",
         ],
       },
     ],
@@ -1022,7 +1022,7 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training helps",
         body: [
-          "Paleon Training is based in Warri, at the heart of Nigeria's oil and gas industry. We deliver online and in-house in Nigeria, South Africa, Kenya and Ghana: staff study self-paced in a private company space, from the office or the site.",
+          "Paleon Training is based in Warri, at the heart of Nigeria's oil and gas industry. We deliver online, per learner or in a private company portal in Nigeria, South Africa, Kenya and Ghana: staff study self-paced, from the office or the site.",
         ],
       },
     ],
@@ -1066,7 +1066,7 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training helps",
         body: [
-          "We deliver CyberSecure Workforce and AI Workflow Productivity for telecoms and technology teams, online and in-house (self-paced, private to your staff), in Nigeria, South Africa, Kenya and Ghana.",
+          "We deliver CyberSecure Workforce and AI Workflow Productivity for telecoms and technology teams, online, per learner or in a private company portal, in Nigeria, South Africa, Kenya and Ghana.",
         ],
       },
     ],
@@ -1074,7 +1074,7 @@ export const GUIDES: Guide[] = [
       { q: "Can you train retail and call-centre staff at scale?", a: "Yes. Training is online and self-paced, so distributed teams and shift workers can study around their shifts." },
       { q: "Do you cover SIM-swap fraud?", a: "Yes. SIM-swap and account takeover scenarios are part of the training for telecoms teams." },
       { q: "Can dealers and partners attend?", a: "Yes. Including partner staff closes a common gap." },
-      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow"],
     related: ["phishing-awareness-training-for-employees", "cybersecurity-training-for-banks-and-fintechs", "generative-ai-risks-for-business"],
@@ -1110,7 +1110,7 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training helps",
         body: [
-          "Online, self-paced training makes it practical to train head-office and field staff on the same course. We deliver online and in-house in Nigeria, South Africa, Kenya and Ghana.",
+          "Online, self-paced training makes it practical to train head-office and field staff on the same course. We deliver online, per learner or in a private company portal in Nigeria, South Africa, Kenya and Ghana.",
         ],
       },
     ],
@@ -1118,7 +1118,7 @@ export const GUIDES: Guide[] = [
       { q: "Can field staff join?", a: "Yes. Training is online and self-paced, so staff in different locations can all take part." },
       { q: "Does this help with donor due diligence?", a: "Training records give you evidence of the measures you take to protect funds and data, which donors often ask about." },
       { q: "Do you cover beneficiary data protection?", a: "Yes, including the data protection law in your country." },
-      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow"],
     related: ["invoice-and-payment-fraud-prevention-training", "chatgpt-training-for-employees", "phishing-awareness-training-for-employees"],
@@ -1154,7 +1154,7 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training helps",
         body: [
-          "We deliver CyberSecure Workforce and AI Workflow Productivity for public sector teams, online and in-house (self-paced, private to your staff), in Nigeria, South Africa, Kenya and Ghana. We can work within your procurement process.",
+          "We deliver CyberSecure Workforce and AI Workflow Productivity for public sector teams, online, per learner or in a private company portal, in Nigeria, South Africa, Kenya and Ghana. We can work within your procurement process.",
         ],
       },
     ],
@@ -1162,7 +1162,7 @@ export const GUIDES: Guide[] = [
       { q: "Can you train large numbers of civil servants?", a: "Yes. We agree a rollout plan by department and level during the consultation." },
       { q: "Do you cover AI policy for public bodies?", a: "Yes, at a practical level: approved tools, data rules, human review and accountability." },
       { q: "Can you provide attendance records?", a: "Yes, for every participant." },
-      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online and in-house: staff learn self-paced in a private company space. We do not run live, facilitator-led or hybrid sessions." },
+      { q: "Where do you deliver?", a: "Nigeria, South Africa, Kenya and Ghana, online, per learner or in a private company portal: staff learn self-paced. We do not run live, facilitator-led or hybrid sessions." },
     ],
     programmes: ["cybersecure-workforce", "ai-workflow", "ai-cyber-accelerator"],
     related: ["generative-ai-risks-for-business", "phishing-awareness-training-for-employees", "ai-training-for-managers"],
@@ -1206,7 +1206,7 @@ export const GUIDES: Guide[] = [
       {
         h: "How Paleon Training answers these",
         body: [
-          "Our programmes are online and in-house: self-paced courses in a private company space for your staff, built around scenarios from your sector, in Nigeria, South Africa, Kenya and Ghana. They are not live, facilitator-led or hybrid. We provide completion and attendance records. " + NOT_ACCREDITED + " Prices per learner are published; organisation-wide rollouts are priced by proposal.",
+          "Our programmes are online, per learner or in a private company portal, as self-paced courses built around scenarios from your sector, in Nigeria, South Africa, Kenya and Ghana. They are not live, facilitator-led or hybrid. We provide completion and attendance records. " + NOT_ACCREDITED + " Prices per learner are published; organisation-wide rollouts are priced by proposal.",
         ],
       },
     ],

@@ -101,7 +101,7 @@
     document.getElementById("rcCost").textContent =
       "Rough cost to close your priority gaps: about " + first.example + " for " + data.exampleStaff +
       " staff on " + first.name + ", self-paced (10% volume discount included), or " + first.pilot +
-      " for a " + data.pilotStaff + "-learner pilot first. All training is online and in-house, self-paced. Your scorecard email includes the full breakdown.";
+      " for a " + data.pilotStaff + "-learner pilot first. All training is online, per learner or in a private company portal, self-paced. Your scorecard email includes the full breakdown.";
 
     quiz.hidden = true;
     result.hidden = false;

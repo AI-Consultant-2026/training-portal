@@ -61,7 +61,7 @@ const ALL_REQUIREMENTS = Array.from(
 export const CORPORATE_PROGRAMMES = ["ai-workflow", "cybersecure-workforce", "ai-cyber-accelerator"] as const;
 export type CorporateProgramme = (typeof CORPORATE_PROGRAMMES)[number];
 
-// Corporate training is online and in-house only (owner, 2026-11-13): never live,
+// Corporate training is online only, per learner or in a private company portal (owner, 2026-11-13): never live,
 // facilitator-led or hybrid. No form asks any more; kept so older leads still validate.
 export const CORPORATE_DELIVERY = ["Online", "In-house", "Not sure"] as const;
 

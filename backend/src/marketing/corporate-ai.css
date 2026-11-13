@@ -320,6 +320,7 @@
 .co-way-price strong { color: var(--charcoal); }
 .section-dark .co-way-price strong { color: var(--paper); }
 .co-way-example { font-size: 15px; margin: 6px 0 4px; }
+.co-way-explainer { font-size: 15.5px; font-weight: 600; margin: 2px 0 10px; }
 .co-way .ca-list { margin: 6px 0 8px; }
 .co-lead { margin-bottom: 6px; }
 .co-outcome-list { margin: 4px 0 14px; }
