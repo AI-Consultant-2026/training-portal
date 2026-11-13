@@ -19,10 +19,8 @@ import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corpor
 import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 import {
-  COHORT_NAME,
-  COHORT_NOTICE,
-  COHORT_PLACES,
-  COHORT_SENTENCE,
+  cohortNotice,
+  cohortSentence,
   callButton,
   forwardSection,
   outcomesSection,
@@ -105,7 +103,7 @@ function blocks(list: AccBlock[], dark: boolean, listClass = "ca-list"): string 
       if ("ul" in block) return `<ul class="${listClass}">${block.ul.map((item) => `<li>${richLinks(item)}</li>`).join("")}</ul>`;
       if ("table" in block) return table(block.table);
       const l = labelled(block.p);
-      if (l && /cta/i.test(l[0])) return `<div class="ca-ctas">${ctaButton(l[1], dark)}</div>`;
+      if (l && /cta/i.test(l[0])) return `<div class="ca-ctas">${ctaButton(l[1], dark, "#buy", "accelerator")}</div>`;
       if (/^\*\*[^*]+↔[^*]+\*\*$/.test(block.p)) return `<p class="ac-bridge">${rich(block.p)}</p>`;
       return `<p class="ca-p">${richLinks(block.p)}</p>`;
     })
@@ -177,9 +175,9 @@ function hero(code: CountryCode, c: AccPageContent): string {
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
-        ${COHORT_NOTICE}
+        ${cohortNotice("accelerator")}
         <div class="hero-ctas">
-          ${reserveButton()}
+          ${reserveButton("accelerator")}
           ${readinessButton(code, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
@@ -202,11 +200,11 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer AI and cybersecurity training for professionals in ${cityList(code)}?`,
-      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each participant, or live online, in-house or hybrid delivery by quote. ${COHORT_SENTENCE}`,
+      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each participant, or live online, in-house or hybrid delivery by quote. ${cohortSentence("accelerator")}`,
     },
     {
       q: "When can our team start?",
-      a: `Self-paced places can start today. For live delivery, the next cohort starts in ${COHORT_NAME} and ${COHORT_PLACES} places remain. Reserve now and we will agree the participants and the capstone challenge with you in advance.`,
+      a: `Self-paced places can start today. For live delivery, ${cohortSentence("accelerator").charAt(0).toLowerCase()}${cohortSentence("accelerator").slice(1)} Reserve now and we will agree the participants and the capstone challenge with you in advance.`,
     },
     {
       q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
@@ -242,10 +240,10 @@ function whereWeTrain(code: CountryCode): string {
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">AI and cybersecurity training for professionals across ${escapeHtml(country)}</h2>
-      ${COHORT_NOTICE}
+      ${cohortNotice("accelerator")}
       <p class="ca-p">Paleon Training runs the AI + Cybersecurity Professional Accelerator for IT, security, risk, data and digital teams in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Scenarios and the capstone are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services. Need cybersecurity awareness for every employee now? <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a> is available today.</p>
-      <div class="ca-ctas">${reserveButton()}${callButton(false)}</div>
+      <div class="ca-ctas">${reserveButton("accelerator")}${callButton(false)}</div>
     </div>
   </section>`;
 }

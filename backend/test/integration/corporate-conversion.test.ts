@@ -26,11 +26,18 @@ describe("Corporate conversion review (2026-11-13)", () => {
       const html = (await request(app).get(path)).text;
       expect(html).not.toMatch(/fully booked|January 2027/i);
     }
-    for (const path of ["/", "/ke/corporate-training/ai-workflow-productivity", "/gh/corporate-training/ai-cybersecurity-professional-accelerator"]) {
+    // Booked until December 2026; places left in that cohort per programme (owner, 2026-11-13).
+    for (const [path, places] of [
+      ["/ke/corporate-training/ai-workflow-productivity", 12],
+      ["/za/corporate-training/cybersecure-workforce", 8],
+      ["/gh/corporate-training/ai-cybersecurity-professional-accelerator", 10],
+    ] as const) {
       const html = (await request(app).get(path)).text;
-      expect(html).toContain("December 2026 cohort: 10 places remain.");
-      expect(html).toContain('data-intent="reserve">Reserve a December 2026 cohort</a>');
+      expect(html).toContain(`<strong>Booked until December 2026.</strong> ${places} places remain in the December 2026 cohort`);
+      expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve a December 2026 cohort</a>`);
     }
+    const hub = (await request(app).get("/")).text;
+    for (const places of [12, 8, 10]) expect(hub).toContain(`${places} places remain in the December 2026 cohort`);
   });
 
   it("uses one corporate email and the UK WhatsApp line, with no Nigerian call line", async () => {

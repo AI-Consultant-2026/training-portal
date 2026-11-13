@@ -17,8 +17,8 @@ import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, foot
 import { pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 import {
-  COHORT_NOTICE,
-  COHORT_SENTENCE,
+  COHORT_PLACES,
+  cohortNotice,
   callButton,
   forwardSection,
   outcomeList,
@@ -43,7 +43,6 @@ const ITF_NOTE =
   "Registered employers who contribute to the Industrial Training Fund (ITF) can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF.";
 
 
-const BOOKED = COHORT_NOTICE;
 
 function faqs(code: CountryCode): { q: string; a: string }[] {
   const country = COUNTRIES[code].name;
@@ -61,7 +60,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       : []),
     {
       q: "When can our team start?",
-      a: `Self-paced places on all three programmes can start today. Live CyberSecure Workforce sessions can be scheduled now. For live AI Workflow Productivity and the AI + Cybersecurity Professional Accelerator, ${COHORT_SENTENCE.charAt(0).toLowerCase()}${COHORT_SENTENCE.slice(1)}`,
+      a: `Self-paced places on all three programmes can start today. Live delivery is booked until December 2026; the December 2026 cohort has ${COHORT_PLACES.cybersecure} places remaining for CyberSecure Workforce, ${COHORT_PLACES["ai-workflow"]} for AI Workflow Productivity and ${COHORT_PLACES.accelerator} for the Accelerator.`,
     },
     {
       q: "Can the training be customised for our organisation?",
@@ -199,6 +198,7 @@ ${header(ctx, home, "/", true)}
         <div class="ca-card">
           <h3><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness training</a></h3>
           ${outcomeList("cybersecure", code)}
+          ${cohortNotice("cybersecure")}
           <p>Every employee learns to recognise, stop and report phishing, payment fraud and impersonation, protect business information and use AI tools safely. Twelve practical modules for non-technical staff, from the boardroom to the front desk.</p>
           <p>It builds awareness of handling personal and customer data responsibly, in line with your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}. Awareness training, not legal advice.</p>
           <p class="ca-card-link"><a href="${cyberSecurePath(code)}">Cybersecurity awareness training in ${escapeHtml(country)} &rarr;</a></p>
@@ -206,14 +206,14 @@ ${header(ctx, home, "/", true)}
         <div class="ca-card">
           <h3><a href="${corporateAiPath(code)}">AI Workflow Productivity &amp; Process Transformation</a></h3>
           ${outcomeList("ai-workflow", code)}
-          ${BOOKED}
+          ${cohortNotice("ai-workflow")}
           <p>Your employees learn to use AI tools such as ChatGPT, Claude and Gemini on their own work &mdash; reports, emails, meeting follow-ups, documents and data &mdash; and to redesign repetitive workflows safely, with human review. Ten practical modules and a real workplace project.</p>
           <p class="ca-card-link"><a href="${corporateAiPath(code)}">AI training for employees in ${escapeHtml(country)} &rarr;</a></p>
         </div>
         <div class="ca-card">
           <h3><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator</a></h3>
           ${outcomeList("accelerator", code)}
-          ${BOOKED}
+          ${cohortNotice("accelerator")}
           <p>For the IT, security, risk, data and digital professionals who will lead secure AI adoption. Twelve professional modules and a capstone on a real challenge from their organisation.</p>
           <p class="ca-card-link"><a href="${acceleratorPath(code)}">AI and cybersecurity training for professionals in ${escapeHtml(country)} &rarr;</a></p>
         </div>
@@ -222,7 +222,7 @@ ${header(ctx, home, "/", true)}
       ${pricingSummaryTable([code])}
       <h3 class="cp-subtitle">Two ways to buy</h3>
       ${waysToBuyBrief(code, false)}
-      <div class="ca-ctas">${reserveButton()}</div>
+      <div class="ca-ctas">${reserveButton("cybersecure")}</div>
     </div>
   </section>
 

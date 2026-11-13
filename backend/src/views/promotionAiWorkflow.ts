@@ -1,7 +1,7 @@
 import { COUNTRIES, MARKET_ORDER } from "../constants/countries";
 import { flagSvg } from "./flags";
 import { ORGANIZATION_LD } from "./corporateLocal";
-import { COHORT_NOTICE, COHORT_SENTENCE, callButton, readinessButton, reserveButton } from "./corporateOffers";
+import { COHORT_PLACES, cohortNotice, cohortSentence, callButton, readinessButton, reserveButton } from "./corporateOffers";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import {
   CORPORATE_HUB_PATH,
@@ -122,7 +122,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "When can we start?",
-    `Self-paced places can start today. For live delivery, ${COHORT_SENTENCE.charAt(0).toLowerCase()}${COHORT_SENTENCE.slice(1)} Reserve now and complete the needs assessment in advance.`,
+    `Self-paced places can start today. For live delivery, ${cohortSentence("ai-workflow").charAt(0).toLowerCase()}${cohortSentence("ai-workflow").slice(1)} Reserve now and complete the needs assessment in advance.`,
   ],
   [
     "How do we contact you?",
@@ -237,9 +237,9 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <h1 class="hero-title ca-hero-title">AI workforce and process transformation training for companies</h1>
           <p class="ca-headline">Less busywork. Better work. An advantage that lasts.</p>
           <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, in-house, live online or self-paced, for companies in South Africa, Kenya, Ghana and Nigeria.</p>
-          ${COHORT_NOTICE}
+          ${cohortNotice("ai-workflow")}
           <div class="hero-ctas">
-            ${reserveButton()}
+            ${reserveButton("ai-workflow")}
             ${readinessButton(null, true)}
           </div>
           <ul class="pw-flags" aria-label="Available in">${flags}</ul>
@@ -262,7 +262,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <a href="${VIDEO}">Download the programme video (MP4)</a>
         </video>
       </figure>
-      <div class="ca-ctas">${reserveButton()} ${callButton(true)}</div>
+      <div class="ca-ctas">${reserveButton("ai-workflow")} ${callButton(true)}</div>
     </div>
   </section>
 
@@ -347,7 +347,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Where we deliver</span>
       <h2 class="section-title" id="countries-title">AI workforce and process transformation training in South Africa, Kenya, Ghana and Nigeria</h2>
-      ${COHORT_NOTICE}
+      ${cohortNotice("ai-workflow")}
       <div class="ca-countries">${countryCards}</div>
       <p class="ca-p pw-more"><a href="${CORPORATE_HUB_PATH}"><strong>See all corporate training programmes &rarr;</strong></a></p>
     </div>
@@ -363,10 +363,10 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <ul class="ca-links">${MARKET_ORDER.map(
         (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</a></li>`,
       ).join("")}</ul>
-      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (December 2026 cohort, 10 places remain): ${MARKET_ORDER.map(
+      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (booked until December 2026; ${COHORT_PLACES.accelerator} places remain in the December cohort): ${MARKET_ORDER.map(
         (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
       ).join(", ")}.</p>
-      <div class="ca-ctas">${reserveButton()}</div>
+      <div class="ca-ctas">${reserveButton("ai-workflow")}</div>
     </div>
   </section>
 

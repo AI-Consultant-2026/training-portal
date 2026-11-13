@@ -18,7 +18,17 @@ import { CITIES, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
-import { callButton, forwardSection, outcomesSection, pilotSection, readinessButton, waysToBuySection } from "./corporateOffers";
+import {
+  callButton,
+  cohortNotice,
+  cohortSentence,
+  forwardSection,
+  outcomesSection,
+  pilotSection,
+  readinessButton,
+  reserveButton,
+  waysToBuySection,
+} from "./corporateOffers";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
 // country at /<cc>/corporate-training/cybersecure-workforce. Copy lives in
@@ -171,6 +181,7 @@ function hero(code: CountryCode, c: CyberPageContent): string {
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
+        ${cohortNotice("cybersecure")}
         <div class="hero-ctas">
           ${ctaButton(WORKFORCE_CTA, true)}
           ${readinessButton(code, true)}
@@ -194,7 +205,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer cybersecurity awareness training for companies in ${cityList(code)}?`,
-      a: `Yes. CyberSecure Workforce is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Every session is scheduled around your working day.`,
+      a: `Yes. CyberSecure Workforce is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Every session is scheduled around your working day. Self-paced places can start today; ${cohortSentence("cybersecure").charAt(0).toLowerCase()}${cohortSentence("cybersecure").slice(1)}`,
     },
     {
       q: "How much does cybersecurity awareness training for employees cost?",
@@ -247,7 +258,8 @@ function whereWeTrain(code: CountryCode): string {
       <h2 class="section-title" id="where-title">Cybersecurity awareness training for employees across ${escapeHtml(country)}</h2>
       <p class="ca-p">Paleon Training runs CyberSecure Workforce for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Sessions are scheduled around your working day, and examples are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
-      <div class="ca-ctas">${ctaButton(CYBER_PROPOSAL, false)}${callButton(false)}</div>
+      ${cohortNotice("cybersecure")}
+      <div class="ca-ctas">${reserveButton("cybersecure")}${callButton(false)}</div>
     </div>
   </section>`;
 }

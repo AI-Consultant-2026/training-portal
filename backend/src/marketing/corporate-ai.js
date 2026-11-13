@@ -26,11 +26,15 @@
   var intentNote = document.getElementById("caIntent");
   var INTENTS = {
     proposal: { note: "", button: submit.getAttribute("data-default") || submit.textContent },
-    reserve: { note: "Reserve places in the December 2026 cohort: 10 places remain. Tell us your organisation and headcount and we will confirm within one working day.", button: "Reserve my team's places" },
+    reserve: { note: "", button: "Reserve my team's places" },
     taster: { note: "Free leadership taster: a short live online session for your leadership team, with no obligation.", button: "Request a free taster" },
   };
-  function setIntent(name) {
+  // The places left come from the button that was clicked (data-places, per programme).
+  function setIntent(name, places) {
     var it = INTENTS[name] || INTENTS.proposal;
+    if (name === "reserve") {
+      it.note = "Reserve places in the December 2026 cohort" + (places ? ": " + places + " places remain" : "") + ". Tell us your organisation and headcount and we will confirm within one working day.";
+    }
     intentInput.value = INTENTS[name] ? name : "proposal";
     intentNote.textContent = it.note;
     intentNote.hidden = !it.note;
@@ -38,7 +42,7 @@
   }
   document.querySelectorAll("[data-intent]").forEach(function (el) {
     el.addEventListener("click", function () {
-      setIntent(el.getAttribute("data-intent"));
+      setIntent(el.getAttribute("data-intent"), el.getAttribute("data-places"));
       if (window.ptTrack) window.ptTrack("corporate_cta_click", { intent: el.getAttribute("data-intent"), programme: programme, country: form.getAttribute("data-country") });
     });
   });

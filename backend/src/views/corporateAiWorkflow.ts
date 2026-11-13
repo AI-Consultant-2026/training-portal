@@ -21,14 +21,15 @@ import {
   scripts,
   whatsappAttr,
 } from "./countryHome";
+import type { PricedProgramme } from "../constants/corporatePricing";
 import { hubPricingFaqAnswer, pricingFaqAnswer, pricingSection, pricingSummaryTable } from "./corporatePricing";
 import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 import {
   CALL_URL,
   COHORT_NAME,
-  COHORT_NOTICE,
+  cohortNotice,
+  cohortSentence,
   COHORT_PLACES,
-  COHORT_SENTENCE,
   RESERVE_CTA,
   callButton,
   forwardSection,
@@ -104,8 +105,8 @@ function field(c: CorporatePageContent, section: string, label: string): string 
   return "";
 }
 
-export function ctaButton(label: string, dark: boolean, buyHref = "#buy"): string {
-  if (label === RESERVE_CTA) return reserveButton();
+export function ctaButton(label: string, dark: boolean, buyHref = "#buy", programme: PricedProgramme = "ai-workflow"): string {
+  if (label === RESERVE_CTA) return reserveButton(programme);
   if (label === WORKFORCE_CTA) {
     return `<a class="btn btn-signal btn-lg" href="${buyHref}" data-buy-cta>${escapeHtml(label)}</a>`;
   }
@@ -188,9 +189,9 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "Hero", "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Hero", "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Hero", "Supporting statement"))}</p>
-        ${COHORT_NOTICE}
+        ${cohortNotice("ai-workflow")}
         <div class="hero-ctas">
-          ${reserveButton()}
+          ${reserveButton("ai-workflow")}
           ${readinessButton(code, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
@@ -212,11 +213,11 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer AI training for employees in ${cityList(code)}?`,
-      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each employee, or live online, in-house or hybrid delivery by quote. ${COHORT_SENTENCE}`,
+      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each employee, or live online, in-house or hybrid delivery by quote. ${cohortSentence("ai-workflow")}`,
     },
     {
       q: "When can we start?",
-      a: `Self-paced places can start today. For live delivery, ${COHORT_SENTENCE.charAt(0).toLowerCase()}${COHORT_SENTENCE.slice(1)} Reserve now and we will complete the needs assessment with you in advance, so your teams are ready to start.`,
+      a: `Self-paced places can start today. For live delivery, ${cohortSentence("ai-workflow").charAt(0).toLowerCase()}${cohortSentence("ai-workflow").slice(1)} Reserve now and we will complete the needs assessment with you in advance, so your teams are ready to start.`,
     },
     {
       q: "How much does corporate AI training cost?",
@@ -224,7 +225,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "Can we combine AI training with cybersecurity training for our staff?",
-      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available for companies in ${country}: many organisations start with cybersecurity training and add AI training in the ${COHORT_NAME} cohort.`,
+      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available for companies in ${country}, self-paced now or live from the ${COHORT_NAME} cohort.`,
     },
   ];
 }
@@ -252,10 +253,10 @@ function whereWeTrain(code: CountryCode): string {
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">AI workforce and process transformation training across ${escapeHtml(country)}</h2>
-      ${COHORT_NOTICE}
+      ${cohortNotice("ai-workflow")}
       <p class="ca-p">Paleon Training runs AI Workflow Productivity &amp; Process Transformation for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Sessions are scheduled around your working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
-      <div class="ca-ctas">${reserveButton()}${callButton(false)}</div>
+      <div class="ca-ctas">${reserveButton("ai-workflow")}${callButton(false)}</div>
     </div>
   </section>`;
 }
@@ -578,7 +579,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    a: `Yes. AI Workflow Productivity & Process Transformation is available in all three countries, self-paced online or live online, in-house or hybrid, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. For both, the ${COHORT_NAME} cohort has ${COHORT_PLACES} places remaining.`,
+    a: `Yes. AI Workflow Productivity & Process Transformation is available in all three countries, self-paced online or live online, in-house or hybrid, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. Live delivery for both is booked until ${COHORT_NAME}; the ${COHORT_NAME} cohort has ${COHORT_PLACES["ai-workflow"]} places remaining for AI Workflow and ${COHORT_PLACES.accelerator} for the Accelerator.`,
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
@@ -851,6 +852,8 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="cybersecure-title">CyberSecure Workforce: cybersecurity awareness training</h2>
       <p class="ca-headline co-lead">Fewer incidents that start with a person.</p>
       ${outcomeList("cybersecure", ctx.country)}
+      ${cohortNotice("cybersecure")}
+      <div class="ca-ctas">${reserveButton("cybersecure")}</div>
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce Essentials (1 minute 48 seconds)">
@@ -871,8 +874,8 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
       <p class="ca-headline co-lead">Hours saved every week, with the risks managed.</p>
       ${outcomeList("ai-workflow", ctx.country)}
-      ${COHORT_NOTICE}
-      <div class="ca-ctas">${reserveButton()}</div>
+      ${cohortNotice("ai-workflow")}
+      <div class="ca-ctas">${reserveButton("ai-workflow")}</div>
       <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-workflow-productivity.jpg" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 54 seconds)">
@@ -891,8 +894,8 @@ ${header(ctx, home, "/", true)}
       <h2 class="section-title" id="accelerator-title">AI + Cybersecurity Professional Accelerator</h2>
       <p class="ca-headline co-lead">Your own people leading secure AI adoption.</p>
       ${outcomeList("accelerator", ctx.country)}
-      ${COHORT_NOTICE}
-      <div class="ca-ctas">${reserveButton()}</div>
+      ${cohortNotice("accelerator")}
+      <div class="ca-ctas">${reserveButton("accelerator")}</div>
       <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-cybersecurity-accelerator.jpg" aria-label="Video: AI + Cybersecurity Professional Accelerator (1 minute 55 seconds)">

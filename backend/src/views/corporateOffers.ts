@@ -15,16 +15,22 @@ function escapeHtml(value: string): string {
 
 const money = (code: CountryCode, amount: number) => formatMoney(code, amount);
 
-// ---- The December 2026 cohort (owner: 10 places remain; replaces "fully booked until
-// January 2027" on AI Workflow Productivity and the Accelerator). Update both when it fills.
+// ---- Live delivery is booked until December 2026 (owner, 2026-11-13); places remaining in
+// the December 2026 cohort per programme. Update here when places fill.
 export const COHORT_NAME = "December 2026";
-export const COHORT_PLACES = 10;
+export const COHORT_PLACES: Record<PricedProgramme, number> = { "ai-workflow": 12, cybersecure: 8, accelerator: 10 };
 export const RESERVE_CTA = `Reserve a ${COHORT_NAME} cohort`;
-export const COHORT_SENTENCE = `The next cohort starts in ${COHORT_NAME} and ${COHORT_PLACES} places remain.`;
-export const COHORT_NOTICE = `<p class="ca-booked"><strong>${COHORT_NAME} cohort: ${COHORT_PLACES} places remain.</strong> Reserve now to hold places for your team.</p>`;
 
-export function reserveButton(): string {
-  return `<a class="btn btn-signal btn-lg" href="#enquiry" data-intent="reserve">${escapeHtml(RESERVE_CTA)}</a>`;
+export function cohortSentence(programme: PricedProgramme): string {
+  return `Live delivery is booked until ${COHORT_NAME}, and ${COHORT_PLACES[programme]} places remain in the ${COHORT_NAME} cohort.`;
+}
+
+export function cohortNotice(programme: PricedProgramme): string {
+  return `<p class="ca-booked"><strong>Booked until ${COHORT_NAME}.</strong> ${COHORT_PLACES[programme]} places remain in the ${COHORT_NAME} cohort; reserve now to hold places for your team.</p>`;
+}
+
+export function reserveButton(programme: PricedProgramme): string {
+  return `<a class="btn btn-signal btn-lg" href="#enquiry" data-intent="reserve" data-places="${COHORT_PLACES[programme]}">${escapeHtml(RESERVE_CTA)}</a>`;
 }
 
 // ---- "Book a 20-minute call": WhatsApp with the message typed in, until there is a calendar.
