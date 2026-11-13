@@ -88,7 +88,8 @@ export const corporateLeadSchema = z.object({
     // Optional since the form was shortened (2026-11-13); older pages still send them.
     jobTitle: optionalText(150),
     organisation: short(200),
-    country: z.enum(COUNTRY_CODES),
+    // XX = another country (2026-11-13).
+    country: z.enum([...COUNTRY_CODES, "XX"]),
     email: z.string().trim().email().max(200),
     phone: z
       .string()

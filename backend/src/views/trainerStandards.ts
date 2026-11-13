@@ -99,7 +99,7 @@ export function trainerStandards(): string {
       <h2 class="section-title" id="trainers-title">Meet our trainers</h2>
       ${TRAINERS.map(profileCard).join("\n      ")}
       <h3 class="tr-sub">How we choose our trainers</h3>
-      <p class="ca-p">Every Paleon programme is led by a live facilitator. Before anyone trains your staff, they must meet these standards:</p>
+      <p class="ca-p">Every live session (online, in-house or hybrid) is led by a facilitator; the self-paced option is studied online in the Paleon portal. Before anyone trains your staff, they must meet these standards:</p>
       <div class="ca-cards">${TRAINER_STANDARDS.map((s) => `
         <div class="ca-card"><h3>${s.h}</h3><p>${s.p}</p></div>`).join("")}
       </div>

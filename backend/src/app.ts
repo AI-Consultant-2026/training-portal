@@ -28,6 +28,12 @@ import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionA
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { renderSector, renderSectorsIndex, SECTORS_PATH } from "./views/corporateSectors";
 import { BROCHURE_BASE, BUSINESS_CASE_BASE, parsePdfSlug } from "./views/corporateOffers";
+import {
+  SAMPLE_ATTENDANCE_PATH,
+  SAMPLE_CERTIFICATE_PATH,
+  streamSampleAttendance,
+  streamSampleCertificate,
+} from "./services/corporateSamples.service";
 import { streamBrochurePdf, streamBusinessCasePdf } from "./services/corporateBrochure.service";
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { countryCorporatePath } from "./views/corporateLocal";
@@ -294,6 +300,18 @@ export function createApp() {
     };
   app.get(`${BROCHURE_BASE}/:slug([a-z-]+)\\.pdf`, sendCorporatePdf(streamBrochurePdf, "brochure"));
   app.get(`${BUSINESS_CASE_BASE}/:slug([a-z-]+)\\.pdf`, sendCorporatePdf(streamBusinessCasePdf, "business-case"));
+  // Example certificate and attendance record, watermarked SAMPLE (2026-11-13).
+  for (const [path, stream, name] of [
+    [SAMPLE_CERTIFICATE_PATH, streamSampleCertificate, "paleon-sample-certificate.pdf"],
+    [SAMPLE_ATTENDANCE_PATH, streamSampleAttendance, "paleon-sample-attendance-record.pdf"],
+  ] as const) {
+    app.get(path, (_req, res) => {
+      res.set("Cache-Control", "public, max-age=3600");
+      res.type("application/pdf");
+      res.set("Content-Disposition", `inline; filename="${name}"`);
+      stream(res);
+    });
+  }
   // Where Flutterwave returns a company after buying learner places (2026-11-12). The
   // payment is checked with Flutterwave here too, in case the webhook is late.
   app.get("/corporate-checkout/complete", async (req, res, next) => {

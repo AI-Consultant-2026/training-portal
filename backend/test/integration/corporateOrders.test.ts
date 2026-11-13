@@ -274,7 +274,7 @@ describe("Admin: corporate orders", () => {
       seats: 250,
       total: 175000,
       totalLabel: "R175,000",
-      programmeName: "CyberSecure Workforce Essentials",
+      programmeName: "CyberSecure Workforce",
       client: null,
     });
   });

@@ -164,7 +164,7 @@ describe("CyberSecure Workforce corporate pages", () => {
     expect(res.text).toContain("Request In-House Training Proposal");
     // All 12 modules, the packages and the AI Workflow cross-link on every page.
     expect(res.text).toContain("Incident Reporting &amp; Response");
-    expect(res.text).toContain("CyberSecure Workforce Essentials");
+    expect(res.text).toContain("CyberSecure Workforce Foundation workshop (live)");
     expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
     expect(res.text).not.toContain("Workforce Score");
     expect(res.text).not.toContain("(link:");

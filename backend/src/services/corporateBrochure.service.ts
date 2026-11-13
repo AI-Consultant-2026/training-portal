@@ -7,6 +7,7 @@ import { ACCELERATOR_CONTENT } from "../views/corporateAcceleratorContent";
 import { CYBERSECURE_CONTENT } from "../views/corporateCyberSecureContent";
 import { DATA_PROTECTION_LAW } from "../views/corporateLocal";
 import {
+  BUYING_TERMS,
   COHORT_NAME,
   COHORT_PLACES,
   EXAMPLE_STAFF,
@@ -195,12 +196,14 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
   );
   if (hasCohort(programme)) {
     doc.moveDown(0.2);
-    labelled(doc, `Booked until ${COHORT_NAME}:`, `${COHORT_PLACES[programme]} places remain in the ${COHORT_NAME} cohort. Reserve by email or WhatsApp.`);
+    labelled(doc, `Next live cohort: ${COHORT_NAME}.`, `${COHORT_PLACES[programme]} places left. Reserve by email or WhatsApp. Self-paced places start today.`);
   }
   heading(doc, "Start small");
   labelled(doc, `Paid pilot:`, `${PILOT_STAFF} learners self-paced for ${money(code, pilotTotal(programme, code))}. Review the results with us, then decide on a wider rollout.`);
   doc.moveDown(0.15);
   labelled(doc, "Free leadership taster:", "a short live online session for your leadership team, with no obligation.");
+  heading(doc, "Refunds, cancellations and unused seats");
+  bullets(doc, BUYING_TERMS.map((x) => `${x.h}: ${x.p}`));
   heading(doc, "Data protection");
   para(
     doc,
@@ -241,7 +244,7 @@ export function streamBusinessCasePdf(programme: PricedProgramme, code: CountryC
     [
       `Recommended: ${EXAMPLE_STAFF} staff, self-paced online, ${money(code, exampleTotal(programme, code))} in total (${money(code, seatPrice(programme, code, EXAMPLE_STAFF))} per learner after the 10% volume discount, 12 months' access).`,
       `Lower-risk start: a ${PILOT_STAFF}-learner pilot for ${money(code, pilotTotal(programme, code))}, then a decision on rollout.`,
-      `Alternative: live online, in-house or hybrid delivery, priced by quote after a 20-minute call${hasCohort(programme) ? `; live delivery is booked until ${COHORT_NAME} and the ${COHORT_NAME} cohort has ${COHORT_PLACES[programme]} places remaining` : ""}.`,
+      `Alternative: live online, in-house or hybrid delivery, priced by quote after a 20-minute call${hasCohort(programme) ? `; the next live cohort is ${COHORT_NAME}, with ${COHORT_PLACES[programme]} places left` : ""}.`,
     ],
     size,
   );

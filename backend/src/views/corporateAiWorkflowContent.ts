@@ -201,7 +201,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
           },
           {
-            "p": "**ITF reimbursement:** Nigerian employers that pay the ITF training levy can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs."
+            "p": "**ITF reimbursement:** Nigerian employers that pay the 1% ITF training levy can apply for a refund of up to 50% of the levy they paid, if the ITF approves their training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide the attendance records and programme documentation a claim needs."
           }
         ]
       },
@@ -318,7 +318,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can our executives have a separate AI strategy workshop?** Yes. Executive AI workshops are short sessions on where AI fits your strategy, risks and adoption plan."
           },
           {
-            "p": "**Can we claim ITF reimbursement for this training?** Yes, if your organisation pays the ITF training levy. Employers can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide attendance records and programme documentation to support your claim."
+            "p": "**Can we claim ITF reimbursement for this training?** Yes, if your organisation pays the ITF training levy: the ITF can refund up to 50% of the levy paid when it approves your training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide attendance records and programme documentation."
           },
           {
             "p": "**How do we request a corporate proposal?** Complete the enquiry form below, or email corporate@paleontraining.com. We will arrange a consultation and send a proposal."

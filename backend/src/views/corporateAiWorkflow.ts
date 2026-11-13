@@ -86,8 +86,16 @@ const PROPOSAL = "Request In-House Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
 
 // Escape, then turn the copy's **bold** marks into <strong>.
+// Where the "up to 50% of the ITF levy" claim comes from (2026-11-13 review): a law firm's
+// summary of the Act, since the ITF's own site does not publish it in a linkable form.
+export const ITF_SOURCE_NAME = "Industrial Training Fund (Amendment) Act 2011";
+export const ITF_SOURCE_URL =
+  "https://www.mondaq.com/nigeria/employee-rights-labour-relations/199880/what-you-should-know-and-do-about-the-industrial-training-fund-amendment-act-2011";
+
 export function rich(value: string): string {
-  return escapeHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  return escapeHtml(value)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(escapeHtml(ITF_SOURCE_NAME), `<a href="${ITF_SOURCE_URL}" target="_blank" rel="noopener">${escapeHtml(ITF_SOURCE_NAME)}</a>`);
 }
 
 // "**Label:** rest" -> ["Label", "rest"]; null when the paragraph doesn't start with a label.
@@ -325,7 +333,8 @@ export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: Enqui
     (code ? "" : '<option value="">Choose your country</option>') +
     MARKET_ORDER.map(
       (k) => `<option value="${k}"${k === code ? " selected" : ""}>${escapeHtml(COUNTRIES[k].name)}</option>`,
-    ).join("");
+    ).join("") +
+    '<option value="XX">Other country</option>';
   return `<section class="section section-dark ca-section" id="enquiry" aria-labelledby="enquiry-title">
     <div class="wrap ca-enquiry">
       <div class="ca-enquiry-copy">
@@ -347,6 +356,7 @@ export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: Enqui
           <div class="form-row"><label class="form-label" for="ca-country">Country</label><select class="form-select" id="ca-country" name="country" required>${countryOptions}</select></div>
           <div class="form-row"><label class="form-label" for="ca-employees">Headcount</label><select class="form-select" id="ca-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Number of employees")}</select></div>
         </div>
+        <div class="form-row"><label class="form-label" for="ca-message">What would you like to improve? <span class="optional">(optional)</span></label><input class="form-input" id="ca-message" name="message" maxlength="500" placeholder="For example: phishing clicks in finance, or safe AI use across the sales team"></div>
         <div class="ca-hp" aria-hidden="true"><label for="ca-website">Website</label><input id="ca-website" name="website" tabindex="-1" autocomplete="off"></div>
         <label class="consent-check"><input type="checkbox" name="consent" required> <span>I agree that Paleon Training may use these details to respond to my enquiry, as described in the <a href="/privacy">Privacy Policy</a>.</span></label>
         <label class="consent-check"><input type="checkbox" name="updates"> <span>Send me occasional updates about Paleon corporate training. I can unsubscribe at any time. <span class="optional">(optional)</span></span></label>
@@ -579,7 +589,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    a: `Yes. AI Workflow Productivity & Process Transformation is available in all three countries, self-paced online or live online, in-house or hybrid, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. Live delivery for both is booked until ${COHORT_NAME}; the ${COHORT_NAME} cohort has ${COHORT_PLACES["ai-workflow"]} places remaining for AI Workflow and ${COHORT_PLACES.accelerator} for the Accelerator.`,
+    a: `Yes. AI Workflow Productivity & Process Transformation is available in all three countries, self-paced online or live online, in-house or hybrid, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. The next live cohort is ${COHORT_NAME}, with ${COHORT_PLACES["ai-workflow"]} places left for AI Workflow and ${COHORT_PLACES.accelerator} for the Accelerator; self-paced places start today.`,
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
@@ -611,7 +621,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Can Nigerian employers claim ITF reimbursement?",
-    a: "Yes, if your organisation pays the ITF training levy. Employers can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs.",
+    a: "Yes, if your organisation pays the ITF training levy: the ITF can refund up to 50% of the levy paid when it approves your training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide attendance records and programme documentation.",
   },
   {
     q: "How quickly will you reply to an enquiry?",
@@ -640,7 +650,7 @@ const HUB_DEFINITION =
 const HUB_VIDEOS = [
   {
     slug: "cybersecure-workforce-essentials",
-    name: "CyberSecure Workforce Essentials",
+    name: "CyberSecure Workforce",
     description: "How phishing, payment fraud and data leaks reach ordinary staff, and how Paleon's CyberSecure Workforce training builds a cyber-aware workforce.",
     duration: "PT1M48S",
   },
@@ -808,7 +818,7 @@ export function renderCorporateHub(
       </a>`,
   ).join("\n");
   const faqHtml = HUB_FAQ.map(
-    (f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`,
+    (f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${rich(f.a)}</p></details>`,
   ).join("\n");
 
   return `${headHtml}
@@ -856,7 +866,7 @@ ${header(ctx, home, "/", true)}
       <div class="ca-ctas">${reserveButton("cybersecure")}</div>
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <figure class="ca-video">
-        <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce Essentials (1 minute 48 seconds)">
+        <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce (1 minute 48 seconds)">
           <source src="/videos/corporate/cybersecure-workforce-essentials.mp4?v=2" type="video/mp4">
         </video>
       </figure>

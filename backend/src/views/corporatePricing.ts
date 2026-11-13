@@ -1,4 +1,5 @@
 import { COUNTRIES, CountryCode, MARKET_ORDER, formatMoney } from "../constants/countries";
+import { termsBlock } from "./corporateOffers";
 import {
   CORPORATE_PRICES,
   PRICED_PROGRAMMES,
@@ -166,6 +167,7 @@ export function pricingSection(code: CountryCode, programme: PricedProgramme, da
       <p class="ca-p ca-hint">${escapeHtml(TERMS)} Orders of ${INVOICE_FROM_SEATS} or more learners are invoiced.</p>
       ${buyForm(code, programme)}
       <p class="ca-p cp-after"><strong>Live facilitator-led or in-house delivery?</strong> It is quoted for your team: <a href="#enquiry" data-intent="proposal">request a proposal</a> and we will reply within one working day.</p>
+      ${termsBlock(dark)}
     </div>
   </section>`;
 }

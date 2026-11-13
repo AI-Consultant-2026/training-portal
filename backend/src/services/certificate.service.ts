@@ -1,4 +1,5 @@
 import PDFDocument from "pdfkit";
+import { watermarkSample } from "../utils/pdfSample";
 import { Course, Enrollment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
 
@@ -9,6 +10,8 @@ export interface CertificateData {
   courseDescription: string;
   durationWeeks: number;
   completionDate: Date;
+  /** Corporate courses are organised in modules, graduate courses in days (2026-11-13). */
+  unit?: "day" | "module";
 }
 
 // Same ownership rule as getEnrollmentById (own enrollment or admin), plus a completion
@@ -48,6 +51,7 @@ export async function getCertificateData(
     courseDescription: course.description,
     durationWeeks: course.durationWeeks,
     completionDate: enrollment.completionDate ?? new Date(),
+    unit: course.metadata?.corporate ? "module" : "day",
   };
 }
 
@@ -62,8 +66,12 @@ const PAPER = "#F7F4EC";
 // Generates straight into the given writable stream (the Express response) -- nothing
 // is persisted server-side, so re-downloading always reflects the current student/course
 // name rather than a stale snapshot from whenever it was first generated.
-export function streamCertificatePdf(data: CertificateData, destination: NodeJS.WritableStream): void {
-  const doc = new PDFDocument({ layout: "landscape", size: "A4", margin: 0 });
+export function streamCertificatePdf(
+  data: CertificateData,
+  destination: NodeJS.WritableStream,
+  opts: { sample?: boolean } = {},
+): void {
+  const doc = new PDFDocument({ layout: "landscape", size: "A4", margin: 0, bufferPages: !!opts.sample });
   doc.pipe(destination);
 
   const { width, height } = doc.page;
@@ -132,7 +140,7 @@ export function streamCertificatePdf(data: CertificateData, destination: NodeJS.
     .fillColor(CHARCOAL_SOFT)
     .font("Helvetica")
     .fontSize(10)
-    .text(`${data.durationWeeks}-DAY PROGRAM`, 0, margin + 302, { align: "center", characterSpacing: 1.5 });
+    .text(data.unit === "module" ? `${data.durationWeeks}-MODULE PROGRAMME` : `${data.durationWeeks}-DAY PROGRAM`, 0, margin + 302, { align: "center", characterSpacing: 1.5 });
 
   doc
     .fillColor(CHARCOAL_SOFT)
@@ -192,5 +200,6 @@ export function streamCertificatePdf(data: CertificateData, destination: NodeJS.
     .fontSize(9)
     .text(`Certificate reference: ${data.enrollmentId}`, 0, height - margin - 26, { align: "center" });
 
+  if (opts.sample) watermarkSample(doc);
   doc.end();
 }

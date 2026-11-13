@@ -7,7 +7,7 @@ import { CorporateCourseSeed } from "./curriculumCorporateTypes";
 // made generic. Already-loaded content only changes through a new migration.
 export const CYBERSECURE_WORKFORCE: CorporateCourseSeed = {
   "slug": "cybersecure-workforce-essentials",
-  "title": "CyberSecure Workforce Essentials",
+  "title": "CyberSecure Workforce",
   "introAssessment": [
     {
       "text": "You get an email from \"IT Support\" saying your mailbox is full and you must log in through a link within 1 hour. What should you do?",

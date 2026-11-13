@@ -338,3 +338,17 @@
 .rc-brochure { font-size: 14.5px; }
 .rc-next { margin: 8px 0 24px; padding: 16px; background: var(--paper-2); border-radius: var(--radius-lg); }
 .rc-proposal { background: var(--paper-2); padding: 10px 12px; border-radius: var(--radius); }
+
+/* Second review (2026-11-13): pilot prices for every country, buying terms, other-country PDFs. */
+.co-way { min-width: 0; }
+.co-pilot-table { margin: 6px 0 12px; max-width: 100%; }
+.co-pilot-table .cp-table { font-size: 14.5px; }
+.co-pilot-table .cp-table th, .co-pilot-table .cp-table td { padding: 8px 10px; }
+.co-pilot-table td.co-here { font-weight: 700; }
+.co-way .ca-ctas { flex-wrap: wrap; gap: 8px; }
+.co-terms { margin-top: 22px; padding: 16px 18px; border: 1px solid var(--line-light); border-radius: var(--radius-lg); background: var(--paper-2); color: var(--charcoal); }
+.co-terms .cp-subtitle { margin-top: 0; color: var(--charcoal); }
+.co-terms .ca-list li { color: var(--charcoal); }
+.co-other-pdfs { font-size: 15px; line-height: 1.7; }
+.co-other-pdf { display: block; margin-top: 6px; }
+.co-samples { flex-direction: column; align-items: flex-start; }

@@ -380,7 +380,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
           },
           {
-            "p": "**ITF reimbursement:** employers that pay the ITF training levy can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs."
+            "p": "**ITF reimbursement:** Nigerian employers that pay the 1% ITF training levy can apply for a refund of up to 50% of the levy they paid, if the ITF approves their training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide the attendance records and programme documentation a claim needs."
           }
         ]
       },
@@ -396,24 +396,27 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Includes"
               ],
               [
-                "CyberSecure Workforce Essentials",
+                "CyberSecure Workforce Foundation workshop (live)",
                 "1–2 days",
                 "Organisations starting cybersecurity awareness across staff",
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with a short knowledge check and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Programme (recommended)",
+                "CyberSecure Workforce Programme (live, recommended)",
                 "4 weeks",
                 "Most organisations",
                 "Pre- and post-training assessments, structured training, department scenarios, the CyberSecure Workforce Challenge, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation",
+                "CyberSecure Workforce Transformation (live)",
                 "6–8 weeks, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report: conversations with managers, department training, incident exercises, and a summary report with an improvement plan"
               ]
             ]
+          },
+          {
+            "p": "**One product, two ways to take it.** CyberSecure Workforce is the programme name everywhere. The **self-paced** version (priced per learner, with 12 months' access in the Paleon portal) covers the same core content as the live Foundation workshop, studied online at each learner's own pace. The **live packages** above add facilitator-led sessions, department scenarios and reporting, and are quoted for your team."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."
@@ -520,7 +523,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Does the programme include practical exercises?** Yes. Participants practise on realistic scenarios and a simulated incident."
           },
           {
-            "p": "**Can we claim ITF reimbursement for this training?** Yes, if your organisation pays the ITF training levy: up to 50% of eligible costs, subject to the ITF's requirements. We provide attendance records and programme documentation."
+            "p": "**Can we claim ITF reimbursement for this training?** Yes, if your organisation pays the ITF training levy: the ITF can refund up to 50% of the levy paid when it approves your training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide attendance records and programme documentation."
           },
           {
             "p": "**Does the training cover data protection?** It builds awareness of handling personal and confidential data responsibly, in line with your obligations under the Nigeria Data Protection Act 2023. It is not legal advice."
@@ -1011,24 +1014,27 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Includes"
               ],
               [
-                "CyberSecure Workforce Essentials",
+                "CyberSecure Workforce Foundation workshop (live)",
                 "1–2 days",
                 "Organisations starting cybersecurity awareness across staff",
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with a short knowledge check and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Programme (recommended)",
+                "CyberSecure Workforce Programme (live, recommended)",
                 "4 weeks",
                 "Most organisations",
                 "Pre- and post-training assessments, structured training, department scenarios, the CyberSecure Workforce Challenge, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation",
+                "CyberSecure Workforce Transformation (live)",
                 "6–8 weeks, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report: conversations with managers, department training, incident exercises, and a summary report with an improvement plan"
               ]
             ]
+          },
+          {
+            "p": "**One product, two ways to take it.** CyberSecure Workforce is the programme name everywhere. The **self-paced** version (priced per learner, with 12 months' access in the Paleon portal) covers the same core content as the live Foundation workshop, studied online at each learner's own pace. The **live packages** above add facilitator-led sessions, department scenarios and reporting, and are quoted for your team."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."
@@ -1513,24 +1519,27 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Includes"
               ],
               [
-                "CyberSecure Workforce Essentials",
+                "CyberSecure Workforce Foundation workshop (live)",
                 "1–2 days",
                 "Organisations starting cybersecurity awareness across staff",
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with a short knowledge check and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Programme (recommended)",
+                "CyberSecure Workforce Programme (live, recommended)",
                 "4 weeks",
                 "Most organisations",
                 "Pre- and post-training assessments, structured training, department scenarios, the CyberSecure Workforce Challenge, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation",
+                "CyberSecure Workforce Transformation (live)",
                 "6–8 weeks, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report: conversations with managers, department training, incident exercises, and a summary report with an improvement plan"
               ]
             ]
+          },
+          {
+            "p": "**One product, two ways to take it.** CyberSecure Workforce is the programme name everywhere. The **self-paced** version (priced per learner, with 12 months' access in the Paleon portal) covers the same core content as the live Foundation workshop, studied online at each learner's own pace. The **live packages** above add facilitator-led sessions, department scenarios and reporting, and are quoted for your team."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."
@@ -2015,24 +2024,27 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
                 "Includes"
               ],
               [
-                "CyberSecure Workforce Essentials",
+                "CyberSecure Workforce Foundation workshop (live)",
                 "1–2 days",
                 "Organisations starting cybersecurity awareness across staff",
                 "Core training on phishing, passwords, data protection, remote working, AI security and incident reporting, with a short knowledge check and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Programme (recommended)",
+                "CyberSecure Workforce Programme (live, recommended)",
                 "4 weeks",
                 "Most organisations",
                 "Pre- and post-training assessments, structured training, department scenarios, the CyberSecure Workforce Challenge, a summary report with recommendations, and certificates of completion"
               ],
               [
-                "CyberSecure Workforce Transformation",
+                "CyberSecure Workforce Transformation (live)",
                 "6–8 weeks, customised",
                 "Organisations wanting a broader improvement programme",
                 "Assess → train → practise → measure → improve → report: conversations with managers, department training, incident exercises, and a summary report with an improvement plan"
               ]
             ]
+          },
+          {
+            "p": "**One product, two ways to take it.** CyberSecure Workforce is the programme name everywhere. The **self-paced** version (priced per learner, with 12 months' access in the Paleon portal) covers the same core content as the live Foundation workshop, studied online at each learner's own pace. The **live packages** above add facilitator-led sessions, department scenarios and reporting, and are quoted for your team."
           },
           {
             "p": "Penetration testing, security engineering and infrastructure assessments are specialist services. They are not part of this programme and would be scoped separately."

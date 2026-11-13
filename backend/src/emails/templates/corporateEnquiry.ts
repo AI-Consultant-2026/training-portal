@@ -14,7 +14,7 @@ export function buildCorporateEnquiryEmail(lead: {
   details?: Record<string, string> | null;
 }): EmailMessage {
   const d = lead.details ?? {};
-  const countryName = COUNTRIES[lead.country as CountryCode]?.name ?? lead.country;
+  const countryName = lead.country === "XX" ? "another country" : (COUNTRIES[lead.country as CountryCode]?.name ?? lead.country);
   // Older AI Workflow enquiries have no programme stored.
   const programme = d.programme ?? "";
   const topic = /accelerator/i.test(programme)

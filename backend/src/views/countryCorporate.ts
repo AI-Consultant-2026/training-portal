@@ -60,7 +60,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       : []),
     {
       q: "When can our team start?",
-      a: `Self-paced places on all three programmes can start today. Live delivery is booked until December 2026; the December 2026 cohort has ${COHORT_PLACES.cybersecure} places remaining for CyberSecure Workforce, ${COHORT_PLACES["ai-workflow"]} for AI Workflow Productivity and ${COHORT_PLACES.accelerator} for the Accelerator.`,
+      a: `Self-paced places on all three programmes can start today. The next live cohort is December 2026, with ${COHORT_PLACES.cybersecure} places left for CyberSecure Workforce, ${COHORT_PLACES["ai-workflow"]} for AI Workflow Productivity and ${COHORT_PLACES.accelerator} for the Accelerator.`,
     },
     {
       q: "Can the training be customised for our organisation?",

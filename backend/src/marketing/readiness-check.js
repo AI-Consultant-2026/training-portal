@@ -96,6 +96,12 @@
       li.appendChild(b);
       suggest.appendChild(li);
     });
+    // A rough cost for closing the priority gaps, using the first recommendation (2026-11-13).
+    var first = data.programmes[order[0]];
+    document.getElementById("rcCost").textContent =
+      "Rough cost to close your priority gaps: about " + first.example + " for " + data.exampleStaff +
+      " staff on " + first.name + ", self-paced (10% volume discount included), or " + first.pilot +
+      " for a " + data.pilotStaff + "-learner pilot first. Live or in-house delivery is quoted separately. Your scorecard email includes the full breakdown.";
 
     quiz.hidden = true;
     result.hidden = false;

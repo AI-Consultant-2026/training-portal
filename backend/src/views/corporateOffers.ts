@@ -1,4 +1,4 @@
-import { COUNTRIES, CountryCode, formatMoney } from "../constants/countries";
+import { COUNTRIES, CountryCode, MARKET_ORDER, formatMoney } from "../constants/countries";
 import { CORPORATE_PRICES, PRICED_PROGRAMMES, PROGRAMME_NAMES, PricedProgramme, seatPrice } from "../constants/corporatePricing";
 import { DATA_PROTECTION_LAW } from "./corporateLocal";
 
@@ -22,11 +22,11 @@ export const COHORT_PLACES: Record<PricedProgramme, number> = { "ai-workflow": 1
 export const RESERVE_CTA = `Reserve a ${COHORT_NAME} cohort`;
 
 export function cohortSentence(programme: PricedProgramme): string {
-  return `Live delivery is booked until ${COHORT_NAME}, and ${COHORT_PLACES[programme]} places remain in the ${COHORT_NAME} cohort.`;
+  return `The next live cohort is ${COHORT_NAME}, with ${COHORT_PLACES[programme]} places left. Self-paced places start today.`;
 }
 
 export function cohortNotice(programme: PricedProgramme): string {
-  return `<p class="ca-booked"><strong>Booked until ${COHORT_NAME}.</strong> ${COHORT_PLACES[programme]} places remain in the ${COHORT_NAME} cohort; reserve now to hold places for your team.</p>`;
+  return `<p class="ca-booked"><strong>Next live cohort: ${COHORT_NAME}, ${COHORT_PLACES[programme]} places left.</strong> Self-paced places start today.</p>`;
 }
 
 export function reserveButton(programme: PricedProgramme): string {
@@ -70,6 +70,10 @@ const PROGRAMME_PAGE: Record<PricedProgramme, string> = {
 export function programmePagePath(programme: PricedProgramme, code: CountryCode): string {
   return `${COUNTRIES[code].site.path}/${PROGRAMME_PAGE[programme]}`;
 }
+
+// Watermarked example documents (services/corporateSamples.service.ts).
+export const SAMPLE_CERTIFICATE_PATH = "/corporate-training/samples/certificate.pdf";
+export const SAMPLE_ATTENDANCE_PATH = "/corporate-training/samples/attendance-record.pdf";
 
 export const BROCHURE_BASE = "/corporate-training/brochures";
 export const BUSINESS_CASE_BASE = "/corporate-training/business-case";
@@ -256,11 +260,35 @@ export function pilotTotal(programme: PricedProgramme, code: CountryCode): numbe
   return seatPrice(programme, code, PILOT_STAFF) * PILOT_STAFF;
 }
 
-export function pilotSection(code: CountryCode, programme: PricedProgramme | null, dark: boolean): string {
-  const prices = (programme ? [programme] : [...PRICED_PROGRAMMES])
-    .map((p) => `<li>${escapeHtml(PROGRAMME_NAMES[p])}: <strong>${escapeHtml(money(code, pilotTotal(p, code)))}</strong> for ${PILOT_STAFF} learners</li>`)
+const PILOT_GUARANTEE_TERMS = "if you order a wider rollout within 90 days, the full pilot fee is credited against it.";
+export const PILOT_GUARANTEE = `Pilot guarantee: ${PILOT_GUARANTEE_TERMS}`;
+
+/** Pilot prices for every country (rows: programmes, columns: countries); the visitor's country first. */
+function pilotTable(code: CountryCode, list: PricedProgramme[]): string {
+  const order = [code, ...MARKET_ORDER.filter((k) => k !== code)];
+  const head = order.map((k) => `<th scope="col">${escapeHtml(COUNTRIES[k].name)}</th>`).join("");
+  const rows = list
+    .map(
+      (p) =>
+        `<tr><th scope="row">${escapeHtml(PROGRAMME_NAMES[p])}</th>${order
+          .map((k) => `<td${k === code ? ' class="co-here"' : ""}>${escapeHtml(money(k, pilotTotal(p, k)))}</td>`)
+          .join("")}</tr>`,
+    )
     .join("");
-  const buyHref = programme ? "#buy" : `${programmePagePath("cybersecure", code)}#buy`;
+  return `<div class="cp-table-wrap co-pilot-table"><table class="cp-table"><caption>${PILOT_STAFF}-learner pilot, self-paced, including the 10% volume discount</caption><thead><tr><th scope="col">Programme</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+export function pilotSection(code: CountryCode, programme: PricedProgramme | null, dark: boolean): string {
+  const list = programme ? [programme] : [...PRICED_PROGRAMMES];
+  // Each pilot button goes to the buy form of its own programme, in the visitor's country.
+  const buttons = list
+    .map(
+      (p) =>
+        `<a class="btn ${list.length === 1 ? "btn-signal btn-lg" : "btn-signal"}" href="${programme ? "#buy" : `${programmePagePath(p, code)}#buy`}" data-pilot-cta data-programme="${PROGRAMME_SLUGS[p]}">${
+          list.length === 1 ? `Buy a ${PILOT_STAFF}-learner pilot` : `Pilot ${escapeHtml(PROGRAMME_NAMES[p])}`
+        }</a>`,
+    )
+    .join("");
   return `<section class="section ${dark ? "section-dark" : "section-paper"} ca-section" id="pilot" aria-labelledby="pilot-title">
     <div class="wrap">
       <span class="section-eyebrow">Start small</span>
@@ -269,9 +297,10 @@ export function pilotSection(code: CountryCode, programme: PricedProgramme | nul
         <div class="ca-card co-way">
           <p class="co-way-tag">Paid pilot</p>
           <h3>Pilot with ${PILOT_STAFF} learners</h3>
-          <p>Put ${PILOT_STAFF} staff through the self-paced programme, review their results with us, then decide on a wider rollout. Prices in ${escapeHtml(COUNTRIES[code].name)}, including the 10% volume discount:</p>
-          <ul class="ca-list">${prices}</ul>
-          <div class="ca-ctas"><a class="btn btn-signal btn-lg" href="${buyHref}" data-pilot-cta>Buy a ${PILOT_STAFF}-learner pilot</a></div>
+          <p>Put ${PILOT_STAFF} staff through the self-paced programme, review their results with us, then decide on a wider rollout. Pilot prices in Nigeria, South Africa, Kenya and Ghana:</p>
+          ${pilotTable(code, list)}
+          <p><strong>${escapeHtml(PILOT_GUARANTEE)}</strong></p>
+          <div class="ca-ctas">${buttons}</div>
         </div>
         <div class="ca-card co-way">
           <p class="co-way-tag">Free</p>
@@ -282,6 +311,27 @@ export function pilotSection(code: CountryCode, programme: PricedProgramme | nul
       </div>
     </div>
   </section>`;
+}
+
+// ---- Refund, cancellation and unused-seat terms (owner-approved 2026-11-13), shown next to
+// every buy form, in the pilot section and in the PDFs.
+export const BUYING_TERMS: { h: string; p: string }[] = [
+  {
+    h: "Self-paced places",
+    p: "Full refund within 14 days of purchase if no learner has started. Once learners have started there is no refund, but unused seats can be given to other staff at any time during the 12 months' access.",
+  },
+  {
+    h: "Live, in-house or hybrid",
+    p: "Free rescheduling up to 10 working days before the first session. Cancelling later than that costs 50% of the fee.",
+  },
+  { h: "Pilot guarantee", p: PILOT_GUARANTEE_TERMS.replace(/^i/, "I") },
+];
+
+export function termsBlock(dark = false): string {
+  return `<div class="co-terms${dark ? " co-terms-dark" : ""}" id="terms">
+      <h3 class="cp-subtitle">Refunds, cancellations and unused seats</h3>
+      <ul class="ca-list">${BUYING_TERMS.map((x) => `<li><strong>${escapeHtml(x.h)}:</strong> ${escapeHtml(x.p)}</li>`).join("")}</ul>
+    </div>`;
 }
 
 // ---- PDFs to forward to whoever signs off.
@@ -299,6 +349,20 @@ export function forwardSection(code: CountryCode, programme: PricedProgramme | n
       <h2 class="section-title" id="forward-title">Something to forward</h2>
       <p class="ca-p">Need approval inside your organisation? Download a brochure and a one-page business case with costs in ${escapeHtml(COUNTRIES[code].site.currency.code)}, the outcomes to expect and how the training supports your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}.</p>
       <ul class="ca-links co-downloads">${items}</ul>
+      <p class="ca-p co-other-pdfs">Versions for other countries, with their own currency and data protection law: ${MARKET_ORDER.filter((k) => k !== code)
+        .map(
+          (k) =>
+            `<span class="co-other-pdf"><strong>${escapeHtml(COUNTRIES[k].name)}</strong> (${escapeHtml(COUNTRIES[k].site.currency.code)}): ${list
+              .map((p) => `<a href="${brochurePath(p, k)}" download>${escapeHtml(PROGRAMME_NAMES[p])} brochure</a>, <a href="${businessCasePath(p, k)}" download>business case</a>`)
+              .join("; ")}</span>`,
+        )
+        .join(" ")}</p>
+      <h3 class="cp-subtitle">What you hold at audit time</h3>
+      <p class="ca-p">Every learner gets a certificate of completion and a dated attendance record showing each module, quiz and status. Your HR or L&amp;D lead gets a manager login showing the seats used and each learner's progress, so the evidence is ready for an auditor, regulator or insurer.</p>
+      <ul class="ca-links co-samples">
+          <li><a href="${SAMPLE_CERTIFICATE_PATH}" target="_blank" rel="noopener">Sample certificate of completion (PDF)</a></li>
+          <li><a href="${SAMPLE_ATTENDANCE_PATH}" target="_blank" rel="noopener">Sample attendance record (PDF)</a></li>
+      </ul>
     </div>
   </section>`;
 }

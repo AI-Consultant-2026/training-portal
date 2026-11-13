@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import PDFDocument from "pdfkit";
+import { watermarkSample } from "../utils/pdfSample";
 import {
   Assignment,
   AssignmentSubmission,
@@ -34,6 +35,8 @@ export interface AttendanceData {
   courseTitle: string;
   durationWeeks: number;
   enrolledDate: Date;
+  /** Corporate courses are organised in modules, graduate courses in days (2026-11-13). */
+  unit?: "day" | "module";
   status: string;
   generatedAt: Date;
   weeks: WeekEngagement[];
@@ -209,6 +212,7 @@ export async function getAttendanceData(
     courseTitle: course.title,
     durationWeeks: course.durationWeeks,
     enrolledDate: enrollment.enrolledDate,
+    unit: course.metadata?.corporate ? "module" : "day",
     status: enrollment.status,
     generatedAt: new Date(),
     weeks,
@@ -276,8 +280,12 @@ function fmtDateShort(date: Date): string {
 // Generates straight into the given writable stream, same as streamCertificatePdf --
 // nothing is persisted server-side, so re-downloading always reflects whatever lessons,
 // quizzes, and assignments are complete at request time rather than a stale snapshot.
-export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.WritableStream): void {
-  const doc = new PDFDocument({ size: "A4", margin: 50 });
+export function streamAttendancePdf(
+  data: AttendanceData,
+  destination: NodeJS.WritableStream,
+  opts: { sample?: boolean } = {},
+): void {
+  const doc = new PDFDocument({ size: "A4", margin: 50, bufferPages: !!opts.sample });
   doc.pipe(destination);
 
   const { width, height } = doc.page;
@@ -314,7 +322,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
 
   infoLine(leftX, infoTop, "Candidate", data.studentName);
   infoLine(leftX, infoTop + 40, "Course", data.courseTitle);
-  infoLine(rightX, infoTop, "Programme length", `${data.durationWeeks} days`);
+  infoLine(rightX, infoTop, "Programme length", `${data.durationWeeks} ${data.unit === "module" ? "modules" : "days"}`);
   infoLine(rightX, infoTop + 40, "Enrolled", fmtDate(data.enrolledDate));
   infoLine(leftX, infoTop + 80, "Status", STATUS_LABELS[data.status] ?? data.status);
   infoLine(rightX, infoTop + 80, "Record generated", fmtDate(data.generatedAt));
@@ -343,7 +351,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
   function drawTableHeader() {
     doc.rect(margin, y, contentWidth, headerHeight).fill("#F2EEE3");
     doc.fillColor(CHARCOAL_SOFT).font("Helvetica-Bold").fontSize(8.5);
-    doc.text("DAY", colX.week + 8, y + 7);
+    doc.text(data.unit === "module" ? "MODULE" : "DAY", colX.week + 8, y + 7);
     doc.text("LESSONS", colX.lessons + 8, y + 7);
     doc.text("QUIZ", colX.quiz + 8, y + 7);
     doc.text("ASSIGNMENT", colX.assignment + 8, y + 7);
@@ -413,7 +421,7 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
     .fillColor(INK)
     .font("Helvetica-Bold")
     .fontSize(10.5)
-    .text(`${data.weeksAttended} of ${data.weeks.length} days fully attended`, margin, y);
+    .text(`${data.weeksAttended} of ${data.weeks.length} ${data.unit === "module" ? "modules completed" : "days fully attended"}`, margin, y);
   y += 15;
 
   doc
@@ -467,5 +475,6 @@ export function streamAttendancePdf(data: AttendanceData, destination: NodeJS.Wr
       align: "center",
     });
 
+  if (opts.sample) watermarkSample(doc);
   doc.end();
 }

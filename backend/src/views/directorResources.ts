@@ -3,7 +3,7 @@ import { READINESS_BANDS, READINESS_QUESTIONS } from "../constants/readinessChec
 import { CORPORATE_EMPLOYEE_BANDS } from "../validators/corporateLeads.validators";
 import { CORPORATE_HUB_PATH, options } from "./corporateAiWorkflow";
 import { CORPORATE_PRICES, PricedProgramme } from "../constants/corporatePricing";
-import { CALL_URL, PILOT_STAFF, brochurePath, callButton, pilotTotal } from "./corporateOffers";
+import { CALL_URL, EXAMPLE_STAFF, PILOT_STAFF, brochurePath, callButton, exampleTotal, pilotTotal } from "./corporateOffers";
 import { DATA_PROTECTION_LAW, ORGANIZATION_LD, countryCorporatePath } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts } from "./countryHome";
 
@@ -146,6 +146,8 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
   const data = {
     questions: READINESS_QUESTIONS.map((q) => ({ id: q.id, area: q.area, q: q.q })),
     bands: READINESS_BANDS,
+    exampleStaff: EXAMPLE_STAFF,
+    pilotStaff: PILOT_STAFF,
     programmes: Object.fromEntries(
       Object.entries(PROGRAMMES).map(([k, p]) => {
         const priced = PRICED[k as keyof typeof PROGRAMMES];
@@ -156,6 +158,9 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
             url: `${COUNTRIES[ctx.country].site.path}/${p.slug}`,
             price: `${formatMoney(ctx.country, CORPORATE_PRICES[priced][ctx.country])} per learner self-paced; ${PILOT_STAFF}-learner pilot ${formatMoney(ctx.country, pilotTotal(priced, ctx.country))}`,
             brochure: brochurePath(priced, ctx.country),
+            // Rough cost for the result screen (2026-11-13 review).
+            example: formatMoney(ctx.country, exampleTotal(priced, ctx.country)),
+            pilot: formatMoney(ctx.country, pilotTotal(priced, ctx.country)),
           },
         ];
       }),
@@ -192,6 +197,7 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
         <span class="section-eyebrow">Your result</span>
         <p class="rc-score"><strong id="rcScore">0%</strong> <span id="rcBand"></span></p>
         <p class="ca-p" id="rcSummary"></p>
+        <p class="ca-hint rc-bands"><strong>How to read your score.</strong> 0&ndash;40% is <strong>Early stage</strong>: important basics are missing. 41&ndash;70% is <strong>Developing</strong>: good practice exists but is uneven across teams. 71&ndash;100% is a <strong>Strong foundation</strong>: keep it current and build specialist skills. The two bars show which area pulls your score down.</p>
         <div class="rc-bars">
           <p><span>Cybersecurity</span> <strong id="rcCyber">0%</strong></p>
           <div class="rc-bar"><span id="rcCyberBar"></span></div>
@@ -203,6 +209,7 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
         <h3>Our recommendation for your organisation</h3>
         <p class="ca-p" id="rcReason"></p>
         <ul class="rc-suggest" id="rcSuggest"></ul>
+        <p class="ca-p rc-cost" id="rcCost"></p>
         <div class="rc-next">
           <p class="ca-p"><strong>Next step: a proposal shaped around this result.</strong> Tick &ldquo;Send me a tailored proposal&rdquo; below and we will reply within one working day, or talk it through first.</p>
           <div class="ca-ctas">${callButton(false)}</div>

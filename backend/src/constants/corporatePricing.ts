@@ -18,7 +18,7 @@ export const ORDER_PROGRAMMES: readonly OrderProgramme[] = [...PRICED_PROGRAMMES
 export const PRICE_REGIONS: readonly PriceRegion[] = ["NG", "GH", "KE", "ZA", "INTL"];
 
 export const PROGRAMME_NAMES: Record<PricedProgramme, string> = {
-  cybersecure: "CyberSecure Workforce Essentials",
+  cybersecure: "CyberSecure Workforce",
   "ai-workflow": "AI Workflow Productivity & Process Transformation",
   accelerator: "AI + Cybersecurity Professional Accelerator",
 };

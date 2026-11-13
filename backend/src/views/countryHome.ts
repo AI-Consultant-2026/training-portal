@@ -348,7 +348,7 @@ function hero(ctx: PageContext, home: string): string {
     <div class="wrap hero-inner">
       <span class="eyebrow">Five courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
       <h1 class="hero-title">Digital skills built for careers in <em>${text(c.site.headlineIndustries)}</em></h1>
-      <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a real capstone project to show employers. <strong>Led from London, delivered in ${escapeHtml(c.name)}.</strong></p>
+      <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a real capstone project to show employers. <strong>Led from the UK, delivered in ${escapeHtml(c.name)}.</strong></p>
       <div class="hero-ctas">
         <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 5 courses</a>
         <a class="btn btn-outline-light btn-lg" href="${home}#courses">Try a free lesson</a>
@@ -629,7 +629,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
   <div class="wrap footer-top">
     <div class="footer-brand">
       <a class="logo" href="${logoHref}">${LOGO_MARK("#F7F4EC")}<span class="logo-word">Paleon Training</span></a>
-      <p class="footer-tag">Digital skills for Africa&rsquo;s growth industries. Led from London, delivered in Nigeria, South Africa, Kenya and Ghana.</p>
+      <p class="footer-tag">Digital skills for Africa&rsquo;s growth industries. Led from the UK, delivered in Nigeria, South Africa, Kenya and Ghana.</p>
       <p class="footer-tag">Paleon Training Limited<br>No.5 Beji Court, Off NNPC Junior Staff Club 10<br>Warri, 320001, Delta State, Nigeria${corporate ? "" : '<br><a href="tel:+2347077149215">+234 707 714 9215 (WhatsApp/Call)</a>'}</p>
     </div>
     <nav aria-label="Countries">
@@ -640,14 +640,20 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
       <h2 class="footer-heading">Corporate Training</h2>
       <ul class="footer-links">${programmes}${corporate ? SECTOR_FOOTER_LINKS : ""}</ul>
       <h2 class="footer-heading footer-heading-gap">Paleon</h2>
-      <ul class="footer-links">
+      <ul class="footer-links">${
+        corporate
+          ? `
+        <li><a href="/ai-cyber-readiness-check">AI &amp; Cyber Readiness Check</a></li>
+        <li><a href="/support">Support</a></li>`
+          : `
         <li><a href="${home}#why">Why Paleon</a></li>
         <li><a href="${home}#career-match">Free Career Match</a></li>
         <li><a href="${jobsBoardPath(ctx.country)}">Latest jobs${ctx.hub ? "" : ` in ${escapeHtml(COUNTRIES[ctx.country].name)}`}</a></li>
         <li><a href="${ambassadorsPath(ctx.country)}">Ambassadors</a></li>
         <li><a href="/support">Support</a></li>
         <li><a href="${corporateHubHref(ctx)}">Corporate &amp; AI training</a></li>
-        ${extras}
+        ${extras}`
+      }
       </ul>
     </nav>
     <div>

@@ -362,7 +362,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
           },
           {
-            "p": "**ITF reimbursement:** employers that pay the ITF training levy can reclaim up to 50% of eligible training costs from the Industrial Training Fund, subject to the ITF's requirements. We provide the attendance records and programme documentation your claim needs."
+            "p": "**ITF reimbursement:** Nigerian employers that pay the 1% ITF training levy can apply for a refund of up to 50% of the levy they paid, if the ITF approves their training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide the attendance records and programme documentation a claim needs."
           }
         ]
       },
@@ -490,7 +490,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Is the programme accredited?** No, the programme is not accredited. Participants who complete it receive a Paleon Training certificate of completion. It is a practical professional-development programme, not a certification exam."
           },
           {
-            "p": "**Can we claim ITF reimbursement?** Yes, if your organisation pays the ITF training levy: up to 50% of eligible costs, subject to the ITF's requirements. We provide attendance records and programme documentation."
+            "p": "**Can we claim ITF reimbursement?** Yes, if your organisation pays the ITF training levy: the ITF can refund up to 50% of the levy paid when it approves your training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide attendance records and programme documentation."
           },
           {
             "p": "**How do we request a corporate proposal?** Complete the form below or email corporate@paleontraining.com. We reply within one working day."

@@ -33,7 +33,7 @@
   function setIntent(name, places) {
     var it = INTENTS[name] || INTENTS.proposal;
     if (name === "reserve") {
-      it.note = "Reserve places in the December 2026 cohort" + (places ? ": " + places + " places remain" : "") + ". Tell us your organisation and headcount and we will confirm within one working day.";
+      it.note = "Reserve places in the December 2026 cohort" + (places ? ": " + places + " places left" : "") + ". Tell us your organisation and headcount and we will confirm within one working day.";
     }
     intentInput.value = INTENTS[name] ? name : "proposal";
     intentNote.textContent = it.note;
