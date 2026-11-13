@@ -365,3 +365,13 @@
 .pv-lesson details { margin: 8px 0 16px; padding: 10px 14px; border: 1px solid var(--line, #E5E7EB); border-radius: 8px; }
 .pv-lesson summary { cursor: pointer; font-weight: 600; }
 .pv-next { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line, #E5E7EB); }
+
+/* Contrast guards (owner, 2026-11-13): light text is only for dark backgrounds. Boxes and
+   sections with a light background always get dark text, whatever section they sit in. */
+.co-terms strong, .section-dark .co-terms strong, .section-dark .co-terms .ca-list strong { color: var(--charcoal); }
+.co-terms a, .section-dark .co-terms a { color: var(--signal-text); }
+.section-paper .ca-headline, .ca-card .ca-headline { color: var(--signal-text); }
+.section-paper .ca-card-link a, .ca-card .ca-card-link a { color: var(--signal-text); }
+.section-dark .ca-card .ca-card-link a, .section-dark .ca-card .ca-headline { color: var(--signal-2); }
+.section-paper .btn-outline-light, .co-terms .btn-outline-light { border-color: var(--ink); color: var(--ink); }
+.section-paper .btn-outline-light:hover, .co-terms .btn-outline-light:hover { background: rgba(16,21,31,0.08); }
