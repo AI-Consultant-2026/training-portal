@@ -9,7 +9,9 @@ import {
   bundlePrice,
   seatPrice,
   BUNDLE_DISCOUNT,
-  INVOICE_FROM_SEATS,
+  INVOICE_FAQ,
+  PAYMENT_METHODS,
+  invoiceSentence,
   OrderProgramme,
   PriceRegion,
   formatRegionMoney,
@@ -45,6 +47,8 @@ const TERMS =
   "Prices are per learner for the online self-paced programme in the Paleon portal, with 12 months’ access, plus VAT where applicable. " +
   "Volume discounts apply to the number of learners on one programme. The all-three discount and volume discounts do not combine; you get whichever saves you more.";
 
+export { INVOICE_FAQ };
+
 /** Answer for the "How much does it cost?" FAQs (also used in FAQPage JSON-LD). */
 export function pricingFaqAnswer(code: CountryCode, programme: PricedProgramme | null): string {
   const list =
@@ -55,6 +59,7 @@ export function pricingFaqAnswer(code: CountryCode, programme: PricedProgramme |
   return (
     `${what} There are volume discounts of 10% for 10–49 learners, 20% for 50–199 and 30% for 200 or more, ` +
     `and 15% off when the same person takes all three programmes. Each place includes 12 months’ access; VAT is added where applicable. ` +
+    `${invoiceSentence(code)} ` +
     "All training is online, per learner or in a private company portal, never live or facilitator-led. For an organisation-wide rollout, request a proposal with your team size and we will reply within one working day."
   );
 }
@@ -88,7 +93,6 @@ function priceData(): string {
       prices: CORPORATE_PRICES,
       tiers: VOLUME_TIERS.map((t) => [t.min, t.discount]),
       bundle: BUNDLE_DISCOUNT,
-      invoiceFrom: INVOICE_FROM_SEATS,
     }),
   );
 }
@@ -115,7 +119,7 @@ function buyForm(code: CountryCode, programme: PricedProgramme): string {
     .join("");
   return `<form class="ca-form cp-buy" id="cpBuy" novalidate data-prices="${priceData()}">
         <h3 class="cp-buy-title" id="buy">Buy learner places online</h3>
-        <p class="cp-buy-lede">Pay securely on Flutterwave by card${code === "NG" ? ", bank transfer or USSD" : code === "GH" || code === "KE" ? " or mobile money" : ""}. Your staff sign-up link is emailed to you as soon as the payment is confirmed.</p>
+        <p class="cp-buy-lede">Pay securely on Flutterwave by ${PAYMENT_METHODS[code]}, or tick &ldquo;Send us an invoice&rdquo; and we&rsquo;ll email one within one working day. Your staff sign-up link is emailed to you as soon as the payment is confirmed.</p>
         <div class="ca-grid">
           <div class="form-row"><label class="form-label" for="cp-programme">Programme</label><select class="form-select" id="cp-programme" name="programme" required>${programmes}</select></div>
           <div class="form-row"><label class="form-label" for="cp-seats">Number of learners</label><input class="form-input" id="cp-seats" name="seats" type="number" inputmode="numeric" min="1" max="10000" step="1" value="10" required></div>
@@ -127,7 +131,7 @@ function buyForm(code: CountryCode, programme: PricedProgramme): string {
           <div class="form-row"><label class="form-label" for="cp-phone">Phone / WhatsApp <span class="optional">(optional)</span></label><input class="form-input" id="cp-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div>
         </div>
         <div class="cp-total" id="cpTotal" aria-live="polite"></div>
-        <label class="consent-check" id="cp-invoice-row"><input type="checkbox" name="payByInvoice" id="cp-invoice"> <span>Send us an invoice instead (pay by bank transfer)</span></label>
+        <label class="consent-check" id="cp-invoice-row"><input type="checkbox" name="payByInvoice" id="cp-invoice"> <span>Send us an invoice <span class="optional">(any order size; pay by bank transfer)</span></span></label>
         <div class="ca-hp" aria-hidden="true"><label for="cp-website">Website</label><input id="cp-website" name="website" tabindex="-1" autocomplete="off"></div>
         <label class="consent-check"><input type="checkbox" name="consent" required> <span>I agree to the <a href="/terms">Terms</a> and that Paleon Training may use these details to process this order, as described in the <a href="/privacy">Privacy Policy</a>.</span></label>
         <p class="form-error" id="cpError" role="alert" hidden></p>
@@ -164,7 +168,7 @@ export function pricingSection(code: CountryCode, programme: PricedProgramme, da
       </div>
       <p class="ca-p"><strong>All three programmes for the same person:</strong> 15% off, ${escapeHtml(money(code, bundlePrice(code)))} per learner for CyberSecure Workforce, AI Workflow Productivity and the AI + Cybersecurity Professional Accelerator.</p>
       <p class="ca-p"><strong>Outside Nigeria, South Africa, Kenya and Ghana?</strong> Pay in pounds: ${escapeHtml(formatRegionMoney("INTL", CORPORATE_PRICES[programme].INTL))} per learner, with the same discounts.</p>
-      <p class="ca-p ca-hint">${escapeHtml(TERMS)} Orders of ${INVOICE_FROM_SEATS} or more learners are invoiced.</p>
+      <p class="ca-p ca-hint">${escapeHtml(TERMS)} ${escapeHtml(invoiceSentence(code))}</p>
       ${buyForm(code, programme)}
       <p class="ca-p cp-after"><strong>Rolling out to the whole organisation?</strong> We set up a private company space for your staff: <a href="#enquiry" data-intent="proposal">request a proposal</a> and we will reply within one working day.</p>
       ${termsBlock(dark)}
@@ -191,5 +195,5 @@ export function pricingSummaryTable(codes: CountryCode[], withGbp = false): stri
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <p class="ca-p ca-hint">Volume discounts: 10% off for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200 or more (invoiced). All three programmes for the same person: 15% off. Plus VAT where applicable. All training is online, per learner or in a private company portal, self-paced.</p>`;
+      <p class="ca-p ca-hint">Volume discounts: 10% for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200+. All three programmes for the same person: 15% off. Plus VAT where applicable. All training is online, per learner or in a private company portal, self-paced.</p>`;
 }

@@ -1,5 +1,5 @@
 import { COUNTRIES, CountryCode, MARKET_ORDER, formatMoney } from "../constants/countries";
-import { CORPORATE_PRICES, PRICED_PROGRAMMES, PROGRAMME_NAMES, PricedProgramme, seatPrice } from "../constants/corporatePricing";
+import { CORPORATE_PRICES, PRICED_PROGRAMMES, PROGRAMME_NAMES, PricedProgramme, invoiceSentence, seatPrice } from "../constants/corporatePricing";
 import { DATA_PROTECTION_LAW } from "./corporateLocal";
 
 // The buying aids shared by every corporate page (2026-11-13, owner's 12-point conversion
@@ -253,7 +253,8 @@ export function waysToBuySection(programme: PricedProgramme, code: CountryCode, 
           <p class="co-way-price"><strong>A private online space for your staff only</strong></p>
           <ul class="ca-list">
             <li>Your own company space in the Paleon portal, for staff anywhere in ${escapeHtml(country)}; staff join with your company sign-up link</li>
-            <li>For whole departments or an organisation-wide rollout; invoiced for 200 learners or more</li>
+            <li>For whole departments or an organisation-wide rollout</li>
+            <li>${escapeHtml(invoiceSentence(code))}</li>
             <li>Managers see each learner&rsquo;s progress; completion and attendance records for your files</li>
           </ul>
           <p class="co-way-example"><strong>Worked example:</strong> tell us your departments and headcount in a 20-minute call, and we reply with a proposal within one working day. All training is online and self-paced: there are no live or facilitator-led sessions.</p>
@@ -282,7 +283,7 @@ export function waysToBuyBrief(code: CountryCode, dark = true): string {
           <p class="co-way-tag">Option 2 &middot; by proposal</p>
           <h3>Private company portal (by proposal)</h3>
           <p class="co-way-explainer">Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&amp;D lead tracks progress from a manager login.</p>
-          <p>A private company space in the Paleon portal for your staff only, in Nigeria, South Africa, Kenya and Ghana. Staff join with your sign-up link and managers track progress; invoiced for 200 learners or more. All training is self-paced online, never live or facilitator-led.</p>
+          <p>A private company space in the Paleon portal for your staff only, in Nigeria, South Africa, Kenya and Ghana. Staff join with your sign-up link and managers track progress. ${escapeHtml(invoiceSentence(code))} All training is self-paced online, never live or facilitator-led.</p>
           <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a proposal</a></div>
         </div>
       </div>`;

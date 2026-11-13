@@ -1,7 +1,7 @@
 import path from "path";
 import PDFDocument from "pdfkit";
 import { COUNTRIES, CountryCode, formatMoney } from "../constants/countries";
-import { CORPORATE_PRICES, PROGRAMME_NAMES, PricedProgramme, VOLUME_TIERS, seatPrice } from "../constants/corporatePricing";
+import { CORPORATE_PRICES, PROGRAMME_NAMES, PricedProgramme, VOLUME_TIERS, invoiceSentence, seatPrice } from "../constants/corporatePricing";
 import { CORPORATE_AI_CONTENT } from "../views/corporateAiWorkflowContent";
 import { ACCELERATOR_CONTENT } from "../views/corporateAcceleratorContent";
 import { CYBERSECURE_CONTENT } from "../views/corporateCyberSecureContent";
@@ -195,7 +195,7 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
   para(doc, "Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login.");
   para(
     doc,
-    `A private online company space in the Paleon portal for your staff only, anywhere in ${country}. Staff join with your company sign-up link, managers see progress, and you receive completion and attendance records for your files. For departments or an organisation-wide rollout; invoiced for 200 learners or more. All training is online and self-paced: there are no live, facilitator-led or hybrid sessions.`,
+    `A private online company space in the Paleon portal for your staff only, anywhere in ${country}. Staff join with your company sign-up link, managers see progress, and you receive completion and attendance records for your files. For departments or an organisation-wide rollout. ${invoiceSentence(code)} All training is online and self-paced: there are no live, facilitator-led or hybrid sessions.`,
   );
   if (hasCohort(programme)) {
     doc.moveDown(0.2);

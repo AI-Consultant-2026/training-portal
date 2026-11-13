@@ -80,6 +80,24 @@ describe("Corporate conversion review (2026-11-13)", () => {
     expect(ke).toContain("Serving employers in Nairobi, Mombasa, Kisumu, Nakuru and nationwide.");
   });
 
+  it("offers an invoice on every order, with each checkout's own payment methods (owner, 2026-11-13)", async () => {
+    const methods: [string, string][] = [
+      ["ng", "card, bank transfer or USSD"],
+      ["za", "card"],
+      ["ke", "card or M-Pesa"],
+      ["gh", "card or mobile money"],
+    ];
+    for (const [cc, m] of methods) {
+      const html = (await request(app).get(`/${cc}/corporate-training/cybersecure-workforce`)).text;
+      expect(html).toContain(`Invoice available on every order. Pay online by ${m}, or tick “Send us an invoice” and we’ll email one within one working day.`);
+      expect(html).toContain("Can we pay by invoice?");
+      expect(html).toContain("Yes, for any order size. Training is set up once payment is received.");
+      expect(html).not.toMatch(/invoiced for 200|\(invoiced\)|200 or more learners are invoiced/);
+    }
+    const ng = (await request(app).get("/ng/corporate-training")).text;
+    expect(ng).toContain("Volume discounts: 10% for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200+.");
+  });
+
   it("uses one corporate email and the UK WhatsApp line, with no Nigerian call line", async () => {
     for (const path of CORPORATE_PAGES) {
       const html = (await request(app).get(path)).text;

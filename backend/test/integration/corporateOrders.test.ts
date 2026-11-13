@@ -7,7 +7,7 @@ import { CorporateClient, CorporateMember, CorporateOrder, CorporateSeat, Course
 import { emailAdapter, MemoryEmailAdapter } from "../../src/utils/email";
 
 // Corporate online orders (2026-11-12): buy learner places on Flutterwave, company set up
-// automatically on payment; 200+ learners (or on request) invoiced instead.
+// automatically on payment; any order size can ask for an invoice instead (2026-11-13).
 
 const app = createApp();
 const memAdapter = emailAdapter as MemoryEmailAdapter;
@@ -87,7 +87,8 @@ describe("Corporate pricing", () => {
     expect(quoteCorporateOrder("NG", "all-three", 10)).toMatchObject({ listUnitPrice: 425000, unitPrice: 361250 });
     expect(quoteCorporateOrder("NG", "all-three", 50)).toMatchObject({ unitPrice: 340000 });
     expect(quoteCorporateOrder("INTL", "all-three", 1)).toMatchObject({ unitPrice: 284 });
-    expect(quoteCorporateOrder("ZA", "cybersecure", 200)).toMatchObject({ invoiceOnly: true, unitPrice: 700 });
+    expect(quoteCorporateOrder("ZA", "cybersecure", 200)).toMatchObject({ unitPrice: 700 });
+    expect(quoteCorporateOrder("ZA", "cybersecure", 200)).not.toHaveProperty("invoiceOnly");
   });
 });
 
@@ -193,9 +194,17 @@ describe("Corporate online orders", () => {
     expect(await CorporateClient.count()).toBe(0);
   });
 
-  it("invoices 200 or more learners instead of opening a checkout", async () => {
+  it("lets 200 or more learners pay online too (invoice on every order, 2026-11-13)", async () => {
     const fw = mockFlutterwave();
     const res = await order({ region: "ZA", programme: "cybersecure", seats: 250 });
+    expect(res.status).toBe(201);
+    expect(res.body.kind).not.toBe("invoice");
+    expect(fw.mock).toHaveBeenCalled();
+  });
+
+  it("invoices 200 or more learners when the buyer ticks Send us an invoice", async () => {
+    const fw = mockFlutterwave();
+    const res = await order({ region: "ZA", programme: "cybersecure", seats: 250, payByInvoice: true });
     expect(res.status).toBe(201);
     expect(res.body.kind).toBe("invoice");
     expect(fw.mock).not.toHaveBeenCalled();
@@ -262,7 +271,7 @@ describe("Admin: corporate orders", () => {
 
   it("lists orders for admins only", async () => {
     mockFlutterwave();
-    await order({ region: "ZA", programme: "cybersecure", seats: 250 });
+    await order({ region: "ZA", programme: "cybersecure", seats: 250, payByInvoice: true });
     expect((await request(app).get("/api/admin/corporate-orders")).status).toBe(401);
     const token = await adminToken();
     const res = await request(app).get("/api/admin/corporate-orders").set("Authorization", `Bearer ${token}`);
@@ -281,7 +290,7 @@ describe("Admin: corporate orders", () => {
 
   it("marks a paid invoice as paid, setting the company up and emailing the buyer", async () => {
     mockFlutterwave();
-    const placed = await order({ region: "NG", programme: "all-three", seats: 300 });
+    const placed = await order({ region: "NG", programme: "all-three", seats: 300, payByInvoice: true });
     const token = await adminToken();
     const list = await request(app).get("/api/admin/corporate-orders").set("Authorization", `Bearer ${token}`);
     const id = list.body.orders[0].id;

@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import { config } from "../config";
 import {
-  INVOICE_FROM_SEATS,
   OrderProgramme,
   PriceRegion,
   PROGRAMME_COURSE_SLUGS,
@@ -28,7 +27,7 @@ import {
 // Corporate online orders (2026-11-12). A company buys learner places on a corporate page:
 //   1. The server prices the order from constants/corporatePricing.ts (never from the
 //      browser), in the buyer's currency: NGN, GHS, KES, ZAR, or GBP outside those four.
-//   2. 200+ learners, or a buyer who asks for one, gets an invoice: the order is saved as
+//   2. A buyer who ticks "Send us an invoice" (any order size) gets an invoice: the order is saved as
 //      invoice_requested and corporate@ is emailed to send it.
 //   3. Otherwise Flutterwave's hosted checkout opens; card and bank details never touch
 //      Paleon's servers.
@@ -98,9 +97,9 @@ function summary(order: CorporateOrder, titles: string[]): OrderSummary {
 
 export async function createCorporateOrder(input: CorporateOrderInput): Promise<CorporateOrderResult> {
   const quote = quoteCorporateOrder(input.region, input.programme, input.seats);
-  const invoice = quote.invoiceOnly || Boolean(input.payByInvoice);
+  const invoice = Boolean(input.payByInvoice);
   if (!invoice && !isFlutterwaveConfigured()) {
-    throw new ApiError(503, "Online payment isn't available right now. Tick \"Send us an invoice instead\", or email corporate@paleontraining.com.", {
+    throw new ApiError(503, "Online payment isn't available right now. Tick \"Send us an invoice\", or email corporate@paleontraining.com.", {
       code: "CARD_PAYMENTS_UNAVAILABLE",
     });
   }
@@ -123,7 +122,7 @@ export async function createCorporateOrder(input: CorporateOrderInput): Promise<
 
   if (invoice) {
     const order = await CorporateOrder.create({ ...fields, status: "invoice_requested" });
-    const reason = quote.invoiceOnly ? `${INVOICE_FROM_SEATS}+ learners are invoiced` : "the buyer asked for an invoice";
+    const reason = "the buyer asked for an invoice";
     const info = summary(order, await courseTitles(input.programme));
     await emails.sendCorporateInvoiceRequestEmail(info);
     await emails.sendCorporateOrderAdminEmail({ ...info, kind: "invoice", reason });
@@ -153,7 +152,7 @@ export async function createCorporateOrder(input: CorporateOrderInput): Promise<
   const paymentLink = body?.data?.link;
   if (!res.ok || body?.status !== "success" || !paymentLink) {
     logger.error(`Flutterwave corporate checkout failed for ${txRef}: ${body?.message ?? `HTTP ${res.status}`}`);
-    throw new ApiError(502, "We couldn't open the payment page. Please try again, or tick \"Send us an invoice instead\".", {
+    throw new ApiError(502, "We couldn't open the payment page. Please try again, or tick \"Send us an invoice\".", {
       code: "FLUTTERWAVE_INIT_FAILED",
     });
   }

@@ -38,7 +38,7 @@
       list = data.prices[p][r];
       unit = Math.round(list * (1 - discount(n)));
     }
-    return { r: r, n: n, list: list, unit: unit, total: unit * n, off: Math.round((1 - unit / list) * 100), invoiceOnly: n >= data.invoiceFrom };
+    return { r: r, n: n, list: list, unit: unit, total: unit * n, off: Math.round((1 - unit / list) * 100) };
   }
 
   function update() {
@@ -56,10 +56,9 @@
     totalBox.appendChild(line);
     var note = document.createElement("p");
     note.className = "cp-total-note";
-    note.textContent = q.invoiceOnly ? "Orders of " + data.invoiceFrom + " or more learners are invoiced: we will email the invoice within one working day." : "Plus VAT where applicable.";
+    note.textContent = "Plus VAT where applicable.";
     totalBox.appendChild(note);
-    invoiceRow.hidden = q.invoiceOnly;
-    submit.textContent = q.invoiceOnly || invoice.checked ? "Request an invoice" : "Continue to secure payment";
+    submit.textContent = invoice.checked ? "Request an invoice" : "Continue to secure payment";
   }
   [programme, seats, region, invoice].forEach(function (x) { x.addEventListener("input", update); x.addEventListener("change", update); });
   update();

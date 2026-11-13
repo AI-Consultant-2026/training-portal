@@ -49,8 +49,27 @@ export const VOLUME_TIERS: { min: number; max: number | null; discount: number }
 /** All three programmes for the same person. */
 export const BUNDLE_DISCOUNT = 0.15;
 
-/** From this many learners the order goes to Paleon as an invoice request, not a card checkout. */
-export const INVOICE_FROM_SEATS = 200;
+// Invoice on every order (owner, 2026-11-13): any order size can pay online or tick
+// "Send us an invoice"; there is no longer an invoice-only threshold (it was 200+ learners).
+// The online methods match what each Flutterwave checkout offers (corporateOrder.service
+// paymentOptions: NG card,banktransfer,ussd; GH card,mobilemoneyghana; KE card,mpesa; ZA and
+// pounds card only).
+export const PAYMENT_METHODS: Record<PriceRegion, string> = {
+  NG: "card, bank transfer or USSD",
+  GH: "card or mobile money",
+  KE: "card or M-Pesa",
+  ZA: "card",
+  INTL: "card",
+};
+
+export function invoiceSentence(region: PriceRegion): string {
+  return `Invoice available on every order. Pay online by ${PAYMENT_METHODS[region]}, or tick “Send us an invoice” and we’ll email one within one working day.`;
+}
+
+export const INVOICE_FAQ = {
+  q: "Can we pay by invoice?",
+  a: "Yes, for any order size. Training is set up once payment is received.",
+};
 export const MAX_ORDER_SEATS = 10000;
 
 export function volumeDiscount(seats: number): number {
@@ -83,8 +102,6 @@ export interface CorporateQuote {
   unitPrice: number;
   discountPercent: number;
   total: number;
-  /** 200+ learners: invoice only. */
-  invoiceOnly: boolean;
 }
 
 export function quoteCorporateOrder(region: PriceRegion, programme: OrderProgramme, seats: number): CorporateQuote {
@@ -102,7 +119,6 @@ export function quoteCorporateOrder(region: PriceRegion, programme: OrderProgram
     unitPrice,
     discountPercent: Math.round((1 - unitPrice / listUnitPrice) * 100),
     total: unitPrice * seats,
-    invoiceOnly: seats >= INVOICE_FROM_SEATS,
   };
 }
 

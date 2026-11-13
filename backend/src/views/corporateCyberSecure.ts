@@ -16,7 +16,7 @@ import {
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
 import { CITIES, WHO_WE_SERVE, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
-import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
+import { INVOICE_FAQ, pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 import {
   callButton,
@@ -211,6 +211,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
       q: "How much does cybersecurity awareness training for employees cost?",
       a: pricingFaqAnswer(code, "cybersecure"),
     },
+    { q: INVOICE_FAQ.q, a: INVOICE_FAQ.a },
     {
       q: "Can we combine cybersecurity training with AI training for our staff?",
       a: `Yes. Many organisations pair CyberSecure Workforce with AI Workflow Productivity & Process Transformation, so staff learn to use AI tools and to recognise the new risks they bring. Both are available for companies in ${country}.`,

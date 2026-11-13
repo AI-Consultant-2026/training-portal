@@ -22,7 +22,7 @@ import {
   whatsappAttr,
 } from "./countryHome";
 import type { PricedProgramme } from "../constants/corporatePricing";
-import { hubPricingFaqAnswer, pricingFaqAnswer, pricingSection, pricingSummaryTable } from "./corporatePricing";
+import { INVOICE_FAQ, hubPricingFaqAnswer, pricingFaqAnswer, pricingSection, pricingSummaryTable } from "./corporatePricing";
 import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 import {
   CALL_URL,
@@ -233,6 +233,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
       q: "How much does corporate AI training cost?",
       a: pricingFaqAnswer(code, "ai-workflow"),
     },
+    { q: INVOICE_FAQ.q, a: INVOICE_FAQ.a },
     {
       q: "Can we combine AI training with cybersecurity training for our staff?",
       a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available online, per learner or in a private company portal for companies in ${country}, and individual places bought online start today.`,
@@ -617,6 +618,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
     q: "How much does corporate training cost?",
     a: hubPricingFaqAnswer(),
   },
+  { q: INVOICE_FAQ.q, a: INVOICE_FAQ.a },
   {
     q: "Can you provide attendance records?",
     a: "Yes. For company groups we provide attendance records and a programme outline for your internal reporting.",

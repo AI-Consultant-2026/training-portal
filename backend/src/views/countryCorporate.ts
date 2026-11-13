@@ -14,7 +14,7 @@ import {
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, WHO_WE_SERVE, servingLine, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
-import { pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
+import { INVOICE_FAQ, pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 import {
   onboardingSummary,
@@ -70,6 +70,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       q: "How much does corporate training cost?",
       a: pricingFaqAnswer(code, null),
     },
+    { q: INVOICE_FAQ.q, a: INVOICE_FAQ.a },
     {
       q: "How do we get started?",
       a: "Take the free Readiness Check, book a 20-minute call, or request a proposal using the form on this page. You can also email corporate@paleontraining.com.",

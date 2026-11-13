@@ -207,7 +207,7 @@ export const SECTORS: Sector[] = [
     faq: [
       {
         q: "Can you invoice a government body?",
-        a: "Yes. Choose \"Send us an invoice instead\" when you buy online, or request a proposal and we will issue a quotation and invoice for your procurement process.",
+        a: "Yes. Tick \"Send us an invoice\" when you buy online, for any order size, or request a proposal and we will issue a quotation and invoice for your procurement process.",
       },
       {
         q: "Can the training cover our own AI and records rules?",

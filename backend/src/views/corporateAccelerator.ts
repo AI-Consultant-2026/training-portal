@@ -16,7 +16,7 @@ import {
 import { WHO_WE_SERVE, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
-import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
+import { INVOICE_FAQ, pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
 import {
   cohortNotice,
@@ -211,6 +211,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
       q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
       a: pricingFaqAnswer(code, "accelerator"),
     },
+    { q: INVOICE_FAQ.q, a: INVOICE_FAQ.a },
     {
       q: "Can we train the rest of our staff in cybersecurity too?",
       a: `Yes. CyberSecure Workforce, our cybersecurity awareness programme for every employee, is available now for companies in ${country}. Many organisations train the whole workforce and develop their specialists through the Accelerator at the same time.`,

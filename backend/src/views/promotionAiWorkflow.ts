@@ -1,5 +1,6 @@
 import { COUNTRIES, MARKET_ORDER } from "../constants/countries";
 import { flagSvg } from "./flags";
+import { INVOICE_FAQ } from "../constants/corporatePricing";
 import { ORGANIZATION_LD, WHO_WE_SERVE, WHO_WE_SERVE_INTRO, servingLine } from "./corporateLocal";
 import { cohortNotice, hasOnboardingSlots, slotsLeft, cohortSentence, callButton, readinessButton, reserveButton } from "./corporateOffers";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
@@ -112,6 +113,7 @@ const FAQ: [string, string][] = [
     "How much does it cost?",
     "Pricing depends on group size and customisation. Request a proposal and we will send a written quotation.",
   ],
+  [INVOICE_FAQ.q, INVOICE_FAQ.a],
   [
     "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
     "Yes. The programme is delivered online, per learner or in a private company portal, for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema), as well as Nigeria.",
