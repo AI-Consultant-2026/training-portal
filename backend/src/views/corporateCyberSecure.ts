@@ -14,7 +14,7 @@ import {
   WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
-import { CITIES, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
+import { CITIES, WHO_WE_SERVE, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
@@ -254,9 +254,9 @@ function whereWeTrain(code: CountryCode): string {
     (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
-      <span class="section-eyebrow">Where we train</span>
-      <h2 class="section-title" id="where-title">Cybersecurity awareness training for employees across ${escapeHtml(country)}</h2>
-      <p class="ca-p">Paleon Training runs CyberSecure Workforce for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
+      <span class="section-eyebrow">Cybersecurity awareness training for employees across ${escapeHtml(country)}</span>
+      <h2 class="section-title" id="where-title">${WHO_WE_SERVE}</h2>
+      <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Paleon Training runs CyberSecure Workforce for organisations across ${escapeHtml(country)}, fully online. ${escapeHtml(how)}</p>
       <p class="ca-p">Staff study around their working day, and examples are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       ${cohortNotice("cybersecure")}
       <div class="ca-ctas">${reserveButton("cybersecure")}${callButton(false)}</div>

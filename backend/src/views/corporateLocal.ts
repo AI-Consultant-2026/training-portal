@@ -10,6 +10,15 @@ export const CITIES: Record<CountryCode, string[]> = {
   GH: ["Accra", "Kumasi", "Tema", "Takoradi", "Tamale", "Cape Coast"],
 };
 
+// "Who we serve" (owner, 2026-11-13): keeps the city names for search without implying
+// on-site delivery, e.g. "Serving employers in Lagos, Abuja, Port Harcourt, Warri and nationwide".
+export function servingLine(code: CountryCode): string {
+  return `Serving employers in ${CITIES[code].slice(0, 4).join(", ")} and nationwide`;
+}
+
+export const WHO_WE_SERVE = "Who we serve";
+export const WHO_WE_SERVE_INTRO = "Organisations across Nigeria, South Africa, Kenya and Ghana, fully online.";
+
 export function cityList(code: CountryCode): string {
   const list = CITIES[code];
   return `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;

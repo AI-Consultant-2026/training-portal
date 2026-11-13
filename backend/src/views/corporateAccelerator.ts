@@ -13,7 +13,7 @@ import {
   rich,
   WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
-import { areaServed, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
+import { WHO_WE_SERVE, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
@@ -239,10 +239,10 @@ function whereWeTrain(code: CountryCode): string {
     (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
-      <span class="section-eyebrow">Where we train</span>
-      <h2 class="section-title" id="where-title">AI and cybersecurity training for professionals across ${escapeHtml(country)}</h2>
+      <span class="section-eyebrow">AI and cybersecurity training for professionals across ${escapeHtml(country)}</span>
+      <h2 class="section-title" id="where-title">${WHO_WE_SERVE}</h2>
       ${cohortNotice("accelerator")}
-      <p class="ca-p">Paleon Training runs the AI + Cybersecurity Professional Accelerator for IT, security, risk, data and digital teams in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
+      <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Paleon Training runs the AI + Cybersecurity Professional Accelerator for IT, security, risk, data and digital teams across ${escapeHtml(country)}, fully online. ${escapeHtml(how)}</p>
       <p class="ca-p">Scenarios and the capstone are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services. Need cybersecurity awareness for every employee now? <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a> is available today.</p>
       <div class="ca-ctas">${reserveButton("accelerator")}${callButton(false)}</div>
     </div>

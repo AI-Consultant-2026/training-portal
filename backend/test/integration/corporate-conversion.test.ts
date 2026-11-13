@@ -66,6 +66,20 @@ describe("Corporate conversion review (2026-11-13)", () => {
     }
   });
 
+  it("says Who we serve, with a city lead-in that does not imply on-site delivery (owner, 2026-11-13)", async () => {
+    const hub = (await request(app).get("/")).text;
+    expect(hub).toContain(">Who we serve</h2>");
+    expect(hub).toContain("Organisations across Nigeria, South Africa, Kenya and Ghana, fully online.");
+    expect(hub).toContain("Serving employers in Lagos, Abuja, Port Harcourt, Warri and nationwide.");
+    expect(hub).toContain("Serving employers in Johannesburg, Cape Town, Durban, Pretoria and nationwide.");
+    for (const path of CORPORATE_PAGES) {
+      const html = (await request(app).get(path)).text;
+      expect(html).not.toMatch(/Where we (train|deliver)/i);
+    }
+    const ke = (await request(app).get("/ke/corporate-training/cybersecure-workforce")).text;
+    expect(ke).toContain("Serving employers in Nairobi, Mombasa, Kisumu, Nakuru and nationwide.");
+  });
+
   it("uses one corporate email and the UK WhatsApp line, with no Nigerian call line", async () => {
     for (const path of CORPORATE_PAGES) {
       const html = (await request(app).get(path)).text;

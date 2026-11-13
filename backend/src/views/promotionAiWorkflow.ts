@@ -1,6 +1,6 @@
 import { COUNTRIES, MARKET_ORDER } from "../constants/countries";
 import { flagSvg } from "./flags";
-import { ORGANIZATION_LD } from "./corporateLocal";
+import { ORGANIZATION_LD, WHO_WE_SERVE, WHO_WE_SERVE_INTRO, servingLine } from "./corporateLocal";
 import { cohortNotice, hasOnboardingSlots, slotsLeft, cohortSentence, callButton, readinessButton, reserveButton } from "./corporateOffers";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import {
@@ -27,10 +27,10 @@ const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
 
 
 const DELIVERY: Record<string, string> = {
-  NG: "Self-paced online, in your own private company portal. Supports ITF reimbursement claims.",
-  ZA: "Self-paced online, in your own private company portal, for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
-  KE: "Self-paced online, in your own private company portal, for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
-  GH: "Self-paced online, in your own private company portal, for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
+  NG: `${servingLine("NG")}. Self-paced online, in your own private company portal. Supports ITF reimbursement claims.`,
+  ZA: `${servingLine("ZA")}. Self-paced online, in your own private company portal.`,
+  KE: `${servingLine("KE")}. Self-paced online, in your own private company portal.`,
+  GH: `${servingLine("GH")}. Self-paced online, in your own private company portal.`,
 };
 
 // AI brings new cyber risks, so the page points employers to CyberSecure Workforce as well
@@ -345,8 +345,9 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
 
   <section class="section section-paper ca-section" id="countries" aria-labelledby="countries-title">
     <div class="wrap">
-      <span class="section-eyebrow">Where we deliver</span>
-      <h2 class="section-title" id="countries-title">AI workforce and process transformation training in South Africa, Kenya, Ghana and Nigeria</h2>
+      <span class="section-eyebrow">AI workforce and process transformation training in South Africa, Kenya, Ghana and Nigeria</span>
+      <h2 class="section-title" id="countries-title">${WHO_WE_SERVE}</h2>
+      <p class="ca-p"><strong>${WHO_WE_SERVE_INTRO}</strong></p>
       ${cohortNotice("ai-workflow")}
       <div class="ca-countries">${countryCards}</div>
       <p class="ca-p pw-more"><a href="${CORPORATE_HUB_PATH}"><strong>See all corporate training programmes &rarr;</strong></a></p>

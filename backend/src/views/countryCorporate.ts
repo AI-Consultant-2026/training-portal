@@ -12,7 +12,7 @@ import {
   NG_CORPORATE_HERO_ALT,
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
-import { CITIES, DATA_PROTECTION_LAW, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
+import { CITIES, DATA_PROTECTION_LAW, WHO_WE_SERVE, servingLine, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
@@ -226,9 +226,9 @@ ${header(ctx, home, "/", true)}
 
   <section class="section section-dark ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
-      <span class="section-eyebrow">Where we train</span>
-      <h2 class="section-title" id="where-title">Staff training for organisations across ${escapeHtml(country)}</h2>
-      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. Training is online, per learner or in a private company portal: self-paced courses, so head office, branches, sites and remote workers can all take part around their working day. There are no live or facilitator-led sessions.</p>
+      <span class="section-eyebrow">Staff training for organisations across ${escapeHtml(country)}</span>
+      <h2 class="section-title" id="where-title">${WHO_WE_SERVE}</h2>
+      <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Organisations across ${escapeHtml(country)}, fully online. Training is online, per learner or in a private company portal: self-paced courses, so head office, branches, sites and remote workers can all take part around their working day. There are no live or facilitator-led sessions.</p>
       <p class="ca-p">Examples and workplace projects are adapted to your sector: ${ng ? "banking and financial services, oil and gas and energy, telecoms, manufacturing, healthcare, education, government and professional services" : "banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services"}.</p>
       ${ng ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_NOTE)}</p>` : ""}
       <p class="ca-p">Sector pages: ${SECTORS.map((sec) => `<a href="${SECTORS_PATH}/${sec.slug}?country=${cc}">${escapeHtml(sec.name)}</a>`).join(" &middot; ")}.</p>

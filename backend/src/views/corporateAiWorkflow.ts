@@ -1,4 +1,4 @@
-import { DATA_PROTECTION_LAW, areaServed, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
+import { DATA_PROTECTION_LAW, WHO_WE_SERVE, WHO_WE_SERVE_INTRO, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
   CORPORATE_DELIVERY,
@@ -261,10 +261,10 @@ function whereWeTrain(code: CountryCode): string {
     (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
-      <span class="section-eyebrow">Where we train</span>
-      <h2 class="section-title" id="where-title">AI workforce and process transformation training across ${escapeHtml(country)}</h2>
+      <span class="section-eyebrow">AI workforce and process transformation training across ${escapeHtml(country)}</span>
+      <h2 class="section-title" id="where-title">${WHO_WE_SERVE}</h2>
       ${cohortNotice("ai-workflow")}
-      <p class="ca-p">Paleon Training runs AI Workflow Productivity &amp; Process Transformation for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
+      <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Paleon Training runs AI Workflow Productivity &amp; Process Transformation for organisations across ${escapeHtml(country)}, fully online. ${escapeHtml(how)}</p>
       <p class="ca-p">Staff study around their working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       <div class="ca-ctas">${reserveButton("ai-workflow")}${callButton(false)}</div>
     </div>
@@ -549,22 +549,22 @@ const HUB_COUNTRY_SEO: { code: CountryCode; h: string; p: string }[] = [
   {
     code: "ZA",
     h: "Corporate training in South Africa",
-    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal, for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
+    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
   },
   {
     code: "KE",
     h: "Corporate training in Kenya",
-    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal, for companies in Nairobi, Mombasa, Kisumu and across Kenya. Practical self-paced courses for every employee, from the front desk to the boardroom, with examples from your sector.",
+    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal. Practical self-paced courses for every employee, from the front desk to the boardroom, with examples from your sector.",
   },
   {
     code: "GH",
     h: "Corporate training in Ghana",
-    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal, for companies in Accra, Kumasi, Tema, Takoradi and across Ghana. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
+    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
   },
   {
     code: "NG",
     h: "Corporate training in Nigeria",
-    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal, for organisations in Lagos, Abuja, Port Harcourt, Warri and across Nigeria. We provide the attendance records and documentation for ITF reimbursement claims.",
+    p: "Online cybersecurity awareness and AI productivity training, per learner or in a private company portal. We provide the attendance records and documentation for ITF reimbursement claims.",
   },
 ];
 
@@ -947,13 +947,14 @@ ${header(ctx, home, "/", true)}
 
   <section class="section section-paper ca-section" id="by-country" aria-labelledby="by-country-title">
     <div class="wrap">
-      <span class="section-eyebrow">Where we train</span>
-      <h2 class="section-title" id="by-country-title">Cybersecurity and AI training for companies in South Africa, Kenya, Ghana and Nigeria</h2>
+      <span class="section-eyebrow">Cybersecurity and AI training for companies in South Africa, Kenya, Ghana and Nigeria</span>
+      <h2 class="section-title" id="by-country-title">${WHO_WE_SERVE}</h2>
+      <p class="ca-p"><strong>${WHO_WE_SERVE_INTRO}</strong></p>
       <p class="ca-p">Every programme uses examples from your sector. All training is online, per learner or in a private company portal: staff study self-paced, when it suits them. There are no live or facilitator-led sessions.</p>
       <div class="ca-cards">${HUB_COUNTRY_SEO.map(
         (c) => `<div class="ca-card">
           <h3>${flagSvg(c.code, "flag flag-sm")} ${escapeHtml(c.h)}</h3>
-          <p>${escapeHtml(c.p)}</p>
+          <p><strong>${escapeHtml(servingLine(c.code))}.</strong> ${escapeHtml(c.p)}</p>
           <p class="ca-card-link"><a href="${cyberSecurePath(c.code)}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[c.code].name)} &rarr;</a></p>
           <p class="ca-card-link"><a href="${corporateAiPath(c.code)}">AI training for employees in ${escapeHtml(COUNTRIES[c.code].name)} &rarr;</a></p>
         </div>`,
