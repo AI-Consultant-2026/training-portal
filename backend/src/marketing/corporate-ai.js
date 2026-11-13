@@ -19,11 +19,32 @@
   var thanks = document.getElementById("caThanks");
   var programme = form.getAttribute("data-programme") || "ai-workflow";
 
-  // Proposal CTAs scroll to the form (their href is #enquiry); the form has a single
-  // "Request In-House Training Proposal" button since 2026-11-12, so nothing to switch.
+  // Every CTA scrolls to the form (href #enquiry) and sets what the visitor wants
+  // (2026-11-13): a proposal, places in the December 2026 cohort, or the free leadership
+  // taster. The form's note and button change to match; the intent is sent with the lead.
+  var intentInput = form.querySelector('input[name="intent"]');
+  var intentNote = document.getElementById("caIntent");
+  var INTENTS = {
+    proposal: { note: "", button: submit.getAttribute("data-default") || submit.textContent },
+    reserve: { note: "Reserve places in the December 2026 cohort: 10 places remain. Tell us your organisation and headcount and we will confirm within one working day.", button: "Reserve my team's places" },
+    taster: { note: "Free leadership taster: a short live online session for your leadership team, with no obligation.", button: "Request a free taster" },
+  };
+  function setIntent(name) {
+    var it = INTENTS[name] || INTENTS.proposal;
+    intentInput.value = INTENTS[name] ? name : "proposal";
+    intentNote.textContent = it.note;
+    intentNote.hidden = !it.note;
+    submit.textContent = it.button;
+  }
   document.querySelectorAll("[data-intent]").forEach(function (el) {
     el.addEventListener("click", function () {
+      setIntent(el.getAttribute("data-intent"));
       if (window.ptTrack) window.ptTrack("corporate_cta_click", { intent: el.getAttribute("data-intent"), programme: programme, country: form.getAttribute("data-country") });
+    });
+  });
+  document.querySelectorAll("[data-call-cta], [data-pilot-cta]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      if (window.ptTrack) window.ptTrack("corporate_cta_click", { intent: el.hasAttribute("data-call-cta") ? "call" : "pilot", programme: programme, country: form.getAttribute("data-country") });
     });
   });
 

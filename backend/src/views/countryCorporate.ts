@@ -1,6 +1,7 @@
 import { GUIDES } from "../constants/corporateGuides";
 import { COUNTRIES, CountryCode } from "../constants/countries";
 import {
+  CORPORATE_CONTACT,
   CORPORATE_HUB_PATH,
   acceleratorPath,
   corporateAiPath,
@@ -12,17 +13,29 @@ import {
 } from "./corporateAiWorkflow";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import { CITIES, DATA_PROTECTION_LAW, ORGANIZATION_LD, areaServed, cityList, countryCorporatePath, deliveryPhrase } from "./corporateLocal";
-import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSummaryTable } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
+import {
+  COHORT_NOTICE,
+  COHORT_SENTENCE,
+  callButton,
+  forwardSection,
+  outcomeList,
+  pilotSection,
+  readinessButton,
+  reserveButton,
+  waysToBuyBrief,
+} from "./corporateOffers";
+import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 
 // Corporate training pages for South Africa, Kenya and Ghana (2026-11-08) and Nigeria
 // (2026-11-09, replacing the static /corporate-training-nigeria, which now 301s) at
 // /ng, /za, /ke and /gh/corporate-training: the country's corporate landing page, linked from
 // the homepage's "Choose your country" selector, the header country menu and the footer's
-// country links. Each lists the three corporate programmes for that country. Training is
-// live online only in South Africa, Kenya and Ghana; in Nigeria it is also in-house or hybrid,
-// and supports ITF reimbursement claims.
+// country links. Each lists the three corporate programmes for that country. Since
+// 2026-11-13 every country offers self-paced online places, or live online, in-house and
+// hybrid delivery by quote; Nigeria's also supports ITF reimbursement claims.
 
 export const COUNTRY_CORPORATE_CODES: CountryCode[] = ["NG", "ZA", "KE", "GH"];
 
@@ -30,9 +43,7 @@ const ITF_NOTE =
   "Registered employers who contribute to the Industrial Training Fund (ITF) can use our training records and attendance evidence to support a reimbursement claim. Eligibility and the amount reimbursed are decided by the ITF.";
 
 
-const PROPOSAL = "Request In-House Training Proposal";
-const BOOKED =
-  '<p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>';
+const BOOKED = COHORT_NOTICE;
 
 function faqs(code: CountryCode): { q: string; a: string }[] {
   const country = COUNTRIES[code].name;
@@ -50,7 +61,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
       : []),
     {
       q: "When can our team start?",
-      a: "CyberSecure Workforce can be scheduled now. AI Workflow Productivity and the AI + Cybersecurity Professional Accelerator are fully booked until January 2027; you can enquire now to reserve a place from January 2027.",
+      a: `Self-paced places on all three programmes can start today. Live CyberSecure Workforce sessions can be scheduled now. For live AI Workflow Productivity and the AI + Cybersecurity Professional Accelerator, ${COHORT_SENTENCE.charAt(0).toLowerCase()}${COHORT_SENTENCE.slice(1)}`,
     },
     {
       q: "Can the training be customised for our organisation?",
@@ -62,7 +73,7 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "How do we get started?",
-      a: "Book a corporate training consultation or request a proposal using the form on this page, or email corporate@paleontraining.com. Tell us your team size and what you want to improve.",
+      a: "Take the free Readiness Check, book a 20-minute call, or request a proposal using the form on this page. You can also email corporate@paleontraining.com.",
     },
   ];
 }
@@ -136,7 +147,7 @@ export function renderCountryCorporate(code: CountryCode): string {
   const ng = code === "NG";
   const description = ng
     ? `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across Nigeria. In-house, online or hybrid; supports ITF claims. Get a proposal.`
-    : `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. Live online with a facilitator. Get a proposal.`;
+    : `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. In-house, online or self-paced. Get a proposal.`;
   const ogImage = `${ORIGIN}/images/og/corporate-ai-workflow-${cc}.jpg`;
   const headHtml = head(ctx, {
     title,
@@ -157,13 +168,7 @@ export function renderCountryCorporate(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(home)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   <section class="hero ca-hero" id="top">
@@ -173,12 +178,12 @@ ${header(ctx, home, "/", true)}
         <span class="eyebrow">Corporate training &middot; ${escapeHtml(country)}</span>
         <h1 class="hero-title ca-hero-title">Corporate training in ${escapeHtml(country)}: AI and cybersecurity training for employees</h1>
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
-        <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered ${ng ? "in-house at your offices, live online or hybrid" : "live online with a facilitator"}, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
+        <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Choose self-paced online places per employee, or live online, in-house or hybrid training by quote, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
         <div class="hero-ctas">
           ${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}
-          ${ctaButton(PROPOSAL, true)}
+          ${readinessButton(code, true)}
         </div>
-        <ul class="ca-trust"><li>${ng ? "In-house, online or hybrid across Nigeria" : `Live online across ${escapeHtml(country)}`}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
+        <ul class="ca-trust"><li>In-house, online or hybrid across ${escapeHtml(country)}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
       </div>
       <div class="ca-hero-media">
         <img src="/images/corporate-ai/${code === "NG" ? "ng-corporate" : cc}-hero.jpg" alt="${escapeHtml(code === "NG" ? NG_CORPORATE_HERO_ALT : CORPORATE_AI_CONTENT[code].images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
@@ -193,18 +198,21 @@ ${header(ctx, home, "/", true)}
       <div class="ca-cards">
         <div class="ca-card">
           <h3><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness training</a></h3>
+          ${outcomeList("cybersecure", code)}
           <p>Every employee learns to recognise, stop and report phishing, payment fraud and impersonation, protect business information and use AI tools safely. Twelve practical modules for non-technical staff, from the boardroom to the front desk.</p>
           <p>It builds awareness of handling personal and customer data responsibly, in line with your obligations under ${escapeHtml(DATA_PROTECTION_LAW[code])}. Awareness training, not legal advice.</p>
           <p class="ca-card-link"><a href="${cyberSecurePath(code)}">Cybersecurity awareness training in ${escapeHtml(country)} &rarr;</a></p>
         </div>
         <div class="ca-card">
           <h3><a href="${corporateAiPath(code)}">AI Workflow Productivity &amp; Process Transformation</a></h3>
+          ${outcomeList("ai-workflow", code)}
           ${BOOKED}
           <p>Your employees learn to use AI tools such as ChatGPT, Claude and Gemini on their own work &mdash; reports, emails, meeting follow-ups, documents and data &mdash; and to redesign repetitive workflows safely, with human review. Ten practical modules and a real workplace project.</p>
           <p class="ca-card-link"><a href="${corporateAiPath(code)}">AI training for employees in ${escapeHtml(country)} &rarr;</a></p>
         </div>
         <div class="ca-card">
           <h3><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator</a></h3>
+          ${outcomeList("accelerator", code)}
           ${BOOKED}
           <p>For the IT, security, risk, data and digital professionals who will lead secure AI adoption. Twelve professional modules and a capstone on a real challenge from their organisation.</p>
           <p class="ca-card-link"><a href="${acceleratorPath(code)}">AI and cybersecurity training for professionals in ${escapeHtml(country)} &rarr;</a></p>
@@ -212,7 +220,9 @@ ${header(ctx, home, "/", true)}
       </div>
       <h3 class="cp-subtitle" id="pricing">Prices in ${escapeHtml(country)}</h3>
       ${pricingSummaryTable([code])}
-      <div class="ca-ctas">${ctaButton(PROPOSAL, false)}</div>
+      <h3 class="cp-subtitle">Two ways to buy</h3>
+      ${waysToBuyBrief(code, false)}
+      <div class="ca-ctas">${reserveButton()}</div>
     </div>
   </section>
 
@@ -220,12 +230,17 @@ ${header(ctx, home, "/", true)}
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">Staff training for organisations across ${escapeHtml(country)}</h2>
-      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${ng ? "Training is delivered in-house at your offices, live online with a facilitator, or hybrid, so head office, branches, sites and remote workers can all take part, scheduled around your working day." : "Training is live online with a facilitator, so every office, branch and remote worker can join the same practical sessions, scheduled around your working day."}</p>
+      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. Training is delivered in-house at your offices, live online with a facilitator, or hybrid, so head office, branches, sites and remote workers can all take part, scheduled around your working day. Staff can also learn self-paced online.</p>
       <p class="ca-p">Examples and workplace projects are adapted to your sector: ${ng ? "banking and financial services, oil and gas and energy, telecoms, manufacturing, healthcare, education, government and professional services" : "banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services"}.</p>
       ${ng ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_NOTE)}</p>` : ""}
-      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}</div>
+      <p class="ca-p">Sector pages: ${SECTORS.map((sec) => `<a href="${SECTORS_PATH}/${sec.slug}?country=${cc}">${escapeHtml(sec.name)}</a>`).join(" &middot; ")}.</p>
+      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}${callButton(true)}</div>
     </div>
   </section>
+
+  ${pilotSection(code, null, false)}
+
+  ${forwardSection(code, null, true)}
 
   ${trainerStandards()}
 
@@ -253,12 +268,10 @@ ${header(ctx, home, "/", true)}
     title: `Tell us what your organisation in ${country} needs`,
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
     note: "Tell us your team size and what you want to improve, and we will send a proposal shaped around your organisation.",
-    contact: ng
-      ? "Email: corporate@paleontraining.com · Phone: +234 707 714 9215 · WhatsApp: +44 7508 823495"
-      : "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495",
+    contact: CORPORATE_CONTACT,
   })}
 </main>
-${footer(ctx, home, false, "/")}
+${footer(ctx, home, false, "/", true)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 </body>

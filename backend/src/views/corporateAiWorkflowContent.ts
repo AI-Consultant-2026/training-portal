@@ -155,7 +155,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "The programme answers one question: how can our employees use AI to do better work, faster, while keeping quality, security and human oversight?"
           },
           {
-            "p": "**CTA after course structure:** Book Corporate Workforce Training"
+            "p": "**CTA after course structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -341,7 +341,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "Tell us about your organisation, your workforce and the processes you want to improve. We will help identify the most appropriate training approach."
           },
           {
-            "p": "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495"
+            "p": "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495"
           }
         ]
       }
@@ -349,7 +349,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   },
   "ZA": {
     "title": "AI Workforce & Process Transformation Training in South Africa",
-    "description": "Live online AI training for employees of companies in Johannesburg, Cape Town, Durban and across South Africa. Faster workflows, safe AI use. Get a proposal.",
+    "description": "In-house and online AI training for employees of companies in Johannesburg, Cape Town, Durban and across South Africa. Faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "South African professionals discussing an AI-assisted workflow on a large screen in a Johannesburg office",
       "collaboration": "South African operations team redesigning a process together",
@@ -379,7 +379,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online training for teams in Johannesburg, Cape Town, Durban and across South Africa · Department-specific · Responsible-AI first"
+            "p": "**Trust line:** In-house or online training for teams in Johannesburg, Cape Town, Durban and across South Africa · Department-specific · Responsible-AI first"
           },
           {
             "p": "**Definition box:** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It helps South African organisations train employees to use generative AI for everyday work and redesign business processes, with governance, data protection and human oversight."
@@ -478,7 +478,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**CTA after course structure:** Book Corporate Workforce Training"
+            "p": "**CTA after course structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -619,7 +619,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Is the training available online?** Yes. Live virtual sessions suit teams spread across provinces."
           },
           {
-            "p": "**Can training be delivered in-house?** Training is delivered live online, so teams in every province can join the same sessions with a facilitator."
+            "p": "**Can training be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to tasks from their own role and completes a workplace project."
@@ -662,7 +662,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   },
   "GH": {
     "title": "AI Workforce & Process Transformation Training in Ghana",
-    "description": "Live online AI training for employees of companies in Accra, Kumasi, Tema and across Ghana. Less admin, faster workflows, safe AI use. Get a proposal.",
+    "description": "In-house and online AI training for employees of companies in Accra, Kumasi, Tema and across Ghana. Less admin, faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "Ghanaian professionals mapping an AI-assisted workflow on a laptop and whiteboard in an Accra office",
       "collaboration": "Ghanaian team improving a business process together",
@@ -692,7 +692,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online training for teams in Accra, Kumasi, Takoradi, Tema and across Ghana · Built for every department · Safe, responsible AI use"
+            "p": "**Trust line:** In-house or online training for teams in Accra, Kumasi, Takoradi, Tema and across Ghana · Built for every department · Safe, responsible AI use"
           },
           {
             "p": "**Definition box:** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It develops employees in Ghanaian organisations to use generative AI tools for everyday tasks, reduce repetitive administrative work and improve business processes, responsibly."
@@ -790,7 +790,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**CTA after course structure:** Book Corporate Workforce Training"
+            "p": "**CTA after course structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -931,7 +931,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Is the training available online?** Yes. Live online sessions let teams in different cities train together."
           },
           {
-            "p": "**Can training be delivered in-house?** Training is delivered live online, so head office and regional teams can join the same sessions with a facilitator."
+            "p": "**Can training be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Participants apply AI to their own work and complete a workplace project."
@@ -971,7 +971,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   },
   "KE": {
     "title": "AI Workforce & Process Transformation Training in Kenya",
-    "description": "Live online AI training for employees of companies in Nairobi, Mombasa, Kisumu and across Kenya. Faster workflows, safe AI use. Get a proposal.",
+    "description": "In-house and online AI training for employees of companies in Nairobi, Mombasa, Kisumu and across Kenya. Faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "Kenyan professionals reviewing an AI-assisted dashboard together in a Nairobi office",
       "collaboration": "Kenyan team designing a shared AI workflow",
@@ -1001,7 +1001,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online training for teams in Nairobi, Mombasa, Kisumu and across Kenya · Tailored by team · Responsible AI throughout"
+            "p": "**Trust line:** In-house or online training for teams in Nairobi, Mombasa, Kisumu and across Kenya · Tailored by team · Responsible AI throughout"
           },
           {
             "p": "**Definition box:** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It helps Kenyan organisations move employees from informal AI use to structured AI-assisted workflows that improve productivity, automate repetitive tasks and keep humans in control."
@@ -1099,7 +1099,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             ]
           },
           {
-            "p": "**CTA after course structure:** Book Corporate Workforce Training"
+            "p": "**CTA after course structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1243,7 +1243,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Is the training available online?** Yes. Live virtual sessions suit distributed and hybrid teams."
           },
           {
-            "p": "**Can training be delivered in-house?** Training is delivered live online, so teams in any location can join the same sessions with a facilitator."
+            "p": "**Can training be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to their own work and completes a workplace project."

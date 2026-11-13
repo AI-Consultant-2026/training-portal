@@ -34,7 +34,7 @@ describe("Corporate SEO signals (2026-11-10)", () => {
     const o = orgs[0];
     expect(o["@id"]).toBe("https://paleontraining.com/#organization");
     expect(o.logo.url).toBe("https://paleontraining.com/images/og/paleon-training-logo.jpg");
-    expect(o.telephone).toBe("+234-707-714-9215");
+    expect(o.telephone).toBe("+44-7508-823495");
     expect(o.address.postalCode).toBe("320001");
     expect(o.sameAs).toContain("https://www.linkedin.com/company/146121029/");
   });

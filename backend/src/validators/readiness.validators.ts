@@ -21,6 +21,8 @@ export const readinessLeadSchema = z.object({
     answers: z.array(z.number().int().min(0).max(2)).length(READINESS_QUESTIONS.length),
     consent: z.literal(true, { errorMap: () => ({ message: "Please tick the box so we can email your scorecard" }) }),
     updates: z.boolean().optional(),
+    // "Also send me a tailored training proposal" (2026-11-13).
+    proposal: z.boolean().optional(),
     page: z.string().trim().max(300).optional(),
     // Honeypot.
     website: z.string().max(0).optional(),

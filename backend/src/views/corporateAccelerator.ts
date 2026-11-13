@@ -15,16 +15,29 @@ import {
 } from "./corporateAiWorkflow";
 import { areaServed, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
-import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
+import {
+  COHORT_NAME,
+  COHORT_NOTICE,
+  COHORT_PLACES,
+  COHORT_SENTENCE,
+  callButton,
+  forwardSection,
+  outcomesSection,
+  pilotSection,
+  readinessButton,
+  reserveButton,
+  waysToBuySection,
+} from "./corporateOffers";
 
 // The "AI + Cybersecurity Professional Accelerator" corporate pages (2026-11-02): one per
 // country at /<cc>/corporate-training/ai-cybersecurity-professional-accelerator. Copy lives in
 // corporateAcceleratorContent.ts. Same styles, enquiry form and corporate-ai.js as the AI
 // Workflow and CyberSecure Workforce pages; enquiries are saved with source "ai-cyber-accelerator".
-// Nigeria offers in-house, online and hybrid delivery and mentions ITF reimbursement;
-// Ghana, Kenya and South Africa are live online only.
+// Every country offers self-paced online learning, or live online, in-house and hybrid
+// delivery by quote (2026-11-13); Nigeria also mentions ITF reimbursement.
 
 export { ACCELERATOR_SLUG, acceleratorPath } from "./corporateAiWorkflow";
 
@@ -164,10 +177,10 @@ function hero(code: CountryCode, c: AccPageContent): string {
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
-        <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+        ${COHORT_NOTICE}
         <div class="hero-ctas">
-          ${ctaButton(field(c, "Primary CTA") || WORKFORCE_CTA, true)}
-          ${ctaButton(field(c, "Secondary CTA") || ACC_PROPOSAL, true)}
+          ${reserveButton()}
+          ${readinessButton(code, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
       </div>
@@ -183,25 +196,25 @@ function hero(code: CountryCode, c: AccPageContent): string {
 
 // Local SEO (2026-11-08): extra FAQs per country (cities, start date, cost, starting with
 // CyberSecure Workforce), placed before the proposal question and in the FAQPage JSON-LD.
-// The Accelerator is fully booked until January 2027, as on the corporate hub.
+// The next live cohort is December 2026 (corporateOffers.ts), as on the corporate hub.
 function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   const country = COUNTRIES[code].name;
   return [
     {
       q: `Do you offer AI and cybersecurity training for professionals in ${cityList(code)}?`,
-      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. It is fully booked until January 2027; you can enquire now to reserve places from January 2027.`,
+      a: `Yes. The AI + Cybersecurity Professional Accelerator is delivered ${deliveryPhrase(code)} for IT, security, risk, data and digital teams in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each participant, or live online, in-house or hybrid delivery by quote. ${COHORT_SENTENCE}`,
     },
     {
       q: "When can our team start?",
-      a: "The Accelerator is fully booked until January 2027. Enquire now to reserve places for your team from January 2027; we can agree the participants and the capstone challenge with you in advance.",
+      a: `Self-paced places can start today. For live delivery, the next cohort starts in ${COHORT_NAME} and ${COHORT_PLACES} places remain. Reserve now and we will agree the participants and the capstone challenge with you in advance.`,
     },
     {
       q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
       a: pricingFaqAnswer(code, "accelerator"),
     },
     {
-      q: "Can we train the rest of our staff in cybersecurity while we wait?",
-      a: `Yes. CyberSecure Workforce, our cybersecurity awareness programme for every employee, is available now for companies in ${country}. Many organisations train the whole workforce first, then develop their specialists through the Accelerator from January 2027.`,
+      q: "Can we train the rest of our staff in cybersecurity too?",
+      a: `Yes. CyberSecure Workforce, our cybersecurity awareness programme for every employee, is available now for companies in ${country}. Many organisations train the whole workforce and develop their specialists through the Accelerator at the same time.`,
     },
   ];
 }
@@ -223,17 +236,16 @@ function faqItems(c: AccPageContent, code?: CountryCode): { q: string; a: string
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    code === "NG"
-      ? "We train in-house at your offices or sites, live online, or a mix of both, and provide the attendance records and documentation for ITF reimbursement claims."
-      : "Training is delivered live online with a facilitator, so specialists in every office and branch can join the same sessions and work on one capstone.";
+    "We train in-house at your offices or sites, live online, or a mix of both, or participants can learn self-paced online" +
+    (code === "NG" ? ", and we provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">AI and cybersecurity training for professionals across ${escapeHtml(country)}</h2>
-      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+      ${COHORT_NOTICE}
       <p class="ca-p">Paleon Training runs the AI + Cybersecurity Professional Accelerator for IT, security, risk, data and digital teams in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Scenarios and the capstone are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services. Need cybersecurity awareness for every employee now? <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a> is available today.</p>
-      <div class="ca-ctas">${ctaButton(ACC_PROPOSAL, false)}</div>
+      <div class="ca-ctas">${reserveButton()}${callButton(false)}</div>
     </div>
   </section>`;
 }
@@ -295,7 +307,7 @@ function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
         provider: { "@id": `${ORIGIN}/#organization` },
         hasCourseInstance: {
           "@type": "CourseInstance",
-          courseMode: code === "NG" ? ["online", "onsite", "blended"] : "online",
+          courseMode: ["online", "onsite", "blended"],
           location: { "@type": "Country", name: country },
         },
       },
@@ -355,16 +367,11 @@ export function renderAccelerator(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(home)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   ${hero(code, c)}
+  ${outcomesSection("accelerator", code)}
   ${section(c, "Problem", { id: "problem", eyebrowOverride: "The challenge", listClass: "ca-list ca-list-x" })}
   ${section(c, "Solution", { id: "solution", dark: true, eyebrowOverride: "The approach", listClass: "ca-steps", aside: image(cc, "ai", c.images.ai) })}
   ${section(c, "Business benefits", { id: "benefits", eyebrowOverride: "Business benefits", titleOverride: "What your organisation gains" })}
@@ -374,18 +381,20 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Workplace scenarios", { id: "scenarios" })}
   ${section(c, "Capstone", { id: "capstone", dark: true, aside: image(cc, "transformation", c.images.transformation) })}
   ${section(c, "Responsible AI", { id: "responsible-ai", aside: image(cc, "security", c.images.security) })}
-  ${section(c, "Corporate delivery options", { id: "delivery", dark: true, eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
+  ${waysToBuySection("accelerator", code, true)}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${section(c, "Programme comparison", { id: "compare", dark: true })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
   ${pricingSection(code, "accelerator", true)}
+  ${pilotSection(code, "accelerator", false)}
+  ${forwardSection(code, "accelerator", true)}
   ${whereWeTrain(code)}
   ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c), ACC_FORM)}
   ${related(code)}
 </main>
-${footer(ctx, home)}
+${footer(ctx, home, false, home, true)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 <script src="/corporate-buy.js" defer></script>

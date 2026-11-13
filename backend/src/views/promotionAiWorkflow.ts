@@ -1,17 +1,16 @@
 import { COUNTRIES, MARKET_ORDER } from "../constants/countries";
 import { flagSvg } from "./flags";
 import { ORGANIZATION_LD } from "./corporateLocal";
+import { COHORT_NOTICE, COHORT_SENTENCE, callButton, readinessButton, reserveButton } from "./corporateOffers";
 import { CORPORATE_AI_CONTENT } from "./corporateAiWorkflowContent";
 import {
   CORPORATE_HUB_PATH,
   acceleratorPath,
   corporateAiPath,
-  ctaButton,
   cyberSecurePath,
   enquiry,
-  WORKFORCE_CTA,
 } from "./corporateAiWorkflow";
-import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts } from "./countryHome";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts } from "./countryHome";
 
 // Promotional page for the AI Workflow Productivity & Process Transformation programme
 // (2026-11-07): what the programme is, what it does for the workforce, how it builds a
@@ -26,13 +25,12 @@ export const PROMOTION_AI_PATH = "/Promotion-AI-Workflow-Productivity";
 const VIDEO = "/videos/corporate/ai-workflow-productivity.mp4?v=2";
 const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
 
-const PROPOSAL = "Request In-House Training Proposal";
 
 const DELIVERY: Record<string, string> = {
   NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
-  ZA: "Live online for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
-  KE: "Live online for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
-  GH: "Live online for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
+  ZA: "In-house, live online or self-paced for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
+  KE: "In-house, live online or self-paced for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
+  GH: "In-house, live online or self-paced for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
 };
 
 // AI brings new cyber risks, so the page points employers to CyberSecure Workforce as well
@@ -104,7 +102,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "Is the training the same in every country?",
-    "The programme is the same. Delivery differs: in Nigeria we train in-house, online or hybrid; in South Africa, Kenya and Ghana training is live online with a facilitator. Examples are adapted to your sector and teams.",
+    "The programme is the same in every country: self-paced online per learner, or live online, in-house or hybrid by quote. Examples are adapted to your sector and teams, and Nigerian employers can use our records for ITF reimbursement claims.",
   ],
   [
     "How do you measure the results?",
@@ -116,7 +114,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    "Yes. The programme is delivered live online with a facilitator for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema). In Nigeria we also train in-house or hybrid.",
+    "Yes. The programme is delivered in-house, live online or hybrid, or self-paced online, for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema). In Nigeria we also train in-house or hybrid.",
   ],
   [
     "Do you also offer cybersecurity training for staff?",
@@ -124,7 +122,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "When can we start?",
-    "The programme is fully booked until January 2027. Enquire now to reserve your dates from January 2027 and complete the needs assessment in advance.",
+    `Self-paced places can start today. For live delivery, ${COHORT_SENTENCE.charAt(0).toLowerCase()}${COHORT_SENTENCE.slice(1)} Reserve now and complete the needs assessment in advance.`,
   ],
   [
     "How do we contact you?",
@@ -173,7 +171,7 @@ function jsonLd(url: string): object {
         "@type": "Course",
         name: "AI Workflow Productivity & Process Transformation",
         description:
-          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered live online for companies in South Africa, Kenya and Ghana, and in-house, online or hybrid in Nigeria.",
+          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered in-house, live online, hybrid or self-paced for companies in South Africa, Kenya, Ghana and Nigeria.",
         provider: { "@id": `${ORIGIN}/#organization` },
         url,
         inLanguage: "en",
@@ -202,7 +200,7 @@ export function renderPromotionAiWorkflow(): string {
   const headHtml = head(ctx, {
     title: "AI Workforce & Process Transformation Training | South Africa, Kenya, Ghana",
     description:
-      "AI workforce and process transformation training for companies in South Africa, Kenya and Ghana: live online, plus cybersecurity awareness for every employee. Enquire today.",
+      "AI workforce and process transformation training for companies in South Africa, Kenya, Ghana and Nigeria: in-house or online, plus cybersecurity awareness for every employee.",
     canonicalPath: PROMOTION_AI_PATH,
     alternatesFor: corporateAiPath,
     xDefault: CORPORATE_HUB_PATH,
@@ -227,13 +225,7 @@ export function renderPromotionAiWorkflow(): string {
 <body data-country="NG" data-hub>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(COUNTRIES.NG.site.path)}
 ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
 <main id="main">
   <section class="hero ca-hero pw-hero" id="top">
@@ -244,10 +236,11 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <span class="eyebrow">AI Workflow Productivity &amp; Process Transformation &middot; South Africa, Kenya, Ghana and Nigeria</span>
           <h1 class="hero-title ca-hero-title">AI workforce and process transformation training for companies</h1>
           <p class="ca-headline">Less busywork. Better work. An advantage that lasts.</p>
-          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, delivered live online for companies in South Africa, Kenya and Ghana, and in-house in Nigeria.</p>
+          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, in-house, live online or self-paced, for companies in South Africa, Kenya, Ghana and Nigeria.</p>
+          ${COHORT_NOTICE}
           <div class="hero-ctas">
-            <a class="btn btn-signal btn-lg" href="#video">Watch the video</a>
-            ${ctaButton(WORKFORCE_CTA, true, `${corporateAiPath("NG")}#buy`)}
+            ${reserveButton()}
+            ${readinessButton(null, true)}
           </div>
           <ul class="pw-flags" aria-label="Available in">${flags}</ul>
         </div>
@@ -269,7 +262,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <a href="${VIDEO}">Download the programme video (MP4)</a>
         </video>
       </figure>
-      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${corporateAiPath("NG")}#buy`)} ${ctaButton(PROPOSAL, true)}</div>
+      <div class="ca-ctas">${reserveButton()} ${callButton(true)}</div>
     </div>
   </section>
 
@@ -354,7 +347,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Where we deliver</span>
       <h2 class="section-title" id="countries-title">AI workforce and process transformation training in South Africa, Kenya, Ghana and Nigeria</h2>
-      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> Enquire now to reserve your dates from January 2027.</p>
+      ${COHORT_NOTICE}
       <div class="ca-countries">${countryCards}</div>
       <p class="ca-p pw-more"><a href="${CORPORATE_HUB_PATH}"><strong>See all corporate training programmes &rarr;</strong></a></p>
     </div>
@@ -370,10 +363,10 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <ul class="ca-links">${MARKET_ORDER.map(
         (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</a></li>`,
       ).join("")}</ul>
-      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (fully booked until January 2027): ${MARKET_ORDER.map(
+      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (December 2026 cohort, 10 places remain): ${MARKET_ORDER.map(
         (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
       ).join(", ")}.</p>
-      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${corporateAiPath("NG")}#buy`)}</div>
+      <div class="ca-ctas">${reserveButton()}</div>
     </div>
   </section>
 
@@ -389,10 +382,10 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
     title: "Find your first three workflows",
     lede: "Tell us about your organisation, your teams and the work you want to improve. We will reply within one working day to arrange a short consultation.",
     note: "Tell us your team size and what you want to improve, and we will send a proposal shaped around your organisation.",
-    contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
+    contact: "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495",
   })}
 </main>
-${footer(ctx, COUNTRIES.NG.site.path, false, "/")}
+${footer(ctx, COUNTRIES.NG.site.path, false, "/", true)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 </body>

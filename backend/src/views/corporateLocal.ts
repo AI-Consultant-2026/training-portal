@@ -15,8 +15,11 @@ export function cityList(code: CountryCode): string {
   return `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;
 }
 
+// Since 2026-11-13 every country gets in-house, live online and hybrid delivery (by quote),
+// as well as self-paced online places. `code` is kept for callers.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function deliveryPhrase(code: CountryCode): string {
-  return code === "NG" ? "in-house, live online or hybrid" : "live online with a facilitator";
+  return "in-house, live online or hybrid";
 }
 
 export function areaServed(code: CountryCode): object[] {
@@ -27,7 +30,7 @@ export const SALES_CONTACT = {
   "@type": "ContactPoint",
   contactType: "sales",
   email: "corporate@paleontraining.com",
-  telephone: "+234-707-714-9215",
+  telephone: "+44-7508-823495",
   areaServed: ["NG", "ZA", "KE", "GH"],
   availableLanguage: "English",
 };
@@ -73,9 +76,9 @@ export const ORGANIZATION_LD = {
   logo: { "@type": "ImageObject", url: `${SITE}/images/og/paleon-training-logo.jpg`, width: 512, height: 512 },
   image: `${SITE}/images/og/paleon-training-logo.jpg`,
   description:
-    "Paleon Training Limited runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: in-house in Nigeria and live online across Africa.",
+    "Paleon Training Limited runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: self-paced online, or live online, in-house and hybrid.",
   email: "corporate@paleontraining.com",
-  telephone: "+234-707-714-9215",
+  telephone: "+44-7508-823495",
   contactPoint: SALES_CONTACT,
   address: {
     "@type": "PostalAddress",

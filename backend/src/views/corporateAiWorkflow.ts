@@ -15,7 +15,7 @@ import {
   SEARCH_OVERLAY,
   coursePagePath,
   escapeHtml,
-  footer,
+  corporateUtilBar, footer,
   head,
   header,
   scripts,
@@ -23,13 +23,32 @@ import {
 } from "./countryHome";
 import { hubPricingFaqAnswer, pricingFaqAnswer, pricingSection, pricingSummaryTable } from "./corporatePricing";
 import { trainerPersonLd, trainerStandards } from "./trainerStandards";
+import {
+  CALL_URL,
+  COHORT_NAME,
+  COHORT_NOTICE,
+  COHORT_PLACES,
+  COHORT_SENTENCE,
+  RESERVE_CTA,
+  callButton,
+  forwardSection,
+  outcomeList,
+  outcomesSection,
+  pilotSection,
+  readinessButton,
+  reserveButton,
+  waysToBuyBrief,
+  waysToBuySection,
+} from "./corporateOffers";
+import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 
 // The "AI Workflow Productivity & Process Transformation" corporate pages (2026-11-02):
 // one per country at /<cc>/corporate-training/ai-workflow-productivity. Copy lives in
 // corporateAiWorkflowContent.ts. Every button opens the same enquiry form with the
-// visitor's intent (consultation or proposal) preselected; the form posts to
-// /api/leads/corporate via corporate-ai.js. Nigeria offers in-house, online and hybrid
-// delivery and mentions ITF reimbursement; Ghana, Kenya and South Africa are live online only.
+// visitor's intent (proposal, reserve, taster) preselected; the form posts to
+// /api/leads/corporate via corporate-ai.js. Since 2026-11-13 every country offers
+// self-paced online learning or live online, in-house and hybrid delivery by quote;
+// Nigeria also mentions ITF reimbursement.
 
 export const CORPORATE_AI_SLUG = "corporate-training/ai-workflow-productivity";
 // The corporate training hub (2026-11-02), the homepage since 2026-11-08 (it was
@@ -64,7 +83,6 @@ export const WORKFORCE_CTA = "Book Corporate Workforce Training";
 const ENQUIRY_SUBMIT = "Request In-House Training Proposal";
 const PROPOSAL = "Request In-House Training Proposal";
 const WHATSAPP_LINK = "https://wa.me/447508823495";
-const PHONE_PREFIX: Record<CountryCode, string> = { NG: "+234", ZA: "+27", GH: "+233", KE: "+254" };
 
 // Escape, then turn the copy's **bold** marks into <strong>.
 export function rich(value: string): string {
@@ -87,6 +105,7 @@ function field(c: CorporatePageContent, section: string, label: string): string 
 }
 
 export function ctaButton(label: string, dark: boolean, buyHref = "#buy"): string {
+  if (label === RESERVE_CTA) return reserveButton();
   if (label === WORKFORCE_CTA) {
     return `<a class="btn btn-signal btn-lg" href="${buyHref}" data-buy-cta>${escapeHtml(label)}</a>`;
   }
@@ -169,10 +188,10 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
         <h1 class="hero-title ca-hero-title">${escapeHtml(field(c, "Hero", "H1"))}</h1>
         <p class="ca-headline">${rich(field(c, "Hero", "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Hero", "Supporting statement"))}</p>
-        <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+        ${COHORT_NOTICE}
         <div class="hero-ctas">
-          ${ctaButton(field(c, "Hero", "Primary CTA") || WORKFORCE_CTA, true)}
-          ${ctaButton(field(c, "Hero", "Secondary CTA") || PROPOSAL, true)}
+          ${reserveButton()}
+          ${readinessButton(code, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
       </div>
@@ -193,11 +212,11 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer AI training for employees in ${cityList(code)}?`,
-      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. The programme is fully booked until January 2027; you can enquire now to reserve dates from January 2027.`,
+      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each employee, or live online, in-house or hybrid delivery by quote. ${COHORT_SENTENCE}`,
     },
     {
       q: "When can we start?",
-      a: "The programme is fully booked until January 2027. Enquire now to reserve your dates from January 2027; we can complete the needs assessment with you in advance, so your teams are ready to start.",
+      a: `Self-paced places can start today. For live delivery, ${COHORT_SENTENCE.charAt(0).toLowerCase()}${COHORT_SENTENCE.slice(1)} Reserve now and we will complete the needs assessment with you in advance, so your teams are ready to start.`,
     },
     {
       q: "How much does corporate AI training cost?",
@@ -205,7 +224,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "Can we combine AI training with cybersecurity training for our staff?",
-      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. CyberSecure Workforce is available now for companies in ${country}, so many organisations start with cybersecurity training and add AI training from January 2027.`,
+      a: `Yes. Many organisations pair AI Workflow Productivity with CyberSecure Workforce, our cybersecurity awareness programme, so staff learn to use AI tools and to recognise the new risks they bring, such as AI-written phishing and deepfake payment requests. Both are available for companies in ${country}: many organisations start with cybersecurity training and add AI training in the ${COHORT_NAME} cohort.`,
     },
   ];
 }
@@ -227,17 +246,16 @@ function faqItems(c: CorporatePageContent, code?: CountryCode): { q: string; a: 
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    code === "NG"
-      ? "We train in-house at your offices or sites, live online, or a mix of both, and provide the attendance records and documentation for ITF reimbursement claims."
-      : "Training is delivered live online with a facilitator, so every office, branch and remote worker can join the same practical sessions.";
+    "We train in-house at your offices or sites, live online, or a mix of both, or your staff can learn self-paced online" +
+    (code === "NG" ? ", and we provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">AI workforce and process transformation training across ${escapeHtml(country)}</h2>
-      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+      ${COHORT_NOTICE}
       <p class="ca-p">Paleon Training runs AI Workflow Productivity &amp; Process Transformation for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Sessions are scheduled around your working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
-      <div class="ca-ctas">${ctaButton(PROPOSAL, false)}</div>
+      <div class="ca-ctas">${reserveButton()}${callButton(false)}</div>
     </div>
   </section>`;
 }
@@ -295,24 +313,18 @@ const AI_FORM: EnquiryForm = {
   messagePlaceholder: "The teams, processes or tasks you want to improve",
 };
 
-// The enquiry form. `code` presets the country (a country page); null is the hub, where
-// the visitor picks their country and sees the delivery question with a note that
-// in-house and hybrid are Nigeria only.
+// The enquiry form (shortened 2026-11-13, owner request): name, business email,
+// organisation, country and headcount only; the rest is collected on the call. `code`
+// presets the country (a country page); null is the hub, where the visitor picks it.
+// The buttons that open it set the intent: proposal, reserve (the December 2026 cohort)
+// or taster (the free leadership session); corporate-ai.js changes the heading and button.
 export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: EnquiryForm = AI_FORM): string {
-  const { title, lede, note, contact } = copy;
+  const { title, lede, note } = copy;
   const countryOptions =
     (code ? "" : '<option value="">Choose your country</option>') +
     MARKET_ORDER.map(
       (k) => `<option value="${k}"${k === code ? " selected" : ""}>${escapeHtml(COUNTRIES[k].name)}</option>`,
     ).join("");
-  const delivery =
-    code === "NG" || code === null
-      ? `<div class="form-row"><label class="form-label" for="ca-delivery">Preferred delivery method <span class="optional">(optional)</span></label>
-          <select class="form-select" id="ca-delivery" name="delivery">${options(CORPORATE_DELIVERY, "Choose one")}</select>${
-            code === null ? '<p class="ca-hint">In-house and hybrid training are available in Nigeria. In Ghana, Kenya and South Africa, training is live online.</p>' : ""
-          }</div>`
-      : "";
-  const phonePlaceholder = code ? `${PHONE_PREFIX[code]} ...` : "Include your country code";
   return `<section class="section section-dark ca-section" id="enquiry" aria-labelledby="enquiry-title">
     <div class="wrap ca-enquiry">
       <div class="ca-enquiry-copy">
@@ -320,39 +332,38 @@ export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: Enqui
         <h2 class="section-title" id="enquiry-title">${escapeHtml(title)}</h2>
         <p class="ca-p">${rich(lede)}</p>
         <p class="ca-p">${rich(note)}</p>
-        <p class="ca-contact">${contactLine(contact)}</p>
+        <p class="ca-p"><strong>Prefer to talk first?</strong> Book a 20-minute call and we will cover your teams, goals and dates.</p>
+        <div class="ca-ctas">${callButton(true)}</div>
+        <p class="ca-contact">${contactLine(CORPORATE_CONTACT)}</p>
       </div>
       <form class="ca-form" id="caForm" novalidate data-country="${code ?? ""}" data-programme="${form.programme}">
         <input type="hidden" name="intent" value="proposal">
-        </p>
+        <p class="ca-form-intent" id="caIntent" hidden></p>
         <div class="ca-grid">
           <div class="form-row"><label class="form-label" for="ca-name">Name</label><input class="form-input" id="ca-name" name="name" autocomplete="name" required maxlength="150"></div>
-          <div class="form-row"><label class="form-label" for="ca-job">Job title</label><input class="form-input" id="ca-job" name="jobTitle" autocomplete="organization-title" required maxlength="150"></div>
+          <div class="form-row"><label class="form-label" for="ca-email">Business email</label><input class="form-input" id="ca-email" name="email" type="email" autocomplete="email" required maxlength="200"></div>
           <div class="form-row"><label class="form-label" for="ca-org">Organisation</label><input class="form-input" id="ca-org" name="organisation" autocomplete="organization" required maxlength="200"></div>
           <div class="form-row"><label class="form-label" for="ca-country">Country</label><select class="form-select" id="ca-country" name="country" required>${countryOptions}</select></div>
-          <div class="form-row"><label class="form-label" for="ca-email">Business email</label><input class="form-input" id="ca-email" name="email" type="email" autocomplete="email" required maxlength="200"></div>
-          <div class="form-row"><label class="form-label" for="ca-phone">Phone / WhatsApp</label><input class="form-input" id="ca-phone" name="phone" type="tel" autocomplete="tel" required placeholder="${phonePlaceholder}" maxlength="20"></div>
-          <div class="form-row"><label class="form-label" for="ca-employees">Number of employees</label><select class="form-select" id="ca-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Choose one")}</select></div>
-          <div class="form-row"><label class="form-label" for="ca-department">Department / team <span class="optional">(optional)</span></label><select class="form-select" id="ca-department" name="department">${options(CORPORATE_DEPARTMENTS, "Choose one")}</select></div>
-          <div class="form-row"><label class="form-label" for="ca-requirement">Training requirement <span class="optional">(optional)</span></label><select class="form-select" id="ca-requirement" name="requirement">${options(form.requirements, "Choose one")}</select></div>
-          ${delivery}
+          <div class="form-row"><label class="form-label" for="ca-employees">Headcount</label><select class="form-select" id="ca-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Number of employees")}</select></div>
         </div>
-        <div class="form-row"><label class="form-label" for="ca-message">Message <span class="optional">(optional)</span></label><textarea class="form-input" id="ca-message" name="message" rows="4" maxlength="3000" placeholder="${escapeHtml(form.messagePlaceholder)}"></textarea></div>
         <div class="ca-hp" aria-hidden="true"><label for="ca-website">Website</label><input id="ca-website" name="website" tabindex="-1" autocomplete="off"></div>
         <label class="consent-check"><input type="checkbox" name="consent" required> <span>I agree that Paleon Training may use these details to respond to my enquiry, as described in the <a href="/privacy">Privacy Policy</a>.</span></label>
         <label class="consent-check"><input type="checkbox" name="updates"> <span>Send me occasional updates about Paleon corporate training. I can unsubscribe at any time. <span class="optional">(optional)</span></span></label>
         <p class="form-error" id="caError" role="alert" hidden></p>
-        <button type="submit" class="btn btn-signal btn-lg btn-block" id="caSubmit">${escapeHtml(ENQUIRY_SUBMIT)}</button>
+        <button type="submit" class="btn btn-signal btn-lg btn-block" id="caSubmit" data-default="${escapeHtml(ENQUIRY_SUBMIT)}">${escapeHtml(ENQUIRY_SUBMIT)}</button>
         <p class="form-note">We reply within one working day. Your details are used only to respond to this enquiry. <a href="/privacy">Privacy Policy</a>.</p>
       </form>
       <div class="ca-thanks" id="caThanks" hidden tabindex="-1">
         <h3>Thank you. Your enquiry has reached our corporate team.</h3>
-        <p>What happens next: a member of the team will reply within one working day to arrange a short consultation about your organisation, teams and goals. After that we send a proposal shaped around what you need.</p>
+        <p>What happens next: a member of the team will reply within one working day to arrange a 20-minute call about your organisation, teams and goals. After that we send a proposal shaped around what you need.</p>
         <p>Urgent question? <a href="${WHATSAPP_LINK}" target="_blank" rel="noopener">Message us on WhatsApp</a> or email <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>.</p>
       </div>
     </div>
   </section>`;
 }
+
+// One corporate email and one WhatsApp line on every corporate page (2026-11-13).
+export const CORPORATE_CONTACT = "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495";
 
 // "Email: x · Call: y · WhatsApp: z" with each part linked.
 export function contactLine(line: string): string {
@@ -412,7 +423,7 @@ function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object
         provider: { "@id": `${ORIGIN}/#organization` },
         hasCourseInstance: {
           "@type": "CourseInstance",
-          courseMode: code === "NG" ? ["online", "onsite", "blended"] : "online",
+          courseMode: ["online", "onsite", "blended"],
           location: { "@type": "Country", name: country },
         },
       },
@@ -472,22 +483,17 @@ export function renderCorporateAiWorkflow(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(home)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   ${hero(code, c)}
+  ${outcomesSection("ai-workflow", code)}
   ${section(c, "Problem", { id: "problem", eyebrowOverride: "The challenge", listClass: "ca-list ca-list-x" })}
   ${section(c, "Solution", { id: "solution", dark: true, aside: image(cc, "collaboration", c.images.collaboration), listClass: "ca-steps" })}
   ${section(c, "Business benefits", { id: "benefits", eyebrowOverride: "Business benefits", titleOverride: "What your organisation gains" })}
   ${section(c, "Course structure", { id: "modules", eyebrowOverride: "Course structure", titleOverride: "10 practical modules", listClass: "ca-steps" })}
   ${section(c, "Who should attend?", { id: "attend", dark: true, eyebrowOverride: "Who it is for" })}
-  ${section(c, "Corporate delivery options", { id: "delivery", eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
+  ${waysToBuySection("ai-workflow", code, false)}
   ${section(c, "Practical workplace project", { id: "project", dark: true, eyebrowOverride: "Practical workplace project", aside: image(cc, "productivity", c.images.productivity) })}
   ${section(c, "Responsible AI", {
     id: "responsible-ai",
@@ -496,13 +502,15 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${pricingSection(code, "ai-workflow", true)}
+  ${pilotSection(code, "ai-workflow", false)}
+  ${forwardSection(code, "ai-workflow", true)}
   ${whereWeTrain(code)}
   ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c))}
   ${related(code)}
 </main>
-${footer(ctx, home)}
+${footer(ctx, home, false, home, true)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 <script src="/corporate-buy.js" defer></script>
@@ -516,75 +524,61 @@ ${scripts(ctx)}
 // in all four countries, pointing to the AI Workflow page for each country and to the other
 // corporate offers. Same enquiry form; the visitor picks their country.
 
-const HUB_CYBER_DELIVERY: Record<CountryCode, string> = {
-  NG: "In-house, online or hybrid awareness training. Supports ITF reimbursement claims.",
-  ZA: "Live online awareness training for teams across South Africa.",
-  KE: "Live online awareness training for teams across Kenya.",
-  GH: "Live online awareness training for teams across Ghana.",
-};
-
-const HUB_ACC_DELIVERY: Record<CountryCode, string> = {
-  NG: "In-house, online or hybrid for professional teams. Supports ITF reimbursement claims.",
-  ZA: "Live online for professional teams across South Africa.",
-  KE: "Live online for professional teams across Kenya.",
-  GH: "Live online for professional teams across Ghana.",
-};
-
-const HUB_DELIVERY: Record<CountryCode, string> = {
-  NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
-  ZA: "Live online training for teams across South Africa.",
-  KE: "Live online training for teams across Kenya.",
-  GH: "Live online training for teams across Ghana.",
-};
+// Every country: self-paced online, or live online, in-house or hybrid (2026-11-13).
+const deliveryNote = (k: CountryCode, what: string) =>
+  `Self-paced online, or ${what} live online, in-house or hybrid across ${COUNTRIES[k].name}.${k === "NG" ? " Supports ITF reimbursement claims." : ""}`;
+const HUB_CYBER_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "awareness training")])) as Record<CountryCode, string>;
+const HUB_ACC_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "professional training")])) as Record<CountryCode, string>;
+const HUB_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "training")])) as Record<CountryCode, string>;
 
 // Country cards on the hub (2026-11-08, SEO for employers in South Africa, Kenya and Ghana).
 const HUB_COUNTRY_SEO: { code: CountryCode; h: string; p: string }[] = [
   {
     code: "ZA",
     h: "Corporate training in South Africa",
-    p: "Live online cybersecurity awareness and AI productivity training for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
+    p: "In-house, live online and self-paced cybersecurity awareness and AI productivity training for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
   },
   {
     code: "KE",
     h: "Corporate training in Kenya",
-    p: "Live online cybersecurity awareness and AI productivity training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Practical sessions for every employee, from the front desk to the boardroom, with examples from your sector.",
+    p: "In-house, live online and self-paced cybersecurity awareness and AI productivity training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Practical sessions for every employee, from the front desk to the boardroom, with examples from your sector.",
   },
   {
     code: "GH",
     h: "Corporate training in Ghana",
-    p: "Live online cybersecurity awareness and AI productivity training for companies in Accra, Kumasi, Tema, Takoradi and across Ghana. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
+    p: "In-house, live online and self-paced cybersecurity awareness and AI productivity training for companies in Accra, Kumasi, Tema, Takoradi and across Ghana. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
   },
   {
     code: "NG",
     h: "Corporate training in Nigeria",
-    p: "In-house, online or hybrid cybersecurity awareness and AI productivity training for organisations in Lagos, Abuja, Port Harcourt, Warri and across Nigeria. We provide the attendance records and documentation for ITF reimbursement claims.",
+    p: "In-house, live online, hybrid or self-paced cybersecurity awareness and AI productivity training for organisations in Lagos, Abuja, Port Harcourt, Warri and across Nigeria. We provide the attendance records and documentation for ITF reimbursement claims.",
   },
 ];
 
 const HUB_FAQ: { q: string; a: string }[] = [
   {
     q: "Who delivers the training, and what qualifications do your trainers have?",
-    a: "Every programme is led by a live facilitator with practical experience in the subject and a relevant degree or recognised industry certification, checked by us before they are booked. Trainers complete an assessed trial session and sign a confidentiality agreement. Before your programme starts, we send you your lead trainer's profile.",
+    a: "Live and in-house sessions are led by a facilitator with practical experience in the subject and a relevant degree or recognised industry certification, checked by us before they are booked. Trainers complete an assessed trial session and sign a confidentiality agreement. Before your programme starts, we send you your lead trainer's profile.",
   },
   {
     q: "Which countries do you deliver corporate training in?",
-    a: "Nigeria, South Africa, Kenya and Ghana. In Nigeria we train in-house, online or hybrid. In South Africa, Kenya and Ghana, training is delivered live online with a facilitator.",
+    a: "Nigeria, South Africa, Kenya and Ghana. In every country your staff can learn self-paced online, or we train live online, in-house at your offices or hybrid.",
   },
   {
     q: "Do you offer cybersecurity awareness training for companies in South Africa?",
-    a: "Yes. CyberSecure Workforce is delivered live online with a facilitator to teams across South Africa, including Johannesburg, Cape Town, Durban and Pretoria. Employees learn to spot phishing, stop payment fraud, protect customer information and report incidents quickly.",
+    a: "Yes. CyberSecure Workforce is available self-paced online, or live online, in-house or hybrid, for teams across South Africa, including Johannesburg, Cape Town, Durban and Pretoria. Employees learn to spot phishing, stop payment fraud, protect customer information and report incidents quickly.",
   },
   {
     q: "Do you offer cybersecurity awareness training for companies in Kenya?",
-    a: "Yes. CyberSecure Workforce is delivered live online with a facilitator to teams across Kenya, including Nairobi, Mombasa and Kisumu. It is written for non-technical staff and uses realistic workplace scenarios.",
+    a: "Yes. CyberSecure Workforce is available self-paced online, or live online, in-house or hybrid, for teams across Kenya, including Nairobi, Mombasa and Kisumu. It is written for non-technical staff and uses realistic workplace scenarios.",
   },
   {
     q: "Do you offer cybersecurity awareness training for companies in Ghana?",
-    a: "Yes. CyberSecure Workforce is delivered live online with a facilitator to teams across Ghana, including Accra, Kumasi, Tema and Takoradi. Staff learn to recognise scams, impersonation and fake payment requests, and to protect business information.",
+    a: "Yes. CyberSecure Workforce is available self-paced online, or live online, in-house or hybrid, for teams across Ghana, including Accra, Kumasi, Tema and Takoradi. Staff learn to recognise scams, impersonation and fake payment requests, and to protect business information.",
   },
   {
     q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    a: "Yes. AI Workflow Productivity & Process Transformation is delivered live online in all three countries, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. Both are fully booked until January 2027; you can enquire now to reserve a place from January 2027.",
+    a: `Yes. AI Workflow Productivity & Process Transformation is available in all three countries, self-paced online or live online, in-house or hybrid, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. For both, the ${COHORT_NAME} cohort has ${COHORT_PLACES} places remaining.`,
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
@@ -624,7 +618,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do we get started?",
-    a: "Book a corporate training consultation or request a proposal using the form on this page, email corporate@paleontraining.com, or message us on WhatsApp on +44 7508 823495. Tell us your country, team size and what you want to improve.",
+    a: "Take the free Readiness Check, book a 20-minute call, or request a proposal using the form on this page. You can also email corporate@paleontraining.com or message us on WhatsApp on +44 7508 823495.",
   },
 ];
 
@@ -632,7 +626,7 @@ const HUB_JOURNEY = [
   "**Consultation:** we learn about your organisation, teams and goals.",
   "**Assessment:** we identify where training will make the biggest difference.",
   "**Design:** we adapt the programme to your sector, departments and tools.",
-  "**Training:** practical sessions, live online or, in Nigeria, in-house or hybrid.",
+  "**Training:** self-paced online, or practical sessions live online, in-house or hybrid.",
   "**Application:** participants apply what they learn to real workplace tasks.",
   "**Review:** we review results with you and plan the next steps.",
 ];
@@ -747,7 +741,14 @@ function hubJsonLd(url: string): object {
 // The hub keeps the visitor's country (2026-11-03): a country page links here with
 // ?country=za, and the page then shows that country in the header, footer and menu links.
 // Without one it falls back to the country the visitor picked (cookie), as / does, then Nigeria.
-export function renderCorporateHub(country: CountryCode | null = null, chosen: CountryCode | null = null): string {
+// The main button routes by country (2026-11-13): the ?country= asked for, else the country
+// the visitor picked (cookie), else the CDN's country; with none of these it scrolls to the
+// country picker instead of assuming Nigeria.
+export function renderCorporateHub(
+  country: CountryCode | null = null,
+  chosen: CountryCode | null = null,
+  detected: CountryCode | null = null,
+): string {
   const ctx: PageContext = country
     ? { country, hub: false, detected: null, chosen: country }
     : { country: chosen ?? "NG", hub: true, detected: null, chosen };
@@ -755,10 +756,12 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
   // Why Paleon ...) to the visitor's learner homepage, /ng by default.
   const home = COUNTRIES[ctx.country].site.path;
   const url = `${ORIGIN}${CORPORATE_HUB_PATH}`;
+  const buyCountry = country ?? chosen ?? detected;
+  const buyHref = buyCountry ? `${cyberSecurePath(buyCountry)}#buy` : "#choose-country";
   const headHtml = head(ctx, {
     title: "Corporate AI & Cybersecurity Training | Nigeria, South Africa, Kenya, Ghana",
     description:
-      "AI and cybersecurity training for employees, for companies in Nigeria, South Africa, Kenya and Ghana. In-house in Nigeria, live online across Africa. Get a proposal.",
+      "AI and cybersecurity training for employees in Nigeria, South Africa, Kenya and Ghana: self-paced per learner, or live and in-house by quote. Get a proposal.",
     canonicalPath: CORPORATE_HUB_PATH,
     alternatesFor: countryCorporatePath,
     xDefault: CORPORATE_HUB_PATH,
@@ -776,7 +779,7 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
     return `<li><a class="ctry-card${selected ? " is-selected" : ""}" href="${countryCorporatePath(k)}" hreflang="${c.site.locale}" data-pick-country="${k}">
         ${flagSvg(k, "flag flag-lg")}
         <span class="ctry-body"><span class="ctry-name">${escapeHtml(c.name)}</span><span class="ctry-meta">Prices in ${escapeHtml(c.site.currency.symbol)} ${escapeHtml(c.site.currency.code)}</span></span>
-        <span class="ctry-status is-live">Live online</span>
+        <span class="ctry-status is-live">In-house &amp; online</span>
       </a></li>`;
   }).join("\n");
   const countryCards = MARKET_ORDER.map(
@@ -811,13 +814,7 @@ export function renderCorporateHub(country: CountryCode | null = null, chosen: C
 <body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(home)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   <section class="section section-dark ca-choose" id="choose-country" aria-labelledby="choose-country-title">
@@ -832,10 +829,10 @@ ${header(ctx, home, "/", true)}
         <span class="eyebrow">Corporate training for employers &middot; South Africa, Kenya, Ghana and Nigeria</span>
         <h1 class="hero-title ca-hero-title">Cybersecurity and AI workforce training for companies</h1>
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
-        <p class="hero-sub">Paleon Training helps business owners, managing directors and HR leaders train their staff in two areas that now matter to every company: <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is delivered live online for companies in South Africa, Kenya and Ghana, and in-house, online or hybrid in Nigeria. Every programme is built around real workplace tasks, not theory.</p>
+        <p class="hero-sub">Paleon Training helps business owners, managing directors and HR leaders train their staff in two areas that now matter to every company: <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Choose self-paced online learning per employee, or live online, in-house or hybrid training by quote, in all four countries. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
-          ${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(country ?? chosen ?? "NG")}#buy`)}
-          ${ctaButton(PROPOSAL, true)}
+          ${ctaButton(WORKFORCE_CTA, true, buyHref)}
+          ${readinessButton(buyCountry, true)}
         </div>
         <ul class="ca-trust"><li>Customised by sector and department</li><li>Responsible AI built in</li><li>Reply within one working day</li></ul>
       </div>
@@ -852,6 +849,8 @@ ${header(ctx, home, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Flagship programme</span>
       <h2 class="section-title" id="cybersecure-title">CyberSecure Workforce: cybersecurity awareness training</h2>
+      <p class="ca-headline co-lead">Fewer incidents that start with a person.</p>
+      ${outcomeList("cybersecure", ctx.country)}
       <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce Essentials (1 minute 48 seconds)">
@@ -870,7 +869,10 @@ ${header(ctx, home, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Flagship programme</span>
       <h2 class="section-title" id="ai-workflow-title">AI Workflow Productivity &amp; Process Transformation</h2>
-      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+      <p class="ca-headline co-lead">Hours saved every week, with the risks managed.</p>
+      ${outcomeList("ai-workflow", ctx.country)}
+      ${COHORT_NOTICE}
+      <div class="ca-ctas">${reserveButton()}</div>
       <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-workflow-productivity.jpg" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 54 seconds)">
@@ -887,7 +889,10 @@ ${header(ctx, home, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Professional programme</span>
       <h2 class="section-title" id="accelerator-title">AI + Cybersecurity Professional Accelerator</h2>
-      <p class="ca-booked"><strong>Fully booked until January 2027.</strong> You can still enquire now to reserve a place from January 2027.</p>
+      <p class="ca-headline co-lead">Your own people leading secure AI adoption.</p>
+      ${outcomeList("accelerator", ctx.country)}
+      ${COHORT_NOTICE}
+      <div class="ca-ctas">${reserveButton()}</div>
       <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-cybersecurity-accelerator.jpg" aria-label="Video: AI + Cybersecurity Professional Accelerator (1 minute 55 seconds)">
@@ -904,7 +909,24 @@ ${header(ctx, home, "/", true)}
       <span class="section-eyebrow">Pricing</span>
       <h2 class="section-title" id="pricing-title">Corporate training prices in Nigeria, South Africa, Kenya and Ghana</h2>
       ${pricingSummaryTable([...MARKET_ORDER], true)}
-      <div class="ca-ctas">${ctaButton(PROPOSAL, true)}</div>
+      <h3 class="cp-subtitle">Two ways to buy</h3>
+      ${waysToBuyBrief(ctx.country)}
+    </div>
+  </section>
+
+  ${pilotSection(ctx.country, null, false)}
+
+  <section class="section section-dark ca-section" id="sectors" aria-labelledby="sectors-title">
+    <div class="wrap">
+      <span class="section-eyebrow">By sector</span>
+      <h2 class="section-title" id="sectors-title">Training shaped around your sector</h2>
+      <div class="ca-cards">${SECTORS.map(
+        (sec) => `<div class="ca-card">
+          <h3><a href="${SECTORS_PATH}/${sec.slug}">${escapeHtml(sec.name)}</a></h3>
+          <p>${escapeHtml(sec.card)}</p>
+          <p class="ca-card-link"><a href="${SECTORS_PATH}/${sec.slug}">${escapeHtml(sec.name)} training &rarr;</a></p>
+        </div>`,
+      ).join("\n")}</div>
     </div>
   </section>
 
@@ -912,7 +934,7 @@ ${header(ctx, home, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="by-country-title">Cybersecurity and AI training for companies in South Africa, Kenya, Ghana and Nigeria</h2>
-      <p class="ca-p">Every programme is led by a live facilitator, uses examples from your sector and is scheduled around your working day.</p>
+      <p class="ca-p">Every programme uses examples from your sector. Live sessions are led by a facilitator and scheduled around your working day; self-paced learners study when it suits them.</p>
       <div class="ca-cards">${HUB_COUNTRY_SEO.map(
         (c) => `<div class="ca-card">
           <h3>${flagSvg(c.code, "flag flag-sm")} ${escapeHtml(c.h)}</h3>
@@ -954,6 +976,8 @@ ${header(ctx, home, "/", true)}
     </div>
   </section>
 
+  ${forwardSection(ctx.country, null, false)}
+
   ${trainerStandards()}
 
   <section class="section section-dark ca-section" id="journey" aria-labelledby="journey-title">
@@ -961,7 +985,7 @@ ${header(ctx, home, "/", true)}
       <span class="section-eyebrow">How it works</span>
       <h2 class="section-title" id="journey-title">Your corporate training journey</h2>
       <ul class="ca-steps">${HUB_JOURNEY.map((j) => `<li>${rich(j)}</li>`).join("")}</ul>
-      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(country ?? chosen ?? "NG")}#buy`)}</div>
+      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, buyHref)}${callButton(true)}</div>
     </div>
   </section>
 
@@ -977,10 +1001,10 @@ ${header(ctx, home, "/", true)}
     title: "Tell us what your organisation needs",
     lede: "Share a little about your organisation, your workforce and the work you want to improve. We will help identify the most appropriate training approach.",
     note: "Tell us your team size and what you want to improve, and we will send a proposal shaped around your organisation.",
-    contact: "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495",
+    contact: CORPORATE_CONTACT,
   })}
 </main>
-${footer(ctx, home, false, "/")}
+${footer(ctx, home, false, "/", true)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 <script src="/corporate-buy.js" defer></script>

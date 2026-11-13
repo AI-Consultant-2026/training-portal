@@ -27,6 +27,7 @@ export async function createReadinessLead(input: ReadinessLeadInput): Promise<{ 
     consentText: READINESS_CONSENT_TEXT,
   };
   if (input.page) details.page = input.page;
+  if (input.proposal) details.wantsProposal = "yes";
 
   const lead = await Lead.create({
     name: input.name,
@@ -50,6 +51,8 @@ export async function createReadinessLead(input: ReadinessLeadInput): Promise<{ 
     email: input.email,
     organisation: input.organisation,
     country: input.country,
+    employees: input.employees,
+    wantsProposal: Boolean(input.proposal),
     result,
   });
   await emails.sendReadinessNotificationEmail(lead);

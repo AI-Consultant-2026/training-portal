@@ -84,7 +84,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Most organisations have people who understand AI, and people who understand security. Few have people who understand both. That gap is where mistakes happen."
           },
           {
-            "p": "**CTA after problem:** Book Corporate Workforce Training"
+            "p": "**CTA after problem:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -217,7 +217,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
+            "p": "**CTA after programme structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -431,7 +431,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Many organisations combine them: CyberSecure Workforce for all staff, AI Workflow for every team, and the Accelerator for the people who will lead AI adoption."
           },
           {
-            "p": "**CTA after comparison:** Book Corporate Workforce Training"
+            "p": "**CTA after comparison:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -513,7 +513,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Tell us about your organisation, your AI plans and the teams you want to develop. We will recommend the right approach."
           },
           {
-            "p": "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495"
+            "p": "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495"
           }
         ]
       }
@@ -521,7 +521,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
   },
   "ZA": {
     "title": "AI & Cybersecurity Training for Professionals in South Africa",
-    "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Johannesburg, Cape Town, Durban and across South Africa. Get a proposal.",
+    "description": "In-house and online AI and cybersecurity training for IT, security, risk and data teams in Johannesburg, Cape Town, Durban and across South Africa. Get a proposal.",
     "images": {
       "hero": "South African risk and technology professionals reviewing an AI governance dashboard in a Johannesburg office.",
       "ai": "South African analyst using an AI tool and verifying its output in a Cape Town office.",
@@ -552,7 +552,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online across South Africa · 12 professional modules · Real-workplace capstone · Governance and POPIA awareness built in"
+            "p": "**Trust line:** In-house or online across South Africa · 12 professional modules · Real-workplace capstone · Governance and POPIA awareness built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps South African organisations develop professionals who can apply AI in their work while managing cybersecurity, AI risk, governance and data protection."
@@ -589,7 +589,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Most organisations have AI enthusiasts and security specialists. Few have professionals who connect the two."
           },
           {
-            "p": "**CTA after problem:** Book Corporate Workforce Training"
+            "p": "**CTA after problem:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -719,7 +719,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
+            "p": "**CTA after programme structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -804,7 +804,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "All training in South Africa is delivered live online with a facilitator."
+            "p": "In South Africa we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
           },
           {
             "table": [
@@ -843,7 +843,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your AI plans, controls and governance.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt scenarios and capstone topics to your sector.",
-              "**Train:** we deliver live online sessions.",
+              "**Train:** we deliver in-house, live online or hybrid sessions.",
               "**Apply:** participants complete capstones on real challenges.",
               "**Transform:** your new internal capability supports accountable AI adoption."
             ]
@@ -897,7 +897,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "**CTA after comparison:** Book Corporate Workforce Training"
+            "p": "**CTA after comparison:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -929,10 +929,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one online cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes. All training in South Africa is live online."
+            "p": "**Is online training available?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across South Africa."
           },
           {
-            "p": "**Can it be delivered in-house?** Training is delivered live online, so teams in every province join the same facilitated sessions."
+            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."
@@ -981,7 +981,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
   },
   "GH": {
     "title": "AI & Cybersecurity Training for Professionals in Ghana",
-    "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Accra, Kumasi, Tema and across Ghana. Lead secure AI adoption.",
+    "description": "In-house and online AI and cybersecurity training for IT, security, risk and data teams in Accra, Kumasi, Tema and across Ghana. Lead secure AI adoption.",
     "images": {
       "hero": "Ghanaian technology and finance professionals reviewing an AI security dashboard in an Accra office.",
       "ai": "Ghanaian product manager using an AI assistant to draft a report.",
@@ -1012,7 +1012,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online across Ghana · 12 professional modules · Real-workplace capstone · Responsible AI built in"
+            "p": "**Trust line:** In-house or online across Ghana · 12 professional modules · Real-workplace capstone · Responsible AI built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps organisations in Ghana develop professionals who can use AI effectively while understanding cybersecurity, AI risk, governance and data protection."
@@ -1049,7 +1049,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Many organisations are building AI skills and security skills in separate teams. The Accelerator brings them together in the same people."
           },
           {
-            "p": "**CTA after problem:** Book Corporate Workforce Training"
+            "p": "**CTA after problem:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1176,7 +1176,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
+            "p": "**CTA after programme structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1260,7 +1260,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "All training in Ghana is delivered live online with a facilitator."
+            "p": "In Ghana we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
           },
           {
             "table": [
@@ -1299,7 +1299,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
-              "**Train:** we deliver the programme live online, with a facilitator.",
+              "**Train:** we deliver the programme in-house, live online or hybrid, with a facilitator.",
               "**Apply:** participants complete capstone projects on real challenges.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
@@ -1353,7 +1353,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "**CTA after comparison:** Book Corporate Workforce Training"
+            "p": "**CTA after comparison:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1385,10 +1385,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one online cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes. All training in Ghana is live online."
+            "p": "**Is online training available?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across Ghana."
           },
           {
-            "p": "**Can it be delivered in-house?** Training is delivered live online, so teams in every region join the same facilitated sessions."
+            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."
@@ -1434,7 +1434,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
   },
   "KE": {
     "title": "AI & Cybersecurity Training for Professionals in Kenya",
-    "description": "Live online AI and cybersecurity training for IT, security, risk and data teams in Nairobi, Mombasa, Kisumu and across Kenya. Lead secure AI adoption.",
+    "description": "In-house and online AI and cybersecurity training for IT, security, risk and data teams in Nairobi, Mombasa, Kisumu and across Kenya. Lead secure AI adoption.",
     "images": {
       "hero": "Kenyan product and security professionals reviewing an AI risk dashboard in a Nairobi office.",
       "ai": "Kenyan data analyst using an AI tool and checking the results.",
@@ -1465,7 +1465,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online across Kenya · 12 professional modules · Real-workplace capstone · AI governance and data protection built in"
+            "p": "**Trust line:** In-house or online across Kenya · 12 professional modules · Real-workplace capstone · AI governance and data protection built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps Kenyan organisations develop professionals who can use AI effectively while managing cybersecurity, AI risk, governance and data protection."
@@ -1502,7 +1502,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "Fast teams need professionals who build security into AI work from the start, not after launch."
           },
           {
-            "p": "**CTA after problem:** Book Corporate Workforce Training"
+            "p": "**CTA after problem:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1629,7 +1629,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "All threat content is defensive. The programme never teaches attack techniques or harmful prompts."
           },
           {
-            "p": "**CTA after programme structure:** Book Corporate Workforce Training"
+            "p": "**CTA after programme structure:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1713,7 +1713,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "All training in Kenya is delivered live online with a facilitator."
+            "p": "In Kenya we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
           },
           {
             "table": [
@@ -1752,7 +1752,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
-              "**Train:** we deliver the programme live online, with a facilitator.",
+              "**Train:** we deliver the programme in-house, live online or hybrid, with a facilitator.",
               "**Apply:** participants complete capstone projects on real challenges.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
@@ -1806,7 +1806,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "**CTA after comparison:** Book Corporate Workforce Training"
+            "p": "**CTA after comparison:** Reserve a December 2026 cohort"
           }
         ]
       },
@@ -1838,10 +1838,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one online cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes. All training in Kenya is live online."
+            "p": "**Is online training available?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across Kenya."
           },
           {
-            "p": "**Can it be delivered in-house?** Training is delivered live online, so teams across Kenya join the same facilitated sessions."
+            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."

@@ -15,16 +15,17 @@ import {
 } from "./corporateAiWorkflow";
 import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCyberSecureContent";
 import { CITIES, cityList, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
-import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { trainerStandards } from "./trainerStandards";
+import { callButton, forwardSection, outcomesSection, pilotSection, readinessButton, waysToBuySection } from "./corporateOffers";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
 // country at /<cc>/corporate-training/cybersecure-workforce. Copy lives in
 // corporateCyberSecureContent.ts. They reuse the AI Workflow pages' styles, enquiry form
 // and corporate-ai.js; enquiries are saved with source "cybersecure-workforce".
-// Nigeria offers in-house, online and hybrid delivery and mentions ITF reimbursement;
-// Ghana, Kenya and South Africa are live online only.
+// Every country offers self-paced online learning, or live online, in-house and hybrid
+// delivery by quote (2026-11-13); Nigeria also mentions ITF reimbursement.
 
 export { CYBERSECURE_SLUG, cyberSecurePath } from "./corporateAiWorkflow";
 
@@ -171,8 +172,8 @@ function hero(code: CountryCode, c: CyberPageContent): string {
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
         <div class="hero-ctas">
-          ${ctaButton(field(c, "Primary CTA") || WORKFORCE_CTA, true)}
-          ${ctaButton(field(c, "Secondary CTA") || CYBER_PROPOSAL, true)}
+          ${ctaButton(WORKFORCE_CTA, true)}
+          ${readinessButton(code, true)}
         </div>
         <ul class="ca-trust">${trust}</ul>
       </div>
@@ -238,16 +239,15 @@ function faq(code: CountryCode, c: CyberPageContent): string {
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    code === "NG"
-      ? "We train in-house at your offices or sites, live online, or a mix of both, and provide the attendance records and documentation for ITF reimbursement claims."
-      : "Training is delivered live online with a facilitator, so every office, branch and remote worker can join the same practical sessions.";
+    "We train in-house at your offices or sites, live online, or a mix of both, or your staff can learn self-paced online" +
+    (code === "NG" ? ", and we provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">Cybersecurity awareness training for employees across ${escapeHtml(country)}</h2>
       <p class="ca-p">Paleon Training runs CyberSecure Workforce for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
       <p class="ca-p">Sessions are scheduled around your working day, and examples are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
-      <div class="ca-ctas">${ctaButton(CYBER_PROPOSAL, false)}</div>
+      <div class="ca-ctas">${ctaButton(CYBER_PROPOSAL, false)}${callButton(false)}</div>
     </div>
   </section>`;
 }
@@ -295,7 +295,7 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
         provider: { "@id": `${ORIGIN}/#organization` },
         hasCourseInstance: {
           "@type": "CourseInstance",
-          courseMode: code === "NG" ? ["online", "onsite", "blended"] : "online",
+          courseMode: ["online", "onsite", "blended"],
           location: { "@type": "Country", name: country },
         },
       },
@@ -358,16 +358,11 @@ export function renderCyberSecure(code: CountryCode): string {
 <body data-country="${code}"${whatsappAttr(code)}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(home)}
 ${header(ctx, home, "/", true)}
 <main id="main">
   ${hero(code, c)}
+  ${outcomesSection("cybersecure", code)}
   ${section(c, "Problem", { id: "problem", eyebrowOverride: "The challenge", listClass: "ca-list ca-list-x", aside: image(cc, "awareness", c.images.awareness) })}
   ${section(c, "Solution", { id: "solution", dark: true, eyebrowOverride: "The solution", listClass: "ca-steps" })}
   ${section(c, "Business benefits", { id: "benefits", eyebrowOverride: "Business benefits", titleOverride: "What your organisation gains" })}
@@ -382,9 +377,11 @@ ${header(ctx, home, "/", true)}
     aside: image(cc, "scenario", c.images.scenario),
     after: `<p class="ca-p">For IT, risk and digital teams who need deeper skills, see the <a href="${acceleratorPath(code)}"><strong>AI + Cybersecurity Professional Accelerator</strong></a>.</p>`,
   })}
-  ${section(c, "Corporate delivery options", { id: "delivery", eyebrowOverride: "Delivery", aside: image(cc, "training", c.images.training) })}
+  ${waysToBuySection("cybersecure", code, false)}
   ${section(c, "Corporate packages", { id: "packages", dark: true, eyebrowOverride: "Packages", titleOverride: "Three ways to run the programme" })}
   ${pricingSection(code, "cybersecure", false)}
+  ${pilotSection(code, "cybersecure", true)}
+  ${forwardSection(code, "cybersecure", false)}
   ${section(c, "Measurement and deliverables", { id: "measurement", dark: true })}
   ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
@@ -394,7 +391,7 @@ ${header(ctx, home, "/", true)}
   ${enquiry(code, finalCopy(c), CYBER_FORM)}
   ${related(code)}
 </main>
-${footer(ctx, home)}
+${footer(ctx, home, false, home, true)}
 ${scripts(ctx)}
 <script src="/corporate-ai.js" defer></script>
 <script src="/corporate-buy.js" defer></script>

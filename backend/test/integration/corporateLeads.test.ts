@@ -100,8 +100,8 @@ describe("Corporate AI training pages", () => {
     expect(res.text).toContain("AI Workflow Productivity &amp; Process Transformation");
     expect(res.text).toContain(`/images/og/corporate-ai-workflow-${cc}.jpg`);
     expect(res.text).toContain('id="caForm"');
-    // Only Nigeria offers in-house and hybrid delivery.
-    expect(res.text.includes('name="delivery"')).toBe(cc === "ng");
+    // The short form (2026-11-13): delivery is agreed on the call, in every country.
+    expect(res.text).not.toContain('name="delivery"');
   });
 
   it("serves the page photos but nothing outside their folder", async () => {
@@ -168,7 +168,7 @@ describe("CyberSecure Workforce corporate pages", () => {
     expect(res.text).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
     expect(res.text).not.toContain("Workforce Score");
     expect(res.text).not.toContain("(link:");
-    expect(res.text.includes('name="delivery"')).toBe(cc === "ng");
+    expect(res.text).not.toContain('name="delivery"');
     expect(res.text.includes("ITF")).toBe(cc === "ng");
   });
 
@@ -217,7 +217,7 @@ describe("AI + Cybersecurity Professional Accelerator corporate pages", () => {
     expect(res.text).not.toMatch(/typically|6 to 10|half a day/i);
     expect(res.text).not.toContain("(link:");
     expect(res.text).not.toContain("**");
-    expect(res.text.includes('name="delivery"')).toBe(cc === "ng");
+    expect(res.text).not.toContain('name="delivery"');
     expect(res.text.includes("ITF")).toBe(cc === "ng");
   });
 
@@ -317,10 +317,11 @@ describe("Director resources and the employer-first menu (2026-11-08)", () => {
     expect((await request(app).get("/ke/corporate-training")).text).toContain("Kenya&#39;s Data Protection Act, 2019");
   });
 
-  it("groups the learner links under For individuals on corporate pages only", async () => {
+  it("keeps For individuals out of the corporate menu, in the top bar and footer (2026-11-13)", async () => {
     for (const path of ["/", "/za/corporate-training", "/ng/corporate-training/cybersecure-workforce", "/ai-use-policy-template"]) {
       const html = (await request(app).get(path)).text;
-      expect(html).toContain('<li class="nav-group"><details><summary>For individuals</summary>');
+      expect(html).not.toContain("<summary>For individuals</summary>");
+      expect(html).toMatch(/<a class="util-individuals" href="\/(ng|za|ke|gh)">For individuals &rarr;<\/a>/);
       expect(html).toContain('<a href="/ai-cyber-readiness-check">Free Readiness Check</a>');
       expect(html).toContain("Corporate training &middot;");
     }

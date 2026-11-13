@@ -26,7 +26,6 @@ export async function createCorporateLead(input: CorporateLeadInput): Promise<Le
   const now = new Date();
   const programme = CORPORATE_LEAD_PROGRAMMES[input.programme ?? "ai-workflow"];
   const details: Record<string, string> = {
-    jobTitle: input.jobTitle,
     organisation: input.organisation,
     employees: input.employees,
     intent: input.intent,
@@ -34,6 +33,7 @@ export async function createCorporateLead(input: CorporateLeadInput): Promise<Le
     consentAt: now.toISOString(),
     consentText: CORPORATE_CONSENT_TEXT,
   };
+  if (input.jobTitle) details.jobTitle = input.jobTitle;
   if (input.department) details.department = input.department;
   if (input.requirement) details.requirement = input.requirement;
   if (input.delivery) details.delivery = input.delivery;
@@ -43,7 +43,7 @@ export async function createCorporateLead(input: CorporateLeadInput): Promise<Le
   const lead = await Lead.create({
     name: input.name,
     email: input.email,
-    phone: input.phone,
+    phone: input.phone ?? null,
     course: programme.course,
     source: programme.source,
     sector: input.organisation,

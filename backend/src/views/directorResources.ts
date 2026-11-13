@@ -1,9 +1,11 @@
-import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
+import { COUNTRIES, CountryCode, MARKET_ORDER, formatMoney } from "../constants/countries";
 import { READINESS_BANDS, READINESS_QUESTIONS } from "../constants/readinessCheck";
 import { CORPORATE_EMPLOYEE_BANDS } from "../validators/corporateLeads.validators";
 import { CORPORATE_HUB_PATH, options } from "./corporateAiWorkflow";
+import { CORPORATE_PRICES, PricedProgramme } from "../constants/corporatePricing";
+import { CALL_URL, PILOT_STAFF, brochurePath, callButton, pilotTotal } from "./corporateOffers";
 import { DATA_PROTECTION_LAW, ORGANIZATION_LD, countryCorporatePath } from "./corporateLocal";
-import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, footer, head, header, scripts } from "./countryHome";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts } from "./countryHome";
 
 // Free resources for business owners, CEOs and managing directors (2026-11-08), linked from
 // the homepage's "Resources" section and menu item:
@@ -27,6 +29,12 @@ export const PROGRAMMES = {
   },
 };
 
+const PRICED: Record<keyof typeof PROGRAMMES, PricedProgramme> = {
+  "cybersecure-workforce": "cybersecure",
+  "ai-workflow": "ai-workflow",
+  "ai-cyber-accelerator": "accelerator",
+};
+
 export function shell(
   ctx: PageContext,
   opts: { title: string; description: string; path: string; jsonLd: object; body: string; extraScript?: string; ogImage?: string },
@@ -47,18 +55,12 @@ export function shell(
 <body data-country="${ctx.country}"${ctx.hub ? " data-hub" : ""}>
 ${SEARCH_OVERLAY}
 <a class="skip-link" href="#main">Skip to main content</a>
-<div class="util-bar">
-  <div class="wrap util-row">
-    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
-    <span>Paleon Training Limited</span>
-    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
-  </div>
-</div>
+${corporateUtilBar(home)}
 ${header(ctx, home, "/", true)}
 <main id="main">
 ${opts.body}
 </main>
-${footer(ctx, home, false, "/")}
+${footer(ctx, home, false, "/", true)}
 ${scripts(ctx)}
 ${opts.extraScript ?? ""}
 </body>
@@ -145,7 +147,18 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
     questions: READINESS_QUESTIONS.map((q) => ({ id: q.id, area: q.area, q: q.q })),
     bands: READINESS_BANDS,
     programmes: Object.fromEntries(
-      Object.entries(PROGRAMMES).map(([k, p]) => [k, { name: p.name, url: `${COUNTRIES[ctx.country].site.path}/${p.slug}` }]),
+      Object.entries(PROGRAMMES).map(([k, p]) => {
+        const priced = PRICED[k as keyof typeof PROGRAMMES];
+        return [
+          k,
+          {
+            name: p.name,
+            url: `${COUNTRIES[ctx.country].site.path}/${p.slug}`,
+            price: `${formatMoney(ctx.country, CORPORATE_PRICES[priced][ctx.country])} per learner self-paced; ${PILOT_STAFF}-learner pilot ${formatMoney(ctx.country, pilotTotal(priced, ctx.country))}`,
+            brochure: brochurePath(priced, ctx.country),
+          },
+        ];
+      }),
     ),
   };
   const countryOptions =
@@ -187,13 +200,19 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
         </div>
         <h3>Your priority gaps</h3>
         <ol class="rc-gaps" id="rcGaps"></ol>
-        <h3>What we suggest</h3>
-        <ul class="ca-links" id="rcSuggest"></ul>
+        <h3>Our recommendation for your organisation</h3>
+        <p class="ca-p" id="rcReason"></p>
+        <ul class="rc-suggest" id="rcSuggest"></ul>
+        <div class="rc-next">
+          <p class="ca-p"><strong>Next step: a proposal shaped around this result.</strong> Tick &ldquo;Send me a tailored proposal&rdquo; below and we will reply within one working day, or talk it through first.</p>
+          <div class="ca-ctas">${callButton(false)}</div>
+          <p class="ca-hint">Not ready for a full rollout? Start with a ${PILOT_STAFF}-learner pilot or a free leadership taster session.</p>
+        </div>
         <p class="ca-hint">A quick self-assessment to help you prioritise. It is not an audit, a certification or legal advice.</p>
 
         <div class="rc-email" id="rcEmailWrap">
           <h2 class="section-title">Email me my scorecard</h2>
-          <p class="ca-p">We will send your score, your priority gaps and practical next steps to share with your management team.</p>
+          <p class="ca-p">We will send your score, your priority gaps, our recommendation with costs, and a brochure and business case to share with your management team.</p>
           <form class="ca-form" id="rcEmail" novalidate>
             <div class="ca-grid">
               <div class="form-row"><label class="form-label" for="rc-name">Name</label><input class="form-input" id="rc-name" name="name" autocomplete="name" required maxlength="150"></div>
@@ -204,14 +223,15 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
               <div class="form-row"><label class="form-label" for="rc-employees">Number of employees</label><select class="form-select" id="rc-employees" name="employees" required>${options(CORPORATE_EMPLOYEE_BANDS, "Choose one")}</select></div>
             </div>
             <div class="ca-hp" aria-hidden="true"><label for="rc-website">Website</label><input id="rc-website" name="website" tabindex="-1" autocomplete="off"></div>
+            <label class="consent-check rc-proposal"><input type="checkbox" name="proposal" checked> <span><strong>Send me a tailored training proposal</strong> based on this result (no obligation).</span></label>
             <label class="consent-check"><input type="checkbox" name="consent" required> <span>I agree that Paleon Training may email me my scorecard and contact me about it, as described in the <a href="/privacy">Privacy Policy</a>.</span></label>
             <label class="consent-check"><input type="checkbox" name="updates"> <span>Send me occasional updates about Paleon corporate training. I can unsubscribe at any time. <span class="optional">(optional)</span></span></label>
             <p class="form-error" id="rcError" role="alert" hidden></p>
-            <button type="submit" class="btn btn-signal btn-lg btn-block" id="rcSubmit">Email my scorecard</button>
+            <button type="submit" class="btn btn-signal btn-lg btn-block" id="rcSubmit">Email my scorecard and recommendation</button>
           </form>
           <div class="ca-thanks" id="rcThanks" hidden tabindex="-1">
             <h3>Your scorecard is on its way.</h3>
-            <p>Check your inbox in the next few minutes. Want to talk it through? Reply to the email, or <a href="/#enquiry">book a corporate training consultation</a>.</p>
+            <p>Check your inbox in the next few minutes. If you asked for a proposal, we will send it within one working day. Want to talk it through sooner? <a href="${CALL_URL}" target="_blank" rel="noopener">Book a 20-minute call</a>.</p>
           </div>
         </div>
       </div>

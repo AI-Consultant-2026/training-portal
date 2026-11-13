@@ -26,6 +26,9 @@ import { renderCorporateCheckoutComplete } from "./views/corporateCheckout";
 import * as corporateOrderService from "./services/corporateOrder.service";
 import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
+import { renderSector, renderSectorsIndex, SECTORS_PATH } from "./views/corporateSectors";
+import { BROCHURE_BASE, BUSINESS_CASE_BASE, parsePdfSlug } from "./views/corporateOffers";
+import { streamBrochurePdf, streamBusinessCasePdf } from "./services/corporateBrochure.service";
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { countryCorporatePath } from "./views/corporateLocal";
 import { COUNTRY_CORPORATE_CODES, renderCountryCorporate } from "./views/countryCorporate";
@@ -262,6 +265,35 @@ export function createApp() {
     const query = req.originalUrl.indexOf("?");
     res.redirect(301, query === -1 ? "/" : "/" + req.originalUrl.slice(query));
   });
+  // The corporate sector pages (2026-11-13): an index and one page per sector, for all four
+  // countries (?country= or the remembered country sets prices and the data protection law).
+  app.get(SECTORS_PATH, (req, res) => {
+    const asked = String(req.query.country ?? "").toUpperCase();
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderSectorsIndex(isCountryCode(asked) ? asked : null, chosenCountry(req)));
+  });
+  app.get(`${SECTORS_PATH}/:slug`, (req, res, next) => {
+    const asked = String(req.query.country ?? "").toUpperCase();
+    const html = renderSector(req.params.slug, isCountryCode(asked) ? asked : null, chosenCountry(req));
+    if (!html) return next();
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(html);
+  });
+  // The PDFs a corporate buyer can forward for sign-off (2026-11-13): a brochure and a
+  // one-page business case per programme and country, built from the live price table.
+  const sendCorporatePdf =
+    (stream: typeof streamBrochurePdf, kind: string) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      const parsed = parsePdfSlug(req.params.slug);
+      if (!parsed) return next();
+      res.set("Cache-Control", "public, max-age=3600");
+      res.type("application/pdf");
+      res.set("Content-Disposition", `inline; filename="paleon-${kind}-${req.params.slug}.pdf"`);
+      stream(parsed.programme, parsed.code, res);
+    };
+  app.get(`${BROCHURE_BASE}/:slug([a-z-]+)\\.pdf`, sendCorporatePdf(streamBrochurePdf, "brochure"));
+  app.get(`${BUSINESS_CASE_BASE}/:slug([a-z-]+)\\.pdf`, sendCorporatePdf(streamBusinessCasePdf, "business-case"));
   // Where Flutterwave returns a company after buying learner places (2026-11-12). The
   // payment is checked with Flutterwave here too, in case the webhook is late.
   app.get("/corporate-checkout/complete", async (req, res, next) => {
@@ -277,7 +309,8 @@ export function createApp() {
     const asked = String(req.query.country ?? "").toUpperCase();
     res.set("Cache-Control", "private, no-cache");
     res.vary("Cookie");
-    res.type("html").send(renderCorporateHub(isCountryCode(asked) ? asked : null, chosenCountry(req)));
+    res.vary("CF-IPCountry");
+    res.type("html").send(renderCorporateHub(isCountryCode(asked) ? asked : null, chosenCountry(req), visitorCountry(req)));
   });
   // AI Workflow programme promotion page with the programme video (2026-11-07), linked
   // from the hub. Express routing is case-insensitive, so the lowercase URL works too.

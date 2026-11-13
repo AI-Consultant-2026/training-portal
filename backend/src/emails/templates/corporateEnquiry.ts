@@ -22,17 +22,24 @@ export function buildCorporateEnquiryEmail(lead: {
     : /cybersecure/i.test(programme)
       ? "cybersecurity training"
       : "AI training";
-  const wants = d.intent === "proposal" ? "a corporate training proposal" : "a consultation";
+  const wants =
+    d.intent === "proposal"
+      ? "a corporate training proposal"
+      : d.intent === "reserve"
+        ? "to reserve places in the December 2026 cohort"
+        : d.intent === "taster"
+          ? "a free leadership taster session"
+          : "a consultation";
   const lines = [
     `New corporate ${topic} enquiry (${countryName}). They asked for ${wants}.`,
     `Programme: ${d.programme ?? "AI Workflow Productivity"}`,
     `Name: ${lead.name}`,
-    `Job title: ${d.jobTitle ?? ""}`,
+    ...(d.jobTitle ? [`Job title: ${d.jobTitle}`] : []),
     `Organisation: ${d.organisation ?? ""}`,
     `Email: ${lead.email}`,
   ];
   if (lead.phone) lines.push(`Phone / WhatsApp: ${lead.phone}`);
-  lines.push(`Employees: ${d.employees ?? ""}`);
+  lines.push(`Headcount: ${d.employees ?? ""}`);
   if (d.department) lines.push(`Department / team: ${d.department}`);
   if (d.requirement) lines.push(`Training requirement: ${d.requirement}`);
   if (d.delivery) lines.push(`Preferred delivery: ${d.delivery}`);
@@ -44,7 +51,7 @@ export function buildCorporateEnquiryEmail(lead: {
   return {
     to: config.corporateEnquiriesEmail,
     replyTo: lead.email,
-    subject: `Corporate ${topic} enquiry: ${d.organisation ?? lead.name} (${countryName})`,
+    subject: `${d.intent === "reserve" ? "Cohort reservation" : d.intent === "taster" ? "Leadership taster request" : `Corporate ${topic} enquiry`}: ${d.organisation ?? lead.name} (${countryName})`,
     text: lines.join("\n"),
     html: wrapHtml(lines),
   };

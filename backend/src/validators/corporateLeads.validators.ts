@@ -65,7 +65,8 @@ export type CorporateProgramme = (typeof CORPORATE_PROGRAMMES)[number];
 // forms don't ask.
 export const CORPORATE_DELIVERY = ["Online", "In-house", "Hybrid", "Not sure"] as const;
 
-export const CORPORATE_INTENTS = ["consultation", "proposal"] as const;
+// reserve = the December 2026 cohort, taster = the free leadership session (2026-11-13).
+export const CORPORATE_INTENTS = ["consultation", "proposal", "reserve", "taster"] as const;
 
 // The words the visitor agreed to, saved with the lead.
 export const CORPORATE_CONSENT_TEXT =
@@ -84,11 +85,17 @@ const optionalText = (max: number) =>
 export const corporateLeadSchema = z.object({
   body: z.object({
     name: short(),
-    jobTitle: short(),
+    // Optional since the form was shortened (2026-11-13); older pages still send them.
+    jobTitle: optionalText(150),
     organisation: short(200),
     country: z.enum(COUNTRY_CODES),
     email: z.string().trim().email().max(200),
-    phone: z.string().trim().regex(PHONE_REGEX),
+    phone: z
+      .string()
+      .trim()
+      .optional()
+      .transform((v) => (v ? v : undefined))
+      .refine((v) => v === undefined || PHONE_REGEX.test(v), { message: "Invalid phone number" }),
     employees: z.enum(CORPORATE_EMPLOYEE_BANDS),
     department: z.enum(CORPORATE_DEPARTMENTS).optional(),
     requirement: z.enum(ALL_REQUIREMENTS).optional(),

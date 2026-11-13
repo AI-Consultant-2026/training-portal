@@ -1,3 +1,4 @@
+import { SECTORS_PATH } from "./corporateSectorsData";
 import {
   COUNTRIES,
   CountryCode,
@@ -235,6 +236,30 @@ export function previewHref(country: CountryCode, slug: string): string {
 // the logo goes: the corporate training homepage "/" on every page since 2026-11-09.
 // `corporate` (2026-11-08) is the employer-first menu used on the corporate pages: the
 // learner sections are grouped under "For individuals".
+
+// The thin bar above the header on every corporate page (2026-11-13): one email, one
+// WhatsApp line, and the link for individual learners, moved out of the main navigation so
+// business buyers are not distracted by it.
+export function corporateUtilBar(home: string): string {
+  return `<div class="util-bar">
+  <div class="wrap util-row">
+    <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
+    <a href="https://wa.me/447508823495" target="_blank" rel="noopener">WhatsApp +44 7508 823495</a>
+    <span class="util-note">Mon&ndash;Fri, 10am&ndash;7pm WAT (9am&ndash;6pm GMT)</span>
+    <a class="util-individuals" href="${home}">For individuals &rarr;</a>
+  </div>
+</div>`;
+}
+
+const SECTOR_FOOTER_LINKS = [
+  ["banking-financial-services", "Banking &amp; financial services"],
+  ["healthcare", "Healthcare"],
+  ["public-sector", "Public sector"],
+  ["oil-and-gas", "Oil &amp; gas"],
+]
+  .map(([slug, label]) => `<li><a href="${SECTORS_PATH}/${slug}">${label}</a></li>`)
+  .join("");
+
 export function header(ctx: PageContext, home: string, logoHref = "/", corporate = false): string {
   const c = COUNTRIES[ctx.country];
   const place = ctx.hub ? "Africa" : escapeHtml(c.name);
@@ -245,11 +270,9 @@ export function header(ctx: PageContext, home: string, logoHref = "/", corporate
   const links = corporate
     ? `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
         <li><a href="/ai-cyber-readiness-check">Free Readiness Check</a></li>
+        <li><a href="${SECTORS_PATH}">Sectors</a></li>
         <li><a href="/#resources">Resources</a></li>
-        <li class="nav-group"><details><summary>For individuals</summary><ul class="nav-sub">
-        ${learnerLinks}
-        <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
-        </ul></details></li>
+        <li class="nav-phone-only"><a href="${home}">For individuals</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>`
     : `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
@@ -588,7 +611,7 @@ const NIGERIA_GUIDES: [string, string][] = [
 // Footer (2026-11-08): the country links go to each country's corporate training page, and
 // the "Corporate Training" column lists the three corporate programmes (on the homepage,
 // its sections; elsewhere, the visitor's country pages).
-export function footer(ctx: PageContext, home: string, nigeriaHome = false, logoHref = home): string {
+export function footer(ctx: PageContext, home: string, nigeriaHome = false, logoHref = home, corporate = false): string {
   const countries = MARKET_ORDER.map((code) => {
     const k = COUNTRIES[code];
     return `<li><a class="footer-country" href="${countryCorporatePath(code)}" data-pick-country="${code}">${flagSvg(code, "flag flag-sm")}<span>${escapeHtml(k.name)}</span></a></li>`;
@@ -607,7 +630,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
     <div class="footer-brand">
       <a class="logo" href="${logoHref}">${LOGO_MARK("#F7F4EC")}<span class="logo-word">Paleon Training</span></a>
       <p class="footer-tag">Digital skills for Africa&rsquo;s growth industries. Led from London, delivered in Nigeria, South Africa, Kenya and Ghana.</p>
-      <p class="footer-tag">Paleon Training Limited<br>No.5 Beji Court, Off NNPC Junior Staff Club 10<br>Warri, 320001, Delta State, Nigeria<br><a href="tel:+2347077149215">+234 707 714 9215 (WhatsApp/Call)</a></p>
+      <p class="footer-tag">Paleon Training Limited<br>No.5 Beji Court, Off NNPC Junior Staff Club 10<br>Warri, 320001, Delta State, Nigeria${corporate ? "" : '<br><a href="tel:+2347077149215">+234 707 714 9215 (WhatsApp/Call)</a>'}</p>
     </div>
     <nav aria-label="Countries">
       <h2 class="footer-heading">Countries</h2>
@@ -615,7 +638,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
     </nav>
     <nav aria-label="Corporate Training">
       <h2 class="footer-heading">Corporate Training</h2>
-      <ul class="footer-links">${programmes}</ul>
+      <ul class="footer-links">${programmes}${corporate ? SECTOR_FOOTER_LINKS : ""}</ul>
       <h2 class="footer-heading footer-heading-gap">Paleon</h2>
       <ul class="footer-links">
         <li><a href="${home}#why">Why Paleon</a></li>
@@ -629,10 +652,17 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
     </nav>
     <div>
       <h2 class="footer-heading">Contact</h2>
-      <ul class="footer-contact">
+      <ul class="footer-contact">${
+        corporate
+          ? `
+        <li>Email: <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a></li>
+        <li>WhatsApp: <a href="https://wa.me/447508823495" target="_blank" rel="noopener">+44 7508 823495</a></li>
+        <li><a href="${home}">For individuals: courses for graduates &rarr;</a></li>`
+          : `
         <li><a href="tel:+447508823495">+44 7508 823495 (WhatsApp/Call)</a></li>
         <li>Courses &amp; fees: <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a></li>
-        <li>Portal problems: <a href="/support">Support</a> &middot; <a href="mailto:support@paleontraining.com">support@paleontraining.com</a></li>
+        <li>Portal problems: <a href="/support">Support</a> &middot; <a href="mailto:support@paleontraining.com">support@paleontraining.com</a></li>`
+      }
         <li>Paleon Training (Operations)<br>42 Okemore Gardens, Orpington, Kent BR5 3PH, United Kingdom</li>
       </ul>
     </div>

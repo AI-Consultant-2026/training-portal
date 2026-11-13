@@ -546,7 +546,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "Tell us about your organisation, your workforce and your concerns. We will recommend the right approach."
           },
           {
-            "p": "Email: corporate@paleontraining.com · Call: +234 707 714 9215 · WhatsApp: +44 7508 823495"
+            "p": "Email: corporate@paleontraining.com · WhatsApp: +44 7508 823495"
           }
         ]
       }
@@ -554,7 +554,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
   },
   "ZA": {
     "title": "Cybersecurity Awareness Training for Employees in South Africa",
-    "description": "Live online cybersecurity awareness training for companies in Johannesburg, Cape Town, Durban and across South Africa. Phishing, fraud and AI risks. Get a proposal.",
+    "description": "In-house and online cybersecurity awareness training for companies in Johannesburg, Cape Town, Durban and across South Africa. Phishing, fraud and AI risks. Get a proposal.",
     "images": {
       "hero": "South African finance team verifying a supplier payment request together in a Johannesburg office.",
       "awareness": "South African colleagues discussing a suspicious email in a Cape Town office.",
@@ -584,7 +584,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online training across South Africa · Department-specific scenarios · Personal-information handling built in · Covers AI-related risks"
+            "p": "**Trust line:** In-house or online training across South Africa · Department-specific scenarios · Personal-information handling built in · Covers AI-related risks"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps South African organisations train employees to recognise phishing and social engineering, handle personal and business information responsibly, and report suspected incidents quickly."
@@ -858,7 +858,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "All training in South Africa is delivered live online with a facilitator."
+            "p": "In South Africa we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
           },
           {
             "table": [
@@ -897,7 +897,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** understand your organisation, priorities and existing controls.",
               "**Assess:** identify workforce awareness gaps.",
               "**Customise:** adapt scenarios to your sector, systems and teams.",
-              "**Train:** deliver live online sessions.",
+              "**Train:** deliver in-house, live online or hybrid sessions.",
               "**Practise:** apply learning to realistic scenarios.",
               "**Strengthen:** review results and plan refreshers."
             ]
@@ -951,10 +951,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Can departments receive tailored examples?** Yes. Finance, HR, contact centres and others each get relevant scenarios."
           },
           {
-            "p": "**Is the training available online?** Yes. All training in South Africa is live online."
+            "p": "**Is the training available online?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across South Africa."
           },
           {
-            "p": "**Can it be delivered in-house?** Training is delivered live online, so teams in every province can join the same sessions with a facilitator."
+            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**Does it cover phishing?** Yes: email, SMS, phone calls and business email compromise."
@@ -1059,7 +1059,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
   },
   "GH": {
     "title": "Cybersecurity Awareness Training for Employees in Ghana",
-    "description": "Live online cybersecurity awareness training for companies in Accra, Kumasi, Tema and across Ghana. Phishing, mobile money scams and fraud. Get a proposal.",
+    "description": "In-house and online cybersecurity awareness training for companies in Accra, Kumasi, Tema and across Ghana. Phishing, mobile money scams and fraud. Get a proposal.",
     "images": {
       "hero": "Ghanaian professionals reviewing a suspicious message on a phone and laptop in an Accra office.",
       "awareness": "Ghanaian colleagues discussing how to verify a payment request.",
@@ -1089,7 +1089,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online training across Ghana · Plain-language, for every employee · Mobile and messaging security included · Covers AI-related risks"
+            "p": "**Trust line:** In-house or online training across Ghana · Plain-language, for every employee · Mobile and messaging security included · Covers AI-related risks"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps organisations in Ghana train employees to recognise phishing, payment and mobile-money scams, protect business and personal data, and report suspicious activity quickly."
@@ -1363,7 +1363,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "All training in Ghana is delivered live online with a facilitator."
+            "p": "In Ghana we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
           },
           {
             "table": [
@@ -1402,7 +1402,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** we learn about your organisation, people and concerns.",
               "**Assess:** we identify your workforce's awareness needs.",
               "**Customise:** we adapt examples and exercises to your sector and teams.",
-              "**Train:** we deliver CyberSecure Workforce live online with a facilitator.",
+              "**Train:** we deliver CyberSecure Workforce in-house, live online or hybrid, with a facilitator.",
               "**Practise:** employees apply what they learn to realistic scenarios.",
               "**Strengthen:** we review with you and suggest next steps for continued awareness."
             ]
@@ -1456,10 +1456,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Can departments receive tailored examples?** Yes."
           },
           {
-            "p": "**Is the training available online?** Yes. All training in Ghana is live online."
+            "p": "**Is the training available online?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across Ghana."
           },
           {
-            "p": "**Can it be delivered in-house?** Training is delivered live online, so teams across Ghana can join the same sessions with a facilitator."
+            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**Does it cover phishing and mobile-money scams?** Yes, along with SMS, WhatsApp and phone scams."
@@ -1561,7 +1561,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
   },
   "KE": {
     "title": "Cybersecurity Awareness Training for Employees in Kenya",
-    "description": "Live online cybersecurity awareness training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Phishing, account takeover and AI scams. Get a proposal.",
+    "description": "In-house and online cybersecurity awareness training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Phishing, account takeover and AI scams. Get a proposal.",
     "images": {
       "hero": "Kenyan team reviewing a security prompt on a phone and laptop in a Nairobi office.",
       "awareness": "Kenyan colleagues discussing a suspicious voice note.",
@@ -1591,7 +1591,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** Live online training across Kenya · Tailored by team · Mobile, cloud and AI risks covered · Practical scenarios throughout"
+            "p": "**Trust line:** In-house or online training across Kenya · Tailored by team · Mobile, cloud and AI risks covered · Practical scenarios throughout"
           },
           {
             "p": "**Definition box:** CyberSecure Workforce is a corporate cybersecurity awareness programme from Paleon Training. It helps Kenyan organisations train employees to recognise phishing, account takeover and AI-assisted scams, protect business and personal data, and report suspicious activity quickly."
@@ -1865,7 +1865,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "All training in Kenya is delivered live online with a facilitator."
+            "p": "In Kenya we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
           },
           {
             "table": [
@@ -1904,7 +1904,7 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
               "**Consult:** we learn about your organisation, people and concerns.",
               "**Assess:** we identify your workforce's awareness needs.",
               "**Customise:** we adapt examples and exercises to your sector and teams.",
-              "**Train:** we deliver CyberSecure Workforce live online with a facilitator.",
+              "**Train:** we deliver CyberSecure Workforce in-house, live online or hybrid, with a facilitator.",
               "**Practise:** employees apply what they learn to realistic scenarios.",
               "**Strengthen:** we review with you and suggest next steps for continued awareness."
             ]
@@ -1958,10 +1958,10 @@ export const CYBERSECURE_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", CyberPageCon
             "p": "**Can departments receive tailored examples?** Yes."
           },
           {
-            "p": "**Is the training available online?** Yes. All training in Kenya is live online."
+            "p": "**Is the training available online?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across Kenya."
           },
           {
-            "p": "**Can it be delivered in-house?** Training is delivered live online, so teams across Kenya can join the same sessions with a facilitator."
+            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
           },
           {
             "p": "**Does it cover phishing and account takeover?** Yes, including SIM-swap warning signs, push-prompt fatigue and business email compromise."

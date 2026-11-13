@@ -157,9 +157,9 @@ describe("Corporate homepage, remembered country and the country banner", () => 
     ]) {
       expect(res.text).toContain(`<link rel="alternate" hreflang="${lang}" href="https://paleontraining.com${href}">`);
     }
-    // The logo goes home; the learner sections are on /ng.
+    // The logo goes home; individuals are sent to /ng from the top bar (2026-11-13).
     expect(res.text).toContain('<a class="logo" href="/">');
-    expect(res.text).toContain('href="/ng#courses"');
+    expect(res.text).toContain('<a class="util-individuals" href="/ng">');
     expect(res.text).not.toContain('href="/#courses"');
   });
 
@@ -167,7 +167,7 @@ describe("Corporate homepage, remembered country and the country banner", () => 
     const res = await request(app).get("/").set("Cookie", "paleon_country=KE");
     expect(res.status).toBe(200);
     expect(res.text).toContain('<body data-country="KE" data-hub>');
-    expect(res.text).toContain('href="/ke#courses"');
+    expect(res.text).toContain('<a class="util-individuals" href="/ke">');
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/">');
   });
 
@@ -553,7 +553,7 @@ describe("Country kept across the corporate hub and free lessons (2026-11-03)", 
     expect(res.text).toContain(`Corporate training &middot; ${name}`);
     expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/">`);
     const nav = res.text.slice(res.text.indexOf('id="navLinks"'), res.text.indexOf("</ul>", res.text.indexOf('id="navLinks"')));
-    expect(nav).toContain(`href="/${cc}#courses"`);
+    expect(nav).toContain(`<a href="/${cc}">For individuals</a>`);
     expect(nav).toContain(`href="/?country=${cc}"`);
   });
 

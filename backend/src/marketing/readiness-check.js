@@ -73,14 +73,27 @@
 
     var order = cyber <= ai ? ["cybersecure-workforce", "ai-workflow"] : ["ai-workflow", "cybersecure-workforce"];
     if (cyber > 70 && ai > 70) order.unshift("ai-cyber-accelerator");
+    // A tailored recommendation (2026-11-13): why the first programme, then what each costs.
+    var reason = document.getElementById("rcReason");
+    reason.textContent =
+      order[0] === "ai-cyber-accelerator"
+        ? "Your scores are strong in both areas, so the next step is developing the specialists who will lead secure AI adoption."
+        : order[0] === "cybersecure-workforce"
+          ? "Cybersecurity (" + cyber + "%) is your weaker area, so start there: most incidents begin with a person, and this is the fastest gap to close."
+          : "AI use (" + ai + "%) is your weaker area, so start there: clear rules and practical training turn ad-hoc AI use into safe, measurable time savings.";
     var suggest = document.getElementById("rcSuggest");
     suggest.textContent = "";
-    order.forEach(function (key) {
+    order.forEach(function (key, i) {
       var p = data.programmes[key];
       var li = document.createElement("li");
-      var a = el("a", p.name + " →");
+      var a = el("a", (i === 0 ? "Start with " : "Then ") + p.name + " →");
       a.href = p.url;
       li.appendChild(a);
+      li.appendChild(el("span", p.price));
+      var b = el("a", "Brochure (PDF)");
+      b.href = p.brochure;
+      b.className = "rc-brochure";
+      li.appendChild(b);
       suggest.appendChild(li);
     });
 
@@ -105,7 +118,7 @@
       return;
     }
     var fd = new FormData(form);
-    var body = { consent: true, updates: fd.get("updates") === "on", answers: answers, page: location.pathname };
+    var body = { consent: true, updates: fd.get("updates") === "on", proposal: fd.get("proposal") === "on", answers: answers, page: location.pathname };
     ["name", "jobTitle", "organisation", "country", "email", "employees", "website"].forEach(function (k) {
       var v = fd.get(k);
       if (typeof v === "string" && v.trim() !== "") body[k] = v.trim();
@@ -122,7 +135,7 @@
         var thanks = document.getElementById("rcThanks");
         thanks.hidden = false;
         thanks.focus();
-        track("generate_lead", { form: "readiness_check", lead_type: "corporate", country: body.country, score_band: band });
+        track("generate_lead", { form: "readiness_check", lead_type: "corporate", country: body.country, score_band: band, wants_proposal: body.proposal });
       })
       .catch(function (err) {
         errorBox.textContent = (err && err.userMessage) || "Something went wrong. Please email corporate@paleontraining.com.";
