@@ -37,7 +37,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
       expect(html).toContain(
         `<strong>Company onboarding: ${places} December 2026 slots left.</strong> Each slot covers portal setup, your staff sign-up link and a manager login for one organisation. Individual places bought online start today.`,
       );
-      expect(html).not.toMatch(/intake/i);
+      expect(html).not.toMatch(/intake|December 2026 cohort/i);
       expect(html).not.toMatch(/Booked until/);
       expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve a December onboarding slot</a>`);
     }

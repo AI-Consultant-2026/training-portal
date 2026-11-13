@@ -114,7 +114,9 @@ function field(c: CorporatePageContent, section: string, label: string): string 
 }
 
 export function ctaButton(label: string, dark: boolean, buyHref = "#buy", programme: PricedProgramme = "ai-workflow"): string {
-  if (label === RESERVE_CTA) return reserveButton(programme);
+  // Any "Reserve ..." label in the page content (e.g. "Reserve a December 2026 cohort") is the
+  // onboarding-slot button, which disappears once December is full.
+  if (label === RESERVE_CTA || /^reserve\b/i.test(label)) return reserveButton(programme);
   if (label === WORKFORCE_CTA) {
     return `<a class="btn btn-signal btn-lg" href="${buyHref}" data-buy-cta>${escapeHtml(label)}</a>`;
   }

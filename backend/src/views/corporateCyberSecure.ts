@@ -101,7 +101,7 @@ function blocks(list: CyberBlock[], dark: boolean, listClass = "ca-list"): strin
       if ("ul" in block) return `<ul class="${listClass}">${block.ul.map((item) => `<li>${richLinks(item)}</li>`).join("")}</ul>`;
       if ("table" in block) return table(block.table);
       const l = labelled(block.p);
-      if (l && /cta/i.test(l[0])) return `<div class="ca-ctas">${ctaButton(l[1], dark)}</div>`;
+      if (l && /cta/i.test(l[0])) return `<div class="ca-ctas">${ctaButton(l[1], dark, "#buy", "cybersecure")}</div>`;
       return `<p class="ca-p">${richLinks(block.p)}</p>`;
     })
     .join("\n");
