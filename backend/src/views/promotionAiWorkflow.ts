@@ -27,10 +27,10 @@ const POSTER = "/videos/corporate/ai-workflow-productivity.jpg";
 
 
 const DELIVERY: Record<string, string> = {
-  NG: "In-house, online or hybrid. Supports ITF reimbursement claims.",
-  ZA: "In-house, live online or self-paced for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
-  KE: "In-house, live online or self-paced for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
-  GH: "In-house, live online or self-paced for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
+  NG: "Online and in-house, self-paced. Supports ITF reimbursement claims.",
+  ZA: "Online and in-house, self-paced, for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa.",
+  KE: "Online and in-house, self-paced, for companies in Nairobi, Mombasa, Kisumu and across Kenya.",
+  GH: "Online and in-house, self-paced, for companies in Accra, Kumasi, Tema, Takoradi and across Ghana.",
 };
 
 // AI brings new cyber risks, so the page points employers to CyberSecure Workforce as well
@@ -102,7 +102,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "Is the training the same in every country?",
-    "The programme is the same in every country: self-paced online per learner, or live online, in-house or hybrid by quote. Examples are adapted to your sector and teams, and Nigerian employers can use our records for ITF reimbursement claims.",
+    "The programme is the same in every country: online and in-house only: self-paced courses in a private space for your staff, bought per learner or organisation-wide. Examples are adapted to your sector and teams, and Nigerian employers can use our records for ITF reimbursement claims.",
   ],
   [
     "How do you measure the results?",
@@ -110,11 +110,11 @@ const FAQ: [string, string][] = [
   ],
   [
     "How much does it cost?",
-    "Pricing depends on group size, delivery method and customisation. Request a proposal and we will send a written quotation.",
+    "Pricing depends on group size and customisation. Request a proposal and we will send a written quotation.",
   ],
   [
     "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    "Yes. The programme is delivered in-house, live online or hybrid, or self-paced online, for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema). In Nigeria we also train in-house or hybrid.",
+    "Yes. The programme is delivered online and in-house, as self-paced courses private to your staff, for companies across South Africa (including Johannesburg, Cape Town, Durban and Pretoria), Kenya (including Nairobi, Mombasa and Kisumu) and Ghana (including Accra, Kumasi and Tema), as well as Nigeria.",
   ],
   [
     "Do you also offer cybersecurity training for staff?",
@@ -122,7 +122,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "When can we start?",
-    `Self-paced places can start today. For live delivery, ${cohortSentence("ai-workflow").charAt(0).toLowerCase()}${cohortSentence("ai-workflow").slice(1)} Reserve now and complete the needs assessment in advance.`,
+    `${cohortSentence("ai-workflow")} Reserve places now and complete the needs assessment in advance.`,
   ],
   [
     "How do we contact you?",
@@ -160,7 +160,7 @@ function jsonLd(url: string): object {
         name: "AI workforce and process transformation training",
         serviceType: "AI workforce and process transformation training",
         description:
-          "Live, facilitated AI productivity and process transformation training for employees in every department, with responsible-use rules and human review built in.",
+          "Online, self-paced AI productivity and process transformation training for employees in every department, private to your organisation, with responsible-use rules and human review built in.",
         url,
         provider: { "@id": `${ORIGIN}/#organization` },
         areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
@@ -171,7 +171,7 @@ function jsonLd(url: string): object {
         "@type": "Course",
         name: "AI Workflow Productivity & Process Transformation",
         description:
-          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered in-house, live online, hybrid or self-paced for companies in South Africa, Kenya, Ghana and Nigeria.",
+          "Corporate AI training that teaches employees to use generative AI safely in their daily work and to redesign repetitive workflows, delivered online and in-house (self-paced, private to your staff) for companies in South Africa, Kenya, Ghana and Nigeria.",
         provider: { "@id": `${ORIGIN}/#organization` },
         url,
         inLanguage: "en",
@@ -236,7 +236,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
           <span class="eyebrow">AI Workflow Productivity &amp; Process Transformation &middot; South Africa, Kenya, Ghana and Nigeria</span>
           <h1 class="hero-title ca-hero-title">AI workforce and process transformation training for companies</h1>
           <p class="ca-headline">Less busywork. Better work. An advantage that lasts.</p>
-          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, in-house, live online or self-paced, for companies in South Africa, Kenya, Ghana and Nigeria.</p>
+          <p class="hero-sub">Your competitors can buy the same AI tools you can. What they cannot buy is a workforce that knows how to use them well, and workflows rebuilt around them. This programme gives your organisation both, online and in-house as self-paced courses private to your staff, for companies in South Africa, Kenya, Ghana and Nigeria.</p>
           ${cohortNotice("ai-workflow")}
           <div class="hero-ctas">
             ${reserveButton("ai-workflow")}
@@ -339,7 +339,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <span class="section-eyebrow">Course structure</span>
       <h2 class="section-title" id="modules-title">10 practical modules</h2>
       <ol class="cs-modules pw-modules">${MODULES.map((m, i) => `<li><span class="cs-num">${i + 1}</span><span>${escapeHtml(m)}</span></li>`).join("")}</ol>
-      <p class="ca-p">Everything is included: needs assessment, instructor-led training, digital resources and prompt templates, exercises and assessments, completion certificates, a management report and a 30-day adoption roadmap.</p>
+      <p class="ca-p">Everything is included: needs assessment, self-paced online training, digital resources and prompt templates, exercises and assessments, completion certificates, a management report and a 30-day adoption roadmap.</p>
     </div>
   </section>
 
@@ -363,7 +363,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <ul class="ca-links">${MARKET_ORDER.map(
         (k) => `<li><a href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[k].name)} &rarr;</a></li>`,
       ).join("")}</ul>
-      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (next live cohort: December 2026, ${COHORT_PLACES.accelerator} places left): ${MARKET_ORDER.map(
+      <p class="ca-p">For IT, security, risk and data teams, the <strong>AI + Cybersecurity Professional Accelerator</strong> develops the people who will lead secure AI adoption (December 2026 intake: ${COHORT_PLACES.accelerator} places left): ${MARKET_ORDER.map(
         (k) => `<a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">${escapeHtml(COUNTRIES[k].name)}</a>`,
       ).join(", ")}.</p>
       <div class="ca-ctas">${reserveButton("ai-workflow")}</div>

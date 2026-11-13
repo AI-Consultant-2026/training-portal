@@ -213,7 +213,7 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
         <div class="rc-next">
           <p class="ca-p"><strong>Next step: a proposal shaped around this result.</strong> Tick &ldquo;Send me a tailored proposal&rdquo; below and we will reply within one working day, or talk it through first.</p>
           <div class="ca-ctas">${callButton(false)}</div>
-          <p class="ca-hint">Not ready for a full rollout? Start with a ${PILOT_STAFF}-learner pilot or a free leadership taster session.</p>
+          <p class="ca-hint">Not ready for a full rollout? Start with a ${PILOT_STAFF}-learner pilot or a free self-paced leadership preview.</p>
         </div>
         <p class="ca-hint">A quick self-assessment to help you prioritise. It is not an audit, a certification or legal advice.</p>
 

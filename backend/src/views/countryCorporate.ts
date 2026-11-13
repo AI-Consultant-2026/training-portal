@@ -34,8 +34,8 @@ import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 // /ng, /za, /ke and /gh/corporate-training: the country's corporate landing page, linked from
 // the homepage's "Choose your country" selector, the header country menu and the footer's
 // country links. Each lists the three corporate programmes for that country. Since
-// 2026-11-13 every country offers self-paced online places, or live online, in-house and
-// hybrid delivery by quote; Nigeria's also supports ITF reimbursement claims.
+// 2026-11-13 every country offers online, in-house training only (self-paced, private to the
+// client's staff; never live, facilitator-led or hybrid); Nigeria's also supports ITF claims.
 
 export const COUNTRY_CORPORATE_CODES: CountryCode[] = ["NG", "ZA", "KE", "GH"];
 
@@ -53,14 +53,14 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: `Do you train companies in ${cityList(code)}?`,
-      a: `Yes. Training is delivered ${deliveryPhrase(code)} for organisations in ${cityList(code)} and anywhere else in ${country}, so every office, branch and remote worker can join the same practical sessions.`,
+      a: `Yes. Training is delivered ${deliveryPhrase(code)} for organisations in ${cityList(code)} and anywhere else in ${country}, so every office, branch and remote worker can take the same practical courses online.`,
     },
     ...(code === "NG"
       ? [{ q: "Can the training support an ITF reimbursement claim?", a: `Yes. ${ITF_NOTE}` }]
       : []),
     {
       q: "When can our team start?",
-      a: `Self-paced places on all three programmes can start today. The next live cohort is December 2026, with ${COHORT_PLACES.cybersecure} places left for CyberSecure Workforce, ${COHORT_PLACES["ai-workflow"]} for AI Workflow Productivity and ${COHORT_PLACES.accelerator} for the Accelerator.`,
+      a: `Places on all three programmes start today. The December 2026 intake has ${COHORT_PLACES.cybersecure} places left for CyberSecure Workforce, ${COHORT_PLACES["ai-workflow"]} for AI Workflow Productivity and ${COHORT_PLACES.accelerator} for the Accelerator.`,
     },
     {
       q: "Can the training be customised for our organisation?",
@@ -145,8 +145,8 @@ export function renderCountryCorporate(code: CountryCode): string {
   const title = `Corporate Training in ${country} | AI & Cybersecurity for Staff`;
   const ng = code === "NG";
   const description = ng
-    ? `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across Nigeria. In-house, online or hybrid; supports ITF claims. Get a proposal.`
-    : `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. In-house, online or self-paced. Get a proposal.`;
+    ? `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across Nigeria. Online and in-house; supports ITF claims. Get a proposal.`
+    : `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. Online and in-house, self-paced. Get a proposal.`;
   const ogImage = `${ORIGIN}/images/og/corporate-ai-workflow-${cc}.jpg`;
   const headHtml = head(ctx, {
     title,
@@ -177,12 +177,12 @@ ${header(ctx, home, "/", true)}
         <span class="eyebrow">Corporate training &middot; ${escapeHtml(country)}</span>
         <h1 class="hero-title ca-hero-title">Corporate training in ${escapeHtml(country)}: AI and cybersecurity training for employees</h1>
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
-        <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Choose self-paced online places per employee, or live online, in-house or hybrid training by quote, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
+        <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is online and in-house: self-paced courses in a private space for your staff only, bought per employee or as an organisation-wide rollout, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
         <div class="hero-ctas">
           ${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}
           ${readinessButton(code, true)}
         </div>
-        <ul class="ca-trust"><li>In-house, online or hybrid across ${escapeHtml(country)}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
+        <ul class="ca-trust"><li>Online and in-house across ${escapeHtml(country)}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
       </div>
       <div class="ca-hero-media">
         <img src="/images/corporate-ai/${code === "NG" ? "ng-corporate" : cc}-hero.jpg" alt="${escapeHtml(code === "NG" ? NG_CORPORATE_HERO_ALT : CORPORATE_AI_CONTENT[code].images.hero)}" width="1600" height="900" fetchpriority="high" decoding="async">
@@ -230,7 +230,7 @@ ${header(ctx, home, "/", true)}
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">Staff training for organisations across ${escapeHtml(country)}</h2>
-      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. Training is delivered in-house at your offices, live online with a facilitator, or hybrid, so head office, branches, sites and remote workers can all take part, scheduled around your working day. Staff can also learn self-paced online.</p>
+      <p class="ca-p">We work with companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. Training is online and in-house: self-paced courses in a private company space for your staff only, so head office, branches, sites and remote workers can all take part around their working day. There are no live or facilitator-led sessions.</p>
       <p class="ca-p">Examples and workplace projects are adapted to your sector: ${ng ? "banking and financial services, oil and gas and energy, telecoms, manufacturing, healthcare, education, government and professional services" : "banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services"}.</p>
       ${ng ? `<p class="ca-p"><strong>ITF reimbursement.</strong> ${escapeHtml(ITF_NOTE)}</p>` : ""}
       <p class="ca-p">Sector pages: ${SECTORS.map((sec) => `<a href="${SECTORS_PATH}/${sec.slug}?country=${cc}">${escapeHtml(sec.name)}</a>`).join(" &middot; ")}.</p>

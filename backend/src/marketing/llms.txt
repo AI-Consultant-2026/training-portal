@@ -1,19 +1,19 @@
 # Paleon Training
 
-> Paleon Training Limited (Warri, Nigeria) runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: in-house, live online or hybrid in Nigeria, and live online with a facilitator across Africa. It also runs self-paced digital skills courses for graduates in Nigeria.
+> Paleon Training Limited (Warri, Nigeria) runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana. Corporate training is online and in-house only: self-paced courses in a private company space for each organisation's staff; it is not live, facilitator-led or hybrid. It also runs self-paced digital skills courses for graduates in Nigeria.
 
-Contact for organisations: corporate@paleontraining.com, +234 707 714 9215. Every corporate programme is led by a live facilitator. Programme Director: Ken Uwotu.
+Contact for organisations: corporate@paleontraining.com, +234 707 714 9215. Programme Director (designs and reviews all corporate courses): Ken Uwotu.
 
 ## Corporate training programmes
 
-- [Corporate training homepage](https://paleontraining.com/): the three programmes, who trains your staff, and how a programme runs
+- [Corporate training homepage](https://paleontraining.com/): the three programmes, who designs the courses, and how a rollout works
 - AI Workflow Productivity & Process Transformation: generative AI for everyday work and redesigning repetitive workflows, with responsible-use rules. [Nigeria](https://paleontraining.com/ng/corporate-training/ai-workflow-productivity) · [South Africa](https://paleontraining.com/za/corporate-training/ai-workflow-productivity) · [Kenya](https://paleontraining.com/ke/corporate-training/ai-workflow-productivity) · [Ghana](https://paleontraining.com/gh/corporate-training/ai-workflow-productivity)
 - CyberSecure Workforce: cybersecurity awareness training for every employee (phishing, payment fraud, data protection). [Nigeria](https://paleontraining.com/ng/corporate-training/cybersecure-workforce) · [South Africa](https://paleontraining.com/za/corporate-training/cybersecure-workforce) · [Kenya](https://paleontraining.com/ke/corporate-training/cybersecure-workforce) · [Ghana](https://paleontraining.com/gh/corporate-training/cybersecure-workforce)
 - AI + Cybersecurity Professional Accelerator: combined AI and cybersecurity programme for managers and professionals. [Nigeria](https://paleontraining.com/ng/corporate-training/ai-cybersecurity-professional-accelerator) · [South Africa](https://paleontraining.com/za/corporate-training/ai-cybersecurity-professional-accelerator) · [Kenya](https://paleontraining.com/ke/corporate-training/ai-cybersecurity-professional-accelerator) · [Ghana](https://paleontraining.com/gh/corporate-training/ai-cybersecurity-professional-accelerator)
 
 ## Corporate training by country
 
-- [Nigeria](https://paleontraining.com/ng/corporate-training): in-house, online or hybrid; supports ITF claims
+- [Nigeria](https://paleontraining.com/ng/corporate-training): online and in-house; supports ITF claims
 - [South Africa](https://paleontraining.com/za/corporate-training)
 - [Kenya](https://paleontraining.com/ke/corporate-training)
 - [Ghana](https://paleontraining.com/gh/corporate-training)

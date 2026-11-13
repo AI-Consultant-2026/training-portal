@@ -189,19 +189,19 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
     `Worked example, ${EXAMPLE_STAFF} staff:`,
     `${EXAMPLE_STAFF} × ${money(code, seatPrice(programme, code, EXAMPLE_STAFF))} = ${money(code, exampleTotal(programme, code))} (10% volume discount).`,
   );
-  heading(doc, "Option 2 · Live, facilitator-led, by quote");
+  heading(doc, "Option 2 · In-house rollout, by proposal");
   para(
     doc,
-    `Live online, in-house at your offices, or hybrid, anywhere in ${country}. Department sessions, executive workshops or an organisation-wide rollout, with examples adapted to your sector and attendance records for your files. We quote after a 20-minute call about your teams, locations and dates.`,
+    `A private online company space in the Paleon portal for your staff only, anywhere in ${country}. Staff join with your company sign-up link, managers see progress, and you receive completion and attendance records for your files. For departments or an organisation-wide rollout; invoiced for 200 learners or more. All training is online and self-paced: there are no live, facilitator-led or hybrid sessions.`,
   );
   if (hasCohort(programme)) {
     doc.moveDown(0.2);
-    labelled(doc, `Next live cohort: ${COHORT_NAME}.`, `${COHORT_PLACES[programme]} places left. Reserve by email or WhatsApp. Self-paced places start today.`);
+    labelled(doc, `${COHORT_NAME} intake:`, `${COHORT_PLACES[programme]} places left. Reserve by email or WhatsApp. Places bought today start today.`);
   }
   heading(doc, "Start small");
   labelled(doc, `Paid pilot:`, `${PILOT_STAFF} learners self-paced for ${money(code, pilotTotal(programme, code))}. Review the results with us, then decide on a wider rollout.`);
   doc.moveDown(0.15);
-  labelled(doc, "Free leadership taster:", "a short live online session for your leadership team, with no obligation.");
+  labelled(doc, "Free leadership preview:", "self-paced online access to sample modules for your leadership team, with no obligation.");
   heading(doc, "Refunds, cancellations and unused seats");
   bullets(doc, BUYING_TERMS.map((x) => `${x.h}: ${x.p}`));
   heading(doc, "Data protection");
@@ -244,7 +244,7 @@ export function streamBusinessCasePdf(programme: PricedProgramme, code: CountryC
     [
       `Recommended: ${EXAMPLE_STAFF} staff, self-paced online, ${money(code, exampleTotal(programme, code))} in total (${money(code, seatPrice(programme, code, EXAMPLE_STAFF))} per learner after the 10% volume discount, 12 months' access).`,
       `Lower-risk start: a ${PILOT_STAFF}-learner pilot for ${money(code, pilotTotal(programme, code))}, then a decision on rollout.`,
-      `Alternative: live online, in-house or hybrid delivery, priced by quote after a 20-minute call${hasCohort(programme) ? `; the next live cohort is ${COHORT_NAME}, with ${COHORT_PLACES[programme]} places left` : ""}.`,
+      `Alternative: an in-house rollout for the whole organisation (a private online space for your staff), priced by proposal after a 20-minute call${hasCohort(programme) ? `; the ${COHORT_NAME} intake has ${COHORT_PLACES[programme]} places left` : ""}.`,
     ],
     size,
   );

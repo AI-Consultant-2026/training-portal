@@ -55,7 +55,7 @@ export function pricingFaqAnswer(code: CountryCode, programme: PricedProgramme |
   return (
     `${what} There are volume discounts of 10% for 10–49 learners, 20% for 50–199 and 30% for 200 or more, ` +
     `and 15% off when the same person takes all three programmes. Each place includes 12 months’ access; VAT is added where applicable. ` +
-    "Live facilitator-led or in-house delivery is quoted separately: request a proposal with your team size and we will reply within one working day."
+    "All training is online and in-house (self-paced, private to your staff), never live or facilitator-led. For an organisation-wide rollout, request a proposal with your team size and we will reply within one working day."
   );
 }
 
@@ -64,7 +64,7 @@ export function hubPricingFaqAnswer(): string {
   const from = MARKET_ORDER.map((k) => `${money(k, CORPORATE_PRICES.cybersecure[k])} in ${COUNTRIES[k].name}`).join(", ");
   return (
     `Online self-paced programmes start from ${from} per learner (CyberSecure Workforce), with volume discounts of up to 30% and 15% off all three programmes. ` +
-    "Live facilitator-led or in-house delivery is quoted per proposal. Choose your country page for full prices in your currency."
+    "All training is online and in-house, never live or facilitator-led. Choose your country page for full prices in your currency."
   );
 }
 
@@ -166,7 +166,7 @@ export function pricingSection(code: CountryCode, programme: PricedProgramme, da
       <p class="ca-p"><strong>Outside Nigeria, South Africa, Kenya and Ghana?</strong> Pay in pounds: ${escapeHtml(formatRegionMoney("INTL", CORPORATE_PRICES[programme].INTL))} per learner, with the same discounts.</p>
       <p class="ca-p ca-hint">${escapeHtml(TERMS)} Orders of ${INVOICE_FROM_SEATS} or more learners are invoiced.</p>
       ${buyForm(code, programme)}
-      <p class="ca-p cp-after"><strong>Live facilitator-led or in-house delivery?</strong> It is quoted for your team: <a href="#enquiry" data-intent="proposal">request a proposal</a> and we will reply within one working day.</p>
+      <p class="ca-p cp-after"><strong>Rolling out to the whole organisation?</strong> We set up a private company space for your staff: <a href="#enquiry" data-intent="proposal">request a proposal</a> and we will reply within one working day.</p>
       ${termsBlock(dark)}
     </div>
   </section>`;
@@ -191,5 +191,5 @@ export function pricingSummaryTable(codes: CountryCode[], withGbp = false): stri
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <p class="ca-p ca-hint">Volume discounts: 10% off for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200 or more (invoiced). All three programmes for the same person: 15% off. Plus VAT where applicable. Live facilitator-led and in-house delivery is quoted per proposal.</p>`;
+      <p class="ca-p ca-hint">Volume discounts: 10% off for 10&ndash;49 learners, 20% for 50&ndash;199, 30% for 200 or more (invoiced). All three programmes for the same person: 15% off. Plus VAT where applicable. All training is online and in-house, self-paced.</p>`;
 }

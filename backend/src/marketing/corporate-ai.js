@@ -20,20 +20,20 @@
   var programme = form.getAttribute("data-programme") || "ai-workflow";
 
   // Every CTA scrolls to the form (href #enquiry) and sets what the visitor wants
-  // (2026-11-13): a proposal, places in the December 2026 cohort, or the free leadership
-  // taster. The form's note and button change to match; the intent is sent with the lead.
+  // (2026-11-13): a proposal, places in the December 2026 intake, or the free self-paced
+  // leadership preview. The form's note and button change to match; the intent is sent with the lead.
   var intentInput = form.querySelector('input[name="intent"]');
   var intentNote = document.getElementById("caIntent");
   var INTENTS = {
     proposal: { note: "", button: submit.getAttribute("data-default") || submit.textContent },
     reserve: { note: "", button: "Reserve my team's places" },
-    taster: { note: "Free leadership taster: a short live online session for your leadership team, with no obligation.", button: "Request a free taster" },
+    taster: { note: "Free leadership preview: self-paced online access to sample modules for your leadership team, with no obligation.", button: "Request a free preview" },
   };
   // The places left come from the button that was clicked (data-places, per programme).
   function setIntent(name, places) {
     var it = INTENTS[name] || INTENTS.proposal;
     if (name === "reserve") {
-      it.note = "Reserve places in the December 2026 cohort" + (places ? ": " + places + " places left" : "") + ". Tell us your organisation and headcount and we will confirm within one working day.";
+      it.note = "Reserve places in the December 2026 intake" + (places ? ": " + places + " places left" : "") + ". Tell us your organisation and headcount and we will confirm within one working day.";
     }
     intentInput.value = INTENTS[name] ? name : "proposal";
     intentNote.textContent = it.note;

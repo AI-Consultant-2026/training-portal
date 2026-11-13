@@ -21,12 +21,12 @@ export interface CorporatePageContent {
 export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   "NG": {
     "title": "AI Workforce & Process Transformation Training in Nigeria",
-    "description": "AI training for employees in Lagos, Abuja, Port Harcourt and across Nigeria. In-house, online or hybrid; supports ITF claims. Get a proposal.",
+    "description": "AI training for employees in Lagos, Abuja, Port Harcourt and across Nigeria. Online and in-house; supports ITF claims. Get a proposal.",
     "images": {
       "hero": "Nigerian professionals reviewing an AI-assisted report on a laptop in a modern Lagos office",
       "collaboration": "Nigerian operations team mapping a workflow on a whiteboard",
       "productivity": "Nigerian finance officer using AI to summarise a spreadsheet report",
-      "training": "Nigerian staff attending a practical AI workshop at their company"
+      "training": "Nigerian staff learning practical AI skills online at their company"
     },
     "sections": {
       "Hero": {
@@ -51,7 +51,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line under the buttons:** Online, in-house or hybrid delivery · Customised by department · Responsible AI built in · Supports ITF reimbursement claims"
+            "p": "**Trust line under the buttons:** Online and in-house, self-paced · Customised by department · Responsible AI built in · Supports ITF reimbursement claims"
           },
           {
             "p": "**Definition box (for AI search):** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It teaches employees in Nigerian organisations to use generative AI tools to save time, improve the quality of their work and redesign repetitive business processes, with human oversight and data protection."
@@ -183,22 +183,20 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "table": [
               "Option",
               "Best for",
-              "In-house corporate training",
-              "A programme built and delivered for your organisation alone, at your office in Lagos, Abuja, Port Harcourt, Warri or elsewhere.",
-              "Online corporate training",
-              "Live, instructor-led virtual sessions for teams across several branches or states.",
-              "Hybrid training",
-              "Online modules combined with in-person workshops.",
-              "Department-specific training",
-              "Tailored sessions for one function, such as Finance, HR or Customer Service.",
-              "Executive AI workshops",
-              "Short strategic sessions for boards and senior leaders.",
+              "Self-paced online places",
+              "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today.",
+              "In-house rollout",
+              "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation.",
+              "Department-specific modules",
+              "Online modules and examples focused on one function, such as Finance, HR or Customer Service.",
+              "Leadership modules",
+              "Short self-paced modules for boards and senior leaders on AI strategy, risk and adoption.",
               "AI Workflow Transformation Programme",
               "Training plus hands-on identification and redesign of selected workflows."
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Self-paced places have a fixed price per learner; in-house rollouts for departments or the whole organisation are priced by proposal. All training is online and in-house: there are no live, facilitator-led or hybrid sessions. **Request In-House Training Proposal** for a quote."
           },
           {
             "p": "**ITF reimbursement:** Nigerian employers that pay the 1% ITF training levy can apply for a refund of up to 50% of the levy they paid, if the ITF approves their training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide the attendance records and programme documentation a claim needs."
@@ -274,7 +272,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**Consultation:** we learn about your organisation, teams and goals.",
               "**Workflow assessment:** we identify where AI can improve productivity.",
               "**Training design:** we adapt the programme to your sector and departments.",
-              "**Employee training:** we deliver practical AI training online, in-house or hybrid.",
+              "**Employee training:** staff take practical AI training online, in a private space for your organisation.",
               "**Workflow application:** participants apply AI to real business tasks.",
               "**Review:** we review results with you and identify next improvements."
             ]
@@ -300,13 +298,13 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can you train our entire workforce?** Yes. We can run cohorts in phases, starting with leaders or AI champions and then rolling out to departments."
           },
           {
-            "p": "**Can different departments receive different training?** Yes. Finance, HR, Operations, Customer Service and other teams can each receive department-specific sessions."
+            "p": "**Can different departments receive different training?** Yes. Finance, HR, Operations, Customer Service and other teams can each take department-specific modules."
           },
           {
-            "p": "**Is the training available online?** Yes. Live instructor-led virtual training works well for teams spread across several states or branches."
+            "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can training be delivered in-house?** Yes. We can deliver at your premises, or combine in-person and online sessions."
+            "p": "**Can training be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to a real task from their role, and the programme ends with a workplace transformation project."
@@ -315,7 +313,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**How does the programme address responsible AI?** Confidentiality, data protection, human review, accuracy checks and governance are covered throughout and in a dedicated module."
           },
           {
-            "p": "**Can our executives have a separate AI strategy workshop?** Yes. Executive AI workshops are short sessions on where AI fits your strategy, risks and adoption plan."
+            "p": "**Can our executives have separate AI strategy training?** Yes. Short self-paced leadership modules cover AI strategy, risk, governance and adoption planning."
           },
           {
             "p": "**Can we claim ITF reimbursement for this training?** Yes, if your organisation pays the ITF training levy: the ITF can refund up to 50% of the levy paid when it approves your training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide attendance records and programme documentation."
@@ -349,12 +347,12 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   },
   "ZA": {
     "title": "AI Workforce & Process Transformation Training in South Africa",
-    "description": "In-house and online AI training for employees of companies in Johannesburg, Cape Town, Durban and across South Africa. Faster workflows, safe AI use. Get a proposal.",
+    "description": "Online, in-house AI training for employees of companies in Johannesburg, Cape Town, Durban and across South Africa. Faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "South African professionals discussing an AI-assisted workflow on a large screen in a Johannesburg office",
       "collaboration": "South African operations team redesigning a process together",
       "productivity": "South African analyst using AI to prepare a management report",
-      "training": "South African employees in a practical AI workshop"
+      "training": "South African employees learning practical AI skills online"
     },
     "sections": {
       "Hero": {
@@ -379,7 +377,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** In-house or online training for teams in Johannesburg, Cape Town, Durban and across South Africa · Department-specific · Responsible-AI first"
+            "p": "**Trust line:** Online and in-house training for teams in Johannesburg, Cape Town, Durban and across South Africa · Department-specific · Responsible-AI first"
           },
           {
             "p": "**Definition box:** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It helps South African organisations train employees to use generative AI for everyday work and redesign business processes, with governance, data protection and human oversight."
@@ -417,7 +415,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "ul": [
               "**Discover.** Map where AI can remove effort and where controls are needed.",
               "**Train.** Build practical AI skills, department by department, in plain language.",
-              "**Apply.** Participants work on live tasks from their own roles during training.",
+              "**Apply.** Participants work on real tasks from their own roles during training.",
               "**Transform.** Teams redesign selected processes into repeatable AI-assisted workflows with review points.",
               "**Measure.** Track time, quality and adoption so leadership can see progress."
             ]
@@ -506,18 +504,20 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "table": [
               "Option",
               "Best for",
-              "Online corporate training",
-              "Live, instructor-led virtual sessions for teams across provinces.",
-              "Department-specific training",
-              "Focused online sessions for one function, such as Finance or the contact centre.",
-              "Executive AI workshops",
-              "Short online strategy and governance sessions for Exco and boards.",
+              "Self-paced online places",
+              "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today.",
+              "In-house rollout",
+              "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation.",
+              "Department-specific modules",
+              "Online modules and examples focused on one function, such as Finance, HR or Customer Service.",
+              "Leadership modules",
+              "Short self-paced modules for boards and senior leaders on AI strategy, risk and adoption.",
               "AI Workflow Transformation Programme",
               "Online training combined with identifying and redesigning priority workflows."
             ]
           },
           {
-            "p": "Costs depend on group size, delivery and customisation. **Request In-House Training Proposal** for a tailored quote."
+            "p": "Self-paced places have a fixed price per learner; in-house rollouts for departments or the whole organisation are priced by proposal. All training is online and in-house: there are no live, facilitator-led or hybrid sessions. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -587,7 +587,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**Consultation:** understand your organisation, priorities and constraints.",
               "**Workflow assessment:** identify productivity opportunities and risk areas.",
               "**Training design:** adapt content to your sector, teams and tools.",
-              "**Employee training:** deliver live, practical online sessions.",
+              "**Employee training:** staff take practical, self-paced online modules in a private space for your organisation.",
               "**Workflow application:** apply AI to real business tasks.",
               "**Review:** assess results and plan the next improvements."
             ]
@@ -613,13 +613,13 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can you train an entire workforce?** Yes, in phased cohorts, often starting with leaders and AI champions."
           },
           {
-            "p": "**Can different departments receive different training?** Yes. Each function can receive its own sessions and examples."
+            "p": "**Can different departments receive different training?** Yes. Each function can take its own modules and examples."
           },
           {
-            "p": "**Is the training available online?** Yes. Live virtual sessions suit teams spread across provinces."
+            "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can training be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
+            "p": "**Can training be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to tasks from their own role and completes a workplace project."
@@ -628,7 +628,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**How does the programme address responsible AI?** Through a dedicated module and checks throughout: confidentiality, personal information, accuracy, human review and governance."
           },
           {
-            "p": "**Can executives receive a separate AI strategy workshop?** Yes. Executive workshops cover AI strategy, risk, governance and adoption planning."
+            "p": "**Can executives receive separate AI strategy training?** Yes. Short self-paced leadership modules cover AI strategy, risk, governance and adoption planning."
           },
           {
             "p": "**Can this support our skills-development planning?** We can provide attendance records and a programme outline for your internal reporting. Ask us what documentation you need."
@@ -662,12 +662,12 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   },
   "GH": {
     "title": "AI Workforce & Process Transformation Training in Ghana",
-    "description": "In-house and online AI training for employees of companies in Accra, Kumasi, Tema and across Ghana. Less admin, faster workflows, safe AI use. Get a proposal.",
+    "description": "Online, in-house AI training for employees of companies in Accra, Kumasi, Tema and across Ghana. Less admin, faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "Ghanaian professionals mapping an AI-assisted workflow on a laptop and whiteboard in an Accra office",
       "collaboration": "Ghanaian team improving a business process together",
       "productivity": "Ghanaian HR officer using AI to draft staff letters",
-      "training": "Ghanaian staff in a corporate AI training session"
+      "training": "Ghanaian staff taking a corporate AI course online"
     },
     "sections": {
       "Hero": {
@@ -692,7 +692,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** In-house or online training for teams in Accra, Kumasi, Takoradi, Tema and across Ghana · Built for every department · Safe, responsible AI use"
+            "p": "**Trust line:** Online and in-house training for teams in Accra, Kumasi, Takoradi, Tema and across Ghana · Built for every department · Safe, responsible AI use"
           },
           {
             "p": "**Definition box:** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It develops employees in Ghanaian organisations to use generative AI tools for everyday tasks, reduce repetitive administrative work and improve business processes, responsibly."
@@ -818,18 +818,20 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "table": [
               "Option",
               "Best for",
-              "Online corporate training",
-              "Live, instructor-led virtual sessions for head office and regional teams together.",
-              "Department-specific training",
-              "Online sessions tailored to one team, such as Finance or Customer Service.",
-              "Executive AI workshops",
-              "Short online sessions for leadership on AI strategy and adoption.",
+              "Self-paced online places",
+              "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today.",
+              "In-house rollout",
+              "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation.",
+              "Department-specific modules",
+              "Online modules and examples focused on one function, such as Finance, HR or Customer Service.",
+              "Leadership modules",
+              "Short self-paced modules for boards and senior leaders on AI strategy, risk and adoption.",
               "AI Workflow Transformation Programme",
               "Online training plus identifying and redesigning key workflows."
             ]
           },
           {
-            "p": "Costs depend on numbers, delivery and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Self-paced places have a fixed price per learner; in-house rollouts for departments or the whole organisation are priced by proposal. All training is online and in-house: there are no live, facilitator-led or hybrid sessions. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -899,7 +901,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**Consultation:** understand your organisation and goals.",
               "**Workflow assessment:** find the best opportunities for AI.",
               "**Training design:** adapt the programme to your teams.",
-              "**Employee training:** live, practical online sessions.",
+              "**Employee training:** staff take practical, self-paced online modules in a private space for your organisation.",
               "**Workflow application:** AI applied to real business tasks.",
               "**Review:** agree on next improvements together."
             ]
@@ -925,13 +927,13 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can you train our entire workforce?** Yes. We can run phased cohorts across head office and regional offices."
           },
           {
-            "p": "**Can different departments receive different training?** Yes. Each department can receive sessions built around its own tasks."
+            "p": "**Can different departments receive different training?** Yes. Each department can take modules built around its own tasks."
           },
           {
-            "p": "**Is the training available online?** Yes. Live online sessions let teams in different cities train together."
+            "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can training be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
+            "p": "**Can training be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Participants apply AI to their own work and complete a workplace project."
@@ -940,7 +942,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**How does the programme address responsible AI?** Confidentiality, data protection, accuracy checks, human review and governance are covered throughout."
           },
           {
-            "p": "**Can executives receive a separate AI strategy workshop?** Yes. We run short executive workshops on AI strategy and adoption."
+            "p": "**Can executives receive separate AI strategy training?** Yes. Short self-paced leadership modules cover AI strategy, risk, governance and adoption planning."
           },
           {
             "p": "**How do we request a corporate proposal?** Complete the form below or email corporate@paleontraining.com."
@@ -971,12 +973,12 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
   },
   "KE": {
     "title": "AI Workforce & Process Transformation Training in Kenya",
-    "description": "In-house and online AI training for employees of companies in Nairobi, Mombasa, Kisumu and across Kenya. Faster workflows, safe AI use. Get a proposal.",
+    "description": "Online, in-house AI training for employees of companies in Nairobi, Mombasa, Kisumu and across Kenya. Faster workflows, safe AI use. Get a proposal.",
     "images": {
       "hero": "Kenyan professionals reviewing an AI-assisted dashboard together in a Nairobi office",
       "collaboration": "Kenyan team designing a shared AI workflow",
       "productivity": "Kenyan customer-experience lead using AI to draft responses",
-      "training": "Kenyan employees in a hands-on AI workshop"
+      "training": "Kenyan employees learning practical AI skills online"
     },
     "sections": {
       "Hero": {
@@ -1001,7 +1003,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** In-house or online training for teams in Nairobi, Mombasa, Kisumu and across Kenya · Tailored by team · Responsible AI throughout"
+            "p": "**Trust line:** Online and in-house training for teams in Nairobi, Mombasa, Kisumu and across Kenya · Tailored by team · Responsible AI throughout"
           },
           {
             "p": "**Definition box:** AI Workflow Productivity & Process Transformation is a corporate training programme from Paleon Training. It helps Kenyan organisations move employees from informal AI use to structured AI-assisted workflows that improve productivity, automate repetitive tasks and keep humans in control."
@@ -1127,18 +1129,20 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "table": [
               "Option",
               "Best for",
-              "Online corporate training",
-              "Live virtual sessions for distributed and hybrid teams.",
-              "Department-specific training",
-              "Focused online sessions for a team such as Customer Experience or Finance.",
-              "Executive AI workshops",
-              "Short online strategy sessions for leadership teams.",
+              "Self-paced online places",
+              "Each employee studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today.",
+              "In-house rollout",
+              "A private online space for your staff only: staff join with your company sign-up link and managers track progress. For departments or the whole organisation.",
+              "Department-specific modules",
+              "Online modules and examples focused on one function, such as Finance, HR or Customer Service.",
+              "Leadership modules",
+              "Short self-paced modules for boards and senior leaders on AI strategy, risk and adoption.",
               "AI Workflow Transformation Programme",
               "Online training plus redesign of priority workflows."
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Self-paced places have a fixed price per learner; in-house rollouts for departments or the whole organisation are priced by proposal. All training is online and in-house: there are no live, facilitator-led or hybrid sessions. **Request In-House Training Proposal** for a quote."
           }
         ]
       },
@@ -1208,7 +1212,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**Consultation:** understand your organisation and priorities.",
               "**Workflow assessment:** review current AI use and productivity opportunities.",
               "**Training design:** tailor the programme to your teams.",
-              "**Employee training:** live, practical online sessions.",
+              "**Employee training:** staff take practical, self-paced online modules in a private space for your organisation.",
               "**Workflow application:** apply AI to real business tasks.",
               "**Review:** measure progress and plan the next step."
             ]
@@ -1237,13 +1241,13 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can you train an entire workforce?** Yes, in phased cohorts, often starting with AI champions."
           },
           {
-            "p": "**Can different departments receive different training?** Yes. Each team can receive sessions built around its own tasks."
+            "p": "**Can different departments receive different training?** Yes. Each team can take modules built around its own tasks."
           },
           {
-            "p": "**Is the training available online?** Yes. Live virtual sessions suit distributed and hybrid teams."
+            "p": "**Is the training available online?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can training be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
+            "p": "**Can training be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to their own work and completes a workplace project."
@@ -1252,7 +1256,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**How does the programme address responsible AI?** Through a dedicated module and checks throughout: confidentiality, data protection, accuracy, human review and governance."
           },
           {
-            "p": "**Can executives receive a separate AI strategy workshop?** Yes. Short executive workshops cover strategy, risk and adoption."
+            "p": "**Can executives receive separate AI strategy training?** Yes. Short self-paced leadership modules cover AI strategy, risk, governance and adoption planning."
           },
           {
             "p": "**How do we request a corporate proposal?** Use the form below or email corporate@paleontraining.com."

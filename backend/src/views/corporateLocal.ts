@@ -15,11 +15,12 @@ export function cityList(code: CountryCode): string {
   return `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;
 }
 
-// Since 2026-11-13 every country gets in-house, live online and hybrid delivery (by quote),
-// as well as self-paced online places. `code` is kept for callers.
+// Owner, 2026-11-13: corporate training is online and in-house only (self-paced online,
+// private to the client's own staff); never live, facilitator-led or hybrid. `code` is kept
+// for callers.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function deliveryPhrase(code: CountryCode): string {
-  return "in-house, live online or hybrid";
+  return "online and in-house, as self-paced courses private to your staff,";
 }
 
 export function areaServed(code: CountryCode): object[] {
@@ -76,7 +77,7 @@ export const ORGANIZATION_LD = {
   logo: { "@type": "ImageObject", url: `${SITE}/images/og/paleon-training-logo.jpg`, width: 512, height: 512 },
   image: `${SITE}/images/og/paleon-training-logo.jpg`,
   description:
-    "Paleon Training Limited runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: self-paced online, or live online, in-house and hybrid.",
+    "Paleon Training Limited runs corporate AI and cybersecurity training for employees of companies in Nigeria, South Africa, Kenya and Ghana: online and in-house only: self-paced online courses private to each organisation's staff.",
   email: "corporate@paleontraining.com",
   telephone: "+44-7508-823495",
   contactPoint: SALES_CONTACT,

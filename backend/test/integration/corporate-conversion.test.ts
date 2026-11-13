@@ -21,24 +21,24 @@ const CORPORATE_PAGES = [
 ];
 
 describe("Corporate conversion review (2026-11-13)", () => {
-  it("never says fully booked, and offers the December 2026 cohort on the booked programmes", async () => {
+  it("never says fully booked, and offers the December 2026 intake on every programme", async () => {
     for (const path of CORPORATE_PAGES) {
       const html = (await request(app).get(path)).text;
       expect(html).not.toMatch(/fully booked|January 2027/i);
     }
-    // Next live cohort December 2026; places left per programme, and self-paced starts today (second review, 2026-11-13).
+    // December 2026 intake; places left per programme, and places start today (online and in-house only, 2026-11-13).
     for (const [path, places] of [
       ["/ke/corporate-training/ai-workflow-productivity", 12],
       ["/za/corporate-training/cybersecure-workforce", 8],
       ["/gh/corporate-training/ai-cybersecurity-professional-accelerator", 10],
     ] as const) {
       const html = (await request(app).get(path)).text;
-      expect(html).toContain(`<strong>Next live cohort: December 2026, ${places} places left.</strong> Self-paced places start today.`);
+      expect(html).toContain(`<strong>December 2026 intake: ${places} places left.</strong> Places bought today start today.`);
       expect(html).not.toMatch(/Booked until/);
-      expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve a December 2026 cohort</a>`);
+      expect(html).toContain(`data-intent="reserve" data-places="${places}">Reserve December 2026 intake places</a>`);
     }
     const hub = (await request(app).get("/")).text;
-    for (const places of [12, 8, 10]) expect(hub).toContain(`Next live cohort: December 2026, ${places} places left.`);
+    for (const places of [12, 8, 10]) expect(hub).toContain(`December 2026 intake: ${places} places left.`);
   });
 
   it("uses one corporate email and the UK WhatsApp line, with no Nigerian call line", async () => {
@@ -54,7 +54,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
 
   it("labels the two ways to buy with a worked example for 25 staff", async () => {
     const html = (await request(app).get("/za/corporate-training/cybersecure-workforce")).text;
-    expect(html).toContain("Self-paced per learner, or live and in-house by quote");
+    expect(html).toContain("Online and in-house: per learner, or for your whole organisation");
     expect(html).toContain("25 staff × R900 (10% volume discount) = R22,500");
     expect(html).toContain("Pilot with 10 learners");
     expect(html).toContain('<td class="co-here">R9,000</td>');
@@ -63,11 +63,15 @@ describe("Corporate conversion review (2026-11-13)", () => {
     expect(html.indexOf('id="outcomes"')).toBeLessThan(html.indexOf('id="modules"'));
   });
 
-  it("offers in-house and hybrid in every country", async () => {
-    for (const cc of ["za", "ke", "gh"]) {
+  it("offers online, in-house training only: never live, facilitator-led or hybrid (owner, 2026-11-13)", async () => {
+    for (const path of CORPORATE_PAGES) {
+      const html = (await request(app).get(path)).text;
+      expect(html).not.toMatch(/live online|live sessions?|live virtual|live cohort|facilitator-led sessions at|in-house at your offices|instructor-led|(online|in-house|, live online,?) or (as a )?hybrid|hybrid deliver|\(live|taster session|leadership taster/i);
+    }
+    for (const cc of ["za", "ke", "gh", "ng"]) {
       const html = (await request(app).get(`/${cc}/corporate-training/cybersecure-workforce`)).text;
-      expect(html).toContain("Live online, in-house at your offices, or hybrid");
-      expect(html).not.toMatch(/All training in [A-Za-z ]+ is (delivered )?live online/);
+      expect(html).toContain("In-house rollout");
+      expect(html).toContain("A private online space for your staff only");
     }
   });
 
@@ -92,7 +96,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
     expect(html).toContain("Book a 20-minute call</a>");
   });
 
-  it("accepts the short form and a cohort reservation", async () => {
+  it("accepts the short form and an intake reservation", async () => {
     const res = await request(app).post("/api/leads/corporate").send({
       name: "Thandi Mokoena",
       organisation: "Example Mining (Pty) Ltd",
@@ -107,8 +111,8 @@ describe("Corporate conversion review (2026-11-13)", () => {
     const lead = await Lead.findByPk(res.body.id);
     expect(lead?.phone).toBeNull();
     expect(lead?.details).toMatchObject({ intent: "reserve", organisation: "Example Mining (Pty) Ltd" });
-    expect(memAdapter.sentMessages[0].subject).toContain("Cohort reservation");
-    expect(memAdapter.sentMessages[0].text).toContain("to reserve places in the December 2026 cohort");
+    expect(memAdapter.sentMessages[0].subject).toContain("Intake reservation");
+    expect(memAdapter.sentMessages[0].text).toContain("to reserve places in the December 2026 intake");
   });
 
   it("serves the sector pages and 404s an unknown sector", async () => {
@@ -178,7 +182,8 @@ describe("Second corporate review (2026-11-13)", () => {
     const after = html.slice(html.indexOf('id="cpBuy"'));
     expect(after).toContain("Refunds, cancellations and unused seats");
     expect(after).toContain("Full refund within 14 days of purchase if no learner has started");
-    expect(after).toContain("Free rescheduling up to 10 working days before the first session");
+    expect(after).toContain("The same refund and unused-seat terms as self-paced places.");
+    expect(after).not.toContain("Free rescheduling");
   });
 
   it("links other countries' brochures and the sample certificate and attendance record", async () => {
@@ -193,10 +198,10 @@ describe("Second corporate review (2026-11-13)", () => {
     }
   });
 
-  it("uses one CyberSecure name, limits the facilitator claim to live delivery and says Led from the UK", async () => {
+  it("uses one CyberSecure name, makes no facilitator claim and says Led from the UK", async () => {
     const za = (await request(app).get("/za/corporate-training/cybersecure-workforce")).text;
     expect(za).not.toContain("CyberSecure Workforce Essentials");
-    expect(za).toContain("One product, two ways to take it.");
+    expect(za).toContain("One product, online and in-house.");
     expect(za).not.toContain("Every Paleon programme is led by a live facilitator");
     for (const path of ["/", "/ng"]) {
       const html = (await request(app).get(path)).text;

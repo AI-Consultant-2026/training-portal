@@ -89,7 +89,7 @@ export const SECTORS: Sector[] = [
       },
       {
         q: "Can we train branch staff in several cities?",
-        a: "Yes. Staff can learn self-paced online, join live online sessions, or we can train in-house at your offices. Many banks combine self-paced learning for branches with live sessions for head office.",
+        a: "Yes. Training is online and in-house: branch and head-office staff all study self-paced in a private space for your bank only, at times that suit them. There are no live or facilitator-led sessions.",
       },
     ],
   },
@@ -150,7 +150,7 @@ export const SECTORS: Sector[] = [
       },
       {
         q: "Our staff work shifts. How do they fit it in?",
-        a: "Self-paced online learning lets staff study between shifts, with 12 months' access. Live sessions can be scheduled around rotas, in-house or online.",
+        a: "Self-paced online learning lets staff study between shifts, with 12 months' access, in a private space for your organisation only. Nothing has to be scheduled around rotas.",
       },
     ],
   },
@@ -211,7 +211,7 @@ export const SECTORS: Sector[] = [
       },
       {
         q: "Can the training cover our own AI and records rules?",
-        a: "Yes. For live and in-house delivery we adapt the exercises to your organisation's existing policies on records, information handling and approved tools.",
+        a: "Yes. For in-house rollouts we adapt the exercises to your organisation's existing policies on records, information handling and approved tools.",
       },
     ],
   },
@@ -268,7 +268,7 @@ export const SECTORS: Sector[] = [
     faq: [
       {
         q: "Can staff on rotation take part?",
-        a: "Yes. Self-paced online learning works around rotations, with 12 months' access. Live sessions can be run in-house at your offices or online when crews are back.",
+        a: "Yes. Self-paced online learning works around rotations, with 12 months' access, so crews can study offshore or when they are back. Nothing has to be scheduled around crew changes.",
       },
       {
         q: "Does this cover operational technology (OT) security?",

@@ -48,8 +48,8 @@ import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 // corporateAiWorkflowContent.ts. Every button opens the same enquiry form with the
 // visitor's intent (proposal, reserve, taster) preselected; the form posts to
 // /api/leads/corporate via corporate-ai.js. Since 2026-11-13 every country offers
-// self-paced online learning or live online, in-house and hybrid delivery by quote;
-// Nigeria also mentions ITF reimbursement.
+// online, in-house training only (self-paced, private to the client's staff; never live,
+// facilitator-led or hybrid); Nigeria also mentions ITF reimbursement.
 
 export const CORPORATE_AI_SLUG = "corporate-training/ai-workflow-productivity";
 // The corporate training hub (2026-11-02), the homepage since 2026-11-08 (it was
@@ -221,11 +221,11 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer AI training for employees in ${cityList(code)}?`,
-      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Choose self-paced online learning for each employee, or live online, in-house or hybrid delivery by quote. ${cohortSentence("ai-workflow")}`,
+      a: `Yes. AI Workflow Productivity & Process Transformation is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Buy self-paced places per employee, or an in-house rollout for your whole organisation. ${cohortSentence("ai-workflow")}`,
     },
     {
       q: "When can we start?",
-      a: `Self-paced places can start today. For live delivery, ${cohortSentence("ai-workflow").charAt(0).toLowerCase()}${cohortSentence("ai-workflow").slice(1)} Reserve now and we will complete the needs assessment with you in advance, so your teams are ready to start.`,
+      a: `${cohortSentence("ai-workflow")} Reserve places now and we will complete the needs assessment with you in advance, so your teams are ready to start.`,
     },
     {
       q: "How much does corporate AI training cost?",
@@ -255,15 +255,15 @@ function faqItems(c: CorporatePageContent, code?: CountryCode): { q: string; a: 
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    "We train in-house at your offices or sites, live online, or a mix of both, or your staff can learn self-paced online" +
-    (code === "NG" ? ", and we provide the attendance records and documentation for ITF reimbursement claims." : ".");
+    "Training is online and in-house: your staff learn self-paced online in a private company space that only your organisation can join. There are no live or facilitator-led sessions" +
+    (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">AI workforce and process transformation training across ${escapeHtml(country)}</h2>
       ${cohortNotice("ai-workflow")}
       <p class="ca-p">Paleon Training runs AI Workflow Productivity &amp; Process Transformation for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
-      <p class="ca-p">Sessions are scheduled around your working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
+      <p class="ca-p">Staff study around their working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       <div class="ca-ctas">${reserveButton("ai-workflow")}${callButton(false)}</div>
     </div>
   </section>`;
@@ -325,8 +325,8 @@ const AI_FORM: EnquiryForm = {
 // The enquiry form (shortened 2026-11-13, owner request): name, business email,
 // organisation, country and headcount only; the rest is collected on the call. `code`
 // presets the country (a country page); null is the hub, where the visitor picks it.
-// The buttons that open it set the intent: proposal, reserve (the December 2026 cohort)
-// or taster (the free leadership session); corporate-ai.js changes the heading and button.
+// The buttons that open it set the intent: proposal, reserve (the December 2026 intake)
+// or taster (the free self-paced leadership preview); corporate-ai.js changes the heading and button.
 export function enquiry(code: CountryCode | null, copy: EnquiryCopy, form: EnquiryForm = AI_FORM): string {
   const { title, lede, note } = copy;
   const countryOptions =
@@ -535,9 +535,9 @@ ${scripts(ctx)}
 // in all four countries, pointing to the AI Workflow page for each country and to the other
 // corporate offers. Same enquiry form; the visitor picks their country.
 
-// Every country: self-paced online, or live online, in-house or hybrid (2026-11-13).
+// Every country: online and in-house only, self-paced (2026-11-13).
 const deliveryNote = (k: CountryCode, what: string) =>
-  `Self-paced online, or ${what} live online, in-house or hybrid across ${COUNTRIES[k].name}.${k === "NG" ? " Supports ITF reimbursement claims." : ""}`;
+  `Online and in-house ${what}, self-paced, across ${COUNTRIES[k].name}.${k === "NG" ? " Supports ITF reimbursement claims." : ""}`;
 const HUB_CYBER_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "awareness training")])) as Record<CountryCode, string>;
 const HUB_ACC_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "professional training")])) as Record<CountryCode, string>;
 const HUB_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "training")])) as Record<CountryCode, string>;
@@ -547,49 +547,49 @@ const HUB_COUNTRY_SEO: { code: CountryCode; h: string; p: string }[] = [
   {
     code: "ZA",
     h: "Corporate training in South Africa",
-    p: "In-house, live online and self-paced cybersecurity awareness and AI productivity training for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
+    p: "Online, in-house cybersecurity awareness and AI productivity training for companies in Johannesburg, Cape Town, Durban, Pretoria and across South Africa. Staff learn to stop phishing and payment fraud, protect customer information and use AI tools safely.",
   },
   {
     code: "KE",
     h: "Corporate training in Kenya",
-    p: "In-house, live online and self-paced cybersecurity awareness and AI productivity training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Practical sessions for every employee, from the front desk to the boardroom, with examples from your sector.",
+    p: "Online, in-house cybersecurity awareness and AI productivity training for companies in Nairobi, Mombasa, Kisumu and across Kenya. Practical self-paced courses for every employee, from the front desk to the boardroom, with examples from your sector.",
   },
   {
     code: "GH",
     h: "Corporate training in Ghana",
-    p: "In-house, live online and self-paced cybersecurity awareness and AI productivity training for companies in Accra, Kumasi, Tema, Takoradi and across Ghana. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
+    p: "Online, in-house cybersecurity awareness and AI productivity training for companies in Accra, Kumasi, Tema, Takoradi and across Ghana. Teams learn to recognise scams and impersonation, protect business data and work faster with AI.",
   },
   {
     code: "NG",
     h: "Corporate training in Nigeria",
-    p: "In-house, live online, hybrid or self-paced cybersecurity awareness and AI productivity training for organisations in Lagos, Abuja, Port Harcourt, Warri and across Nigeria. We provide the attendance records and documentation for ITF reimbursement claims.",
+    p: "Online, in-house cybersecurity awareness and AI productivity training for organisations in Lagos, Abuja, Port Harcourt, Warri and across Nigeria. We provide the attendance records and documentation for ITF reimbursement claims.",
   },
 ];
 
 const HUB_FAQ: { q: string; a: string }[] = [
   {
-    q: "Who delivers the training, and what qualifications do your trainers have?",
-    a: "Live and in-house sessions are led by a facilitator with practical experience in the subject and a relevant degree or recognised industry certification, checked by us before they are booked. Trainers complete an assessed trial session and sign a confidentiality agreement. Before your programme starts, we send you your lead trainer's profile.",
+    q: "How is the training delivered, and who writes the courses?",
+    a: "All corporate training is online and in-house: staff study self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions. Each course is designed by our Programme Director and written by authors with practical experience in the subject and a relevant degree or recognised industry certification, and reviewed before it is published.",
   },
   {
     q: "Which countries do you deliver corporate training in?",
-    a: "Nigeria, South Africa, Kenya and Ghana. In every country your staff can learn self-paced online, or we train live online, in-house at your offices or hybrid.",
+    a: "Nigeria, South Africa, Kenya and Ghana. In every country training is online and in-house: your staff learn self-paced online in a private company space.",
   },
   {
     q: "Do you offer cybersecurity awareness training for companies in South Africa?",
-    a: "Yes. CyberSecure Workforce is available self-paced online, or live online, in-house or hybrid, for teams across South Africa, including Johannesburg, Cape Town, Durban and Pretoria. Employees learn to spot phishing, stop payment fraud, protect customer information and report incidents quickly.",
+    a: "Yes. CyberSecure Workforce is available online and in-house, self-paced, for teams across South Africa, including Johannesburg, Cape Town, Durban and Pretoria. Employees learn to spot phishing, stop payment fraud, protect customer information and report incidents quickly.",
   },
   {
     q: "Do you offer cybersecurity awareness training for companies in Kenya?",
-    a: "Yes. CyberSecure Workforce is available self-paced online, or live online, in-house or hybrid, for teams across Kenya, including Nairobi, Mombasa and Kisumu. It is written for non-technical staff and uses realistic workplace scenarios.",
+    a: "Yes. CyberSecure Workforce is available online and in-house, self-paced, for teams across Kenya, including Nairobi, Mombasa and Kisumu. It is written for non-technical staff and uses realistic workplace scenarios.",
   },
   {
     q: "Do you offer cybersecurity awareness training for companies in Ghana?",
-    a: "Yes. CyberSecure Workforce is available self-paced online, or live online, in-house or hybrid, for teams across Ghana, including Accra, Kumasi, Tema and Takoradi. Staff learn to recognise scams, impersonation and fake payment requests, and to protect business information.",
+    a: "Yes. CyberSecure Workforce is available online and in-house, self-paced, for teams across Ghana, including Accra, Kumasi, Tema and Takoradi. Staff learn to recognise scams, impersonation and fake payment requests, and to protect business information.",
   },
   {
     q: "Do you offer AI training for employees in South Africa, Kenya and Ghana?",
-    a: `Yes. AI Workflow Productivity & Process Transformation is available in all three countries, self-paced online or live online, in-house or hybrid, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. The next live cohort is ${COHORT_NAME}, with ${COHORT_PLACES["ai-workflow"]} places left for AI Workflow and ${COHORT_PLACES.accelerator} for the Accelerator; self-paced places start today.`,
+    a: `Yes. AI Workflow Productivity & Process Transformation is available online and in-house in all three countries, self-paced, and the AI + Cybersecurity Professional Accelerator trains IT, security, risk and data teams. The ${COHORT_NAME} intake has ${COHORT_PLACES["ai-workflow"]} places left for AI Workflow and ${COHORT_PLACES.accelerator} for the Accelerator; places bought today start today.`,
   },
   {
     q: "What is AI Workflow Productivity & Process Transformation?",
@@ -637,7 +637,7 @@ const HUB_JOURNEY = [
   "**Consultation:** we learn about your organisation, teams and goals.",
   "**Assessment:** we identify where training will make the biggest difference.",
   "**Design:** we adapt the programme to your sector, departments and tools.",
-  "**Training:** self-paced online, or practical sessions live online, in-house or hybrid.",
+  "**Training:** online and in-house: practical self-paced courses in a private space for your staff.",
   "**Application:** participants apply what they learn to real workplace tasks.",
   "**Review:** we review results with you and plan the next steps.",
 ];
@@ -721,7 +721,7 @@ function hubJsonLd(url: string): object {
         name: "CyberSecure Workforce: cybersecurity awareness training for employees",
         serviceType: "Cybersecurity awareness training",
         description:
-          "Live, facilitated cybersecurity awareness training for non-technical employees: phishing, payment fraud, impersonation, data protection, safe AI use and incident reporting.",
+          "Online, self-paced cybersecurity awareness training for non-technical employees, private to your organisation: phishing, payment fraud, impersonation, data protection, safe AI use and incident reporting.",
         url: `${url}#cybersecure`,
         provider: { "@id": `${ORIGIN}/#organization` },
         areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
@@ -772,7 +772,7 @@ export function renderCorporateHub(
   const headHtml = head(ctx, {
     title: "Corporate AI & Cybersecurity Training | Nigeria, South Africa, Kenya, Ghana",
     description:
-      "AI and cybersecurity training for employees in Nigeria, South Africa, Kenya and Ghana: self-paced per learner, or live and in-house by quote. Get a proposal.",
+      "AI and cybersecurity training for employees in Nigeria, South Africa, Kenya and Ghana: online and in-house, per learner or organisation-wide. Get a proposal.",
     canonicalPath: CORPORATE_HUB_PATH,
     alternatesFor: countryCorporatePath,
     xDefault: CORPORATE_HUB_PATH,
@@ -783,7 +783,7 @@ export function renderCorporateHub(
 
   // Homepage country selector (2026-11-09): the same card format as the learner homepages'
   // "Choose your country" (flag, name, currency, status pill), linking to each country's
-  // corporate training page. The pill reads "Live online" for every country (2026-11-10).
+  // corporate training page. The pill reads "In-house &amp; online" for every country (2026-11-13).
   const chooseCards = MARKET_ORDER.map((k) => {
     const c = COUNTRIES[k];
     const selected = ctx.chosen === k;
@@ -840,7 +840,7 @@ ${header(ctx, home, "/", true)}
         <span class="eyebrow">Corporate training for employers &middot; South Africa, Kenya, Ghana and Nigeria</span>
         <h1 class="hero-title ca-hero-title">Cybersecurity and AI workforce training for companies</h1>
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
-        <p class="hero-sub">Paleon Training helps business owners, managing directors and HR leaders train their staff in two areas that now matter to every company: <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Choose self-paced online learning per employee, or live online, in-house or hybrid training by quote, in all four countries. Every programme is built around real workplace tasks, not theory.</p>
+        <p class="hero-sub">Paleon Training helps business owners, managing directors and HR leaders train their staff in two areas that now matter to every company: <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is online and in-house: self-paced courses in a private space for your staff only, per employee or organisation-wide, in all four countries. Every programme is built around real workplace tasks, not theory.</p>
         <div class="hero-ctas">
           ${ctaButton(WORKFORCE_CTA, true, buyHref)}
           ${readinessButton(buyCountry, true)}
@@ -947,7 +947,7 @@ ${header(ctx, home, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="by-country-title">Cybersecurity and AI training for companies in South Africa, Kenya, Ghana and Nigeria</h2>
-      <p class="ca-p">Every programme uses examples from your sector. Live sessions are led by a facilitator and scheduled around your working day; self-paced learners study when it suits them.</p>
+      <p class="ca-p">Every programme uses examples from your sector. All training is online and in-house: staff study self-paced in your private company space, when it suits them. There are no live or facilitator-led sessions.</p>
       <div class="ca-cards">${HUB_COUNTRY_SEO.map(
         (c) => `<div class="ca-card">
           <h3>${flagSvg(c.code, "flag flag-sm")} ${escapeHtml(c.h)}</h3>

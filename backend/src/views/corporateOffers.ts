@@ -4,9 +4,12 @@ import { DATA_PROTECTION_LAW } from "./corporateLocal";
 
 // The buying aids shared by every corporate page (2026-11-13, owner's 12-point conversion
 // review): business outcomes before the module list, the two ways to buy (self-paced per
-// learner, or live / in-house by quote, with a worked example for 25 staff), the December
-// 2026 cohort for the two booked programmes, a paid 10-learner pilot and a free leadership
-// taster, a "Book a 20-minute call" link, and the PDFs a buyer can forward for sign-off.
+// learner, or an in-house rollout for the whole organisation, with a worked example for 25
+// staff), the December 2026 intake, a paid 10-learner pilot and a free leadership preview,
+// a "Book a 20-minute call" link, and the PDFs a buyer can forward for sign-off.
+// Delivery (owner, 2026-11-13): corporate training is ONLINE and IN-HOUSE only, meaning
+// self-paced online courses private to the client's own staff. It is NOT live, NOT
+// facilitator-led and NOT hybrid; never offer sessions, workshops or training at offices.
 // No view imports, so every corporate page module can use it.
 
 function escapeHtml(value: string): string {
@@ -15,18 +18,18 @@ function escapeHtml(value: string): string {
 
 const money = (code: CountryCode, amount: number) => formatMoney(code, amount);
 
-// ---- Live delivery is booked until December 2026 (owner, 2026-11-13); places remaining in
-// the December 2026 cohort per programme. Update here when places fill.
+// ---- Places remaining in the December 2026 intake per programme (owner, 2026-11-13).
+// Update here when places fill.
 export const COHORT_NAME = "December 2026";
 export const COHORT_PLACES: Record<PricedProgramme, number> = { "ai-workflow": 12, cybersecure: 8, accelerator: 10 };
-export const RESERVE_CTA = `Reserve a ${COHORT_NAME} cohort`;
+export const RESERVE_CTA = `Reserve ${COHORT_NAME} intake places`;
 
 export function cohortSentence(programme: PricedProgramme): string {
-  return `The next live cohort is ${COHORT_NAME}, with ${COHORT_PLACES[programme]} places left. Self-paced places start today.`;
+  return `The ${COHORT_NAME} intake has ${COHORT_PLACES[programme]} places left, and places bought today start today.`;
 }
 
 export function cohortNotice(programme: PricedProgramme): string {
-  return `<p class="ca-booked"><strong>Next live cohort: ${COHORT_NAME}, ${COHORT_PLACES[programme]} places left.</strong> Self-paced places start today.</p>`;
+  return `<p class="ca-booked"><strong>${COHORT_NAME} intake: ${COHORT_PLACES[programme]} places left.</strong> Places bought today start today.</p>`;
 }
 
 export function reserveButton(programme: PricedProgramme): string {
@@ -143,7 +146,7 @@ export function outcomes(programme: PricedProgramme, code: CountryCode): Outcome
     case "accelerator":
       return [
         {
-          h: "In-house AI and cyber champions",
+          h: "Your own AI and cyber champions",
           p: "IT, security, risk and data staff who can assess AI tools, recognise AI-enabled threats and support colleagues across the business.",
         },
         {
@@ -152,7 +155,7 @@ export function outcomes(programme: PricedProgramme, code: CountryCode): Outcome
         },
         {
           h: "A real problem worked on",
-          p: "Each capstone tackles a live challenge from your organisation, so the programme ends with a result you can use.",
+          p: "Each capstone tackles a current challenge from your organisation, so the programme ends with a result you can use.",
         },
       ];
   }
@@ -201,7 +204,7 @@ export function waysToBuySection(programme: PricedProgramme, code: CountryCode, 
   return `<section class="section ${dark ? "section-dark" : "section-paper"} ca-section" id="delivery" aria-labelledby="delivery-title">
     <div class="wrap">
       <span class="section-eyebrow">Two ways to buy</span>
-      <h2 class="section-title" id="delivery-title">Self-paced per learner, or live and in-house by quote</h2>
+      <h2 class="section-title" id="delivery-title">Online and in-house: per learner, or for your whole organisation</h2>
       <div class="ca-cards co-ways">
         <div class="ca-card co-way">
           <p class="co-way-tag">Option 1 &middot; fixed price</p>
@@ -216,15 +219,15 @@ export function waysToBuySection(programme: PricedProgramme, code: CountryCode, 
           <div class="ca-ctas"><a class="btn btn-signal btn-lg" href="#buy" data-buy-cta>Buy learner places</a></div>
         </div>
         <div class="ca-card co-way">
-          <p class="co-way-tag">Option 2 &middot; by quote</p>
-          <h3>Live, facilitator-led</h3>
-          <p class="co-way-price"><strong>Live online, in-house at your offices, or hybrid</strong></p>
+          <p class="co-way-tag">Option 2 &middot; by proposal</p>
+          <h3>In-house rollout</h3>
+          <p class="co-way-price"><strong>A private online space for your staff only</strong></p>
           <ul class="ca-list">
-            <li>Available in Nigeria, South Africa, Kenya and Ghana, including at your offices in ${escapeHtml(country)}</li>
-            <li>Department sessions, executive workshops or an organisation-wide rollout</li>
-            <li>Examples and exercises adapted to your sector; attendance records for your files</li>
+            <li>Your own company space in the Paleon portal, for staff anywhere in ${escapeHtml(country)}; staff join with your company sign-up link</li>
+            <li>For whole departments or an organisation-wide rollout; invoiced for 200 learners or more</li>
+            <li>Managers see each learner&rsquo;s progress; completion and attendance records for your files</li>
           </ul>
-          <p class="co-way-example"><strong>Worked example:</strong> for ${EXAMPLE_STAFF} staff we quote after a 20-minute call about your teams, locations and dates, and reply with a proposal within one working day.</p>
+          <p class="co-way-example"><strong>Worked example:</strong> tell us your departments and headcount in a 20-minute call, and we reply with a proposal within one working day. All training is online and self-paced: there are no live or facilitator-led sessions.</p>
           <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a proposal</a></div>
         </div>
       </div>
@@ -247,15 +250,15 @@ export function waysToBuyBrief(code: CountryCode, dark = true): string {
           <ul class="ca-list">${examples}</ul>
         </div>
         <div class="ca-card co-way">
-          <p class="co-way-tag">Option 2 &middot; by quote</p>
-          <h3>Live online, in-house or hybrid</h3>
-          <p>Facilitator-led sessions at your offices, live online or a mix, in Nigeria, South Africa, Kenya and Ghana. We quote after a 20-minute call about your teams, locations and dates.</p>
+          <p class="co-way-tag">Option 2 &middot; by proposal</p>
+          <h3>In-house rollout, online</h3>
+          <p>A private company space in the Paleon portal for your staff only, in Nigeria, South Africa, Kenya and Ghana. Staff join with your sign-up link and managers track progress; invoiced for 200 learners or more. All training is self-paced online, never live or facilitator-led.</p>
           <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="proposal">Request a proposal</a></div>
         </div>
       </div>`;
 }
 
-// ---- Pilot (10 learners at the normal 10-learner price) and free leadership taster.
+// ---- Pilot (10 learners at the normal 10-learner price) and free leadership preview.
 export function pilotTotal(programme: PricedProgramme, code: CountryCode): number {
   return seatPrice(programme, code, PILOT_STAFF) * PILOT_STAFF;
 }
@@ -292,7 +295,7 @@ export function pilotSection(code: CountryCode, programme: PricedProgramme | nul
   return `<section class="section ${dark ? "section-dark" : "section-paper"} ca-section" id="pilot" aria-labelledby="pilot-title">
     <div class="wrap">
       <span class="section-eyebrow">Start small</span>
-      <h2 class="section-title" id="pilot-title">Try it first: a 10-learner pilot or a free leadership taster</h2>
+      <h2 class="section-title" id="pilot-title">Try it first: a 10-learner pilot or a free leadership preview</h2>
       <div class="ca-cards co-ways">
         <div class="ca-card co-way">
           <p class="co-way-tag">Paid pilot</p>
@@ -304,9 +307,9 @@ export function pilotSection(code: CountryCode, programme: PricedProgramme | nul
         </div>
         <div class="ca-card co-way">
           <p class="co-way-tag">Free</p>
-          <h3>Leadership taster session</h3>
-          <p>A short live online session for your leadership team: the cyber and AI risks and opportunities for your organisation, and what training would change. Free, with no obligation.</p>
-          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="taster">Request a free taster</a></div>
+          <h3>Leadership preview</h3>
+          <p>Free self-paced online access to sample modules for your leadership team, so they can see the cyber and AI risks and opportunities the programme covers before you buy. No obligation.</p>
+          <div class="ca-ctas"><a class="btn ${dark ? "btn-outline-light" : "btn-outline-ink"} btn-lg" href="#enquiry" data-intent="taster">Request a free preview</a></div>
         </div>
       </div>
     </div>
@@ -321,8 +324,8 @@ export const BUYING_TERMS: { h: string; p: string }[] = [
     p: "Full refund within 14 days of purchase if no learner has started. Once learners have started there is no refund, but unused seats can be given to other staff at any time during the 12 months' access.",
   },
   {
-    h: "Live, in-house or hybrid",
-    p: "Free rescheduling up to 10 working days before the first session. Cancelling later than that costs 50% of the fee.",
+    h: "In-house rollouts",
+    p: "The same refund and unused-seat terms as self-paced places.",
   },
   { h: "Pilot guarantee", p: PILOT_GUARANTEE_TERMS.replace(/^i/, "I") },
 ];

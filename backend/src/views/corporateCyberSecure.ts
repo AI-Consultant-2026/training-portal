@@ -34,8 +34,8 @@ import {
 // country at /<cc>/corporate-training/cybersecure-workforce. Copy lives in
 // corporateCyberSecureContent.ts. They reuse the AI Workflow pages' styles, enquiry form
 // and corporate-ai.js; enquiries are saved with source "cybersecure-workforce".
-// Every country offers self-paced online learning, or live online, in-house and hybrid
-// delivery by quote (2026-11-13); Nigeria also mentions ITF reimbursement.
+// Every country offers online, in-house training only (self-paced, private to the client's
+// staff; never live, facilitator-led or hybrid) (2026-11-13); Nigeria also mentions ITF reimbursement.
 
 export { CYBERSECURE_SLUG, cyberSecurePath } from "./corporateAiWorkflow";
 
@@ -205,7 +205,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
   return [
     {
       q: `Do you offer cybersecurity awareness training for companies in ${cityList(code)}?`,
-      a: `Yes. CyberSecure Workforce is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Every session is scheduled around your working day. Self-paced places can start today; ${cohortSentence("cybersecure").charAt(0).toLowerCase()}${cohortSentence("cybersecure").slice(1)}`,
+      a: `Yes. CyberSecure Workforce is delivered ${deliveryPhrase(code)} for companies in ${cityList(code)} and anywhere else in ${country}. Staff study at their own pace around their working day. ${cohortSentence("cybersecure")}`,
     },
     {
       q: "How much does cybersecurity awareness training for employees cost?",
@@ -250,14 +250,14 @@ function faq(code: CountryCode, c: CyberPageContent): string {
 function whereWeTrain(code: CountryCode): string {
   const country = COUNTRIES[code].name;
   const how =
-    "We train in-house at your offices or sites, live online, or a mix of both, or your staff can learn self-paced online" +
-    (code === "NG" ? ", and we provide the attendance records and documentation for ITF reimbursement claims." : ".");
+    "Training is online and in-house: your staff learn self-paced online in a private company space that only your organisation can join. There are no live or facilitator-led sessions" +
+    (code === "NG" ? ". We provide the attendance records and documentation for ITF reimbursement claims." : ".");
   return `<section class="section section-paper ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
       <span class="section-eyebrow">Where we train</span>
       <h2 class="section-title" id="where-title">Cybersecurity awareness training for employees across ${escapeHtml(country)}</h2>
       <p class="ca-p">Paleon Training runs CyberSecure Workforce for companies in ${escapeHtml(cityList(code))}, and anywhere else in ${escapeHtml(country)}. ${escapeHtml(how)}</p>
-      <p class="ca-p">Sessions are scheduled around your working day, and examples are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
+      <p class="ca-p">Staff study around their working day, and examples are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       ${cohortNotice("cybersecure")}
       <div class="ca-ctas">${reserveButton("cybersecure")}${callButton(false)}</div>
     </div>

@@ -2,8 +2,8 @@ import { CountryCode, isCountryCode } from "./countries";
 
 // Corporate prices (2026-11-12, owner request). These are for the ONLINE SELF-PACED version
 // of each programme in the Paleon portal (company seats; staff join with the company's
-// code), per learner, 12 months' access. Live facilitator-led and in-house delivery is
-// still quoted per proposal. Market-adjusted, not straight exchange-rate conversions.
+// code), per learner, 12 months' access. Since 2026-11-13 this is the ONLY delivery: online
+// and in-house (private to the client's staff); never live, facilitator-led or hybrid. Market-adjusted, not straight exchange-rate conversions.
 // Every price on the corporate pages, in the cost FAQs and at the corporate checkout
 // comes from this file, so the checkout can never charge a different price than the page.
 

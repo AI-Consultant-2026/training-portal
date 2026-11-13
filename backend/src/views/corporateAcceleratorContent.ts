@@ -1,5 +1,5 @@
 // Generated 2026-11-02 from the "AI + Cybersecurity Professional Accelerator — Corporate Landing
-// Pages" Claude Doc (5bpmJxwFtTDYHiwJkcbXD3). Confirmed promises only: a facilitator reviews each
+// Pages" Claude Doc (5bpmJxwFtTDYHiwJkcbXD3). Confirmed promises only: a Paleon reviewer reviews each
 // capstone, and a Paleon certificate of completion (not accredited). Programme length is not
 // promised; it is agreed in each proposal. Edit the copy here.
 
@@ -15,12 +15,12 @@ export interface AccPageContent {
 export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageContent> = {
   "NG": {
     "title": "AI & Cybersecurity Training for Professionals in Nigeria",
-    "description": "AI and cybersecurity training for IT, risk and data teams in Lagos, Abuja, Port Harcourt and across Nigeria. In-house or online; supports ITF claims.",
+    "description": "AI and cybersecurity training for IT, risk and data teams in Lagos, Abuja, Port Harcourt and across Nigeria. Online and in-house; supports ITF claims.",
     "images": {
       "hero": "Nigerian technology and risk professionals reviewing an AI security dashboard together in a Lagos office.",
       "ai": "Nigerian business analyst using an AI assistant on a laptop and checking the output against a report.",
       "security": "Nigerian security analyst and risk manager reviewing a risk assessment together.",
-      "training": "Nigerian professionals in an in-person AI and cybersecurity workshop.",
+      "training": "Nigerian professionals taking an AI and cybersecurity course online.",
       "transformation": "Nigerian project team mapping a secure AI adoption plan on a whiteboard."
     },
     "sections": {
@@ -46,7 +46,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** 12 professional modules · Real-workplace capstone project · In-house, online or hybrid · Supports ITF reimbursement claims"
+            "p": "**Trust line:** 12 professional modules · Real-workplace capstone project · Online and in-house, self-paced · Supports ITF reimbursement claims"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps professionals in Nigerian organisations develop practical AI skills while understanding cybersecurity, AI risk, governance and secure digital transformation."
@@ -295,7 +295,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "A Paleon facilitator reviews each capstone and gives written feedback. Your organisation keeps the work."
+            "p": "A Paleon reviewer reviews each capstone and gives written feedback. Your organisation keeps the work."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -333,24 +333,20 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
                 "Best for"
               ],
               [
-                "In-house corporate programme",
-                "Delivered for your organisation alone, at your offices in Lagos, Abuja, Port Harcourt, Warri or elsewhere."
+                "Self-paced online places",
+                "Each participant studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
               ],
               [
-                "Online instructor-led training",
-                "Live virtual sessions for teams across branches and states."
+                "In-house rollout",
+                "A private online space for your team only: participants join with your company sign-up link and managers track progress."
               ],
               [
-                "Hybrid programme",
-                "Online modules combined with in-person workshops."
+                "Leadership modules",
+                "Short self-paced modules for leaders on AI strategy, governance and cyber risk."
               ],
               [
                 "Department-specific programme",
                 "Adapted for technology, cybersecurity, operations, risk or management teams."
-              ],
-              [
-                "Executive AI + Cybersecurity Workshop",
-                "A strategic session for leaders."
               ],
               [
                 "Professional Accelerator Programme",
@@ -359,7 +355,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             ]
           },
           {
-            "p": "Pricing depends on group size, delivery method and customisation. **Request In-House Training Proposal** for a quote."
+            "p": "Self-paced places have a fixed price per learner; in-house rollouts for departments or the whole organisation are priced by proposal. All training is online and in-house: there are no live, facilitator-led or hybrid sessions. **Request In-House Training Proposal** for a quote."
           },
           {
             "p": "**ITF reimbursement:** Nigerian employers that pay the 1% ITF training levy can apply for a refund of up to 50% of the levy they paid, if the ITF approves their training programme (source: Industrial Training Fund (Amendment) Act 2011). We provide the attendance records and programme documentation a claim needs."
@@ -374,7 +370,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
-              "**Train:** we deliver the programme in-house, online or hybrid.",
+              "**Train:** staff study online and in-house, self-paced in a private company space.",
               "**Apply:** participants complete capstone projects on real challenges.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
@@ -466,10 +462,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes, as live instructor-led sessions."
+            "p": "**Is online training available?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes, at your premises, or as a hybrid of in-person and online."
+            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."
@@ -484,7 +480,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Does it teach hacking?** No. All threat content is defensive, focused on awareness, protection and risk management."
           },
           {
-            "p": "**Will participants complete practical projects?** Yes. Every participant completes a capstone on a real organisational challenge, reviewed by a Paleon facilitator."
+            "p": "**Will participants complete practical projects?** Yes. Every participant completes a capstone on a real organisational challenge, reviewed by a Paleon reviewer."
           },
           {
             "p": "**Is the programme accredited?** No, the programme is not accredited. Participants who complete it receive a Paleon Training certificate of completion. It is a practical professional-development programme, not a certification exam."
@@ -521,12 +517,12 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
   },
   "ZA": {
     "title": "AI & Cybersecurity Training for Professionals in South Africa",
-    "description": "In-house and online AI and cybersecurity training for IT, security, risk and data teams in Johannesburg, Cape Town, Durban and across South Africa. Get a proposal.",
+    "description": "Online, in-house AI and cybersecurity training for IT, security, risk and data teams in Johannesburg, Cape Town, Durban and across South Africa. Get a proposal.",
     "images": {
       "hero": "South African risk and technology professionals reviewing an AI governance dashboard in a Johannesburg office.",
       "ai": "South African analyst using an AI tool and verifying its output in a Cape Town office.",
       "security": "South African security team discussing a risk register beside a monitoring screen.",
-      "training": "South African professional taking part in a live online AI and cybersecurity session.",
+      "training": "South African professional taking an AI and cybersecurity course online.",
       "transformation": "South African project team planning a secure AI rollout for a mining operation."
     },
     "sections": {
@@ -543,7 +539,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Headline line:** AI adoption needs owners who understand the risk. Develop them inside your organisation."
           },
           {
-            "p": "**Supporting statement:** South African boards and executive committees are asking two questions at once: how fast can we use AI, and who is accountable for the risk? The AI + Cybersecurity Professional Accelerator develops professionals in financial services, mining, telecoms, retail and the public sector who can use AI well, assess its security and governance risks, and support responsible adoption. Live online, for teams in every province."
+            "p": "**Supporting statement:** South African boards and executive committees are asking two questions at once: how fast can we use AI, and who is accountable for the risk? The AI + Cybersecurity Professional Accelerator develops professionals in financial services, mining, telecoms, retail and the public sector who can use AI well, assess its security and governance risks, and support responsible adoption. Online and in-house, for teams in every province."
           },
           {
             "p": "**Primary CTA:** Book Corporate Workforce Training"
@@ -552,7 +548,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** In-house or online across South Africa · 12 professional modules · Real-workplace capstone · Governance and POPIA awareness built in"
+            "p": "**Trust line:** Online and in-house across South Africa · 12 professional modules · Real-workplace capstone · Governance and POPIA awareness built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps South African organisations develop professionals who can apply AI in their work while managing cybersecurity, AI risk, governance and data protection."
@@ -785,7 +781,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start. Examples: an AI risk assessment, an AI-use policy, an AI-assisted security reporting workflow, an AI governance framework, or a secure AI adoption plan for one division. A Paleon facilitator reviews each capstone and gives written feedback."
+            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start. Examples: an AI risk assessment, an AI-use policy, an AI-assisted security reporting workflow, an AI governance framework, or a secure AI adoption plan for one division. A Paleon reviewer reviews each capstone and gives written feedback."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -804,7 +800,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "In South Africa we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
+            "p": "In South Africa, as everywhere, training is online and in-house: staff learn self-paced in a private company space. There are no live, facilitator-led or hybrid sessions."
           },
           {
             "table": [
@@ -813,16 +809,20 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
                 "Best for"
               ],
               [
-                "Online instructor-led programme",
-                "Live sessions for teams across provinces, offices and sites."
+                "Self-paced online places",
+                "Each participant studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
+              ],
+              [
+                "In-house rollout",
+                "A private online space for your team only: participants join with your company sign-up link and managers track progress."
+              ],
+              [
+                "Leadership modules",
+                "Short self-paced modules for leaders on AI strategy, governance and cyber risk."
               ],
               [
                 "Department-specific programme",
                 "Adapted for technology, security, risk, operations or management teams."
-              ],
-              [
-                "Executive AI + Cybersecurity Workshop",
-                "A strategic online session for Exco and boards."
               ],
               [
                 "Professional Accelerator Programme",
@@ -843,7 +843,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your AI plans, controls and governance.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt scenarios and capstone topics to your sector.",
-              "**Train:** we deliver in-house, live online or hybrid sessions.",
+              "**Train:** staff study online and in-house, self-paced in a private company space.",
               "**Apply:** participants complete capstones on real challenges.",
               "**Transform:** your new internal capability supports accountable AI adoption."
             ]
@@ -929,10 +929,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one online cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across South Africa."
+            "p": "**Is online training available?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
+            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."
@@ -981,12 +981,12 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
   },
   "GH": {
     "title": "AI & Cybersecurity Training for Professionals in Ghana",
-    "description": "In-house and online AI and cybersecurity training for IT, security, risk and data teams in Accra, Kumasi, Tema and across Ghana. Lead secure AI adoption.",
+    "description": "Online, in-house AI and cybersecurity training for IT, security, risk and data teams in Accra, Kumasi, Tema and across Ghana. Lead secure AI adoption.",
     "images": {
       "hero": "Ghanaian technology and finance professionals reviewing an AI security dashboard in an Accra office.",
       "ai": "Ghanaian product manager using an AI assistant to draft a report.",
       "security": "Ghanaian security analyst explaining a risk assessment to a colleague.",
-      "training": "Ghanaian professionals in a live online AI and cybersecurity workshop.",
+      "training": "Ghanaian professionals taking an AI and cybersecurity course online.",
       "transformation": "Ghanaian team mapping a secure digital-service launch on a whiteboard."
     },
     "sections": {
@@ -1003,7 +1003,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Headline line:** Build the people who will lead your move to AI, safely."
           },
           {
-            "p": "**Supporting statement:** Banks, fintechs, telecoms operators and mining and energy companies in Ghana are adding AI to customer service, operations and reporting. Every new tool needs people who understand both what AI can do and what it can expose. The AI + Cybersecurity Professional Accelerator develops those professionals inside your organisation, in live online sessions."
+            "p": "**Supporting statement:** Banks, fintechs, telecoms operators and mining and energy companies in Ghana are adding AI to customer service, operations and reporting. Every new tool needs people who understand both what AI can do and what it can expose. The AI + Cybersecurity Professional Accelerator develops those professionals inside your organisation, online and in-house."
           },
           {
             "p": "**Primary CTA:** Book Corporate Workforce Training"
@@ -1012,7 +1012,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** In-house or online across Ghana · 12 professional modules · Real-workplace capstone · Responsible AI built in"
+            "p": "**Trust line:** Online and in-house across Ghana · 12 professional modules · Real-workplace capstone · Responsible AI built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps organisations in Ghana develop professionals who can use AI effectively while understanding cybersecurity, AI risk, governance and data protection."
@@ -1241,7 +1241,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start: for example an AI risk assessment, an AI-use policy, an AI-assisted security reporting workflow or a secure AI adoption plan. A Paleon facilitator reviews each capstone and gives written feedback."
+            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start: for example an AI risk assessment, an AI-use policy, an AI-assisted security reporting workflow or a secure AI adoption plan. A Paleon reviewer reviews each capstone and gives written feedback."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -1260,7 +1260,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "In Ghana we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
+            "p": "In Ghana, as everywhere, training is online and in-house: staff learn self-paced in a private company space. There are no live, facilitator-led or hybrid sessions."
           },
           {
             "table": [
@@ -1269,16 +1269,20 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
                 "Best for"
               ],
               [
-                "Online instructor-led programme",
-                "Live sessions for teams in Accra, Kumasi, Takoradi, Tema and beyond."
+                "Self-paced online places",
+                "Each participant studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
+              ],
+              [
+                "In-house rollout",
+                "A private online space for your team only: participants join with your company sign-up link and managers track progress."
+              ],
+              [
+                "Leadership modules",
+                "Short self-paced modules for leaders on AI strategy, governance and cyber risk."
               ],
               [
                 "Department-specific programme",
                 "Adapted for technology, security, risk, operations or management teams."
-              ],
-              [
-                "Executive AI + Cybersecurity Workshop",
-                "A strategic online session for leadership."
               ],
               [
                 "Professional Accelerator Programme",
@@ -1299,7 +1303,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
-              "**Train:** we deliver the programme in-house, live online or hybrid, with a facilitator.",
+              "**Train:** staff study online and in-house, self-paced in a private company space.",
               "**Apply:** participants complete capstone projects on real challenges.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
@@ -1385,10 +1389,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one online cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across Ghana."
+            "p": "**Is online training available?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
+            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."
@@ -1434,12 +1438,12 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
   },
   "KE": {
     "title": "AI & Cybersecurity Training for Professionals in Kenya",
-    "description": "In-house and online AI and cybersecurity training for IT, security, risk and data teams in Nairobi, Mombasa, Kisumu and across Kenya. Lead secure AI adoption.",
+    "description": "Online, in-house AI and cybersecurity training for IT, security, risk and data teams in Nairobi, Mombasa, Kisumu and across Kenya. Lead secure AI adoption.",
     "images": {
       "hero": "Kenyan product and security professionals reviewing an AI risk dashboard in a Nairobi office.",
       "ai": "Kenyan data analyst using an AI tool and checking the results.",
       "security": "Kenyan security and fraud team reviewing an account-takeover alert.",
-      "training": "Kenyan professional taking part in a live online AI and cybersecurity workshop.",
+      "training": "Kenyan professional taking an AI and cybersecurity course online.",
       "transformation": "Kenyan fintech team planning secure AI features on a whiteboard."
     },
     "sections": {
@@ -1456,7 +1460,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Headline line:** Innovate with AI at Kenyan speed, without leaving security behind."
           },
           {
-            "p": "**Supporting statement:** Kenyan banks, fintechs, telecoms and technology firms build and ship digital services fast, and AI is now part of many of them. Speed needs people who can see the risks as clearly as the opportunities. The AI + Cybersecurity Professional Accelerator develops professionals who can apply AI, manage AI and cyber risk, and keep innovation secure. Live online, for teams in Nairobi and across Kenya."
+            "p": "**Supporting statement:** Kenyan banks, fintechs, telecoms and technology firms build and ship digital services fast, and AI is now part of many of them. Speed needs people who can see the risks as clearly as the opportunities. The AI + Cybersecurity Professional Accelerator develops professionals who can apply AI, manage AI and cyber risk, and keep innovation secure. Online and in-house, for teams in Nairobi and across Kenya."
           },
           {
             "p": "**Primary CTA:** Book Corporate Workforce Training"
@@ -1465,7 +1469,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request In-House Training Proposal"
           },
           {
-            "p": "**Trust line:** In-house or online across Kenya · 12 professional modules · Real-workplace capstone · AI governance and data protection built in"
+            "p": "**Trust line:** Online and in-house across Kenya · 12 professional modules · Real-workplace capstone · AI governance and data protection built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps Kenyan organisations develop professionals who can use AI effectively while managing cybersecurity, AI risk, governance and data protection."
@@ -1694,7 +1698,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start: for example an AI risk assessment for a product feature, an AI-use policy, an AI-assisted security reporting workflow or a secure AI adoption plan. A Paleon facilitator reviews each capstone and gives written feedback."
+            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start: for example an AI risk assessment for a product feature, an AI-use policy, an AI-assisted security reporting workflow or a secure AI adoption plan. A Paleon reviewer reviews each capstone and gives written feedback."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -1713,7 +1717,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Corporate delivery options",
         "blocks": [
           {
-            "p": "In Kenya we deliver in-house at your offices, live online with a facilitator, or hybrid; staff can also learn self-paced online."
+            "p": "In Kenya, as everywhere, training is online and in-house: staff learn self-paced in a private company space. There are no live, facilitator-led or hybrid sessions."
           },
           {
             "table": [
@@ -1722,16 +1726,20 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
                 "Best for"
               ],
               [
-                "Online instructor-led programme",
-                "Live sessions for teams in Nairobi, Mombasa, Kisumu and beyond."
+                "Self-paced online places",
+                "Each participant studies at their own pace in the Paleon portal, with 12 months' access. Fixed price per learner; start today."
+              ],
+              [
+                "In-house rollout",
+                "A private online space for your team only: participants join with your company sign-up link and managers track progress."
+              ],
+              [
+                "Leadership modules",
+                "Short self-paced modules for leaders on AI strategy, governance and cyber risk."
               ],
               [
                 "Department-specific programme",
                 "Adapted for technology, security, product, risk or management teams."
-              ],
-              [
-                "Executive AI + Cybersecurity Workshop",
-                "A strategic online session for leadership."
               ],
               [
                 "Professional Accelerator Programme",
@@ -1752,7 +1760,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
               "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
-              "**Train:** we deliver the programme in-house, live online or hybrid, with a facilitator.",
+              "**Train:** staff study online and in-house, self-paced in a private company space.",
               "**Apply:** participants complete capstone projects on real challenges.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
@@ -1838,10 +1846,10 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Can an organisation train an entire professional team?** Yes, in one online cohort or several."
           },
           {
-            "p": "**Is online training available?** Yes. Staff can learn self-paced online in the Paleon portal, or join live online sessions with a facilitator. In-house and hybrid delivery are also available across Kenya."
+            "p": "**Is online training available?** Yes. All corporate training is online: staff learn self-paced in a private company space in the Paleon portal. There are no live, facilitator-led or hybrid sessions."
           },
           {
-            "p": "**Can it be delivered in-house?** Yes. We deliver in-house at your offices anywhere in the country, live online, or as a hybrid. Live and in-house delivery are priced by quote; self-paced online places have a fixed price per learner."
+            "p": "**Can it be delivered in-house?** Yes, online. In-house means a private company space in the Paleon portal that only your staff can join, with progress visible to your managers. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
             "p": "**How long does the programme take?** It depends on your group, the depth you need and the capstone. We agree the length and schedule with you in the proposal."

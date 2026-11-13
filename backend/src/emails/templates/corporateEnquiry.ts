@@ -26,9 +26,9 @@ export function buildCorporateEnquiryEmail(lead: {
     d.intent === "proposal"
       ? "a corporate training proposal"
       : d.intent === "reserve"
-        ? "to reserve places in the December 2026 cohort"
+        ? "to reserve places in the December 2026 intake"
         : d.intent === "taster"
-          ? "a free leadership taster session"
+          ? "a free self-paced leadership preview"
           : "a consultation";
   const lines = [
     `New corporate ${topic} enquiry (${countryName}). They asked for ${wants}.`,
@@ -51,7 +51,7 @@ export function buildCorporateEnquiryEmail(lead: {
   return {
     to: config.corporateEnquiriesEmail,
     replyTo: lead.email,
-    subject: `${d.intent === "reserve" ? "Cohort reservation" : d.intent === "taster" ? "Leadership taster request" : `Corporate ${topic} enquiry`}: ${d.organisation ?? lead.name} (${countryName})`,
+    subject: `${d.intent === "reserve" ? "Intake reservation" : d.intent === "taster" ? "Leadership preview request" : `Corporate ${topic} enquiry`}: ${d.organisation ?? lead.name} (${countryName})`,
     text: lines.join("\n"),
     html: wrapHtml(lines),
   };

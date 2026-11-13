@@ -24,11 +24,11 @@ export const CORPORATE_DEPARTMENTS = [
 ] as const;
 
 export const CORPORATE_REQUIREMENTS = [
-  "Executive AI workshop",
+  "Executive AI briefing (self-paced)",
   "Department training",
   "Whole-workforce training",
   "AI Workflow Transformation Programme",
-  "AI governance / policy workshop",
+  "AI governance / policy module",
   "Review of current AI use",
   "Not sure yet",
 ] as const;
@@ -36,7 +36,7 @@ export const CORPORATE_REQUIREMENTS = [
 // The CyberSecure Workforce pages' options (2026-11-02):
 // /ng, /za, /gh and /ke/corporate-training/cybersecure-workforce.
 export const CYBERSECURE_REQUIREMENTS = [
-  "Executive awareness workshop",
+  "Executive awareness module",
   "Department training",
   "Organisation-wide awareness programme",
   "Not sure yet",
@@ -45,7 +45,7 @@ export const CYBERSECURE_REQUIREMENTS = [
 // The AI + Cybersecurity Professional Accelerator pages' options (2026-11-02):
 // /ng, /za, /gh and /ke/corporate-training/ai-cybersecurity-professional-accelerator.
 export const ACCELERATOR_REQUIREMENTS = [
-  "Executive AI + Cybersecurity Workshop",
+  "Executive AI + Cybersecurity module",
   "Professional Accelerator for a team",
   "Department-specific programme",
   "Developing AI and cyber champions",
@@ -61,11 +61,11 @@ const ALL_REQUIREMENTS = Array.from(
 export const CORPORATE_PROGRAMMES = ["ai-workflow", "cybersecure-workforce", "ai-cyber-accelerator"] as const;
 export type CorporateProgramme = (typeof CORPORATE_PROGRAMMES)[number];
 
-// Nigeria offers all three; Ghana, Kenya and South Africa are online only, so their
-// forms don't ask.
-export const CORPORATE_DELIVERY = ["Online", "In-house", "Hybrid", "Not sure"] as const;
+// Corporate training is online and in-house only (owner, 2026-11-13): never live,
+// facilitator-led or hybrid. No form asks any more; kept so older leads still validate.
+export const CORPORATE_DELIVERY = ["Online", "In-house", "Not sure"] as const;
 
-// reserve = the December 2026 cohort, taster = the free leadership session (2026-11-13).
+// reserve = the December 2026 intake, taster = the free self-paced leadership preview (2026-11-13).
 export const CORPORATE_INTENTS = ["consultation", "proposal", "reserve", "taster"] as const;
 
 // The words the visitor agreed to, saved with the lead.
