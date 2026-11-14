@@ -317,16 +317,16 @@ describe("Director resources and the employer-first menu (2026-11-08)", () => {
     expect((await request(app).get("/ke/corporate-training")).text).toContain("Kenya&#39;s Data Protection Act, 2019");
   });
 
-  it("keeps For Graduate out of the corporate menu, in the top bar and footer (2026-11-13)", async () => {
+  it("keeps For Graduates out of the corporate menu, in the top bar and footer (2026-11-13)", async () => {
     for (const path of ["/", "/za/corporate-training", "/ng/corporate-training/cybersecure-workforce", "/ai-use-policy-template"]) {
       const html = (await request(app).get(path)).text;
-      expect(html).not.toContain("<summary>For Graduate</summary>");
-      expect(html).toMatch(/<a class="util-individuals" href="\/(ng|za|ke|gh)">For Graduate &rarr;<\/a>/);
+      expect(html).not.toContain("<summary>For Graduates</summary>");
+      expect(html).toMatch(/<a class="util-individuals" href="\/(ng|za|ke|gh)">For Graduates &rarr;<\/a>/);
       expect(html).toContain('<a href="/ai-cyber-readiness-check">Free Readiness Check</a>');
       expect(html).toContain("Corporate training &middot;");
     }
     const learner = (await request(app).get("/ng")).text;
-    expect(learner).not.toContain("For Graduate");
+    expect(learner).not.toContain("For Graduates");
     expect(learner).toContain("Digital skills &middot; Nigeria");
   });
 });
