@@ -191,7 +191,7 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
   const note = `Prices exclude VAT where applicable and are correct on ${today()}. Awareness training supports your compliance programme; it is not legal advice. Paleon Training Limited, Warri, Nigeria.`;
 
   // Page 1: outcomes first, then who it is for and the modules.
-  band(doc, `Corporate training · ${country}`);
+  band(doc, `Corporate training · ${country}`, code);
   doc.font(SERIF_BOLD).fontSize(24).fillColor(INK).text(name, M, 92, { width: W });
   doc.font(SANS).fontSize(12).fillColor(MUTED).text(`For organisations in ${country}`, M, doc.y + 2, { width: W });
   doc.moveDown(0.8);
@@ -214,7 +214,7 @@ export function streamBrochurePdf(programme: PricedProgramme, code: CountryCode,
 
   // Page 2: two ways to buy, pilot, law, next steps.
   doc.addPage();
-  band(doc, `${name} · ${country}`);
+  band(doc, `${name} · ${country}`, code);
   doc.y = 92;
   doc.font(SERIF_BOLD).fontSize(18).fillColor(INK).text("Two ways to buy", M, doc.y, { width: W });
   heading(doc, "Option 1 · Self-paced online, fixed price");
@@ -275,7 +275,7 @@ export function streamBusinessCasePdf(programme: PricedProgramme, code: CountryC
   const country = COUNTRIES[code].name;
   const doc = newDoc(`Business case: ${name} (${country})`);
   doc.pipe(out);
-  band(doc, "One-page business case");
+  band(doc, `One-page business case · ${country}`, code);
   doc.font(SERIF_BOLD).fontSize(19).fillColor(INK).text(`Business case: ${name}`, M, 86, { width: W });
   doc.font(SANS).fontSize(10).fillColor(MUTED).text(`Prepared for: ____________________   Organisation in ${country}   Date: ${today()}`, M, doc.y + 2, { width: W });
 
