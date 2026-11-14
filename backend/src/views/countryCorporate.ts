@@ -1,3 +1,4 @@
+import { countryCorporateSeo } from "./corporateSeo";
 import { GUIDES } from "../constants/corporateGuides";
 import { COUNTRIES, CountryCode } from "../constants/countries";
 import {
@@ -160,11 +161,8 @@ export function renderCountryCorporate(code: CountryCode): string {
   const home = c.site.path;
   const canonicalPath = countryCorporatePath(code);
   const url = `${ORIGIN}${canonicalPath}`;
-  const title = `Corporate Training in ${country} | AI & Cybersecurity for Staff`;
+  const { title, description } = countryCorporateSeo(code);
   const ng = code === "NG";
-  const description = ng
-    ? `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across Nigeria. Online, per learner or in a private company portal; supports ITF claims. Get a proposal.`
-    : `Corporate AI and cybersecurity training for employees in ${CITIES[code].slice(0, 3).join(", ")} and across ${country}. Self-paced online, in your own private company portal. Get a proposal.`;
   const ogImage = `${ORIGIN}/images/og/corporate-ai-workflow-${cc}.jpg`;
   const headHtml = head(ctx, {
     title,

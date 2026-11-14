@@ -28,6 +28,7 @@ import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionA
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { renderSector, renderSectorsIndex, SECTORS_PATH } from "./views/corporateSectors";
 import { renderPreviewModule, renderPreviewSignup } from "./views/corporatePreview";
+import { ONLINE_STAFF_TRAINING_PATH, renderOnlineStaffTraining } from "./views/onlineStaffTraining";
 import { PREVIEW_PATH } from "./views/corporateOffers";
 import { PREVIEW_PROGRAMMES, isValidPreviewToken } from "./services/corporatePreview.service";
 import { BROCHURE_BASE, BUSINESS_CASE_BASE, HOW_IT_WORKS_PDF_BASE, parseHowItWorksSlug, parsePdfSlug } from "./views/corporateOffers";
@@ -278,6 +279,12 @@ export function createApp() {
   // countries (?country= or the remembered country sets prices and the data protection law).
   // Free leadership preview (2026-11-13): one-step sign-up, then module 1 of each programme
   // behind the signed link the sign-up returns.
+  // Online staff training for companies (2026-11-14, SEO for company managers and HR).
+  app.get(ONLINE_STAFF_TRAINING_PATH, (req, res) => {
+    res.set("Cache-Control", "private, no-cache");
+    res.vary("Cookie");
+    res.type("html").send(renderOnlineStaffTraining(chosenCountry(req)));
+  });
   app.get(PREVIEW_PATH, (req, res) => {
     const asked = String(req.query.country ?? "").toUpperCase();
     const prog = String(req.query.programme ?? "");

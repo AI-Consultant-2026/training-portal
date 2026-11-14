@@ -69,3 +69,58 @@ describe("Corporate SEO signals (2026-11-10)", () => {
     expect(res.text).toContain("https://paleontraining.com/corporate-guides/ndpa-data-protection-training-nigeria");
   });
 });
+
+describe("Search titles and course data for company buyers (2026-11-14)", () => {
+  const PAGES = [
+    "/",
+    "/corporate-training/online-staff-training",
+    ...["ng", "za", "ke", "gh"].flatMap((cc) => [
+      `/${cc}/corporate-training`,
+      `/${cc}/corporate-training/cybersecure-workforce`,
+      `/${cc}/corporate-training/ai-workflow-productivity`,
+      `/${cc}/corporate-training/ai-cybersecurity-professional-accelerator`,
+    ]),
+  ];
+  const decode = (s: string) => s.replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+
+  it("keeps titles within 65 and descriptions within 160 characters, all unique", async () => {
+    const titles = new Set<string>();
+    for (const path of PAGES) {
+      const html = (await request(app).get(path)).text;
+      const title = decode(/<title>([^<]*)<\/title>/.exec(html)![1]);
+      const desc = decode(/<meta name="description" content="([^"]*)"/.exec(html)![1]);
+      expect([path, title.length <= 65]).toEqual([path, true]);
+      expect([path, desc.length <= 160]).toEqual([path, true]);
+      expect(titles.has(title)).toBe(false);
+      titles.add(title);
+    }
+  });
+
+  it("leads with the phrases buyers search for", async () => {
+    const get = async (p: string) => decode(/<title>([^<]*)<\/title>/.exec((await request(app).get(p)).text)![1]);
+    expect(await get("/ng/corporate-training")).toMatch(/^Corporate Training in Nigeria/);
+    expect(await get("/za/corporate-training/cybersecure-workforce")).toMatch(/^Security Awareness Training for Employees/);
+    expect(await get("/ke/corporate-training/ai-workflow-productivity")).toMatch(/^AI Training for Employees in Kenya/);
+    expect(await get("/corporate-training/online-staff-training")).toMatch(/^Online Staff Training for Companies/);
+  });
+
+  it("marks programmes as online courses with a real price and study time", async () => {
+    const html = (await request(app).get("/gh/corporate-training/cybersecure-workforce")).text;
+    expect(html).not.toMatch(/"onsite"|"blended"/);
+    expect(html).toContain('"courseMode":"online"');
+    expect(html).toMatch(/"courseWorkload":"PT\d+H/);
+    expect(html).toContain('"priceCurrency":"GHS"');
+    expect(html).toContain('"price":650');
+  });
+
+  it("serves the online staff training page with FAQ data, linked from the footer and sitemap", async () => {
+    const res = await request(app).get("/corporate-training/online-staff-training");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("<h1");
+    expect(res.text).toContain('"FAQPage"');
+    expect(res.text).toContain('id="how-it-works"');
+    const home = (await request(app).get("/")).text;
+    expect(home).toContain('href="/corporate-training/online-staff-training"');
+    expect((await request(app).get("/sitemap.xml")).text).toContain("/corporate-training/online-staff-training");
+  });
+});

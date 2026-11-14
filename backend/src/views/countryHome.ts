@@ -649,7 +649,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
     </nav>
     <nav aria-label="Corporate Training">
       <h2 class="footer-heading">Corporate Training</h2>
-      <ul class="footer-links">${programmes}${corporate ? SECTOR_FOOTER_LINKS : ""}</ul>
+      <ul class="footer-links">${programmes}${corporate ? `<li><a href="/corporate-training/online-staff-training">Online staff training</a></li>${SECTOR_FOOTER_LINKS}` : ""}</ul>
       <h2 class="footer-heading footer-heading-gap">Paleon</h2>
       <ul class="footer-links">${
         corporate

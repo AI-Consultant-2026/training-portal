@@ -1,3 +1,4 @@
+import { courseInstance, courseOffer, programmeSeo } from "./corporateSeo";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import { ACCELERATOR_REQUIREMENTS } from "../validators/corporateLeads.validators";
 import {
@@ -310,11 +311,8 @@ function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
         inLanguage: "en",
         audience: { "@type": "BusinessAudience", name: `Organisations in ${country}` },
         provider: { "@id": `${ORIGIN}/#organization` },
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: ["online", "onsite", "blended"],
-          location: { "@type": "Country", name: country },
-        },
+        hasCourseInstance: courseInstance("accelerator", code),
+        offers: courseOffer("accelerator", code, url),
       },
       {
         "@type": "Service",
@@ -358,8 +356,8 @@ export function renderAccelerator(code: CountryCode): string {
   const canonicalPath = acceleratorPath(code);
   const ogImage = `${ORIGIN}/images/og/ai-cyber-accelerator-${cc}.jpg`;
   const headHtml = head(ctx, {
-    title: c.title,
-    description: c.description,
+    title: programmeSeo("accelerator", code).title,
+    description: programmeSeo("accelerator", code).description,
     canonicalPath,
     alternatesFor: acceleratorPath,
     xDefault: CORPORATE_HUB_PATH,

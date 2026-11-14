@@ -1,3 +1,4 @@
+import { courseInstance, courseOffer, programmeSeo } from "./corporateSeo";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import { CYBERSECURE_REQUIREMENTS } from "../validators/corporateLeads.validators";
 import {
@@ -311,11 +312,8 @@ function jsonLd(code: CountryCode, c: CyberPageContent, url: string): object {
         inLanguage: "en",
         audience: { "@type": "BusinessAudience", name: `Organisations in ${country}` },
         provider: { "@id": `${ORIGIN}/#organization` },
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: ["online", "onsite", "blended"],
-          location: { "@type": "Country", name: country },
-        },
+        hasCourseInstance: courseInstance("cybersecure", code),
+        offers: courseOffer("cybersecure", code, url),
       },
       {
         "@type": "Service",
@@ -362,8 +360,8 @@ export function renderCyberSecure(code: CountryCode): string {
   const canonicalPath = cyberSecurePath(code);
   const ogImage = `${ORIGIN}/images/og/cybersecure-workforce-${cc}.jpg`;
   const headHtml = head(ctx, {
-    title: c.title,
-    description: c.description,
+    title: programmeSeo("cybersecure", code).title,
+    description: programmeSeo("cybersecure", code).description,
     canonicalPath,
     alternatesFor: cyberSecurePath,
     xDefault: CORPORATE_HUB_PATH,

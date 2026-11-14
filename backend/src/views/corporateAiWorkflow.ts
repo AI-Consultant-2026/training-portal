@@ -1,3 +1,4 @@
+import { HUB_SEO, courseInstance, courseOffer, programmeSeo } from "./corporateSeo";
 import { DATA_PROTECTION_LAW, WHO_WE_SERVE, WHO_WE_SERVE_INTRO, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
@@ -453,11 +454,8 @@ function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object
         inLanguage: "en",
         audience: { "@type": "BusinessAudience", name: `Organisations in ${country}` },
         provider: { "@id": `${ORIGIN}/#organization` },
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: ["online", "onsite", "blended"],
-          location: { "@type": "Country", name: country },
-        },
+        hasCourseInstance: courseInstance("ai-workflow", code),
+        offers: courseOffer("ai-workflow", code, url),
       },
       {
         "@type": "Service",
@@ -501,8 +499,8 @@ export function renderCorporateAiWorkflow(code: CountryCode): string {
   const canonicalPath = corporateAiPath(code);
   const ogImage = `${ORIGIN}/images/og/corporate-ai-workflow-${cc}.jpg`;
   const headHtml = head(ctx, {
-    title: c.title,
-    description: c.description,
+    title: programmeSeo("ai-workflow", code).title,
+    description: programmeSeo("ai-workflow", code).description,
     canonicalPath,
     alternatesFor: corporateAiPath,
     xDefault: CORPORATE_HUB_PATH,
@@ -783,9 +781,8 @@ export function renderCorporateHub(
   const buyCountry = country ?? chosen ?? detected;
   const buyHref = buyCountry ? `${cyberSecurePath(buyCountry)}#buy` : "#choose-country";
   const headHtml = head(ctx, {
-    title: "Corporate AI & Cybersecurity Training | Nigeria, South Africa, Kenya, Ghana",
-    description:
-      "AI and cybersecurity training for employees in Nigeria, South Africa, Kenya and Ghana: online, per learner or in a private company portal. Get a proposal.",
+    title: HUB_SEO.title,
+    description: HUB_SEO.description,
     canonicalPath: CORPORATE_HUB_PATH,
     alternatesFor: countryCorporatePath,
     xDefault: CORPORATE_HUB_PATH,
