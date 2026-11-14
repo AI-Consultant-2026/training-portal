@@ -1,7 +1,79 @@
 {
- "updated": "2026-11-13",
+ "updated": "2026-11-14",
  "source": "MyJobMag Kenya (myjobmag.co.ke)",
  "jobs": [
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Healthcare Scheduler | C1 English Required | Remote",
+   "company": "Solvo Global",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-14",
+   "deadline": "2026-12-14",
+   "requirements": "What You'll Do Coordinate caregiver and client schedules. Fill open shifts and manage last-minute schedule changes. Support clients and caregivers as a primary point of contact.…",
+   "link": "https://www.myjobmag.co.ke/job/healthcare-scheduler-c1-english-required-remote-solvo-global",
+   "course": "HSE Fundamentals"
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Recruitment Supervisor",
+   "company": "Solvo Global",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-14",
+   "deadline": "2026-12-14",
+   "requirements": "Key Responsibilities Lead the day-to-day operations of both Pipe Builder and Head Hunter teams. Allocate sourcing resources according to business priorities and hiring projections.…",
+   "link": "https://www.myjobmag.co.ke/job/recruitment-supervisor-solvo-global",
+   "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Judicial Liaison Officer",
+   "company": "Safaricom Kenya",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-14",
+   "deadline": "2026-11-20",
+   "requirements": "Job Description Reporting to the Senior Manager: Law Enforcement Liaison, the Judicial Liaison Officer role purpose is to support judicial proceedings by lawfully presenting and clarifying…",
+   "link": "https://www.myjobmag.co.ke/job/judicial-liaison-officer-safaricom-kenya",
+   "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Lead Software Developer, Corporate Development Portal",
+   "company": "Hugo Kenya",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-14",
+   "deadline": "2026-12-14",
+   "requirements": "THE ROLE Hugo’s Corporate Development department needs a lead engineer to own the Corporate Development Portal, part of Hugo’s internal Intelligence Hub. Senior leaders use it…",
+   "link": "https://www.myjobmag.co.ke/job/lead-software-developer-corporate-development-portal-hugo-kenya",
+   "course": "Cyber Security Fundamentals"
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Project Manager",
+   "company": "Salix Data",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-14",
+   "deadline": "2026-12-14",
+   "requirements": "Job Description Independently manage a wide range of internal and external projects from kickoff through completion. Develop and maintain detailed project plans, task lists, timelines, and…",
+   "link": "https://www.myjobmag.co.ke/job/project-manager-salix-data-5",
+   "course": null
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Software Sales & Marketing Executive",
+   "company": "Riset Software & Systems LTD",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-14",
+   "deadline": "2026-12-14",
+   "requirements": "IMPORTANT NOTICE – OFFICIAL JOB ADVERTISEMENT This vacancy is officially advertised by Riset Software & Systems LTD on MyJobMag. All interested candidates must submit their…",
+   "link": "https://www.myjobmag.co.ke/job/software-sales-marketing-executive-riset-software-systems-ltd-5",
+   "course": "Cyber Security Fundamentals"
+  },
   {
    "sector": "Energy, Oil & Gas",
    "role": "In-House Legal Counsel & Company Secretary – Nairobi, Kenya",
@@ -37,6 +109,18 @@
    "requirements": "Key Responsibilities: Manage the day-to-day operations of the camp clinic, ensuring the availability of accessible, timely and professional healthcare services. Conduct patient…",
    "link": "https://www.myjobmag.co.ke/job/site-clinical-officer-upstream-waste-management-project-lokichar-kenya-wts-energy",
    "course": "HSE Fundamentals"
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Sales Executive",
+   "company": "MyCredit Limited",
+   "location": "Mombasa",
+   "county": "Mombasa",
+   "posted": "2026-11-13",
+   "deadline": "2026-12-13",
+   "requirements": "Role Description This is a full-time Sales Executive role based in Mombasa with a hybrid work arrangement, allowing some work-from-home flexibility. The Sales Executive will identify and…",
+   "link": "https://www.myjobmag.co.ke/job/sales-executive-mycredit-limited-1",
+   "course": "Digital Marketing"
   },
   {
    "sector": "Banking & Finance",
@@ -510,10 +594,10 @@
    "sector": "Banking & Finance",
    "role": "Fullstack Developer (6 months Fixed Term Contract)",
    "company": "Britam",
-   "location": "Nairobi",
-   "county": "Nairobi",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-11-12",
-   "deadline": "2026-11-13",
+   "deadline": null,
    "requirements": "Job Purpose A Full-Stack Developer with expertise in Flutter, Next.js, Go and Python to design, build, and maintain end-to-end applications spanning cross-platform mobile development, modern…",
    "link": "https://www.myjobmag.co.ke/job/fullstack-developer-6-months-fixed-term-contract-britam-1",
    "course": "Cyber Security Fundamentals"
@@ -771,42 +855,6 @@
    "course": "HSE Fundamentals"
   },
   {
-   "sector": "ICT & Telecoms",
-   "role": "Head of Q Commerce Kenya",
-   "company": "Glovo",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-12",
-   "deadline": "2026-12-12",
-   "requirements": "YOUR MISSION At Glovo, you’ll have the job of your life while working together towards our shared vision to build the largest marketplace in your city to give you access to anything…",
-   "link": "https://www.myjobmag.co.ke/job/head-of-q-commerce-kenya-glovo-1",
-   "course": null
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Financial Controls Manager – Ethiopia",
-   "company": "Safaricom Kenya",
-   "location": "Kenya (various)",
-   "county": "Various",
-   "posted": "2026-11-12",
-   "deadline": "2026-11-18",
-   "requirements": "Job Description Reporting to the Financial Controls, Governance & SOX Lead, the Financial Controls Manager – Ethiopia is responsible for providing end-to-end financial stewardship…",
-   "link": "https://www.myjobmag.co.ke/job/financial-controls-manager-ethiopia-safaricom-kenya",
-   "course": null
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Grants Manager - Fixed Term Contract",
-   "company": "Safaricom Kenya",
-   "location": "Kenya (various)",
-   "county": "Various",
-   "posted": "2026-11-12",
-   "deadline": "2026-11-18",
-   "requirements": "Job Description Reporting to the Executive Head of Finance, the Grants Manager is responsible for the strategic management and administration of the Foundation's grant portfolio, ensuring…",
-   "link": "https://www.myjobmag.co.ke/job/grants-manager-fixed-term-contract-safaricom-kenya",
-   "course": null
-  },
-  {
    "sector": "Banking & Finance",
    "role": "Senior Manager, Governance & Controls",
    "company": "Sidian Bank",
@@ -853,54 +901,6 @@
    "requirements": "Premier Bank Kenya is looking for a driven professional to join our Financing Department and help us deliver Shariah-compliant banking solutions built around our customers.",
    "link": "https://www.myjobmag.co.ke/job/manager-financing-administration-department-premier-bank",
    "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Monitoring & Evaluation Officer - Africa Rural Climate Adaptation Finance Mechanism -",
-   "company": "Equity Bank Kenya",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-11",
-   "deadline": "2026-12-11",
-   "requirements": "THE ROLE PURPOSE: Lead the design and operation of ARCAFIM’s monitoring, evaluation and learning framework, providing reliable and timely evidence on lending, technical assistance and…",
-   "link": "https://www.myjobmag.co.ke/job/monitoring-evaluation-officer-africa-rural-climate-adaptation-finance-mechanism-equity-bank-kenya",
-   "course": null
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Computer Studies & ICT Teacher",
-   "company": "Yellow Pages Kenya",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-11",
-   "deadline": "2026-12-11",
-   "requirements": "Description Skills, knowledge, abilities & values: Demonstrate a good knowledge and understanding of current educational issues relating to the specialist subject areas Strong…",
-   "link": "https://www.myjobmag.co.ke/job/computer-studies-ict-teacher-yellow-pages-kenya",
-   "course": "Cyber Security Fundamentals"
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Operations Associate NBO",
-   "company": "SafeBoda",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-11",
-   "deadline": "2026-12-11",
-   "requirements": "Position Summary: The Operations Associate will provide support to passengers and drivers through various support channels. Serving as the primary liaison between passengers…",
-   "link": "https://www.myjobmag.co.ke/job/operations-associate-nbo-safeboda",
-   "course": null
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Fibre Technician",
-   "company": "Mawingu",
-   "location": "Kisii",
-   "county": "Kisii",
-   "posted": "2026-11-11",
-   "deadline": "2026-11-20",
-   "requirements": "ELIGIBILITY CRITERIA Diploma or Degree in Telecommunications, Electrical Engineering, Electronics, ICT or related field. 1-3 years' experience in fibre optic installation and maintenance.",
-   "link": "https://www.myjobmag.co.ke/job/fibre-technician-mawingu",
-   "course": "HSE Fundamentals"
   },
   {
    "sector": "Energy, Oil & Gas",
@@ -1026,10 +1026,10 @@
    "sector": "Energy, Oil & Gas",
    "role": "LPG Plant & Warehouse Manager",
    "company": "Green Wells Energies Limited ( Formerly Wells Oil Ltd)",
-   "location": "Kisumu",
-   "county": "Kisumu",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-10-27",
-   "deadline": "2026-11-13",
+   "deadline": null,
    "requirements": "Academic qualifications Bachelor’s degree or higher diploma in Engineering, Operations, Supply Chain or a related field. Minimum qualifications Progressive 5 years experience…",
    "link": "https://www.myjobmag.co.ke/job/lpg-plant-warehouse-manager-green-wells-energies-limited",
    "course": "HSE Fundamentals"
