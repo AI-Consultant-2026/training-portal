@@ -384,4 +384,40 @@ describe("Second corporate review (2026-11-13)", () => {
     expect(memAdapter.sentMessages.at(-1)?.text).toContain("another country");
     expect(memAdapter.sentMessages.at(-1)?.text).toContain("Message: Phishing clicks in finance");
   });
+
+  it("shows how the company portal works, with local payment methods and a one-page PDF (2026-11-14)", async () => {
+    for (const [path, buy] of [
+      ["/", "#pricing"],
+      ["/za/corporate-training", "#pricing"],
+      ["/ke/corporate-training/ai-workflow-productivity", "#buy"],
+      ["/gh/corporate-training/ai-cybersecurity-professional-accelerator", "#buy"],
+      ["/ng/corporate-training/cybersecure-workforce", "#buy"],
+    ] as const) {
+      const html = (await request(app).get(path)).text;
+      expect(html).toContain('id="how-it-works"');
+      expect(html).toContain("How the company portal works");
+      expect(html.match(/<li value="\d">/g)).toHaveLength(7);
+      expect(html).toContain("Why companies choose portal training");
+      expect(html).toContain(`href="${buy}">See prices and buy seats</a>`);
+      expect(html).not.toContain("Your corporate training journey");
+      expect(html).not.toMatch(/video lessons/i);
+    }
+    const ke = (await request(app).get("/ke/corporate-training/ai-workflow-productivity")).text;
+    expect(ke).toContain("Pay securely online by card or M-Pesa.");
+    expect(ke).toContain('href="/corporate-training/how-the-company-portal-works-ke.pdf"');
+    const home = (await request(app).get("/")).text;
+    expect(home).toContain('<a href="#how-it-works">How the company portal works &darr;</a>');
+    // The section sits before the prices on the homepage.
+    expect(home.indexOf('id="how-it-works"')).toBeLessThan(home.indexOf('id="pricing"'));
+    for (const cc of ["ng", "za", "ke", "gh"]) expect(home).toContain(`/corporate-training/how-the-company-portal-works-${cc}.pdf`);
+    const pdf = await request(app).get("/corporate-training/how-the-company-portal-works-za.pdf").buffer(true).parse((res, cb) => {
+      const chunks: Buffer[] = [];
+      res.on("data", (c: Buffer) => chunks.push(c));
+      res.on("end", () => cb(null, Buffer.concat(chunks)));
+    });
+    expect(pdf.status).toBe(200);
+    expect(pdf.headers["content-type"]).toMatch(/application\/pdf/);
+    expect((pdf.body as Buffer).subarray(0, 4).toString()).toBe("%PDF");
+    expect((await request(app).get("/corporate-training/how-the-company-portal-works-xx.pdf")).status).toBe(404);
+  });
 });

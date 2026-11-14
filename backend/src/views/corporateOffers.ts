@@ -1,5 +1,5 @@
 import { COUNTRIES, CountryCode, MARKET_ORDER, formatMoney } from "../constants/countries";
-import { CORPORATE_PRICES, PRICED_PROGRAMMES, PROGRAMME_NAMES, PricedProgramme, invoiceSentence, seatPrice } from "../constants/corporatePricing";
+import { CORPORATE_PRICES, PAYMENT_METHODS, PRICED_PROGRAMMES, PROGRAMME_NAMES, PricedProgramme, invoiceSentence, seatPrice } from "../constants/corporatePricing";
 import { DATA_PROTECTION_LAW } from "./corporateLocal";
 
 // The buying aids shared by every corporate page (2026-11-13, owner's 12-point conversion
@@ -381,6 +381,7 @@ export function termsBlock(dark = false): string {
 export function forwardSection(code: CountryCode | null, programme: PricedProgramme | null, dark: boolean): string {
   const list = programme ? [programme] : [...PRICED_PROGRAMMES];
   const items = (k: CountryCode) =>
+    `<li><a href="${howItWorksPdfPath(k)}" download>How the company portal works: from order to certificate (one page, PDF)</a></li>` +
     list
       .map(
         (p) => `<li><a href="${brochurePath(p, k)}" download>${escapeHtml(PROGRAMME_NAMES[p])} brochure (PDF)</a></li>
@@ -416,4 +417,98 @@ export const PREVIEW_PATH = "/corporate-training/free-preview";
 export function previewSignupPath(code: CountryCode | null, programme: PricedProgramme | null): string {
   const q = [code ? `country=${code.toLowerCase()}` : "", programme ? `programme=${programme}` : ""].filter(Boolean).join("&");
   return q ? `${PREVIEW_PATH}?${q}` : PREVIEW_PATH;
+}
+
+// ---- How the company portal works (owner, 2026-11-14): the buy-online flow for company
+// managers, shown on the page (not behind a form) on the homepage, the 4 country pages and
+// the 12 programme pages, plus a one-page PDF per country to forward. One source of truth
+// for the web section and the PDF (services/corporateBrochure.service.ts).
+export const HOW_IT_WORKS_PDF_BASE = "/corporate-training/how-the-company-portal-works";
+
+export function howItWorksPdfPath(code: CountryCode): string {
+  return `${HOW_IT_WORKS_PDF_BASE}-${code.toLowerCase()}.pdf`;
+}
+
+/** "/corporate-training/how-the-company-portal-works-za.pdf" slug part -> code, or null. */
+export function parseHowItWorksSlug(cc: string): CountryCode | null {
+  return /^(ng|za|ke|gh)$/.test(cc) ? (cc.toUpperCase() as CountryCode) : null;
+}
+
+export interface PortalStep { h: string; p: string }
+export interface PortalStage { title: string; steps: PortalStep[] }
+
+function paymentLine(code: CountryCode | null): string {
+  return code
+    ? `Pay securely online by ${PAYMENT_METHODS[code]}.`
+    : "Pay securely online by card, bank transfer, USSD, mobile money or M-Pesa, depending on your country.";
+}
+
+export function portalStages(code: CountryCode | null): PortalStage[] {
+  return [
+    {
+      title: "Buy",
+      steps: [
+        { h: "Choose your seats", p: "Pick a programme and enter the number of learners and your organisation's details. The price, including any volume discount, is worked out for you automatically." },
+        { h: "Pay online or by invoice", p: `${paymentLine(code)} If your finance team prefers, tick “Send us an invoice” and we'll email one within one working day.` },
+      ],
+    },
+    {
+      title: "Set up",
+      steps: [
+        { h: "Your company portal is created", p: "Once payment is confirmed, we create your company's private space on the Paleon portal and email you your staff sign-up link." },
+        { h: "Share the link with your staff", p: "Send it to your team by email or WhatsApp. Each person opens it, creates their own account and confirms their email address. It takes about two minutes." },
+      ],
+    },
+    {
+      title: "Learn and track",
+      steps: [
+        { h: "Staff start straight away", p: "When they log in at paleontraining.com, the course is already on their dashboard. They work through short lessons, practical exercises and quizzes on a phone, laptop or office computer, whenever it suits their work." },
+        { h: "You track progress", p: "Sign up with the same email address used on the order and your account becomes the manager login. You see who has joined, how far each person has got and who has finished." },
+        { h: "Certificates on completion", p: "Each staff member who finishes receives a certificate of completion, and a dated attendance record is available for your training files." },
+      ],
+    },
+  ];
+}
+
+export const PORTAL_BENEFITS: PortalStep[] = [
+  { h: "No time away from work", p: "Staff learn in short sessions around their duties, with no need to bring people in from other branches or sites." },
+  { h: "No travel or venue costs", p: "Everyone, in every location, gets the same training at the same price." },
+  { h: "Start today", p: "There's no waiting for a training date: seats can be used as soon as payment is confirmed." },
+  { h: "Full visibility for HR", p: "You see each person's progress yourself, without chasing anyone." },
+  { h: "Flexible seats", p: "An unused seat can be given to another member of staff at any time during the 12 months' access." },
+  { h: "Low risk", p: "Full refund within 14 days of purchase if no learner has started." },
+  { h: "Practical, job-focused content", p: "Short lessons built around real workplace tasks, with examples adapted to your sector, not theory." },
+  { h: "Start small if you prefer", p: "Test it with one team in a 10-learner pilot. The pilot fee is credited if you order a wider rollout within 90 days." },
+];
+
+export const HOW_IT_WORKS_TITLE = "How the company portal works";
+
+export function howItWorksSection(code: CountryCode | null, programme: PricedProgramme | null, buyHref: string): string {
+  let n = 0;
+  const stages = portalStages(code)
+    .map(
+      (s) => `<div class="co-how-stage">
+          <h3 class="co-how-stage-title">${escapeHtml(s.title)}</h3>
+          <ol class="co-how-steps">${s.steps
+            .map((st) => `<li value="${++n}"><span class="co-how-num" aria-hidden="true">${n}</span><span><strong>${escapeHtml(st.h)}.</strong> ${escapeHtml(st.p)}</span></li>`)
+            .join("")}</ol>
+        </div>`,
+    )
+    .join("");
+  const benefits = PORTAL_BENEFITS.map((b) => `<li class="co-how-benefit"><strong>${escapeHtml(b.h)}.</strong> ${escapeHtml(b.p)}</li>`).join("");
+  const pdf = code
+    ? `<a href="${howItWorksPdfPath(code)}" download>Download this as a one-page PDF</a> to forward to your MD or finance team.`
+    : `Download this as a one-page PDF to forward to your MD or finance team: ${MARKET_ORDER.map((k) => `<a href="${howItWorksPdfPath(k)}" download>${escapeHtml(COUNTRIES[k].name)}</a>`).join(" &middot; ")}.`;
+  return `<section class="section section-paper ca-section co-how" id="how-it-works" aria-labelledby="how-it-works-title">
+    <div class="wrap">
+      <span class="section-eyebrow">For company managers and HR</span>
+      <h2 class="section-title" id="how-it-works-title">${HOW_IT_WORKS_TITLE}</h2>
+      <p class="ca-p">Buy a seat for each member of staff, and they start training online the same day, in your own private company portal. Seven steps from order to certificate:</p>
+      <div class="co-how-stages">${stages}</div>
+      <h3 class="cp-subtitle">Why companies choose portal training</h3>
+      <ul class="co-how-benefits">${benefits}</ul>
+      <div class="ca-ctas"><a class="btn btn-signal btn-lg" href="${buyHref}">See prices and buy seats</a> <a class="btn btn-outline-ink btn-lg" href="${previewSignupPath(code, programme)}" data-preview-cta>Get the free preview</a></div>
+      <p class="ca-p ca-hint">${pdf}</p>
+    </div>
+  </section>`;
 }

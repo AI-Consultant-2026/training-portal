@@ -30,14 +30,14 @@ import { renderSector, renderSectorsIndex, SECTORS_PATH } from "./views/corporat
 import { renderPreviewModule, renderPreviewSignup } from "./views/corporatePreview";
 import { PREVIEW_PATH } from "./views/corporateOffers";
 import { PREVIEW_PROGRAMMES, isValidPreviewToken } from "./services/corporatePreview.service";
-import { BROCHURE_BASE, BUSINESS_CASE_BASE, parsePdfSlug } from "./views/corporateOffers";
+import { BROCHURE_BASE, BUSINESS_CASE_BASE, HOW_IT_WORKS_PDF_BASE, parseHowItWorksSlug, parsePdfSlug } from "./views/corporateOffers";
 import {
   SAMPLE_ATTENDANCE_PATH,
   SAMPLE_CERTIFICATE_PATH,
   streamSampleAttendance,
   streamSampleCertificate,
 } from "./services/corporateSamples.service";
-import { streamBrochurePdf, streamBusinessCasePdf } from "./services/corporateBrochure.service";
+import { streamBrochurePdf, streamBusinessCasePdf, streamHowItWorksPdf } from "./services/corporateBrochure.service";
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { countryCorporatePath } from "./views/corporateLocal";
 import { COUNTRY_CORPORATE_CODES, renderCountryCorporate } from "./views/countryCorporate";
@@ -332,6 +332,15 @@ export function createApp() {
     };
   app.get(`${BROCHURE_BASE}/:slug([a-z-]+)\\.pdf`, sendCorporatePdf(streamBrochurePdf, "brochure"));
   app.get(`${BUSINESS_CASE_BASE}/:slug([a-z-]+)\\.pdf`, sendCorporatePdf(streamBusinessCasePdf, "business-case"));
+  // How the company portal works, one page per country (owner, 2026-11-14).
+  app.get(`${HOW_IT_WORKS_PDF_BASE}-:cc([a-z]{2})\\.pdf`, (req, res, next) => {
+    const code = parseHowItWorksSlug(req.params.cc);
+    if (!code) return next();
+    res.set("Cache-Control", "public, max-age=3600");
+    res.type("application/pdf");
+    res.set("Content-Disposition", `inline; filename="paleon-how-the-company-portal-works-${req.params.cc}.pdf"`);
+    streamHowItWorksPdf(code, res);
+  });
   // Example certificate and attendance record, watermarked SAMPLE (2026-11-13).
   for (const [path, stream, name] of [
     [SAMPLE_CERTIFICATE_PATH, streamSampleCertificate, "paleon-sample-certificate.pdf"],

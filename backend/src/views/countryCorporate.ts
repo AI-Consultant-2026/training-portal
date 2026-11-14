@@ -26,6 +26,7 @@ import {
   readinessButton,
   reserveButton,
   waysToBuyBrief,
+  howItWorksSection,
 } from "./corporateOffers";
 import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 
@@ -239,6 +240,8 @@ ${header(ctx, home, "/", true)}
       <div class="ca-ctas">${reserveButton("cybersecure")}</div>
     </div>
   </section>
+
+  ${howItWorksSection(code, null, "#pricing")}
 
   <section class="section section-dark ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">

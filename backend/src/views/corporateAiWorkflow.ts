@@ -41,6 +41,8 @@ import {
   onboardingSummary,
   waysToBuyBrief,
   waysToBuySection,
+  HOW_IT_WORKS_TITLE,
+  howItWorksSection,
 } from "./corporateOffers";
 import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
 
@@ -530,7 +532,7 @@ ${header(ctx, home, "/", true)}
     after: `<p class="ca-p">Need security awareness for every employee? See <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a>, our cybersecurity awareness programme for organisations in ${escapeHtml(COUNTRIES[code].name)}. Developing specialists? See the <a href="${acceleratorPath(code)}"><strong>AI + Cybersecurity Professional Accelerator</strong></a>.</p>`,
   })}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
-  ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
+  ${howItWorksSection(code, "ai-workflow", "#buy")}
   ${pricingSection(code, "ai-workflow", true)}
   ${pilotSection(code, "ai-workflow", false)}
   ${forwardSection(code, "ai-workflow", true)}
@@ -649,17 +651,8 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do we get started?",
-    a: "Take the free Readiness Check, book a 20-minute call, or request a proposal using the form on this page. You can also email corporate@paleontraining.com or message us on WhatsApp on +44 7508 823495.",
+    a: "Buy seats online on any programme page and your staff can start the same day: see how the company portal works, above. Or take the free Readiness Check, book a 20-minute call, or request a proposal using the form on this page. You can also email corporate@paleontraining.com or message us on WhatsApp on +44 7508 823495.",
   },
-];
-
-const HUB_JOURNEY = [
-  "**Consultation:** we learn about your organisation, teams and goals.",
-  "**Assessment:** we identify where training will make the biggest difference.",
-  "**Design:** we adapt the programme to your sector, departments and tools.",
-  "**Training:** practical self-paced courses online, per learner or in a private company portal.",
-  "**Application:** participants apply what they learn to real workplace tasks.",
-  "**Review:** we review results with you and plan the next steps.",
 ];
 
 const HUB_DEFINITION =
@@ -865,6 +858,7 @@ ${header(ctx, home, "/", true)}
           ${ctaButton(WORKFORCE_CTA, true, buyHref)}
           ${readinessButton(buyCountry, true)}
         </div>
+        <p class="co-how-link"><a href="#how-it-works">${HOW_IT_WORKS_TITLE} &darr;</a></p>
         <ul class="ca-trust"><li>Customised by sector and department</li><li>Responsible AI built in</li><li>Reply within one working day</li></ul>
       </div>
       <div class="ca-hero-media">
@@ -936,6 +930,8 @@ ${header(ctx, home, "/", true)}
       <div class="ca-countries">${accCards}</div>
     </div>
   </section>
+
+  ${howItWorksSection(ctx.chosen ?? null, null, "#pricing")}
 
   <section class="section section-dark ca-section" id="pricing" aria-labelledby="pricing-title">
     <div class="wrap">
@@ -1014,14 +1010,6 @@ ${header(ctx, home, "/", true)}
 
   ${trainerStandards()}
 
-  <section class="section section-dark ca-section" id="journey" aria-labelledby="journey-title">
-    <div class="wrap">
-      <span class="section-eyebrow">How it works</span>
-      <h2 class="section-title" id="journey-title">Your corporate training journey</h2>
-      <ul class="ca-steps">${HUB_JOURNEY.map((j) => `<li>${rich(j)}</li>`).join("")}</ul>
-      <div class="ca-ctas">${ctaButton(WORKFORCE_CTA, true, buyHref)}${callButton(true)}</div>
-    </div>
-  </section>
 
   <section class="section section-paper ca-section" id="faq" aria-labelledby="faq-title">
     <div class="wrap ca-narrow">

@@ -19,6 +19,9 @@ import {
   outcomes,
   pilotTotal,
   programmePagePath,
+  HOW_IT_WORKS_TITLE,
+  PORTAL_BENEFITS,
+  portalStages,
 } from "../views/corporateOffers";
 
 // The PDFs a corporate buyer can forward for sign-off (2026-11-13, owner's conversion
@@ -275,5 +278,46 @@ export function streamBusinessCasePdf(programme: PricedProgramme, code: CountryC
     doc,
     `Figures from ${ORIGIN}${programmePagePath(programme, code)} on ${today()}; prices exclude VAT where applicable. Paleon Training Limited, Warri, Nigeria.`,
   );
+  doc.end();
+}
+
+/** One page for company managers to forward (owner, 2026-11-14): the 7 steps from order to
+ * certificate and the benefits, the same copy as the "How the company portal works" section. */
+export function streamHowItWorksPdf(code: CountryCode, out: NodeJS.WritableStream): void {
+  const country = COUNTRIES[code].name;
+  const doc = newDoc(`${HOW_IT_WORKS_TITLE} (${country})`);
+  doc.pipe(out);
+  band(doc, "For company managers and HR");
+  doc.font(SERIF_BOLD).fontSize(20).fillColor(INK).text(HOW_IT_WORKS_TITLE, M, 86, { width: W });
+  doc
+    .font(SANS)
+    .fontSize(10.5)
+    .fillColor(MUTED)
+    .text(`Buy a seat for each member of staff in ${country}, and they start training online the same day, in your own private company portal.`, M, doc.y + 4, { width: W });
+  const size = 9.8;
+  let n = 0;
+  for (const stage of portalStages(code)) {
+    heading(doc, stage.title);
+    for (const step of stage.steps) {
+      const y = doc.y;
+      n += 1;
+      doc.circle(M + 7, y + 6, 7).fill(SIGNAL);
+      doc.font(SANS_BOLD).fontSize(8.5).fillColor(PAPER).text(String(n), M, y + 2, { width: 14, align: "center", lineBreak: false });
+      doc.font(SANS_BOLD).fontSize(size).fillColor(INK).text(`${step.h}. `, M + 20, y, { width: W - 20, continued: true, lineGap: 1.5 });
+      doc.font(SANS).text(step.p, { lineGap: 1.5 });
+      doc.moveDown(0.3);
+    }
+  }
+  heading(doc, "Why companies choose portal training");
+  for (const b of PORTAL_BENEFITS) {
+    const y = doc.y;
+    doc.circle(M + 3, y + size * 0.55, 1.8).fill(SIGNAL);
+    doc.font(SANS_BOLD).fontSize(size).fillColor(INK).text(`${b.h}. `, M + 12, y, { width: W - 12, continued: true, lineGap: 1.5 });
+    doc.font(SANS).text(b.p, { lineGap: 1.5 });
+    doc.moveDown(0.12);
+  }
+  heading(doc, "Next step");
+  para(doc, `See prices and buy seats at ${ORIGIN}${COUNTRIES[code].site.path}/corporate-training#pricing, or get a free preview of the courses at ${ORIGIN}/corporate-training/free-preview.`, size);
+  footerLine(doc, `Prices and terms are on the website and correct on ${today()}. Paleon Training Limited, Warri, Nigeria.`);
   doc.end();
 }

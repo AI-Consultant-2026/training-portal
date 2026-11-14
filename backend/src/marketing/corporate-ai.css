@@ -375,3 +375,22 @@
 .section-dark .ca-card .ca-card-link a, .section-dark .ca-card .ca-headline { color: var(--signal-2); }
 .section-paper .btn-outline-light, .co-terms .btn-outline-light { border-color: var(--ink); color: var(--ink); }
 .section-paper .btn-outline-light:hover, .co-terms .btn-outline-light:hover { background: rgba(16,21,31,0.08); }
+
+/* How the company portal works (owner, 2026-11-14) */
+.co-how { background: var(--paper-2); border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.co-how-stages { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 20px 0 28px; }
+@media (min-width: 900px) { .co-how-stages { grid-template-columns: repeat(3, 1fr); } }
+.co-how-stage { background: var(--white, #fff); border: 1px solid var(--line-light); border-top: 3px solid var(--signal); border-radius: var(--radius-lg); padding: 18px; min-width: 0; }
+.co-how-stage-title { font-family: var(--font-display); font-size: 20px; color: var(--charcoal); margin: 0 0 10px; }
+.co-how-steps { margin: 0; padding: 0; list-style: none; color: var(--charcoal); line-height: 1.55; }
+.co-how-steps li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+.co-how-num { flex: 0 0 28px; height: 28px; border-radius: 50%; background: var(--signal); color: var(--ink); font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+.co-how-steps strong, .co-how-benefits strong { color: var(--charcoal); }
+.co-how-benefits { list-style: none; margin: 12px 0 24px; padding: 0; display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 700px) { .co-how-benefits { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .co-how-benefits { grid-template-columns: repeat(4, 1fr); } }
+.co-how-benefit { background: var(--white, #fff); border: 1px solid var(--line-light); border-radius: var(--radius); padding: 14px 16px; color: var(--charcoal-soft, #3a352c); line-height: 1.5; }
+.co-how-benefit strong { display: block; margin-bottom: 4px; }
+.co-how .ca-hint a { color: var(--signal-text); font-weight: 600; }
+.co-how-link { margin: 14px 0 0; }
+.co-how-link a { color: var(--paper); font-weight: 600; text-underline-offset: 3px; }

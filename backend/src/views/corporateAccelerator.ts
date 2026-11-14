@@ -29,6 +29,7 @@ import {
   reserveButton,
   hasOnboardingSlots,
   waysToBuySection,
+  howItWorksSection,
 } from "./corporateOffers";
 
 // The "AI + Cybersecurity Professional Accelerator" corporate pages (2026-11-02): one per
@@ -386,7 +387,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Capstone", { id: "capstone", dark: true, aside: image(cc, "transformation", c.images.transformation) })}
   ${section(c, "Responsible AI", { id: "responsible-ai", aside: image(cc, "security", c.images.security) })}
   ${waysToBuySection("accelerator", code, true)}
-  ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
+  ${howItWorksSection(code, "accelerator", "#buy")}
   ${section(c, "Programme comparison", { id: "compare", dark: true })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
   ${pricingSection(code, "accelerator", true)}

@@ -28,6 +28,7 @@ import {
   readinessButton,
   reserveButton,
   waysToBuySection,
+  howItWorksSection,
 } from "./corporateOffers";
 
 // The "CyberSecure Workforce" corporate cybersecurity awareness pages (2026-11-02): one per
@@ -400,7 +401,7 @@ ${header(ctx, home, "/", true)}
   ${pilotSection(code, "cybersecure", true)}
   ${forwardSection(code, "cybersecure", false)}
   ${section(c, "Measurement and deliverables", { id: "measurement", dark: true })}
-  ${section(c, "Your corporate training journey", { id: "journey", eyebrowOverride: "How it works", listClass: "ca-steps" })}
+  ${howItWorksSection(code, "cybersecure", "#buy")}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${whereWeTrain(code)}
   ${trainerStandards()}
