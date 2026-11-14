@@ -307,7 +307,7 @@
 .cp-buy [hidden] { display: none !important; }
 
 /* Conversion review (2026-11-13): two ways to buy, pilot/taster, outcomes, sector pages,
-   the "For individuals" link in the top bar, and the form's intent note. */
+   the "For Graduate" link in the top bar, and the form's intent note. */
 .util-individuals { margin-left: auto; font-weight: 600; }
 @media (min-width: 860px) { .util-row .util-note { margin-left: auto; } .util-individuals { margin-left: 0; } }
 .co-ways { grid-template-columns: 1fr; }

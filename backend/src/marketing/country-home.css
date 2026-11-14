@@ -449,7 +449,7 @@ mark.tbc {
 .cc-end { margin-top: 28px; }
 
 /* Employer-first menu on the corporate pages (2026-11-08): the learner links sit under
-   "For individuals" -- a <details> so it works without JS (the CSP blocks inline scripts). */
+   "For Graduate" -- a <details> so it works without JS (the CSP blocks inline scripts). */
 .nav-group details > summary {
   list-style: none; cursor: pointer;
   display: flex; align-items: center; gap: 6px; min-height: 44px;

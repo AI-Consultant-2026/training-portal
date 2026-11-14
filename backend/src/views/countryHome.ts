@@ -235,7 +235,7 @@ export function previewHref(country: CountryCode, slug: string): string {
 // `home` is the learner homepage the menu's section links point at; `logoHref` is where
 // the logo goes: the corporate training homepage "/" on every page since 2026-11-09.
 // `corporate` (2026-11-08) is the employer-first menu used on the corporate pages: the
-// learner sections are grouped under "For individuals".
+// learner sections are grouped under "For Graduate".
 
 // The thin bar above the header on every corporate page (2026-11-13): one email, one
 // WhatsApp line, and the link for individual learners, moved out of the main navigation so
@@ -257,7 +257,7 @@ export function corporateUtilBar(home: string, code: CountryCode | null = null):
     <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>
     <a href="https://wa.me/447508823495" target="_blank" rel="noopener">WhatsApp +44 7508 823495</a>
     <span class="util-note">${hours}</span>
-    <a class="util-individuals" href="${home}">For individuals &rarr;</a>
+    <a class="util-individuals" href="${home}">For Graduate &rarr;</a>
   </div>
 </div>`;
 }
@@ -283,7 +283,7 @@ export function header(ctx: PageContext, home: string, logoHref = "/", corporate
         <li><a href="/ai-cyber-readiness-check">Free Readiness Check</a></li>
         <li><a href="${SECTORS_PATH}">Sectors</a></li>
         <li><a href="/#resources">Resources</a></li>
-        <li class="nav-phone-only"><a href="${home}">For individuals</a></li>
+        <li class="nav-phone-only"><a href="${home}">For Graduate</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>`
     : `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
@@ -674,7 +674,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
           ? `
         <li>Email: <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a></li>
         <li>WhatsApp: <a href="https://wa.me/447508823495" target="_blank" rel="noopener">+44 7508 823495</a></li>
-        <li><a href="${home}">For individuals: courses for graduates &rarr;</a></li>`
+        <li><a href="${home}">For Graduate: courses for graduates &rarr;</a></li>`
           : `
         <li><a href="tel:+447508823495">+44 7508 823495 (WhatsApp/Call)</a></li>
         <li>Courses &amp; fees: <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a></li>

@@ -60,7 +60,7 @@
     });
   }
   disclosure(document.getElementById("navToggle"), document.getElementById("navLinks"), "is-open");
-  // The "For individuals" menu on the corporate pages (2026-11-08) closes on an outside click or Esc.
+  // The "For Graduate" menu on the corporate pages (2026-11-08) closes on an outside click or Esc.
   var group = document.querySelector(".nav-group details");
   if (group) {
     document.addEventListener("click", function (event) {

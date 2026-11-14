@@ -553,7 +553,7 @@ describe("Country kept across the corporate hub and free lessons (2026-11-03)", 
     expect(res.text).toContain(`Corporate training &middot; ${name}`);
     expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/">`);
     const nav = res.text.slice(res.text.indexOf('id="navLinks"'), res.text.indexOf("</ul>", res.text.indexOf('id="navLinks"')));
-    expect(nav).toContain(`<a href="/${cc}">For individuals</a>`);
+    expect(nav).toContain(`<a href="/${cc}">For Graduate</a>`);
     expect(nav).toContain(`href="/?country=${cc}"`);
   });
 
