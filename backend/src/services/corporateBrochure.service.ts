@@ -103,11 +103,49 @@ function moduleTitles(programme: PricedProgramme, code: CountryCode): string[] {
   return out;
 }
 
-function band(doc: PDFKit.PDFDocument, kicker: string): void {
+// Country flags drawn as vectors, the same artwork as views/flags.ts (30 x 20 units, 3:2).
+function drawFlag(doc: PDFKit.PDFDocument, code: CountryCode, x: number, y: number, w: number): void {
+  const h = (w * 2) / 3;
+  doc.save();
+  doc.translate(x, y).scale(w / 30);
+  doc.rect(0, 0, 30, 20).clip();
+  const rect = (rx: number, ry: number, rw: number, rh: number, c: string) => doc.rect(rx, ry, rw, rh).fill(c);
+  if (code === "NG") {
+    rect(0, 0, 10, 20, "#008751"); rect(10, 0, 10, 20, "#FFFFFF"); rect(20, 0, 10, 20, "#008751");
+  } else if (code === "GH") {
+    rect(0, 0, 30, 6.67, "#CE1126"); rect(0, 6.67, 30, 6.67, "#FCD116"); rect(0, 13.33, 30, 6.67, "#006B3F");
+    doc.polygon([15, 6.7], [15.76, 8.95], [18.14, 8.98], [16.24, 10.4], [16.94, 12.67], [15, 11.3], [13.06, 12.67], [13.76, 10.4], [11.86, 8.98], [14.24, 8.95]).fill("#000000");
+  } else if (code === "KE") {
+    rect(0, 0, 30, 20, "#FFFFFF"); rect(0, 0, 30, 6, "#000000"); rect(0, 7, 30, 6, "#BB0000"); rect(0, 14, 30, 6, "#006600");
+    doc.lineWidth(0.6).strokeColor("#FFFFFF");
+    doc.moveTo(11, 3).lineTo(19, 17).stroke();
+    doc.moveTo(19, 3).lineTo(11, 17).stroke();
+    doc.ellipse(15, 10, 3, 6).fill("#000000");
+    doc.ellipse(15, 10, 1.8, 6).fill("#BB0000");
+    doc.ellipse(15, 10, 0.5, 1.6).fill("#FFFFFF");
+  } else {
+    rect(0, 0, 30, 10, "#E03C31"); rect(0, 10, 30, 10, "#001489");
+    const y = "M0,0 L12,10 L30,10 M0,20 L12,10";
+    doc.path(y).lineJoin("miter").lineWidth(6.67).strokeColor("#FFFFFF").stroke();
+    doc.path(y).lineJoin("miter").lineWidth(4).strokeColor("#007749").stroke();
+    doc.polygon([0, 2.6], [8.88, 10], [0, 17.4]).fill("#FFB81C");
+    doc.polygon([0, 3.47], [7.84, 10], [0, 16.53]).fill("#000000");
+  }
+  doc.restore();
+  // A hairline edge so white parts of a flag stay crisp on the dark band.
+  doc.rect(x, y, w, h).lineWidth(0.5).strokeColor("#C9CEDA").stroke();
+}
+
+function band(doc: PDFKit.PDFDocument, kicker: string, flag?: CountryCode): void {
   doc.rect(0, 0, A4.w, 64).fill(INK);
   doc.rect(0, 64, A4.w, 4).fill(SIGNAL);
   doc.fillColor(PAPER).font(SERIF_BOLD).fontSize(17).text("Paleon Training", M, 22, { lineBreak: false });
-  doc.font(SANS).fontSize(10).fillColor("#C9CEDA").text(kicker, M, 27, { width: W, align: "right" });
+  // With a flag: it sits at the right-hand margin, centred in the band, and the kicker
+  // (ending with the country name) is right-aligned just before it.
+  const flagW = 30;
+  const textW = flag ? W - flagW - 10 : W;
+  doc.font(SANS).fontSize(10).fillColor("#C9CEDA").text(kicker, M, 27, { width: textW, align: "right" });
+  if (flag) drawFlag(doc, flag, A4.w - M - flagW, 32 - flagW / 3, flagW);
 }
 
 function footerLine(doc: PDFKit.PDFDocument, note: string): void {
@@ -287,7 +325,7 @@ export function streamHowItWorksPdf(code: CountryCode, out: NodeJS.WritableStrea
   const country = COUNTRIES[code].name;
   const doc = newDoc(`${HOW_IT_WORKS_TITLE} (${country})`);
   doc.pipe(out);
-  band(doc, "For company managers and HR");
+  band(doc, `For company managers and HR  \u00b7  ${country}`, code);
   doc.font(SERIF_BOLD).fontSize(20).fillColor(INK).text(HOW_IT_WORKS_TITLE, M, 86, { width: W });
   doc
     .font(SANS)
