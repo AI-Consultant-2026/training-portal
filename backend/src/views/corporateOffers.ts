@@ -38,7 +38,7 @@ export function hasOnboardingSlots(_programme?: PricedProgramme): boolean {
 
 export function slotsLeft(_programme?: PricedProgramme): string {
   const n = ONBOARDING.slotsLeft;
-  return `${n} ${COHORT_NAME} slot${n === 1 ? "" : "s"} left`;
+  return `${n} slot${n === 1 ? "" : "s"} left for ${COHORT_NAME} start`;
 }
 
 /** The onboarding line as plain text (FAQs, JSON-LD); just "places start today" once December is full. */

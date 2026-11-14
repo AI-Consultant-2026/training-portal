@@ -35,7 +35,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
     ] as const) {
       const html = (await request(app).get(path)).text;
       expect(html).toContain(
-        `<strong>Company onboarding: ${places} December 2026 slots left.</strong> Each slot covers portal setup, your staff sign-up link and a manager login for one organisation. Individual places bought online start today.`,
+        `<strong>Company onboarding: ${places} slots left for December 2026 start.</strong> Each slot covers portal setup, your staff sign-up link and a manager login for one organisation. Individual places bought online start today.`,
       );
       expect(html).not.toMatch(/intake|December 2026 cohort/i);
       expect(html).not.toMatch(/Booked until/);
@@ -43,10 +43,10 @@ describe("Corporate conversion review (2026-11-13)", () => {
     }
     const hub = (await request(app).get("/")).text;
     // One count shared by the three programmes (owner, 2026-11-13); multi-programme pages say so.
-    expect(hub).toContain("Company onboarding: 10 December 2026 slots left, shared across our three corporate programmes.");
-    expect(hub).not.toMatch(/\b(12|8) December 2026 slots/);
+    expect(hub).toContain("Company onboarding: 10 slots left for December 2026 start, shared across our three corporate programmes.");
+    expect(hub).not.toMatch(/\b(12|8) slots left for December 2026/);
     const za = (await request(app).get("/za/corporate-training")).text;
-    expect(za.match(/Company onboarding: 10 December 2026 slots left, shared/g)?.length).toBeGreaterThanOrEqual(1);
+    expect(za.match(/Company onboarding: 10 slots left for December 2026 start, shared/g)?.length).toBeGreaterThanOrEqual(1);
   });
 
   it("drops the onboarding line, buttons and FAQ mentions when December is full", () => {
@@ -60,7 +60,7 @@ describe("Corporate conversion review (2026-11-13)", () => {
       }
       expect(onboardingSummary()).toBe("Individual places bought online start today.");
       ONBOARDING.slotsLeft = 1;
-      expect(cohortNotice("accelerator")).toContain("1 December 2026 slot left.");
+      expect(cohortNotice("accelerator")).toContain("1 slot left for December 2026 start.");
     } finally {
       ONBOARDING.slotsLeft = saved;
     }
