@@ -211,7 +211,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
     site: {
       path: "/gh",
       locale: "en-GH",
-      status: "coming_soon",
+      status: "live",
       currency: { code: "GHS", symbol: "GH\u20B5", spaced: false },
       headlineIndustries: "Oil & Gas, Mining and Banking",
       coursePrices: {
@@ -313,7 +313,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
     site: {
       path: "/ke",
       locale: "en-KE",
-      status: "coming_soon",
+      status: "live",
       currency: { code: "KES", symbol: "KSh", spaced: true },
       headlineIndustries: "Telecoms, Fintech and Energy",
       coursePrices: {
@@ -377,7 +377,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
     site: {
       path: "/za",
       locale: "en-ZA",
-      status: "coming_soon",
+      status: "live",
       currency: { code: "ZAR", symbol: "R", spaced: false },
       headlineIndustries: "Mining, Banking and Telecoms",
       coursePrices: {

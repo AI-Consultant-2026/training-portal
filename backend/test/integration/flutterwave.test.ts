@@ -128,14 +128,6 @@ describe("Flutterwave checkout (Ghana, Kenya, South Africa)", () => {
     });
   });
 
-  it("keeps a Kenyan student on Naira and Paystack while Kenya isn't live", async () => {
-    config.liveCountries = [];
-    const { course, token } = await setup();
-    const res = await request(app).get(`/api/payments/quote/${course.id}`).set("Authorization", `Bearer ${token}`);
-    expect(res.body.quote.checkout).toMatchObject({ country: "NG", gateway: "paystack" });
-    expect(res.body.quote.card).toMatchObject({ currency: "NGN", amount: 150_000 });
-  });
-
   it("says payments are off when the Flutterwave key isn't set", async () => {
     config.flutterwave.secretKey = "";
     const { course, token } = await setup();
@@ -338,7 +330,7 @@ describe("A live Kenya outside the checkout", () => {
     expect(live.text).toContain('href="/register?country=KE"');
     expect(live.text).not.toContain("Course payments in Kenya open soon");
     const gh = await request(app).get("/gh/ambassadors");
-    expect(gh.text).toContain("Course payments in Ghana open soon");
+    expect(gh.text).not.toContain("Course payments in Ghana open soon");
   });
 
   it("quotes a Kenyan lead the fee in shillings and Kenya's WhatsApp line", () => {

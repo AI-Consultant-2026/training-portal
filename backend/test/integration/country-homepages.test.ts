@@ -43,18 +43,18 @@ describe("Country homepages", () => {
     ["/za", "ZA", "en-ZA", "POPIA", "University / TVET college", "R"],
     ["/ke", "KE", "en-KE", "Occupational Safety and Health Act 2007", "National Youth Service (NYS)", "KSh"],
     ["/gh", "GH", "en-GH", "Data Protection Act 2012 (Act 843)", "National Service (NSS)", "GH₵"],
-  ])("serves %s as a coming-soon page: waitlist, local prices, no checkout", async (path, code, locale, law, service, symbol) => {
+  ])("serves %s as a live page: local prices and checkout, no waitlist (live 2026-11-14)", async (path, code, locale, law, service, symbol) => {
     const res = await request(app).get(path);
     expect(res.status).toBe(200);
     expect(res.text).toContain(`<html lang="${locale}">`);
-    expect(res.text).toContain(`data-waitlist-form data-country="${code}"`);
-    expect(res.text).toContain("are launching soon");
+    expect(res.text).not.toContain("data-waitlist-form");
+    expect(res.text).not.toContain("are launching soon");
+    expect(res.text).not.toContain("Coming soon");
     expect(res.text).not.toContain('<mark class="tbc">');
     expect(res.text).toContain(law);
     expect(res.text).toContain(`<option>${service}</option>`);
     expect(res.text).toContain(`NG &middot; ₦`.replace("NG", code).replace("₦", symbol.replace("₵", "₵")));
-    expect(res.text).not.toContain("/register?course=");
-    expect(res.text).not.toContain("priceCurrency");
+    expect(res.text).toContain("/register?course=");
     // Their own WhatsApp line on the floating button, not Nigeria's.
     expect(res.text).toContain('data-whatsapp="https://wa.me/447508823495"');
     expect(res.text).toContain("whatsapp-float.js");
@@ -207,16 +207,13 @@ describe("Corporate homepage, remembered country and the country banner", () => 
 describe("Country waitlist", () => {
   beforeEach(() => memAdapter.clear());
 
-  it("stores a sign-up with its country and tells the team once", async () => {
-    const first = await request(app).post("/api/waitlist").send({ country: "KE", whatsapp: "+254 712 345 678", consent: true });
-    expect(first.status).toBe(201);
-    const again = await request(app).post("/api/waitlist").send({ country: "KE", whatsapp: "+254 712 345 678", consent: true });
-    expect(again.status).toBe(201);
-    const rows = await WaitlistSignup.findAll({ where: { country: "KE" } });
-    expect(rows).toHaveLength(1);
-    expect(rows[0].whatsapp).toBe("+254 712 345 678");
-    expect(memAdapter.sentMessages).toHaveLength(1);
-    expect(memAdapter.sentMessages[0].subject).toBe("New Kenya waitlist sign-up");
+  it("takes no new sign-ups now every country is live (2026-11-14)", async () => {
+    for (const country of ["NG", "ZA", "KE", "GH"]) {
+      const res = await request(app).post("/api/waitlist").send({ country, whatsapp: "+254 712 345 678", consent: true });
+      expect(res.status).toBe(400);
+    }
+    expect(await WaitlistSignup.count()).toBe(0);
+    expect(memAdapter.sentMessages).toHaveLength(0);
   });
 
   it("rejects live countries and numbers that aren't phone numbers", async () => {
@@ -277,7 +274,7 @@ describe("Country waitlist", () => {
     for (const path of ["/za", "/ke", "/gh"]) {
       const html = (await request(app).get(path)).text;
       expect(html).toContain('id="regConsent" name="consent" required');
-      expect(html).toContain('id="waitlistConsent" name="consent" required');
+      expect(html).not.toContain('id="waitlistConsent"');
     }
     const ng = (await request(app).get("/ng")).text;
     expect(ng).not.toContain('name="consent"');
@@ -323,7 +320,7 @@ describe("Paystack per country", () => {
     expect((await webhook(GH_SECRET, { ...charge, currency: "GHS" })).body.outcome).toBe("unmatched");
   });
 
-  it("keeps a student from a coming-soon country paying in Naira through Nigeria's account", async () => {
+  it("quotes a Ghanaian student in cedis through Flutterwave now Ghana is live (2026-11-14)", async () => {
     const instructor = await User.create({
       email: "pc-instructor@example.com",
       passwordHash: await bcrypt.hash("Password123!", 4),
@@ -349,24 +346,12 @@ describe("Paystack per country", () => {
       emailVerifiedAt: new Date(),
     });
     const login = await request(app).post("/api/auth/login").send({ email: "pc-ghana@example.com", password: "Password123!" });
-    const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ status: true, data: { authorization_url: "https://checkout.paystack.com/gh" } }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
-    );
     const res = await request(app)
-      .post("/api/payments/instalment")
-      .set("Authorization", `Bearer ${login.body.accessToken}`)
-      .send({ courseId: course.id, kind: "deposit" });
-    expect(res.status).toBe(201);
-    const [, init] = fetchMock.mock.calls[0];
-    expect((init as RequestInit).headers).toMatchObject({ Authorization: `Bearer ${NG_SECRET}` });
-    const sent = JSON.parse(String((init as RequestInit).body));
-    expect(sent).toMatchObject({ currency: "NGN", amount: 2_000_000 });
-    const enrollment = await Enrollment.findOne({ where: { courseId: course.id } });
-    const payment = await Payment.findOne({ where: { enrollmentId: enrollment!.id } });
-    expect(payment).toMatchObject({ currency: "NGN", billingCountry: "NG" });
+      .get(`/api/payments/quote/${course.id}`)
+      .set("Authorization", `Bearer ${login.body.accessToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.quote.checkout).toMatchObject({ country: "GH", gateway: "flutterwave" });
+    expect(res.body.quote.card.currency).toBe("GHS");
   });
 
   it("serves the Nigerian jobs board and its data", async () => {
