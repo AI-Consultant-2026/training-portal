@@ -400,7 +400,7 @@ describe("Second corporate review (2026-11-13)", () => {
       expect(html).toContain("Why companies choose portal training");
       expect(html).toContain(`href="${buy}">See prices and buy seats</a>`);
       expect(html).not.toContain("Your corporate training journey");
-      expect(html).not.toMatch(/video lessons/i);
+      expect(html).toContain("short video lessons, practical exercises and quizzes");
     }
     const ke = (await request(app).get("/ke/corporate-training/ai-workflow-productivity")).text;
     expect(ke).toContain("Pay securely online by card or M-Pesa.");

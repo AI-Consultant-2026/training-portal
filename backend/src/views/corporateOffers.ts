@@ -462,7 +462,7 @@ export function portalStages(code: CountryCode | null): PortalStage[] {
     {
       title: "Learn and track",
       steps: [
-        { h: "Staff start straight away", p: "When they log in at paleontraining.com, the course is already on their dashboard. They work through short lessons, practical exercises and quizzes on a phone, laptop or office computer, whenever it suits their work." },
+        { h: "Staff start straight away", p: "When they log in at paleontraining.com, the course is already on their dashboard. They work through short video lessons, practical exercises and quizzes on a phone, laptop or office computer, whenever it suits their work." },
         { h: "You track progress", p: "Sign up with the same email address used on the order and your account becomes the manager login. You see who has joined, how far each person has got and who has finished." },
         { h: "Certificates on completion", p: "Each staff member who finishes receives a certificate of completion, and a dated attendance record is available for your training files." },
       ],
