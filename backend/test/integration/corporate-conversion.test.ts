@@ -405,6 +405,12 @@ describe("Second corporate review (2026-11-13)", () => {
     const ke = (await request(app).get("/ke/corporate-training/ai-workflow-productivity")).text;
     expect(ke).toContain("Pay securely online by card or M-Pesa.");
     expect(ke).toContain('href="/corporate-training/how-the-company-portal-works-ke.pdf"');
+    for (const cc of ["ng", "za", "ke", "gh"]) {
+      const page = (await request(app).get(`/${cc}/corporate-training`)).text;
+      expect(page).toContain('<a href="#how-it-works">How the company portal works &darr;</a>');
+      expect(page.indexOf('id="programmes"')).toBeLessThan(page.indexOf('id="how-it-works"'));
+      expect(page.indexOf('id="how-it-works"')).toBeLessThan(page.indexOf('id="pricing"'));
+    }
     const home = (await request(app).get("/")).text;
     expect(home).toContain('<a href="#how-it-works">How the company portal works &darr;</a>');
     // The section sits before the prices on the homepage.

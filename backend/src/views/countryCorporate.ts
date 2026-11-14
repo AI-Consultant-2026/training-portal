@@ -26,6 +26,7 @@ import {
   readinessButton,
   reserveButton,
   waysToBuyBrief,
+  HOW_IT_WORKS_TITLE,
   howItWorksSection,
 } from "./corporateOffers";
 import { SECTORS, SECTORS_PATH } from "./corporateSectorsData";
@@ -199,6 +200,7 @@ ${header(ctx, home, "/", true)}
           ${ctaButton(WORKFORCE_CTA, true, `${cyberSecurePath(code)}#buy`)}
           ${readinessButton(code, true)}
         </div>
+        <p class="co-how-link"><a href="#how-it-works">${HOW_IT_WORKS_TITLE} &darr;</a></p>
         <ul class="ca-trust"><li>Self-paced online, in your own private company portal, across ${escapeHtml(country)}</li><li>Customised by sector and department</li><li>Reply within one working day</li></ul>
       </div>
       <div class="ca-hero-media">
@@ -233,6 +235,13 @@ ${header(ctx, home, "/", true)}
         </div>
       </div>
       ${cohortNotice(undefined, true)}
+    </div>
+  </section>
+
+  ${howItWorksSection(code, null, "#pricing")}
+
+  <section class="section section-paper ca-section" id="prices" aria-label="Prices in ${escapeHtml(country)}">
+    <div class="wrap">
       <h3 class="cp-subtitle" id="pricing">Prices in ${escapeHtml(country)}</h3>
       ${pricingSummaryTable([code])}
       <h3 class="cp-subtitle">Two ways to buy</h3>
@@ -240,8 +249,6 @@ ${header(ctx, home, "/", true)}
       <div class="ca-ctas">${reserveButton("cybersecure")}</div>
     </div>
   </section>
-
-  ${howItWorksSection(code, null, "#pricing")}
 
   <section class="section section-dark ca-section" id="where" aria-labelledby="where-title">
     <div class="wrap ca-narrow">
