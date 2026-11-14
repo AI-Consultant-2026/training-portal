@@ -674,7 +674,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
           ? `
         <li>Email: <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a></li>
         <li>WhatsApp: <a href="https://wa.me/447508823495" target="_blank" rel="noopener">+44 7508 823495</a></li>
-        <li><a href="${home}">For Graduates &rarr;</a></li>`
+        <li><a href="${home}">Courses for graduates &rarr;</a></li>`
           : `
         <li><a href="tel:+447508823495">+44 7508 823495 (WhatsApp/Call)</a></li>
         <li>Courses &amp; fees: <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a></li>

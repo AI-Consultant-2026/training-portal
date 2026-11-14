@@ -322,6 +322,7 @@ describe("Director resources and the employer-first menu (2026-11-08)", () => {
       const html = (await request(app).get(path)).text;
       expect(html).not.toContain("<summary>For Graduates</summary>");
       expect(html).toMatch(/<a class="util-individuals" href="\/(ng|za|ke|gh)">For Graduates &rarr;<\/a>/);
+      expect(html).toMatch(/<li><a href="\/(ng|za|ke|gh)">Courses for graduates &rarr;<\/a><\/li>/);
       expect(html).toContain('<a href="/ai-cyber-readiness-check">Free Readiness Check</a>');
       expect(html).toContain("Corporate training &middot;");
     }
