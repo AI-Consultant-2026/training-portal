@@ -98,7 +98,7 @@ export const COURSE_INFO: Record<HomepageCourse, CourseInfo> = {
     page: "/data-analytics-business-intelligence-course",
     desc: "Clean, analyse and present data with Excel, SQL, Power BI and Python, and turn it into decisions managers act on.",
     days: 18,
-    lessons: 72,
+    lessons: 36,
     law: null,
     why: "Every bank, telecoms operator, energy company and growing business runs on reports and dashboards. You\u2019ll learn to clean and analyse data in Excel, SQL and Python, build Power BI dashboards and present findings managers act on.",
     icon: '<path d="M6 40 H40" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="9" y="26" width="6" height="14" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="20" y="18" width="6" height="22" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="31" y="10" width="6" height="30" rx="1" stroke="currentColor" stroke-width="1.8"/><path d="M8 20 L19 12 L27 15 L38 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',

@@ -11,6 +11,8 @@ export interface LessonSeed {
   durationMinutes: number;
   videoUrl?: string;
   images?: LessonImageSeed[];
+  /** Stored in lessons.resources; links are listed under "Resources" on the lesson page. */
+  resources?: { links: { label: string; url: string }[] };
 }
 
 export interface AnswerSeed {

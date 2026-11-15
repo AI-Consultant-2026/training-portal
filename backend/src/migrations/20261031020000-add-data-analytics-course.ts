@@ -4,7 +4,8 @@ import { applyBriefs } from "../seeders/data/assignmentBriefs/applyBriefs";
 import { WEEKS } from "../seeders/data/curriculumDataAnalytics";
 
 // Adds the Data Analytics & Business Intelligence course: 18 days of 4 lessons each (every
-// lesson with an embedded video), a daily quiz bank with 10 questions drawn per attempt, a
+// lesson with an embedded video; merged into 2 two-part lessons a day on 2026-11-15, see
+// 20261115020000 -- a fresh database now gets the 36-lesson version straight away), a daily quiz bank with 10 questions drawn per attempt, a
 // daily assignment and one capstone. Each bank is the day's 10-question module quiz plus its
 // four lessons' 5-question knowledge checks: 30 questions, except Day 18 (the capstone day,
 // which has no module quiz) with 20. The day gate works as on every other course: lesson 1,
@@ -104,7 +105,7 @@ module.exports = {
           title: lesson.title,
           content: lesson.content,
           video_url: lesson.videoUrl ?? null,
-          resources: JSON.stringify({}),
+          resources: JSON.stringify(lesson.resources ?? {}),
           images: JSON.stringify(lesson.images ?? []),
           order: lesson.order,
           duration_minutes: lesson.durationMinutes,

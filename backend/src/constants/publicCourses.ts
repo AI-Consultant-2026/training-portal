@@ -78,7 +78,7 @@ export const PUBLIC_COURSES: PublicCourse[] = [
     slug: "data-analytics-business-intelligence",
     title: "Data Analytics & Business Intelligence",
     days: 18,
-    lessons: 72,
+    lessons: 36,
     highlights: [
       "Data types, data quality and cleaning data in Excel",
       "SQL queries, joins and business metrics",
