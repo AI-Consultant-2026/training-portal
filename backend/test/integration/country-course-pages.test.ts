@@ -4,7 +4,14 @@ import { createApp } from "../../src/app";
 // Ghana, Kenya and South Africa course pages (SEO, 2026-10-30).
 const app = createApp();
 const ORIGIN = "https://paleontraining.com";
-const SLUGS = ["cyber-security-fundamentals", "gis-and-drone-mapping", "digital-marketing", "hse-fundamentals"];
+const SLUGS = [
+  "cyber-security-fundamentals",
+  "gis-and-drone-mapping",
+  "digital-marketing",
+  "hse-fundamentals",
+  "ai-machine-learning-fundamentals",
+  "data-analytics-business-intelligence",
+];
 const COUNTRIES: [string, string, string, RegExp][] = [
   ["gh", "en-GH", "Ghana", /GH₵[\d,]+/],
   ["ke", "en-KE", "Kenya", /KSh [\d,]+/],
@@ -58,6 +65,21 @@ describe("Country course pages", () => {
     const types = blocks.flatMap((b) => (JSON.parse(b[1])["@graph"] ?? [JSON.parse(b[1])]).map((n: { "@type": string }) => n["@type"]));
     expect(types).toEqual(expect.arrayContaining(["Course", "BreadcrumbList", "FAQPage"]));
     expect(res.text).not.toMatch(/<script(?![^>]*(?:\bsrc=|type="application\/(?:ld\+)?json"))[^>]*>/);
+  });
+
+  it("prices Data Analytics at ₦195,000 and the same rate as the other courses abroad (2026-11-15)", async () => {
+    const ng = await request(app).get("/data-analytics-business-intelligence-course");
+    expect(ng.text).toContain("&#8358;195,000");
+    expect(ng.text).toContain("&#8358;175,000");
+    expect(ng.text).toMatch(/"price": ?195000/);
+    for (const [path, fee] of [
+      ["/gh/data-analytics-business-intelligence-course", "GH₵1,705"],
+      ["/ke/data-analytics-business-intelligence-course", "KSh 18,820"],
+      ["/za/data-analytics-business-intelligence-course", "R2,410"],
+    ]) {
+      const res = await request(app).get(path);
+      expect(main(res.text)).toContain(fee);
+    }
   });
 
   it("returns 404 for a course or country that doesn't exist", async () => {

@@ -25,6 +25,8 @@ describe("Country homepages", () => {
       gis: COURSE_PRICES_NGN["gis-and-drone-mapping"],
       dm: COURSE_PRICES_NGN["digital-marketing"],
       hse: COURSE_PRICES_NGN["hse-fundamentals"],
+      ai: COURSE_PRICES_NGN["ai-machine-learning-fundamentals"],
+      da: COURSE_PRICES_NGN["data-analytics-business-intelligence"],
     })) {
       expect(res.text).toContain(`<span class="price-value">${naira(price)}</span>`);
     }
@@ -37,6 +39,28 @@ describe("Country homepages", () => {
     expect(res.text).not.toContain('id="waitlist"');
     expect(res.text).toContain('<script src="/whatsapp-float.js" defer></script>');
     expect(res.text).toContain('"priceCurrency":"NGN","price":"200000"');
+  });
+
+  it("shows the Data Analytics card on every country page in the same format, in local money (2026-11-15)", async () => {
+    expect(COURSE_PRICES_NGN["data-analytics-business-intelligence"]).toBe(195_000);
+    for (const [path, fee, deposit] of [
+      ["/ng", "₦195,000", "₦20,000"],
+      ["/gh", "GH₵1,705", "GH₵175"],
+      ["/ke", "KSh 18,820", "KSh 1,930"],
+      ["/za", "R2,410", "R247"],
+    ]) {
+      const res = await request(app).get(path);
+      const cards = res.text.match(/<article class="course-card">[\s\S]*?<\/article>/g) ?? [];
+      expect(cards).toHaveLength(6);
+      const da = cards.find((c) => c.includes("Data Analytics &amp; Business Intelligence") || c.includes("Data Analytics & Business Intelligence"));
+      expect(da).toBeDefined();
+      expect(da).toContain(`<span class="price-value">${fee}</span>`);
+      expect(da).toContain(`or start with ${deposit}`);
+      expect(da).toContain("<li>18 days</li><li>72 lessons</li><li>Beginner</li>");
+      expect(da).toContain("Free lesson");
+      expect(da).toContain("data-analytics-business-intelligence-course");
+      expect(res.text).toContain("Six fields. Real depth in each.");
+    }
   });
 
   it.each([

@@ -73,6 +73,7 @@ export const HOMEPAGE_COURSES = [
   "digital-marketing",
   "hse-fundamentals",
   "ai-machine-learning-fundamentals",
+  "data-analytics-business-intelligence",
 ] as const;
 export type HomepageCourse = (typeof HOMEPAGE_COURSES)[number];
 
@@ -152,6 +153,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "digital-marketing": COURSE_PRICES_NGN["digital-marketing"],
         "hse-fundamentals": COURSE_PRICES_NGN["hse-fundamentals"],
         "ai-machine-learning-fundamentals": COURSE_PRICES_NGN["ai-machine-learning-fundamentals"],
+        "data-analytics-business-intelligence": COURSE_PRICES_NGN["data-analytics-business-intelligence"],
       },
       deposit: INSTALMENT_DEPOSIT_NGN,
       paymentMethods: "Card \u00b7 Bank transfer \u00b7 USSD",
@@ -162,6 +164,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "digital-marketing": "Banking \u00b7 Telecoms \u00b7 SMEs",
         "hse-fundamentals": "Oil & Gas \u00b7 Construction",
         "ai-machine-learning-fundamentals": "Banking \u00b7 Telecoms \u00b7 Oil & Gas",
+        "data-analytics-business-intelligence": "Oil & Gas \u00b7 Banking \u00b7 Telecoms",
       },
       // Same three values (and course mapping) the Nigerian Career Match has always used.
       industryOptions: [
@@ -224,6 +227,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "hse-fundamentals": 865,
         // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
         "ai-machine-learning-fundamentals": 2625,
+        // \u20A6195,000 at the same rate as the other courses (2026-11-15).
+        "data-analytics-business-intelligence": 1705,
       },
       deposit: 175,
       paymentMethods: "MTN MoMo \u00b7 Telecel Cash \u00b7 Card",
@@ -234,6 +239,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "digital-marketing": "Banking \u00b7 Telecoms \u00b7 SMEs",
         "hse-fundamentals": "Mining \u00b7 Oil & Gas",
         "ai-machine-learning-fundamentals": "Banking \u00b7 Mining \u00b7 Agriculture",
+        "data-analytics-business-intelligence": "Banking \u00b7 Telecoms \u00b7 Mining & energy",
       },
       industryOptions: [
         { label: "Oil & Gas", course: "hse-fundamentals" },
@@ -326,6 +332,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "hse-fundamentals": 9650,
         // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
         "ai-machine-learning-fundamentals": 28950,
+        // \u20A6195,000 at the same rate as the other courses (2026-11-15).
+        "data-analytics-business-intelligence": 18820,
       },
       deposit: 1930,
       paymentMethods: "M-Pesa \u00b7 Card",
@@ -336,6 +344,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "digital-marketing": "Fintech \u00b7 Retail \u00b7 SMEs",
         "hse-fundamentals": "Energy \u00b7 Construction",
         "ai-machine-learning-fundamentals": "Fintech \u00b7 Agriculture \u00b7 Energy",
+        "data-analytics-business-intelligence": "Fintech & mobile money \u00b7 Telecoms \u00b7 Energy",
       },
       industryOptions: [
         { label: "Telecoms", course: "cyber-security-fundamentals" },
@@ -390,6 +399,8 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "hse-fundamentals": 1235,
         // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
         "ai-machine-learning-fundamentals": 3705,
+        // \u20A6195,000 at the same rate as the other courses (2026-11-15).
+        "data-analytics-business-intelligence": 2410,
       },
       deposit: 247,
       paymentMethods: "Card \u00b7 EFT",
@@ -400,6 +411,7 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "digital-marketing": "Retail \u00b7 Fintech \u00b7 SMEs",
         "hse-fundamentals": "Mining \u00b7 Construction",
         "ai-machine-learning-fundamentals": "Banking \u00b7 Mining \u00b7 Retail",
+        "data-analytics-business-intelligence": "Banking \u00b7 Telecoms \u00b7 Mining",
       },
       industryOptions: [
         { label: "Mining", course: "hse-fundamentals" },

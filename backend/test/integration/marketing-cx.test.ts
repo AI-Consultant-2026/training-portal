@@ -3,7 +3,7 @@ import { createApp } from "../../src/app";
 
 const app = createApp();
 
-const COURSES = ["cyber-security-fundamentals", "gis-and-drone-mapping", "digital-marketing", "hse-fundamentals", "ai-machine-learning-fundamentals"];
+const COURSES = ["cyber-security-fundamentals", "gis-and-drone-mapping", "digital-marketing", "hse-fundamentals", "ai-machine-learning-fundamentals", "data-analytics-business-intelligence"];
 
 describe("Customer-experience changes on the public pages (2026-09-25)", () => {
   it.each(COURSES)("the %s course page offers the free lesson, the facts and a sample certificate", async (slug) => {
@@ -25,7 +25,7 @@ describe("Customer-experience changes on the public pages (2026-09-25)", () => {
   it("gives the homepage one clear start path, with free lessons and course-preselected sign-up", async () => {
     const res = await request(app).get("/ng");
     expect(res.text).toContain('id="how"');
-    expect(res.text).toContain('href="/ng#courses">Browse the 5 courses</a>');
+    expect(res.text).toContain('href="/ng#courses">Browse the 6 courses</a>');
     for (const slug of COURSES) {
       expect(res.text).toContain(`href="/preview/${slug}"`);
       expect(res.text).toContain(`href="/register?course=${slug}"`);

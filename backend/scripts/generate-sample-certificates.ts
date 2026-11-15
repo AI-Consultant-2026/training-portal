@@ -13,6 +13,7 @@ const SLUGS = [
   "digital-marketing",
   "hse-fundamentals",
   "ai-machine-learning-fundamentals",
+  "data-analytics-business-intelligence",
 ];
 
 async function main() {

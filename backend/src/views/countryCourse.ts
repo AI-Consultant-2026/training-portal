@@ -42,7 +42,7 @@ import {
 
 type LocalCountry = Exclude<CountryCode, "NG">;
 // Courses whose lessons use general, international examples rather than Nigerian ones.
-const GENERAL_EXAMPLE_COURSES: HomepageCourse[] = ["ai-machine-learning-fundamentals"];
+const GENERAL_EXAMPLE_COURSES: HomepageCourse[] = ["ai-machine-learning-fundamentals", "data-analytics-business-intelligence"];
 export const COURSE_PAGE_COUNTRIES: LocalCountry[] = ["GH", "KE", "ZA"];
 
 interface Law {
@@ -139,6 +139,26 @@ const OUTLINE: Record<HomepageCourse, [string, string][]> = {
     ["Day 16", "Responsible AI: bias, privacy, deepfakes, copyright and governance"],
     ["Day 17", "AI and cyber security: prompt injection, AI phishing and deepfake fraud"],
     ["Day 18", "Your capstone: plan, build, evaluate and present an AI project"],
+  ],
+  "data-analytics-business-intelligence": [
+    ["Day 1", "What data analytics and business intelligence are, and the analysis process"],
+    ["Day 2", "Data sources, data types, data collection and data quality"],
+    ["Day 3", "Excel basics: formulas, sorting, filtering and a first report"],
+    ["Day 4", "Cleaning data in Excel, lookup functions and PivotTables"],
+    ["Day 5", "Databases and your first SQL queries"],
+    ["Day 6", "SQL for analysis: GROUP BY, HAVING, JOIN and subqueries"],
+    ["Day 7", "Statistics for analysts: averages, spread, growth rates and correlation"],
+    ["Day 8", "Data visualisation and storytelling with charts"],
+    ["Day 9", "Power BI: getting and cleaning data, and a first report"],
+    ["Day 10", "Power BI data modelling, the star schema and DAX measures"],
+    ["Day 11", "Interactive Power BI dashboards: slicers, KPIs and drill-down"],
+    ["Day 12", "Python basics in Google Colab and loading data with pandas"],
+    ["Day 13", "Cleaning, grouping and charting data in Python: exploratory analysis"],
+    ["Day 14", "Business analysis: KPIs, reports, recommendations and presenting"],
+    ["Day 15", "Analytics in oil & gas, energy and industrial operations"],
+    ["Day 16", "Analytics in banking and financial services"],
+    ["Day 17", "Analytics in telecommunications: churn and network performance"],
+    ["Day 18", "Your capstone: a full analysis, dashboard, report and presentation"],
   ],
 };
 
@@ -297,6 +317,35 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by MTN MoMo, Telecel Cash or card."],
         ],
       },
+      "data-analytics-business-intelligence": {
+        title: "Data Analytics and Power BI Course Online in Ghana | Paleon",
+        description:
+          "Beginner data analytics course for learners in Ghana: Excel, SQL, Power BI dashboards and Python, with banking, telecoms and mining case studies. 18 days. {FEE}.",
+        h1: "Data Analytics & Business Intelligence: online course for Ghana",
+        intro:
+          "A beginner course in turning raw data into decisions: cleaning and analysing data in Excel, querying databases with SQL, building Power BI dashboards and exploring data in Python, then reporting what you find. It suits Ghanaian graduates and professionals who want practical data skills without a computing degree.",
+        whoFor: [
+          "Graduates and final-year students from any discipline who want a first role in data, reporting or business analysis",
+          "People on National Service who want a skill and a portfolio project to show at the end of their service year",
+          "Staff in banks, telcos, mines and businesses who prepare reports in spreadsheets and want to build dashboards instead",
+        ],
+        usedIn: [
+          { sector: "Banking and mobile money", example: "Banks and payment companies track branch performance, loan quality and unusual transactions, and analyse which customers are likely to leave." },
+          { sector: "Telecoms", example: "Operators analyse customer churn, data usage and network performance to decide where to invest and which customers to retain." },
+          { sector: "Mining and energy", example: "Mines and energy companies report production against plan, downtime, maintenance costs and safety indicators on management dashboards." },
+        ],
+        laws: [
+          { name: "Data Protection Act, 2012 (Act 843)", what: "Governs how personal data is collected, stored and used, and set up the Data Protection Commission. Relevant whenever an analysis uses data about customers or staff." },
+        ],
+        certificateNote:
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to data analytics and business intelligence and its capstone project. It is not a university degree or a vendor certification such as Microsoft\u2019s Power BI Data Analyst exam, though the course is a practical foundation for it.",
+        faqs: [
+          ["Do I need experience with data or coding?", "No. Every idea starts in plain English with an everyday example, and each tool is introduced one small step at a time. A laptop or desktop makes the hands-on work much easier."],
+          ["Which tools will I use?", "Excel for the web, DB Browser for SQLite, Power BI Desktop and Python in Google Colab. All have free versions. Power BI Desktop runs on Windows; the lessons show Mac users other ways to do the Power BI work."],
+          ["What will I build?", "A daily assignment (a cleaned dataset, SQL queries, a PivotTable report, Power BI dashboards and a Python analysis) and a capstone: a full analysis of retail, oil & gas, banking or telecoms data with a dashboard, a written report and a short presentation."],
+          ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by MTN MoMo, Telecel Cash or card."],
+        ],
+      },
     },
   },
   KE: {
@@ -449,6 +498,35 @@ const COPY: Record<LocalCountry, CountryCopy> = {
         faqs: [
           ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
           ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
+          ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by M-Pesa or card."],
+        ],
+      },
+      "data-analytics-business-intelligence": {
+        title: "Data Analytics and Power BI Course Online in Kenya | Paleon",
+        description:
+          "Beginner data analytics course for learners in Kenya: Excel, SQL, Power BI dashboards and Python, with fintech, telecoms and energy case studies. 18 days. {FEE}.",
+        h1: "Data Analytics & Business Intelligence: online course for Kenya",
+        intro:
+          "A beginner course in turning raw data into decisions: cleaning and analysing data in Excel, querying databases with SQL, building Power BI dashboards and exploring data in Python, then reporting what you find. It suits Kenyan graduates and professionals who want practical data skills without a computing degree.",
+        whoFor: [
+          "Graduates and students on industrial attachment who want a first role in data, reporting or business analysis",
+          "Young professionals in fintech, banking, telecoms and energy who prepare reports in spreadsheets and want to build dashboards instead",
+          "Anyone considering a career in data who wants a practical, project-based starting point",
+        ],
+        usedIn: [
+          { sector: "Fintech and mobile money", example: "Payment and lending companies track transactions, spot unusual patterns and analyse which customers are likely to stop using a service." },
+          { sector: "Telecoms", example: "Operators analyse customer churn, data usage and network performance to decide where to invest and which customers to retain." },
+          { sector: "Energy and business", example: "Energy companies report output, downtime and maintenance costs, and businesses of every size use dashboards to follow sales and costs." },
+        ],
+        laws: [
+          { name: "Data Protection Act, 2019", what: "Kenya's main personal-data law, overseen by the Office of the Data Protection Commissioner. Relevant whenever an analysis uses data about customers or staff." },
+        ],
+        certificateNote:
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to data analytics and business intelligence and its capstone project. It is not a university degree or a vendor certification such as Microsoft\u2019s Power BI Data Analyst exam, though the course is a practical foundation for it.",
+        faqs: [
+          ["Do I need experience with data or coding?", "No. Every idea starts in plain English with an everyday example, and each tool is introduced one small step at a time. A laptop or desktop makes the hands-on work much easier."],
+          ["Which tools will I use?", "Excel for the web, DB Browser for SQLite, Power BI Desktop and Python in Google Colab. All have free versions. Power BI Desktop runs on Windows; the lessons show Mac users other ways to do the Power BI work."],
+          ["What will I build?", "A daily assignment (a cleaned dataset, SQL queries, a PivotTable report, Power BI dashboards and a Python analysis) and a capstone: a full analysis of retail, oil & gas, banking or telecoms data with a dashboard, a written report and a short presentation."],
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by M-Pesa or card."],
         ],
       },
@@ -607,6 +685,35 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit."],
         ],
       },
+      "data-analytics-business-intelligence": {
+        title: "Data Analytics and Power BI Course Online in South Africa",
+        description:
+          "Beginner data analytics course for South Africa: Excel, SQL, Power BI dashboards and Python, with banking, telecoms and mining case studies. 18 days. {FEE}.",
+        h1: "Data Analytics & Business Intelligence: online course for South Africa",
+        intro:
+          "A beginner course in turning raw data into decisions: cleaning and analysing data in Excel, querying databases with SQL, building Power BI dashboards and exploring data in Python, then reporting what you find. It suits South African graduates and professionals who want practical data skills without a computing degree.",
+        whoFor: [
+          "Graduates and final-year students from any discipline who want a first role in data, reporting or business analysis",
+          "Young professionals in banking, insurance, telecoms, retail and mining who prepare reports in spreadsheets and want to build dashboards instead",
+          "Anyone considering a career in data who wants a practical, project-based starting point",
+        ],
+        usedIn: [
+          { sector: "Banking and insurance", example: "Banks and insurers track branch performance, credit quality and unusual transactions, and analyse which customers are likely to leave." },
+          { sector: "Telecoms", example: "Operators analyse customer churn, data usage and network performance to decide where to invest and which customers to retain." },
+          { sector: "Mining", example: "Mines report production against plan, downtime, maintenance costs and safety indicators on management dashboards." },
+        ],
+        laws: [
+          { name: "Protection of Personal Information Act, 2013 (POPIA)", what: "South Africa's main personal-data law, enforced by the Information Regulator. Relevant whenever an analysis uses data about customers or staff." },
+        ],
+        certificateNote:
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to data analytics and business intelligence and its capstone project. It is not a university degree or a vendor certification such as Microsoft\u2019s Power BI Data Analyst exam, though the course is a practical foundation for it.",
+        faqs: [
+          ["Do I need experience with data or coding?", "No. Every idea starts in plain English with an everyday example, and each tool is introduced one small step at a time. A laptop or desktop makes the hands-on work much easier."],
+          ["Which tools will I use?", "Excel for the web, DB Browser for SQLite, Power BI Desktop and Python in Google Colab. All have free versions. Power BI Desktop runs on Windows; the lessons show Mac users other ways to do the Power BI work."],
+          ["What will I build?", "A daily assignment (a cleaned dataset, SQL queries, a PivotTable report, Power BI dashboards and a Python analysis) and a capstone: a full analysis of retail, oil & gas, banking or telecoms data with a dashboard, a written report and a short presentation."],
+          ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit."],
+        ],
+      },
     },
   },
 };
@@ -634,6 +741,10 @@ const READING: Record<HomepageCourse, [string, string][]> = {
   "ai-machine-learning-fundamentals": [
     ["/top-skills-employers-want-in-2026", "Top skills employers want"],
     ["/what-is-a-soc-analyst", "What does a SOC analyst do?"],
+  ],
+  "data-analytics-business-intelligence": [
+    ["/top-skills-employers-want-in-2026", "Top skills employers want"],
+    ["/interview-prep-for-digital-roles-nigeria", "Interview prep for digital roles"],
   ],
 };
 

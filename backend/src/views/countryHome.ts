@@ -92,6 +92,17 @@ export const COURSE_INFO: Record<HomepageCourse, CourseInfo> = {
     why: "AI is changing work in every industry, from banking and telecoms to mining, energy and agriculture. You\u2019ll learn how AI learns from data, build models in Python, write prompts that work, automate routine tasks and use AI responsibly.",
     icon: '<circle cx="9" cy="14" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="32" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="9" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="23" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="37" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="37" cy="23" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 15 L20 10 M12 15 L20 22 M12 31 L20 24 M12 31 L20 36 M26 10 L34 21 M26 23 H33.5 M26 36 L34 25" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
   },
+  "data-analytics-business-intelligence": {
+    tag: "Data",
+    title: "Data Analytics & Business Intelligence",
+    page: "/data-analytics-business-intelligence-course",
+    desc: "Clean, analyse and present data with Excel, SQL, Power BI and Python, and turn it into decisions managers act on.",
+    days: 18,
+    lessons: 72,
+    law: null,
+    why: "Every bank, telecoms operator, energy company and growing business runs on reports and dashboards. You\u2019ll learn to clean and analyse data in Excel, SQL and Python, build Power BI dashboards and present findings managers act on.",
+    icon: '<path d="M6 40 H40" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="9" y="26" width="6" height="14" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="20" y="18" width="6" height="22" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="31" y="10" width="6" height="30" rx="1" stroke="currentColor" stroke-width="1.8"/><path d="M8 20 L19 12 L27 15 L38 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  },
 };
 
 // The Career Match "kind of work" options (LEAD_INTERESTS) and the course each points to.
@@ -357,11 +368,11 @@ function hero(ctx: PageContext, home: string): string {
   const c = COUNTRIES[ctx.country];
   return `<section class="hero" id="top">
     <div class="wrap hero-inner">
-      <span class="eyebrow">Five courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
+      <span class="eyebrow">Six courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
       <h1 class="hero-title">Digital skills built for careers in <em>${text(c.site.headlineIndustries)}</em></h1>
       <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a real capstone project to show employers. <strong>Led from the UK, delivered in ${escapeHtml(c.name)}.</strong></p>
       <div class="hero-ctas">
-        <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 5 courses</a>
+        <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 6 courses</a>
         <a class="btn btn-outline-light btn-lg" href="${home}#courses">Try a free lesson</a>
         <a class="hero-link" href="${home}#career-match">Not sure? Get matched in 2 minutes</a>
       </div>
@@ -422,7 +433,7 @@ function courseCards(ctx: PageContext, home: string): string {
       <div class="section-head">
         <div>
           <span class="section-eyebrow">The courses &middot; ${escapeHtml(c.name)}</span>
-          <h2 class="section-title" id="coursesTitle">Five fields. Real depth in each.</h2>
+          <h2 class="section-title" id="coursesTitle">Six fields. Real depth in each.</h2>
         </div>
         <p class="section-desc">Every course has a full curriculum, an illustrated lesson and matching video for each topic, and a capstone project that mirrors the work you&rsquo;d be hired to do.</p>
       </div>

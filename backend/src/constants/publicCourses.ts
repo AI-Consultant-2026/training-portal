@@ -74,6 +74,18 @@ export const PUBLIC_COURSES: PublicCourse[] = [
       "Responsible AI, AI security and a capstone project you present",
     ],
   },
+  {
+    slug: "data-analytics-business-intelligence",
+    title: "Data Analytics & Business Intelligence",
+    days: 18,
+    lessons: 72,
+    highlights: [
+      "Data types, data quality and cleaning data in Excel",
+      "SQL queries, joins and business metrics",
+      "Power BI data models, DAX and interactive dashboards",
+      "Python and pandas for analysis, plus oil & gas, banking and telecoms case studies",
+    ],
+  },
 ];
 
 export function findPublicCourseByTitle(title: string): PublicCourse | null {

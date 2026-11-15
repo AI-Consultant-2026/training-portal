@@ -48,6 +48,12 @@
     "category": "Courses"
   },
   {
+    "title": "Data Analytics and Power BI Course Online (Nigeria)",
+    "description": "Beginner data analytics course: Excel, SQL, statistics, Power BI dashboards, Python and business reporting, with oil & gas, banking and telecoms case studies. 18 days, 72 lessons.",
+    "url": "/data-analytics-business-intelligence-course",
+    "category": "Courses"
+  },
+  {
     "title": "Paleon Training Ghana: Digital Skills for Oil & Gas, Mining and Banking Careers",
     "description": "Online courses in Cyber Security, GIS & Drone Mapping, Digital Marketing and HSE for careers in Oil & Gas, Mining and Banking in Ghana. Pay in local currency and try a free first lesson.",
     "url": "/gh",
@@ -888,6 +894,12 @@
     "category": "Courses"
   },
   {
+    "title": "Data Analytics and Power BI Course Online in Ghana",
+    "description": "Beginner data analytics course for learners in Ghana: Excel, SQL, Power BI dashboards and Python, with banking, telecoms and mining case studies. 18 days. GH₵1,705.",
+    "url": "/gh/data-analytics-business-intelligence-course",
+    "category": "Courses"
+  },
+  {
     "title": "Cyber Security Course Online in Kenya",
     "description": "Beginner cybersecurity course for learners in Kenya: threats, networks, incident response and data protection, 18 days and 36 video lessons. KSh 19,300. Free lesson.",
     "url": "/ke/cyber-security-fundamentals-course",
@@ -918,6 +930,12 @@
     "category": "Courses"
   },
   {
+    "title": "Data Analytics and Power BI Course Online in Kenya",
+    "description": "Beginner data analytics course for learners in Kenya: Excel, SQL, Power BI dashboards and Python, with fintech, telecoms and energy case studies. 18 days. KSh 18,820.",
+    "url": "/ke/data-analytics-business-intelligence-course",
+    "category": "Courses"
+  },
+  {
     "title": "Cyber Security Course Online in South Africa",
     "description": "Beginner cybersecurity course for learners in South Africa: threats, networks, incident response and POPIA-style data protection. 18 days, 36 lessons. R2,470.",
     "url": "/za/cyber-security-fundamentals-course",
@@ -945,6 +963,12 @@
     "title": "AI and Machine Learning Course Online in South Africa",
     "description": "Beginner AI and machine learning course for South Africa: Python, data, machine learning, generative AI, automation and responsible AI. 18 days. R3,705.",
     "url": "/za/ai-machine-learning-fundamentals-course",
+    "category": "Courses"
+  },
+  {
+    "title": "Data Analytics and Power BI Course Online in South Africa",
+    "description": "Beginner data analytics course for South Africa: Excel, SQL, Power BI dashboards and Python, with banking, telecoms and mining case studies. 18 days. R2,410.",
+    "url": "/za/data-analytics-business-intelligence-course",
     "category": "Courses"
   },
   {

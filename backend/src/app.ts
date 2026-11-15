@@ -959,6 +959,9 @@ export function createApp() {
   app.get("/ai-machine-learning-fundamentals-course", (req, res) => {
     res.sendFile(path.join(__dirname, "marketing", "ai-machine-learning-fundamentals-course.html"));
   });
+  app.get("/data-analytics-business-intelligence-course", (req, res) => {
+    res.sendFile(path.join(__dirname, "marketing", "data-analytics-business-intelligence-course.html"));
+  });
   // Oil & gas content cluster (2026-09-24): two new pages alongside the expanded
   // /digital-skills-for-oil-and-gas-nigeria and /gis-mapping-oil-and-gas-nigeria.
   app.get("/nysc-digital-skills-oil-and-gas-career", (req, res) => {
