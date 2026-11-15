@@ -225,10 +225,10 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 1750,
         "digital-marketing": 1300,
         "hse-fundamentals": 865,
-        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
-        "ai-machine-learning-fundamentals": 2625,
-        // \u20A6195,000 at the same rate as the other courses (2026-11-15).
-        "data-analytics-business-intelligence": 1705,
+        // \u20A6240,000 at the same rate as the other fees here (owner, 2026-11-15; was \u20A6300,000).
+        "ai-machine-learning-fundamentals": 2100,
+        // \u20A6250,000 at the same rate as the other fees here (owner, 2026-11-15).
+        "data-analytics-business-intelligence": 2190,
       },
       deposit: 175,
       paymentMethods: "MTN MoMo \u00b7 Telecel Cash \u00b7 Card",
@@ -330,10 +330,10 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 19300,
         "digital-marketing": 14475,
         "hse-fundamentals": 9650,
-        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
-        "ai-machine-learning-fundamentals": 28950,
-        // \u20A6195,000 at the same rate as the other courses (2026-11-15).
-        "data-analytics-business-intelligence": 18820,
+        // \u20A6240,000 at the same rate as the other fees here (owner, 2026-11-15; was \u20A6300,000).
+        "ai-machine-learning-fundamentals": 23160,
+        // \u20A6250,000 at the same rate as the other fees here (owner, 2026-11-15).
+        "data-analytics-business-intelligence": 24125,
       },
       deposit: 1930,
       paymentMethods: "M-Pesa \u00b7 Card",
@@ -397,10 +397,10 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
         "gis-and-drone-mapping": 2470,
         "digital-marketing": 1850,
         "hse-fundamentals": 1235,
-        // 2026-10-31: 300,000 NGN at the same rate as the other fees here; confirmed by the owner.
-        "ai-machine-learning-fundamentals": 3705,
-        // \u20A6195,000 at the same rate as the other courses (2026-11-15).
-        "data-analytics-business-intelligence": 2410,
+        // \u20A6240,000 at the same rate as the other fees here (owner, 2026-11-15; was \u20A6300,000).
+        "ai-machine-learning-fundamentals": 2965,
+        // \u20A6250,000 at the same rate as the other fees here (owner, 2026-11-15).
+        "data-analytics-business-intelligence": 3090,
       },
       deposit: 247,
       paymentMethods: "Card \u00b7 EFT",

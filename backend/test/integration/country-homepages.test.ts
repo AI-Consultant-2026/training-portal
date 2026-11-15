@@ -54,12 +54,12 @@ describe("Country homepages", () => {
   });
 
   it("shows the Data Analytics card on every country page in the same format, in local money (2026-11-15)", async () => {
-    expect(COURSE_PRICES_NGN["data-analytics-business-intelligence"]).toBe(195_000);
+    expect(COURSE_PRICES_NGN["data-analytics-business-intelligence"]).toBe(250_000);
     for (const [path, fee, deposit] of [
-      ["/ng", "₦195,000", "₦20,000"],
-      ["/gh", "GH₵1,705", "GH₵175"],
-      ["/ke", "KSh 18,820", "KSh 1,930"],
-      ["/za", "R2,410", "R247"],
+      ["/ng", "₦250,000", "₦20,000"],
+      ["/gh", "GH₵2,190", "GH₵175"],
+      ["/ke", "KSh 24,125", "KSh 1,930"],
+      ["/za", "R3,090", "R247"],
     ]) {
       const res = await request(app).get(path);
       const cards = res.text.match(/<article class="course-card">[\s\S]*?<\/article>/g) ?? [];

@@ -8,8 +8,8 @@ export const COURSE_PRICES_NGN: Record<string, number> = {
   "digital-marketing": 150_000,
   "gis-and-drone-mapping": 200_000,
   "hse-fundamentals": 100_000,
-  "ai-machine-learning-fundamentals": 300_000,
-  "data-analytics-business-intelligence": 195_000,
+  "ai-machine-learning-fundamentals": 240_000,
+  "data-analytics-business-intelligence": 250_000,
   "renewable-energy-digital-systems": 250_000,
   "social-media-management-content": 150_000,
 };

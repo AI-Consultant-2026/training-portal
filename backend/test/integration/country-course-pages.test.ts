@@ -67,15 +67,31 @@ describe("Country course pages", () => {
     expect(res.text).not.toMatch(/<script(?![^>]*(?:\bsrc=|type="application\/(?:ld\+)?json"))[^>]*>/);
   });
 
-  it("prices Data Analytics at ₦195,000 and the same rate as the other courses abroad (2026-11-15)", async () => {
+  it("prices Data Analytics at ₦250,000 and the same rate as the other courses abroad (2026-11-15)", async () => {
     const ng = await request(app).get("/data-analytics-business-intelligence-course");
-    expect(ng.text).toContain("&#8358;195,000");
-    expect(ng.text).toContain("&#8358;175,000");
-    expect(ng.text).toMatch(/"price": ?195000/);
+    expect(ng.text).toContain("&#8358;250,000");
+    expect(ng.text).toContain("&#8358;230,000");
+    expect(ng.text).toMatch(/"price": ?250000/);
     for (const [path, fee] of [
-      ["/gh/data-analytics-business-intelligence-course", "GH₵1,705"],
-      ["/ke/data-analytics-business-intelligence-course", "KSh 18,820"],
-      ["/za/data-analytics-business-intelligence-course", "R2,410"],
+      ["/gh/data-analytics-business-intelligence-course", "GH₵2,190"],
+      ["/ke/data-analytics-business-intelligence-course", "KSh 24,125"],
+      ["/za/data-analytics-business-intelligence-course", "R3,090"],
+    ]) {
+      const res = await request(app).get(path);
+      expect(main(res.text)).toContain(fee);
+    }
+  });
+
+  it("prices AI & Machine Learning at ₦240,000 and the same rate abroad (2026-11-15)", async () => {
+    const ng = await request(app).get("/ai-machine-learning-fundamentals-course");
+    expect(ng.text).toContain("&#8358;240,000");
+    expect(ng.text).toContain("&#8358;220,000");
+    expect(ng.text).not.toContain("300,000");
+    expect(ng.text).toMatch(/"price": ?240000/);
+    for (const [path, fee] of [
+      ["/gh/ai-machine-learning-fundamentals-course", "GH₵2,100"],
+      ["/ke/ai-machine-learning-fundamentals-course", "KSh 23,160"],
+      ["/za/ai-machine-learning-fundamentals-course", "R2,965"],
     ]) {
       const res = await request(app).get(path);
       expect(main(res.text)).toContain(fee);
