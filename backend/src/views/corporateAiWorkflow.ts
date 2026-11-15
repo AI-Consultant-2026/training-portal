@@ -561,6 +561,23 @@ const HUB_CYBER_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, delive
 const HUB_ACC_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "professional training")])) as Record<CountryCode, string>;
 const HUB_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "training")])) as Record<CountryCode, string>;
 
+// Links from the homepage into every corporate guide (2026-11-15: every corporate page is
+// linked from "/"), set on words already in the copy. Built here rather than imported from
+// views/corporateGuides.ts, which imports this file; a test checks every slug is a guide.
+const guide = (slug: string, text: string) => `<a href="/corporate-guides/${slug}">${text}</a>`;
+const HUB_LAW_GUIDE: Record<CountryCode, string> = {
+  NG: "ndpa-data-protection-training-nigeria",
+  ZA: "popia-training-for-staff-south-africa",
+  KE: "kenya-data-protection-act-staff-training",
+  GH: "ghana-data-protection-cybersecurity-act-training",
+};
+const HUB_AWARENESS_GUIDE: Record<CountryCode, string> = {
+  NG: "cybersecurity-awareness-training-nigeria",
+  ZA: "cybersecurity-awareness-training-south-africa",
+  KE: "cybersecurity-awareness-training-kenya",
+  GH: "cybersecurity-awareness-training-ghana",
+};
+
 // Country cards on the hub (2026-11-08, SEO for employers in South Africa, Kenya and Ghana).
 const HUB_COUNTRY_SEO: { code: CountryCode; h: string; p: string }[] = [
   {
@@ -875,14 +892,14 @@ ${header(ctx, home, "/", true)}
       ${outcomeList("cybersecure", ctx.country)}
       ${cohortNotice("cybersecure", true)}
       <div class="ca-ctas">${reserveButton("cybersecure")}</div>
-      <p class="ca-p">Many attacks on organisations start with a person, not a system: a fake invoice, a message that seems to come from the boss, a login page that looks real. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and AI-related risks included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
+      <p class="ca-p">Many attacks on organisations start with a person, not a system: ${guide("invoice-and-payment-fraud-prevention-training", "a fake invoice")}, ${guide("business-email-compromise-training", "a message that seems to come from the boss")}, ${guide("phishing-awareness-training-for-employees", "a login page that looks real")}. CyberSecure Workforce trains every employee to recognise, stop and report them, in plain language, with practice on realistic workplace scenarios and ${guide("deepfake-and-voice-fraud-training-for-executives", "AI-related risks such as deepfake voice calls")} included. Twelve practical modules, ending with the CyberSecure Workforce Challenge.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/cybersecure-workforce-essentials.jpg" aria-label="Video: CyberSecure Workforce (1 minute 48 seconds)">
           <source src="/videos/corporate/cybersecure-workforce-essentials.mp4?v=2" type="video/mp4">
         </video>
       </figure>
       <p class="ca-p"><strong>Data protection, in plain language.</strong> The programme builds awareness of handling personal and customer data responsibly, in line with your obligations under your country&rsquo;s law:</p>
-      <ul class="ca-law">${MARKET_ORDER.map((k) => `<li><strong>${escapeHtml(COUNTRIES[k].name)}:</strong> ${escapeHtml(DATA_PROTECTION_LAW[k].replace(/^the /, ""))}</li>`).join("")}</ul>
+      <ul class="ca-law">${MARKET_ORDER.map((k) => `<li><strong>${escapeHtml(COUNTRIES[k].name)}:</strong> ${guide(HUB_LAW_GUIDE[k], escapeHtml(DATA_PROTECTION_LAW[k].replace(/^the /, "")))}</li>`).join("")}</ul>
       <p class="ca-p ca-hint">Awareness training to support your compliance programme; it is not legal advice.</p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
       <div class="ca-countries">${cyberCards}</div>
@@ -897,7 +914,7 @@ ${header(ctx, home, "/", true)}
       ${outcomeList("ai-workflow", ctx.country)}
       ${cohortNotice("ai-workflow", true)}
       <div class="ca-ctas">${reserveButton("ai-workflow")}</div>
-      <p class="ca-p">Your employees learn to use AI on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, with confidentiality, accuracy checks and human review built into every module. Ten practical modules, ending with a real workplace project.</p>
+      <p class="ca-p">Your employees learn to use AI tools such as ${guide("chatgpt-training-for-employees", "ChatGPT")} and ${guide("microsoft-copilot-training-for-staff", "Microsoft Copilot")} on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, ${guide("ai-training-for-managers", "led by managers who know where AI helps")}, with ${guide("generative-ai-risks-for-business", "confidentiality, accuracy checks and human review")} built into every module. Ten practical modules, ending with a real workplace project.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-workflow-productivity.jpg" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 54 seconds)">
           <source src="/videos/corporate/ai-workflow-productivity.mp4?v=2" type="video/mp4">
@@ -935,6 +952,7 @@ ${header(ctx, home, "/", true)}
       <span class="section-eyebrow">Pricing</span>
       <h2 class="section-title" id="pricing-title">Corporate training prices in Nigeria, South Africa, Kenya and Ghana</h2>
       ${pricingSummaryTable([...MARKET_ORDER], true)}
+      <p class="ca-p ca-hint">Paying through a training levy? See how ${guide("itf-reimbursement-staff-training-nigeria", "ITF reimbursement works in Nigeria")}, what the ${guide("skills-development-levy-training-south-africa", "Skills Development Levy can cover in South Africa")} and how the ${guide("nita-training-levy-kenya", "NITA training levy works in Kenya")}.</p>
       <h3 class="cp-subtitle">Two ways to buy</h3>
       ${waysToBuyBrief(ctx.country)}
     </div>
@@ -953,6 +971,7 @@ ${header(ctx, home, "/", true)}
           <p class="ca-card-link"><a href="${SECTORS_PATH}/${sec.slug}">${escapeHtml(sec.name)} training &rarr;</a></p>
         </div>`,
       ).join("\n")}</div>
+      <p class="ca-p">More on what each industry needs in our guides for ${guide("cybersecurity-training-for-banks-and-fintechs", "banks and fintechs")}, ${guide("cybersecurity-ai-training-oil-and-gas", "oil and gas companies")}, ${guide("cybersecurity-training-for-telecoms", "telecoms companies")}, ${guide("cybersecurity-ai-training-for-ngos", "NGOs and charities")} and ${guide("cybersecurity-ai-training-for-government", "government and the public sector")}.</p>
     </div>
   </section>
 
@@ -965,7 +984,9 @@ ${header(ctx, home, "/", true)}
       <div class="ca-cards">${HUB_COUNTRY_SEO.map(
         (c) => `<div class="ca-card">
           <h3>${flagSvg(c.code, "flag flag-sm")} ${escapeHtml(c.h)}</h3>
-          <p><strong>${escapeHtml(servingLine(c.code))}.</strong> ${escapeHtml(c.p)}</p>
+          <p><strong>${escapeHtml(servingLine(c.code))}.</strong> ${escapeHtml(c.p)
+            .replace("cybersecurity awareness", guide(HUB_AWARENESS_GUIDE[c.code], "cybersecurity awareness"))
+            .replace("ITF reimbursement claims", guide("itf-reimbursement-staff-training-nigeria", "ITF reimbursement claims"))}</p>
           <p class="ca-card-link"><a href="${cyberSecurePath(c.code)}">Cybersecurity awareness training in ${escapeHtml(COUNTRIES[c.code].name)} &rarr;</a></p>
           <p class="ca-card-link"><a href="${corporateAiPath(c.code)}">AI training for employees in ${escapeHtml(COUNTRIES[c.code].name)} &rarr;</a></p>
         </div>`,
@@ -996,7 +1017,7 @@ ${header(ctx, home, "/", true)}
         </div>
         <div class="ca-card">
           <h3><a href="/corporate-guides">Corporate training guides</a></h3>
-          <p>Free guides on POPIA, NDPA, Kenya and Ghana data protection training, cybersecurity awareness, training levies, AI for staff and advice by sector.</p>
+          <p>Free guides on POPIA, NDPA, Kenya and Ghana data protection training, cybersecurity awareness, training levies, AI for staff and advice by sector, plus ${guide("how-to-choose-a-corporate-cybersecurity-training-provider", "how to choose a training provider")}.</p>
           <p class="ca-card-link"><a href="/corporate-guides">Browse the guides &rarr;</a></p>
         </div>
       </div>
