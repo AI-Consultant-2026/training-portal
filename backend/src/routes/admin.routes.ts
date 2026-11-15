@@ -7,6 +7,8 @@ import * as ambassadorNoticesController from "../controllers/ambassadorNotices.c
 import * as salesRepsController from "../controllers/salesReps.controller";
 import * as corporateController from "../controllers/corporate.controller";
 import * as corporateOrdersController from "../controllers/corporateOrders.controller";
+import * as universityController from "../controllers/university.controller";
+import { discountTiersSchema } from "../validators/university.validators";
 import {
   adminInviteSchema,
   clientIdSchema,
@@ -103,6 +105,9 @@ adminRouter.post("/corporate-clients/:id/invites", validate(adminInviteSchema), 
 adminRouter.get("/corporate-orders", corporateOrdersController.listOrders);
 adminRouter.post("/corporate-orders/:id/mark-paid", validate(clientIdSchema), corporateOrdersController.markPaid);
 adminRouter.post("/corporate-orders/:id/cancel", validate(clientIdSchema), corporateOrdersController.cancelOrder);
+// University group discount tiers (2026-11-15).
+adminRouter.get("/university-discounts", universityController.getDiscounts);
+adminRouter.put("/university-discounts", validate(discountTiersSchema), universityController.setDiscounts);
 adminRouter.patch(
   "/corporate-clients/:id/members/:userId",
   validate(setManagerSchema),

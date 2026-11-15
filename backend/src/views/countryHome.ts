@@ -428,10 +428,11 @@ function courseCards(ctx: PageContext, home: string): string {
       </div>
       ${
         live
-          ? `<p class="deposit-note">Can&rsquo;t pay it all at once? A ${text(deposit)} deposit unlocks Days 1&ndash;2 straight away, and you pay the balance whenever you&rsquo;re ready to carry on. Same total price, no extra fees. Payments are taken securely by Paystack, with a <a href="/terms#refunds">7-day refund</a> if you haven&rsquo;t started Day 2.</p>`
+          ? `<p class="deposit-note">Can&rsquo;t pay it all at once? A ${text(deposit)} deposit unlocks Days 1&ndash;2 straight away, and you pay the balance whenever you&rsquo;re ready to carry on. Same total price, no extra fees. Payments are taken securely by ${c.site.gateway === "flutterwave" ? "Flutterwave" : "Paystack"}, with a <a href="/terms#refunds">7-day refund</a> if you haven&rsquo;t started Day 2.</p>`
           : `<p class="deposit-note">Courses in ${escapeHtml(c.name)} open soon. Every first lesson is free to try now, and <a href="${home}#waitlist">the waitlist</a> gets launch pricing first.</p>`
       }
       <div class="course-grid">${cards}</div>
+      <p class="deposit-note"><strong>Universities and colleges:</strong> buy places on these courses for your students, with group discounts and a manager login to track every student. <a href="${c.site.path}/universities">See group prices &rarr;</a></p>
     </div>
   </section>`;
 }

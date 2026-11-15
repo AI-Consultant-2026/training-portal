@@ -83,6 +83,10 @@ const AdminCorporateOrdersPage = lazyImport(
   () => import("../features/admin/AdminCorporateOrdersPage"),
   "AdminCorporateOrdersPage",
 );
+const AdminUniversityDiscountsPage = lazyImport(
+  () => import("../features/admin/AdminUniversityDiscountsPage"),
+  "AdminUniversityDiscountsPage",
+);
 const ReferralPage = lazyImport(() => import("../features/referrals/ReferralPage"), "ReferralPage");
 const AdminReferralsPage = lazyImport(
   () => import("../features/admin/AdminReferralsPage"),
@@ -123,6 +127,8 @@ export function AppRouter() {
         <Route path="/sponsor/:token" element={<SponsorPage />} />
         {/* Corporate staff portal: a company's staff sign-up link (public). */}
         <Route path="/company/join/:code" element={<CompanyJoinPage />} />
+        {/* University places (2026-11-15): the same page, for a university's students. */}
+        <Route path="/university/join/:code" element={<CompanyJoinPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/courses" element={<CourseListPage />} />
           <Route path="/courses/:slug" element={<CourseDetailPage />} />
@@ -131,6 +137,7 @@ export function AppRouter() {
           <Route path="/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/dashboard" element={<StudentDashboardPage />} />
           <Route path="/company" element={<CompanyPage />} />
+          <Route path="/university" element={<CompanyPage />} />
           {/* Students' own referral code + stats. The public Refer & Earn page at /refer is
               served by the backend (a static marketing page); in-app links that still point at
               /refer land here instead of doing a full page load. */}
@@ -167,6 +174,7 @@ export function AppRouter() {
             <Route path="/admin/referrals" element={<AdminReferralsPage />} />
             <Route path="/admin/corporate-clients" element={<AdminCorporateClientsPage />} />
             <Route path="/admin/corporate-orders" element={<AdminCorporateOrdersPage />} />
+            <Route path="/admin/university-discounts" element={<AdminUniversityDiscountsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

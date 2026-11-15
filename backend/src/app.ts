@@ -42,6 +42,8 @@ import { streamBrochurePdf, streamBusinessCasePdf, streamHowItWorksPdf } from ".
 import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator";
 import { countryCorporatePath } from "./views/corporateLocal";
 import { COUNTRY_CORPORATE_CODES, renderCountryCorporate } from "./views/countryCorporate";
+import { renderCountryUniversities, universitiesPath } from "./views/countryUniversities";
+import { getGroupDiscountTiers } from "./services/universityPricing.service";
 import {
   AI_POLICY_PATH,
   BOARD_BRIEFING_PATH,
@@ -240,6 +242,18 @@ export function createApp() {
       res.type("html").send(renderCountryAmbassadors(code));
     });
   }
+  // Universities buy places for their students (2026-11-15): /ng, /za, /ke and
+  // /gh/universities, priced with the group discount tiers set in /admin.
+  for (const code of MARKET_ORDER) {
+    app.get(universitiesPath(code), async (req, res, next) => {
+      try {
+        res.set("Cache-Control", "no-cache");
+        res.type("html").send(renderCountryUniversities(code, await getGroupDiscountTiers()));
+      } catch (err) {
+        next(err);
+      }
+    });
+  }
   // The AI Workflow Productivity corporate pages, one per country (2026-11-02):
   // /ng, /za, /gh and /ke/corporate-training/ai-workflow-productivity.
   for (const code of MARKET_ORDER) {
@@ -371,6 +385,16 @@ export function createApp() {
       next(err);
     }
   });
+  // The same for university places (2026-11-15), worded for students.
+  app.get("/university-checkout/complete", async (req, res, next) => {
+    try {
+      const result = await corporateOrderService.handleCheckoutReturn(req.query);
+      res.set("Cache-Control", "no-store");
+      res.type("html").send(renderCorporateCheckoutComplete(result, true));
+    } catch (err) {
+      next(err);
+    }
+  });
   app.get(CORPORATE_HUB_PATH, (req, res) => {
     const asked = String(req.query.country ?? "").toUpperCase();
     res.set("Cache-Control", "private, no-cache");
@@ -425,6 +449,13 @@ export function createApp() {
   });
   app.get("/corporate-buy.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "corporate-buy.js"));
+  });
+  // University places (2026-11-15).
+  app.get("/university-buy.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "university-buy.js"));
+  });
+  app.get("/universities.css", (req, res) => {
+    res.type("text/css").sendFile(path.join(__dirname, "marketing", "universities.css"));
   });
   // Their photos. The pattern keeps this from serving anything outside that folder.
   app.get("/images/corporate-ai/:file([a-z0-9-]+\\.jpg)", (req, res) => {

@@ -30,9 +30,14 @@ const clientFields = {
   status: z.enum(["active", "suspended"]).optional(),
   notes: optional(z.string().trim().max(5000)),
   seats: z.array(seatSchema).max(10).optional(),
+  // Universities (2026-11-15): representatives get the manager login; an agreed discount.
+  representativeEmails: z.array(z.string().trim().toLowerCase().email().max(200)).max(20).optional(),
+  discountPercent: optional(z.coerce.number().int().min(0).max(90)),
 };
 
-export const createClientSchema = z.object({ body: z.object(clientFields) });
+export const createClientSchema = z.object({
+  body: z.object({ ...clientFields, clientType: z.enum(["company", "university"]).optional() }),
+});
 
 export const updateClientSchema = z.object({
   params: z.object({ id: z.string().uuid() }),

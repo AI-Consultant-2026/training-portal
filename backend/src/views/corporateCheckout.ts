@@ -36,8 +36,21 @@ const COPY: Record<ReturnStatus, { title: string; body: (email: string, org: str
   },
 };
 
-export function renderCorporateCheckoutComplete(result: { status: ReturnStatus; email?: string; organisation?: string }): string {
-  const copy = COPY[result.status];
+// University places (2026-11-15): the same statuses, worded for a university.
+const UNIVERSITY_PAID = {
+  title: "Payment received. Thank you.",
+  body: (email: string, org: string) =>
+    `<p>${org ? `Student places for <strong>${org}</strong> are ready.` : "Your students' places are ready."} We have emailed the student sign-up link${email ? ` to <strong>${email}</strong>` : ""}.</p>
+      <p><strong>Next:</strong> create your own login with that link first, using the same email address. That makes you your university&rsquo;s representative, with the manager login. Then share the link with your students.</p>
+      <p>Bought more places for a university that is already set up? They have been added, and your students keep using the same link.</p>
+      <p>No email within 10 minutes? Check your spam folder, or write to <a href="mailto:corporate@paleontraining.com">corporate@paleontraining.com</a>.</p>`,
+};
+
+export function renderCorporateCheckoutComplete(
+  result: { status: ReturnStatus; email?: string; organisation?: string },
+  university = false,
+): string {
+  const copy = university && result.status === "paid" ? UNIVERSITY_PAID : COPY[result.status];
   const back = result.status === "cancelled" || result.status === "failed";
   return `<!doctype html>
 <html lang="en-GB">
@@ -56,7 +69,7 @@ export function renderCorporateCheckoutComplete(result: { status: ReturnStatus; 
     <p><a href="/"><strong>Paleon Training</strong></a></p>
     <h1 class="section-title">${escapeHtml(copy.title)}</h1>
     ${copy.body(escapeHtml(result.email ?? ""), escapeHtml(result.organisation ?? ""))}
-    <p><a class="btn btn-signal btn-lg" href="${back ? "/#pricing" : "/"}">${back ? "Back to prices" : "Back to Paleon Training"}</a></p>
+    <p><a class="btn btn-signal btn-lg" href="${back ? (university ? "/ng/universities#buy" : "/#pricing") : "/"}">${back ? "Back to prices" : "Back to Paleon Training"}</a></p>
   </div>
 </main>
 </body>

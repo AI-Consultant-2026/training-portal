@@ -13,6 +13,8 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const isCorporateStaff = Boolean(user?.profileData?.corporateClient);
+  // Students on university-paid places (2026-11-15) keep the learner links and get a University link.
+  const isUniversityStudent = Boolean(user?.profileData?.universityClient);
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -45,6 +47,11 @@ export function Navbar() {
       {isCorporateStaff && (
         <Link to="/company" className={linkClassName} onClick={closeMenu}>
           Company
+        </Link>
+      )}
+      {isUniversityStudent && (
+        <Link to="/university" className={linkClassName} onClick={closeMenu}>
+          University
         </Link>
       )}
       {user.role === "student" && !isCorporateStaff && (

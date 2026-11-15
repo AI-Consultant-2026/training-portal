@@ -16,6 +16,7 @@ import { CorporateClient, CorporateOrder, CorporateSeat, Course, sequelize } fro
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import { generateJoinCode } from "./corporate.service";
+import { setUpUniversity, universityProgrammeName, universitySummary } from "./universityOrder.service";
 import {
   FLUTTERWAVE_API,
   FlutterwaveTransaction,
@@ -78,6 +79,7 @@ async function courseTitles(programme: OrderProgramme): Promise<string[]> {
 }
 
 function summary(order: CorporateOrder, titles: string[]): OrderSummary {
+  if (order.orderType === "university") return universitySummary(order);
   const region = order.region as PriceRegion;
   return {
     txRef: order.txRef,
@@ -218,6 +220,8 @@ async function setUpCompany(
   order: CorporateOrder,
   payment: { amount: number; paidVia: string; flutterwaveTransactionId?: string | null },
 ): Promise<boolean> {
+  // University places (2026-11-15): same payment checks, different set-up.
+  if (order.orderType === "university") return setUpUniversity(order, payment);
   const region = order.region as PriceRegion;
   const txRef = order.txRef;
   const programme = order.programme as OrderProgramme;
@@ -293,7 +297,10 @@ export async function listOrders() {
       region: o.region,
       buyerCountry: o.buyerCountry,
       programme: o.programme,
-      programmeName: orderProgrammeName(o.programme as OrderProgramme),
+      orderType: o.orderType,
+      items: o.items,
+      programmeName:
+        o.orderType === "university" ? universityProgrammeName(o.items) : orderProgrammeName(o.programme as OrderProgramme),
       seats: o.seats,
       currency: o.currency,
       unitPrice: Number(o.unitPrice),

@@ -12,11 +12,14 @@ import {
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Spinner } from "../../components/ui/Spinner";
+import { BuyMorePlaces } from "./BuyMorePlaces";
 import { downloadCsv, SeatsTable, StaffTable, staffCsv } from "./StaffTables";
 
 // /company -- the company area of the portal. Every staff member sees their company and
 // can add another course their company has seats on; training managers also see seats,
 // everyone's progress, the staff sign-up link, and can invite or remove staff.
+// Universities (2026-11-15) see the same page at /university, worded for students; their
+// representatives can also buy more places.
 export function CompanyPage() {
   const [company, setCompany] = useState<MyCompany | null | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +31,7 @@ export function CompanyPage() {
   function load() {
     return fetchMyCompany()
       .then(setCompany)
-      .catch(() => setError("Couldn't load your company's details."));
+      .catch(() => setError("Couldn't load your details."));
   }
 
   useEffect(() => {
@@ -73,14 +76,14 @@ export function CompanyPage() {
   async function handleRemove(userId: string, name: string) {
     if (
       !window.confirm(
-        `Remove ${name}? They lose access to the company's courses and their seat becomes free for someone else.`,
+        `Remove ${name}? They lose access to the ${university ? "university's" : "company's"} courses and their place becomes free for someone else.`,
       )
     )
       return;
     setError(null);
     try {
       setCompany(await managerRemoveStaff(userId));
-      setNotice(`${name} was removed and their seat is free.`);
+      setNotice(`${name} was removed and their place is free.`);
     } catch (err) {
       setError(apiErrorMessage(err, "Couldn't remove that person."));
     }
@@ -92,9 +95,12 @@ export function CompanyPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.prompt("Copy the staff sign-up link:", url);
+      window.prompt("Copy the sign-up link:", url);
     }
   }
+
+  const university = company?.clientType === "university";
+  const people = university ? "students" : "staff";
 
   if (company === undefined && !error) {
     return (
@@ -107,15 +113,19 @@ export function CompanyPage() {
   if (!company) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <h1 className="text-2xl font-semibold text-gray-900">Company training</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Company or university training</h1>
         {error && (
           <div className="mt-4">
             <Alert message={error} />
           </div>
         )}
         <p className="mt-3 text-sm text-gray-600">
-          Your account isn't linked to a company. If your employer has bought training for staff, open the staff sign-up
-          link they sent you while logged in. Companies interested in staff training can{" "}
+          Your account isn't linked to a company or university. If your employer or university has paid for your place,
+          open the sign-up link they sent you while logged in. Universities can{" "}
+          <a href="/ng/universities" className="text-blue-600 hover:underline">
+            buy places for their students
+          </a>
+          , and companies interested in staff training can{" "}
           <a href="/" className="text-blue-600 hover:underline">
             see our corporate programmes
           </a>
@@ -127,11 +137,13 @@ export function CompanyPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      <p className="text-sm font-medium uppercase tracking-wide text-blue-700">Company training</p>
+      <p className="text-sm font-medium uppercase tracking-wide text-blue-700">
+        {university ? (company.isManager ? "University representative" : "University places") : "Company training"}
+      </p>
       <h1 className="mt-1 text-2xl font-semibold text-gray-900">{company.name}</h1>
       {company.status !== "active" && (
         <div className="mt-4">
-          <Alert message="Your company's access is paused. Please contact Paleon Training." />
+          <Alert message={`Your ${university ? "university" : "company"}'s access is paused. Please contact Paleon Training.`} />
         </div>
       )}
       {error && (
@@ -154,7 +166,7 @@ export function CompanyPage() {
         </p>
         {company.availableCourses.length > 0 && (
           <div className="mt-4 flex flex-col gap-2">
-            <p className="text-sm text-gray-700">Your company also has seats on:</p>
+            <p className="text-sm text-gray-700">Your {university ? "university" : "company"} also has places on:</p>
             {company.availableCourses.map((c) => (
               <div key={c.courseId} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-gray-200 p-3">
                 <span className="text-sm font-medium text-gray-900">{c.title}</span>
@@ -170,24 +182,31 @@ export function CompanyPage() {
       {company.isManager && company.seats && company.members && (
         <>
           <section className="mt-6 rounded-lg border border-gray-200 bg-white p-5">
-            <h2 className="text-lg font-semibold text-gray-900">Seats</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{university ? "Places" : "Seats"}</h2>
             <div className="mt-3">
               <SeatsTable seats={company.seats} />
             </div>
-            <p className="mt-3 text-xs text-gray-500">
-              Need more seats or another programme? Email{" "}
-              <a href="mailto:corporate@paleontraining.com" className="text-blue-600 hover:underline">
-                corporate@paleontraining.com
-              </a>
-              .
-            </p>
+            {university && company.buy ? (
+              <BuyMorePlaces buy={company.buy} />
+            ) : (
+              <p className="mt-3 text-xs text-gray-500">
+                Need more seats or another programme? Email{" "}
+                <a href="mailto:corporate@paleontraining.com" className="text-blue-600 hover:underline">
+                  corporate@paleontraining.com
+                </a>
+                .
+              </p>
+            )}
           </section>
 
           <section className="mt-6 rounded-lg border border-gray-200 bg-white p-5">
-            <h2 className="text-lg font-semibold text-gray-900">Add staff</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Add {people}</h2>
             <p className="mt-1 text-sm text-gray-600">
-              Share your staff sign-up link (for example on your intranet or in an email), or send invitations below.
-              Staff create their own login{company.emailDomain ? ` with their @${company.emailDomain} email` : ""}.
+              {university
+                ? "Share your student sign-up link (for example in a department notice or class WhatsApp group), or send invitations below."
+                : "Share your staff sign-up link (for example on your intranet or in an email), or send invitations below."}{" "}
+              {university ? "Students" : "Staff"} create their own login
+              {company.emailDomain ? ` with their @${company.emailDomain} email` : ""}.
             </p>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
               <code className="block flex-1 break-all rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-800">
@@ -206,7 +225,7 @@ export function CompanyPage() {
                 rows={3}
                 value={inviteText}
                 onChange={(e) => setInviteText(e.target.value)}
-                placeholder="Paste work emails, separated by commas or new lines"
+                placeholder={`Paste ${university ? "student" : "work"} emails, separated by commas or new lines`}
                 className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
               />
               <Button type="submit" className="mt-2" isLoading={busy}>
@@ -217,12 +236,14 @@ export function CompanyPage() {
 
           <section className="mt-6 rounded-lg border border-gray-200 bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold text-gray-900">Staff progress ({company.members.length})</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                {university ? "Student progress" : "Staff progress"} ({company.members.length})
+              </h2>
               {company.members.length > 0 && (
                 <button
                   type="button"
                   className="text-sm font-medium text-blue-600 hover:underline"
-                  onClick={() => downloadCsv(`${company.name} staff progress.csv`, staffCsv(company.members!))}
+                  onClick={() => downloadCsv(`${company.name} ${people} progress.csv`, staffCsv(company.members!))}
                 >
                   Download CSV
                 </button>

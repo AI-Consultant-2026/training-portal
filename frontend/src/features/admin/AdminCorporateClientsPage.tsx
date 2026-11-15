@@ -22,7 +22,9 @@ import { Spinner } from "../../components/ui/Spinner";
 import { downloadCsv, SeatsTable, StaffTable, staffCsv } from "../corporate/StaffTables";
 
 // /admin/corporate-clients -- companies that bought the corporate programmes: their seats
-// per course, the staff sign-up link to send them, and their staff's progress.
+// per course, the staff sign-up link to send them, and their staff's progress. Since
+// 2026-11-15 also universities: student places on the graduate courses, their
+// representatives (manager login) and any group discount agreed with them.
 
 const COUNTRIES = [
   { code: "NG", name: "Nigeria" },
@@ -31,7 +33,12 @@ const COUNTRIES = [
   { code: "GH", name: "Ghana" },
 ];
 
+type ClientType = "company" | "university";
+
 interface FormState {
+  clientType: ClientType;
+  representativeEmails: string;
+  discountPercent: string;
   name: string;
   country: string;
   contactName: string;
@@ -42,8 +49,11 @@ interface FormState {
   seats: Record<string, { seats: string; expiresAt: string }>;
 }
 
-function emptyForm(courses: CorporateCourseOption[]): FormState {
+function emptyForm(courses: CorporateCourseOption[], clientType: ClientType = "company"): FormState {
   return {
+    clientType,
+    representativeEmails: "",
+    discountPercent: "",
     name: "",
     country: "NG",
     contactName: "",
@@ -56,9 +66,11 @@ function emptyForm(courses: CorporateCourseOption[]): FormState {
 }
 
 function formFromClient(client: CorporateClient, courses: CorporateCourseOption[]): FormState {
-  const form = emptyForm(courses);
+  const form = emptyForm(courses, client.clientType ?? "company");
   return {
     ...form,
+    representativeEmails: (client.representativeEmails ?? []).join("\n"),
+    discountPercent: client.discountPercent === null || client.discountPercent === undefined ? "" : String(client.discountPercent),
     name: client.name,
     country: client.country,
     contactName: client.contactName ?? "",
@@ -75,9 +87,17 @@ function formFromClient(client: CorporateClient, courses: CorporateCourseOption[
   };
 }
 
-function toInput(form: FormState, existing: CorporateClient | null): ClientInput {
+function toInput(form: FormState, existing: CorporateClient | null, courseIds: Set<string>): ClientInput {
   const hadSeat = new Set(existing?.seats.map((s) => s.courseId) ?? []);
+  const university = form.clientType === "university";
   return {
+    ...(existing ? {} : { clientType: form.clientType }),
+    ...(university
+      ? {
+          representativeEmails: parseEmailList(form.representativeEmails),
+          discountPercent: form.discountPercent.trim() === "" ? null : Number(form.discountPercent),
+        }
+      : {}),
     name: form.name,
     country: form.country,
     contactName: form.contactName,
@@ -86,6 +106,7 @@ function toInput(form: FormState, existing: CorporateClient | null): ClientInput
     notes: form.notes,
     status: form.status,
     seats: Object.entries(form.seats)
+      .filter(([courseId]) => courseIds.has(courseId))
       .filter(([courseId, s]) => Number(s.seats) > 0 || hadSeat.has(courseId))
       .map(([courseId, s]) => ({
         courseId,
@@ -99,6 +120,8 @@ function toInput(form: FormState, existing: CorporateClient | null): ClientInput
 export function AdminCorporateClientsPage() {
   const [clients, setClients] = useState<CorporateClient[]>([]);
   const [courses, setCourses] = useState<CorporateCourseOption[]>([]);
+  const [universityCourses, setUniversityCourses] = useState<CorporateCourseOption[]>([]);
+  const [typeFilter, setTypeFilter] = useState<"all" | ClientType>("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -112,6 +135,7 @@ export function AdminCorporateClientsPage() {
     const data = await fetchCorporateClients();
     setClients(data.clients);
     setCourses(data.courses);
+    setUniversityCourses(data.universityCourses ?? []);
     return data;
   }
 
@@ -139,15 +163,18 @@ export function AdminCorporateClientsPage() {
     }
   }
 
-  function startCreate() {
+  const allCourses = [...courses, ...universityCourses];
+  const coursesFor = (type: ClientType) => (type === "university" ? universityCourses : courses);
+
+  function startCreate(clientType: ClientType) {
     setEditing(null);
     setSelected(null);
-    setForm(emptyForm(courses));
+    setForm(emptyForm(allCourses, clientType));
   }
 
   function startEdit(client: CorporateClient) {
     setEditing(client);
-    setForm(formFromClient(client, courses));
+    setForm(formFromClient(client, allCourses));
   }
 
   async function handleSave(e: FormEvent) {
@@ -156,16 +183,23 @@ export function AdminCorporateClientsPage() {
     setSaving(true);
     setError(null);
     try {
+      const ids = new Set(coursesFor(form.clientType).map((c) => c.id));
       const saved = editing
-        ? await updateCorporateClient(editing.id, toInput(form, editing))
-        : await createCorporateClient(toInput(form, null));
+        ? await updateCorporateClient(editing.id, toInput(form, editing, ids))
+        : await createCorporateClient(toInput(form, null, ids));
       await reload();
       setSelected(saved);
       setForm(null);
       setEditing(null);
-      setNotice(editing ? "Saved." : "Company created. Send them the staff sign-up link below.");
+      setNotice(
+        editing
+          ? "Saved."
+          : form.clientType === "university"
+            ? "University created. Send the representative the student sign-up link below: signing up with a representative email gives them the manager login."
+            : "Company created. Send them the staff sign-up link below.",
+      );
     } catch (err) {
-      setError(apiErrorMessage(err, "Couldn't save the company."));
+      setError(apiErrorMessage(err, "Couldn't save."));
     } finally {
       setSaving(false);
     }
@@ -215,14 +249,29 @@ export function AdminCorporateClientsPage() {
         ← Admin dashboard
       </Link>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-gray-900">Corporate clients</h1>
-        <Button onClick={startCreate}>Add a company</Button>
+        <h1 className="text-2xl font-semibold text-gray-900">Corporate &amp; university clients</h1>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={() => startCreate("company")}>Add a company</Button>
+          <Button variant="secondary" onClick={() => startCreate("university")}>
+            Add a university
+          </Button>
+        </div>
       </div>
       <p className="mt-1 text-sm text-gray-600">
         Set up each company that has paid for a corporate programme, with its number of seats per course. Staff create
         their own login with the company's sign-up link; each course they take uses one seat and is unlocked straight
         away. Tick <strong>Manager</strong> for the company's HR/training lead so they can see progress and invite staff
         at /company.
+      </p>
+      <p className="mt-2 text-sm text-gray-600">
+        <strong>Universities</strong> buy student places on the graduate courses (online at /ng, /za, /ke or
+        /gh/universities, or set up here after an invoice). Anyone on the university's{" "}
+        <strong>representatives</strong> list who signs up with its link gets the manager login at /university. The
+        group discount tiers are set on{" "}
+        <Link to="/admin/university-discounts" className="text-blue-600 hover:underline">
+          University discounts
+        </Link>
+        ; an <strong>agreed discount</strong> here overrides them for that university when it is bigger.
       </p>
       {courses.length === 0 && (
         <div className="mt-4">
@@ -241,10 +290,12 @@ export function AdminCorporateClientsPage() {
 
       {form && (
         <form onSubmit={handleSave} className="mt-6 rounded-lg border border-gray-200 bg-white p-5">
-          <h2 className="text-lg font-semibold text-gray-900">{editing ? `Edit ${editing.name}` : "Add a company"}</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {editing ? `Edit ${editing.name}` : form.clientType === "university" ? "Add a university" : "Add a company"}
+          </h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="block text-sm font-medium text-gray-700">
-              Company name
+              {form.clientType === "university" ? "University, polytechnic or college" : "Company name"}
               <input
                 required
                 minLength={2}
@@ -285,17 +336,52 @@ export function AdminCorporateClientsPage() {
               />
             </label>
             <label className="block text-sm font-medium text-gray-700">
-              Work email domain (optional)
+              {form.clientType === "university" ? "Student email domain (optional)" : "Work email domain (optional)"}
               <input
                 value={form.emailDomain}
                 onChange={(e) => setForm({ ...form, emailDomain: e.target.value })}
-                placeholder="e.g. company.com"
+                placeholder={form.clientType === "university" ? "e.g. students.unilag.edu.ng" : "e.g. company.com"}
                 className={inputClass}
               />
               <span className="mt-1 block text-xs font-normal text-gray-500">
-                If set, staff can only sign up with an email at this domain.
+                {form.clientType === "university"
+                  ? "If set, students can only sign up with an email at this domain. Leave empty if students use personal emails."
+                  : "If set, staff can only sign up with an email at this domain."}
               </span>
             </label>
+            {form.clientType === "university" && (
+              <>
+                <label className="block text-sm font-medium text-gray-700">
+                  Representatives' emails (manager login)
+                  <textarea
+                    rows={3}
+                    value={form.representativeEmails}
+                    onChange={(e) => setForm({ ...form, representativeEmails: e.target.value })}
+                    placeholder="One per line, e.g. careers@university.edu"
+                    className={inputClass}
+                  />
+                  <span className="mt-1 block text-xs font-normal text-gray-500">
+                    Each one gets the manager login when they sign up with the university's link (or straight away if
+                    they already have). The contact email always counts.
+                  </span>
+                </label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Agreed group discount % (optional)
+                  <input
+                    type="number"
+                    min={0}
+                    max={90}
+                    value={form.discountPercent}
+                    onChange={(e) => setForm({ ...form, discountPercent: e.target.value })}
+                    placeholder="Standard tiers"
+                    className={inputClass}
+                  />
+                  <span className="mt-1 block text-xs font-normal text-gray-500">
+                    Used when their representative buys more places at /university, if bigger than the standard tier.
+                  </span>
+                </label>
+              </>
+            )}
             {editing && (
               <label className="block text-sm font-medium text-gray-700">
                 Access
@@ -311,9 +397,11 @@ export function AdminCorporateClientsPage() {
             )}
           </div>
 
-          <h3 className="mt-6 text-sm font-semibold text-gray-900">Seats paid for</h3>
+          <h3 className="mt-6 text-sm font-semibold text-gray-900">
+            {form.clientType === "university" ? "Student places paid for" : "Seats paid for"}
+          </h3>
           <div className="mt-2 flex flex-col gap-3">
-            {courses.map((c) => (
+            {coursesFor(form.clientType).map((c) => (
               <div key={c.id} className="grid grid-cols-1 items-end gap-3 rounded-md border border-gray-200 p-3 sm:grid-cols-3">
                 <span className="text-sm font-medium text-gray-900">{c.title}</span>
                 <label className="block text-xs font-medium text-gray-700">
@@ -358,7 +446,7 @@ export function AdminCorporateClientsPage() {
           </label>
           <div className="mt-4 flex gap-3">
             <Button type="submit" isLoading={saving}>
-              {editing ? "Save changes" : "Create company"}
+              {editing ? "Save changes" : form.clientType === "university" ? "Create university" : "Create company"}
             </Button>
             <Button
               type="button"
@@ -378,7 +466,14 @@ export function AdminCorporateClientsPage() {
         <section className="mt-6 rounded-lg border border-gray-200 bg-white p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{selected.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900">
+                {selected.name}
+                {selected.clientType === "university" && (
+                  <span className="ml-2 rounded bg-purple-100 px-2 py-0.5 align-middle text-xs font-medium text-purple-800">
+                    University
+                  </span>
+                )}
+              </h2>
               <p className="text-sm text-gray-600">
                 {COUNTRIES.find((c) => c.code === selected.country)?.name ?? selected.country}
                 {selected.contactName ? ` · ${selected.contactName}` : ""}
@@ -386,6 +481,17 @@ export function AdminCorporateClientsPage() {
                 {selected.emailDomain ? ` · staff emails @${selected.emailDomain}` : ""}
               </p>
               {selected.status === "suspended" && <p className="mt-1 text-sm font-medium text-red-600">Suspended</p>}
+              {selected.clientType === "university" && (
+                <p className="mt-1 text-sm text-gray-600">
+                  Representatives:{" "}
+                  {selected.representativeEmails?.length ? selected.representativeEmails.join(", ") : selected.contactEmail ?? "none yet"}
+                  {" · "}
+                  Discount:{" "}
+                  {selected.discountPercent !== null && selected.discountPercent !== undefined
+                    ? `${selected.discountPercent}% agreed`
+                    : "standard tiers"}
+                </p>
+              )}
             </div>
             <div className="flex gap-3">
               <Button variant="secondary" onClick={() => startEdit(selected)}>
@@ -397,7 +503,9 @@ export function AdminCorporateClientsPage() {
             </div>
           </div>
 
-          <h3 className="mt-5 text-sm font-semibold text-gray-900">Staff sign-up link</h3>
+          <h3 className="mt-5 text-sm font-semibold text-gray-900">
+            {selected.clientType === "university" ? "Student sign-up link" : "Staff sign-up link"}
+          </h3>
           <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
             <code className="block flex-1 break-all rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-800">
               {selected.joinUrl}
@@ -427,7 +535,7 @@ export function AdminCorporateClientsPage() {
 
           <form onSubmit={handleInvite} className="mt-5">
             <label className="block text-sm font-semibold text-gray-900" htmlFor="admin-invite">
-              Email the sign-up link to staff
+              Email the sign-up link to {selected.clientType === "university" ? "students" : "staff"}
             </label>
             <textarea
               id="admin-invite"
@@ -443,7 +551,9 @@ export function AdminCorporateClientsPage() {
           </form>
 
           <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-sm font-semibold text-gray-900">Staff ({selected.members?.length ?? 0})</h3>
+            <h3 className="text-sm font-semibold text-gray-900">
+              {selected.clientType === "university" ? "Students and representatives" : "Staff"} ({selected.members?.length ?? 0})
+            </h3>
             {!!selected.members?.length && (
               <button
                 type="button"
@@ -465,7 +575,7 @@ export function AdminCorporateClientsPage() {
                       checked={m.isManager}
                       onChange={(e) => act(() => setCorporateManager(selected.id, m.userId, e.target.checked))}
                     />
-                    Manager
+                    {selected.clientType === "university" ? "Representative" : "Manager"}
                   </label>
                   <button
                     type="button"
@@ -502,11 +612,24 @@ export function AdminCorporateClientsPage() {
         </section>
       )}
 
-      <section className="mt-6 overflow-x-auto rounded-lg border border-gray-200 bg-white">
+      <div className="mt-6 flex flex-wrap gap-2 text-sm">
+        {(["all", "company", "university"] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTypeFilter(t)}
+            className={`rounded-full border px-3 py-1 ${typeFilter === t ? "border-blue-600 bg-blue-50 text-blue-700" : "border-gray-300 text-gray-700"}`}
+          >
+            {t === "all" ? "All" : t === "company" ? "Companies" : "Universities"} (
+            {t === "all" ? clients.length : clients.filter((c) => (c.clientType ?? "company") === t).length})
+          </button>
+        ))}
+      </div>
+      <section className="mt-3 overflow-x-auto rounded-lg border border-gray-200 bg-white">
         <table className="min-w-full text-left text-sm">
           <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
             <tr>
-              <th className="px-4 py-2">Company</th>
+              <th className="px-4 py-2">Organisation</th>
               <th className="px-4 py-2">Seats (used / paid)</th>
               <th className="px-4 py-2">Staff</th>
               <th className="px-4 py-2" />
@@ -516,15 +639,16 @@ export function AdminCorporateClientsPage() {
             {clients.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
-                  No companies yet.
+                  None yet.
                 </td>
               </tr>
             )}
-            {clients.map((c) => (
+            {clients.filter((c) => typeFilter === "all" || (c.clientType ?? "company") === typeFilter).map((c) => (
               <tr key={c.id} className="border-b border-gray-100 align-top">
                 <td className="px-4 py-2">
                   <div className="font-medium text-gray-900">{c.name}</div>
                   <div className="text-xs text-gray-500">
+                    {c.clientType === "university" ? "University · " : ""}
                     {COUNTRIES.find((x) => x.code === c.country)?.name ?? c.country}
                     {c.status === "suspended" && <span className="ml-1 text-red-600">· suspended</span>}
                   </div>

@@ -48,6 +48,9 @@ export interface CorporateClient {
   status: "active" | "suspended";
   notes: string | null;
   createdAt: string;
+  clientType?: "company" | "university";
+  representativeEmails?: string[];
+  discountPercent?: number | null;
   seats: SeatSummary[];
   memberCount?: number;
   members?: CorporateMemberRow[];
@@ -74,16 +77,36 @@ export interface ClientInput {
   status?: "active" | "suspended";
   notes?: string | null;
   seats?: SeatInput[];
+  clientType?: "company" | "university";
+  representativeEmails?: string[];
+  discountPercent?: number | null;
 }
 
 export interface JoinInfo {
   companyName: string;
+  clientType?: "company" | "university";
   emailDomain: string | null;
   courses: { courseId: string; title: string; seatsLeft: number; open: boolean }[];
 }
 
+export interface DiscountTier {
+  minLearners: number;
+  percent: number;
+}
+
+/** What a university representative's "Buy more places" form needs (2026-11-15). */
+export interface UniversityBuyInfo {
+  country: string;
+  currency: { code: string; symbol: string; spaced: boolean };
+  courses: { slug: string; title: string; listPrice: number }[];
+  tiers: DiscountTier[];
+  agreedPercent: number | null;
+}
+
 export interface MyCompany {
   name: string;
+  clientType?: "company" | "university";
+  buy?: UniversityBuyInfo;
   status: string;
   isManager: boolean;
   joinCode: string;
@@ -96,7 +119,11 @@ export interface MyCompany {
 
 // --- Admin
 export async function fetchCorporateClients() {
-  const res = await axiosClient.get<{ clients: CorporateClient[]; courses: CorporateCourseOption[] }>(
+  const res = await axiosClient.get<{
+    clients: CorporateClient[];
+    courses: CorporateCourseOption[];
+    universityCourses?: CorporateCourseOption[];
+  }>(
     "/admin/corporate-clients",
   );
   return res.data;
@@ -162,6 +189,33 @@ export async function managerInviteStaff(emails: string[]) {
 }
 export async function managerRemoveStaff(userId: string) {
   return (await axiosClient.delete<{ company: MyCompany | null }>(`/corporate/me/members/${userId}`)).data.company;
+}
+
+// --- University places (2026-11-15)
+export async function buyMoreUniversityPlaces(input: {
+  items: { courseSlug: string; seats: number }[];
+  payByInvoice: boolean;
+  phone?: string;
+}) {
+  return (
+    await axiosClient.post<{ kind: "checkout"; paymentLink: string; txRef: string } | { kind: "invoice"; txRef: string }>(
+      "/corporate/me/orders",
+      input,
+    )
+  ).data;
+}
+export async function fetchUniversityDiscounts() {
+  return (await axiosClient.get<{ tiers: DiscountTier[]; defaults: DiscountTier[] }>("/admin/university-discounts")).data;
+}
+export async function saveUniversityDiscounts(tiers: DiscountTier[]) {
+  return (await axiosClient.put<{ tiers: DiscountTier[] }>("/admin/university-discounts", { tiers })).data.tiers;
+}
+
+/** Same rule as the server: each course's discount is the tier for its places, or the agreed percent if bigger. */
+export function universityPercent(seats: number, tiers: DiscountTier[], agreed: number | null): number {
+  let p = 0;
+  for (const t of tiers) if (seats >= t.minLearners) p = t.percent;
+  return Math.max(p, agreed ?? 0);
 }
 
 export function apiErrorMessage(err: unknown, fallback: string): string {

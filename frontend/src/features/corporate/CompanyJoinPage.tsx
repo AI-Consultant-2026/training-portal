@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   apiErrorMessage,
   fetchJoinInfo,
@@ -17,11 +17,13 @@ import { sessionStarted } from "../auth/authSlice";
 // /company/join/:code -- the staff sign-up link a company shares with its employees.
 // Staff create their own login (or use the account they're logged in with) and choose
 // the course(s) their company paid for; each course uses one of the company's seats.
+// Universities' students use the same page at /university/join/:code (2026-11-15).
 export function CompanyJoinPage() {
   const { code = "" } = useParams<{ code: string }>();
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [info, setInfo] = useState<JoinInfo | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -36,7 +38,7 @@ export function CompanyJoinPage() {
         // Every course with a seat left is ticked to start with.
         setSelected(new Set(data.courses.filter((c) => c.open).map((c) => c.courseId)));
       })
-      .catch((err) => setLoadError(apiErrorMessage(err, "This staff sign-up link isn't working.")));
+      .catch((err) => setLoadError(apiErrorMessage(err, "This sign-up link isn't working.")));
   }, [code]);
 
   function toggle(courseId: string) {
@@ -76,10 +78,16 @@ export function CompanyJoinPage() {
     }
   }
 
+  // Wording follows the link until the details load, then the organisation type.
+  const university = info ? info.clientType === "university" : location.pathname.startsWith("/university/");
+  const joinPath = `/${university ? "university" : "company"}/join/${code}`;
+  const org = university ? "university" : "company";
+  const manager = university ? "university representative" : "manager";
+
   if (loadError) {
     return (
       <div className="mx-auto mt-16 max-w-md px-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Staff sign-up</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{university ? "Student sign-up" : "Staff sign-up"}</h1>
         <div className="mt-4">
           <Alert message={loadError} />
         </div>
@@ -119,7 +127,7 @@ export function CompanyJoinPage() {
           />
           <span>
             <span className="font-medium text-gray-900">{c.title}</span>
-            {!c.open && <span className="block text-xs">No seats left. Ask your manager.</span>}
+            {!c.open && <span className="block text-xs">No places left. Ask your {manager}.</span>}
           </span>
         </label>
       ))}
@@ -128,11 +136,13 @@ export function CompanyJoinPage() {
 
   return (
     <div className="mx-auto mt-12 max-w-md px-6 pb-16">
-      <p className="text-sm font-medium uppercase tracking-wide text-blue-700">Staff training</p>
+      <p className="text-sm font-medium uppercase tracking-wide text-blue-700">
+        {university ? "Student places" : "Staff training"}
+      </p>
       <h1 className="mt-1 text-2xl font-semibold text-gray-900">{info.companyName}</h1>
       <p className="mt-2 text-sm text-gray-600">
-        {info.companyName} has paid for your place. Create your login below to start straight away. You can come back
-        and continue any time.
+        {info.companyName} has paid for your place. Create your login below{university ? ", choose your course" : ""} and
+        start straight away. You can come back and continue any time.
       </p>
 
       {error && (
@@ -143,7 +153,7 @@ export function CompanyJoinPage() {
 
       {openCourses.length === 0 ? (
         <div className="mt-6">
-          <Alert message="All of your company's seats are taken at the moment. Please ask your manager to add more." />
+          <Alert message={`All of your ${org}'s places are taken at the moment. Please ask your ${manager} to add more.`} />
         </div>
       ) : user ? (
         <div className="mt-6 flex flex-col gap-4">
@@ -182,7 +192,15 @@ export function CompanyJoinPage() {
           <Input
             id="email"
             type="email"
-            label={info.emailDomain ? `Work email (@${info.emailDomain})` : "Work email"}
+            label={
+              university
+                ? info.emailDomain
+                  ? `University email (@${info.emailDomain})`
+                  : "Email"
+                : info.emailDomain
+                  ? `Work email (@${info.emailDomain})`
+                  : "Work email"
+            }
             required
             autoComplete="email"
             value={form.email}
@@ -202,13 +220,13 @@ export function CompanyJoinPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
               id="jobTitle"
-              label="Job title (optional)"
+              label={university ? "Student / matric number (optional)" : "Job title (optional)"}
               value={form.jobTitle}
               onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
             />
             <Input
               id="department"
-              label="Department (optional)"
+              label={university ? "Department or faculty (optional)" : "Department (optional)"}
               value={form.department}
               onChange={(e) => setForm({ ...form, department: e.target.value })}
             />
@@ -218,7 +236,7 @@ export function CompanyJoinPage() {
           </Button>
           <p className="text-sm text-gray-600">
             Already have a Paleon Training login?{" "}
-            <Link to={`/login?next=${encodeURIComponent(`/company/join/${code}`)}`} className="text-blue-600 hover:underline">
+            <Link to={`/login?next=${encodeURIComponent(joinPath)}`} className="text-blue-600 hover:underline">
               Log in first
             </Link>
           </p>

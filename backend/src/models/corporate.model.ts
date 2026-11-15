@@ -3,6 +3,8 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 // Corporate staff portal (2026-11-10), see migration 20261110010000-create-corporate-clients.
 
 export type CorporateClientStatus = "active" | "suspended";
+/** "company" = staff training (corporate courses); "university" = student places on the graduate courses (2026-11-15). */
+export type CorporateClientType = "company" | "university";
 
 export interface CorporateClientAttributes {
   id: string;
@@ -14,6 +16,11 @@ export interface CorporateClientAttributes {
   emailDomain: string | null;
   status: CorporateClientStatus;
   notes: string | null;
+  clientType: CorporateClientType;
+  /** Representatives' emails: signing up with the join link makes them managers. */
+  representativeEmails: string[];
+  /** Group discount agreed with this client (percent); null = the standard tiers. */
+  discountPercent: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,7 +30,18 @@ export class CorporateClient
     CorporateClientAttributes,
     Optional<
       CorporateClientAttributes,
-      "id" | "country" | "contactName" | "contactEmail" | "emailDomain" | "status" | "notes" | "createdAt" | "updatedAt"
+      | "id"
+      | "country"
+      | "contactName"
+      | "contactEmail"
+      | "emailDomain"
+      | "status"
+      | "notes"
+      | "clientType"
+      | "representativeEmails"
+      | "discountPercent"
+      | "createdAt"
+      | "updatedAt"
     >
   >
   implements CorporateClientAttributes
@@ -37,6 +55,9 @@ export class CorporateClient
   declare emailDomain: string | null;
   declare status: CorporateClientStatus;
   declare notes: string | null;
+  declare clientType: CorporateClientType;
+  declare representativeEmails: string[];
+  declare discountPercent: number | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -104,6 +125,9 @@ export function initCorporateModels(sequelize: Sequelize) {
       emailDomain: { type: DataTypes.STRING, allowNull: true },
       status: { type: DataTypes.STRING, allowNull: false, defaultValue: "active" },
       notes: { type: DataTypes.TEXT, allowNull: true },
+      clientType: { type: DataTypes.STRING(20), allowNull: false, defaultValue: "company" },
+      representativeEmails: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+      discountPercent: { type: DataTypes.INTEGER, allowNull: true },
     },
     { sequelize, modelName: "CorporateClient", tableName: "corporate_clients", underscored: true },
   );

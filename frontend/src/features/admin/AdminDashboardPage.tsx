@@ -83,8 +83,9 @@ function downloadLeadsCsv(leads: Lead[]) {
 // Admin section buttons at the top of the dashboard (2026-11-12).
 const ADMIN_SECTIONS = [
   { to: "/admin/course-progress", label: "Course progress" },
-  { to: "/admin/corporate-clients", label: "Corporate clients" },
-  { to: "/admin/corporate-orders", label: "Corporate orders" },
+  { to: "/admin/corporate-clients", label: "Corporate & university clients" },
+  { to: "/admin/corporate-orders", label: "Corporate & university orders" },
+  { to: "/admin/university-discounts", label: "University discounts" },
   { to: "/admin/referrals", label: "Referrals" },
   { to: "/admin/zoom-attendees", label: "Zoom attendees" },
   { to: "/admin/notices", label: "Notice board" },

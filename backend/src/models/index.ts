@@ -32,6 +32,7 @@ import { WaitlistSignup, initWaitlistSignupModel } from "./waitlistSignup.model"
 import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
 import { CorporateClient, CorporateMember, CorporateSeat, initCorporateModels } from "./corporate.model";
 import { CorporateOrder, initCorporateOrderModel } from "./corporateOrder.model";
+import { AppSetting, initAppSettingModel } from "./appSetting.model";
 import {
   SalesRep,
   SalesRepPayment,
@@ -95,6 +96,7 @@ initSalesRepStudentModel(sequelize);
 initSalesRepPaymentModel(sequelize);
 initCorporateModels(sequelize);
 initCorporateOrderModel(sequelize);
+initAppSettingModel(sequelize);
 
 User.hasMany(Course, { foreignKey: "instructorId", as: "coursesTaught" });
 Course.belongsTo(User, { foreignKey: "instructorId", as: "instructor" });
@@ -216,6 +218,7 @@ export {
   CorporateClient,
   CorporateMember,
   CorporateOrder,
+  AppSetting,
   CorporateSeat,
   Assignment,
   AssignmentSubmission,

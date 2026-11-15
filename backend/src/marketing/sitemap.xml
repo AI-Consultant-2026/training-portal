@@ -823,6 +823,30 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://paleontraining.com/ng/universities</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://paleontraining.com/za/universities</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://paleontraining.com/ke/universities</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://paleontraining.com/gh/universities</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://paleontraining.com/za/ambassadors</loc>
     <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>

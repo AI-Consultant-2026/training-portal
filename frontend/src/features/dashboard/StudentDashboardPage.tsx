@@ -11,6 +11,7 @@ export function StudentDashboardPage() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const corporateClient = (user?.profileData?.corporateClient as string | undefined) ?? null;
+  const universityClient = (user?.profileData?.universityClient as string | undefined) ?? null;
   const { items: enrollments, status, error } = useAppSelector((state) => state.enrollments);
 
   useEffect(() => {
@@ -35,6 +36,18 @@ export function StudentDashboardPage() {
         </Link>
       ) : (
         <>
+        {universityClient && (
+          // Students on university-paid places (2026-11-15).
+          <Link
+            to="/university"
+            className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-purple-200 bg-purple-50 px-4 py-3 text-sm hover:bg-purple-100"
+          >
+            <span className="text-purple-900">
+              <span className="font-medium">Your place is paid for by {universityClient}.</span> Your courses are below.
+            </span>
+            <span className="shrink-0 font-medium text-purple-700">University page →</span>
+          </Link>
+        )}
         <Link
           to="/refer/me"
           className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm hover:bg-blue-100"

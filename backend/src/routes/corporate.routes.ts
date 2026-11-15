@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 import { config } from "../config";
 import * as corporateController from "../controllers/corporate.controller";
 import * as corporateOrdersController from "../controllers/corporateOrders.controller";
+import * as universityController from "../controllers/university.controller";
 import { authenticate } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
 import {
@@ -13,6 +14,7 @@ import {
   managerRemoveSchema,
 } from "../validators/corporate.validators";
 import { corporateOrderSchema } from "../validators/corporateOrders.validators";
+import { universityOrderSchema, universityTopUpSchema } from "../validators/university.validators";
 
 // Corporate staff portal: the public staff sign-up link and the /company page.
 // Admin management lives under /api/admin/corporate-clients (admin.routes.ts).
@@ -55,3 +57,7 @@ const orderRateLimiter = rateLimit({
   skip: () => config.nodeEnv === "test",
 });
 corporateRouter.post("/orders", orderRateLimiter, validate(corporateOrderSchema), corporateOrdersController.createOrder);
+// University places (2026-11-15): the buy form on /<country>/universities, and a
+// logged-in representative buying more places from /university.
+corporateRouter.post("/university-orders", orderRateLimiter, validate(universityOrderSchema), universityController.createOrder);
+corporateRouter.post("/me/orders", orderRateLimiter, authenticate, validate(universityTopUpSchema), universityController.topUp);

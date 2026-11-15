@@ -1,0 +1,13 @@
+/* /<country>/universities (2026-11-15): university places buy form. Builds on country-home.css and corporate-ai.css. */
+.uni-off { font-weight: 400; font-size: 13px; color: var(--charcoal-soft); }
+.uni-courses { border: 0; padding: 0; margin: 0 0 12px; }
+.uni-courses legend { margin-bottom: 8px; }
+.uni-row { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--line-light); }
+.uni-row:last-child { border-bottom: 0; }
+.uni-row .form-label { margin: 0; }
+.uni-row .form-input { max-width: 140px; }
+.uni-lines { margin: 0 0 6px; padding: 0; list-style: none; font-size: 15px; }
+.uni-lines li { padding: 2px 0; }
+@media (min-width: 640px) {
+  .uni-row { grid-template-columns: 1fr 140px; align-items: center; }
+}

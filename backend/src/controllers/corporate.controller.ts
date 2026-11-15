@@ -18,11 +18,12 @@ function setRefreshCookie(res: Response, token: string) {
 // --- Admin -------------------------------------------------------------------
 
 export const listClients = asyncHandler(async (_req: Request, res: Response) => {
-  const [clients, courses] = await Promise.all([
+  const [clients, courses, universityCourses] = await Promise.all([
     corporateService.listClients(),
     corporateService.listCorporateCourses(),
+    corporateService.listUniversityCourses(),
   ]);
-  res.json({ clients, courses });
+  res.json({ clients, courses, universityCourses });
 });
 
 export const getClient = asyncHandler(async (req: Request, res: Response) => {

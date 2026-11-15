@@ -3,8 +3,10 @@ import { randomBytes } from "crypto";
 import { Op, Transaction } from "sequelize";
 import { config } from "../config";
 import { COUNTRIES, CountryCode, isCountryCode } from "../constants/countries";
+import { PUBLIC_COURSES } from "../constants/publicCourses";
 import * as emails from "../emails";
 import { corporateJoinUrl } from "../emails/templates/corporate";
+import { CorporateClientType } from "../models/corporate.model";
 import {
   Course,
   CorporateClient,
@@ -19,6 +21,12 @@ import { logger } from "../utils/logger";
 import { sendVerificationEmail } from "./auth.service";
 import { isCorporateCourse } from "./course.service";
 import { generateAccessToken, issueRefreshToken } from "./token.service";
+import {
+  UNIVERSITY_COURSES,
+  getGroupDiscountTiers,
+  isUniversityCourse,
+  listPrice,
+} from "./universityPricing.service";
 
 // Corporate staff portal (2026-11-10).
 //
@@ -29,10 +37,15 @@ import { generateAccessToken, issueRefreshToken } from "./token.service";
 // because the company paid Paleon directly. Managers (ticked by Paleon) see seats and
 // staff progress at /company, and can invite staff and remove leavers (which frees the
 // seat). Seat expiry closes new sign-ups only; people already on a course keep access.
+//
+// Universities (2026-11-15) use the same tables with client_type "university": they buy
+// places on the graduate courses for their students, their representatives get the
+// manager login (representative_emails), and students join with /university/join/<code>.
 
 // No 0/o/1/l/i, so a code read out over the phone or typed from a printout still works.
 const CODE_ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 const MAX_INVITES_PER_REQUEST = 100;
+const PUBLIC_COURSE_TITLES: Record<string, string> = Object.fromEntries(PUBLIC_COURSES.map((c) => [c.slug, c.title]));
 
 export function generateJoinCode(length = 10): string {
   const bytes = randomBytes(length);
@@ -101,6 +114,14 @@ async function seatSummaries(client: CorporateClient) {
   });
 }
 
+export function isUniversity(client: Pick<CorporateClient, "clientType">): boolean {
+  return client.clientType === "university";
+}
+
+function normaliseEmails(list: string[] | null | undefined): string[] {
+  return [...new Set((list ?? []).map((e) => e.trim().toLowerCase()).filter((e) => e.includes("@")))];
+}
+
 function serializeClient(client: CorporateClient) {
   return {
     id: client.id,
@@ -109,10 +130,13 @@ function serializeClient(client: CorporateClient) {
     contactName: client.contactName,
     contactEmail: client.contactEmail,
     joinCode: client.joinCode,
-    joinUrl: corporateJoinUrl(client.joinCode),
+    joinUrl: corporateJoinUrl(client.joinCode, client.clientType),
     emailDomain: client.emailDomain,
     status: client.status,
     notes: client.notes,
+    clientType: client.clientType,
+    representativeEmails: client.representativeEmails ?? [],
+    discountPercent: client.discountPercent,
     createdAt: client.createdAt,
   };
 }
@@ -136,11 +160,22 @@ export interface ClientInput {
   status?: "active" | "suspended";
   notes?: string | null;
   seats?: SeatInput[];
+  clientType?: CorporateClientType;
+  representativeEmails?: string[];
+  discountPercent?: number | null;
 }
 
 export async function listCorporateCourses() {
   const courses = await Course.findAll({ where: { status: "published" }, order: [["createdAt", "ASC"]] });
   return courses.filter(isCorporateCourse).map((c) => ({ id: c.id, title: c.title, slug: c.slug }));
+}
+
+/** The graduate courses a university can buy places on (2026-11-15). */
+export async function listUniversityCourses() {
+  const courses = await Course.findAll({ where: { status: "published", slug: [...UNIVERSITY_COURSES] } });
+  return UNIVERSITY_COURSES.map((slug) => courses.find((c) => c.slug === slug))
+    .filter((c): c is Course => Boolean(c))
+    .map((c) => ({ id: c.id, title: c.title, slug: c.slug }));
 }
 
 export async function listClients() {
@@ -154,11 +189,14 @@ export async function listClients() {
   );
 }
 
-async function applySeats(clientId: string, seats: SeatInput[], transaction: Transaction) {
-  const corporateIds = new Set((await listCorporateCourses()).map((c) => c.id));
+async function applySeats(clientId: string, clientType: CorporateClientType, seats: SeatInput[], transaction: Transaction) {
+  const university = clientType === "university";
+  const allowedIds = new Set((await (university ? listUniversityCourses() : listCorporateCourses())).map((c) => c.id));
   for (const input of seats) {
-    if (!corporateIds.has(input.courseId)) {
-      throw ApiError.badRequest("Seats can only be added for the corporate courses");
+    if (!allowedIds.has(input.courseId)) {
+      throw ApiError.badRequest(
+        university ? "University places can only be added on the graduate courses" : "Seats can only be added for the corporate courses",
+      );
     }
     const used = await countUsedSeats(clientId, input.courseId, transaction);
     if (input.seats < used) {
@@ -176,8 +214,25 @@ async function applySeats(clientId: string, seats: SeatInput[], transaction: Tra
   }
 }
 
+// Members whose email is on the representatives list (or is the contact email) are
+// made managers straight away, so adding a representative who already signed up works.
+async function promoteRepresentatives(client: CorporateClient, transaction: Transaction) {
+  const emails = new Set([...(client.representativeEmails ?? []), client.contactEmail ?? ""].filter(Boolean));
+  if (emails.size === 0) return;
+  const members = await CorporateMember.findAll({
+    where: { clientId: client.id, isManager: false },
+    include: [{ model: User, as: "user", attributes: ["email"] }],
+    transaction,
+  });
+  for (const m of members) {
+    const email = (m as unknown as { user?: User }).user?.email?.toLowerCase();
+    if (email && emails.has(email)) await m.update({ isManager: true }, { transaction });
+  }
+}
+
 export async function createClient(input: ClientInput) {
   const client = await sequelize.transaction(async (transaction) => {
+    const clientType: CorporateClientType = input.clientType === "university" ? "university" : "company";
     const created = await CorporateClient.create(
       {
         name: input.name.trim(),
@@ -187,10 +242,13 @@ export async function createClient(input: ClientInput) {
         emailDomain: normaliseDomain(input.emailDomain),
         notes: input.notes?.trim() || null,
         joinCode: generateJoinCode(),
+        clientType,
+        representativeEmails: normaliseEmails(input.representativeEmails),
+        discountPercent: input.discountPercent ?? null,
       },
       { transaction },
     );
-    if (input.seats) await applySeats(created.id, input.seats, transaction);
+    if (input.seats) await applySeats(created.id, clientType, input.seats, transaction);
     return created;
   });
   return getClientDetail(client.id);
@@ -211,10 +269,15 @@ export async function updateClient(id: string, input: Partial<ClientInput>) {
         ...(input.emailDomain !== undefined ? { emailDomain: normaliseDomain(input.emailDomain) } : {}),
         ...(input.status !== undefined ? { status: input.status } : {}),
         ...(input.notes !== undefined ? { notes: input.notes?.trim() || null } : {}),
+        ...(input.representativeEmails !== undefined
+          ? { representativeEmails: normaliseEmails(input.representativeEmails) }
+          : {}),
+        ...(input.discountPercent !== undefined ? { discountPercent: input.discountPercent ?? null } : {}),
       },
       { transaction },
     );
-    if (input.seats) await applySeats(client.id, input.seats, transaction);
+    if (input.seats) await applySeats(client.id, client.clientType, input.seats, transaction);
+    await promoteRepresentatives(client, transaction);
   });
   return getClientDetail(client.id);
 }
@@ -312,7 +375,7 @@ export async function removeMember(clientId: string, userId: string): Promise<vo
 export async function inviteStaff(clientId: string, emailList: string[], invitedBy?: string | null) {
   const client = await CorporateClient.findByPk(clientId);
   if (!client) throw ApiError.notFound("Company not found");
-  if (client.status !== "active") throw ApiError.badRequest("This company's access is suspended");
+  if (client.status !== "active") throw ApiError.badRequest("This organisation's access is suspended");
   const unique = [...new Set(emailList.map((e) => e.trim().toLowerCase()).filter(Boolean))];
   if (unique.length > MAX_INVITES_PER_REQUEST) {
     throw ApiError.badRequest(`Send at most ${MAX_INVITES_PER_REQUEST} invitations at a time`);
@@ -320,17 +383,24 @@ export async function inviteStaff(clientId: string, emailList: string[], invited
   const wrongDomain = unique.filter((e) => !emailMatchesDomain(e, client.emailDomain));
   if (wrongDomain.length) {
     throw ApiError.badRequest(
-      `These addresses are not @${client.emailDomain} work emails: ${wrongDomain.slice(0, 5).join(", ")}`,
+      `These addresses are not @${client.emailDomain} ${isUniversity(client) ? "university" : "work"} emails: ${wrongDomain.slice(0, 5).join(", ")}`,
     );
   }
   const seats = await seatSummaries(client);
   const courseTitles = seats.filter((s) => s.open && s.left > 0).map((s) => s.courseTitle);
   if (courseTitles.length === 0) {
-    throw ApiError.badRequest("There are no seats left to invite staff to");
+    throw ApiError.badRequest(isUniversity(client) ? "There are no places left to invite students to" : "There are no seats left to invite staff to");
   }
   let sent = 0;
   for (const to of unique) {
-    await emails.sendCorporateInviteEmail({ to, companyName: client.name, joinCode: client.joinCode, courseTitles, invitedBy });
+    await emails.sendCorporateInviteEmail({
+      to,
+      companyName: client.name,
+      joinCode: client.joinCode,
+      courseTitles,
+      invitedBy,
+      university: isUniversity(client),
+    });
     sent += 1;
   }
   return { sent };
@@ -342,17 +412,36 @@ export async function inviteStaff(clientId: string, emailList: string[], invited
 
 async function findActiveClientByCode(code: string): Promise<CorporateClient> {
   const client = await CorporateClient.findOne({ where: { joinCode: code.trim().toLowerCase() } });
-  if (!client) throw ApiError.notFound("This staff sign-up link isn't valid. Ask your manager for the current link.");
+  if (!client) throw ApiError.notFound("This sign-up link isn't valid. Ask whoever sent it for the current link.");
   if (client.status !== "active") {
-    throw ApiError.forbidden("Your company's access is paused. Please contact your manager or Paleon Training.");
+    throw ApiError.forbidden(
+      isUniversity(client)
+        ? "Your university's access is paused. Please contact your university representative or Paleon Training."
+        : "Your company's access is paused. Please contact your manager or Paleon Training.",
+    );
   }
   return client;
 }
 
 // The person who bought the places online (the company's contact email) becomes its
-// training manager when they sign up with the staff link (2026-11-12).
+// training manager when they sign up with the staff link (2026-11-12). So does anyone
+// Paleon lists as one of a university's representatives (2026-11-15).
 function isOrderContact(client: CorporateClient, email: string): boolean {
-  return Boolean(client.contactEmail) && client.contactEmail!.trim().toLowerCase() === email.trim().toLowerCase();
+  const wanted = email.trim().toLowerCase();
+  if (client.contactEmail && client.contactEmail.trim().toLowerCase() === wanted) return true;
+  return (client.representativeEmails ?? []).some((e) => e.trim().toLowerCase() === wanted);
+}
+
+function domainMessage(client: CorporateClient): string {
+  return isUniversity(client)
+    ? `Use your @${client.emailDomain} university email address`
+    : `Use your @${client.emailDomain} work email address`;
+}
+
+// Marks the account as company staff (left out of learner marketing) or as a student
+// with university-paid places (2026-11-15).
+function membershipProfile(client: CorporateClient): Record<string, string> {
+  return isUniversity(client) ? { universityClient: client.name } : { corporateClient: client.name };
 }
 
 export async function getJoinInfo(code: string) {
@@ -360,6 +449,7 @@ export async function getJoinInfo(code: string) {
   const seats = await seatSummaries(client);
   return {
     companyName: client.name,
+    clientType: client.clientType,
     emailDomain: client.emailDomain,
     courses: seats.map((s) => ({
       courseId: s.courseId,
@@ -386,7 +476,11 @@ async function takeSeats(
       lock: transaction.LOCK.UPDATE,
       transaction,
     });
-    if (!seat) throw ApiError.badRequest("Your company hasn't bought seats on that course");
+    if (!seat) {
+      throw ApiError.badRequest(
+        isUniversity(client) ? "Your university hasn't bought places on that course" : "Your company hasn't bought seats on that course",
+      );
+    }
     const course = await Course.findByPk(courseId, { transaction });
     if (!course) throw ApiError.badRequest("Course not found");
 
@@ -455,11 +549,11 @@ export async function joinWithNewAccount(code: string, input: JoinNewInput) {
   const client = await findActiveClientByCode(code);
   const email = input.email.trim().toLowerCase();
   if (!emailMatchesDomain(email, client.emailDomain)) {
-    throw ApiError.badRequest(`Use your @${client.emailDomain} work email address`);
+    throw ApiError.badRequest(domainMessage(client));
   }
   if (await User.findOne({ where: { email } })) {
     throw ApiError.conflict(
-      "You already have a Paleon Training account with this email. Log in, then open your company link again.",
+      `You already have a Paleon Training account with this email. Log in, then open your ${isUniversity(client) ? "university" : "company"} link again.`,
     );
   }
   const passwordHash = await bcrypt.hash(input.password, config.bcryptSaltRounds);
@@ -474,8 +568,9 @@ export async function joinWithNewAccount(code: string, input: JoinNewInput) {
         lastName: input.lastName.trim(),
         country,
         location: COUNTRIES[country]?.name ?? "Nigeria",
-        // Marks the account as corporate staff, e.g. so learner marketing can leave them out.
-        profileData: { corporateClient: client.name },
+        // Marks the account as corporate staff (so learner marketing can leave them out)
+        // or as a student on university-paid places.
+        profileData: membershipProfile(client),
       },
       { transaction },
     );
@@ -496,7 +591,13 @@ export async function joinWithNewAccount(code: string, input: JoinNewInput) {
   const accessToken = generateAccessToken(user);
   const refreshToken = await issueRefreshToken(user.id);
   emails
-    .sendCorporateWelcomeEmail({ to: user.email, firstName: user.firstName, companyName: client.name, courseTitles: titles })
+    .sendCorporateWelcomeEmail({
+      to: user.email,
+      firstName: user.firstName,
+      companyName: client.name,
+      courseTitles: titles,
+      university: isUniversity(client),
+    })
     .catch((err) => logger.error("Failed to send corporate welcome email", err));
   sendVerificationEmail(user);
   return { user, accessToken, refreshToken };
@@ -508,21 +609,19 @@ export async function joinWithExistingAccount(code: string, userId: string, cour
   const user = await User.findByPk(userId);
   if (!user) throw ApiError.notFound("User not found");
   if (user.role !== "student") {
-    throw ApiError.badRequest("Staff and admin accounts can't take company seats. Use a learner account.");
+    throw ApiError.badRequest("Staff and admin accounts can't take paid places. Use a learner account.");
   }
   if (!emailMatchesDomain(user.email, client.emailDomain)) {
-    throw ApiError.badRequest(
-      `Your company asks staff to use their @${client.emailDomain} work email. Log out and create your login with it.`,
-    );
+    throw ApiError.badRequest(`${domainMessage(client)}. Log out and create your login with it.`);
   }
   const membership = await CorporateMember.findOne({ where: { userId } });
   if (membership && membership.clientId !== client.id) {
-    throw ApiError.conflict("Your account is already linked to another company. Contact Paleon Training.");
+    throw ApiError.conflict("Your account is already linked to another organisation. Contact Paleon Training.");
   }
   const titles = await sequelize.transaction(async (transaction) => {
     if (!membership) {
       await CorporateMember.create({ clientId: client.id, userId, isManager: isOrderContact(client, user.email) }, { transaction });
-      await user.update({ profileData: { ...(user.profileData ?? {}), corporateClient: client.name } }, { transaction });
+      await user.update({ profileData: { ...(user.profileData ?? {}), ...membershipProfile(client) } }, { transaction });
     }
     return takeSeats(client, userId, courseIds, transaction);
   });
@@ -535,16 +634,46 @@ export async function joinWithExistingAccount(code: string, userId: string, cour
 
 async function requireMembership(userId: string) {
   const member = await CorporateMember.findOne({ where: { userId } });
-  if (!member) throw ApiError.notFound("Your account isn't linked to a company");
+  if (!member) throw ApiError.notFound("Your account isn't linked to a company or university");
   const client = await CorporateClient.findByPk(member.clientId);
-  if (!client) throw ApiError.notFound("Your account isn't linked to a company");
+  if (!client) throw ApiError.notFound("Your account isn't linked to a company or university");
   return { member, client };
 }
 
 async function requireManager(userId: string) {
   const { member, client } = await requireMembership(userId);
-  if (!member.isManager) throw ApiError.forbidden("Only your company's training managers can do this");
+  if (!member.isManager) {
+    throw ApiError.forbidden(
+      isUniversity(client) ? "Only your university's representatives can do this" : "Only your company's training managers can do this",
+    );
+  }
   return { member, client };
+}
+
+/** A university representative (manager), for buying more places (2026-11-15). */
+export async function requireUniversityManager(userId: string) {
+  const { member, client } = await requireManager(userId);
+  if (!isUniversity(client)) throw ApiError.forbidden("Companies buy more places on the corporate pages");
+  if (client.status !== "active") throw ApiError.forbidden("Your university's access is paused. Please contact Paleon Training.");
+  return { member, client };
+}
+
+// What a representative's "Buy more places" form needs: the course fees in the
+// university's country, the group discount tiers and any discount agreed with Paleon.
+async function universityBuyInfo(client: CorporateClient) {
+  const country = client.country as CountryCode;
+  const site = COUNTRIES[country].site;
+  return {
+    country,
+    currency: site.currency,
+    courses: UNIVERSITY_COURSES.filter((slug) => isUniversityCourse(slug) && site.coursePrices?.[slug]).map((slug) => ({
+      slug,
+      title: PUBLIC_COURSE_TITLES[slug] ?? slug,
+      listPrice: listPrice(country, slug),
+    })),
+    tiers: await getGroupDiscountTiers(),
+    agreedPercent: client.discountPercent,
+  };
 }
 
 export async function getMyCompany(userId: string) {
@@ -560,6 +689,7 @@ export async function getMyCompany(userId: string) {
   const myCourseIds = new Set(mine.map((e) => e.courseId));
   const base = {
     name: client.name,
+    clientType: client.clientType,
     status: client.status,
     isManager: member.isManager,
     joinCode: client.joinCode,
@@ -572,10 +702,11 @@ export async function getMyCompany(userId: string) {
   return {
     company: {
       ...base,
-      joinUrl: corporateJoinUrl(client.joinCode),
+      joinUrl: corporateJoinUrl(client.joinCode, client.clientType),
       emailDomain: client.emailDomain,
       seats,
       members: await membersWithProgress(client.id),
+      ...(isUniversity(client) ? { buy: await universityBuyInfo(client) } : {}),
     },
   };
 }

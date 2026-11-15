@@ -19,9 +19,13 @@ export interface OrderSummary {
   unitPrice: string;
   total: string;
   discountPercent: number;
+  /** University orders (2026-11-15): one line per course, e.g. "HSE Fundamentals: 20 places at ₦90,000 each (10% off)". */
+  itemLines?: string[];
+  university?: boolean;
 }
 
 function orderLines(o: OrderSummary): string[] {
+  if (o.itemLines) return [...o.itemLines, `Total: ${o.total} (order ${o.txRef})`];
   return [
     `Programme: ${o.programmeName}`,
     `Learners: ${o.seats} at ${o.unitPrice} each${o.discountPercent ? ` (${o.discountPercent}% off)` : ""}`,
@@ -29,7 +33,10 @@ function orderLines(o: OrderSummary): string[] {
   ];
 }
 
-export function buildCorporateOrderPaidEmail(o: OrderSummary & { joinCode: string; signUpsCloseOn: string }): EmailMessage {
+export function buildCorporateOrderPaidEmail(
+  o: OrderSummary & { joinCode: string; signUpsCloseOn: string; topUp?: boolean },
+): EmailMessage {
+  if (o.university) return buildUniversityOrderPaidEmail(o);
   const firstName = o.contactName.split(/\s+/)[0] || "there";
   const url = corporateJoinUrl(o.joinCode);
   const lines = [
@@ -59,7 +66,9 @@ export function buildCorporateInvoiceRequestEmail(o: OrderSummary): EmailMessage
     `Hi ${firstName},`,
     `Thank you for your order for ${o.organisation}. We have your request for an invoice:`,
     ...orderLines(o),
-    "Our corporate team will send the invoice, with bank transfer details, within one working day. As soon as it is paid we set up your staff training and send you the link your staff use to sign up.",
+    o.university
+      ? "Our team will send the invoice, with bank transfer details, within one working day. As soon as it is paid we set up your students' places and send you the link your students use to sign up."
+      : "Our corporate team will send the invoice, with bank transfer details, within one working day. As soon as it is paid we set up your staff training and send you the link your staff use to sign up.",
     "Questions? Reply to this email or write to corporate@paleontraining.com.",
   ];
   return {
@@ -73,19 +82,57 @@ export function buildCorporateInvoiceRequestEmail(o: OrderSummary): EmailMessage
 export function buildCorporateOrderAdminEmail(
   o: OrderSummary & { kind: "paid" | "invoice"; joinCode?: string; reason?: string },
 ): EmailMessage {
+  const who = o.university ? "UNIVERSITY " : "";
   const lines = [
     o.kind === "paid"
-      ? `PAID: ${o.organisation} bought ${o.seats} learner places. The company, its seats and its join link were set up automatically.`
-      : `INVOICE REQUEST: ${o.organisation} wants an invoice for ${o.seats} learner places${o.reason ? ` (${o.reason})` : ""}. Send the invoice within one working day; once paid, create the company in /admin (Corporate clients).`,
+      ? `${who}PAID: ${o.organisation} bought ${o.seats} learner places. The ${o.university ? "university" : "company"}, its seats and its join link were set up automatically.`
+      : `${who}INVOICE REQUEST: ${o.organisation} wants an invoice for ${o.seats} learner places${o.reason ? ` (${o.reason})` : ""}. Send the invoice within one working day; once paid, click "Mark paid & set up" in /admin/corporate-orders.`,
     ...orderLines(o),
     `Courses: ${o.courseTitles.join("; ")}`,
     `Contact: ${o.contactName}, ${o.contactEmail}${o.phone ? `, ${o.phone}` : ""}`,
     ...(o.buyerCountry ? [`Based in: ${o.buyerCountry}`] : []),
-    ...(o.joinCode ? [`Staff join link: ${corporateJoinUrl(o.joinCode)}`] : []),
+    ...(o.joinCode ? [`Join link: ${corporateJoinUrl(o.joinCode, o.university ? "university" : "company")}`] : []),
   ];
+  const kind = o.university ? "University" : "Corporate";
   return {
     to: config.corporateEnquiriesEmail,
-    subject: `${o.kind === "paid" ? "Corporate order PAID" : "Corporate invoice request"}: ${o.organisation} (${o.seats} learners, ${o.total})`,
+    subject: `${o.kind === "paid" ? `${kind} order PAID` : `${kind} invoice request`}: ${o.organisation} (${o.seats} learners, ${o.total})`,
+    text: lines.join("\n\n"),
+    html: wrapHtml(lines),
+  };
+}
+
+// University places paid (2026-11-15): the representative's receipt and the student link.
+// A top-up (more places for a university already set up) keeps the same link.
+function buildUniversityOrderPaidEmail(
+  o: OrderSummary & { joinCode: string; signUpsCloseOn: string; topUp?: boolean },
+): EmailMessage {
+  const firstName = o.contactName.split(/\s+/)[0] || "there";
+  const url = corporateJoinUrl(o.joinCode, "university");
+  const lines = [
+    `Hi ${firstName},`,
+    `Thank you. Your payment for ${o.organisation} has been received and your students' places are ready.`,
+    ...orderLines(o),
+    ...(o.topUp
+      ? [
+          "The new places have been added to your university's account. Your students keep using the same sign-up link:",
+          url,
+          `See places, students and progress at ${config.corsOrigin}/university.`,
+        ]
+      : [
+          "Step 1. Create your own login first with this link, using this email address (" +
+            o.contactEmail +
+            "). That makes you your university's representative, with the manager login:",
+          url,
+          "Step 2. Send the same link to your students (for example in a department notice or WhatsApp group). Each student creates a login, picks their course and starts straight away. As representative you can also invite students by email, see who has started and track progress at " +
+            `${config.corsOrigin}/university.`,
+        ]),
+    `Students can sign up until ${o.signUpsCloseOn}. Each student who signs up for a course uses one of the places on that course.`,
+    "Keep the link for your students: anyone with it can take a place. Need an invoice, more places or help? Reply to this email or write to corporate@paleontraining.com.",
+  ];
+  return {
+    to: o.contactEmail,
+    subject: `${o.organisation}: your Paleon Training student places`,
     text: lines.join("\n\n"),
     html: wrapHtml(lines),
   };

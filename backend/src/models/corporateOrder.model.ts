@@ -3,6 +3,18 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 // Corporate online orders (2026-11-12), see migration 20261112070000-create-corporate-orders.
 
 export type CorporateOrderStatus = "pending" | "paid" | "invoice_requested" | "failed" | "cancelled";
+export type CorporateOrderType = "company" | "university";
+
+/** One course on a university order (2026-11-15). */
+export interface UniversityOrderItem {
+  courseSlug: string;
+  courseTitle: string;
+  seats: number;
+  listUnitPrice: number;
+  unitPrice: number;
+  discountPercent: number;
+  total: number;
+}
 
 export interface CorporateOrderAttributes {
   id: string;
@@ -23,6 +35,8 @@ export interface CorporateOrderAttributes {
   clientId: string | null;
   flutterwaveTransactionId: string | null;
   paidAt: Date | null;
+  orderType: CorporateOrderType;
+  items: UniversityOrderItem[] | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -37,6 +51,8 @@ type CreationAttributes = Optional<
   | "clientId"
   | "flutterwaveTransactionId"
   | "paidAt"
+  | "orderType"
+  | "items"
   | "createdAt"
   | "updatedAt"
 >;
@@ -60,6 +76,8 @@ export class CorporateOrder extends Model<CorporateOrderAttributes, CreationAttr
   declare clientId: string | null;
   declare flutterwaveTransactionId: string | null;
   declare paidAt: Date | null;
+  declare orderType: CorporateOrderType;
+  declare items: UniversityOrderItem[] | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -95,6 +113,8 @@ export function initCorporateOrderModel(sequelize: Sequelize) {
       clientId: { type: DataTypes.UUID, allowNull: true },
       flutterwaveTransactionId: { type: DataTypes.STRING, allowNull: true },
       paidAt: { type: DataTypes.DATE, allowNull: true },
+      orderType: { type: DataTypes.STRING(20), allowNull: false, defaultValue: "company" },
+      items: { type: DataTypes.JSONB, allowNull: true },
     },
     { sequelize, modelName: "CorporateOrder", tableName: "corporate_orders", underscored: true },
   );
