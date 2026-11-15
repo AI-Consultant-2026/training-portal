@@ -96,6 +96,13 @@ describe("Leads", () => {
     expect(memAdapter.sentMessages[0].text).toContain("Interested in: Maps, drones and location data");
   });
 
+  it("accepts the split AI / data interests and the older combined wording (2026-11-15)", async () => {
+    for (const interest of ["AI, machine learning and automation", "Data analysis, reports and dashboards", "AI, data and automation"]) {
+      const res = await request(app).post("/api/leads").send({ ...validLead, email: `match-${interest.length}@example.com`, interest });
+      expect(res.status).toBe(201);
+    }
+  });
+
   it("rejects an industry or interest outside the allow-lists", async () => {
     const badSector = await request(app).post("/api/leads").send({ ...validLead, sector: "Fishing" });
     expect(badSector.status).toBe(400);

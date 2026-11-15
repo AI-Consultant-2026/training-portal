@@ -111,6 +111,9 @@ const INTEREST_COURSE: Record<string, HomepageCourse> = {
   "Maps, drones and location data": "gis-and-drone-mapping",
   "Marketing, content and online growth": "digital-marketing",
   "Health, safety and site operations": "hse-fundamentals",
+  "AI, machine learning and automation": "ai-machine-learning-fundamentals",
+  "Data analysis, reports and dashboards": "data-analytics-business-intelligence",
+  // Older wording (before 2026-11-15), from pages cached before the change.
   "AI, data and automation": "ai-machine-learning-fundamentals",
 };
 

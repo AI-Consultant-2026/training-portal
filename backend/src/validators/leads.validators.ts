@@ -49,9 +49,14 @@ export const LEAD_INTERESTS = [
   "Maps, drones and location data",
   "Marketing, content and online growth",
   "Health, safety and site operations",
-  "AI, data and automation",
+  // 2026-11-15: "AI, data and automation" split in two, so data work points to the Data
+  // Analytics & BI course and AI work to the AI course.
+  "AI, machine learning and automation",
+  "Data analysis, reports and dashboards",
   "Not sure yet",
 ] as const;
+// Options the form used to offer, still accepted so a page cached before a change can submit.
+export const LEGACY_LEAD_INTERESTS = ["AI, data and automation"] as const;
 
 const PHONE_REGEX = /^[0-9+()\s-]{7,20}$/;
 
@@ -64,7 +69,7 @@ export const createLeadSchema = z.object({
     university: z.enum(REGISTRATION_STATUSES).optional(),
     source: z.enum(LEAD_SOURCES).optional(),
     sector: z.enum(LEAD_SECTORS).optional(),
-    interest: z.enum(LEAD_INTERESTS).optional(),
+    interest: z.enum([...LEAD_INTERESTS, ...LEGACY_LEAD_INTERESTS]).optional(),
     // The country homepages (/ng, /za, /ke, /gh) send their own code; older forms leave it out.
     country: z.enum(COUNTRY_CODES).default("NG"),
     // The "email me" tick-box on the Ghana, Kenya and South Africa forms (2026-10-30).

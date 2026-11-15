@@ -41,6 +41,18 @@ describe("Country homepages", () => {
     expect(res.text).toContain('"priceCurrency":"NGN","price":"200000"');
   });
 
+  it("Career Match sends data work to Data Analytics and AI work to the AI course (2026-11-15)", async () => {
+    for (const path of ["/ng", "/gh", "/ke", "/za"]) {
+      const res = await request(app).get(path);
+      expect(res.text).toContain("<option>Data analysis, reports and dashboards</option>");
+      expect(res.text).toContain("<option>AI, machine learning and automation</option>");
+      expect(res.text).not.toContain("<option>AI, data and automation</option>");
+      const data = JSON.parse(res.text.match(/<script type="application\/json" id="ptHomeData">([\s\S]*?)<\/script>/)![1]);
+      expect(data.byInterest["Data analysis, reports and dashboards"]).toBe("data-analytics-business-intelligence");
+      expect(data.byInterest["AI, machine learning and automation"]).toBe("ai-machine-learning-fundamentals");
+    }
+  });
+
   it("shows the Data Analytics card on every country page in the same format, in local money (2026-11-15)", async () => {
     expect(COURSE_PRICES_NGN["data-analytics-business-intelligence"]).toBe(195_000);
     for (const [path, fee, deposit] of [
