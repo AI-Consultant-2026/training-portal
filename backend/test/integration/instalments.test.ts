@@ -49,14 +49,6 @@ async function setup() {
   return { course, days, student, token };
 }
 
-function mockPaystackInit() {
-  return jest.spyOn(global, "fetch").mockResolvedValue(
-    new Response(JSON.stringify({ status: true, data: { authorization_url: "https://checkout.paystack.com/abc123" } }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    }),
-  );
-}
 
 function sendWebhook(data: Record<string, unknown>) {
   const body = JSON.stringify({ event: "charge.success", data: { status: "success", currency: "NGN", ...data } });
@@ -96,27 +88,39 @@ describe("Instalment payments", () => {
     expect(res.body.quote.instalment).toEqual({ depositNgn: 20_000, balanceNgn: 130_000, unlockedDays: 2, enabled: true });
   });
 
-  it("opens Paystack checkout for the deposit, enrolling the student and recording a pending payment", async () => {
+  // Nigeria's checkout opens on Flutterwave since 2026-11-15; Paystack's webhook (below)
+  // still confirms charges started before the switch.
+  it("opens Flutterwave checkout for the deposit, enrolling the student and recording a pending payment", async () => {
     const { course, student, token } = await setup();
-    const fetchMock = mockPaystackInit();
+    const originalFlw = { ...config.flutterwave };
+    config.flutterwave.secretKey = "FLWSECK_TEST-jest";
+    const fetchMock = jest.spyOn(global, "fetch").mockImplementation(
+      async () =>
+        new Response(JSON.stringify({ status: "success", data: { link: "https://checkout.flutterwave.com/v3/hosted/pay/dep" } }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+    );
+    try {
+      const res = await request(app)
+        .post("/api/payments/instalment")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ courseId: course.id, kind: "deposit" });
 
-    const res = await request(app)
-      .post("/api/payments/instalment")
-      .set("Authorization", `Bearer ${token}`)
-      .send({ courseId: course.id, kind: "deposit" });
-
-    expect(res.status).toBe(201);
-    expect(res.body.paymentLink).toBe("https://checkout.paystack.com/abc123");
-    const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe("https://api.paystack.co/transaction/initialize");
-    const sent = JSON.parse(String((init as RequestInit).body));
-    expect(sent.amount).toBe(2_000_000);
-    expect(sent.email).toBe(student.email);
-    const enrollment = await Enrollment.findOne({ where: { courseId: course.id, studentId: student.id } });
-    expect(sent.metadata).toMatchObject({ enrollmentId: enrollment!.id, instalment: "deposit" });
-    const payment = await Payment.findOne({ where: { enrollmentId: enrollment!.id } });
-    expect(payment).toMatchObject({ status: "pending", notes: "Instalment deposit" });
-    expect(Number(payment!.amount)).toBe(20_000);
+      expect(res.status).toBe(201);
+      expect(res.body.paymentLink).toBe("https://checkout.flutterwave.com/v3/hosted/pay/dep");
+      const [url, init] = fetchMock.mock.calls[0];
+      expect(String(url)).toBe("https://api.flutterwave.com/v3/payments");
+      const sent = JSON.parse(String((init as RequestInit).body));
+      expect(sent).toMatchObject({ amount: 20_000, currency: "NGN", customer: { email: student.email } });
+      const enrollment = await Enrollment.findOne({ where: { courseId: course.id, studentId: student.id } });
+      const payment = await Payment.findOne({ where: { enrollmentId: enrollment!.id } });
+      expect(payment).toMatchObject({ status: "pending", currency: "NGN" });
+      expect(Number(payment!.amount)).toBe(20_000);
+      expect(Number(payment!.baseAmountNgn)).toBe(20_000);
+    } finally {
+      config.flutterwave.secretKey = originalFlw.secretKey;
+    }
   });
 
   it("won't take the balance before the deposit", async () => {

@@ -104,7 +104,7 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
             {enrollment.paymentSubmittedAt ? (
               <>
                 <strong>Payment started</strong> on {new Date(enrollment.paymentSubmittedAt).toLocaleDateString("en-GB")}.{" "}
-                If you&rsquo;ve paid on Paystack, we&rsquo;re confirming it and your lessons unlock{" "}
+                If you&rsquo;ve paid, we&rsquo;re confirming it and your lessons unlock{" "}
                 {PAYMENT_CONFIRMATION_PROMISE}.{" "}
                 {course && (
                   <Link to={`/courses/${course.slug}/pay/card`} className="font-medium text-amber-900 underline">

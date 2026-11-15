@@ -181,7 +181,10 @@ export const COUNTRIES: Record<CountryCode, CountryInfo> = {
       corporateTraining: { label: "Corporate AI training for Nigerian employers", href: "/ng/corporate-training/ai-workflow-productivity" },
       ogImage: "/images/og/welcome.jpg",
       paystackSecretKeyEnv: "PAYSTACK_SECRET_KEY_NG",
-      gateway: "paystack",
+      // Course payments moved from Paystack to Flutterwave on 2026-11-15 (owner request).
+      // Paystack's webhook stays in place for payments started before the switch.
+      gateway: "flutterwave",
+      flutterwavePaymentOptions: "card,banktransfer,ussd",
     },
   },
   GH: {

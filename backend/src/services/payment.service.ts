@@ -76,7 +76,9 @@ export async function getQuote(courseIdOrSlug: string, studentId: string): Promi
   const course = await courseService.getCourseByIdOrSlug(courseIdOrSlug);
   const student = await userService.getUserById(studentId);
   const country = checkoutCountryFor(student.country);
-  if (country !== "NG") return getLocalQuote(course.slug, country);
+  // Every country pays through Flutterwave since 2026-11-15; the Paystack quote below is
+  // only used if a country is switched back to Paystack in countries.ts.
+  if (checkoutGateway(country) === "flutterwave") return getLocalQuote(course.slug, country);
 
   const baseAmountNgn = requirePriceNgn(course.slug);
 
@@ -141,7 +143,7 @@ export async function startCardPayment(input: {
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
   const student = await userService.getUserById(input.studentId);
   const country = checkoutCountryFor(student.country);
-  if (country !== "NG") return startLocalFullPayment(course, input.studentId, country);
+  if (checkoutGateway(country) === "flutterwave") return startLocalFullPayment(course, input.studentId, country);
   const paymentLink = getPaystackPaymentLink(course.slug);
   if (!paymentLink) {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });

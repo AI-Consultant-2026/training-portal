@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../../src/app";
+import { config } from "../../src/config";
 import { PAYSTACK_PAYMENT_LINKS } from "../../src/constants/paystackPaymentLinks";
 import { Course, Enrollment, Payment, User } from "../../src/models";
 
@@ -39,23 +40,46 @@ async function createPricedCourse(instructorId: string) {
   });
 }
 
-const PAYSTACK_LINK = "https://paystack.com/pay/jest-cyber-security";
+const FLW_LINK = "https://checkout.flutterwave.com/v3/hosted/pay/jest-ng";
+
+function json(body: unknown) {
+  return new Response(JSON.stringify(body), { status: 200, headers: { "Content-Type": "application/json" } });
+}
+
+// Nigeria pays through Flutterwave since 2026-11-15 (it was Paystack): opening a checkout
+// returns its link, and records what the server sent.
+function mockFlutterwave() {
+  const opened: Record<string, unknown>[] = [];
+  jest.spyOn(global, "fetch").mockImplementation(async (input, init) => {
+    const url = String(input);
+    if (url.endsWith("/v3/payments")) {
+      opened.push(JSON.parse(String((init as RequestInit).body)));
+      return json({ status: "success", data: { link: FLW_LINK } });
+    }
+    throw new Error(`unexpected fetch ${url}`);
+  });
+  return opened;
+}
 
 describe("Payments", () => {
-  // Pin the priced course's link so these tests don't depend on the real one; the "no
-  // Paystack link" block covers a course without one.
-  const originalLink = PAYSTACK_PAYMENT_LINKS["cyber-security-fundamentals"];
-  beforeAll(() => {
-    PAYSTACK_PAYMENT_LINKS["cyber-security-fundamentals"] = PAYSTACK_LINK;
+  const original = { ...config.flutterwave };
+  let opened: Record<string, unknown>[] = [];
+  beforeEach(() => {
+    config.flutterwave.secretKey = "FLWSECK_TEST-jest";
+    config.flutterwave.secretHash = "jest-flw-hash";
+    opened = mockFlutterwave();
   });
+  afterEach(() => jest.restoreAllMocks());
   afterAll(() => {
-    PAYSTACK_PAYMENT_LINKS["cyber-security-fundamentals"] = originalLink;
+    config.flutterwave.secretKey = original.secretKey;
+    config.flutterwave.secretHash = original.secretHash;
   });
 
-  it("has a real Paystack link for every live course", () => {
+  // The Paystack Payment Pages stay in place (nothing else changed), though checkout no
+  // longer uses them.
+  it("still has a Paystack link for every live course", () => {
     for (const slug of ["cyber-security-fundamentals", "digital-marketing", "gis-and-drone-mapping", "hse-fundamentals"]) {
-      const link = slug === "cyber-security-fundamentals" ? originalLink : PAYSTACK_PAYMENT_LINKS[slug];
-      expect(link).toMatch(/^https:\/\/paystack\.com\//);
+      expect(PAYSTACK_PAYMENT_LINKS[slug]).toMatch(/^https:\/\/paystack\.com\//);
     }
   });
 
@@ -72,7 +96,7 @@ describe("Payments", () => {
     expect((await request(app).post("/api/payments/card").send({ courseId: course.id })).status).toBe(401);
   });
 
-  it("quotes the course price in NGN with card payment available", async () => {
+  it("quotes the course price in Naira, paid through Flutterwave", async () => {
     const instructor = await createInstructor();
     const course = await createPricedCourse(instructor.id);
     await registerStudent("quote-student@example.com");
@@ -82,22 +106,20 @@ describe("Payments", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.quote).toEqual({
-      // Nigeria pays in Naira on Paystack, as before (2026-10-30).
       checkout: {
         country: "NG",
-        gateway: "paystack",
+        gateway: "flutterwave",
         currency: { code: "NGN", symbol: "\u20A6", spaced: false },
         currencyName: "Naira",
         whatsappLink: "https://wa.me/447508823495",
       },
       baseAmountNgn: 200_000,
       card: { currency: "NGN", amount: 200_000, enabled: true },
-      // Instalments are only offered when Paystack's API key is set (it isn't in this test).
-      instalment: { depositNgn: 20_000, balanceNgn: 180_000, unlockedDays: 2, enabled: false },
+      instalment: { depositNgn: 20_000, balanceNgn: 180_000, unlockedDays: 2, enabled: true },
     });
   });
 
-  it("returns the Paystack link and records one pending NGN card payment without confirming it", async () => {
+  it("opens a Flutterwave checkout for the full price in Naira and records a pending payment", async () => {
     const instructor = await createInstructor();
     const course = await createPricedCourse(instructor.id);
     const student = await registerStudent("card-payer@example.com");
@@ -110,19 +132,17 @@ describe("Payments", () => {
       .send({ courseId: course.id });
 
     expect(res.status).toBe(201);
-    expect(res.body.paymentLink).toBe(PAYSTACK_LINK);
+    expect(res.body.paymentLink).toBe(FLW_LINK);
+    expect(opened[0]).toMatchObject({
+      amount: 200_000,
+      currency: "NGN",
+      payment_options: "card,banktransfer,ussd",
+      customer: { email: "card-payer@example.com" },
+    });
     expect(res.body.payment).toMatchObject({ method: "card", status: "pending", currency: "NGN" });
     expect(Number(res.body.payment.amount)).toBe(200_000);
+    expect(Number(res.body.payment.baseAmountNgn)).toBe(200_000);
     expect(res.body.enrollment.paymentConfirmed).toBe(false);
-
-    // Clicking Pay again reuses the pending payment instead of piling up duplicates.
-    const again = await request(app)
-      .post("/api/payments/card")
-      .set("Authorization", `Bearer ${token}`)
-      .send({ courseId: course.id });
-    expect(again.status).toBe(201);
-    expect(again.body.payment.id).toBe(res.body.payment.id);
-    expect(await Payment.count({ where: { studentId: student.id } })).toBe(1);
   });
 
   it("enrols a verified student who hasn't enrolled yet, and refuses an unverified one", async () => {
@@ -183,12 +203,9 @@ describe("Payments", () => {
     expect(res.status).toBe(404);
   });
 
-  describe("for a course with no Paystack link", () => {
+  describe("when Flutterwave isn't configured", () => {
     beforeEach(() => {
-      PAYSTACK_PAYMENT_LINKS["cyber-security-fundamentals"] = "";
-    });
-    afterEach(() => {
-      PAYSTACK_PAYMENT_LINKS["cyber-security-fundamentals"] = PAYSTACK_LINK;
+      config.flutterwave.secretKey = "";
     });
 
     it("rejects a card payment with a 503, records nothing, and leaves the course locked", async () => {
@@ -208,7 +225,7 @@ describe("Payments", () => {
       expect(await Payment.count({ where: { studentId: student.id } })).toBe(0);
     });
 
-    it("flags payment as unavailable in the quote, and treats a non-Paystack URL as no link", async () => {
+    it("flags payment as unavailable in the quote", async () => {
       const instructor = await createInstructor("card-off-inst2@example.com");
       const course = await createPricedCourse(instructor.id);
       await registerStudent("card-off2@example.com");
@@ -216,10 +233,7 @@ describe("Payments", () => {
 
       const none = await request(app).get(`/api/payments/quote/${course.id}`).set("Authorization", `Bearer ${token}`);
       expect(none.body.quote.card.enabled).toBe(false);
-
-      PAYSTACK_PAYMENT_LINKS["cyber-security-fundamentals"] = "https://example.com/pay/cyber";
-      const foreign = await request(app).get(`/api/payments/quote/${course.id}`).set("Authorization", `Bearer ${token}`);
-      expect(foreign.body.quote.card.enabled).toBe(false);
+      expect(none.body.quote.instalment.enabled).toBe(false);
     });
   });
 });

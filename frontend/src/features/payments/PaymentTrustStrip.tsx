@@ -26,8 +26,8 @@ export function PaymentTrustStrip({
           <span>
             {flutterwave ? (
               <>
-                <strong className="text-gray-900">Secure payment by Flutterwave.</strong> Your card and mobile money
-                details never touch Paleon&rsquo;s site.
+                <strong className="text-gray-900">Secure payment by Flutterwave.</strong> Your payment details never
+                touch Paleon&rsquo;s site.
               </>
             ) : (
               <>

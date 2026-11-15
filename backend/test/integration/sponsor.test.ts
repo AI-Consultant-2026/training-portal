@@ -51,12 +51,16 @@ async function setup() {
   return { course, days, student, token };
 }
 
-function mockPaystackInit() {
-  return jest.spyOn(global, "fetch").mockResolvedValue(
-    new Response(JSON.stringify({ status: true, data: { authorization_url: "https://checkout.paystack.com/abc123" } }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    }),
+// Nigeria's checkout opens on Flutterwave since 2026-11-15. Charges are still confirmed
+// here through Paystack's webhook too (for payments started before the switch).
+const FLW_LINK = "https://checkout.flutterwave.com/v3/hosted/pay/sponsor";
+function mockFlutterwaveInit() {
+  return jest.spyOn(global, "fetch").mockImplementation(
+    async () =>
+      new Response(JSON.stringify({ status: "success", data: { link: FLW_LINK } }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
   );
 }
 
@@ -81,14 +85,17 @@ function instalmentCharge(enrollmentId: string, kind: "deposit" | "balance" | "f
 
 describe("Sponsor payment links", () => {
   const original = config.paystackSecretKey;
+  const originalFlw = config.flutterwave.secretKey;
   beforeEach(() => {
     config.paystackSecretKey = SECRET;
+    config.flutterwave.secretKey = "FLWSECK_TEST-jest";
   });
   afterEach(() => {
     jest.restoreAllMocks();
   });
   afterAll(() => {
     config.paystackSecretKey = original;
+    config.flutterwave.secretKey = originalFlw;
   });
 
   async function getLink(courseId: string, token: string) {
@@ -111,7 +118,7 @@ describe("Sponsor payment links", () => {
     expect(page.body.sponsor).toEqual({
       checkout: {
           country: "NG",
-          gateway: "paystack",
+          gateway: "flutterwave",
           currency: { code: "NGN", symbol: "\u20A6", spaced: false },
           currencyName: "Naira",
           whatsappLink: "https://wa.me/447508823495",
@@ -140,15 +147,14 @@ describe("Sponsor payment links", () => {
   it("a sponsor's full payment is charged to the student's email and unlocks the whole course", async () => {
     const { course, days, student, token } = await setup();
     const enrollment = await Enrollment.create({ courseId: course.id, studentId: student.id });
-    const fetchMock = mockPaystackInit();
+    const fetchMock = mockFlutterwaveInit();
 
     const res = await request(app).post(`/api/sponsor/${sponsorToken(enrollment.id)}/pay`).send({ kind: "full" });
     expect(res.status).toBe(201);
-    expect(res.body).toEqual({ paymentLink: "https://checkout.paystack.com/abc123" });
+    expect(res.body).toEqual({ paymentLink: FLW_LINK });
     const sent = JSON.parse(String((fetchMock.mock.calls[0][1] as RequestInit).body));
-    expect(sent).toMatchObject({ email: student.email, amount: 15_000_000 });
-    expect(sent.metadata).toMatchObject({ enrollmentId: enrollment.id, instalment: "full" });
-    expect(sent.callback_url).toContain(`/sponsor/${sponsorToken(enrollment.id)}?paid=full`);
+    expect(sent).toMatchObject({ customer: { email: student.email }, amount: 150_000, currency: "NGN" });
+    expect(sent.redirect_url).toContain(`/sponsor/${sponsorToken(enrollment.id)}?paid=full`);
     fetchMock.mockRestore();
 
     const hook = await instalmentCharge(enrollment.id, "full", 150_000, "FULL1");
@@ -180,13 +186,13 @@ describe("Sponsor payment links", () => {
     expect((await request(app).get(`/api/sponsor/${token}`)).body.sponsor.status).toBe("deposit_paid");
 
     expect((await request(app).post(`/api/sponsor/${token}/pay`).send({ kind: "full" })).status).toBe(409);
-    const fetchMock = mockPaystackInit();
+    const fetchMock = mockFlutterwaveInit();
     const res = await request(app).post(`/api/sponsor/${token}/pay`).send({ kind: "balance" });
     expect(res.status).toBe(201);
     const sent = JSON.parse(String((fetchMock.mock.calls[0][1] as RequestInit).body));
-    expect(sent.amount).toBe(13_000_000);
+    expect(sent).toMatchObject({ amount: 130_000, currency: "NGN" });
     const pending = await Payment.findOne({ where: { enrollmentId: enrollment.id, status: "pending" } });
-    expect(pending).toMatchObject({ notes: "Instalment balance" });
+    expect(pending).toMatchObject({ notes: "Instalment balance (Flutterwave)" });
   });
 
   it("the student's own instalment endpoint still refuses kind=full", async () => {

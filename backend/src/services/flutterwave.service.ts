@@ -12,7 +12,7 @@ import { moneyIn, paystackCurrency } from "./paystackAccounts";
 import * as userService from "./user.service";
 
 // Flutterwave checkout for Ghana, Kenya and South Africa (2026-10-30), in cedis, shillings
-// and rand; Nigeria stays on Paystack. It works like the Paystack instalment checkout:
+// and rand; Nigeria too since 2026-11-15, in Naira (card, bank transfer or USSD). It works like the Paystack instalment checkout:
 // the server opens a Flutterwave Standard checkout for a set amount (deposit, balance or
 // full price), the student (or their sponsor) pays on Flutterwave's own page, so card and
 // mobile money details never touch Paleon's servers, and the charge is applied when
@@ -103,8 +103,9 @@ export async function initializeFlutterwaveCharge(input: {
     status: "pending",
     currency,
     amount,
-    // There's no exchange rate to give a Naira figure for cedis, shillings or rand.
-    baseAmountNgn: 0,
+    // Naira charges (Nigeria, since 2026-11-15) record the Naira figure; there's no
+    // exchange rate to give one for cedis, shillings or rand.
+    baseAmountNgn: country === "NG" ? amount : 0,
     billingCountry: country,
     gatewayReference: FLUTTERWAVE_INIT_REFERENCE_PREFIX + txRef,
     notes: `${INSTALMENT_NOTES[input.kind]} (Flutterwave)`,

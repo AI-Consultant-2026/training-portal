@@ -190,7 +190,7 @@ export function CardPaymentPage() {
         <ol className="mt-6 list-decimal space-y-2 pl-5 text-sm text-gray-700">
           <li>
             You&rsquo;ll pay on <strong>Flutterwave</strong>&rsquo;s secure page, in {quote?.checkout?.currencyName}.
-            Your card or mobile money details go to Flutterwave only, never to Paleon Training.
+            Your payment details go to Flutterwave only, never to Paleon Training.
           </li>
           <li>
             Your payment unlocks the course automatically, usually within a few minutes. Meanwhile, the
