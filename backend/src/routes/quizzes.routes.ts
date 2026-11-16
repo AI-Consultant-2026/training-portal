@@ -8,11 +8,11 @@ import { submitQuizSchema } from "../validators/quiz.validators";
 export const quizzesRouter = Router();
 
 quizzesRouter.get("/:id", authenticate, quizzesController.getById);
-quizzesRouter.post("/:id/start", authenticate, authorize("student"), quizzesController.start);
+quizzesRouter.post("/:id/start", authenticate, authorize("student", "admin"), quizzesController.start);
 quizzesRouter.post(
   "/:id/submit",
   authenticate,
-  authorize("student"),
+  authorize("student", "admin"),
   validate(submitQuizSchema),
   quizzesController.submit,
 );
@@ -20,6 +20,6 @@ quizzesRouter.get("/:id/attempts/:attemptId", authenticate, quizzesController.ge
 quizzesRouter.get(
   "/:id/attempts",
   authenticate,
-  authorize("student"),
+  authorize("student", "admin"),
   quizzesController.listMyAttempts,
 );

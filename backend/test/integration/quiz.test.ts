@@ -146,6 +146,37 @@ describe("Quizzes", () => {
     expect(attempts[0].attemptNumber).toBe(1);
   });
 
+  it("lets an admin take any quiz without enrolment, day lock or attempt limits", async () => {
+    const instructor = await createInstructor();
+    const { courseModule, quiz, q1, q1Correct, q2, q2Correct } = await createCourseWithQuiz(instructor.id);
+    // A lesson the admin hasn't completed would lock the quiz for a student.
+    await Lesson.create({ moduleId: courseModule.id, title: "Lesson 1", order: 1 });
+    await quiz.update({ maxAttempts: 1, minHoursBetweenAttempts: 24 });
+    await createAdmin();
+    const token = await loginAs("jest-admin@example.com");
+
+    for (let i = 0; i < 2; i += 1) {
+      const started = await request(app)
+        .post(`/api/quizzes/${quiz.id}/start`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(started.status).toBe(201);
+      const submitted = await request(app)
+        .post(`/api/quizzes/${quiz.id}/submit`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          attemptId: started.body.attempt.id,
+          responses: [
+            { questionId: q1.id, studentAnswer: q1Correct.id },
+            { questionId: q2.id, studentAnswer: q2Correct.id },
+          ],
+        });
+      expect(submitted.status).toBe(200);
+      expect(submitted.body.attempt.score).toBe(100);
+    }
+    const mine = await request(app).get(`/api/quizzes/${quiz.id}/attempts`).set("Authorization", `Bearer ${token}`);
+    expect(mine.body.attempts).toHaveLength(2);
+  });
+
   it("rejects starting a quiz for a non-enrolled student", async () => {
     const instructor = await createInstructor();
     const { quiz } = await createCourseWithQuiz(instructor.id);

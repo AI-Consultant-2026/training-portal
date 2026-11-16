@@ -226,6 +226,8 @@ export interface LessonNavigation {
   nextTaskGate?: ModuleTaskStatus | null;
   /** Students only: the next lesson's day isn't covered by their payment. */
   nextPaymentLocked?: boolean;
+  // Set on the course's last lesson: its Final Assessment, shown as the "Next" step.
+  finalAssessment?: { id: string; title: string } | null;
 }
 
 export interface ModuleTaskItem {

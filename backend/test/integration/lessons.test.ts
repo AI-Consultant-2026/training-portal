@@ -7,6 +7,7 @@ import {
   Enrollment,
   Lesson,
   ProgressTracking,
+  Quiz,
   User,
   VideoCheckpoint,
   VideoCheckpointAnswer,
@@ -182,6 +183,30 @@ describe("Lessons and progress tracking", () => {
         weekNumber: 1,
       });
       expect(res.body.next).toBeNull();
+    });
+
+    it("offers the course's Final Assessment after the last lesson, and nowhere else", async () => {
+      const instructor = await createInstructor("jest-nav-instructor-final@example.com");
+      const token = await loginAs(instructor.email);
+      const { modules, lessonsByModule } = await createCourseWithModules(instructor.id, [2, 2]);
+      await Quiz.create({ moduleId: modules[1].id, title: "Day 2 Quiz", passingScore: 70, questionCount: 1 });
+      const final = await Quiz.create({
+        moduleId: modules[1].id,
+        title: "Final Assessment",
+        passingScore: 80,
+        questionCount: 1,
+      });
+
+      const last = await request(app)
+        .get(`/api/lessons/${lessonsByModule[1][1].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(last.body.next).toBeNull();
+      expect(last.body.finalAssessment).toEqual({ id: final.id, title: "Final Assessment" });
+
+      const earlier = await request(app)
+        .get(`/api/lessons/${lessonsByModule[1][0].id}/navigation`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(earlier.body.finalAssessment).toBeNull();
     });
 
     it("crosses into the next module's first lesson at a week boundary", async () => {

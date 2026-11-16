@@ -446,8 +446,10 @@ export function CourseDetailPage() {
           const dayTasks =
             content && courseProgress
               ? (() => {
+                  // The Final Assessment sits in the last day but isn't a day task
+                  // (same rule as lesson.service.ts's getModuleTaskStatus).
                   const quizzes = content.quizzes
-                    .filter((q) => q.isEnabled)
+                    .filter((q) => q.isEnabled && q.title !== "Final Assessment")
                     .map((q) => ({
                       id: q.id,
                       title: q.title,

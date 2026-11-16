@@ -231,6 +231,9 @@ export interface LessonNavigation {
   // Students only: the next lesson's day isn't covered by their payment (unpaid, or an
   // instalment deposit that stops before it).
   nextPaymentLocked?: boolean;
+  // On the course's last lesson (no `next`): the course's Final Assessment, so the lesson
+  // page's "Next" leads to it instead of stopping (2026-11-16).
+  finalAssessment?: { id: string; title: string } | null;
 }
 
 // Powers the Previous/Next lesson buttons on the lesson page. Navigation stays within
@@ -306,11 +309,25 @@ export async function getLessonNavigation(
     nextPaymentLocked = !(await hasPaidAccessToModule(enrollment, course.id, nextModuleId ?? ""));
   }
 
+  let finalAssessment: { id: string; title: string } | null = null;
+  if (!next) {
+    const finalQuiz = await Quiz.findOne({
+      where: {
+        title: FINAL_ASSESSMENT_TITLE,
+        isEnabled: true,
+        moduleId: { [Op.in]: allModules.map((m) => m.id) },
+      },
+      order: [["createdAt", "DESC"]],
+    });
+    if (finalQuiz) finalAssessment = { id: finalQuiz.id, title: finalQuiz.title };
+  }
+
   return {
     course: { id: course.id, slug: course.slug, title: course.title },
     module: { id: courseModule.id, title: courseModule.title, weekNumber: courseModule.weekNumber },
     previous,
     next,
+    finalAssessment,
     ...(requester?.role === "student" ? { nextTaskGate, nextPaymentLocked } : {}),
   };
 }

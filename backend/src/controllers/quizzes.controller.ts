@@ -13,7 +13,7 @@ export const getById = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const start = asyncHandler(async (req: Request, res: Response) => {
-  const result = await quizService.start(req.params.id, req.user!.id);
+  const result = await quizService.start(req.params.id, req.user!);
   res.status(201).json(result);
 });
 

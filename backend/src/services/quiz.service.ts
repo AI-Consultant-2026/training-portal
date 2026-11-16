@@ -125,15 +125,21 @@ export async function getById(quizId: string) {
   return serializeQuiz(quiz);
 }
 
-export async function start(quizId: string, studentId: string) {
+// Admins (owner, 2026-11-16: "as admin I should have permission to all aspects of the
+// courses") can take any quiz, including the Final Assessments, to check it: no enrolment,
+// day lock, attempt limit or gap between attempts applies to them. Their attempts are
+// stored like a student's, under the admin's own user id.
+export async function start(quizId: string, user: { id: string; role: string }) {
+  const studentId = user.id;
+  const isAdmin = user.role === "admin";
   const { quiz, course } = await getQuizWithCourse(quizId);
-  await assertEnrolled(course.id, studentId);
+  if (!isAdmin) await assertEnrolled(course.id, studentId);
 
-  if (!quiz.isEnabled) {
+  if (!quiz.isEnabled && !isAdmin) {
     throw ApiError.forbidden("This quiz is not available right now.");
   }
 
-  const unlocked = await isModuleQuizUnlocked(quiz, studentId);
+  const unlocked = isAdmin || (await isModuleQuizUnlocked(quiz, studentId));
   if (!unlocked) {
     throw ApiError.forbidden("Complete this day's first lesson before you can start the quiz.");
   }
@@ -143,7 +149,7 @@ export async function start(quizId: string, studentId: string) {
   });
 
   let attempt = existing;
-  if (!attempt && quiz.maxAttempts) {
+  if (!attempt && quiz.maxAttempts && !isAdmin) {
     // Attempt limit (e.g. the corporate final assessments: 3). An attempt still in
     // progress can always be resumed; only starting a new one is refused.
     const used = await QuizAttempt.count({ where: { quizId, studentId } });
@@ -153,7 +159,7 @@ export async function start(quizId: string, studentId: string) {
       );
     }
   }
-  if (!attempt && quiz.minHoursBetweenAttempts) {
+  if (!attempt && quiz.minHoursBetweenAttempts && !isAdmin) {
     // Minimum gap between attempts (the corporate final assessments: 24 hours), counted
     // from when the previous attempt finished.
     const last = await QuizAttempt.findOne({

@@ -218,7 +218,7 @@ export function LessonDetailPage() {
         </div>
       )}
 
-      {navigation && (navigation.previous || navigation.next) && (
+      {navigation && (navigation.previous || navigation.next || navigation.finalAssessment) && (
         <div className="mt-8 flex items-center justify-between gap-4 border-t border-gray-200 pt-6">
           <LessonNavLink
             item={navigation.previous}
@@ -232,6 +232,16 @@ export function LessonDetailPage() {
             locked={isNextLocked || nextTaskGate !== null}
             onLockedClick={() => (isNextLocked ? setShowPaymentDialog(true) : setShowTasksDialog(true))}
           />
+          {/* The course's last lesson leads on to its Final Assessment (2026-11-16). */}
+          {!navigation.next && navigation.finalAssessment && (
+            <Link
+              to={`/quizzes/${navigation.finalAssessment.id}`}
+              className="ml-auto flex max-w-[45%] flex-col rounded-md border border-blue-300 bg-blue-50 px-4 py-3 text-right hover:bg-blue-100"
+            >
+              <span className="text-xs font-medium uppercase text-blue-600">Next →</span>
+              <span className="mt-1 truncate text-sm font-medium text-gray-900">{navigation.finalAssessment.title}</span>
+            </Link>
+          )}
         </div>
       )}
 
