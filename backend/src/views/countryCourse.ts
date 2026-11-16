@@ -98,7 +98,7 @@ const OUTLINE: Record<HomepageCourse, [string, string][]> = {
     ["Day 6", "Photogrammetry, orthomosaics, point clouds and 3D products"],
     ["Day 7", "Spatial analysis and thematic mapping"],
     ["Day 8", "Planning and delivering a GIS project"],
-    ["Day 9", "Industry applications and your sector capstone"],
+    ["Day 9", "Industry applications across seven sectors, and your final assessment"],
   ],
   "digital-marketing": [
     ["Day 1", "Digital marketing fundamentals and the funnel"],
@@ -201,7 +201,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
       "gis-and-drone-mapping": {
         title: "GIS and Drone Mapping Course Online in Ghana | Paleon",
         description:
-          "Learn GIS, QGIS, remote sensing and drone mapping online from Ghana: 9 days, 18 lessons and a sector capstone for mining, oil & gas and agriculture. {FEE}.",
+          "Learn GIS, QGIS, remote sensing and drone mapping online from Ghana: 9 days, 18 lessons, examples from mining, oil & gas and agriculture, and a final assessment. {FEE}.",
         h1: "GIS and Drone Mapping: online course for Ghana",
         intro:
           "Learn to capture, analyse and present location data with free GIS software (QGIS), satellite imagery and drone mapping. It is aimed at Ghanaian graduates in geography, geomatics, planning, agriculture, mining and environmental science, and at anyone who wants to turn maps into evidence for decisions.",
@@ -386,7 +386,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
       "gis-and-drone-mapping": {
         title: "GIS and Drone Mapping Course Online in Kenya | Paleon",
         description:
-          "Learn GIS, QGIS, remote sensing and drone mapping online from Kenya: 9 days, 18 lessons and a capstone for agriculture, energy and infrastructure. {FEE}.",
+          "Learn GIS, QGIS, remote sensing and drone mapping online from Kenya: 9 days, 18 lessons, examples from agriculture, energy and infrastructure, and a final assessment. {FEE}.",
         h1: "GIS and Drone Mapping: online course for Kenya",
         intro:
           "Learn to capture, analyse and present location data with QGIS, satellite imagery and drone mapping. It is aimed at Kenyan graduates in geography, geospatial engineering, planning, agriculture and environmental science, and at county and project staff who work with maps.",
@@ -569,7 +569,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
       "gis-and-drone-mapping": {
         title: "GIS and Drone Mapping Course Online in South Africa | Paleon",
         description:
-          "Learn GIS, QGIS, remote sensing and drone mapping online from South Africa: 9 days, 18 lessons and a capstone for mining, infrastructure and environment. {FEE}.",
+          "Learn GIS, QGIS, remote sensing and drone mapping online from South Africa: 9 days, 18 lessons, examples from mining, infrastructure and environment, and a final assessment. {FEE}.",
         h1: "GIS and Drone Mapping: online course for South Africa",
         intro:
           "Learn to capture, analyse and present location data with QGIS, satellite imagery and drone mapping. It is aimed at South African graduates in geography, geomatics, environmental science and town planning, and at people in mining, municipalities and consulting who work with spatial data.",
@@ -816,8 +816,8 @@ function localCourse(country: LocalCountry, slug: HomepageCourse): LocalCourse {
 }
 
 export function renderCountryCourse(country: LocalCountry, slug: HomepageCourse): string {
-  // Cyber Security Fundamentals and HSE Fundamentals end in a final assessment, not a capstone (2026-11-16).
-  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals";
+  // Cyber Security Fundamentals, HSE Fundamentals and GIS and Drone Mapping end in a final assessment, not a capstone (2026-11-16).
+  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals" || slug === "gis-and-drone-mapping";
   const c = COUNTRIES[country];
   const local = localCourse(country, slug);
   const info = COURSE_INFO[slug];
