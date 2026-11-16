@@ -1,11 +1,26 @@
 import { Course, CourseFeedback, Enrollment, User } from "../models";
 import { ApiError } from "../utils/ApiError";
+import { FeedbackQuestionnaire, questionnaireFor } from "../constants/feedbackQuestionnaires";
 
 export interface FeedbackInput {
   rating: number;
   comment: string;
   consentQuote: boolean;
   consentCapstone: boolean;
+  answers?: Record<string, string>;
+}
+
+// A questionnaire's multiple-choice questions must all be answered with one of their options.
+function checkAnswers(questionnaire: FeedbackQuestionnaire, answers: Record<string, string> | undefined) {
+  const out: Record<string, string> = {};
+  for (const question of questionnaire.choiceQuestions) {
+    const answer = answers?.[question.id];
+    if (!answer || !question.options.includes(answer)) {
+      throw ApiError.badRequest(`Please answer: ${question.text}`);
+    }
+    out[question.id] = answer;
+  }
+  return out;
 }
 
 // A student leaves (or updates) feedback on a course they've completed (2026-09-25).
@@ -18,8 +33,17 @@ export async function saveFeedback(enrollmentId: string, studentId: string, inpu
   if (enrollment.status !== "completed") {
     throw ApiError.forbidden("You can leave feedback once you've completed the course");
   }
+  const course = await Course.findByPk(enrollment.courseId, { attributes: ["slug"] });
+  const questionnaire = questionnaireFor(course?.slug);
   const existing = await CourseFeedback.findOne({ where: { enrollmentId } });
-  const values = { ...input, comment: input.comment.trim(), approved: false };
+  const values = {
+    rating: input.rating,
+    comment: input.comment.trim(),
+    consentQuote: input.consentQuote,
+    consentCapstone: questionnaire && !questionnaire.asksCapstoneConsent ? false : input.consentCapstone,
+    answers: questionnaire ? checkAnswers(questionnaire, input.answers) : null,
+    approved: false,
+  };
   if (existing) {
     await existing.update(values);
     return existing;
@@ -32,7 +56,18 @@ export async function getMyFeedback(enrollmentId: string, studentId: string) {
   if (!enrollment || enrollment.studentId !== studentId) {
     throw ApiError.notFound("Enrollment not found");
   }
-  return CourseFeedback.findOne({ where: { enrollmentId } });
+  const course = await Course.findByPk(enrollment.courseId, { attributes: ["slug"] });
+  const feedback = await CourseFeedback.findOne({ where: { enrollmentId } });
+  return { feedback, questionnaire: questionnaireFor(course?.slug) };
+}
+
+// Questionnaire answers as question/answer pairs, in the questionnaire's order.
+function questionnaireAnswers(courseSlug: string, answers: Record<string, string> | null) {
+  const questionnaire = questionnaireFor(courseSlug);
+  if (!questionnaire || !answers) return [];
+  return questionnaire.choiceQuestions
+    .filter((q) => answers[q.id])
+    .map((q) => ({ question: q.text, answer: answers[q.id] }));
 }
 
 export async function listFeedbackForAdmin() {
@@ -55,6 +90,7 @@ export async function listFeedbackForAdmin() {
       comment: f.comment,
       consentQuote: f.consentQuote,
       consentCapstone: f.consentCapstone,
+      answers: questionnaireAnswers(course.slug, f.answers),
       approved: f.approved,
       createdAt: f.createdAt,
     };

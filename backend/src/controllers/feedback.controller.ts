@@ -8,8 +8,8 @@ export const saveMyFeedback = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getMyFeedback = asyncHandler(async (req: Request, res: Response) => {
-  const feedback = await feedbackService.getMyFeedback(req.params.id, req.user!.id);
-  res.json({ feedback });
+  const { feedback, questionnaire } = await feedbackService.getMyFeedback(req.params.id, req.user!.id);
+  res.json({ feedback, questionnaire });
 });
 
 export const listForAdmin = asyncHandler(async (_req: Request, res: Response) => {

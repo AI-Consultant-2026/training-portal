@@ -21,11 +21,11 @@ async function tokenFor(email: string) {
   return res.body.accessToken as string;
 }
 
-async function setup(status: "active" | "completed" = "completed") {
+async function setup(status: "active" | "completed" = "completed", slug = "gis-and-drone-mapping") {
   const instructor = await makeUser("fb-instructor@example.com", "instructor");
   const course = await Course.create({
     title: "GIS and Drone Mapping",
-    slug: "gis-and-drone-mapping",
+    slug,
     durationWeeks: 9,
     status: "published",
     instructorId: instructor.id,
@@ -115,5 +115,44 @@ describe("Course feedback and learner testimonials", () => {
     const js = await request(app).get("/learner-voices.js");
     expect(js.status).toBe(200);
     expect(js.text).toContain("textContent");
+  });
+
+  // CyberSecure Workforce asks a five-question questionnaire (2026-11-16).
+  it("asks the CyberSecure Workforce questionnaire and requires its answers", async () => {
+    const { enrollment, studentToken, adminToken } = await setup("completed", "cybersecure-workforce-essentials");
+    const auth = { Authorization: `Bearer ${studentToken}` };
+    const asked = await request(app).get(`/api/enrollments/${enrollment.id}/feedback`).set(auth);
+    expect(asked.status).toBe(200);
+    expect(asked.body.questionnaire.choiceQuestions).toHaveLength(3);
+    expect(asked.body.questionnaire.asksCapstoneConsent).toBe(false);
+
+    const missing = await request(app).put(`/api/enrollments/${enrollment.id}/feedback`).set(auth).send(good);
+    expect(missing.status).toBe(400);
+
+    const answers = { relevance: "Very relevant", confidence: "Much more confident", ease: "Easy" };
+    const invalid = await request(app)
+      .put(`/api/enrollments/${enrollment.id}/feedback`)
+      .set(auth)
+      .send({ ...good, answers: { ...answers, ease: "Fine" } });
+    expect(invalid.status).toBe(400);
+
+    const saved = await request(app).put(`/api/enrollments/${enrollment.id}/feedback`).set(auth).send({ ...good, answers });
+    expect(saved.status).toBe(201);
+    const row = await CourseFeedback.findOne({ where: { enrollmentId: enrollment.id } });
+    expect(row?.answers).toEqual(answers);
+    expect(row?.consentCapstone).toBe(false);
+
+    const list = await request(app).get("/api/admin/feedback").set("Authorization", `Bearer ${adminToken}`);
+    expect(list.body.feedback[0].answers).toEqual([
+      { question: "How relevant was the course to your day-to-day work?", answer: "Very relevant" },
+      { question: "How confident do you now feel about spotting and reporting a cyber threat at work?", answer: "Much more confident" },
+      { question: "How easy was the course to follow?", answer: "Easy" },
+    ]);
+  });
+
+  it("asks no questionnaire on other courses", async () => {
+    const { enrollment, studentToken } = await setup();
+    const asked = await request(app).get(`/api/enrollments/${enrollment.id}/feedback`).set("Authorization", `Bearer ${studentToken}`);
+    expect(asked.body.questionnaire).toBeNull();
   });
 });

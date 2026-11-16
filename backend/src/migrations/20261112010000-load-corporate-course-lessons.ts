@@ -21,6 +21,16 @@ const MODULE_ASSESSMENT_MINUTES = 20;
 const FINAL_ASSESSMENT_MINUTES = 45;
 const INTRO_ASSESSMENT_MINUTES = 15;
 
+// The final assessment's description, by its number of questions (CyberSecure Workforce has 30
+// since 2026-11-16; see 20261116020000, which also updates it in existing databases).
+function finalDescription(count: number): string {
+  if (count === 25) {
+    return `Twenty-five questions covering the whole course, most of them workplace scenarios. Pass mark: 20 out of 25 (${PASS_MARK}%).`;
+  }
+  const pass = Math.ceil((count * PASS_MARK) / 100);
+  return `${count} multiple-choice questions covering the whole course, most of them workplace scenarios. Pass mark: ${pass} out of ${count} (${PASS_MARK}%).`;
+}
+
 async function findCourseId(queryInterface: QueryInterface, slug: string): Promise<string | null> {
   const [rows] = await queryInterface.sequelize.query(`SELECT id FROM courses WHERE slug = ?`, {
     replacements: [slug],
@@ -131,7 +141,7 @@ module.exports = {
           });
         });
 
-        if (mod.moduleNumber === 1) {
+        if (mod.moduleNumber === 1 && course.introAssessment.length > 0) {
           addQuiz(
             moduleId,
             "Introductory Assessment (not scored)",
@@ -155,7 +165,7 @@ module.exports = {
           addQuiz(
             moduleId,
             "Final Assessment",
-            `Twenty-five questions covering the whole course, most of them workplace scenarios. Pass mark: 20 out of 25 (${PASS_MARK}%).`,
+            finalDescription(course.finalAssessment.length),
             course.finalAssessment,
             PASS_MARK,
             FINAL_ASSESSMENT_MINUTES,
@@ -168,7 +178,7 @@ module.exports = {
       await queryInterface.bulkInsert("quizzes", quizRows);
       await queryInterface.bulkInsert("quiz_questions", questionRows);
       await queryInterface.bulkInsert("quiz_answers", answerRows);
-      await queryInterface.bulkInsert("capstones", [
+      if (course.capstone) await queryInterface.bulkInsert("capstones", [
         {
           id: crypto.randomUUID(),
           course_id: courseId,

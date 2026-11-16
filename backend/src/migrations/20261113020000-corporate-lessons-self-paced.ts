@@ -31,9 +31,11 @@ module.exports = {
           });
         }
       }
-      await q.query(`UPDATE capstones SET description = ? WHERE course_id = (SELECT id FROM courses WHERE slug = ?)`, {
-        replacements: [course.capstone.description, course.slug],
-      });
+      if (course.capstone) {
+        await q.query(`UPDATE capstones SET description = ? WHERE course_id = (SELECT id FROM courses WHERE slug = ?)`, {
+          replacements: [course.capstone.description, course.slug],
+        });
+      }
     }
     await q.query(`UPDATE quizzes SET description = replace(description, ?, ?) WHERE description LIKE ?`, {
       replacements: [INTRO_OLD, INTRO_NEW, `%${INTRO_OLD}%`],

@@ -138,15 +138,15 @@ describe("Gap between quiz attempts", () => {
 
 describe("Corporate course content", () => {
   it.each([
-    [CYBERSECURE_WORKFORCE, 13, 39],
-    [AI_WORKFLOW, 10, 30],
-    [AI_CYBER_ACCELERATOR, 12, 36],
-  ])("course %# has its modules, lessons and assessments", (course, modules, lessons) => {
+    [CYBERSECURE_WORKFORCE, 13, 39, 30, 0],
+    [AI_WORKFLOW, 10, 30, 25, 10],
+    [AI_CYBER_ACCELERATOR, 12, 36, 25, 10],
+  ])("course %# has its modules, lessons and assessments", (course, modules, lessons, finalCount, moduleCount) => {
     expect(course.modules).toHaveLength(modules);
     expect(course.modules.reduce((n, m) => n + m.lessons.length, 0)).toBe(lessons);
     expect(course.introAssessment).toHaveLength(10);
-    expect(course.finalAssessment).toHaveLength(25);
-    course.modules.slice(0, -1).forEach((m) => expect(m.assessment).toHaveLength(10));
+    expect(course.finalAssessment).toHaveLength(finalCount);
+    course.modules.slice(0, -1).forEach((m) => expect(m.assessment).toHaveLength(moduleCount));
     const all = [
       ...course.introAssessment,
       ...course.finalAssessment,
@@ -156,5 +156,53 @@ describe("Corporate course content", () => {
     const text = JSON.stringify(course);
     expect(text.split("Video coming soon:").length - 1).toBe(lessons);
     expect(text).not.toMatch(/Video placeholder|\*Answer:|Lagos|Nairobi|Johannesburg|Nigeria|Kenya|Ghana/);
+  });
+
+  // Owner's changes of 2026-11-16 (migration 20261116020000).
+  describe("CyberSecure Workforce", () => {
+    const lessons = CYBERSECURE_WORKFORCE.modules.flatMap((m) => m.lessons);
+    const text = JSON.stringify(CYBERSECURE_WORKFORCE);
+
+    it("has no module quizzes or project, and a 30-question multiple-choice final across eight topics", () => {
+      expect(CYBERSECURE_WORKFORCE.capstone).toBeUndefined();
+      expect(CYBERSECURE_WORKFORCE.modules.every((m) => m.assessment.length === 0)).toBe(true);
+      expect(CYBERSECURE_WORKFORCE.finalAssessment.every((q) => q.type === "multiple_choice")).toBe(true);
+      expect(new Set(CYBERSECURE_WORKFORCE.finalAssessment.map((q) => q.text)).size).toBe(30);
+      const final = lessons[lessons.length - 1].content;
+      const counts = [...final.matchAll(/^\| ([A-Z][^|]+) \| (\d+) \|$/gm)].map((m) => [m[1], Number(m[2])]);
+      expect(counts).toEqual([
+        ["Cybersecurity fundamentals", 3],
+        ["Phishing and social engineering", 5],
+        ["Passwords and authentication", 3],
+        ["Data protection and confidentiality", 4],
+        ["Device, network and remote working security", 4],
+        ["Malware and ransomware", 4],
+        ["AI security and responsible use", 3],
+        ["Incident identification and reporting", 4],
+      ]);
+      expect(final).toContain("Pass mark: 24 out of 30 (80%).");
+      expect(text).not.toMatch(/Module \d+ Assessment|Action Plan|action plan|25 questions/);
+    });
+
+    it("gives every knowledge check one multiple-choice, one true-or-false and one scenario question", () => {
+      const checks = lessons.filter((l) => l.content.includes("**Knowledge check"));
+      expect(checks).toHaveLength(37);
+      for (const l of checks) {
+        const block = l.content.split(/\*\*Knowledge check [\d.]+\*\*/)[1].split("\n---\n")[0].split("\n## ")[0];
+        const questions = block.split(/\n\n(?=\*\*\d\.\*\* )/).filter((q) => /^\*\*\d\.\*\* /.test(q.trim()));
+        expect(questions).toHaveLength(3);
+        expect(questions[0]).toMatch(/\n- A\. /);
+        expect(questions[1]).toMatch(/True or false:/);
+        expect(questions[1]).not.toMatch(/\n- A\. /);
+        expect(questions[2]).toMatch(/\n- A\. /);
+      }
+    });
+
+    it("has three learner reflections and the five-question feedback questionnaire at the end", () => {
+      expect(text.match(/\*\*Reflection \d of 3\.\*\*/g)).toHaveLength(3);
+      const final = lessons[lessons.length - 1].content;
+      expect(final).toContain("## Course feedback questionnaire");
+      expect(final.match(/^\d\. /gm)?.length).toBeGreaterThanOrEqual(5);
+    });
   });
 });

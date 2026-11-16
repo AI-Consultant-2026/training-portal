@@ -25,6 +25,7 @@ export interface CorporateCourseSeed {
   title: string;
   introAssessment: QuestionSeed[];
   finalAssessment: QuestionSeed[];
-  capstone: { title: string; description: string };
+  // CyberSecure Workforce has no project since 2026-11-16; its final assessment replaces it.
+  capstone?: { title: string; description: string };
   modules: CorporateModuleSeed[];
 }

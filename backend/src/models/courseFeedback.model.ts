@@ -9,6 +9,8 @@ export interface CourseFeedbackAttributes {
   comment: string;
   consentQuote: boolean;
   consentCapstone: boolean;
+  // Questionnaire answers by question id (constants/feedbackQuestionnaires.ts), or null.
+  answers: Record<string, string> | null;
   approved: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -16,7 +18,7 @@ export interface CourseFeedbackAttributes {
 
 export type CourseFeedbackCreationAttributes = Optional<
   CourseFeedbackAttributes,
-  "id" | "consentQuote" | "consentCapstone" | "approved" | "createdAt" | "updatedAt"
+  "id" | "consentQuote" | "consentCapstone" | "answers" | "approved" | "createdAt" | "updatedAt"
 >;
 
 export class CourseFeedback
@@ -31,6 +33,7 @@ export class CourseFeedback
   declare comment: string;
   declare consentQuote: boolean;
   declare consentCapstone: boolean;
+  declare answers: Record<string, string> | null;
   declare approved: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -47,6 +50,7 @@ export function initCourseFeedbackModel(sequelize: Sequelize) {
       comment: { type: DataTypes.TEXT, allowNull: false },
       consentQuote: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
       consentCapstone: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+      answers: { type: DataTypes.JSONB, allowNull: true },
       approved: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     },
     { sequelize, modelName: "CourseFeedback", tableName: "course_feedback", underscored: true, timestamps: true },
