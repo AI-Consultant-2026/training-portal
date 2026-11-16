@@ -34,4 +34,21 @@ describe("Data Analytics & BI curriculum", () => {
   it("keeps the daily question banks (30 a day, 20 on the capstone day)", () => {
     for (const w of WEEKS) expect(w.quizQuestions).toHaveLength(w.weekNumber === 18 ? 20 : 30);
   });
+
+  it("has an accessible illustration under each part heading (two per lesson)", () => {
+    for (const l of lessons) {
+      const paras = l.content.split("\n\n");
+      expect(l.images).toHaveLength(2);
+      l.images!.forEach((img, i) => {
+        expect(img.url).toMatch(/^data:image\/svg\+xml;base64,/);
+        const svg = Buffer.from(img.url.split(",")[1], "base64").toString("utf8");
+        expect(svg).toMatch(/role="img" aria-labelledby="t"/);
+        expect(svg).toMatch(/<title id="t">[^<]{20,}<\/title>/);
+        expect(img.caption.length).toBeGreaterThan(20);
+        const heading = paras.findIndex((p) => p.startsWith(`### Part ${i + 1}: `));
+        expect(img.afterParagraph).toBeGreaterThanOrEqual(heading);
+        expect(img.afterParagraph).toBeLessThanOrEqual(heading + 1);
+      });
+    }
+  });
 });

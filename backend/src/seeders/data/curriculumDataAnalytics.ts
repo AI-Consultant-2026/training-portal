@@ -1,4 +1,5 @@
 import { WeekSeed } from "./curriculumTypes";
+import { DA_LESSON_IMAGES } from "./curriculumDataAnalyticsImages";
 
 // Data Analytics & Business Intelligence: 18 days, 2 lessons a day (36 lessons). Until
 // 2026-11-15 each day had 4 lessons; on the owner's request each pair was merged into one
@@ -13489,3 +13490,8 @@ export const WEEKS: WeekSeed[] = [
     ]
   }
 ];
+
+// One illustration per part, kept in their own file because of their size.
+for (const week of WEEKS) {
+  for (const lesson of week.lessons) lesson.images = DA_LESSON_IMAGES[`${week.weekNumber}.${lesson.order}`] ?? [];
+}
