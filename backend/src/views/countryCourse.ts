@@ -108,7 +108,7 @@ const OUTLINE: Record<HomepageCourse, [string, string][]> = {
     ["Day 5", "Google Ads: structure, bidding, ad copy and tracking"],
     ["Day 6", "Analytics, attribution and marketing ROI"],
     ["Day 7", "E-commerce marketing, automation and CRM"],
-    ["Day 8", "Integrated strategy and your capstone plan"],
+    ["Day 8", "Integrated strategy and your final assessment"],
   ],
   "hse-fundamentals": [
     ["Day 1", "Core HSE concepts, using oil &amp; gas as the setting"],
@@ -231,7 +231,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
       "digital-marketing": {
         title: "Digital Marketing Course Online in Ghana | Paleon Training",
         description:
-          "Practical digital marketing course for learners in Ghana: SEO, Google Ads, content, email and analytics. 8 days, 16 video lessons and a capstone. {FEE}.",
+          "Practical digital marketing course for learners in Ghana: SEO, Google Ads, content, email and analytics. 8 days, 16 video lessons and a final assessment. {FEE}.",
         h1: "Digital Marketing: online course for Ghana",
         intro:
           "A practical course in attracting customers online and proving what works: SEO, Google Ads, content, email, analytics and automation. It suits Ghanaian graduates aiming for marketing roles in banks, telcos and growing businesses, and anyone selling a product or service online.",
@@ -250,7 +250,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Electronic Transactions Act, 2008 (Act 772)", what: "Covers electronic communications and online transactions, including unsolicited electronic messages." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished the course and its capstone campaign plan. It is not a Google Ads certification or a professional marketing qualification such as CIM, though the course prepares you well for Google's free certifications.",
+          "Your Paleon certificate of completion shows you finished the course. It is not a Google Ads certification or a professional marketing qualification such as CIM, though the course prepares you well for Google's free certifications.",
         faqs: [
           ["Is it suitable for beginners?", "Yes. It starts with the marketing funnel and builds up to SEO, paid search, analytics and automation."],
           ["Does it cover Google Ads and SEO?", "Yes, each has its own lesson, along with content, email and analytics."],
@@ -416,7 +416,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
       "digital-marketing": {
         title: "Digital Marketing Course Online in Kenya | Paleon Training",
         description:
-          "Practical digital marketing course for learners in Kenya: SEO, Google Ads, content, email and analytics. 8 days, 16 video lessons and a capstone. {FEE}.",
+          "Practical digital marketing course for learners in Kenya: SEO, Google Ads, content, email and analytics. 8 days, 16 video lessons and a final assessment. {FEE}.",
         h1: "Digital Marketing: online course for Kenya",
         intro:
           "A practical course in attracting customers online and proving what works: SEO, Google Ads, content, email, analytics and automation. It suits Kenyan graduates aiming for marketing roles in fintech, retail and agencies, and business owners who sell online.",
@@ -434,7 +434,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Data Protection Act, 2019", what: "Sets rules for using personal data in marketing, including direct marketing; enforced by the ODPC." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished the course and its capstone campaign plan. It is not NITA-accredited and it is not a Google Ads certification, though the course prepares you well for Google's free certifications.",
+          "Your Paleon certificate of completion shows you finished the course. It is not NITA-accredited and it is not a Google Ads certification, though the course prepares you well for Google's free certifications.",
         faqs: [
           ["Is it suitable for beginners?", "Yes. It starts with the marketing funnel and builds up to SEO, paid search, analytics and automation."],
           ["Does it cover Google Ads and SEO?", "Yes, each has its own lesson."],
@@ -618,7 +618,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Consumer Protection Act 68 of 2008", what: "Covers fair marketing and consumers' right to block direct marketing." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished the course and its capstone campaign plan. It is not a QCTO-registered qualification or a Google Ads certification, though the course prepares you well for Google's free certifications.",
+          "Your Paleon certificate of completion shows you finished the course. It is not a QCTO-registered qualification or a Google Ads certification, though the course prepares you well for Google's free certifications.",
         faqs: [
           ["Is it suitable for beginners?", "Yes. It starts with the marketing funnel and builds up to SEO, paid search, analytics and automation."],
           ["Does it cover POPIA for email marketing?", "The email lesson covers list building, consent and deliverability in general terms. Read POPIA section 69 alongside it before emailing South African contacts."],
@@ -816,8 +816,8 @@ function localCourse(country: LocalCountry, slug: HomepageCourse): LocalCourse {
 }
 
 export function renderCountryCourse(country: LocalCountry, slug: HomepageCourse): string {
-  // Cyber Security Fundamentals, HSE Fundamentals and GIS and Drone Mapping end in a final assessment, not a capstone (2026-11-16).
-  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals" || slug === "gis-and-drone-mapping";
+  // Cyber Security Fundamentals, HSE Fundamentals, GIS and Drone Mapping and Digital Marketing end in a final assessment, not a capstone (2026-11-16).
+  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals" || slug === "gis-and-drone-mapping" || slug === "digital-marketing";
   const c = COUNTRIES[country];
   const local = localCourse(country, slug);
   const info = COURSE_INFO[slug];
