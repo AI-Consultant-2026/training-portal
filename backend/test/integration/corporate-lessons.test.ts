@@ -140,7 +140,7 @@ describe("Corporate course content", () => {
   it.each([
     [CYBERSECURE_WORKFORCE, 13, 39, 30, 0],
     [AI_WORKFLOW, 10, 30, 30, 0],
-    [AI_CYBER_ACCELERATOR, 12, 36, 25, 10],
+    [AI_CYBER_ACCELERATOR, 12, 36, 40, 0],
   ])("course %# has its modules, lessons and assessments", (course, modules, lessons, finalCount, moduleCount) => {
     expect(course.modules).toHaveLength(modules);
     expect(course.modules.reduce((n, m) => n + m.lessons.length, 0)).toBe(lessons);
@@ -256,6 +256,74 @@ describe("Corporate course content", () => {
     it("gives every knowledge check one multiple-choice, one true-or-false and one scenario question", () => {
       const checks = lessons.filter((l) => l.content.includes("**Knowledge check"));
       expect(checks).toHaveLength(28);
+      for (const l of checks) {
+        const block = l.content.split(/\*\*Knowledge check [\d.]+\*\*/)[1].split("\n---\n")[0].split("\n## ")[0];
+        const questions = block.split(/\n\n(?=\*\*\d\.\*\* )/).filter((q) => /^\*\*\d\.\*\* /.test(q.trim()));
+        expect(questions).toHaveLength(3);
+        expect(questions[0]).toMatch(/\n- A\. /);
+        expect(questions[1]).toMatch(/True or false:/);
+        expect(questions[1]).not.toMatch(/\n- A\. /);
+        expect(questions[2]).toMatch(/\n- A\. /);
+      }
+    });
+
+    it("has three learner reflections and the five-question feedback questionnaire at the end", () => {
+      expect(text.match(/\*\*Reflection \d of 3\.\*\*/g)).toHaveLength(3);
+      expect(lessons[lessons.length - 1].content).toContain("## Course feedback questionnaire");
+    });
+  });
+
+  // Owner's changes of 2026-11-16 (migration 20261116050000).
+  describe("AI + Cybersecurity Professional Accelerator", () => {
+    const lessons = AI_CYBER_ACCELERATOR.modules.flatMap((m) => m.lessons);
+    const text = JSON.stringify(AI_CYBER_ACCELERATOR);
+
+    it("has no module quizzes, and a 40-question final in the owner's format and topics", () => {
+      expect(AI_CYBER_ACCELERATOR.modules.every((m) => m.assessment.length === 0)).toBe(true);
+      const final = AI_CYBER_ACCELERATOR.finalAssessment;
+      const trueFalse = final.filter((q) => q.type === "true_false");
+      const scenarios = final.filter((q) => q.text.startsWith("Scenario:"));
+      expect(trueFalse).toHaveLength(4);
+      expect(scenarios).toHaveLength(4);
+      expect(final.length - trueFalse.length - scenarios.length).toBe(32);
+      expect(new Set(final.map((q) => q.text)).size).toBe(40);
+      const last = lessons[lessons.length - 1].content;
+      const counts = [...last.matchAll(/^\| ([A-Z][^|*]+) \| (\d+) \|$/gm)].map((m) => [m[1], Number(m[2])]);
+      expect(counts).toEqual([
+        ["AI fundamentals and applications", 5],
+        ["Advanced prompt engineering", 5],
+        ["AI productivity and workflow automation", 5],
+        ["Data analytics and AI-assisted decisions", 4],
+        ["Cybersecurity fundamentals", 4],
+        ["Threat identification and risk management", 5],
+        ["Data protection and AI governance", 4],
+        ["AI security and responsible implementation", 4],
+        ["Integrated business scenarios", 4],
+      ]);
+      expect(last).toContain("32 out of 40 (80%)");
+      expect(text).not.toMatch(/Module \d+ Assessment|module assessments|25 questions/);
+    });
+
+    it("has one integrated capstone covering eight areas, marked out of 100 with a pass of 70", () => {
+      expect(AI_CYBER_ACCELERATOR.capstone?.description).toMatch(/fictional organisation.*pass mark 70/);
+      const brief = lessons.find((l) => l.title === "The capstone project")!.content;
+      const areas = brief.split("## What your proposal must cover")[1].split("\n## ")[0];
+      expect(areas.match(/^\d\. \*\*/gm)).toHaveLength(8);
+      const marks = [...brief.matchAll(/^\| \d\. ([^|]+) \| (\d+) \|/gm)].map((m) => [m[1].trim(), Number(m[2])]);
+      expect(marks).toEqual([
+        ["Business problem analysis", 15],
+        ["AI implementation recommendations", 20],
+        ["Cybersecurity risk assessment", 20],
+        ["Governance and security controls", 20],
+        ["Implementation roadmap", 15],
+        ["Presentation and professional recommendations", 10],
+      ]);
+      expect(brief).toContain("**Pass: 70 out of 100.**");
+    });
+
+    it("gives every knowledge check one multiple-choice, one true-or-false and one scenario question", () => {
+      const checks = lessons.filter((l) => l.content.includes("**Knowledge check"));
+      expect(checks).toHaveLength(35);
       for (const l of checks) {
         const block = l.content.split(/\*\*Knowledge check [\d.]+\*\*/)[1].split("\n---\n")[0].split("\n## ")[0];
         const questions = block.split(/\n\n(?=\*\*\d\.\*\* )/).filter((q) => /^\*\*\d\.\*\* /.test(q.trim()));

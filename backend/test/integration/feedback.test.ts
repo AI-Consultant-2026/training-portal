@@ -164,6 +164,18 @@ describe("Course feedback and learner testimonials", () => {
     expect(row?.consentCapstone).toBe(true);
   });
 
+  it.each(["ai-workflow-productivity", "ai-cybersecurity-professional-accelerator"])(
+    "the %s questionnaire also has three choice questions and keeps the capstone permission",
+    async (slug) => {
+      const { enrollment, studentToken } = await setup("completed", slug);
+      const asked = await request(app)
+        .get(`/api/enrollments/${enrollment.id}/feedback`)
+        .set("Authorization", `Bearer ${studentToken}`);
+      expect(asked.body.questionnaire.choiceQuestions).toHaveLength(3);
+      expect(asked.body.questionnaire.asksCapstoneConsent).toBe(true);
+    },
+  );
+
   it("asks no questionnaire on other courses", async () => {
     const { enrollment, studentToken } = await setup();
     const asked = await request(app).get(`/api/enrollments/${enrollment.id}/feedback`).set("Authorization", `Bearer ${studentToken}`);
