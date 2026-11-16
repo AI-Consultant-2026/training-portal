@@ -21,10 +21,10 @@ async function tokenFor(email: string) {
   return res.body.accessToken as string;
 }
 
-async function setup(status: "active" | "completed" = "completed", slug = "digital-marketing") {
+async function setup(status: "active" | "completed" = "completed", slug = "renewable-energy-digital-systems") {
   const instructor = await makeUser("fb-instructor@example.com", "instructor");
   const course = await Course.create({
-    title: "Digital Marketing",
+    title: "Renewable Energy",
     slug,
     durationWeeks: 8,
     status: "published",
@@ -76,9 +76,9 @@ describe("Course feedback and learner testimonials", () => {
       .patch(`/api/admin/feedback/${list.body.feedback[0].id}`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({ approved: true });
-    const pub = await request(app).get("/api/testimonials?course=digital-marketing");
+    const pub = await request(app).get("/api/testimonials?course=renewable-energy-digital-systems");
     expect(pub.body.testimonials).toEqual([
-      { name: "Chidi O.", courseTitle: "Digital Marketing", courseSlug: "digital-marketing", rating: 5, comment: good.comment },
+      { name: "Chidi O.", courseTitle: "Renewable Energy", courseSlug: "renewable-energy-digital-systems", rating: 5, comment: good.comment },
     ]);
     expect(JSON.stringify(pub.body)).not.toContain("fb-student@example.com");
     expect((await request(app).get("/api/testimonials?course=hse-fundamentals")).body.testimonials).toEqual([]);
