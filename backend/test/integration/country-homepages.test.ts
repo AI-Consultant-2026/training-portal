@@ -68,7 +68,7 @@ describe("Country homepages", () => {
       expect(da).toBeDefined();
       expect(da).toContain(`<span class="price-value">${fee}</span>`);
       expect(da).toContain(`or start with ${deposit}`);
-      expect(da).toContain("<li>18 days</li><li>36 lessons</li><li>Beginner</li>");
+      expect(da).toContain("<li>12 days</li><li>24 lessons</li><li>Beginner</li>");
       expect(da).toContain("Free lesson");
       expect(da).toContain("data-analytics-business-intelligence-course");
       expect(res.text).toContain("Six fields. Real depth in each.");

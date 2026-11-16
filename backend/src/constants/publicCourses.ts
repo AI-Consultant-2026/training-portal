@@ -71,14 +71,14 @@ export const PUBLIC_COURSES: PublicCourse[] = [
       "How AI learns from data, and Python for data analysis",
       "Supervised and unsupervised machine learning with scikit-learn",
       "Generative AI, prompt engineering and AI automation",
-      "Responsible AI, AI security and a capstone project you present",
+      "Responsible AI, AI security and a 30-question final assessment",
     ],
   },
   {
     slug: "data-analytics-business-intelligence",
     title: "Data Analytics & Business Intelligence",
-    days: 18,
-    lessons: 36,
+    days: 12,
+    lessons: 24,
     highlights: [
       "Data types, data quality and cleaning data in Excel",
       "SQL queries, joins and business metrics",
