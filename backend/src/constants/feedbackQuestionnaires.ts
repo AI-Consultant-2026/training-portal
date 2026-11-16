@@ -83,6 +83,28 @@ export const FEEDBACK_QUESTIONNAIRES: Record<string, FeedbackQuestionnaire> = {
     commentQuestion: "What was most useful, and what one thing should we improve?",
     asksCapstoneConsent: true,
   },
+  "cyber-security-fundamentals": {
+    ratingQuestion: "Overall, how would you rate this course?",
+    choiceQuestions: [
+      {
+        id: "relevance",
+        text: "How relevant was the course to the job or career you want?",
+        options: ["Very relevant", "Mostly relevant", "Slightly relevant", "Not relevant"],
+      },
+      {
+        id: "confidence",
+        text: "How confident do you now feel about spotting and reporting a cyber threat?",
+        options: ["Much more confident", "A little more confident", "About the same", "Less confident"],
+      },
+      {
+        id: "ease",
+        text: "How easy was the course to follow?",
+        options: ["Very easy", "Easy", "Difficult", "Very difficult"],
+      },
+    ],
+    commentQuestion: "What was most useful, and what one thing should we improve?",
+    asksCapstoneConsent: false,
+  },
 };
 
 export function questionnaireFor(courseSlug: string | null | undefined): FeedbackQuestionnaire | null {

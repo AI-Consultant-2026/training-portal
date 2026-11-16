@@ -124,6 +124,33 @@ describe("Day gate: quiz + assignment before the day's next lesson", () => {
     expect(res.status).toBe(403);
   });
 
+  it("leaves a course's Final Assessment out of the day gate", async () => {
+    const { day1, lesson2, quiz, assignment, student, token } = await setUpDay("gate-final@example.com");
+    await Quiz.create({
+      moduleId: day1.id,
+      title: "Final Assessment",
+      passingScore: 80,
+      questionCount: 30,
+      shuffleQuestions: true,
+    });
+    await submitQuiz(quiz.id, student.id);
+    await submitAssignment(assignment.id, student.id);
+    const res = await request(app).get(`/api/lessons/${lesson2.id}`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+  });
+
+  it("asks only for the quiz when the day has no assignment", async () => {
+    const { lesson2, quiz, assignment, student, token } = await setUpDay("gate-no-assignment@example.com");
+    await assignment.destroy();
+    const blocked = await request(app).get(`/api/lessons/${lesson2.id}`).set("Authorization", `Bearer ${token}`);
+    expect(blocked.status).toBe(403);
+    expect(blocked.body.error.message).toBe("Complete this day's quiz to proceed to the next lesson.");
+    expect(blocked.body.error.details.assignments).toEqual([]);
+    await submitQuiz(quiz.id, student.id);
+    const open = await request(app).get(`/api/lessons/${lesson2.id}`).set("Authorization", `Bearer ${token}`);
+    expect(open.status).toBe(200);
+  });
+
   it("ignores an admin-disabled quiz", async () => {
     const { lesson2, quiz, assignment, student, token } = await setUpDay("gate-disabled@example.com");
     await quiz.update({ isEnabled: false });

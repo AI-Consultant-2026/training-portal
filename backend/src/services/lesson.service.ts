@@ -110,7 +110,7 @@ export async function getLessonForStudent(id: string, requester: { id: string; r
 
   const taskGate = await getLessonTaskGate(lesson, requester.id);
   if (taskGate) {
-    throw new ApiError(403, MODULE_TASKS_INCOMPLETE_MESSAGE, {
+    throw new ApiError(403, moduleTasksIncompleteMessage(taskGate), {
       code: MODULE_TASKS_INCOMPLETE_CODE,
       ...taskGate,
     });
@@ -134,6 +134,13 @@ export const BALANCE_REQUIRED_MESSAGE =
 export const MODULE_TASKS_INCOMPLETE_CODE = "MODULE_TASKS_INCOMPLETE";
 export const MODULE_TASKS_INCOMPLETE_MESSAGE =
   "Complete this day's quiz and assignment to proceed to the next lesson.";
+// Courses without day assignments (Cyber Security Fundamentals from 2026-11-16).
+export const MODULE_QUIZ_INCOMPLETE_MESSAGE = "Complete this day's quiz to proceed to the next lesson.";
+export const FINAL_ASSESSMENT_TITLE = "Final Assessment";
+
+export function moduleTasksIncompleteMessage(status: Pick<ModuleTaskStatus, "assignments">): string {
+  return status.assignments.length > 0 ? MODULE_TASKS_INCOMPLETE_MESSAGE : MODULE_QUIZ_INCOMPLETE_MESSAGE;
+}
 
 export interface ModuleTaskItem {
   id: string;
@@ -150,7 +157,11 @@ export interface ModuleTaskStatus {
 
 export async function getModuleTaskStatus(moduleId: string, studentId: string): Promise<ModuleTaskStatus> {
   const [quizzes, assignments] = await Promise.all([
-    Quiz.findAll({ where: { moduleId, isEnabled: true }, order: [["createdAt", "ASC"]] }),
+    // A course's Final Assessment sits in its last day but is not a day task (2026-11-16).
+    Quiz.findAll({
+      where: { moduleId, isEnabled: true, title: { [Op.ne]: FINAL_ASSESSMENT_TITLE } },
+      order: [["createdAt", "ASC"]],
+    }),
     Assignment.findAll({ where: { moduleId }, order: [["createdAt", "ASC"]] }),
   ]);
   const [attempts, submissions] = await Promise.all([
@@ -436,7 +447,7 @@ export async function markLessonComplete(
   // complete straight through the API, which would then exempt it from the gate.
   const taskGate = await getLessonTaskGate(lesson, studentId);
   if (taskGate) {
-    throw new ApiError(403, MODULE_TASKS_INCOMPLETE_MESSAGE, {
+    throw new ApiError(403, moduleTasksIncompleteMessage(taskGate), {
       code: MODULE_TASKS_INCOMPLETE_CODE,
       ...taskGate,
     });

@@ -18,6 +18,8 @@ export function DayTasksDialog({
   closeLabel?: string;
 }) {
   const dayLabel = dayNumber !== undefined ? `Day ${dayNumber}` : "this day";
+  // Some courses have no day assignments, so only name what the day actually has.
+  const tasks = gate.assignments.length > 0 ? "quiz and assignment" : "quiz";
 
   return (
     <div
@@ -28,10 +30,10 @@ export function DayTasksDialog({
     >
       <div className="w-full max-w-md rounded-lg bg-white p-5 shadow-lg">
         <p id="day-tasks-title" className="text-base font-semibold text-gray-900">
-          Complete the quiz and assignment first
+          Complete the {tasks} first
         </p>
         <p className="mt-2 text-sm text-gray-700">
-          Please complete {dayLabel}&rsquo;s quiz and assignment to proceed to the next lesson.
+          Please complete {dayLabel}&rsquo;s {tasks} to proceed to the next lesson.
         </p>
         <ul className="mt-4 flex flex-col gap-2">
           {gate.quizzes.map((q) => (
