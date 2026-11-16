@@ -816,8 +816,8 @@ function localCourse(country: LocalCountry, slug: HomepageCourse): LocalCourse {
 }
 
 export function renderCountryCourse(country: LocalCountry, slug: HomepageCourse): string {
-  // Cyber Security Fundamentals ends in a final assessment, not a capstone (2026-11-16).
-  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals";
+  // Cyber Security Fundamentals and HSE Fundamentals end in a final assessment, not a capstone (2026-11-16).
+  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals";
   const c = COUNTRIES[country];
   const local = localCourse(country, slug);
   const info = COURSE_INFO[slug];
