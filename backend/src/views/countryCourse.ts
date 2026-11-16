@@ -190,7 +190,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Bank of Ghana Cyber and Information Security Directive", what: "Sets security expectations for banks and other regulated financial institutions." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished the course and its capstone. It is not a Cyber Security Authority accreditation or licence, and it is not an international certification such as CompTIA Security+ or ISC2 CC; many learners use this course as the foundation before attempting those.",
+          "Your Paleon certificate of completion shows you finished the course. It is not a Cyber Security Authority accreditation or licence, and it is not an international certification such as CompTIA Security+ or ISC2 CC; many learners use this course as the foundation before attempting those.",
         faqs: [
           ["Do I need an IT background?", "No. The course starts from what cybersecurity protects and why, and builds up to networks, cloud and incident response. You need a phone or laptop and an internet connection."],
           ["Does it cover Ghanaian law?", "The lessons teach data protection and incident reporting in general terms, with Nigerian regulation as the worked example. This page lists the Ghanaian laws and regulators to read alongside the course: Act 1038, Act 843 and the Bank of Ghana directive."],
@@ -375,7 +375,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Central Bank of Kenya cybersecurity guidance", what: "Sets out what banks and payment service providers must do to manage cyber risk." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished the course and its capstone. It is not NITA-accredited and it is not an international certification such as CompTIA Security+ or ISC2 CC; many learners use this course as the foundation before attempting those.",
+          "Your Paleon certificate of completion shows you finished the course. It is not NITA-accredited and it is not an international certification such as CompTIA Security+ or ISC2 CC; many learners use this course as the foundation before attempting those.",
         faqs: [
           ["Do I need an IT background?", "No. The course starts from first principles and builds up to networks, cloud security and incident response."],
           ["Does it cover Kenyan law?", "The lessons teach data protection and incident reporting in general terms, with Nigerian regulation as the worked example. Read Kenya's Data Protection Act 2019 and the Computer Misuse and Cybercrimes Act 2018 alongside the course."],
@@ -558,7 +558,7 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Cybercrimes Act 19 of 2020", what: "Defines cybercrimes and sets duties on reporting certain offences." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished the course and its capstone. It is not a QCTO-registered qualification and it is not an international certification such as CompTIA Security+ or ISC2 CC; many learners use this course as the foundation before attempting those.",
+          "Your Paleon certificate of completion shows you finished the course. It is not a QCTO-registered qualification and it is not an international certification such as CompTIA Security+ or ISC2 CC; many learners use this course as the foundation before attempting those.",
         faqs: [
           ["Do I need an IT background?", "No. The course starts from first principles and builds up to networks, cloud security and incident response."],
           ["Does it cover POPIA?", "The data protection lesson covers classification, encryption and breach notification in general terms, with Nigerian regulation as the worked example. Read POPIA and the Information Regulator's guidance alongside it."],
@@ -816,6 +816,8 @@ function localCourse(country: LocalCountry, slug: HomepageCourse): LocalCourse {
 }
 
 export function renderCountryCourse(country: LocalCountry, slug: HomepageCourse): string {
+  // Cyber Security Fundamentals ends in a final assessment, not a capstone (2026-11-16).
+  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals";
   const c = COUNTRIES[country];
   const local = localCourse(country, slug);
   const info = COURSE_INFO[slug];
@@ -886,11 +888,19 @@ ${header(ctx, home)}
         <thead><tr><th scope="col">Day</th><th scope="col">Topic</th></tr></thead>
         <tbody>${OUTLINE[slug].map(([d, t]) => `<tr><td>${d}</td><td>${t}</td></tr>`).join("")}</tbody>
       </table>
-      <p>Every lesson is illustrated and has a matching video. Each day ends with a short quiz and an assignment, and the course finishes with a capstone project you can show employers. It is self-paced with lifetime access, and you can try the <a href="${previewHref(country, slug)}">first lesson free</a> before paying.</p>
+      <p>Every lesson is illustrated and has a matching video. ${
+        isFinalAssessmentCourse
+          ? "Every lesson has a short knowledge check, each day ends with a quiz, and the course finishes with a 30-question final assessment (pass mark 80%)."
+          : "Each day ends with a short quiz and an assignment, and the course finishes with a capstone project you can show employers."
+      } It is self-paced with lifetime access, and you can try the <a href="${previewHref(country, slug)}">first lesson free</a> before paying.</p>
 
       <h2 class="section-title">Your certificate, and what it isn&rsquo;t</h2>
       <p>${local.certificateNote}</p>
-      <p>When you finish, including the capstone, we help you write a CV that presents your project as real work, and provide a reference confirming what you completed. We teach skills; we don&rsquo;t promise jobs.</p>
+      <p>${
+        isFinalAssessmentCourse
+          ? "When you finish and pass the final assessment, we help you write a CV that presents your skills"
+          : "When you finish, including the capstone, we help you write a CV that presents your project as real work"
+      }, and provide a reference confirming what you completed. We teach skills; we don&rsquo;t promise jobs.</p>
 
       <h2 class="section-title">Who runs the course</h2>
       <p>Paleon Training Limited is an online training company registered in Nigeria (Warri, Delta State), with operations in the United Kingdom. There is no Paleon office in ${escapeHtml(c.name)}: the course is taught entirely online, and you can reach us by WhatsApp on ${escapeHtml(c.site.whatsapp.display)} or at <a href="mailto:hello@paleontraining.com">hello@paleontraining.com</a>.</p>

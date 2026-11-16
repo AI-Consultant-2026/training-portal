@@ -207,7 +207,7 @@ function extraFaqs(code: CountryCode): { q: string; a: string }[] {
     },
     {
       q: "When can our team start?",
-      a: `${cohortSentence("accelerator")}${hasOnboardingSlots("accelerator") ? " Reserve an onboarding slot now and we will agree the participants and the capstone challenge with you in advance." : ""}`,
+      a: `${cohortSentence("accelerator")}${hasOnboardingSlots("accelerator") ? " Reserve an onboarding slot now and we will agree the participants with you in advance." : ""}`,
     },
     {
       q: "How much does the AI + Cybersecurity Professional Accelerator cost?",
@@ -250,7 +250,7 @@ function whereWeTrain(code: CountryCode): string {
       <h2 class="section-title" id="where-title">${WHO_WE_SERVE}</h2>
       ${cohortNotice("accelerator")}
       <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Paleon Training runs the AI + Cybersecurity Professional Accelerator for IT, security, risk, data and digital teams across ${escapeHtml(country)}, fully online. ${escapeHtml(how)}</p>
-      <p class="ca-p">Scenarios and the capstone are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services. Need cybersecurity awareness for every employee now? <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a> is available today.</p>
+      <p class="ca-p">Examples and scenarios are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services. Need cybersecurity awareness for every employee now? <a href="${cyberSecurePath(code)}"><strong>CyberSecure Workforce</strong></a> is available today.</p>
       <div class="ca-ctas">${reserveButton("accelerator")}${callButton(false)}</div>
     </div>
   </section>`;

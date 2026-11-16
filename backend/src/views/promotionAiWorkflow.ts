@@ -273,11 +273,11 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
       <div class="ca-body">
         <span class="section-eyebrow">What it is</span>
         <h2 class="section-title" id="what-title">Practical AI training, built around your real work</h2>
-        <p class="ca-p">AI Workflow Productivity &amp; Process Transformation is a corporate training programme that teaches employees in every department to use generative AI tools, such as ChatGPT, Claude, Gemini and Copilot, on their own daily tasks. Teams then take real workflows from your organisation and redesign them, so the improvement continues long after the training ends.</p>
+        <p class="ca-p">AI Workflow Productivity &amp; Process Transformation is a corporate training programme that teaches employees in every department to use generative AI tools, such as ChatGPT, Claude, Gemini and Copilot, on their own daily tasks. They then practise redesigning workflows, finishing with a project on a fictional business, so the improvement continues long after the training ends.</p>
         <p class="ca-p">AI training is only the beginning. <strong>The real gain comes from changing how the work gets done</strong>, with confidentiality, accuracy checks and a named person reviewing every output built in from the first module.</p>
         <div class="pw-facts">
           <div><strong>10</strong><span>practical modules</span></div>
-          <div><strong>1</strong><span>real workplace project per team</span></div>
+          <div><strong>1</strong><span>workplace project per participant</span></div>
           <div><strong>30</strong><span>day adoption roadmap</span></div>
         </div>
       </div>

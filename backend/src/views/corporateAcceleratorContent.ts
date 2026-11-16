@@ -46,7 +46,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** 12 professional modules · Real-workplace capstone project · Self-paced online, in your own private company portal · Supports ITF reimbursement claims"
+            "p": "**Trust line:** 12 professional modules · Integrated capstone project · Self-paced online, in your own private company portal · Supports ITF reimbursement claims"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps professionals in Nigerian organisations develop practical AI skills while understanding cybersecurity, AI risk, governance and secure digital transformation."
@@ -210,7 +210,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**AI-Enabled Digital Transformation.** Introducing AI while keeping security, governance, data protection, business continuity and staff capability in place.",
               "**Professional AI + Cybersecurity Workflows.** Building repeatable workflows for security reporting, risk assessment, policy review, awareness content, research and management reporting.",
-              "**Professional Capstone Project.** Each participant solves a real challenge from their organisation, moving from knowledge to application to a professional proposal."
+              "**Professional Capstone Project.** Each participant writes a professional improvement proposal for a fictional organisation, bringing together AI opportunities, cybersecurity risks, controls, governance and a roadmap."
             ]
           },
           {
@@ -282,20 +282,22 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Every participant completes a capstone project on a real challenge from their organisation. Projects are agreed with you at the start, so the work is useful afterwards. Examples:"
+            "p": "Every participant completes one integrated capstone: a professional improvement proposal for a fictional organisation, Ridgeway Logistics, which has inefficient business processes and cybersecurity weaknesses. A fictional case means no confidential company data is needed. The proposal covers:"
           },
           {
             "ul": [
-              "an AI security risk assessment for a planned AI tool",
-              "an AI governance framework or AI-use policy",
-              "an AI-assisted cybersecurity reporting workflow",
-              "an AI security awareness programme for a department",
-              "an AI-supported incident reporting process",
-              "a secure AI adoption plan for one business unit"
+              "three AI opportunities",
+              "three cybersecurity risks",
+              "recommended security controls",
+              "AI governance and data protection measures",
+              "an implementation roadmap",
+              "expected business benefits",
+              "key performance indicators",
+              "monitoring and review arrangements"
             ]
           },
           {
-            "p": "A Paleon reviewer reviews each capstone and gives written feedback. Your organisation keeps the work."
+            "p": "A Paleon reviewer marks each capstone out of 100 (pass mark 70) and gives written feedback. Participants may resubmit once."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -369,9 +371,9 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
-              "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
+              "**Customise:** we adapt examples and scenarios to your sector.",
               "**Train:** staff study self-paced online, per learner or in your private company portal.",
-              "**Apply:** participants complete capstone projects on real challenges.",
+              "**Apply:** participants complete an integrated capstone on a realistic case.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
           }
@@ -456,7 +458,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**How is it different from CyberSecure Workforce?** CyberSecure Workforce is awareness training for every employee. The Accelerator is deeper, professional-level training for selected staff who will use, assess and govern AI."
           },
           {
-            "p": "**Can the programme be customised?** Yes. Examples, scenarios and capstone topics are adapted to your sector and systems."
+            "p": "**Can the programme be customised?** Yes. Examples and scenarios are adapted to your sector and systems."
           },
           {
             "p": "**Can an organisation train an entire professional team?** Yes, in one cohort or several."
@@ -480,7 +482,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Does it teach hacking?** No. All threat content is defensive, focused on awareness, protection and risk management."
           },
           {
-            "p": "**Will participants complete practical projects?** Yes. Every participant completes a capstone on a real organisational challenge, reviewed by a Paleon reviewer."
+            "p": "**Will participants complete practical projects?** Yes. Every participant completes an integrated capstone on a fictional organisation, marked out of 100 and reviewed by a Paleon reviewer."
           },
           {
             "p": "**Is the programme accredited?** No, the programme is not accredited. Participants who complete it receive a Paleon Training certificate of completion. It is a practical professional-development programme, not a certification exam."
@@ -548,7 +550,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Self-paced online, in your own private company portal, across South Africa · 12 professional modules · Real-workplace capstone · Governance and POPIA awareness built in"
+            "p": "**Trust line:** Self-paced online, in your own private company portal, across South Africa · 12 professional modules · Integrated capstone · Governance and POPIA awareness built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps South African organisations develop professionals who can apply AI in their work while managing cybersecurity, AI risk, governance and data protection."
@@ -708,7 +710,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**AI-Enabled Digital Transformation.** Introducing AI while keeping security, governance, data protection, business continuity and staff capability in place.",
               "**Professional AI + Cybersecurity Workflows.** Building repeatable workflows for security reporting, risk assessment, policy review, awareness content, research and management reporting.",
-              "**Professional Capstone Project.** Each participant solves a real challenge from their organisation, moving from knowledge to application to a professional proposal."
+              "**Professional Capstone Project.** Each participant writes a professional improvement proposal for a fictional organisation, bringing together AI opportunities, cybersecurity risks, controls, governance and a roadmap."
             ]
           },
           {
@@ -781,7 +783,22 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start. Examples: an AI risk assessment, an AI-use policy, an AI-assisted security reporting workflow, an AI governance framework, or a secure AI adoption plan for one division. A Paleon reviewer reviews each capstone and gives written feedback."
+            "p": "Every participant completes one integrated capstone: a professional improvement proposal for a fictional organisation, Ridgeway Logistics, which has inefficient business processes and cybersecurity weaknesses. A fictional case means no confidential company data is needed. The proposal covers:"
+          },
+          {
+            "ul": [
+              "three AI opportunities",
+              "three cybersecurity risks",
+              "recommended security controls",
+              "AI governance and data protection measures",
+              "an implementation roadmap",
+              "expected business benefits",
+              "key performance indicators",
+              "monitoring and review arrangements"
+            ]
+          },
+          {
+            "p": "A Paleon reviewer marks each capstone out of 100 (pass mark 70) and gives written feedback. Participants may resubmit once."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -842,9 +859,9 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**Consult:** we learn about your AI plans, controls and governance.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
-              "**Customise:** we adapt scenarios and capstone topics to your sector.",
+              "**Customise:** we adapt examples and scenarios to your sector.",
               "**Train:** staff study self-paced online, per learner or in your private company portal.",
-              "**Apply:** participants complete capstones on real challenges.",
+              "**Apply:** participants complete an integrated capstone on a realistic case.",
               "**Transform:** your new internal capability supports accountable AI adoption."
             ]
           }
@@ -1012,7 +1029,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Self-paced online, in your own private company portal, across Ghana · 12 professional modules · Real-workplace capstone · Responsible AI built in"
+            "p": "**Trust line:** Self-paced online, in your own private company portal, across Ghana · 12 professional modules · Integrated capstone · Responsible AI built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps organisations in Ghana develop professionals who can use AI effectively while understanding cybersecurity, AI risk, governance and data protection."
@@ -1169,7 +1186,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**AI-Enabled Digital Transformation.** Introducing AI while keeping security, governance, data protection, business continuity and staff capability in place.",
               "**Professional AI + Cybersecurity Workflows.** Building repeatable workflows for security reporting, risk assessment, policy review, awareness content, research and management reporting.",
-              "**Professional Capstone Project.** Each participant solves a real challenge from their organisation, moving from knowledge to application to a professional proposal."
+              "**Professional Capstone Project.** Each participant writes a professional improvement proposal for a fictional organisation, bringing together AI opportunities, cybersecurity risks, controls, governance and a roadmap."
             ]
           },
           {
@@ -1241,7 +1258,22 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start: for example an AI risk assessment, an AI-use policy, an AI-assisted security reporting workflow or a secure AI adoption plan. A Paleon reviewer reviews each capstone and gives written feedback."
+            "p": "Every participant completes one integrated capstone: a professional improvement proposal for a fictional organisation, Ridgeway Logistics, which has inefficient business processes and cybersecurity weaknesses. A fictional case means no confidential company data is needed. The proposal covers:"
+          },
+          {
+            "ul": [
+              "three AI opportunities",
+              "three cybersecurity risks",
+              "recommended security controls",
+              "AI governance and data protection measures",
+              "an implementation roadmap",
+              "expected business benefits",
+              "key performance indicators",
+              "monitoring and review arrangements"
+            ]
+          },
+          {
+            "p": "A Paleon reviewer marks each capstone out of 100 (pass mark 70) and gives written feedback. Participants may resubmit once."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -1302,9 +1334,9 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
-              "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
+              "**Customise:** we adapt examples and scenarios to your sector.",
               "**Train:** staff study self-paced online, per learner or in your private company portal.",
-              "**Apply:** participants complete capstone projects on real challenges.",
+              "**Apply:** participants complete an integrated capstone on a realistic case.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
           }
@@ -1469,7 +1501,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "p": "**Secondary CTA:** Request a Company Portal Proposal"
           },
           {
-            "p": "**Trust line:** Self-paced online, in your own private company portal, across Kenya · 12 professional modules · Real-workplace capstone · AI governance and data protection built in"
+            "p": "**Trust line:** Self-paced online, in your own private company portal, across Kenya · 12 professional modules · Integrated capstone · AI governance and data protection built in"
           },
           {
             "p": "**Definition box:** The AI + Cybersecurity Professional Accelerator is a corporate professional-development programme from Paleon Training. It helps Kenyan organisations develop professionals who can use AI effectively while managing cybersecurity, AI risk, governance and data protection."
@@ -1626,7 +1658,7 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**AI-Enabled Digital Transformation.** Introducing AI while keeping security, governance, data protection, business continuity and staff capability in place.",
               "**Professional AI + Cybersecurity Workflows.** Building repeatable workflows for security reporting, risk assessment, policy review, awareness content, research and management reporting.",
-              "**Professional Capstone Project.** Each participant solves a real challenge from their organisation, moving from knowledge to application to a professional proposal."
+              "**Professional Capstone Project.** Each participant writes a professional improvement proposal for a fictional organisation, bringing together AI opportunities, cybersecurity risks, controls, governance and a roadmap."
             ]
           },
           {
@@ -1698,7 +1730,22 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
         "h": "Capstone — Don't just learn AI and cybersecurity. Apply both.",
         "blocks": [
           {
-            "p": "Each participant completes a capstone on a real challenge from their organisation, agreed with you at the start: for example an AI risk assessment for a product feature, an AI-use policy, an AI-assisted security reporting workflow or a secure AI adoption plan. A Paleon reviewer reviews each capstone and gives written feedback."
+            "p": "Every participant completes one integrated capstone: a professional improvement proposal for a fictional organisation, Ridgeway Logistics, which has inefficient business processes and cybersecurity weaknesses. A fictional case means no confidential company data is needed. The proposal covers:"
+          },
+          {
+            "ul": [
+              "three AI opportunities",
+              "three cybersecurity risks",
+              "recommended security controls",
+              "AI governance and data protection measures",
+              "an implementation roadmap",
+              "expected business benefits",
+              "key performance indicators",
+              "monitoring and review arrangements"
+            ]
+          },
+          {
+            "p": "A Paleon reviewer marks each capstone out of 100 (pass mark 70) and gives written feedback. Participants may resubmit once."
           },
           {
             "p": "**CTA after capstone:** Talk to a Training Specialist"
@@ -1759,9 +1806,9 @@ export const ACCELERATOR_CONTENT: Record<"NG" | "ZA" | "GH" | "KE", AccPageConte
             "ul": [
               "**Consult:** we learn about your priorities, systems and AI plans.",
               "**Identify:** we find the AI and cybersecurity capability gaps.",
-              "**Customise:** we adapt examples, scenarios and capstone topics to your sector.",
+              "**Customise:** we adapt examples and scenarios to your sector.",
               "**Train:** staff study self-paced online, per learner or in your private company portal.",
-              "**Apply:** participants complete capstone projects on real challenges.",
+              "**Apply:** participants complete an integrated capstone on a realistic case.",
               "**Transform:** your new internal capability supports secure AI adoption."
             ]
           }

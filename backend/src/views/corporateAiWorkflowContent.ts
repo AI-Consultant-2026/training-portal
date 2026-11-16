@@ -91,7 +91,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "ul": [
               "**Discover.** We find where AI can improve work in your organisation, department by department.",
               "**Train.** Employees learn practical AI skills in plain language, using examples from their own roles.",
-              "**Apply.** Participants use AI on real workplace tasks during the programme, not on made-up exercises.",
+              "**Apply.** Participants use AI on real workplace tasks during the programme.",
               "**Transform.** Teams redesign selected workflows so the improvement lasts beyond the training room.",
               "**Measure.** We help you track time saved, quality and adoption, so leaders can see what changed."
             ]
@@ -148,7 +148,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**AI-Powered Process Transformation.** Moving from manual to AI-assisted processes, redesigning workflows, writing SOPs and building repeatable AI workflows.",
               "**Responsible AI.** Confidentiality, data protection, sensitive information, accuracy and \"hallucinations\", verification, bias, company AI policies and governance.",
               "**Building an AI-Ready Workforce.** Creating an AI culture, driving adoption, choosing AI champions, writing internal guidelines and measuring adoption.",
-              "**Workplace AI Transformation Project.** Each participant or team takes a real process and designs an improved AI-assisted version."
+              "**Workplace AI Transformation Project.** Each participant works through a fictional business scenario: finding repetitive tasks, writing prompts, redesigning a workflow and managing confidentiality and accuracy risks."
             ]
           },
           {
@@ -207,19 +207,21 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
         "h": "Practical workplace project — Don't just learn AI. Apply it.",
         "blocks": [
           {
-            "p": "Every participant works on a real task from their own job, so the training produces something your organisation can use. Examples:"
+            "p": "Every participant completes a workplace project built on a fictional business, Crestview Property Services, whose office team loses hours each week to repetitive admin. A fictional case means no confidential company data is needed, and the skills carry straight back to real work. The seven tasks:"
           },
           {
             "ul": [
-              "Automating the first draft of a recurring monthly or board report",
-              "Speeding up an HR workflow such as onboarding letters or job descriptions",
-              "Designing an AI-assisted process for answering common customer enquiries",
-              "Producing management reports from spreadsheets faster",
-              "Building a document-processing workflow for contracts, invoices or field reports",
-              "Improving how a team researches suppliers, markets or regulations",
-              "Creating a library of department-specific prompts",
-              "Writing an AI-assisted standard operating procedure (SOP)"
+              "Identify three repetitive tasks",
+              "Select suitable AI tools for them",
+              "Develop five effective prompts",
+              "Demonstrate one improved workflow",
+              "Produce one AI-assisted business document",
+              "Identify confidentiality and accuracy risks",
+              "Recommend how to measure the productivity improvement"
             ]
+          },
+          {
+            "p": "Projects are marked out of 100 (five criteria, 20 marks each), with a pass mark of 70."
           },
           {
             "p": "**CTA after project:** Talk to a Corporate Training Specialist"
@@ -292,7 +294,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Do our employees need previous AI experience?** No. We start from the basics and build up to workflow design. Staff who already use AI learn to use it more effectively and safely."
           },
           {
-            "p": "**Can the training be customised for our organisation?** Yes. We adapt examples, exercises and the workplace project to your sector, departments and the tools you use."
+            "p": "**Can the training be customised for our organisation?** Yes. We adapt examples and exercises to your sector, departments and the tools you use."
           },
           {
             "p": "**Can you train our entire workforce?** Yes. We can run cohorts in phases, starting with leaders or AI champions and then rolling out to departments."
@@ -307,7 +309,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
-            "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to a real task from their role, and the programme ends with a workplace transformation project."
+            "p": "**Will employees work on real workplace tasks?** Yes. Participants practise on everyday tasks like the ones in their roles, and the programme ends with a workplace project built on a fictional business scenario, so no confidential data is needed."
           },
           {
             "p": "**How does the programme address responsible AI?** Confidentiality, data protection, human review, accuracy checks and governance are covered throughout and in a dedicated module."
@@ -472,7 +474,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**AI-Powered Process Transformation.** Workflow redesign, SOPs, AI-assisted document production and repeatable AI workflows.",
               "**Responsible AI.** Confidentiality, personal information, accuracy and verification, bias, company policy and governance.",
               "**Building an AI-Ready Workforce.** Culture, adoption, AI champions, internal guidelines and adoption measures.",
-              "**Workplace AI Transformation Project.** A real process redesigned with AI by each participant or team."
+              "**Workplace AI Transformation Project.** A workflow redesigned with AI by each participant, using a fictional business scenario."
             ]
           },
           {
@@ -525,19 +527,21 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
         "h": "Practical workplace project — Don't just learn AI. Apply it.",
         "blocks": [
           {
-            "p": "Participants bring a real piece of work and leave with an improved, AI-assisted version. Examples:"
+            "p": "Every participant completes a workplace project built on a fictional business, Crestview Property Services, whose office team loses hours each week to repetitive admin. A fictional case means no confidential company data is needed, and the skills carry straight back to real work. The seven tasks:"
           },
           {
             "ul": [
-              "Automating the first draft of a weekly operations or production report",
-              "Streamlining an HR process such as recruitment shortlisting notes or policy queries",
-              "Designing an AI-assisted process for routine customer-service responses",
-              "Building management packs from spreadsheet data faster",
-              "Creating a document-review workflow for contracts, tenders or compliance documents",
-              "Improving market, supplier or regulatory research",
-              "Building a library of tested prompts for a department",
-              "Writing an AI-assisted SOP with clear review points"
+              "Identify three repetitive tasks",
+              "Select suitable AI tools for them",
+              "Develop five effective prompts",
+              "Demonstrate one improved workflow",
+              "Produce one AI-assisted business document",
+              "Identify confidentiality and accuracy risks",
+              "Recommend how to measure the productivity improvement"
             ]
+          },
+          {
+            "p": "Projects are marked out of 100 (five criteria, 20 marks each), with a pass mark of 70."
           },
           {
             "p": "**CTA after project:** Talk to a Corporate Training Specialist"
@@ -607,7 +611,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Do our employees need previous AI experience?** No. We start with the fundamentals. Experienced users learn structured, safer ways of working."
           },
           {
-            "p": "**Can the training be customised?** Yes. Examples, exercises and projects are adapted to your sector, systems and departments."
+            "p": "**Can the training be customised?** Yes. Examples and exercises are adapted to your sector, systems and departments."
           },
           {
             "p": "**Can you train an entire workforce?** Yes, in phased cohorts, often starting with leaders and AI champions."
@@ -622,7 +626,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
-            "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to tasks from their own role and completes a workplace project."
+            "p": "**Will employees work on real workplace tasks?** Yes. Participants practise on everyday tasks like the ones in their roles, and the programme ends with a workplace project built on a fictional business scenario, so no confidential data is needed."
           },
           {
             "p": "**How does the programme address responsible AI?** Through a dedicated module and checks throughout: confidentiality, personal information, accuracy, human review and governance."
@@ -786,7 +790,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**AI-Powered Process Transformation.** From manual to AI-assisted processes; workflow redesign; SOPs; repeatable workflows.",
               "**Responsible AI.** Confidentiality, data protection, accuracy, verification, bias, policies and governance.",
               "**Building an AI-Ready Workforce.** Culture, adoption, AI champions, guidelines and measuring progress.",
-              "**Workplace AI Transformation Project.** Participants redesign a real workplace process with AI."
+              "**Workplace AI Transformation Project.** Participants redesign a workflow with AI, using a fictional business scenario."
             ]
           },
           {
@@ -839,19 +843,21 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
         "h": "Practical workplace project — Don't just learn AI. Apply it.",
         "blocks": [
           {
-            "p": "Each participant improves a real task from their role. Examples:"
+            "p": "Every participant completes a workplace project built on a fictional business, Crestview Property Services, whose office team loses hours each week to repetitive admin. A fictional case means no confidential company data is needed, and the skills carry straight back to real work. The seven tasks:"
           },
           {
             "ul": [
-              "Automating the first draft of a recurring branch, site or management report",
-              "Improving an HR process such as staff letters, onboarding or leave queries",
-              "Creating an AI-assisted process for common customer questions",
-              "Turning paper or spreadsheet records into structured, usable information",
-              "Building a document-processing workflow for invoices, applications or field reports",
-              "Improving research for tenders, suppliers or new markets",
-              "Developing a set of prompts for one department",
-              "Writing an AI-assisted SOP"
+              "Identify three repetitive tasks",
+              "Select suitable AI tools for them",
+              "Develop five effective prompts",
+              "Demonstrate one improved workflow",
+              "Produce one AI-assisted business document",
+              "Identify confidentiality and accuracy risks",
+              "Recommend how to measure the productivity improvement"
             ]
+          },
+          {
+            "p": "Projects are marked out of 100 (five criteria, 20 marks each), with a pass mark of 70."
           },
           {
             "p": "**CTA after project:** Talk to a Corporate Training Specialist"
@@ -936,7 +942,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
-            "p": "**Will employees work on real workplace tasks?** Yes. Participants apply AI to their own work and complete a workplace project."
+            "p": "**Will employees work on real workplace tasks?** Yes. Participants practise on everyday tasks like the ones in their roles, and the programme ends with a workplace project built on a fictional business scenario, so no confidential data is needed."
           },
           {
             "p": "**How does the programme address responsible AI?** Confidentiality, data protection, accuracy checks, human review and governance are covered throughout."
@@ -1097,7 +1103,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
               "**AI-Powered Process Transformation.** Workflow redesign, SOPs, automated information processing and repeatable AI workflows.",
               "**Responsible AI.** Confidentiality, data protection, accuracy, verification, bias, policies and governance.",
               "**Building an AI-Ready Workforce.** Culture, adoption, AI champions, internal guidelines and measurement.",
-              "**Workplace AI Transformation Project.** A real workflow redesigned with AI."
+              "**Workplace AI Transformation Project.** A workflow redesigned with AI, using a fictional business scenario."
             ]
           },
           {
@@ -1150,19 +1156,21 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
         "h": "Practical workplace project — Don't just learn AI. Apply it.",
         "blocks": [
           {
-            "p": "Participants take a real task from their role and rebuild it as an AI-assisted workflow. Examples:"
+            "p": "Every participant completes a workplace project built on a fictional business, Crestview Property Services, whose office team loses hours each week to repetitive admin. A fictional case means no confidential company data is needed, and the skills carry straight back to real work. The seven tasks:"
           },
           {
             "ul": [
-              "Automating the first draft of a weekly performance or sales report",
-              "Improving an HR workflow such as recruitment notes or policy FAQs",
-              "Designing an AI-assisted process for routine customer-support replies",
-              "Producing management summaries from dashboards and spreadsheets",
-              "Creating a document-processing workflow for delivery notes, applications or supplier documents",
-              "Speeding up market, product or partner research",
-              "Building a shared prompt library for a team",
-              "Documenting an AI-assisted SOP with review steps"
+              "Identify three repetitive tasks",
+              "Select suitable AI tools for them",
+              "Develop five effective prompts",
+              "Demonstrate one improved workflow",
+              "Produce one AI-assisted business document",
+              "Identify confidentiality and accuracy risks",
+              "Recommend how to measure the productivity improvement"
             ]
+          },
+          {
+            "p": "Projects are marked out of 100 (five criteria, 20 marks each), with a pass mark of 70."
           },
           {
             "p": "**CTA after project:** Talk to a Corporate Training Specialist"
@@ -1235,7 +1243,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Do employees need previous AI experience?** No. Beginners start with the fundamentals; experienced users move quickly to workflow design."
           },
           {
-            "p": "**Can the training be customised?** Yes. We adapt examples and projects to your sector, tools and departments."
+            "p": "**Can the training be customised?** Yes. We adapt examples to your sector, tools and departments."
           },
           {
             "p": "**Can you train an entire workforce?** Yes, in phased cohorts, often starting with AI champions."
@@ -1250,7 +1258,7 @@ export const CORPORATE_AI_CONTENT: Record<CountryCode, CorporatePageContent> = {
             "p": "**Can we have our own private company portal?** Yes. Your organisation gets its own private space in the Paleon portal. Staff join with one sign-up link, and your HR or L&D lead tracks progress from a manager login. We do not run sessions at your premises. Self-paced places have a fixed price per learner; organisation-wide rollouts are priced by proposal."
           },
           {
-            "p": "**Will employees work on real workplace tasks?** Yes. Every participant applies AI to their own work and completes a workplace project."
+            "p": "**Will employees work on real workplace tasks?** Yes. Participants practise on everyday tasks like the ones in their roles, and the programme ends with a workplace project built on a fictional business scenario, so no confidential data is needed."
           },
           {
             "p": "**How does the programme address responsible AI?** Through a dedicated module and checks throughout: confidentiality, data protection, accuracy, human review and governance."

@@ -274,7 +274,7 @@ function whereWeTrain(code: CountryCode): string {
       <h2 class="section-title" id="where-title">${WHO_WE_SERVE}</h2>
       ${cohortNotice("ai-workflow")}
       <p class="ca-p"><strong>${escapeHtml(servingLine(code))}.</strong> Paleon Training runs AI Workflow Productivity &amp; Process Transformation for organisations across ${escapeHtml(country)}, fully online. ${escapeHtml(how)}</p>
-      <p class="ca-p">Staff study around their working day, and examples and the workplace project are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
+      <p class="ca-p">Staff study around their working day, and examples and exercises are adapted to your sector: banking and financial services, energy and mining, telecoms, healthcare, education, government and professional services.</p>
       <div class="ca-ctas">${reserveButton("ai-workflow")}${callButton(false)}</div>
     </div>
   </section>`;
@@ -637,7 +637,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What is the AI + Cybersecurity Professional Accelerator?",
-    a: "Our professional-level programme for selected staff such as IT, security, risk, data and digital teams. Participants learn to use AI in their work, understand the cyber risks AI brings, and support secure AI adoption. Twelve modules and a capstone project on a real challenge from their organisation.",
+    a: "Our professional-level programme for selected staff such as IT, security, risk, data and digital teams. Participants learn to use AI in their work, understand the cyber risks AI brings, and support secure AI adoption. Twelve modules and an integrated capstone built on a fictional organisation.",
   },
   {
     q: "Which programme is right for us?",
@@ -645,7 +645,7 @@ const HUB_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Can the training be customised for our organisation?",
-    a: "Yes. We adapt examples, exercises and the workplace project to your sector, departments and the tools you use.",
+    a: "Yes. We adapt examples and exercises to your sector, departments and the tools you use.",
   },
   {
     q: "How much does corporate training cost?",
@@ -761,7 +761,7 @@ function hubJsonLd(url: string): object {
         name: "AI Workflow Productivity & Process Transformation: AI training for employees",
         serviceType: "Corporate AI training",
         description:
-          "Practical AI productivity training for every department, with confidentiality, accuracy checks and human review built in, ending with a real workplace project.",
+          "Practical AI productivity training for every department, with confidentiality, accuracy checks and human review built in, ending with a practical workplace project.",
         url: `${url}#ai-workflow`,
         provider: { "@id": `${ORIGIN}/#organization` },
         areaServed: MARKET_ORDER.map((k) => ({ "@type": "Country", name: COUNTRIES[k].name })),
@@ -914,7 +914,7 @@ ${header(ctx, home, "/", true)}
       ${outcomeList("ai-workflow", ctx.country)}
       ${cohortNotice("ai-workflow", true)}
       <div class="ca-ctas">${reserveButton("ai-workflow")}</div>
-      <p class="ca-p">Your employees learn to use AI tools such as ${guide("chatgpt-training-for-employees", "ChatGPT")} and ${guide("microsoft-copilot-training-for-staff", "Microsoft Copilot")} on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, ${guide("ai-training-for-managers", "led by managers who know where AI helps")}, with ${guide("generative-ai-risks-for-business", "confidentiality, accuracy checks and human review")} built into every module. Ten practical modules, ending with a real workplace project.</p>
+      <p class="ca-p">Your employees learn to use AI tools such as ${guide("chatgpt-training-for-employees", "ChatGPT")} and ${guide("microsoft-copilot-training-for-staff", "Microsoft Copilot")} on their own tasks: reports, emails, meeting follow-ups, documents and data. Teams then redesign selected workflows so the improvement lasts, ${guide("ai-training-for-managers", "led by managers who know where AI helps")}, with ${guide("generative-ai-risks-for-business", "confidentiality, accuracy checks and human review")} built into every module. Ten practical modules, ending with a practical workplace project.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-workflow-productivity.jpg" aria-label="Video: AI Workflow Productivity &amp; Process Transformation (1 minute 54 seconds)">
           <source src="/videos/corporate/ai-workflow-productivity.mp4?v=2" type="video/mp4">
@@ -934,7 +934,7 @@ ${header(ctx, home, "/", true)}
       ${outcomeList("accelerator", ctx.country)}
       ${cohortNotice("accelerator", true)}
       <div class="ca-ctas">${reserveButton("accelerator")}</div>
-      <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with a capstone on a real challenge from their organisation.</p>
+      <p class="ca-p">For the people who will lead secure AI adoption: IT, security, risk, data and digital professionals. Participants learn to use AI in their work, understand the cyber risks it brings, and help set the rules for using it safely. Twelve professional modules, ending with an integrated capstone built on a fictional organisation.</p>
       <figure class="ca-video">
         <video controls playsinline preload="none" poster="/videos/corporate/ai-cybersecurity-accelerator.jpg" aria-label="Video: AI + Cybersecurity Professional Accelerator (1 minute 55 seconds)">
           <source src="/videos/corporate/ai-cybersecurity-accelerator.mp4?v=2" type="video/mp4">
