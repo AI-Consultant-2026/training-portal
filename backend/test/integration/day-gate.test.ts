@@ -151,6 +151,14 @@ describe("Day gate: quiz + assignment before the day's next lesson", () => {
     expect(open.status).toBe(200);
   });
 
+  it("opens lesson 2 when the day has no quiz or assignment left (e.g. AI & ML after 2026-11-16)", async () => {
+    const { lesson2, quiz, assignment, token } = await setUpDay("gate-no-tasks@example.com");
+    await quiz.destroy();
+    await assignment.destroy();
+    const res = await request(app).get(`/api/lessons/${lesson2.id}`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+  });
+
   it("ignores an admin-disabled quiz", async () => {
     const { lesson2, quiz, assignment, student, token } = await setUpDay("gate-disabled@example.com");
     await quiz.update({ isEnabled: false });
