@@ -373,7 +373,7 @@ function hero(ctx: PageContext, home: string): string {
     <div class="wrap hero-inner">
       <span class="eyebrow">Six courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
       <h1 class="hero-title">Digital skills built for careers in <em>${text(c.site.headlineIndustries)}</em></h1>
-      <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a real capstone project to show employers. <strong>Led from the UK, delivered in ${escapeHtml(c.name)}.</strong></p>
+      <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a final project or assessment that proves what you can do. <strong>Led from the UK, delivered in ${escapeHtml(c.name)}.</strong></p>
       <div class="hero-ctas">
         <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 6 courses</a>
         <a class="btn btn-outline-light btn-lg" href="${home}#courses">Try a free lesson</a>
@@ -438,7 +438,7 @@ function courseCards(ctx: PageContext, home: string): string {
           <span class="section-eyebrow">The courses &middot; ${escapeHtml(c.name)}</span>
           <h2 class="section-title" id="coursesTitle">Six fields. Real depth in each.</h2>
         </div>
-        <p class="section-desc">Every course has a full curriculum, an illustrated lesson and matching video for each topic, and a capstone project that mirrors the work you&rsquo;d be hired to do.</p>
+        <p class="section-desc">Every course has a full curriculum, an illustrated lesson and matching video for each topic, and ends with a capstone project or final assessment based on the work you&rsquo;d be hired to do.</p>
       </div>
       ${
         live
@@ -561,7 +561,7 @@ function why(ctx: PageContext): string {
     ["Every lesson illustrated", "A hand-drawn diagram built for each concept, not stock slides."],
     ["A video for every lesson", "Read it, watch it, or both. No exceptions."],
     [`Grounded in ${c.name}`, "Local regulations, employers and case studies, not borderless material."],
-    ["Ends in a real capstone", "A project built to show an employer, not just a badge."],
+    ["Ends with proof of skill", "A capstone project or final assessment, not just a badge."],
   ];
   return `<section class="section section-paper why-section" id="why" aria-labelledby="whyTitle">
     <div class="wrap">

@@ -106,7 +106,7 @@ function faq(country: CountryCode, tiers: DiscountTier[]): string {
     ],
     [
       "How long do the places last?",
-      "Students can sign up with your link for 12 months from payment. Once a student has started a course, they keep it, with lifetime access, the full curriculum, quizzes, the capstone project and a certificate when they finish.",
+      "Students can sign up with your link for 12 months from payment. Once a student has started a course, they keep it, with lifetime access, the full curriculum, quizzes, the course's capstone project or final assessment, and a certificate when they finish.",
     ],
     [
       "Can we buy more places later?",
