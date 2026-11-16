@@ -390,11 +390,8 @@ export async function isModuleQuizUnlocked(
   if (!(await isCorporateModule(quiz.moduleId))) {
     return isFirstModuleLessonCompleted(quiz.moduleId, studentId);
   }
-  if (quiz.passingScore === 0) return true;
-  const lessons = await listLessonsForModule(quiz.moduleId);
-  for (const lesson of lessons) {
-    if (!(await isLessonCompletedByStudent(lesson.id, studentId))) return false;
-  }
+  // Corporate courses (owner, 2026-11-16): every quiz is open at any time; the introductory
+  // and final assessments no longer wait for the module's lessons to be completed.
   return true;
 }
 

@@ -14,7 +14,6 @@ import {
   sequelize,
 } from "../models";
 import { isModuleQuizUnlocked } from "./lesson.service";
-import { isCorporateCourse } from "./course.service";
 import { ApiError } from "../utils/ApiError";
 import { shuffle } from "../utils/shuffle";
 
@@ -136,11 +135,7 @@ export async function start(quizId: string, studentId: string) {
 
   const unlocked = await isModuleQuizUnlocked(quiz, studentId);
   if (!unlocked) {
-    throw ApiError.forbidden(
-      isCorporateCourse(course)
-        ? "Complete this module's lessons before you start the assessment."
-        : "Complete this day's first lesson before you can start the quiz.",
-    );
+    throw ApiError.forbidden("Complete this day's first lesson before you can start the quiz.");
   }
 
   const existing = await QuizAttempt.findOne({

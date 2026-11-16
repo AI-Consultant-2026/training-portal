@@ -65,21 +65,11 @@ describe("Corporate course lesson and assessment rules", () => {
     expect(res.status).toBeLessThan(300);
   });
 
-  it("locks the module assessment until all the module's lessons are complete", async () => {
-    const { lessons, assessment, token } = await setUp("corp-assessment-lock@example.com");
-    const auth = { Authorization: `Bearer ${token}` };
-    const early = await request(app).post(`/api/quizzes/${assessment.id}/start`).set(auth);
-    expect(early.status).toBe(403);
-    expect(early.body.error.message).toMatch(/module's lessons/);
-
-    await request(app).post(`/api/lessons/${lessons[0].id}/mark-complete`).set(auth).expect(200);
-    await request(app).post(`/api/lessons/${lessons[1].id}/mark-complete`).set(auth).expect(200);
-    const partway = await request(app).post(`/api/quizzes/${assessment.id}/start`).set(auth);
-    expect(partway.status).toBe(403);
-
-    await request(app).post(`/api/lessons/${lessons[2].id}/mark-complete`).set(auth).expect(200);
-    const ready = await request(app).post(`/api/quizzes/${assessment.id}/start`).set(auth);
-    expect(ready.status).toBeLessThan(300);
+  // Owner, 2026-11-16: corporate quizzes are open at any time, before any lesson is done.
+  it("opens a scored assessment before any of the module's lessons are complete", async () => {
+    const { assessment, token } = await setUp("corp-assessment-open@example.com");
+    const early = await request(app).post(`/api/quizzes/${assessment.id}/start`).set("Authorization", `Bearer ${token}`);
+    expect(early.status).toBeLessThan(300);
   });
 });
 

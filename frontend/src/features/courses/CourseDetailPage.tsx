@@ -186,9 +186,8 @@ export function CourseDetailPage() {
   const isEnrolled = myEnrollment !== undefined;
   const isPaidInFull = !!myEnrollment?.paymentConfirmed;
   // Corporate courses (2026-11-12) are organised in modules, not days: no day gate between
-  // lessons, an unscored introductory assessment that's open from the start, and module
-  // assessments that unlock once all of the module's lessons are complete (same rules as
-  // lesson.service.ts / quiz.service.ts).
+  // lessons, and every quiz (the introductory and final assessments) open at any time
+  // (2026-11-16; same rule as lesson.service.ts / quiz.service.ts).
   const isCorporate = course?.metadata?.corporate === true;
   // Instalments (2026-10-11): a deposit opens the first days (course order: week, then
   // module order -- the same rule as enrollment.service.ts's getDepositUnlockedModuleIds).
@@ -579,12 +578,8 @@ export function CourseDetailPage() {
                     const firstLessonCompleted =
                       content.lessons.length === 0 ||
                       !!courseProgress?.completedLessonIds.includes(content.lessons[0].id);
-                    const allLessonsCompleted = content.lessons.every(
-                      (l) => !!courseProgress?.completedLessonIds.includes(l.id),
-                    );
-                    const quizUnlocked = isCorporate
-                      ? q.passingScore === 0 || allLessonsCompleted
-                      : firstLessonCompleted;
+                    // Corporate courses (2026-11-16): every quiz is open at any time.
+                    const quizUnlocked = isCorporate || firstLessonCompleted;
                     const isLocked = user?.role === "student" && !quizUnlocked;
                     const isSubmitted = courseProgress?.submittedQuizIds.includes(q.id);
 
@@ -593,11 +588,7 @@ export function CourseDetailPage() {
                         <span
                           key={q.id}
                           className="text-sm font-medium text-gray-400"
-                          title={
-                            isCorporate
-                              ? "Complete this module's lessons to unlock the assessment"
-                              : "Complete this day's first lesson to unlock the quiz"
-                          }
+                          title="Complete this day's first lesson to unlock the quiz"
                         >
                           Quiz: {q.title} (locked)
                         </span>
