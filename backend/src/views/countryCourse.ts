@@ -138,7 +138,7 @@ const OUTLINE: Record<HomepageCourse, [string, string][]> = {
     ["Day 15", "AI across industries and how to judge an AI idea"],
     ["Day 16", "Responsible AI: bias, privacy, deepfakes, copyright and governance"],
     ["Day 17", "AI and cyber security: prompt injection, AI phishing and deepfake fraud"],
-    ["Day 18", "Your capstone: plan, build, evaluate and present an AI project"],
+    ["Day 18", "Plan and present your own AI project, then take the final assessment"],
   ],
   "data-analytics-business-intelligence": [
     ["Day 1", "What data analytics and business intelligence are, and the analysis process"],
@@ -310,10 +310,10 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Data Protection Act, 2012 (Act 843)", what: "Governs how personal data is collected and used, and set up the Data Protection Commission. Relevant whenever an AI project uses data about people." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning and its capstone project. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
         faqs: [
           ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
-          ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
+          ["What will I build?", "A practical exercise in every lesson (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow), a plan for your own AI project on the last day, and a 30-question final assessment."],
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by MTN MoMo, Telecel Cash or card."],
         ],
       },
@@ -494,10 +494,10 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Data Protection Act, 2019", what: "Kenya's main personal-data law, overseen by the Office of the Data Protection Commissioner. Relevant whenever an AI project uses data about people." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning and its capstone project. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
         faqs: [
           ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
-          ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
+          ["What will I build?", "A practical exercise in every lesson (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow), a plan for your own AI project on the last day, and a 30-question final assessment."],
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit. Pay by M-Pesa or card."],
         ],
       },
@@ -678,10 +678,10 @@ const COPY: Record<LocalCountry, CountryCopy> = {
           { name: "Protection of Personal Information Act, 2013 (POPIA)", what: "South Africa's main personal-data law, enforced by the Information Regulator. Relevant whenever an AI project uses data about people." },
         ],
         certificateNote:
-          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning and its capstone project. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
+          "Your Paleon certificate of completion shows you finished an 18-day introduction to AI and machine learning. It is not a university degree or a vendor certification from Google, Microsoft or AWS, though the course is a practical foundation for them.",
         faqs: [
           ["Do I need to know coding or maths?", "No. Every idea starts in plain English with an everyday example. You write your first Python in Day 4, one small step at a time, in a free online notebook."],
-          ["What will I build?", "Small projects every day (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow) and a capstone AI project you present at the end."],
+          ["What will I build?", "A practical exercise in every lesson (a data analysis, a prediction model, a customer segmentation, a prompt library and an automation workflow), a plan for your own AI project on the last day, and a 30-question final assessment."],
           ["How much is it?", "{FEE}, or start with a {DEPOSIT} deposit."],
         ],
       },
@@ -816,8 +816,10 @@ function localCourse(country: LocalCountry, slug: HomepageCourse): LocalCourse {
 }
 
 export function renderCountryCourse(country: LocalCountry, slug: HomepageCourse): string {
-  // Cyber Security Fundamentals, HSE Fundamentals, GIS and Drone Mapping and Digital Marketing end in a final assessment, not a capstone (2026-11-16).
-  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals" || slug === "gis-and-drone-mapping" || slug === "digital-marketing";
+  // Cyber Security Fundamentals, HSE Fundamentals, GIS and Drone Mapping, Digital Marketing and AI & ML
+  // Fundamentals end in a final assessment, not a capstone (2026-11-16); AI & ML also has no daily quizzes.
+  const isFinalAssessmentCourse = slug === "cyber-security-fundamentals" || slug === "hse-fundamentals" || slug === "gis-and-drone-mapping" || slug === "digital-marketing" || slug === "ai-machine-learning-fundamentals";
+  const hasDailyQuizzes = slug !== "ai-machine-learning-fundamentals";
   const c = COUNTRIES[country];
   const local = localCourse(country, slug);
   const info = COURSE_INFO[slug];
@@ -890,7 +892,9 @@ ${header(ctx, home)}
       </table>
       <p>Every lesson is illustrated and has a matching video. ${
         isFinalAssessmentCourse
-          ? "Every lesson has a short knowledge check, each day ends with a quiz, and the course finishes with a 30-question final assessment (pass mark 80%)."
+          ? hasDailyQuizzes
+            ? "Every lesson has a short knowledge check, each day ends with a quiz, and the course finishes with a 30-question final assessment (pass mark 80%)."
+            : "Every lesson has a practical exercise and an eight-question knowledge check, and the course finishes with a 30-question final assessment (pass mark 80%)."
           : "Each day ends with a short quiz and an assignment, and the course finishes with a capstone project you can show employers."
       } It is self-paced with lifetime access, and you can try the <a href="${previewHref(country, slug)}">first lesson free</a> before paying.</p>
 
