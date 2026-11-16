@@ -139,7 +139,7 @@ describe("Gap between quiz attempts", () => {
 describe("Corporate course content", () => {
   it.each([
     [CYBERSECURE_WORKFORCE, 13, 39, 30, 0],
-    [AI_WORKFLOW, 10, 30, 25, 10],
+    [AI_WORKFLOW, 10, 30, 30, 0],
     [AI_CYBER_ACCELERATOR, 12, 36, 25, 10],
   ])("course %# has its modules, lessons and assessments", (course, modules, lessons, finalCount, moduleCount) => {
     expect(course.modules).toHaveLength(modules);
@@ -203,6 +203,73 @@ describe("Corporate course content", () => {
       const final = lessons[lessons.length - 1].content;
       expect(final).toContain("## Course feedback questionnaire");
       expect(final.match(/^\d\. /gm)?.length).toBeGreaterThanOrEqual(5);
+    });
+  });
+
+  // Owner's changes of 2026-11-16 (migration 20261116040000).
+  describe("AI Workflow Productivity", () => {
+    const lessons = AI_WORKFLOW.modules.flatMap((m) => m.lessons);
+    const text = JSON.stringify(AI_WORKFLOW);
+
+    it("has no module quizzes, and a 30-question final in the owner's format and topics", () => {
+      expect(AI_WORKFLOW.modules.every((m) => m.assessment.length === 0)).toBe(true);
+      const final = AI_WORKFLOW.finalAssessment;
+      const trueFalse = final.filter((q) => q.type === "true_false");
+      const scenarios = final.filter((q) => q.text.startsWith("Scenario:"));
+      expect(trueFalse).toHaveLength(3);
+      trueFalse.forEach((q) => expect(q.answers.map((a) => a.text)).toEqual(["True", "False"]));
+      expect(scenarios).toHaveLength(3);
+      expect(final.length - trueFalse.length - scenarios.length).toBe(24);
+      expect(new Set(final.map((q) => q.text)).size).toBe(30);
+      const last = lessons[lessons.length - 1].content;
+      const counts = [...last.matchAll(/^\| ([A-Z][^|*]+) \| (\d+) \|$/gm)].map((m) => [m[1], Number(m[2])]);
+      expect(counts).toEqual([
+        ["AI fundamentals", 3],
+        ["Generative AI tools and applications", 4],
+        ["Prompt engineering", 5],
+        ["AI-assisted emails and reports", 4],
+        ["Research and information analysis", 3],
+        ["Business workflow improvement", 4],
+        ["AI governance and confidentiality", 4],
+        ["Responsible AI implementation", 3],
+      ]);
+      expect(last).toContain("Pass mark: 24 out of 30 (80%).");
+      expect(text).not.toMatch(/Module \d+ Assessment|Action Plan|action plan|25 questions/);
+    });
+
+    it("has a fictional-scenario project with seven tasks, marked out of 100 with a pass of 70", () => {
+      expect(AI_WORKFLOW.capstone?.description).toMatch(/fictional business scenario.*pass mark 70/);
+      const brief = lessons.find((l) => l.title === "The Workplace AI Transformation Project")!.content;
+      const tasks = brief.split("## What you must do")[1].split("\n## ")[0];
+      expect(tasks.match(/^\d\. \*\*/gm)).toHaveLength(7);
+      const marks = [...brief.matchAll(/^\| \d\. ([^|]+) \| (\d+) \|/gm)].map((m) => [m[1].trim(), Number(m[2])]);
+      expect(marks).toEqual([
+        ["Understanding the business problem", 20],
+        ["Effective use of AI", 20],
+        ["Quality of business output", 20],
+        ["Workflow improvement", 20],
+        ["Responsible AI and risk management", 20],
+      ]);
+      expect(brief).toContain("**Pass: 70 out of 100.**");
+    });
+
+    it("gives every knowledge check one multiple-choice, one true-or-false and one scenario question", () => {
+      const checks = lessons.filter((l) => l.content.includes("**Knowledge check"));
+      expect(checks).toHaveLength(28);
+      for (const l of checks) {
+        const block = l.content.split(/\*\*Knowledge check [\d.]+\*\*/)[1].split("\n---\n")[0].split("\n## ")[0];
+        const questions = block.split(/\n\n(?=\*\*\d\.\*\* )/).filter((q) => /^\*\*\d\.\*\* /.test(q.trim()));
+        expect(questions).toHaveLength(3);
+        expect(questions[0]).toMatch(/\n- A\. /);
+        expect(questions[1]).toMatch(/True or false:/);
+        expect(questions[1]).not.toMatch(/\n- A\. /);
+        expect(questions[2]).toMatch(/\n- A\. /);
+      }
+    });
+
+    it("has three learner reflections and the five-question feedback questionnaire at the end", () => {
+      expect(text.match(/\*\*Reflection \d of 3\.\*\*/g)).toHaveLength(3);
+      expect(lessons[lessons.length - 1].content).toContain("## Course feedback questionnaire");
     });
   });
 });

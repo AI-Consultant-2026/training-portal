@@ -150,6 +150,20 @@ describe("Course feedback and learner testimonials", () => {
     ]);
   });
 
+  it("asks the AI Workflow questionnaire, keeping the capstone permission", async () => {
+    const { enrollment, studentToken } = await setup("completed", "ai-workflow-productivity");
+    const auth = { Authorization: `Bearer ${studentToken}` };
+    const asked = await request(app).get(`/api/enrollments/${enrollment.id}/feedback`).set(auth);
+    expect(asked.body.questionnaire.choiceQuestions).toHaveLength(3);
+    expect(asked.body.questionnaire.asksCapstoneConsent).toBe(true);
+    const answers = { relevance: "Mostly relevant", confidence: "A little more confident", ease: "Very easy" };
+    const saved = await request(app).put(`/api/enrollments/${enrollment.id}/feedback`).set(auth).send({ ...good, answers });
+    expect(saved.status).toBe(201);
+    const row = await CourseFeedback.findOne({ where: { enrollmentId: enrollment.id } });
+    expect(row?.answers).toEqual(answers);
+    expect(row?.consentCapstone).toBe(true);
+  });
+
   it("asks no questionnaire on other courses", async () => {
     const { enrollment, studentToken } = await setup();
     const asked = await request(app).get(`/api/enrollments/${enrollment.id}/feedback`).set("Authorization", `Bearer ${studentToken}`);
