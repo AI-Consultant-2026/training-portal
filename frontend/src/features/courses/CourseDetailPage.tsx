@@ -189,6 +189,20 @@ export function CourseDetailPage() {
   // lessons, and every quiz (the introductory and final assessments) open at any time
   // (2026-11-16; same rule as lesson.service.ts / quiz.service.ts).
   const isCorporate = course?.metadata?.corporate === true;
+  // Final Assessment lock (owner, 2026-11-17): on every course the Final Assessment stays
+  // disabled for students until the course's last lesson is completed (same rule as
+  // lesson.service.ts's getFinalAssessmentLock). Unknown until the last module's lessons load.
+  const lastLessonId = (() => {
+    const ordered = [...modules].sort((a, b) => b.weekNumber - a.weekNumber || b.order - a.order);
+    for (const mod of ordered) {
+      const lessons = moduleContent[mod.id]?.lessons;
+      if (!lessons) return null;
+      if (lessons.length > 0) return lessons[lessons.length - 1].id;
+    }
+    return null;
+  })();
+  const finalAssessmentLocked =
+    user?.role === "student" && !(lastLessonId && courseProgress?.completedLessonIds.includes(lastLessonId));
   // Instalments (2026-10-11): a deposit opens the first days (course order: week, then
   // module order -- the same rule as enrollment.service.ts's getDepositUnlockedModuleIds).
   const hasDepositOnly = !isPaidInFull && !!myEnrollment?.depositPaidAt;
@@ -585,6 +599,17 @@ export function CourseDetailPage() {
                     const isLocked = user?.role === "student" && !quizUnlocked;
                     const isSubmitted = courseProgress?.submittedQuizIds.includes(q.id);
 
+                    if (q.title === "Final Assessment" && finalAssessmentLocked) {
+                      return (
+                        <span
+                          key={q.id}
+                          className="text-sm font-medium text-gray-400"
+                          title="Complete the last lesson of the course to unlock the Final Assessment"
+                        >
+                          Quiz: {q.title} (locked until you complete the last lesson)
+                        </span>
+                      );
+                    }
                     if (isLocked) {
                       return (
                         <span

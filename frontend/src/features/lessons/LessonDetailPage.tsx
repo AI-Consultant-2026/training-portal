@@ -233,7 +233,18 @@ export function LessonDetailPage() {
             onLockedClick={() => (isNextLocked ? setShowPaymentDialog(true) : setShowTasksDialog(true))}
           />
           {/* The course's last lesson leads on to its Final Assessment (2026-11-16). */}
-          {!navigation.next && navigation.finalAssessment && (
+          {/* Locked for students until this last lesson is marked complete (2026-11-17). */}
+          {!navigation.next && navigation.finalAssessment && user?.role === "student" && !completed && (
+            <span
+              className="ml-auto flex max-w-[45%] cursor-not-allowed flex-col rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-right"
+              title="Mark this lesson complete to unlock the Final Assessment"
+            >
+              <span className="text-xs font-medium uppercase text-gray-400">Locked</span>
+              <span className="mt-1 truncate text-sm font-medium text-gray-500">{navigation.finalAssessment.title}</span>
+              <span className="mt-1 text-xs text-gray-500">Mark this lesson complete to unlock it</span>
+            </span>
+          )}
+          {!navigation.next && navigation.finalAssessment && !(user?.role === "student" && !completed) && (
             <Link
               to={`/quizzes/${navigation.finalAssessment.id}`}
               className="ml-auto flex max-w-[45%] flex-col rounded-md border border-blue-300 bg-blue-50 px-4 py-3 text-right hover:bg-blue-100"

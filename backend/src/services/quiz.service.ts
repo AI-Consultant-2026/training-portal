@@ -13,7 +13,7 @@ import {
   User,
   sequelize,
 } from "../models";
-import { isModuleQuizUnlocked } from "./lesson.service";
+import { FINAL_ASSESSMENT_LOCKED_CODE, getFinalAssessmentLock, isModuleQuizUnlocked } from "./lesson.service";
 import { ApiError } from "../utils/ApiError";
 import { shuffle } from "../utils/shuffle";
 
@@ -137,6 +137,17 @@ export async function start(quizId: string, user: { id: string; role: string }) 
 
   if (!quiz.isEnabled && !isAdmin) {
     throw ApiError.forbidden("This quiz is not available right now.");
+  }
+
+  if (!isAdmin) {
+    const finalLock = await getFinalAssessmentLock(quiz, studentId);
+    if (finalLock) {
+      throw new ApiError(
+        403,
+        `Complete the last lesson of the course, "${finalLock.lastLessonTitle}", to unlock the Final Assessment.`,
+        { code: FINAL_ASSESSMENT_LOCKED_CODE, ...finalLock },
+      );
+    }
   }
 
   const unlocked = isAdmin || (await isModuleQuizUnlocked(quiz, studentId));

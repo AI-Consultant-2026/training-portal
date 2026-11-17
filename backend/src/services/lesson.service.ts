@@ -423,6 +423,38 @@ export async function isModuleQuizUnlocked(
   return true;
 }
 
+// Final Assessment lock (owner, 2026-11-17): on every course, graduate and corporate, the
+// Final Assessment stays disabled until the student has completed the course's last
+// lesson (last module by week number then order, last lesson by order). Admins are exempt
+// (quiz.service.ts's start()).
+export const FINAL_ASSESSMENT_LOCKED_CODE = "FINAL_ASSESSMENT_LOCKED";
+
+export async function getCourseLastLesson(courseId: string): Promise<{ id: string; title: string } | null> {
+  const modules = await CourseModule.findAll({
+    where: { courseId },
+    attributes: ["id"],
+    order: [["weekNumber", "DESC"], ["order", "DESC"]],
+  });
+  for (const mod of modules) {
+    // Same lesson order as the lesson page's previous/next navigation.
+    const lessons = await listLessonsForModule(mod.id);
+    if (lessons.length > 0) return lessons[lessons.length - 1];
+  }
+  return null;
+}
+
+export async function getFinalAssessmentLock(
+  quiz: { title: string; moduleId: string },
+  studentId: string,
+): Promise<{ lastLessonId: string; lastLessonTitle: string } | null> {
+  if (quiz.title !== FINAL_ASSESSMENT_TITLE) return null;
+  const courseModule = await CourseModule.findByPk(quiz.moduleId, { attributes: ["courseId"] });
+  if (!courseModule) return null;
+  const last = await getCourseLastLesson(courseModule.courseId);
+  if (!last || (await isLessonCompletedByStudent(last.id, studentId))) return null;
+  return { lastLessonId: last.id, lastLessonTitle: last.title };
+}
+
 // Distinct from enrollment.service.ts's getEnrollmentForCourseAndStudent (which allows
 // any status): completing a lesson requires an *active* enrollment, so a dropped or
 // suspended student can't rack up further progress. Local to this file (rather than a
