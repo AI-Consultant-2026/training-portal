@@ -469,3 +469,7 @@ mark.tbc {
     background: var(--paper); box-shadow: 0 12px 24px rgba(16,21,31,0.12);
   }
 }
+
+/* Students and graduates section on the country homepages (2026-11-17) */
+.section-lead { font-size: 17px; line-height: 1.6; color: var(--charcoal); max-width: 68ch; margin: 14px 0 28px; }
+#students .section-title { max-width: 30ch; }

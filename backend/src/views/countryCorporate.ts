@@ -77,6 +77,10 @@ function faqs(code: CountryCode): { q: string; a: string }[] {
         ]
       : []),
     {
+      q: `How does workforce training improve productivity in ${country}?`,
+      a: "AI Workflow Productivity teaches every department to use AI tools such as ChatGPT, Copilot and Gemini on their own reports, emails, documents and data, and to redesign repetitive tasks with human review. CyberSecure Workforce cuts the time and money lost to phishing, payment fraud and impersonation. Managers can follow each employee's progress in the company portal.",
+    },
+    {
       q: "When can our team start?",
       a: onboardingSummary(),
     },
@@ -191,7 +195,7 @@ ${header(ctx, home, "/", true)}
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">Corporate training &middot; ${escapeHtml(country)}</span>
-        <h1 class="hero-title ca-hero-title">Corporate training in ${escapeHtml(country)}: AI and cybersecurity training for employees</h1>
+        <h1 class="hero-title ca-hero-title">Corporate and workforce training in ${escapeHtml(country)}: AI and cybersecurity training for employees</h1>
         <p class="ca-headline">Protect your business and help your teams do more, with training built around your organisation.</p>
         <p class="hero-sub">Paleon Training helps business owners, CEOs, managing directors and HR leaders in ${escapeHtml(cityList(code))} train their staff in <strong>cybersecurity awareness</strong>, so every employee can spot phishing, payment fraud and impersonation, and <strong>AI productivity</strong>, so every department can use AI tools safely to save time. Training is online, per learner or in a private company portal: self-paced courses, bought per employee or as an organisation-wide rollout, built around real workplace tasks.${ng ? " It supports ITF reimbursement claims." : ""}</p>
         <div class="hero-ctas">

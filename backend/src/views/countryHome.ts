@@ -372,7 +372,7 @@ function hero(ctx: PageContext, home: string): string {
   return `<section class="hero" id="top">
     <div class="wrap hero-inner">
       <span class="eyebrow">Six courses &middot; ${TOTAL_LESSONS} lessons &middot; paleontraining.com${ctx.hub ? "" : c.site.path}</span>
-      <h1 class="hero-title">Digital skills built for careers in <em>${text(c.site.headlineIndustries)}</em></h1>
+      <h1 class="hero-title">${ctx.hub ? "Digital skills built for careers in" : "Job-ready digital skills for students and graduates, for careers in"} <em>${text(c.site.headlineIndustries)}</em></h1>
       <p class="hero-sub">Practical, illustrated courses with a video for every lesson and a final project or assessment that proves what you can do. <strong>Led from the UK, delivered in ${escapeHtml(c.name)}.</strong></p>
       <div class="hero-ctas">
         <a class="btn btn-signal btn-lg" href="${home}#courses">Browse the 6 courses</a>
@@ -535,6 +535,28 @@ function careerMatch(ctx: PageContext, home: string): string {
             : `Courses in ${escapeHtml(c.name)} open soon: <a href="${home}#waitlist">join the waitlist</a> for launch pricing.`
         }</p>
       </div>
+    </div>
+  </section>`;
+}
+
+// University students and graduates looking for work (2026-11-17): the search intent the
+// country homepages target ("courses for students/graduates to get a job in <country>").
+function students(ctx: PageContext, home: string): string {
+  if (ctx.hub) return "";
+  const c = COUNTRIES[ctx.country];
+  const guide = ctx.country === "NG"
+    ? ` Read our guide to <a href="/digital-skills-for-students-nigeria">digital skills for students in Nigeria</a>.`
+    : "";
+  return `<section class="section section-paper" id="students" aria-labelledby="studentsTitle">
+    <div class="wrap">
+      <span class="section-eyebrow">For university students and graduates</span>
+      <h2 class="section-title" id="studentsTitle">Courses for university students and graduates looking for jobs in ${escapeHtml(c.name)}</h2>
+      <p class="section-lead">In your final year or already job hunting? Build a practical skill that employers in ${escapeHtml(c.name)} recruit for, and finish with a project or assessment you can talk about at interview.${guide}</p>
+      <ol class="start-steps">
+        <li class="start-step"><span class="start-num" aria-hidden="true">1</span><h3>Pick a skill employers hire for</h3><p>Cyber Security, AI &amp; Machine Learning, GIS &amp; Drone Mapping, Digital Marketing, HSE and Data Analytics. <a href="${home}#courses">Compare the courses</a>.</p></li>
+        <li class="start-step"><span class="start-num" aria-hidden="true">2</span><h3>See who is hiring</h3><p>Our <a href="${jobsBoardPath(ctx.country)}">latest jobs board for ${escapeHtml(c.name)}</a> lists current vacancies and the skills they ask for.</p></li>
+        <li class="start-step"><span class="start-num" aria-hidden="true">3</span><h3>Not sure where to start?</h3><p>Answer a few questions and <a href="${home}#career-match">get your free Career Match</a> in two minutes.</p></li>
+      </ol>
     </div>
   </section>`;
 }
@@ -812,6 +834,7 @@ function homeJsonLd(ctx: PageContext, url: string): object {
     url,
     description: `Digital skills training for graduates in ${ctx.hub ? "Nigeria, South Africa, Kenya and Ghana" : c.name}: Cyber Security, GIS and Drone Mapping, Digital Marketing, HSE Fundamentals and AI & Machine Learning.`,
     areaServed: (ctx.hub ? MARKET_ORDER : [ctx.country]).map((code) => ({ "@type": "Country", name: COUNTRIES[code].name })),
+    audience: { "@type": "EducationalAudience", educationalRole: "student", audienceType: "University students and graduates looking for jobs" },
     sameAs: [
       "https://www.facebook.com/profile.php?id=61593708334223",
       "https://www.linkedin.com/company/146121029/",
@@ -837,12 +860,15 @@ export function renderCountryHome(ctx: PageContext): string {
   const canonicalPath = home;
   // Under ~60 characters so search results show them whole; the industries are in the
   // description and the H1 (2026-10-30).
+  // 2026-11-17: country pages target university students and graduates looking for jobs.
   const title = ctx.hub
     ? "Online Digital Skills Courses for Africa | Paleon Training"
-    : `Online Digital Skills Courses in ${c.name} | Paleon Training`;
+    : `Job-Ready Courses for Students & Graduates in ${c.name}`;
   // Plain text: page() escapes it once for the meta tag.
   const industries = c.site.headlineIndustries.replace(/\[TBC: [^\]]*\]/g, "").trim();
-  const description = `Practical digital skills for ${industries} careers in ${ctx.hub ? "Africa" : c.name}. Cyber Security, GIS & Drones, Digital Marketing, HSE, AI. First lesson free.`;
+  const description = ctx.hub
+    ? `Practical digital skills for ${industries} careers in Africa. Cyber Security, GIS & Drones, Digital Marketing, HSE, AI. First lesson free.`
+    : `For university students and graduates in ${c.name} seeking jobs in ${industries}: Cyber Security, AI, GIS, Marketing, HSE. First lesson free.`;
   return `${head(ctx, {
     title,
     description,
@@ -867,6 +893,7 @@ ${header(ctx, home)}
 <main id="main">
   ${hero(ctx, home)}
   ${depositStrip(ctx)}
+  ${students(ctx, home)}
   ${courseCards(ctx, home)}
   ${careerMatch(ctx, home)}
   ${steps(ctx, home)}

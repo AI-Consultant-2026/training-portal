@@ -506,7 +506,7 @@ describe("Country corporate training pages (2026-11-08)", () => {
     const res = await request(app).get(`/${cc}/corporate-training`);
     expect(res.status).toBe(200);
     expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/${cc}/corporate-training">`);
-    expect(res.text).toContain(`Corporate training in ${name}: AI and cybersecurity training for employees`);
+    expect(res.text).toContain(`Corporate and workforce training in ${name}: AI and cybersecurity training for employees`);
     expect(res.text).toContain(city);
     for (const slug of ["ai-workflow-productivity", "cybersecure-workforce", "ai-cybersecurity-professional-accelerator"]) {
       expect(res.text).toContain(`href="/${cc}/corporate-training/${slug}"`);
@@ -523,7 +523,7 @@ describe("Country corporate training pages (2026-11-08)", () => {
     const res = await request(app).get("/ng/corporate-training");
     expect(res.status).toBe(200);
     expect(res.text).toContain('<link rel="canonical" href="https://paleontraining.com/ng/corporate-training">');
-    expect(res.text).toContain("Corporate training in Nigeria: AI and cybersecurity training for employees");
+    expect(res.text).toContain("Corporate and workforce training in Nigeria: AI and cybersecurity training for employees");
     expect(res.text).toContain("Lagos");
     expect(res.text).toContain("Self-paced online, in your own private company portal, across Nigeria");
     expect(res.text).toContain("ITF reimbursement");

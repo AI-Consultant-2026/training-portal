@@ -21,8 +21,9 @@ export function countryCorporateSeo(code: CountryCode): Seo {
   const country = COUNTRIES[code].name;
   const levy: Record<CountryCode, string> = { NG: " ITF-claimable.", ZA: "", KE: "", GH: "" };
   return {
-    title: `Corporate Training in ${country}: Online Staff Training Courses`,
-    description: `Online staff training for companies in ${country}: cybersecurity awareness and AI courses for employees, from ${price("cybersecure", code)} per learner.${levy[code]} Buy seats today.`,
+    // 2026-11-17: aimed at owners, MDs and HR managers looking for workforce training for productivity.
+    title: `Corporate Training in ${country} | Workforce Productivity`,
+    description: `For owners, MDs and HR managers in ${country}: online AI and cybersecurity staff training to boost workforce productivity. From ${price("cybersecure", code)} per learner.${levy[code]}`,
   };
 }
 
