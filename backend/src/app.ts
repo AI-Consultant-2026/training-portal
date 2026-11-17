@@ -592,6 +592,13 @@ export function createApp() {
   app.get("/latest-jobs.json", (req, res) => {
     res.type("application/json").sendFile(path.join(__dirname, "marketing", "latest-jobs.json"));
   });
+  // Private universities jobs board (2026-11-17): a copy of /latest-jobs-board for sharing
+  // with universities. Reuses latest-jobs-board.js + /latest-jobs.json so it refreshes daily
+  // with the public board. Unlisted: noindex, not in sitemap, robots.txt or search-index.
+  app.get("/universities-jobs-board", (req, res) => {
+    res.set("X-Robots-Tag", "noindex, nofollow");
+    res.sendFile(path.join(__dirname, "marketing", "universities-jobs-board.html"));
+  });
   // Kenyan latest-jobs board (2026-10-30): same page as /latest-jobs-board for energy,
   // banking and ICT vacancies in Kenya. ke-latest-jobs.json is rebuilt from MyJobMag Kenya
   // by backend/scripts/build-kenya-jobs.py. Listed in sitemap.xml.
