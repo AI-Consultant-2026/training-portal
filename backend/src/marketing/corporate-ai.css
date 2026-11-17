@@ -400,3 +400,6 @@
 .co-how .ca-hint a { color: var(--signal-text); font-weight: 600; }
 .co-how-link { margin: 14px 0 0; }
 .co-how-link a { color: var(--paper); font-weight: 600; text-underline-offset: 3px; }
+
+/* Careers office resources pages (2026-11-17) */
+.cr-list { margin: 8px 0 0 18px; list-style: disc; line-height: 1.7; }

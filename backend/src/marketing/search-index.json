@@ -1252,5 +1252,29 @@
     "description": "Online training for employees in Nigeria, South Africa, Kenya and Ghana: buy seats, staff join with one link and HR tracks progress. Certificates included.",
     "url": "/corporate-training/online-staff-training",
     "category": "Corporate"
+  },
+  {
+    "title": "Free Career Resources for Students in Nigeria | Paleon",
+    "description": "For university careers offices and student bodies in Nigeria: a free jobs board, free first lessons, Career Match and a free online careers talk to share with students.",
+    "url": "/ng/careers-office-resources",
+    "category": "Careers"
+  },
+  {
+    "title": "Free Career Resources for Students in South Africa | Paleon",
+    "description": "For university careers offices and student bodies in South Africa: a free jobs board, free first lessons, Career Match and a free online careers talk to share with students.",
+    "url": "/za/careers-office-resources",
+    "category": "Careers"
+  },
+  {
+    "title": "Free Career Resources for Students in Kenya | Paleon",
+    "description": "For university careers offices and student bodies in Kenya: a free jobs board, free first lessons, Career Match and a free online careers talk to share with students.",
+    "url": "/ke/careers-office-resources",
+    "category": "Careers"
+  },
+  {
+    "title": "Free Career Resources for Students in Ghana | Paleon",
+    "description": "For university careers offices and student bodies in Ghana: a free jobs board, free first lessons, Career Match and a free online careers talk to share with students.",
+    "url": "/gh/careers-office-resources",
+    "category": "Careers"
   }
 ]

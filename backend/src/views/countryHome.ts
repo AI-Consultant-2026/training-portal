@@ -697,6 +697,7 @@ export function footer(ctx: PageContext, home: string, nigeriaHome = false, logo
         <li><a href="${home}#why">Why Paleon</a></li>
         <li><a href="${home}#career-match">Free Career Match</a></li>
         <li><a href="${jobsBoardPath(ctx.country)}">Latest jobs${ctx.hub ? "" : ` in ${escapeHtml(COUNTRIES[ctx.country].name)}`}</a></li>
+        ${ctx.hub ? "" : `<li><a href="${COUNTRIES[ctx.country].site.path}/careers-office-resources">For careers offices</a></li>`}
         <li><a href="${ambassadorsPath(ctx.country)}">Ambassadors</a></li>
         <li><a href="/support">Support</a></li>
         <li><a href="${corporateHubHref(ctx)}">Corporate &amp; AI training</a></li>

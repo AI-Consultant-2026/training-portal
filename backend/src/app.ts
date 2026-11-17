@@ -43,6 +43,7 @@ import { acceleratorPath, renderAccelerator } from "./views/corporateAccelerator
 import { countryCorporatePath } from "./views/corporateLocal";
 import { COUNTRY_CORPORATE_CODES, renderCountryCorporate } from "./views/countryCorporate";
 import { renderCountryUniversities, universitiesPath } from "./views/countryUniversities";
+import { careersResourcesPath, renderCountryCareersResources } from "./views/countryCareersResources";
 import { getGroupDiscountTiers } from "./services/universityPricing.service";
 import {
   AI_POLICY_PATH,
@@ -240,6 +241,13 @@ export function createApp() {
     // The full ambassador programme page, in the country's currency (2026-10-30).
     app.get(`${folder}/ambassadors`, (req, res) => {
       res.type("html").send(renderCountryAmbassadors(code));
+    });
+  }
+  // Free resources for university careers offices and student bodies (2026-11-17):
+  // /ng, /za, /ke and /gh/careers-office-resources.
+  for (const code of MARKET_ORDER) {
+    app.get(careersResourcesPath(code), (req, res) => {
+      res.type("html").send(renderCountryCareersResources(code));
     });
   }
   // Universities buy places for their students (2026-11-15): /ng, /za, /ke and
