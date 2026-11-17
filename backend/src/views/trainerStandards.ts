@@ -44,6 +44,8 @@ export interface Trainer {
   programmes: string[];
   bio: string;
   linkedin: string;
+  // CPD certificates (2026-11-17): shown as a badge with a thumbnail; the PDF is deliberately not published.
+  certificates?: { name: string; issuer: string; issued: string; expires: string; number: string; thumb: string }[];
 }
 
 export const TRAINERS: Trainer[] = [
@@ -56,6 +58,16 @@ export const TRAINERS: Trainer[] = [
     programmes: ["CyberSecure Workforce", "AI Workflow Productivity & Process Transformation", "AI + Cybersecurity Professional Accelerator"],
     bio: "Ken founded Paleon Training. As Programme Director he designs and oversees all three corporate programmes and reviews every module before it is published; cybersecurity modules are written by authors with hands-on security experience. Before Paleon, he spent more than five years as an IT business consultant, including verification and validation work, and more than eight years as a senior consultant at Hellocare Consulting, advising UK care providers on regulation, compliance and governance.",
     linkedin: "https://www.linkedin.com/in/ken-uwotu-b687911a1/",
+    certificates: [
+      {
+        name: "Cyber Security Awareness",
+        issuer: "Human Focus",
+        issued: "17 November 2026",
+        expires: "November 2029",
+        number: "HF12627343",
+        thumb: "/images/team/ken-uwotu-cpd-certificate.jpg",
+      },
+    ],
   },
 ];
 
@@ -71,12 +83,25 @@ export function trainerPersonLd(): object[] {
     worksFor: { "@id": `${ORIGIN}/#organization` },
     sameAs: [t.linkedin],
     knowsAbout: ["Cybersecurity awareness training", "Generative AI in the workplace", "Business information technology"],
-    hasCredential: {
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "degree",
-      name: t.credential,
-    },
+    hasCredential: [
+      { "@type": "EducationalOccupationalCredential", credentialCategory: "degree", name: t.credential },
+      ...(t.certificates ?? []).map((c) => ({
+        "@type": "EducationalOccupationalCredential",
+        credentialCategory: "certificate",
+        name: `${c.name} (CPD-approved)`,
+        recognizedBy: { "@type": "Organization", name: "The CPD Certification Service" },
+      })),
+    ],
   }));
+}
+
+function certBadge(c: NonNullable<Trainer["certificates"]>[number]): string {
+  return `<div class="tr-cert">
+            <img src="${c.thumb}" alt="${esc(c.name)} certificate" width="72" height="102" loading="lazy">
+            <span><span class="tr-cert-tag">CPD-approved certificate</span>
+            <strong>${esc(c.name)}</strong>
+            <span class="tr-cert-meta">${esc(c.issuer)} &middot; ${esc(c.issued)} &middot; valid to ${esc(c.expires)} &middot; No. ${esc(c.number)}</span></span>
+          </div>`;
 }
 
 function profileCard(t: Trainer): string {
@@ -86,6 +111,7 @@ function profileCard(t: Trainer): string {
           <h3 id="tr-${t.slug}">${esc(t.name)}</h3>
           <p class="tr-role">${esc(t.role)}</p>
           <p class="tr-cred"><strong>Qualification:</strong> ${esc(t.credential)}</p>
+          ${(t.certificates ?? []).map(certBadge).join("")}
           <p class="tr-cred"><strong>Designs and reviews:</strong> ${t.programmes.map(esc).join(" &middot; ")}</p>
           <p>${esc(t.bio)}</p>
           <p class="tr-link"><a href="${t.linkedin}" rel="noopener" target="_blank">View ${esc(t.name.split(" ")[0])}'s LinkedIn profile &rarr;</a></p>

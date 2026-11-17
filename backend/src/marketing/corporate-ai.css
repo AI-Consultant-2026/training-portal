@@ -271,6 +271,12 @@
 .tr-body p + p:not(.tr-cred) { margin-top: 10px; }
 .tr-link a { font-weight: 600; }
 .tr-sub { font-size: 24px; margin: 8px 0 8px; }
+.tr-cert { display: flex; gap: 14px; align-items: center; margin: 10px 0 12px; padding: 10px 14px 10px 10px; border: 1px solid var(--line-light); border-radius: var(--radius-lg); background: var(--paper, #faf8f4); max-width: 560px; }
+.tr-cert img { flex: none; width: 72px; height: auto; border: 1px solid var(--line-light); border-radius: 4px; background: #fff; }
+.tr-cert > span { display: flex; flex-direction: column; gap: 2px; line-height: 1.4; min-width: 0; }
+.tr-cert-tag { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #5b2a86; }
+.tr-cert-meta { font-size: 14px; color: var(--charcoal-soft); }
+
 @media (min-width: 720px) {
   .tr-profile { grid-template-columns: 200px 1fr; align-items: start; padding: 28px; }
   .tr-photo { width: 200px; height: 200px; }
