@@ -11,6 +11,7 @@ afterEach(async () => {
     "zoom_attendees",
     "waitlist_signups",
     "ambassador_notices",
+    "discount_codes",
     "corporate_orders",
     "corporate_members",
     "corporate_seats",

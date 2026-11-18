@@ -204,11 +204,15 @@ export async function applyApiCharge(
     return unmatched(`instalment ${meta.instalment} paid with an email that isn't the enrolled student's`);
   }
 
+  const pending = await Payment.findOne({ where: { gatewayReference: charge.pendingReference } });
+  // A full payment opened with a discount code (2026-11-18) expects the discounted amount
+  // the server set when it opened the checkout, recorded on the pending payment.
+  const discountedFull = meta.instalment === "full" && pending?.discountCode ? Number(pending.amount) : null;
   const expected =
     meta.instalment === "deposit"
       ? depositIn(charge.country)
       : meta.instalment === "full"
-        ? (coursePriceIn(charge.country, course.slug) ?? null)
+        ? (discountedFull ?? coursePriceIn(charge.country, course.slug) ?? null)
         : balanceIn(charge.country, course.slug);
   if (expected === null || charge.amount !== expected) {
     return unmatched(
@@ -216,7 +220,6 @@ export async function applyApiCharge(
     );
   }
 
-  const pending = await Payment.findOne({ where: { gatewayReference: charge.pendingReference } });
   if (pending) {
     await pending.update({ status: "succeeded", amount: charge.amount, gatewayReference: charge.gatewayReference });
   } else {

@@ -1,11 +1,15 @@
 import { z } from "zod";
 
+// A discount code (2026-11-18) lowers the pay-in-full price only.
+const discountCode = z.string().trim().max(40).optional();
+
 export const getQuoteSchema = z.object({
   params: z.object({ courseId: z.string().min(1) }),
+  query: z.object({ discountCode }).passthrough(),
 });
 
 export const cardPaymentStartSchema = z.object({
-  body: z.object({ courseId: z.string().min(1).max(255) }),
+  body: z.object({ courseId: z.string().min(1).max(255), discountCode }),
 });
 
 export const instalmentPaymentStartSchema = z.object({

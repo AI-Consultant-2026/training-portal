@@ -6,12 +6,17 @@ import * as paystackWebhookService from "../services/paystackWebhook.service";
 import { asyncHandler } from "../utils/asyncHandler";
 
 export const getQuote = asyncHandler(async (req: Request, res: Response) => {
-  const quote = await paymentService.getQuote(req.params.courseId, req.user!.id);
+  const code = typeof req.query.discountCode === "string" ? req.query.discountCode : undefined;
+  const quote = await paymentService.getQuote(req.params.courseId, req.user!.id, code || undefined);
   res.json({ quote });
 });
 
 export const startCardPayment = asyncHandler(async (req: Request, res: Response) => {
-  const result = await paymentService.startCardPayment({ courseId: req.body.courseId, studentId: req.user!.id });
+  const result = await paymentService.startCardPayment({
+    courseId: req.body.courseId,
+    studentId: req.user!.id,
+    discountCode: req.body.discountCode || undefined,
+  });
   res.status(201).json(result);
 });
 

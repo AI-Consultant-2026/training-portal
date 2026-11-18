@@ -6,7 +6,7 @@ import { Course, Enrollment, Payment } from "../models";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../utils/logger";
 import type { ApiChargeKind, VerifiedCharge } from "./payment.service";
-import { CARD_PAYMENTS_UNAVAILABLE_MESSAGE, INSTALMENT_NOTES } from "./payment.service";
+import { CARD_PAYMENTS_UNAVAILABLE_MESSAGE, chargeNotes, INSTALMENT_NOTES } from "./payment.service";
 import { applyApiCharge, WebhookOutcome } from "./paystackWebhook.service";
 import { moneyIn, paystackCurrency } from "./paystackAccounts";
 import * as userService from "./user.service";
@@ -53,6 +53,7 @@ export async function initializeFlutterwaveCharge(input: {
   amount: number;
   country: CountryCode;
   callbackUrl: string;
+  discountCode?: string | null;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const { enrollment, amount, country } = input;
   if (!isFlutterwaveConfigured()) {
@@ -108,7 +109,8 @@ export async function initializeFlutterwaveCharge(input: {
     baseAmountNgn: country === "NG" ? amount : 0,
     billingCountry: country,
     gatewayReference: FLUTTERWAVE_INIT_REFERENCE_PREFIX + txRef,
-    notes: `${INSTALMENT_NOTES[input.kind]} (Flutterwave)`,
+    notes: `${chargeNotes(input.kind, input.discountCode)} (Flutterwave)`,
+    discountCode: input.discountCode ?? null,
   });
 
   return { paymentLink, payment, enrollment };

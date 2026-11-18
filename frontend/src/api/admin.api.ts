@@ -10,6 +10,8 @@ import {
   ZoomAttendee,
   AmbassadorNotice,
   AmbassadorNoticeInput,
+  DiscountCode,
+  DiscountCodeInput,
   SalesRep,
   SalesRepDetail,
   SalesRepInput,
@@ -219,4 +221,24 @@ export async function recordSalesRepPayment(id: string, input: SalesRepPaymentIn
 export async function deleteSalesRepPayment(id: string, paymentId: string): Promise<SalesRepDetail> {
   const res = await axiosClient.delete<{ rep: SalesRepDetail }>(`/admin/sales-reps/${id}/payments/${paymentId}`);
   return res.data.rep;
+}
+
+// Discount codes (2026-11-18): % off the course price when a candidate pays in full.
+export async function fetchDiscountCodes(): Promise<DiscountCode[]> {
+  const res = await axiosClient.get<{ codes: DiscountCode[] }>("/admin/discount-codes");
+  return res.data.codes;
+}
+
+export async function createDiscountCode(input: DiscountCodeInput): Promise<DiscountCode> {
+  const res = await axiosClient.post<{ code: DiscountCode }>("/admin/discount-codes", input);
+  return res.data.code;
+}
+
+export async function updateDiscountCode(id: string, input: DiscountCodeInput): Promise<DiscountCode> {
+  const res = await axiosClient.patch<{ code: DiscountCode }>(`/admin/discount-codes/${id}`, input);
+  return res.data.code;
+}
+
+export async function deleteDiscountCode(id: string): Promise<void> {
+  await axiosClient.delete(`/admin/discount-codes/${id}`);
 }

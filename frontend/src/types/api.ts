@@ -344,6 +344,33 @@ export interface PaymentQuote {
     unlockedDays: number;
     enabled: boolean;
   } | null;
+  /** Set when a valid discount code was applied: it lowers the pay-in-full price only. */
+  discount?: {
+    code: string;
+    percentOff: number;
+    originalAmount: number;
+    amount: number;
+  };
+}
+
+// Discount codes (2026-11-18), managed at /admin/discount-codes.
+export interface DiscountCode {
+  id: string;
+  code: string;
+  percentOff: number;
+  description: string | null;
+  active: boolean;
+  expiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DiscountCodeInput {
+  code: string;
+  percentOff: number;
+  description?: string | null;
+  active?: boolean;
+  expiresAt?: string | null;
 }
 
 // Public "pay for a student" page (2026-10-12). Amounts are in checkout.currency.

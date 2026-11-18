@@ -21,6 +21,8 @@ import {
 } from "./paystackAccounts";
 import { initializeFlutterwaveCharge, verifyFlutterwaveCharge } from "./flutterwave.service";
 import { CountryCode, isCountryCode } from "../constants/countries";
+import type { DiscountCode } from "../models";
+import { discountedAmount, requireValidCode } from "./discountCode.service";
 
 function requirePriceNgn(courseSlug: string): number {
   const priceNgn = COURSE_PRICES_NGN[courseSlug];
@@ -70,9 +72,33 @@ export interface Quote {
     /** False when Paystack's API key isn't set (instalments need the API checkout). */
     enabled: boolean;
   } | null;
+  /** Set when the student applied a valid discount code: it only lowers the full payment. */
+  discount?: {
+    code: string;
+    percentOff: number;
+    /** The full price before the discount, in the checkout currency. */
+    originalAmount: number;
+    /** What paying in full costs with the code. */
+    amount: number;
+  };
 }
 
-export async function getQuote(courseIdOrSlug: string, studentId: string): Promise<Quote> {
+export async function getQuote(courseIdOrSlug: string, studentId: string, discountCode?: string): Promise<Quote> {
+  const quote = await getBaseQuote(courseIdOrSlug, studentId);
+  if (!discountCode) return quote;
+  const discount = await requireValidCode(discountCode);
+  return {
+    ...quote,
+    discount: {
+      code: discount.code,
+      percentOff: discount.percentOff,
+      originalAmount: quote.card.amount,
+      amount: discountedAmount(quote.card.amount, discount.percentOff),
+    },
+  };
+}
+
+async function getBaseQuote(courseIdOrSlug: string, studentId: string): Promise<Quote> {
   const course = await courseService.getCourseByIdOrSlug(courseIdOrSlug);
   const student = await userService.getUserById(studentId);
   const country = checkoutCountryFor(student.country);
@@ -139,11 +165,17 @@ export const PAYSTACK_PENDING_REFERENCE = "Paystack payment page";
 export async function startCardPayment(input: {
   courseId: string;
   studentId: string;
+  discountCode?: string;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const course = await courseService.getCourseByIdOrSlug(input.courseId);
   const student = await userService.getUserById(input.studentId);
   const country = checkoutCountryFor(student.country);
-  if (checkoutGateway(country) === "flutterwave") return startLocalFullPayment(course, input.studentId, country);
+  const discount = input.discountCode ? await requireValidCode(input.discountCode) : null;
+  // A discounted price can't use a fixed-price Paystack page, so it always goes through
+  // the API checkout, which charges exactly the amount set here.
+  if (checkoutGateway(country) === "flutterwave" || discount) {
+    return startLocalFullPayment(course, input.studentId, country, discount);
+  }
   const paymentLink = getPaystackPaymentLink(course.slug);
   if (!paymentLink) {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
@@ -173,11 +205,14 @@ export async function startCardPayment(input: {
 }
 
 // A live Ghana, Kenya or South Africa has no fixed-price payment pages: paying in full is
-// an API checkout for the whole price, like a sponsor's full payment.
+// an API checkout for the whole price, like a sponsor's full payment. With a discount code
+// (2026-11-18) the checkout is for the discounted price and remembers the code, so the
+// confirmation expects that amount.
 async function startLocalFullPayment(
   course: Course,
   studentId: string,
   country: CountryCode,
+  discount: DiscountCode | null = null,
 ): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   if (!paymentsEnabledIn(country)) {
     throw new ApiError(503, CARD_PAYMENTS_UNAVAILABLE_MESSAGE, { code: "CARD_PAYMENTS_UNAVAILABLE" });
@@ -193,7 +228,8 @@ async function startLocalFullPayment(
     enrollment,
     courseSlug: course.slug,
     kind: "full",
-    amount: price,
+    amount: discount ? discountedAmount(price, discount.percentOff) : price,
+    discountCode: discount?.code ?? null,
     callbackUrl: `${origin}/courses/${course.slug}?payment=full`,
     cancelUrl: `${origin}/courses/${course.slug}/pay/card`,
   });
@@ -218,6 +254,11 @@ export const INSTALMENT_NOTES: Record<ApiChargeKind, string> = {
   balance: "Instalment balance",
   full: "Full payment",
 };
+
+// What the admin view shows for a charge, e.g. "Full payment (code FULLPAY15)".
+export function chargeNotes(kind: ApiChargeKind, discountCode?: string | null): string {
+  return discountCode ? `${INSTALMENT_NOTES[kind]} (code ${discountCode})` : INSTALMENT_NOTES[kind];
+}
 
 export async function startInstalmentPayment(input: {
   courseId: string;
@@ -271,6 +312,7 @@ export async function openCheckout(input: {
   amount: number;
   callbackUrl: string;
   cancelUrl: string;
+  discountCode?: string | null;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const student = await userService.getUserById(input.enrollment.studentId);
   const country = checkoutCountryFor(student.country);
@@ -293,6 +335,7 @@ export async function initializePaystackCharge(input: {
   amount: number;
   callbackUrl: string;
   cancelUrl: string;
+  discountCode?: string | null;
 }): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const { enrollment, amount } = input;
   const student = await userService.getUserById(enrollment.studentId);
@@ -340,7 +383,8 @@ export async function initializePaystackCharge(input: {
     baseAmountNgn: currency === "NGN" ? amount : 0,
     billingCountry: country,
     gatewayReference: PAYSTACK_INIT_REFERENCE_PREFIX + reference,
-    notes: INSTALMENT_NOTES[input.kind],
+    notes: chargeNotes(input.kind, input.discountCode),
+    discountCode: input.discountCode ?? null,
   });
 
   return { paymentLink, payment, enrollment };

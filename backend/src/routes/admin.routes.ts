@@ -4,6 +4,12 @@ import * as emailCampaignsController from "../controllers/emailCampaigns.control
 import * as referralsController from "../controllers/referrals.controller";
 import * as zoomAttendeesController from "../controllers/zoomAttendees.controller";
 import * as ambassadorNoticesController from "../controllers/ambassadorNotices.controller";
+import * as discountCodesController from "../controllers/discountCodes.controller";
+import {
+  createDiscountCodeSchema,
+  discountCodeIdSchema,
+  updateDiscountCodeSchema,
+} from "../validators/discountCodes.validators";
 import * as salesRepsController from "../controllers/salesReps.controller";
 import * as corporateController from "../controllers/corporate.controller";
 import * as corporateOrdersController from "../controllers/corporateOrders.controller";
@@ -92,6 +98,11 @@ adminRouter.get("/notices", ambassadorNoticesController.listAll);
 adminRouter.post("/notices", validate(createNoticeSchema), ambassadorNoticesController.create);
 adminRouter.patch("/notices/:id", validate(updateNoticeSchema), ambassadorNoticesController.update);
 adminRouter.delete("/notices/:id", validate(noticeIdSchema), ambassadorNoticesController.remove);
+// Discount codes (2026-11-18): % off the course price when a candidate pays in full.
+adminRouter.get("/discount-codes", discountCodesController.list);
+adminRouter.post("/discount-codes", validate(createDiscountCodeSchema), discountCodesController.create);
+adminRouter.patch("/discount-codes/:id", validate(updateDiscountCodeSchema), discountCodesController.update);
+adminRouter.delete("/discount-codes/:id", validate(discountCodeIdSchema), discountCodesController.remove);
 
 // Corporate staff portal: companies, their seats per corporate course, and their staff.
 adminRouter.get("/corporate-clients", corporateController.listClients);

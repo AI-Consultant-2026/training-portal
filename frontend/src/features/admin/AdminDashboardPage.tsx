@@ -89,6 +89,7 @@ const ADMIN_SECTIONS = [
   { to: "/admin/referrals", label: "Referrals" },
   { to: "/admin/zoom-attendees", label: "Zoom attendees" },
   { to: "/admin/notices", label: "Notice board" },
+  { to: "/admin/discount-codes", label: "Discount codes" },
   { to: "/admin/sales-reps", label: "Sales reps" },
   { to: "/admin/partner-pipeline", label: "Partner pipeline" },
   { to: "/admin/email-client", label: "Email client" },

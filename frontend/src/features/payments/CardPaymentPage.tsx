@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { createSponsorLink, fetchPaymentQuote, startCardPayment, startInstalmentPayment } from "../../api/payments.api";
 import { PAYMENT_CONFIRMATION_PROMISE } from "./paymentCopy";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -25,6 +25,7 @@ export function CardPaymentPage() {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { selectedCourse: course } = useAppSelector((state) => state.courses);
   const { user } = useAppSelector((state) => state.auth);
   const { items: enrollments } = useAppSelector((state) => state.enrollments);
@@ -35,6 +36,12 @@ export function CardPaymentPage() {
   const [quoteError, setQuoteError] = useState(false);
   const [starting, setStartingKind] = useState<"full" | "deposit" | "balance" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Discount code (2026-11-18): lowers the pay-in-full price only. A link can carry it as
+  // ?code=FULLPAY15 so it's applied as soon as the page loads.
+  const [codeInput, setCodeInput] = useState(searchParams.get("code") ?? "");
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [applying, setApplying] = useState(false);
 
   useEffect(() => {
     if (slug) dispatch(fetchCourseBySlug(slug));
@@ -47,7 +54,40 @@ export function CardPaymentPage() {
     fetchPaymentQuote(course.id)
       .then(setQuote)
       .catch(() => setQuoteError(true));
+    const fromLink = searchParams.get("code")?.trim();
+    if (fromLink) void applyCode(fromLink);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course]);
+
+  async function applyCode(raw: string) {
+    if (!course) return;
+    const code = raw.trim();
+    if (!code) return;
+    setApplying(true);
+    setCodeError(null);
+    try {
+      const discounted = await fetchPaymentQuote(course.id, code);
+      setQuote(discounted);
+      setAppliedCode(discounted.discount?.code ?? code.toUpperCase());
+      setCodeInput(discounted.discount?.code ?? code.toUpperCase());
+      track("discount_code_applied", { code: discounted.discount?.code, course_slug: course.slug });
+    } catch (err) {
+      setCodeError(
+        (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message ??
+          "Couldn't check this code. Please try again.",
+      );
+    } finally {
+      setApplying(false);
+    }
+  }
+
+  async function removeCode() {
+    if (!course) return;
+    setAppliedCode(null);
+    setCodeInput("");
+    setCodeError(null);
+    setQuote(await fetchPaymentQuote(course.id).catch(() => quote));
+  }
 
   async function handlePay(kind: "full" | "deposit" | "balance") {
     if (!course) return;
@@ -55,10 +95,12 @@ export function CardPaymentPage() {
     setError(null);
     try {
       const { paymentLink } =
-        kind === "full" ? await startCardPayment(course.id) : await startInstalmentPayment(course.id, kind);
+        kind === "full"
+          ? await (appliedCode ? startCardPayment(course.id, appliedCode) : startCardPayment(course.id))
+          : await startInstalmentPayment(course.id, kind);
       const value =
         kind === "full"
-          ? quote?.card.amount
+          ? (quote?.discount?.amount ?? quote?.card.amount)
           : kind === "deposit"
             ? quote?.instalment?.depositNgn
             : quote?.instalment?.balanceNgn;
@@ -155,18 +197,73 @@ export function CardPaymentPage() {
               </Button>
             </div>
           )}
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-            <p className="text-base font-semibold text-gray-900">Pay in full: {money(quote.card.amount)}</p>
+          <div
+            className={`rounded-lg p-4 text-sm ${
+              quote.discount ? "border-2 border-green-600 bg-white" : "border border-gray-200 bg-gray-50"
+            }`}
+          >
+            {quote.discount ? (
+              <>
+                <p className="text-base font-semibold text-gray-900">
+                  Pay in full: <span className="text-gray-400 line-through">{money(quote.discount.originalAmount)}</span>{" "}
+                  {money(quote.discount.amount)}
+                </p>
+                <p className="mt-1 font-medium text-green-700">
+                  Code {quote.discount.code}: {quote.discount.percentOff}% off. You save{" "}
+                  {money(quote.discount.originalAmount - quote.discount.amount)}.
+                </p>
+              </>
+            ) : (
+              <p className="text-base font-semibold text-gray-900">Pay in full: {money(quote.card.amount)}</p>
+            )}
             <p className="mt-1 text-gray-600">Unlocks the whole course straight away.</p>
             <Button
-              variant={instalment ? "secondary" : "primary"}
+              variant={instalment && !quote.discount ? "secondary" : "primary"}
               className="mt-3 w-full"
               onClick={() => handlePay("full")}
               isLoading={starting === "full"}
               disabled={starting !== null}
             >
-              Pay {money(quote.card.amount)} with {gateway}
+              Pay {money(quote.discount?.amount ?? quote.card.amount)} with {gateway}
             </Button>
+
+            <form
+              className="mt-4 border-t border-gray-200 pt-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void applyCode(codeInput);
+              }}
+            >
+              <label htmlFor="discount-code" className="block text-sm font-medium text-gray-700">
+                Have a discount code?
+              </label>
+              {appliedCode ? (
+                <p className="mt-1 text-gray-600">
+                  <span className="font-mono font-semibold text-gray-900">{appliedCode}</span> applied to the full
+                  payment.{" "}
+                  <button type="button" onClick={removeCode} className="text-blue-600 hover:underline">
+                    Remove
+                  </button>
+                </p>
+              ) : (
+                <div className="mt-1 flex gap-2">
+                  <input
+                    id="discount-code"
+                    value={codeInput}
+                    onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
+                    maxLength={40}
+                    autoComplete="off"
+                    placeholder="Enter code"
+                    className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm uppercase focus:border-blue-500 focus:outline-none"
+                  />
+                  <Button type="submit" variant="secondary" isLoading={applying} disabled={!codeInput.trim()}>
+                    Apply
+                  </Button>
+                </div>
+              )}
+              {codeError && <p className="mt-1 text-sm text-red-600">{codeError}</p>}
+              <p className="mt-1 text-xs text-gray-500">Discount codes apply to paying in full only.</p>
+            </form>
           </div>
         </div>
       )}

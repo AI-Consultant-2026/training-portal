@@ -1,8 +1,12 @@
 import { Enrollment, Payment, PaymentQuote } from "../types/api";
 import { axiosClient } from "./axiosClient";
 
-export async function fetchPaymentQuote(courseId: string): Promise<PaymentQuote> {
-  const res = await axiosClient.get<{ quote: PaymentQuote }>(`/payments/quote/${courseId}`);
+// With a discount code, the quote's `discount` gives the lower pay-in-full price; an
+// invalid code is a 400 whose message the page shows.
+export async function fetchPaymentQuote(courseId: string, discountCode?: string): Promise<PaymentQuote> {
+  const res = await axiosClient.get<{ quote: PaymentQuote }>(`/payments/quote/${courseId}`, {
+    params: discountCode ? { discountCode } : undefined,
+  });
   return res.data.quote;
 }
 
@@ -10,10 +14,11 @@ export async function fetchPaymentQuote(courseId: string): Promise<PaymentQuote>
 // Paystack payment page, where the student actually pays.
 export async function startCardPayment(
   courseId: string,
+  discountCode?: string,
 ): Promise<{ paymentLink: string; payment: Payment; enrollment: Enrollment }> {
   const res = await axiosClient.post<{ paymentLink: string; payment: Payment; enrollment: Enrollment }>(
     "/payments/card",
-    { courseId },
+    discountCode ? { courseId, discountCode } : { courseId },
   );
   return res.data;
 }

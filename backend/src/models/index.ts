@@ -30,6 +30,7 @@ import { VideoCheckpointAnswer, initVideoCheckpointAnswerModel } from "./videoCh
 import { ZoomAttendee, initZoomAttendeeModel } from "./zoomAttendee.model";
 import { WaitlistSignup, initWaitlistSignupModel } from "./waitlistSignup.model";
 import { AmbassadorNotice, initAmbassadorNoticeModel } from "./ambassadorNotice.model";
+import { DiscountCode, initDiscountCodeModel } from "./discountCode.model";
 import { CorporateClient, CorporateMember, CorporateSeat, initCorporateModels } from "./corporate.model";
 import { CorporateOrder, initCorporateOrderModel } from "./corporateOrder.model";
 import { AppSetting, initAppSettingModel } from "./appSetting.model";
@@ -91,6 +92,7 @@ initEmailUnsubscribeModel(sequelize);
 initZoomAttendeeModel(sequelize);
 initWaitlistSignupModel(sequelize);
 initAmbassadorNoticeModel(sequelize);
+initDiscountCodeModel(sequelize);
 initSalesRepModel(sequelize);
 initSalesRepStudentModel(sequelize);
 initSalesRepPaymentModel(sequelize);
@@ -215,6 +217,7 @@ CorporateOrder.belongsTo(CorporateClient, { foreignKey: "clientId", as: "client"
 
 export {
   AmbassadorNotice,
+  DiscountCode,
   CorporateClient,
   CorporateMember,
   CorporateOrder,

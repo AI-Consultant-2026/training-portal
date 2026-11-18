@@ -128,4 +128,35 @@ describe("CardPaymentPage", () => {
     await waitFor(() => expect(paymentsApi.startInstalmentPayment).toHaveBeenCalledWith("course-1", "deposit"));
     await waitFor(() => expect(assign).toHaveBeenCalledWith("https://checkout.paystack.com/xyz"));
   });
+
+  it("applies a discount code to the full payment and sends it with the checkout", async () => {
+    const user = userEvent.setup();
+    renderPage(quote(true));
+    await screen.findByText(/have a discount code/i);
+    vi.mocked(paymentsApi.fetchPaymentQuote).mockResolvedValueOnce({
+      ...quote(true),
+      discount: { code: "FULLPAY15", percentOff: 15, originalAmount: 100000, amount: 85000 },
+    });
+    vi.mocked(paymentsApi.startCardPayment).mockReturnValue(new Promise(() => {}));
+
+    await user.type(screen.getByLabelText(/have a discount code/i), "fullpay15");
+    await user.click(screen.getByRole("button", { name: /apply/i }));
+
+    expect(await screen.findByText(/code FULLPAY15: 15% off/i)).toBeInTheDocument();
+    expect(paymentsApi.fetchPaymentQuote).toHaveBeenLastCalledWith(COURSE.id, "FULLPAY15");
+    await user.click(screen.getByRole("button", { name: /pay .*85,000/i }));
+    await waitFor(() => expect(paymentsApi.startCardPayment).toHaveBeenCalledWith(COURSE.id, "FULLPAY15"));
+  });
+
+  it("shows why a code was rejected", async () => {
+    const user = userEvent.setup();
+    renderPage(quote(true));
+    await screen.findByText(/have a discount code/i);
+    vi.mocked(paymentsApi.fetchPaymentQuote).mockRejectedValueOnce({
+      response: { data: { error: { message: "This discount code isn't valid or has expired." } } },
+    });
+    await user.type(screen.getByLabelText(/have a discount code/i), "NOPE");
+    await user.click(screen.getByRole("button", { name: /apply/i }));
+    expect(await screen.findByText(/isn.t valid or has expired/i)).toBeInTheDocument();
+  });
 });

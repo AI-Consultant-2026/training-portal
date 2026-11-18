@@ -17,6 +17,8 @@ export interface PaymentAttributes {
   cardLast4: string | null;
   gatewayReference: string | null;
   notes: string | null;
+  /** The discount code a full-payment checkout was opened with (2026-11-18). */
+  discountCode: string | null;
   receiptPath: string | null;
   receiptName: string | null;
   receiptMimeType: string | null;
@@ -32,6 +34,7 @@ export type PaymentCreationAttributes = Optional<
   | "cardLast4"
   | "gatewayReference"
   | "notes"
+  | "discountCode"
   | "receiptPath"
   | "receiptName"
   | "receiptMimeType"
@@ -56,6 +59,7 @@ export class Payment
   declare cardLast4: string | null;
   declare gatewayReference: string | null;
   declare notes: string | null;
+  declare discountCode: string | null;
   declare receiptPath: string | null;
   declare receiptName: string | null;
   declare receiptMimeType: string | null;
@@ -100,6 +104,7 @@ export function initPaymentModel(sequelize: Sequelize) {
       cardLast4: { type: DataTypes.STRING(4), allowNull: true, field: "card_last4" },
       gatewayReference: { type: DataTypes.STRING, allowNull: true, field: "gateway_reference" },
       notes: { type: DataTypes.TEXT, allowNull: true },
+      discountCode: { type: DataTypes.STRING(40), allowNull: true, field: "discount_code" },
       receiptPath: { type: DataTypes.STRING, allowNull: true, field: "receipt_path" },
       receiptName: { type: DataTypes.STRING, allowNull: true, field: "receipt_name" },
       receiptMimeType: { type: DataTypes.STRING, allowNull: true, field: "receipt_mime_type" },
