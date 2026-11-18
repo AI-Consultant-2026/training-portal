@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useSearchParams } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "../../test/test-utils";
 import { User } from "../../types/api";
@@ -25,6 +25,11 @@ const STUDENT: User = {
   referralCode: null,
   emailVerifiedAt: "2026-01-01T00:00:00.000Z",
 };
+
+function LoginProbe() {
+  const [params] = useSearchParams();
+  return <div data-testid="next">{params.get("next")}</div>;
+}
 
 function renderProtected(authState: { user: User | null; bootstrapped: boolean }) {
   return renderWithProviders(
@@ -56,6 +61,32 @@ describe("ProtectedRoute", () => {
     renderProtected({ user: null, bootstrapped: false });
     expect(screen.queryByText("Protected dashboard content")).not.toBeInTheDocument();
     expect(screen.queryByText("Login page")).not.toBeInTheDocument();
+  });
+
+  it("sends a signed-out user to /login with the page they wanted, query string included", () => {
+    renderWithProviders(
+      <Routes>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/courses/:slug/pay/card" element={<div>Pay page</div>} />
+        </Route>
+        <Route path="/login" element={<LoginProbe />} />
+      </Routes>,
+      {
+        route: "/courses/hse-fundamentals/pay/card?code=FULLPAY15",
+        preloadedState: {
+          auth: {
+            user: null,
+            accessToken: null,
+            status: "idle",
+            bootstrapped: true,
+            error: null,
+            passwordReset: { status: "idle", error: null },
+            emailVerification: { status: "idle", error: null, resendStatus: "idle" },
+          },
+        },
+      },
+    );
+    expect(screen.getByTestId("next").textContent).toBe("/courses/hse-fundamentals/pay/card?code=FULLPAY15");
   });
 
   it("redirects a signed-out user to /login once bootstrapped", () => {

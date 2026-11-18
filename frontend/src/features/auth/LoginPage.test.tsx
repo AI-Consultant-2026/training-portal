@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import * as authApi from "../../api/auth.api";
 import { renderWithProviders } from "../../test/test-utils";
@@ -24,19 +24,44 @@ const STUDENT: User = {
   emailVerifiedAt: "2026-01-01T00:00:00.000Z",
 };
 
-function renderLoginPage() {
+function Where() {
+  const location = useLocation();
+  return <div>At {location.pathname + location.search}</div>;
+}
+
+function renderLoginPage(route = "/login") {
   return renderWithProviders(
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/courses/:slug/pay/card" element={<Where />} />
       <Route path="/dashboard" element={<div>Student dashboard</div>} />
       <Route path="/admin" element={<div>Admin dashboard</div>} />
       <Route path="/register" element={<div>Register page</div>} />
     </Routes>,
-    { route: "/login" },
+    { route },
   );
 }
 
+async function logInAsStudent() {
+  vi.mocked(authApi.login).mockResolvedValue({ user: STUDENT, accessToken: "token" });
+  fireEvent.change(screen.getByLabelText("Email"), { target: { value: STUDENT.email } });
+  fireEvent.change(screen.getByLabelText("Password"), { target: { value: "password123" } });
+  fireEvent.click(screen.getByRole("button", { name: "Log in" }));
+}
+
 describe("LoginPage", () => {
+  it("returns to the page in ?next=, keeping its query string", async () => {
+    renderLoginPage(`/login?next=${encodeURIComponent("/courses/hse-fundamentals/pay/card?code=FULLPAY15")}`);
+    await logInAsStudent();
+    expect(await screen.findByText("At /courses/hse-fundamentals/pay/card?code=FULLPAY15")).toBeInTheDocument();
+  });
+
+  it.each(["https://evil.example", "//evil.example", "/\\evil.example"])("ignores an off-site next (%s)", async (next) => {
+    renderLoginPage(`/login?next=${encodeURIComponent(next)}`);
+    await logInAsStudent();
+    expect(await screen.findByText("Student dashboard")).toBeInTheDocument();
+  });
+
   it("has a working sign-up link to /register", () => {
     // Regression guard: this link was previously disabled site-wide pending the new
     // intake, then re-enabled -- this test is what should catch it if that regresses.

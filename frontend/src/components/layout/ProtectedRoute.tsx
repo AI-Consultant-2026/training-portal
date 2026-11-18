@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { sendHeartbeat } from "../../api/users.api";
 import { useAppSelector } from "../../app/hooks";
 import { Spinner } from "../ui/Spinner";
@@ -8,6 +8,7 @@ const HEARTBEAT_INTERVAL_MS = 60_000;
 
 export function ProtectedRoute() {
   const { user, bootstrapped } = useAppSelector((state) => state.auth);
+  const location = useLocation();
 
   useEffect(() => {
     if (!user) return;
@@ -28,7 +29,10 @@ export function ProtectedRoute() {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // Come back here after logging in (2026-11-18), keeping the query string, so a link
+    // like /courses/<slug>/pay/card?code=FULLPAY15 still applies its code.
+    const next = location.pathname + location.search;
+    return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
   }
 
   return <Outlet />;

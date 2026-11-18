@@ -15,7 +15,7 @@ export function LoginPage() {
   // Return to the page that sent them here (e.g. a company staff sign-up link). Only
   // same-site paths, so a crafted ?next= can't bounce people to another website.
   const next = searchParams.get("next");
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
+  const safeNext = next && /^\/(?![/\\])/.test(next) && !next.startsWith("/login") ? next : null;
   const { status, error } = useAppSelector((state) => state.auth);
 
   async function handleSubmit(e: FormEvent) {
