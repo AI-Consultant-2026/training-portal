@@ -301,6 +301,8 @@ export interface Enrollment {
   nextLessonId: string | null;
   // Set while a started payment awaits confirmation (my-enrollments only).
   paymentSubmittedAt?: string | null;
+  /** Completed and, where the course has one, the final assessment passed (my-enrollments only). */
+  certificateAvailable?: boolean;
 }
 
 // "bank_transfer" only appears on older payment records (bank transfer has been retired).

@@ -279,6 +279,56 @@ describe("Enrollments: certificate download", () => {
   });
 });
 
+describe("Enrollments: certificate needs a passed final assessment", () => {
+  async function completedWithFinal(email: string) {
+    const instructor = await createInstructor();
+    const { course } = await createCourseWithModules(instructor.id, [1]);
+    const courseModule = await CourseModule.findOne({ where: { courseId: course.id } });
+    const final = await Quiz.create({ moduleId: courseModule!.id, title: "Final Assessment", passingScore: 80, questionCount: 1 });
+    const student = await registerStudent(email);
+    const enrollment = await Enrollment.create({
+      courseId: course.id,
+      studentId: student.id,
+      status: "completed",
+      progressPercent: 100,
+      paymentConfirmed: true,
+      completionDate: new Date(),
+    });
+    const token = await loginAs(email);
+    return { final, student, enrollment, token };
+  }
+
+  it("withholds the certificate until the final is passed, then releases it", async () => {
+    const { final, student, enrollment, token } = await completedWithFinal("certificate-final@example.com");
+
+    let res = await request(app).get(`/api/enrollments/${enrollment.id}/certificate`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(403);
+    expect(res.body.error.details.code).toBe("FINAL_ASSESSMENT_NOT_PASSED");
+    let list = await request(app).get("/api/enrollments").set("Authorization", `Bearer ${token}`);
+    expect(list.body.enrollments[0].certificateAvailable).toBe(false);
+
+    // A failed graded attempt and an ungraded one don't count.
+    await QuizAttempt.create({ quizId: final.id, studentId: student.id, status: "graded", score: 60, endTime: new Date() });
+    await QuizAttempt.create({ quizId: final.id, studentId: student.id, status: "submitted", score: 100, attemptNumber: 2, endTime: new Date() });
+    res = await request(app).get(`/api/enrollments/${enrollment.id}/certificate`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(403);
+
+    await QuizAttempt.create({ quizId: final.id, studentId: student.id, status: "graded", score: 80, attemptNumber: 3, endTime: new Date() });
+    res = await request(app).get(`/api/enrollments/${enrollment.id}/certificate`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    list = await request(app).get("/api/enrollments").set("Authorization", `Bearer ${token}`);
+    expect(list.body.enrollments[0].certificateAvailable).toBe(true);
+  });
+
+  it("also applies when an admin downloads the student's certificate", async () => {
+    const { enrollment } = await completedWithFinal("certificate-final-admin@example.com");
+    await createAdmin();
+    const adminToken = await loginAs("jest-enroll-admin@example.com");
+    const res = await request(app).get(`/api/enrollments/${enrollment.id}/certificate`).set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(403);
+  });
+});
+
 describe("Enrollments: attendance record download", () => {
   it("rejects an anonymous request", async () => {
     const res = await request(app).get("/api/enrollments/00000000-0000-0000-0000-000000000000/attendance-record");

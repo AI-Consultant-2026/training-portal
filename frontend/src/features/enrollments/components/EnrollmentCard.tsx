@@ -138,7 +138,10 @@ export function EnrollmentCard({ enrollment }: EnrollmentCardProps) {
                 Share feedback
               </button>
             )}
-            {enrollment.status === "completed" && course && (
+            {enrollment.status === "completed" && course && !enrollment.certificateAvailable && (
+              <span className="text-amber-700">Pass the final assessment for your certificate</span>
+            )}
+            {enrollment.status === "completed" && course && enrollment.certificateAvailable && (
               <button
                 type="button"
                 onClick={handleDownloadCertificate}

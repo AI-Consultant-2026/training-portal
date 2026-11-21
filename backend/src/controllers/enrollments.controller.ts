@@ -40,6 +40,11 @@ export const listMyEnrollments = asyncHandler(async (req: Request, res: Response
       paymentSubmittedAt: enrollment.paymentConfirmed
         ? null
         : await enrollmentService.getPendingPaymentSubmittedAt(enrollment.id),
+      // The certificate needs the course completed and, where there is one, the final
+      // assessment passed (certificate.service.ts) -- drives the Certificate button.
+      certificateAvailable:
+        enrollment.status === "completed" &&
+        (await certificateService.hasPassedFinalAssessment(enrollment.courseId, req.user!.id)),
     })),
   );
   res.json({ enrollments: enriched });

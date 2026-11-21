@@ -1,7 +1,36 @@
 import PDFDocument from "pdfkit";
+import { Op } from "sequelize";
 import { watermarkSample } from "../utils/pdfSample";
-import { Course, Enrollment, User } from "../models";
+import { Course, CourseModule, Enrollment, Quiz, QuizAttempt, User } from "../models";
 import { ApiError } from "../utils/ApiError";
+import { FINAL_ASSESSMENT_TITLE } from "./lesson.service";
+
+// Certificate rule (owner, 2026-11-21): on every course that has an enabled Final
+// Assessment, the certificate unlocks only once the student has a graded attempt at or
+// above its pass mark (the same pass rule as quiz.service.ts's attempt results). The
+// course itself still shows as completed when the last lesson is done; only the
+// certificate waits for the pass. A course without a final keeps the old rule.
+export const FINAL_ASSESSMENT_NOT_PASSED_CODE = "FINAL_ASSESSMENT_NOT_PASSED";
+export const FINAL_ASSESSMENT_NOT_PASSED_MESSAGE =
+  "Your certificate unlocks once you pass the final assessment";
+
+export async function hasPassedFinalAssessment(courseId: string, studentId: string): Promise<boolean> {
+  const modules = await CourseModule.findAll({ where: { courseId }, attributes: ["id"] });
+  if (modules.length === 0) return true;
+  const finals = await Quiz.findAll({
+    where: { title: FINAL_ASSESSMENT_TITLE, isEnabled: true, moduleId: { [Op.in]: modules.map((m) => m.id) } },
+    attributes: ["id", "passingScore"],
+  });
+  if (finals.length === 0) return true;
+  const attempts = await QuizAttempt.findAll({
+    where: { studentId, status: "graded", quizId: { [Op.in]: finals.map((f) => f.id) } },
+    attributes: ["quizId", "score"],
+  });
+  return attempts.some((a) => {
+    const quiz = finals.find((f) => f.id === a.quizId);
+    return !!quiz && (a.score ?? 0) >= quiz.passingScore;
+  });
+}
 
 export interface CertificateData {
   enrollmentId: string;
@@ -17,7 +46,7 @@ export interface CertificateData {
 // Same ownership rule as getEnrollmentById (own enrollment or admin), plus a completion
 // requirement a plain "enrolled" state doesn't satisfy -- there's nothing to certify
 // until every lesson is done and enrollment.service.ts's recalculateProgress() has
-// already flipped status to "completed".
+// already flipped status to "completed" -- and, where the course has a final, until it's passed.
 export async function getCertificateData(
   enrollmentId: string,
   requester: { id: string; role: string },
@@ -36,6 +65,9 @@ export async function getCertificateData(
   }
   if (enrollment.status !== "completed") {
     throw ApiError.forbidden("This certificate is available once the course is completed");
+  }
+  if (!(await hasPassedFinalAssessment(enrollment.courseId, enrollment.studentId))) {
+    throw new ApiError(403, FINAL_ASSESSMENT_NOT_PASSED_MESSAGE, { code: FINAL_ASSESSMENT_NOT_PASSED_CODE });
   }
 
   const course = (enrollment as unknown as { course?: Course }).course;

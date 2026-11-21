@@ -403,7 +403,12 @@ export function CourseDetailPage() {
                 Resume course
               </Link>
             )}
-            {isEnrolled && myEnrollment?.status === "completed" && (
+            {isEnrolled && myEnrollment?.status === "completed" && !myEnrollment.certificateAvailable && (
+              <span className="self-center text-sm text-amber-700">
+                Pass the final assessment to unlock your certificate.
+              </span>
+            )}
+            {isEnrolled && myEnrollment?.status === "completed" && myEnrollment.certificateAvailable && (
               <button
                 type="button"
                 onClick={handleDownloadCertificate}
