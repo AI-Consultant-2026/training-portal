@@ -18,7 +18,7 @@ describe("CyberSecure Workforce landing pages", () => {
       expect(html).toContain('id="buy"');
       expect(html).toContain('id="caForm"');
       expect(html).toContain('data-programme="cybersecure-workforce"');
-      expect(html).toContain("data-video-placeholder");
+      expect(html).toContain('<source src="/videos/corporate/cybersecure-workforce-promo.mp4?v=1" type="video/mp4">');
       expect(html).toContain("14-day money-back guarantee");
       expect(html).toContain("Pilot with your fee credited back");
       expect(html).toContain("corporate@paleontraining.com");

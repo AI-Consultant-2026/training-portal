@@ -15,12 +15,17 @@ import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, foot
 // corporate pages (volume discounts, the all-three bundle, the pilot guarantee, the 14-day
 // refund, the free leadership preview, December onboarding slots, ITF/SETA support): nothing new
 // is promised. Online, self-paced, private company portal only; never live or facilitator-led.
-// The promotional video slot shows a placeholder until LANDING_VIDEO is set.
+// The promotional video slot plays LANDING_VIDEO (CyberSecureWorkforce.mp4, 2026-11-23, 720p);
+// set it to null to show the placeholder again.
 
 export { cyberLandingPath };
 
 /** Set to { src, poster, label } once the promo video is uploaded to /videos/corporate/. */
-export const LANDING_VIDEO: { src: string; poster: string; label: string } | null = null;
+export const LANDING_VIDEO: { src: string; poster: string; label: string } | null = {
+  src: "/videos/corporate/cybersecure-workforce-promo.mp4?v=1",
+  poster: "/videos/corporate/cybersecure-workforce-promo.jpg",
+  label: "Video: CyberSecure Workforce (1 minute 24 seconds)",
+};
 
 const money = (code: CountryCode, n: number) => formatMoney(code, n);
 const maxDiscount = Math.round(Math.max(...VOLUME_TIERS.map((t) => t.discount)) * 100);
@@ -201,7 +206,7 @@ ${header(ctx, home, "/", true)}
 
   <section class="section section-dark ca-section" id="video" aria-labelledby="video-title">
     <div class="wrap">
-      <span class="section-eyebrow">Watch</span>
+      <span class="section-eyebrow">Watch &middot; 1 min 24 s</span>
       <h2 class="section-title" id="video-title">CyberSecure Workforce in 90 seconds</h2>
       ${videoSlot()}
     </div>
