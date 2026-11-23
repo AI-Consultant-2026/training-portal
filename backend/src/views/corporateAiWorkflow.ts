@@ -68,6 +68,11 @@ export function corporateAiPath(country: CountryCode): string {
 // so this file can link to them without a circular import.
 export const CYBERSECURE_SLUG = "corporate-training/cybersecure-workforce";
 
+/** AI Workflow landing page (views/aiWorkflowLanding.ts), kept here with the others to avoid import cycles. */
+export function aiLandingPath(country: CountryCode): string {
+  return `${COUNTRIES[country].site.path}/ai-workflow-productivity`;
+}
+
 /** CyberSecure Workforce landing page (views/cybersecureLanding.ts), kept here to avoid an import cycle. */
 export function cyberLandingPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/cybersecure-workforce`;
@@ -340,7 +345,7 @@ export interface EnquiryForm {
   messagePlaceholder: string;
 }
 
-const AI_FORM: EnquiryForm = {
+export const AI_FORM: EnquiryForm = {
   programme: "ai-workflow",
   consultation: CONSULTATION,
   proposal: PROPOSAL,
@@ -929,6 +934,7 @@ ${header(ctx, home, "/", true)}
       <p class="ca-p"><a href="/Promotion-AI-Workflow-Productivity"><strong>Explore the programme: what it is, what your workforce gains and how it builds a competitive advantage &rarr;</strong></a></p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>AI Workflow Productivity &amp; Process Transformation</strong></p>
       <div class="ca-countries">${countryCards}</div>
+      <p class="ca-p"><strong>Ready to train your staff?</strong> Buy seats, see your volume discount and the 14-day money-back guarantee on the AI Workflow Productivity offer page for ${MARKET_ORDER.map((k) => `<a href="${aiLandingPath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(", ").replace(/, ([^,]*)$/, " or $1")}.</p>
     </div>
   </section>
 

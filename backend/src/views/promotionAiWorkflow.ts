@@ -75,7 +75,7 @@ const ICONS: Record<string, string> = {
   trust: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
 };
 
-const MODULES = [
+export const AI_MODULES = [
   "Understanding AI at Work",
   "AI-Powered Employee Productivity",
   "AI Workflow Design",
@@ -340,7 +340,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
     <div class="wrap">
       <span class="section-eyebrow">Course structure</span>
       <h2 class="section-title" id="modules-title">10 practical modules</h2>
-      <ol class="cs-modules pw-modules">${MODULES.map((m, i) => `<li><span class="cs-num">${i + 1}</span><span>${escapeHtml(m)}</span></li>`).join("")}</ol>
+      <ol class="cs-modules pw-modules">${AI_MODULES.map((m, i) => `<li><span class="cs-num">${i + 1}</span><span>${escapeHtml(m)}</span></li>`).join("")}</ol>
       <p class="ca-p">Everything is included: needs assessment, self-paced online training, digital resources and prompt templates, exercises and assessments, completion certificates, a management report and a 30-day adoption roadmap.</p>
     </div>
   </section>

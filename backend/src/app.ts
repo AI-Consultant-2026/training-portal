@@ -27,6 +27,7 @@ import * as corporateOrderService from "./services/corporateOrder.service";
 import { PROMOTION_AI_PATH, renderPromotionAiWorkflow } from "./views/promotionAiWorkflow";
 import { cyberSecurePath, renderCyberSecure } from "./views/corporateCyberSecure";
 import { cyberLandingPath, renderCyberLanding } from "./views/cybersecureLanding";
+import { aiLandingPath, renderAiLanding } from "./views/aiWorkflowLanding";
 import { renderSector, renderSectorsIndex, SECTORS_PATH } from "./views/corporateSectors";
 import { renderPreviewModule, renderPreviewSignup } from "./views/corporatePreview";
 import { ONLINE_STAFF_TRAINING_PATH, renderOnlineStaffTraining } from "./views/onlineStaffTraining";
@@ -275,6 +276,13 @@ export function createApp() {
   for (const code of MARKET_ORDER) {
     app.get(cyberSecurePath(code), (req, res) => {
       res.type("html").send(renderCyberSecure(code));
+    });
+  }
+  // AI Workflow Productivity landing pages for buyers, one per country (2026-11-23):
+  // /ng, /za, /gh and /ke/ai-workflow-productivity.
+  for (const code of MARKET_ORDER) {
+    app.get(aiLandingPath(code), (req, res) => {
+      res.type("html").send(renderAiLanding(code));
     });
   }
   // CyberSecure Workforce landing pages for buyers, one per country (2026-11-23):

@@ -45,6 +45,7 @@ describe("Corporate homepage links every corporate training page", () => {
         `${f}/corporate-training`,
         `${f}/corporate-training/cybersecure-workforce`,
         `${f}/cybersecure-workforce`,
+        `${f}/ai-workflow-productivity`,
         `${f}/corporate-training/ai-workflow-productivity`,
         `${f}/corporate-training/ai-cybersecurity-professional-accelerator`,
         `/corporate-training/how-the-company-portal-works-${code.toLowerCase()}.pdf`,
