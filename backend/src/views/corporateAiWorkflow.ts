@@ -901,7 +901,7 @@ ${header(ctx, home, "/", true)}
       <p class="ca-p"><strong>Data protection, in plain language.</strong> The programme builds awareness of handling personal and customer data responsibly, in line with your obligations under your country&rsquo;s law:</p>
       <ul class="ca-law">${MARKET_ORDER.map((k) => `<li><strong>${escapeHtml(COUNTRIES[k].name)}:</strong> ${guide(HUB_LAW_GUIDE[k], escapeHtml(DATA_PROTECTION_LAW[k].replace(/^the /, "")))}</li>`).join("")}</ul>
       <p class="ca-p ca-hint">Awareness training to support your compliance programme; it is not legal advice.</p>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>CyberSecure Workforce</strong></p>
       <div class="ca-countries">${cyberCards}</div>
     </div>
   </section>
@@ -921,7 +921,7 @@ ${header(ctx, home, "/", true)}
         </video>
       </figure>
       <p class="ca-p"><a href="/Promotion-AI-Workflow-Productivity"><strong>Explore the programme: what it is, what your workforce gains and how it builds a competitive advantage &rarr;</strong></a></p>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>AI Workflow Productivity &amp; Process Transformation</strong></p>
       <div class="ca-countries">${countryCards}</div>
     </div>
   </section>
@@ -940,7 +940,7 @@ ${header(ctx, home, "/", true)}
           <source src="/videos/corporate/ai-cybersecurity-accelerator.mp4?v=2" type="video/mp4">
         </video>
       </figure>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details:</p>
+      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>AI + Cybersecurity Professional Accelerator</strong></p>
       <div class="ca-countries">${accCards}</div>
     </div>
   </section>
