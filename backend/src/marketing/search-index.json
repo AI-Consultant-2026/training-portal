@@ -1324,5 +1324,29 @@
     "description": "For university careers offices and student bodies in Ghana: a free jobs board, free first lessons, Career Match and a free online careers talk to share with students.",
     "url": "/gh/careers-office-resources",
     "category": "Careers"
+  },
+  {
+    "title": "AI + Cybersecurity Training for Your Team in Nigeria | Professional Accelerator",
+    "description": "Buy seats for your IT, security, risk and data staff in Nigeria: 12 online, self-paced modules on AI, cyber threats and governance, from ₦250,000 per learner, up to 30% off for teams.",
+    "url": "/ng/ai-cybersecurity-accelerator",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI + Cybersecurity Training for Your Team in South Africa | Professional Accelerator",
+    "description": "Buy seats for your IT, security, risk and data staff in South Africa: 12 online, self-paced modules on AI, cyber threats and governance, from R4,300 per learner, up to 30% off for teams.",
+    "url": "/za/ai-cybersecurity-accelerator",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI + Cybersecurity Training for Your Team in Kenya | Professional Accelerator",
+    "description": "Buy seats for your IT, security, risk and data staff in Kenya: 12 online, self-paced modules on AI, cyber threats and governance, from KSh 32,500 per learner, up to 30% off for teams.",
+    "url": "/ke/ai-cybersecurity-accelerator",
+    "category": "Corporate"
+  },
+  {
+    "title": "AI + Cybersecurity Training for Your Team in Ghana | Professional Accelerator",
+    "description": "Buy seats for your IT, security, risk and data staff in Ghana: 12 online, self-paced modules on AI, cyber threats and governance, from GH₵2,900 per learner, up to 30% off for teams.",
+    "url": "/gh/ai-cybersecurity-accelerator",
+    "category": "Corporate"
   }
 ]

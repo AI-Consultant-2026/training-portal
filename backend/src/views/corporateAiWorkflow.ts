@@ -78,6 +78,11 @@ export function cyberLandingPath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/cybersecure-workforce`;
 }
 
+/** AI + Cybersecurity Accelerator landing page (views/acceleratorLanding.ts), kept here to avoid an import cycle. */
+export function accLandingPath(country: CountryCode): string {
+  return `${COUNTRIES[country].site.path}/ai-cybersecurity-accelerator`;
+}
+
 export function cyberSecurePath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${CYBERSECURE_SLUG}`;
 }
@@ -954,6 +959,7 @@ ${header(ctx, home, "/", true)}
       </figure>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>AI + Cybersecurity Professional Accelerator</strong></p>
       <div class="ca-countries">${accCards}</div>
+      <p class="ca-p"><strong>Ready to develop your people?</strong> Buy seats, see your volume discount and the 14-day money-back guarantee on the AI + Cybersecurity Accelerator offer page for ${MARKET_ORDER.map((k) => `<a href="${accLandingPath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(", ").replace(/, ([^,]*)$/, " or $1")}.</p>
     </div>
   </section>
 
