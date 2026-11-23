@@ -14,12 +14,16 @@ import { AI_MODULES } from "./promotionAiWorkflow";
 // /<cc>/corporate-training/ai-workflow-productivity. Same layout and incentives as the
 // CyberSecure landing pages (landingShared.ts); nothing new is promised. Online, self-paced,
 // private company portal only. AI products are named in text only, never shown as logos.
-// The promotional video slot shows a placeholder until AI_LANDING_VIDEO is set.
+// The promotional video is AI_LANDING_VIDEO (from ~/Downloads/AIWorkflow.mp4, 2026-11-23).
 
 export { aiLandingPath };
 
-/** Set to { src, poster, label } once the promo video is in /videos/corporate/. */
-export const AI_LANDING_VIDEO: LandingVideo | null = null;
+/** The promo video in /videos/corporate/; set to null to show the "Video coming soon" placeholder. */
+export const AI_LANDING_VIDEO: LandingVideo | null = {
+  src: "/videos/corporate/ai-workflow-productivity-promo.mp4?v=1",
+  poster: "/videos/corporate/ai-workflow-productivity-promo.jpg",
+  label: "Video: AI Workflow Productivity & Process Transformation (1 minute 13 seconds)",
+};
 
 const PROBLEMS: [string, string][] = [
   [

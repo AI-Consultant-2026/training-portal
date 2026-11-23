@@ -18,7 +18,8 @@ describe("AI Workflow Productivity landing pages", () => {
       expect(html).toContain('id="buy"');
       expect(html).toContain('id="caForm"');
       expect(html).toContain('data-programme="ai-workflow"');
-      expect(html).toContain("data-video-placeholder");
+      expect(html).toContain('<source src="/videos/corporate/ai-workflow-productivity-promo.mp4?v=1" type="video/mp4">');
+      expect(html).not.toContain("data-video-placeholder");
       expect(html).toContain("14-day money-back guarantee");
       expect(html).toContain("Add CyberSecure Workforce and the AI + Cybersecurity Professional Accelerator");
       expect(html).toContain("corporate@paleontraining.com");
