@@ -68,6 +68,11 @@ export function corporateAiPath(country: CountryCode): string {
 // so this file can link to them without a circular import.
 export const CYBERSECURE_SLUG = "corporate-training/cybersecure-workforce";
 
+/** CyberSecure Workforce landing page (views/cybersecureLanding.ts), kept here to avoid an import cycle. */
+export function cyberLandingPath(country: CountryCode): string {
+  return `${COUNTRIES[country].site.path}/cybersecure-workforce`;
+}
+
 export function cyberSecurePath(country: CountryCode): string {
   return `${COUNTRIES[country].site.path}/${CYBERSECURE_SLUG}`;
 }
@@ -903,6 +908,7 @@ ${header(ctx, home, "/", true)}
       <p class="ca-p ca-hint">Awareness training to support your compliance programme; it is not legal advice.</p>
       <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>CyberSecure Workforce</strong></p>
       <div class="ca-countries">${cyberCards}</div>
+      <p class="ca-p"><strong>Ready to train your staff?</strong> Buy seats, see your volume discount and the 14-day money-back guarantee on the CyberSecure Workforce offer page for ${MARKET_ORDER.map((k) => `<a href="${cyberLandingPath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(", ").replace(/, ([^,]*)$/, " or $1")}.</p>
     </div>
   </section>
 

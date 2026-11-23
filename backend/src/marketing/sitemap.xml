@@ -1366,4 +1366,28 @@
     <loc>https://paleontraining.com/gh/careers-office-resources</loc>
     <lastmod>2026-11-17</lastmod>
   </url>
+  <url>
+    <loc>https://paleontraining.com/ng/cybersecure-workforce</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paleontraining.com/za/cybersecure-workforce</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paleontraining.com/ke/cybersecure-workforce</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paleontraining.com/gh/cybersecure-workforce</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

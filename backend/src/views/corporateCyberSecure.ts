@@ -145,7 +145,7 @@ function image(cc: string, slot: string, alt: string): string {
 }
 
 // The 12 modules as four stage columns, numbered 1 to 12, then the section's CTA.
-function modules(c: CyberPageContent): string {
+export function modules(c: CyberPageContent): string {
   const stages: { name: string; items: string[] }[] = [];
   const rest: CyberBlock[] = [];
   for (const block of c.sections["Course structure"].blocks) {
