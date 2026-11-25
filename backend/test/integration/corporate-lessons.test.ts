@@ -5,6 +5,7 @@ import { Course, CourseModule, Enrollment, Lesson, Quiz, QuizAttempt, User } fro
 import { CYBERSECURE_WORKFORCE } from "../../src/seeders/data/curriculumCorporateCyberSecure";
 import { AI_WORKFLOW } from "../../src/seeders/data/curriculumCorporateAiWorkflow";
 import { AI_CYBER_ACCELERATOR } from "../../src/seeders/data/curriculumCorporateAccelerator";
+import { CORPORATE_LESSON_VIDEOS } from "../../src/seeders/data/curriculumCorporateVideos";
 
 // Corporate courses (2026-11-12): modules, not days. No day gate between lessons, the
 // unscored introductory assessment is open from the start, and a module assessment
@@ -144,7 +145,17 @@ describe("Corporate course content", () => {
     ];
     all.forEach((q) => expect(q.answers.filter((a) => a.isCorrect)).toHaveLength(1));
     const text = JSON.stringify(course);
-    expect(text.split("Video coming soon:").length - 1).toBe(lessons);
+    expect(text).not.toContain("Video coming soon:");
+    expect(text.split("<!-- lesson-video -->").length - 1).toBe(lessons);
+    // Every lesson has exactly one video marker and one video (2026-11-25).
+    const videos = CORPORATE_LESSON_VIDEOS[course.slug];
+    course.modules.forEach((m) =>
+      m.lessons.forEach((l) => {
+        expect(l.content.split("\n\n").filter((p) => p.trim() === "<!-- lesson-video -->")).toHaveLength(1);
+        expect(videos[`${m.moduleNumber}.${l.order}`]).toMatch(/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11}$/);
+      }),
+    );
+    expect(Object.keys(videos)).toHaveLength(lessons);
     expect(text).not.toMatch(/Video placeholder|\*Answer:|Lagos|Nairobi|Johannesburg|Nigeria|Kenya|Ghana/);
   });
 

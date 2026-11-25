@@ -83,7 +83,8 @@ export function renderPreviewSignup(country: CountryCode | null, programme: Pric
 }
 
 // Lesson text: the shared preview renderer plus what corporate lessons also use: tables,
-// rules, "Show answer" details, and the "Video coming soon" notes (dropped here).
+// rules, "Show answer" details, and the lesson-video markers / old "Video coming soon" notes
+// (both dropped here: the public preview shows no lesson videos).
 function renderLesson(content: string): string {
   return content
     .split(/\n\s*\n/)
@@ -91,6 +92,7 @@ function renderLesson(content: string): string {
       const t = block.trim();
       if (!t) return "";
       if (t === "---") return "<hr>";
+      if (t === "<!-- lesson-video -->") return "";
       if (t === "<details><summary>Show answer</summary>") return "<details><summary>Show answer</summary>";
       if (t === "</details>") return "</details>";
       if (t.startsWith(">")) {
