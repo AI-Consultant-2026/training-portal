@@ -32,6 +32,8 @@ declare namespace YT {
     pauseVideo(): void;
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     getCurrentTime(): number;
+    // Undocumented but long-standing: unloadModule("captions") turns captions off.
+    unloadModule(module: string): void;
     destroy(): void;
   }
 }

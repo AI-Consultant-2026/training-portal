@@ -74,6 +74,8 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
       }, 300);
     }
 
+    let captionsTurnedOff = false;
+
     loadYouTubeIframeApi()
       .then(() => {
         if (cancelled || !containerRef.current || !window.YT) return;
@@ -81,7 +83,11 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
           videoId,
           // See YouTubePlayer.tsx for why `origin` matters here -- without it the postMessage
           // handshake can fail and surface as Error 153, especially on mobile browsers.
-          playerVars: { rel: 0, origin: window.location.origin },
+          // Captions start off (owner, 2026-11-25). cc_load_policy 0 stops the embed forcing
+          // them on; YouTube can still switch them on from the viewer's own settings or the
+          // video's caption track, so they are also turned off once, when playback first
+          // starts (the captions module only loads then). The CC button still works after.
+          playerVars: { rel: 0, origin: window.location.origin, cc_load_policy: 0 },
           events: {
             onError: (event) => {
               if (!cancelled) {
@@ -91,6 +97,15 @@ export function CheckpointVideoPlayer({ lessonId, videoId, videoUrl, checkpoints
             },
             onStateChange: (event) => {
               if (event.data === window.YT!.PlayerState.PLAYING) {
+                if (!captionsTurnedOff) {
+                  captionsTurnedOff = true;
+                  try {
+                    event.target.unloadModule("captions");
+                    event.target.unloadModule("cc");
+                  } catch {
+                    // Older players without the module API: captions just keep YouTube's default.
+                  }
+                }
                 startPolling();
               } else {
                 stopPolling();
