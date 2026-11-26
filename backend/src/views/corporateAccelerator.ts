@@ -1,12 +1,11 @@
 import { courseInstance, courseOffer, programmeSeo } from "./corporateSeo";
-import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
+import { COUNTRIES, CountryCode } from "../constants/countries";
 import { ACCELERATOR_REQUIREMENTS } from "../validators/corporateLeads.validators";
 import {
   CORPORATE_HUB_PATH,
   EnquiryCopy,
   EnquiryForm,
   acceleratorPath,
-  corporateAiPath,
   ctaButton,
   cyberSecurePath,
   enquiry,
@@ -16,7 +15,7 @@ import {
 } from "./corporateAiWorkflow";
 import { WHO_WE_SERVE, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
-import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
+import { ORIGIN, PageContext, SEARCH_OVERLAY, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { INVOICE_FAQ, pricingFaqAnswer, pricingSection } from "./corporatePricing";
 import { compareCourses, courseSwitcher } from "./corporateCourseNav";
 import { trainerStandards } from "./trainerStandards";
@@ -280,28 +279,6 @@ function finalCopy(c: AccPageContent): EnquiryCopy {
   return { title: (title ?? "").replace(/\*\*/g, ""), lede: lede ?? "", note: note ?? "", contact: contact ?? "" };
 }
 
-function related(code: CountryCode): string {
-  const c = COUNTRIES[code];
-  const links = [
-    `<li><a href="${countryCorporatePath(code)}">All corporate training in ${escapeHtml(COUNTRIES[code].name)}</a></li>`,
-    `<li><a href="${corporateAiPath(code)}">AI Workflow Productivity for teams in ${escapeHtml(c.name)}</a></li>`,
-    `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: awareness for all staff</a></li>`,
-    `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
-    `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
-    code === "NG" ? `<li><a href="/ng/corporate-training">Corporate training in Nigeria</a></li>` : "",
-    code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
-    ...MARKET_ORDER.filter((k) => k !== code).map(
-      (k) => `<li><a href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">AI and cybersecurity training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,
-    ),
-  ].filter(Boolean);
-  return `<section class="section section-paper ca-section ca-related" aria-labelledby="related-title">
-    <div class="wrap">
-      <h2 class="section-title" id="related-title">Related</h2>
-      <ul class="ca-links">${links.join("")}</ul>
-    </div>
-  </section>`;
-}
-
 function jsonLd(code: CountryCode, c: AccPageContent, url: string): object {
   const country = COUNTRIES[code].name;
   return {
@@ -401,7 +378,6 @@ ${header(ctx, home, "/", true)}
   ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c), ACC_FORM)}
-  ${related(code)}
 </main>
 ${footer(ctx, home, false, home, true)}
 ${scripts(ctx)}

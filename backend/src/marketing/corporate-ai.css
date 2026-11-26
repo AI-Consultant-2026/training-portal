@@ -163,6 +163,15 @@
 .cp-card-here{font-size:14px;font-weight:600;color:var(--charcoal-soft,#555);padding:10px 0}
 .cp-compare-help{margin-top:22px}
 
+/* Homepage: one line per course instead of four country cards (2026-11-26) */
+.hub-go{margin:18px 0 8px}
+.hub-go-ctas{display:flex;flex-wrap:wrap;gap:10px}
+.hub-go-other,.hub-go-buy{margin:14px 0 0;font-size:15px;line-height:1.7}
+.hub-go-other span{font-weight:600;margin-right:4px}
+.hub-go-other a{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.hub-go-other .flag{width:20px;height:auto;border-radius:2px}
+.hub-go-buy{margin-top:4px;font-size:14px;color:var(--charcoal-soft,#555)}
+
 /* Promotion page /Promotion-AI-Workflow-Productivity (2026-11-07) */
 .pw-crumb{position:relative;margin:0 0 18px;font-size:14px;color:#C9C2B2}
 .pw-more{margin-top:22px}

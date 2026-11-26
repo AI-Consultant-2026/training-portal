@@ -1,5 +1,5 @@
 import { HUB_SEO, courseInstance, courseOffer, programmeSeo } from "./corporateSeo";
-import { compareCourses, courseSwitcher } from "./corporateCourseNav";
+import { compareCourses, courseSwitcher, hubCourseLine } from "./corporateCourseNav";
 import { DATA_PROTECTION_LAW, WHO_WE_SERVE, WHO_WE_SERVE_INTRO, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
@@ -16,7 +16,6 @@ import {
   ORIGIN,
   PageContext,
   SEARCH_OVERLAY,
-  coursePagePath,
   escapeHtml,
   corporateUtilBar, footer,
   head,
@@ -437,29 +436,6 @@ export function contactLine(line: string): string {
     .join(" &middot; ");
 }
 
-function related(code: CountryCode): string {
-  const c = COUNTRIES[code];
-  const links = [
-    `<li><a href="${countryCorporatePath(code)}">All corporate training in ${escapeHtml(c.name)}</a></li>`,
-    `<li><a href="${c.site.path}">Paleon Training ${escapeHtml(c.name)}</a></li>`,
-    `<li><a href="${coursePagePath(code, "ai-machine-learning-fundamentals")}">AI &amp; Machine Learning Fundamentals (individual course)</a></li>`,
-    code === "NG" ? `<li><a href="/digital-skills-training-nigeria">Digital skills training in Nigeria</a></li>` : "",
-    code === "NG" ? `<li><a href="/executive-training">Executive and corporate training</a></li>` : "",
-    `<li><a href="${cyberSecurePath(code)}">CyberSecure Workforce: cybersecurity awareness for staff</a></li>`,
-    `<li><a href="${acceleratorPath(code)}">AI + Cybersecurity Professional Accelerator</a></li>`,
-    `<li><a href="/consultancy">Web and AI consultancy</a></li>`,
-    ...MARKET_ORDER.filter((k) => k !== code).map(
-      (k) => `<li><a href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">Corporate AI training in ${escapeHtml(COUNTRIES[k].name)}</a></li>`,
-    ),
-  ].filter(Boolean);
-  return `<section class="section section-paper ca-section ca-related" aria-labelledby="related-title">
-    <div class="wrap">
-      <h2 class="section-title" id="related-title">Related</h2>
-      <ul class="ca-links">${links.join("")}</ul>
-    </div>
-  </section>`;
-}
-
 function jsonLd(code: CountryCode, c: CorporatePageContent, url: string): object {
   const country = COUNTRIES[code].name;
   return {
@@ -559,7 +535,6 @@ ${header(ctx, home, "/", true)}
   ${trainerStandards()}
   ${faq(code, c)}
   ${enquiry(code, finalCopy(c))}
-  ${related(code)}
 </main>
 ${footer(ctx, home, false, home, true)}
 ${scripts(ctx)}
@@ -575,12 +550,6 @@ ${scripts(ctx)}
 // in all four countries, pointing to the AI Workflow page for each country and to the other
 // corporate offers. Same enquiry form; the visitor picks their country.
 
-// Every country: online only, per learner or in a private company portal, self-paced (2026-11-13).
-const deliveryNote = (k: CountryCode, what: string) =>
-  `Online ${what}, self-paced, per learner or in a private company portal, across ${COUNTRIES[k].name}.${k === "NG" ? " Supports ITF reimbursement claims." : ""}`;
-const HUB_CYBER_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "awareness training")])) as Record<CountryCode, string>;
-const HUB_ACC_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "professional training")])) as Record<CountryCode, string>;
-const HUB_DELIVERY = Object.fromEntries(MARKET_ORDER.map((k) => [k, deliveryNote(k, "training")])) as Record<CountryCode, string>;
 
 // Links from the homepage into every corporate guide (2026-11-15: every corporate page is
 // linked from "/"), set on words already in the copy. Built here rather than imported from
@@ -841,30 +810,7 @@ export function renderCorporateHub(
         <span class="ctry-status is-live">Online &amp; company portal</span>
       </a></li>`;
   }).join("\n");
-  const countryCards = MARKET_ORDER.map(
-    (k) => `<a class="ca-country" href="${corporateAiPath(k)}" hreflang="${COUNTRIES[k].site.locale}">
-        ${flagSvg(k, "flag flag-md")}
-        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
-        <span class="ca-country-note">${escapeHtml(HUB_DELIVERY[k])}</span>
-        <span class="ca-country-go">View the programme &rarr;</span>
-      </a>`,
-  ).join("\n");
-  const cyberCards = MARKET_ORDER.map(
-    (k) => `<a class="ca-country" href="${cyberSecurePath(k)}" hreflang="${COUNTRIES[k].site.locale}">
-        ${flagSvg(k, "flag flag-md")}
-        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
-        <span class="ca-country-note">${escapeHtml(HUB_CYBER_DELIVERY[k])}</span>
-        <span class="ca-country-go">View the programme &rarr;</span>
-      </a>`,
-  ).join("\n");
-  const accCards = MARKET_ORDER.map(
-    (k) => `<a class="ca-country" href="${acceleratorPath(k)}" hreflang="${COUNTRIES[k].site.locale}">
-        ${flagSvg(k, "flag flag-md")}
-        <span class="ca-country-name">${escapeHtml(COUNTRIES[k].name)}</span>
-        <span class="ca-country-note">${escapeHtml(HUB_ACC_DELIVERY[k])}</span>
-        <span class="ca-country-go">View the programme &rarr;</span>
-      </a>`,
-  ).join("\n");
+  const hubCountry = ctx.chosen ?? ctx.country;
   const faqHtml = HUB_FAQ.map(
     (f) => `<details class="ca-faq"><summary>${escapeHtml(f.q)}</summary><p>${rich(f.a)}</p></details>`,
   ).join("\n");
@@ -922,9 +868,7 @@ ${header(ctx, home, "/", true)}
       <p class="ca-p"><strong>Data protection, in plain language.</strong> The programme builds awareness of handling personal and customer data responsibly, in line with your obligations under your country&rsquo;s law:</p>
       <ul class="ca-law">${MARKET_ORDER.map((k) => `<li><strong>${escapeHtml(COUNTRIES[k].name)}:</strong> ${guide(HUB_LAW_GUIDE[k], escapeHtml(DATA_PROTECTION_LAW[k].replace(/^the /, "")))}</li>`).join("")}</ul>
       <p class="ca-p ca-hint">Awareness training to support your compliance programme; it is not legal advice.</p>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>CyberSecure Workforce</strong></p>
-      <div class="ca-countries">${cyberCards}</div>
-      <p class="ca-p"><strong>Ready to train your staff?</strong> Buy seats, see your volume discount and the 14-day money-back guarantee on the CyberSecure Workforce offer page for ${MARKET_ORDER.map((k) => `<a href="${cyberLandingPath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(", ").replace(/, ([^,]*)$/, " or $1")}.</p>
+      ${hubCourseLine("cybersecure", hubCountry, cyberLandingPath)}
     </div>
   </section>
 
@@ -943,9 +887,7 @@ ${header(ctx, home, "/", true)}
         </video>
       </figure>
       <p class="ca-p"><a href="/Promotion-AI-Workflow-Productivity"><strong>Explore the programme: what it is, what your workforce gains and how it builds a competitive advantage &rarr;</strong></a></p>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>AI Workflow Productivity &amp; Process Transformation</strong></p>
-      <div class="ca-countries">${countryCards}</div>
-      <p class="ca-p"><strong>Ready to train your staff?</strong> Buy seats, see your volume discount and the 14-day money-back guarantee on the AI Workflow Productivity offer page for ${MARKET_ORDER.map((k) => `<a href="${aiLandingPath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(", ").replace(/, ([^,]*)$/, " or $1")}.</p>
+      ${hubCourseLine("ai-workflow", hubCountry, aiLandingPath)}
     </div>
   </section>
 
@@ -963,9 +905,7 @@ ${header(ctx, home, "/", true)}
           <source src="/videos/corporate/ai-cybersecurity-accelerator.mp4?v=2" type="video/mp4">
         </video>
       </figure>
-      <p class="ca-p"><strong>Choose your country</strong> for local delivery options and details: <strong>AI + Cybersecurity Professional Accelerator</strong></p>
-      <div class="ca-countries">${accCards}</div>
-      <p class="ca-p"><strong>Ready to develop your people?</strong> Buy seats, see your volume discount and the 14-day money-back guarantee on the AI + Cybersecurity Accelerator offer page for ${MARKET_ORDER.map((k) => `<a href="${accLandingPath(k)}">${escapeHtml(COUNTRIES[k].name)}</a>`).join(", ").replace(/, ([^,]*)$/, " or $1")}.</p>
+      ${hubCourseLine("accelerator", hubCountry, accLandingPath)}
     </div>
   </section>
 

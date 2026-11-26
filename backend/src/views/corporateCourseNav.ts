@@ -1,6 +1,8 @@
 import { COUNTRIES, CountryCode, formatMoney } from "../constants/countries";
 import { CORPORATE_PRICES, PRICED_PROGRAMMES, PROGRAMME_NAMES, PricedProgramme } from "../constants/corporatePricing";
+import { MARKET_ORDER } from "../constants/countries";
 import { countryCorporatePath } from "./corporateLocal";
+import { flagSvg } from "./flags";
 
 // Finding the other corporate courses (owner, 2026-11-26): readers on one course page had no
 // quick way to see the other two in their country. Three aids, all country-specific:
@@ -115,4 +117,23 @@ export function corporateNavItem(hubHref: string, code: CountryCode): string {
             <li class="nav-courses-all"><a href="${countryCorporatePath(code)}">All corporate training in ${esc(country)}</a></li>
           </ul>
         </li>`;
+}
+
+/** 4. Homepage ("/"), under each course (2026-11-26): replaces the four country cards and the
+ *  "Ready to train your staff?" country list. One button to the course in the visitor's
+ *  country, one to buy seats there, then the other three countries. Every country's course
+ *  page and offer page stays linked from the homepage (rule, 2026-11-15). */
+export function hubCourseLine(programme: PricedProgramme, chosen: CountryCode, offerPath: (k: CountryCode) => string): string {
+  const course = CORPORATE_COURSES.find((c) => c.programme === programme)!;
+  const name = COUNTRIES[chosen].name;
+  const others = MARKET_ORDER.filter((k) => k !== chosen);
+  const join = (parts: string[]) => parts.join(" &middot; ");
+  return `<div class="hub-go" data-hub-go="${programme}">
+        <div class="hub-go-ctas">
+          <a class="btn btn-signal btn-lg" href="${coursePath(chosen, course)}" hreflang="${COUNTRIES[chosen].site.locale}">View ${esc(course.short)} in ${esc(name)} &rarr;</a>
+          <a class="btn btn-outline-ink btn-lg" href="${offerPath(chosen)}">Buy seats online</a>
+        </div>
+        <p class="hub-go-other"><span>Also available in:</span> ${join(others.map((k) => `<a href="${coursePath(k, course)}" hreflang="${COUNTRIES[k].site.locale}">${flagSvg(k, "flag")} ${esc(COUNTRIES[k].name)}</a>`))}</p>
+        <p class="hub-go-buy">Buy seats online in ${join(others.map((k) => `<a href="${offerPath(k)}">${esc(COUNTRIES[k].name)}</a>`))}</p>
+      </div>`;
 }

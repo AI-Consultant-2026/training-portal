@@ -44,4 +44,24 @@ describe("Corporate course navigation", () => {
       expect(nav).toContain(`href="/${cc}/corporate-training"`);
     }
   });
+
+  it("homepage: one line per course for the visitor's country, with the others linked (2026-11-26)", async () => {
+    const html = (await request(app).get("/?country=ke")).text;
+    expect(html).not.toContain('class="ca-country"');
+    expect(html.match(/data-hub-go=/g)).toHaveLength(3);
+    expect(html).toContain('href="/ke/corporate-training/cybersecure-workforce" hreflang="en-KE">View CyberSecure Workforce in Kenya');
+    expect(html).toContain('<a class="btn btn-outline-ink btn-lg" href="/ke/cybersecure-workforce">Buy seats online</a>');
+    for (const cc of ["ng", "za", "gh"]) {
+      expect(html).toContain(`href="/${cc}/corporate-training/ai-workflow-productivity"`);
+      expect(html).toContain(`href="/${cc}/ai-cybersecurity-accelerator"`);
+    }
+  });
+
+  it("no longer has a Related section on the course pages", async () => {
+    for (const cc of COUNTRIES) {
+      for (const c of CORPORATE_COURSES) {
+        expect((await request(app).get(`/${cc}/${c.slug}`)).text).not.toContain('id="related-title"');
+      }
+    }
+  });
 });
