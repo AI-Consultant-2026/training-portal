@@ -1,4 +1,5 @@
 import { HUB_SEO, courseInstance, courseOffer, programmeSeo } from "./corporateSeo";
+import { compareCourses, courseSwitcher } from "./corporateCourseNav";
 import { DATA_PROTECTION_LAW, WHO_WE_SERVE, WHO_WE_SERVE_INTRO, areaServed, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { COUNTRIES, CountryCode, MARKET_ORDER } from "../constants/countries";
 import {
@@ -29,6 +30,7 @@ import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 import {
   CALL_URL,
   cohortNotice,
+  readinessHref,
   firstLessonVideo,
   cohortSentence,
   RESERVE_CTA,
@@ -213,6 +215,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
     .join("");
   return `<section class="hero ca-hero" id="top">
     <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${countryCorporatePath(code)}">Corporate training in ${escapeHtml(COUNTRIES[code].name)}</a> <span aria-hidden="true">/</span> AI training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
+    ${courseSwitcher(code, "ai-workflow")}
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Hero", "Eyebrow"))}</span>
@@ -549,6 +552,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Why Paleon Training?", { id: "why", dark: true, eyebrowOverride: "Why us" })}
   ${howItWorksSection(code, "ai-workflow", "#buy")}
   ${pricingSection(code, "ai-workflow", true)}
+  ${compareCourses(code, "ai-workflow", readinessHref(code))}
   ${pilotSection(code, "ai-workflow", false)}
   ${forwardSection(code, "ai-workflow", true)}
   ${whereWeTrain(code)}

@@ -13,6 +13,7 @@ import {
 import { LEAD_INTERESTS, REGISTRATION_STATUSES, leadSourcesFor } from "../validators/leads.validators";
 import { countryCorporatePath, PROGRAMME_LINKS } from "./corporateLocal";
 import { flagSvg } from "./flags";
+import { corporateNavItem } from "./corporateCourseNav";
 
 // Country homepages (2026-10-30): /ng, /za, /ke, /gh, and the hub at / (the same page with
 // the country picker, showing the visitor's remembered country or Nigeria). Everything
@@ -293,14 +294,14 @@ export function header(ctx: PageContext, home: string, logoHref = "/", corporate
         <li><a href="${home}#how">How it works</a></li>
         <li><a href="${home}#why">Why Paleon</a></li>`;
   const links = corporate
-    ? `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
+    ? `${corporateNavItem(corporateHubHref(ctx), ctx.country)}
         <li><a href="/ai-cyber-readiness-check">Free Readiness Check</a></li>
         <li><a href="${SECTORS_PATH}">Sectors</a></li>
         <li><a href="/#resources">Resources</a></li>
         <li class="nav-phone-only"><a href="${home}">For Graduates</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>
         <li><a href="/login">Login</a></li>`
-    : `<li><a href="${corporateHubHref(ctx)}">Corporate Training</a></li>
+    : `${corporateNavItem(corporateHubHref(ctx), ctx.country)}
         ${learnerLinks}
         <li><a href="${home}#refer-earn">Refer &amp; Earn</a></li>
         <li class="nav-phone-only"><a href="/support">Support</a></li>

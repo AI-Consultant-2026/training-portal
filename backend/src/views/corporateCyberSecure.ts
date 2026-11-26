@@ -18,10 +18,12 @@ import { CYBERSECURE_CONTENT, CyberBlock, CyberPageContent } from "./corporateCy
 import { CITIES, WHO_WE_SERVE, cityList, servingLine, countryCorporatePath, deliveryPhrase, ORGANIZATION_LD } from "./corporateLocal";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { INVOICE_FAQ, pricingFaqAnswer, pricingSection } from "./corporatePricing";
+import { compareCourses, courseSwitcher } from "./corporateCourseNav";
 import { trainerStandards } from "./trainerStandards";
 import {
   callButton,
   cohortNotice,
+  readinessHref,
   firstLessonVideo,
   cohortSentence,
   forwardSection,
@@ -178,6 +180,7 @@ function hero(code: CountryCode, c: CyberPageContent): string {
     .join("");
   return `<section class="hero ca-hero" id="top">
     <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${countryCorporatePath(code)}">Corporate training in ${escapeHtml(COUNTRIES[code].name)}</a> <span aria-hidden="true">/</span> Cybersecurity awareness training in ${escapeHtml(COUNTRIES[code].name)}</p></div>
+    ${courseSwitcher(code, "cybersecure")}
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
@@ -398,6 +401,7 @@ ${header(ctx, home, "/", true)}
   ${waysToBuySection("cybersecure", code, false)}
   ${section(c, "Corporate packages", { id: "packages", dark: true, eyebrowOverride: "Packages", titleOverride: "Three ways to run the programme" })}
   ${pricingSection(code, "cybersecure", false)}
+  ${compareCourses(code, "cybersecure", readinessHref(code))}
   ${pilotSection(code, "cybersecure", true)}
   ${forwardSection(code, "cybersecure", false)}
   ${section(c, "Measurement and deliverables", { id: "measurement", dark: true })}

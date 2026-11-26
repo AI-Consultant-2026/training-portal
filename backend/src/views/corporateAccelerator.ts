@@ -18,9 +18,11 @@ import { WHO_WE_SERVE, areaServed, cityList, servingLine, countryCorporatePath, 
 import { ACCELERATOR_CONTENT, AccBlock, AccPageContent } from "./corporateAcceleratorContent";
 import { ORIGIN, PageContext, SEARCH_OVERLAY, coursePagePath, escapeHtml, corporateUtilBar, footer, head, header, scripts, whatsappAttr } from "./countryHome";
 import { INVOICE_FAQ, pricingFaqAnswer, pricingSection } from "./corporatePricing";
+import { compareCourses, courseSwitcher } from "./corporateCourseNav";
 import { trainerStandards } from "./trainerStandards";
 import {
   cohortNotice,
+  readinessHref,
   firstLessonVideo,
   cohortSentence,
   callButton,
@@ -173,6 +175,7 @@ function hero(code: CountryCode, c: AccPageContent): string {
     .join("");
   return `<section class="hero ca-hero" id="top">
     <div class="wrap cs-crumb-wrap"><p class="pw-crumb"><a href="${countryCorporatePath(code)}">Corporate training in ${escapeHtml(COUNTRIES[code].name)}</a> <span aria-hidden="true">/</span> AI and cybersecurity training for professionals in ${escapeHtml(COUNTRIES[code].name)}</p></div>
+    ${courseSwitcher(code, "accelerator")}
     <div class="wrap ca-hero-grid">
       <div class="hero-inner ca-hero-copy">
         <span class="eyebrow">${escapeHtml(field(c, "Eyebrow"))}</span>
@@ -391,6 +394,7 @@ ${header(ctx, home, "/", true)}
   ${section(c, "Programme comparison", { id: "compare", dark: true })}
   ${section(c, "Why Paleon Training?", { id: "why", eyebrowOverride: "Why us" })}
   ${pricingSection(code, "accelerator", true)}
+  ${compareCourses(code, "accelerator", readinessHref(code))}
   ${pilotSection(code, "accelerator", false)}
   ${forwardSection(code, "accelerator", true)}
   ${whereWeTrain(code)}

@@ -460,8 +460,9 @@ describe("Employers card on the country homepages", () => {
     ["/za/corporate-training", "/?country=za"],
   ])("%s has Corporate Training as the first menu item, linking to the hub in its own country", async (path, href) => {
     const html = (await request(app).get(path)).text;
-    const nav = html.slice(html.indexOf('id="navLinks"'), html.indexOf("</ul>", html.indexOf('id="navLinks"')));
-    expect(nav).toMatch(new RegExp(`^id="navLinks">\\s*<li><a href="${href.replace(/[?]/g, "\\?")}">Corporate Training</a></li>`));
+    // Since 2026-11-26 the item is a drop-down with the three courses, so read to </nav>.
+    const nav = html.slice(html.indexOf('id="navLinks"'), html.indexOf("</nav>", html.indexOf('id="navLinks"')));
+    expect(nav).toMatch(new RegExp(`^id="navLinks">\\s*<li class="nav-courses">\\s*<a href="${href.replace(/[?]/g, "\\?")}" class="nav-courses-top">Corporate Training`));
     expect(nav).not.toContain("For employers");
   });
 });
@@ -573,7 +574,7 @@ describe("Country kept across the corporate hub and free lessons (2026-11-03)", 
     expect(res.text).toContain(`<body data-country="${code}">`);
     expect(res.text).toContain(`Corporate training &middot; ${name}`);
     expect(res.text).toContain(`<link rel="canonical" href="https://paleontraining.com/">`);
-    const nav = res.text.slice(res.text.indexOf('id="navLinks"'), res.text.indexOf("</ul>", res.text.indexOf('id="navLinks"')));
+    const nav = res.text.slice(res.text.indexOf('id="navLinks"'), res.text.indexOf("</nav>", res.text.indexOf('id="navLinks"')));
     expect(nav).toContain(`<a href="/${cc}">For Graduates</a>`);
     expect(nav).toContain(`href="/?country=${cc}"`);
   });

@@ -137,6 +137,32 @@
 .ca-lesson-video{max-width:640px;margin:.25rem 0 1.5rem}
 .ca-lesson-video figcaption{margin-top:.5rem;font-size:.9rem;color:#C9C2B2}
 
+/* Course pages: the three courses at a glance (2026-11-26) */
+.cp-switch{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.cp-switch-label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#C9C2B2;font-weight:600}
+.cp-switch-list{list-style:none;margin:0;padding:0;display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.cp-switch-list li{flex:0 0 auto;scroll-snap-align:start}
+.cp-switch-link{display:flex;flex-direction:column;gap:2px;min-height:44px;padding:9px 14px;border:1px solid rgba(255,255,255,.22);border-radius:8px;color:#F6F2EA;text-decoration:none;background:rgba(255,255,255,.04)}
+.cp-switch-link:hover{border-color:#E8863C}
+.cp-switch-link.is-current{background:#E8863C;border-color:#E8863C;color:#10151F}
+.cp-switch-name{font-weight:700;font-size:15px;white-space:nowrap}
+.cp-switch-for{font-size:12.5px;opacity:.85;white-space:nowrap}
+@media (min-width:860px){.cp-switch{flex-direction:row;align-items:center;gap:16px}.cp-switch-list{overflow:visible}}
+.cp-compare{background:#F1ECE1}
+.cp-cards{display:grid;grid-template-columns:1fr;gap:16px;margin-top:22px}
+@media (min-width:860px){.cp-cards{grid-template-columns:repeat(3,1fr)}}
+.cp-card{display:flex;flex-direction:column;gap:10px;padding:22px 20px;border:1px solid var(--line-light);border-radius:var(--radius-lg,10px);background:var(--white,#fff)}
+.cp-card.is-current{border:2px solid #E8863C}
+.cp-card h3{margin:0;font-family:var(--font-display);font-size:21px;line-height:1.2}
+.cp-card-for{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--signal-text,#b45309)}
+.cp-card-outcome{margin:0;font-weight:600}
+.cp-card-who{margin:0;font-size:15px;color:var(--charcoal-soft,#555)}
+.cp-card-facts{list-style:none;margin:4px 0 6px;padding:0;font-size:14.5px;display:grid;gap:4px}
+.cp-card-facts li::before{content:"✓ ";color:#E8863C;font-weight:700}
+.cp-card-btn,.cp-card-here{margin-top:auto;align-self:flex-start}
+.cp-card-here{font-size:14px;font-weight:600;color:var(--charcoal-soft,#555);padding:10px 0}
+.cp-compare-help{margin-top:22px}
+
 /* Promotion page /Promotion-AI-Workflow-Productivity (2026-11-07) */
 .pw-crumb{position:relative;margin:0 0 18px;font-size:14px;color:#C9C2B2}
 .pw-more{margin-top:22px}
