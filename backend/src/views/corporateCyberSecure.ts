@@ -22,6 +22,7 @@ import { trainerStandards } from "./trainerStandards";
 import {
   callButton,
   cohortNotice,
+  firstLessonVideo,
   cohortSentence,
   forwardSection,
   outcomesSection,
@@ -184,6 +185,7 @@ function hero(code: CountryCode, c: CyberPageContent): string {
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
         ${cohortNotice("cybersecure")}
+        ${firstLessonVideo("cybersecure")}
         <div class="hero-ctas">
           ${ctaButton(WORKFORCE_CTA, true)}
           ${readinessButton(code, true)}

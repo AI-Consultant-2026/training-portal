@@ -29,6 +29,7 @@ import { trainerPersonLd, trainerStandards } from "./trainerStandards";
 import {
   CALL_URL,
   cohortNotice,
+  firstLessonVideo,
   cohortSentence,
   RESERVE_CTA,
   callButton,
@@ -219,6 +220,7 @@ function hero(code: CountryCode, c: CorporatePageContent): string {
         <p class="ca-headline">${rich(field(c, "Hero", "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Hero", "Supporting statement"))}</p>
         ${cohortNotice("ai-workflow")}
+        ${firstLessonVideo("ai-workflow")}
         <div class="hero-ctas">
           ${reserveButton("ai-workflow")}
           ${readinessButton(code, true)}

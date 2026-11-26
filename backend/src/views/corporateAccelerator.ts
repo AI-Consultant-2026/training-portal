@@ -21,6 +21,7 @@ import { INVOICE_FAQ, pricingFaqAnswer, pricingSection } from "./corporatePricin
 import { trainerStandards } from "./trainerStandards";
 import {
   cohortNotice,
+  firstLessonVideo,
   cohortSentence,
   callButton,
   forwardSection,
@@ -179,6 +180,7 @@ function hero(code: CountryCode, c: AccPageContent): string {
         <p class="ca-headline">${rich(field(c, "Headline line"))}</p>
         <p class="hero-sub">${rich(field(c, "Supporting statement"))}</p>
         ${cohortNotice("accelerator")}
+        ${firstLessonVideo("accelerator")}
         <div class="hero-ctas">
           ${reserveButton("accelerator")}
           ${readinessButton(code, true)}

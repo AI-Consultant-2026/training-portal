@@ -59,6 +59,27 @@ export function cohortNotice(_programme?: PricedProgramme, shared = false): stri
   return `<p class="ca-booked"><strong>Company onboarding: ${slotsLeft()}${shared ? `, ${SHARED}` : ""}.</strong> ${ONBOARDING_COVERS} ${PLACES_START_TODAY}</p>`;
 }
 
+// ---- Module 1, Lesson 1 (version 2, with the closing contact slide) of each programme
+// (owner, 2026-11-26): shown on every country's course page, just under the onboarding line
+// in the hero, so a buyer can watch a real lesson before buying. Web copies of the
+// ~/Desktop/Paleon Ad Related Videos/<CWE|AIW|ACC>-M01-L1-v2.mp4 files (720p).
+export const FIRST_LESSON_VIDEOS: Record<PricedProgramme, { slug: string; lesson: string; minutes: number }> = {
+  cybersecure: { slug: "cybersecure-workforce-m01-l1", lesson: "What cybersecurity means", minutes: 3 },
+  "ai-workflow": { slug: "ai-workflow-productivity-m01-l1", lesson: "What generative AI is", minutes: 3 },
+  accelerator: { slug: "ai-cybersecurity-accelerator-m01-l1", lesson: "How generative AI works", minutes: 4 },
+};
+
+export function firstLessonVideo(programme: PricedProgramme): string {
+  const v = FIRST_LESSON_VIDEOS[programme];
+  const label = `Watch Module 1, Lesson 1: ${v.lesson} (${v.minutes} minutes)`;
+  return `<figure class="ca-video ca-lesson-video" data-first-lesson-video="${programme}">
+          <video controls playsinline preload="none" poster="/videos/corporate/${v.slug}.jpg" aria-label="${escapeHtml(label)}">
+            <source src="/videos/corporate/${v.slug}.mp4" type="video/mp4">
+          </video>
+          <figcaption>${escapeHtml(label)}</figcaption>
+        </figure>`;
+}
+
 export function reserveButton(_programme?: PricedProgramme): string {
   if (!hasOnboardingSlots()) return "";
   return `<a class="btn btn-signal btn-lg" href="#enquiry" data-intent="reserve" data-places="${ONBOARDING.slotsLeft}">${escapeHtml(RESERVE_CTA)}</a>`;

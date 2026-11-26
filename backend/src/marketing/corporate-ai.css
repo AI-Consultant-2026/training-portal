@@ -133,6 +133,10 @@
 .ca-video{width:100%;max-width:880px;margin:1.25rem 0 1.5rem}
 .ca-video video{display:block;width:100%;aspect-ratio:16/9;border-radius:8px;background:#10151F;border:1px solid rgba(232,134,60,.35)}
 
+/* Course pages: Module 1, Lesson 1 under the onboarding line in the hero (2026-11-26) */
+.ca-lesson-video{max-width:640px;margin:.25rem 0 1.5rem}
+.ca-lesson-video figcaption{margin-top:.5rem;font-size:.9rem;color:#C9C2B2}
+
 /* Promotion page /Promotion-AI-Workflow-Productivity (2026-11-07) */
 .pw-crumb{position:relative;margin:0 0 18px;font-size:14px;color:#C9C2B2}
 .pw-more{margin-top:22px}
