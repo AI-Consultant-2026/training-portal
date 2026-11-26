@@ -253,7 +253,7 @@ export function renderReadinessCheck(country: CountryCode | null, chosen: Countr
     ogImage: "ai-cyber-readiness-check",
     jsonLd: pageLd(READINESS_PATH, "AI & Cyber Readiness Check", description),
     body,
-    extraScript: '<script src="/readiness-check.js" defer></script>',
+    extraScript: '<script src="/human-check.js" defer></script><script src="/readiness-check.js" defer></script>',
   });
 }
 

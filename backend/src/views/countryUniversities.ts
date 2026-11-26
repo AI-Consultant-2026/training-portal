@@ -194,7 +194,7 @@ ${header(ctx, home)}
 </main>
 ${footer(ctx, home, country === "NG")}
 ${scripts(ctx)}
-<script src="/university-buy.js" defer></script>
+<script src="/human-check.js" defer></script><script src="/university-buy.js" defer></script>
 </body>
 </html>
 `;

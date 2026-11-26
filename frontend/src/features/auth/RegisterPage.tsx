@@ -9,6 +9,7 @@ import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { registerUser } from "./authSlice";
 import { track } from "../../lib/analytics";
+import { HumanCheckField, useHumanCheck } from "../../components/HumanCheck";
 
 export const LOCATIONS = [
   "Abia",
@@ -273,6 +274,8 @@ export function RegisterPage() {
     };
   }, [referralCode]);
 
+  const hc = useHumanCheck();
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const result = await dispatch(
@@ -288,8 +291,10 @@ export function RegisterPage() {
         referralCode: referralCode.trim() || undefined,
         phone: phone.trim(),
         mobileNetwork: isNigeria ? mobileNetwork : undefined,
+        ...hc.fields(),
       }),
     );
+    if (registerUser.rejected.match(result)) hc.reload();
     if (registerUser.fulfilled.match(result)) {
       track("sign_up", {
         method: "email",
@@ -583,6 +588,7 @@ export function RegisterPage() {
                   We don&apos;t recognise that code — you can still sign up without it.
                 </p>
               )}
+              <HumanCheckField hc={hc} id="registerHumanAnswer" />
               <Button
                 type="submit"
                 isLoading={status === "loading"}

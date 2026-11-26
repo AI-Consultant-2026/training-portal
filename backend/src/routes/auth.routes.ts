@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requireHumanCheck } from "../middleware/requireHumanCheck";
 import rateLimit from "express-rate-limit";
 import * as authController from "../controllers/auth.controller";
 import { config } from "../config";
@@ -41,12 +42,13 @@ const sessionRateLimiter = rateLimit({
 
 authRouter.use(authRateLimiter);
 
-authRouter.post("/register", validate(registerSchema), authController.register);
+authRouter.post("/register", requireHumanCheck, validate(registerSchema), authController.register);
 authRouter.post("/login", validate(loginSchema), authController.login);
 authRouter.post("/refresh", sessionRateLimiter, authController.refresh);
 authRouter.post("/logout", sessionRateLimiter, authController.logout);
 authRouter.post(
   "/password-reset",
+  requireHumanCheck,
   validate(passwordResetRequestSchema),
   authController.requestPasswordReset,
 );

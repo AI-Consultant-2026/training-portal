@@ -78,6 +78,7 @@
     var msg = form.querySelector(".waitlist-msg");
     var consent = form.querySelector("input[name=consent]");
     var button = form.querySelector("button");
+    var hc = window.PaleonHumanCheck ? window.PaleonHumanCheck.mount(form, button) : null;
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       var whatsapp = input.value.trim();
@@ -94,21 +95,25 @@
         consent.focus();
         return;
       }
+      if (hc && hc.missing()) return;
+      var wlBody = { country: form.getAttribute("data-country"), whatsapp: whatsapp, consent: true };
+      if (hc) hc.addTo(wlBody);
       button.disabled = true;
       fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ country: form.getAttribute("data-country"), whatsapp: whatsapp, consent: true }),
+        body: JSON.stringify(wlBody),
       })
         .then(function (res) {
+          if (!res.ok && hc && hc.failed(res.status)) throw new Error("human");
           if (!res.ok) throw new Error("request failed");
           form.closest(".waitlist").classList.add("is-done");
           msg.textContent = "You’re on the waitlist. We’ll message you on WhatsApp when courses open.";
           if (window.ptTrack) window.ptTrack("join_waitlist", { country: form.getAttribute("data-country") });
         })
-        .catch(function () {
+        .catch(function (err) {
           msg.classList.add("is-error");
-          msg.textContent = "Something went wrong. Please check the number and try again.";
+          msg.textContent = err && err.message === "human" ? hc.message : "Something went wrong. Please check the number and try again.";
         })
         .then(function () {
           button.disabled = false;
@@ -127,6 +132,7 @@
   var errorBox = document.getElementById("formError");
   var submitBtn = document.getElementById("registerSubmit");
   var submitLabel = submitBtn.textContent;
+  var regHc = window.PaleonHumanCheck ? window.PaleonHumanCheck.mount(form, submitBtn) : null;
 
   function matchCourse(sector, interest) {
     return data.byInterest[interest] || data.bySector[sector] || "cyber-security-fundamentals";
@@ -172,6 +178,7 @@
     if (phone) payload.phone = phone;
     // Ghana, Kenya and South Africa only; checkValidity above makes sure it's ticked.
     if (form.regConsent) payload.consent = form.regConsent.checked;
+    if (regHc) regHc.addTo(payload);
 
     fetch("/api/leads", {
       method: "POST",
@@ -179,6 +186,7 @@
       body: JSON.stringify(payload),
     })
       .then(function (res) {
+        if (!res.ok && regHc) regHc.failed(res.status);
         if (!res.ok) throw new Error("request failed");
         // GA4 conversion (a no-op until analytics is on). Coarse fields only, never contact details.
         if (window.ptTrack) {

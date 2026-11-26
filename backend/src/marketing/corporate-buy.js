@@ -64,6 +64,7 @@
   update();
 
   function showError(msg) { errorBox.textContent = msg; errorBox.hidden = false; }
+  var hc = window.PaleonHumanCheck ? window.PaleonHumanCheck.mount(form, submit) : null;
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -81,10 +82,12 @@
       var v = fd.get(k);
       if (typeof v === "string" && v.trim() !== "") body[k] = v.trim();
     });
+    if (hc) hc.addTo(body);
     submit.disabled = true;
     fetch("/api/corporate/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
       .then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (json) {
+          if (!res.ok && hc) { var hcMsg = hc.failed(res.status); if (hcMsg) throw { userMessage: hcMsg }; }
           if (!res.ok) {
             var msg = res.status === 429 ? "Too many attempts. Please try again later." : (json.error && (json.error.message || json.error)) || json.message || "Please check your details and try again.";
             throw { userMessage: typeof msg === "string" && msg !== "Validation failed" ? msg : "Please check your details and try again." };

@@ -818,7 +818,7 @@ export function whatsappAttr(country: CountryCode): string {
 }
 
 export function scripts(ctx: PageContext): string {
-  return `<script src="/country-home.js" defer></script>
+  return `<script src="/human-check.js" defer></script><script src="/country-home.js" defer></script>
 <script src="/search.js" defer></script>
 ${hasWhatsappButton(ctx.country) ? '<script src="/whatsapp-float.js" defer></script>' : ""}
 <script src="/email-links.js" defer></script>

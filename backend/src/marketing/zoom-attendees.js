@@ -13,6 +13,8 @@
     errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
+  var hc = window.PaleonHumanCheck ? window.PaleonHumanCheck.mount(form, button) : null;
+
   function formatDate(iso) {
     var p = iso.split("-");
     return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
@@ -33,6 +35,8 @@
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateAttended)) return showError("Please choose the date you attended.");
     if (!/^[0-9+()\s-]{7,20}$/.test(phone)) return showError("Please enter your WhatsApp number, e.g. 0803 123 4567.");
 
+    if (hc && hc.missing()) return;
+
     var payload = {
       name: name,
       email: email,
@@ -42,6 +46,7 @@
       website: form.website.value,
     };
     if (statusInput) payload.status = statusInput.value;
+    if (hc) hc.addTo(payload);
 
     button.disabled = true;
     button.textContent = "Saving…";
@@ -53,6 +58,7 @@
     })
       .then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (body) {
+          if (!res.ok && hc && hc.failed(res.status)) throw new Error("human");
           if (!res.ok) throw new Error(res.status === 429 ? "rate" : "bad");
           return body;
         });
@@ -70,6 +76,7 @@
       .catch(function (err) {
         button.disabled = false;
         button.textContent = "Record my attendance";
+        if (err && err.message === "human") return showError(hc.message);
         showError(err && err.message === "rate"
           ? "Too many sign-ins from this network just now. Please try again in a few minutes."
           : "Sorry, we couldn't save that. Please check your details and try again, or message us on WhatsApp on +234 707 714 9215 (WhatsApp/Call).");

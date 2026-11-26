@@ -78,7 +78,7 @@ export function renderPreviewSignup(country: CountryCode | null, programme: Pric
     path: PREVIEW_PATH,
     jsonLd: ld(PREVIEW_PATH, "Free leadership preview", description),
     body,
-    extraScript: '<script src="/corporate-preview.js" defer></script>',
+    extraScript: '<script src="/human-check.js" defer></script><script src="/corporate-preview.js" defer></script>',
   });
 }
 

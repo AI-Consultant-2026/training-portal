@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requireHumanCheck } from "../middleware/requireHumanCheck";
 import rateLimit from "express-rate-limit";
 import { z } from "zod";
 import { config } from "../config";
@@ -37,6 +38,7 @@ waitlistRouter.use(
 
 waitlistRouter.post(
   "/",
+  requireHumanCheck,
   validate(waitlistSchema),
   asyncHandler(async (req, res) => {
     const { country, whatsapp } = req.body as { country: string; whatsapp: string };

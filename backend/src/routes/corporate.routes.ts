@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requireHumanCheck } from "../middleware/requireHumanCheck";
 import rateLimit from "express-rate-limit";
 import { config } from "../config";
 import * as corporateController from "../controllers/corporate.controller";
@@ -30,7 +31,7 @@ const joinRateLimiter = rateLimit({
 });
 
 corporateRouter.get("/join/:code", joinRateLimiter, validate(joinCodeSchema), corporateController.getJoinInfo);
-corporateRouter.post("/join/:code", joinRateLimiter, validate(joinNewSchema), corporateController.joinNew);
+corporateRouter.post("/join/:code", joinRateLimiter, requireHumanCheck, validate(joinNewSchema), corporateController.joinNew);
 corporateRouter.post(
   "/join/:code/existing",
   joinRateLimiter,
@@ -56,8 +57,8 @@ const orderRateLimiter = rateLimit({
   legacyHeaders: false,
   skip: () => config.nodeEnv === "test",
 });
-corporateRouter.post("/orders", orderRateLimiter, validate(corporateOrderSchema), corporateOrdersController.createOrder);
+corporateRouter.post("/orders", orderRateLimiter, requireHumanCheck, validate(corporateOrderSchema), corporateOrdersController.createOrder);
 // University places (2026-11-15): the buy form on /<country>/universities, and a
 // logged-in representative buying more places from /university.
-corporateRouter.post("/university-orders", orderRateLimiter, validate(universityOrderSchema), universityController.createOrder);
+corporateRouter.post("/university-orders", orderRateLimiter, requireHumanCheck, validate(universityOrderSchema), universityController.createOrder);
 corporateRouter.post("/me/orders", orderRateLimiter, authenticate, validate(universityTopUpSchema), universityController.topUp);

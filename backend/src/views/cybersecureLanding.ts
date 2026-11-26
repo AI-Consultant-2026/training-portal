@@ -162,7 +162,7 @@ ${header(ctx, home, "/", true)}
 </main>
 ${footer(ctx, home, false, home, true)}
 ${scripts(ctx)}
-<script src="/corporate-ai.js" defer></script>
+<script src="/human-check.js" defer></script><script src="/corporate-ai.js" defer></script>
 <script src="/corporate-buy.js" defer></script>
 </body>
 </html>

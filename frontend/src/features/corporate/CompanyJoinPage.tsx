@@ -12,6 +12,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Spinner } from "../../components/ui/Spinner";
+import { HumanCheckField, useHumanCheck } from "../../components/HumanCheck";
 import { sessionStarted } from "../auth/authSlice";
 
 // /company/join/:code -- the staff sign-up link a company shares with its employees.
@@ -30,6 +31,7 @@ export function CompanyJoinPage() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "", jobTitle: "", department: "" });
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const hc = useHumanCheck();
 
   useEffect(() => {
     fetchJoinInfo(code)
@@ -55,10 +57,11 @@ export function CompanyJoinPage() {
     setSaving(true);
     setError(null);
     try {
-      const result = await joinWithNewAccount(code, { ...form, courseIds: [...selected] });
+      const result = await joinWithNewAccount(code, { ...form, courseIds: [...selected], ...hc.fields() });
       dispatch(sessionStarted(result));
       navigate("/dashboard");
     } catch (err) {
+      hc.reload();
       setError(apiErrorMessage(err, "Couldn't create your login. Please try again."));
     } finally {
       setSaving(false);
@@ -231,6 +234,7 @@ export function CompanyJoinPage() {
               onChange={(e) => setForm({ ...form, department: e.target.value })}
             />
           </div>
+          <HumanCheckField hc={hc} id="joinHumanAnswer" />
           <Button type="submit" isLoading={saving} disabled={selected.size === 0}>
             Create my login
           </Button>

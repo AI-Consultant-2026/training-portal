@@ -10,6 +10,7 @@
     errorBox.textContent = msg;
     errorBox.hidden = false;
   }
+  var hc = window.PaleonHumanCheck ? window.PaleonHumanCheck.mount(form, submit) : null;
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     errorBox.hidden = true;
@@ -25,10 +26,13 @@
       var v = fd.get(k);
       if (typeof v === "string" && v.trim() !== "") body[k] = v.trim();
     });
+    if (hc) hc.addTo(body);
     submit.disabled = true;
     submit.textContent = "Opening your preview…";
     fetch("/api/leads/corporate-preview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
       .then(function (r) {
+        var hcMsg = !r.ok && hc ? hc.failed(r.status) : null;
+        if (hcMsg) throw new Error(hcMsg);
         return r.json().then(function (j) { return { ok: r.ok, j: j }; });
       })
       .then(function (res) {

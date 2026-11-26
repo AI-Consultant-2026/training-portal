@@ -390,7 +390,7 @@ ${header(ctx, COUNTRIES.NG.site.path, "/", true)}
 </main>
 ${footer(ctx, COUNTRIES.NG.site.path, false, "/", true)}
 ${scripts(ctx)}
-<script src="/corporate-ai.js" defer></script>
+<script src="/human-check.js" defer></script><script src="/corporate-ai.js" defer></script>
 </body>
 </html>
 `;

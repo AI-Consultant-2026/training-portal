@@ -4,16 +4,19 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
+import { HumanCheckField, useHumanCheck } from "../../components/HumanCheck";
 import { requestPasswordReset } from "./authSlice";
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const dispatch = useAppDispatch();
-  const { status } = useAppSelector((state) => state.auth.passwordReset);
+  const { status, error } = useAppSelector((state) => state.auth.passwordReset);
+  const hc = useHumanCheck();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    await dispatch(requestPasswordReset({ email }));
+    const result = await dispatch(requestPasswordReset({ email, ...hc.fields() }));
+    if (requestPasswordReset.rejected.match(result)) hc.reload();
   }
 
   const submitted = status === "succeeded";
@@ -33,6 +36,8 @@ export function ForgotPasswordPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <HumanCheckField hc={hc} />
+          {status === "failed" && error && <Alert variant="error" message={error} />}
           <Button type="submit" isLoading={status === "loading"}>
             Send reset link
           </Button>

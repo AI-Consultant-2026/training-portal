@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createHumanCheck } from "../utils/humanCheck";
 import { adminRouter } from "./admin.routes";
 import { assignmentsRouter } from "./assignments.routes";
 import { assignmentSubmissionsRouter } from "./assignmentSubmissions.routes";
@@ -27,6 +28,12 @@ import { usersRouter } from "./users.routes";
 import { zoomAttendeesRouter } from "./zoomAttendees.routes";
 
 export const apiRouter = Router();
+
+// Human-check question for the public forms (2026-11-26). Never cached.
+apiRouter.get("/human-check", (req, res) => {
+  res.set("Cache-Control", "no-store");
+  res.json(createHumanCheck());
+});
 
 apiRouter.use("/health", healthRouter);
 apiRouter.use("/auth", authRouter);

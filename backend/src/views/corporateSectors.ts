@@ -180,7 +180,7 @@ export function renderSector(slug: string, country: CountryCode | null, chosen: 
     path,
     jsonLd: sectorLd(s, url),
     body,
-    extraScript: '<script src="/corporate-ai.js" defer></script>',
+    extraScript: '<script src="/human-check.js" defer></script><script src="/corporate-ai.js" defer></script>',
   });
 }
 

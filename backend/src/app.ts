@@ -697,6 +697,10 @@ export function createApp() {
   app.get("/zooom-attendees", (req, res) => {
     res.redirect(301, "/zoom-attendees");
   });
+  // Human check for the public forms (2026-11-26), loaded before each form's own script.
+  app.get("/human-check.js", (req, res) => {
+    res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "human-check.js"));
+  });
   app.get("/zoom-attendees.js", (req, res) => {
     res.type("application/javascript").sendFile(path.join(__dirname, "marketing", "zoom-attendees.js"));
   });

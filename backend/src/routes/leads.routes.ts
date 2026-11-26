@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requireHumanCheck } from "../middleware/requireHumanCheck";
 import rateLimit from "express-rate-limit";
 import * as corporateLeadsController from "../controllers/corporateLeads.controller";
 import * as leadsController from "../controllers/leads.controller";
@@ -34,10 +35,10 @@ leadsRouter.post("/unsubscribe", unsubscribeRateLimiter, leadsController.unsubsc
 
 leadsRouter.use(leadsRateLimiter);
 
-leadsRouter.post("/", validate(createLeadSchema), leadsController.create);
+leadsRouter.post("/", requireHumanCheck, validate(createLeadSchema), leadsController.create);
 // Enquiries from the AI Workflow Productivity corporate pages (2026-11-02).
-leadsRouter.post("/corporate", validate(corporateLeadSchema), corporateLeadsController.create);
+leadsRouter.post("/corporate", requireHumanCheck, validate(corporateLeadSchema), corporateLeadsController.create);
 // The free leadership preview's one-step sign-up (2026-11-13).
-leadsRouter.post("/corporate-preview", validate(corporatePreviewSchema), corporateLeadsController.preview);
+leadsRouter.post("/corporate-preview", requireHumanCheck, validate(corporatePreviewSchema), corporateLeadsController.preview);
 // "Email me my scorecard" on the AI & Cyber Readiness Check (2026-11-08).
-leadsRouter.post("/readiness", validate(readinessLeadSchema), readinessLeadsController.create);
+leadsRouter.post("/readiness", requireHumanCheck, validate(readinessLeadSchema), readinessLeadsController.create);

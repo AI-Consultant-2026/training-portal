@@ -113,6 +113,7 @@
   var form = document.getElementById("rcEmail");
   var submit = document.getElementById("rcSubmit");
   var errorBox = document.getElementById("rcError");
+  var hc = window.PaleonHumanCheck ? window.PaleonHumanCheck.mount(form, submit) : null;
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     errorBox.hidden = true;
@@ -129,6 +130,7 @@
       var v = fd.get(k);
       if (typeof v === "string" && v.trim() !== "") body[k] = v.trim();
     });
+    if (hc) hc.addTo(body);
     submit.disabled = true;
     fetch("/api/leads/readiness", {
       method: "POST",
@@ -136,6 +138,7 @@
       body: JSON.stringify(body),
     })
       .then(function (res) {
+        if (!res.ok && hc) { var hcMsg = hc.failed(res.status); if (hcMsg) throw { userMessage: hcMsg }; }
         if (!res.ok) throw { userMessage: res.status === 429 ? "Too many attempts. Please try again in a few minutes." : "Please check your details and try again." };
         form.hidden = true;
         var thanks = document.getElementById("rcThanks");

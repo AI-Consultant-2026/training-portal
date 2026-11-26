@@ -12,6 +12,9 @@ export interface RegisterInput {
   university: string;
   referralCode?: string;
   phone: string;
+  /** Human check (2026-11-26): from GET /api/human-check. */
+  humanToken?: string;
+  humanAnswer?: string;
   // Nigeria only: airtime/data rewards go through Nigerian networks.
   mobileNetwork?: string;
 }
@@ -23,6 +26,8 @@ export interface LoginInput {
 
 export interface PasswordResetRequestInput {
   email: string;
+  humanToken?: string;
+  humanAnswer?: string;
 }
 
 export interface PasswordResetConfirmInput {

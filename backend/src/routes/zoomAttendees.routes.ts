@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requireHumanCheck } from "../middleware/requireHumanCheck";
 import rateLimit from "express-rate-limit";
 import * as zoomAttendeesController from "../controllers/zoomAttendees.controller";
 import { config } from "../config";
@@ -20,6 +21,7 @@ const zoomAttendeesRateLimiter = rateLimit({
 zoomAttendeesRouter.post(
   "/",
   zoomAttendeesRateLimiter,
+  requireHumanCheck,
   validate(createZoomAttendeeSchema),
   zoomAttendeesController.create,
 );

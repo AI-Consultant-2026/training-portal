@@ -172,6 +172,8 @@ export async function joinWithNewAccount(
     jobTitle?: string;
     department?: string;
     courseIds: string[];
+    humanToken?: string;
+    humanAnswer?: string;
   },
 ) {
   return (await axiosClient.post<{ user: User; accessToken: string }>(`/corporate/join/${code}`, input)).data;
