@@ -1,7 +1,19 @@
 {
- "updated": "2026-11-27",
+ "updated": "2026-11-28",
  "source": "MyJobMag Kenya (myjobmag.co.ke)",
  "jobs": [
+  {
+   "sector": "Energy, Oil & Gas",
+   "role": "CWI Finance Lead Specialist - FP&A Operations",
+   "company": "Baker Hughes",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-28",
+   "deadline": "2026-12-28",
+   "requirements": "In this role, you will be responsible for: Leading the annual operating plan, quarterly forecasts, and long-term strategic planning processes across the SSA business. Partnering with…",
+   "link": "https://www.myjobmag.co.ke/job/cwi-finance-lead-specialist-fp-and-a-operations-baker-hughes",
+   "course": null
+  },
   {
    "sector": "Banking & Finance",
    "role": "Manager, Credit Monitoring & Control (Commercial and Consumer Banking)",
@@ -157,6 +169,18 @@
    "requirements": "Job Purpose: Growth of FA & IFA business to meet set annual premium targets. Key responsibilities Secure new GI business through intermediaries.…",
    "link": "https://www.myjobmag.co.ke/job/corporate-sales-executive-britam-15",
    "course": "Digital Marketing"
+  },
+  {
+   "sector": "ICT & Telecoms",
+   "role": "Phone Technician",
+   "company": "OPPO Kenya",
+   "location": "Nairobi",
+   "county": "Nairobi",
+   "posted": "2026-11-27",
+   "deadline": "2026-11-30",
+   "requirements": "Job Responsibilities: Troubleshoot issues with Mobile Phones Diagnose the cause of a particular problem Replace broken parts Perform software updates to repair the device and…",
+   "link": "https://www.myjobmag.co.ke/job/phone-technician-oppo-kenya",
+   "course": "HSE Fundamentals"
   },
   {
    "sector": "ICT & Telecoms",
@@ -510,10 +534,10 @@
    "sector": "Banking & Finance",
    "role": "Customer Service Officer",
    "company": "Caritas MFB",
-   "location": "Nairobi",
-   "county": "Nairobi",
+   "location": "Kenya (various)",
+   "county": "Various",
    "posted": "2026-11-26",
-   "deadline": "2026-11-27",
+   "deadline": null,
    "requirements": "KEY RESPONSIBILITIES: Welcome and attend to customers at the branch, responding promptly to inquiries and resolving complaints effectively. Accurately record and document all customer…",
    "link": "https://www.myjobmag.co.ke/job/customer-service-officer-caritas-mfb-1",
    "course": null
@@ -1081,18 +1105,6 @@
    "requirements": "This role will ensure Reuters delivers cohesive, high-impact journalism across all formats — text, video and pictures — by aligning field operations across the region with editorial…",
    "link": "https://www.myjobmag.co.ke/job/planning-assignments-and-photography-editor-africa-thomson-reuters",
    "course": null
-  },
-  {
-   "sector": "ICT & Telecoms",
-   "role": "Sales and Marketing Management Trainee",
-   "company": "Bomahut Property Management Software",
-   "location": "Nairobi",
-   "county": "Nairobi",
-   "posted": "2026-11-24",
-   "deadline": "2026-12-24",
-   "requirements": "Role Description This is a full-time remote entry level role for a Sales and Marketing Management Trainee at Bomahut located in Nairobi County, Kenya, with some work from home flexibility. The…",
-   "link": "https://www.myjobmag.co.ke/job/sales-and-marketing-management-trainee-bomahut-property-management-software",
-   "course": "Digital Marketing"
   },
   {
    "sector": "Energy, Oil & Gas",

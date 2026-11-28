@@ -1,7 +1,55 @@
 {
- "updated": "2026-11-27",
+ "updated": "2026-11-28",
  "source": "MyJobMag South Africa (myjobmag.co.za)",
  "jobs": [
+  {
+   "sector": "Banking & Finance",
+   "role": "Senior Business Analysts",
+   "company": "Sanlam Group",
+   "location": "South Africa (various)",
+   "province": "Various",
+   "posted": "2026-11-27",
+   "deadline": "2026-12-10",
+   "requirements": "Purpose of the Role Independently conduct end-to-end data analysis by extracting, transforming and visualising datasets to uncover trends and support business decision-making. Apply analytical…",
+   "link": "https://www.myjobmag.co.za/job/senior-business-analysts-sanlam",
+   "course": null
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Java Developer-Ennuity",
+   "company": "Sanlam Group",
+   "location": "South Africa (various)",
+   "province": "Various",
+   "posted": "2026-11-27",
+   "deadline": "2026-12-10",
+   "requirements": "Purpose of the Role We are seeking an experienced Java Developer to join the IT function within a Financial Services environment. This role focuses on the design, development, and support of…",
+   "link": "https://www.myjobmag.co.za/job/java-developer-ennuity-sanlam",
+   "course": "Cyber Security Fundamentals"
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Chief Strategy and Insights Officer: Group Brand and Marketing",
+   "company": "Sanlam Group",
+   "location": "South Africa (various)",
+   "province": "Various",
+   "posted": "2026-11-27",
+   "deadline": "2026-12-10",
+   "requirements": "Purpose of the Role As Chief Marketing Strategy and Insights Officer, you give Group Marketing its strategic spine – holding the strategy and integrated planning for the whole marketing…",
+   "link": "https://www.myjobmag.co.za/job/chief-strategy-and-insights-officer-group-brand-and-marketing-sanlam",
+   "course": "Digital Marketing"
+  },
+  {
+   "sector": "Banking & Finance",
+   "role": "Dynamics 365 Intermediate Developer",
+   "company": "Sanlam Group",
+   "location": "South Africa (various)",
+   "province": "Various",
+   "posted": "2026-11-27",
+   "deadline": "2026-12-10",
+   "requirements": "Purpose of the Role The Intermediate Microsoft Dynamics 365 Developer is responsible for the design, configuration, development, enhancement and support of Microsoft Dynamics 365 CRM solutions…",
+   "link": "https://www.myjobmag.co.za/job/dynamics-365-intermediate-developer-sanlam",
+   "course": "Cyber Security Fundamentals"
+  },
   {
    "sector": "Banking & Finance",
    "role": "Junior Salvage Support Administrator",
@@ -732,54 +780,6 @@
    "deadline": "2026-12-26",
    "requirements": "Description This is an exciting opportunity for an Administrator – Transfer Agency, the Administrator will be expected to review and authorise all investor instructions, provide…",
    "link": "https://www.myjobmag.co.za/job/administrator-transfer-agency-apex-group",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Transfer Agency - Accounting and Reconciliation Senior Administrator (Evergreen)",
-   "company": "Apex Group",
-   "location": "Cape Town",
-   "province": "Western Cape",
-   "posted": "2026-11-26",
-   "deadline": "2026-12-26",
-   "requirements": "Role Summary The primary responsibility of the Accounting and Reconciliations Senior Administrator is to reconcile and manage the unit trust fund, Hedge and Offshore Fund accounts within Funds…",
-   "link": "https://www.myjobmag.co.za/job/transfer-agency-accounting-and-reconciliation-senior-administrator-evergreen-apex-group-1",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Service Delivery Manager",
-   "company": "Apex Group",
-   "location": "Cape Town",
-   "province": "Western Cape",
-   "posted": "2026-11-26",
-   "deadline": "2026-12-26",
-   "requirements": "Summary of the position The Service Delivery Manager role entails the management and support functions related to the service delivery to clients. The Service Delivery Management department…",
-   "link": "https://www.myjobmag.co.za/job/service-delivery-manager-apex-group-2",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Revenue Strategy Analyst",
-   "company": "Apex Group",
-   "location": "Cape Town",
-   "province": "Western Cape",
-   "posted": "2026-11-26",
-   "deadline": "2026-12-26",
-   "requirements": "Description As a Revenue Strategy Analyst, you are an individual contributor responsible for supporting consistent, data-led revenue performance across Apex's Global Sales (new business)…",
-   "link": "https://www.myjobmag.co.za/job/revenue-strategy-analyst-apex-group",
-   "course": null
-  },
-  {
-   "sector": "Banking & Finance",
-   "role": "Fund Accountant – Offshore Fund Accounting",
-   "company": "Apex Group",
-   "location": "Cape Town",
-   "province": "Western Cape",
-   "posted": "2026-11-26",
-   "deadline": "2026-12-26",
-   "requirements": "Description The Fund Accountant is responsible for the accurate and timely production of Net Asset Values (NAVs) for hedge funds and offshore investment structures. The role involves…",
-   "link": "https://www.myjobmag.co.za/job/fund-accountant-offshore-fund-accounting-apex-group",
    "course": null
   },
   {
@@ -1569,7 +1569,7 @@
    "location": "South Africa (various)",
    "province": "Various",
    "posted": "2026-11-17",
-   "deadline": "2026-11-27",
+   "deadline": null,
    "requirements": "Purpose To manage the day-to-day delivery of legal, licensing, governance, and regulatory support services, ensuring the provision of timely, accurate, and practical legal advice, effective…",
    "link": "https://www.myjobmag.co.za/job/legal-manager-the-eswatini-energy-regulatory-authority-esera",
    "course": null
@@ -1581,7 +1581,7 @@
    "location": "South Africa (various)",
    "province": "Various",
    "posted": "2026-11-17",
-   "deadline": "2026-11-27",
+   "deadline": null,
    "requirements": "Purpose To provide professional human resources and administration services through the implementation of talent management, employee relations, performance management, compensation and…",
    "link": "https://www.myjobmag.co.za/job/human-resources-officer-the-eswatini-energy-regulatory-authority-esera",
    "course": null
